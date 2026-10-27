@@ -1,0 +1,3236 @@
+{
+  "format": 1,
+  "scope": "Read from theme files, the spec-pack and the seed report only. No live site, no database, no ids. Counts under \"seed\" are at seed time, not live.",
+  "theme": {
+    "slug": "wp-ja-kinetic",
+    "dir": "wp-ja-kinetic",
+    "header": {
+      "License": "GNU General Public License v3",
+      "Requires at least": "7.0",
+      "Requires PHP": "8.1",
+      "Tested up to": "7.1",
+      "Text Domain": "wp-ja-kinetic",
+      "Theme Name": "WP Kinetic",
+      "Update URI": "https://github.com/TracyHQ/claude-cowork",
+      "Version": "1.1.0"
+    },
+    "themeJson": {
+      "version": 3,
+      "customTemplates": [
+        {
+          "name": "landing",
+          "title": "Landing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "fixture",
+          "title": "Design system page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "artifact",
+          "title": "Design page (engine)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "pricing",
+          "title": "Pricing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-landing",
+          "title": "Landing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-contact",
+          "title": "Contact",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-login",
+          "title": "Login",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-register",
+          "title": "Register",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-account",
+          "title": "Account",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-password",
+          "title": "Password",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-authors",
+          "title": "Authors directory",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-categories",
+          "title": "Categories index",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-tags",
+          "title": "Tags cloud",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-article",
+          "title": "Article (source com_content article view)",
+          "postTypes": [
+            "page"
+          ]
+        }
+      ],
+      "templateParts": [
+        {
+          "name": "header",
+          "title": "Header",
+          "area": "header"
+        },
+        {
+          "name": "footer",
+          "title": "Footer",
+          "area": "footer"
+        }
+      ]
+    },
+    "presets": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta"
+        },
+        {
+          "slug": "border",
+          "name": "Border"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active"
+        },
+        {
+          "slug": "success",
+          "name": "Success"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger"
+        }
+      ],
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display"
+        },
+        {
+          "slug": "body",
+          "name": "Body"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono"
+        }
+      ],
+      "fontSizes": [
+        "xs",
+        "sm",
+        "base",
+        "lg",
+        "xl",
+        "xxl",
+        "xxxl",
+        "xxxxl"
+      ],
+      "spacingSizes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "8",
+        "12"
+      ],
+      "layout": {
+        "contentSize": "1240px",
+        "wideSize": "1240px"
+      },
+      "customKeys": [
+        "container",
+        "ease",
+        "elev",
+        "focusRing",
+        "leading",
+        "motion",
+        "radius",
+        "sectionY",
+        "tracking",
+        "tracy"
+      ],
+      "inspiration": "ja-kinetic",
+      "stylesCss": 1758
+    },
+    "templates": [
+      {
+        "name": "404",
+        "own": true,
+        "parts": [
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "acymailing/subscription-form"
+        ]
+      },
+      {
+        "name": "archive",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/cards"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "artifact",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "author",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/author-identity",
+          "wp-ja-kinetic/post-readtime",
+          "wp-ja-kinetic/post-topic-eyebrow"
+        ]
+      },
+      {
+        "name": "category-engineering",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/category-card-part",
+          "wp-ja-kinetic/category-siblings",
+          "wp-ja-kinetic/popular-tags"
+        ]
+      },
+      {
+        "name": "category-field-notes-from-the-on-call",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/blog-ledger-header",
+          "wp-ja-kinetic/blog-rail",
+          "wp-ja-kinetic/blog-topics-items",
+          "wp-ja-kinetic/field-notes-featured",
+          "wp-ja-kinetic/kinetic-pagination",
+          "wp-ja-kinetic/post-readtime",
+          "wp-ja-kinetic/post-topic-eyebrow"
+        ]
+      },
+      {
+        "name": "category",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/blog-ledger-header",
+          "wp-ja-kinetic/blog-topics-items",
+          "wp-ja-kinetic/field-notes-featured",
+          "wp-ja-kinetic/kinetic-pagination",
+          "wp-ja-kinetic/post-readtime",
+          "wp-ja-kinetic/post-topic-eyebrow"
+        ]
+      },
+      {
+        "name": "date",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/archive-months",
+          "wp-ja-kinetic/kinetic-pagination",
+          "wp-ja-kinetic/popular-tags"
+        ]
+      },
+      {
+        "name": "fixture",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "front-page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "home",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/cards"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "index",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/kinetic-pagination",
+          "wp-ja-kinetic/post-readtime",
+          "wp-ja-kinetic/post-topic-eyebrow"
+        ]
+      },
+      {
+        "name": "landing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-account",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/kinetic-auth-account"
+        ]
+      },
+      {
+        "name": "page-archive",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/archive-months",
+          "wp-ja-kinetic/kinetic-pagination",
+          "wp-ja-kinetic/popular-tags"
+        ]
+      },
+      {
+        "name": "page-article",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/article-byline-meta",
+          "wp-ja-kinetic/article-foot",
+          "wp-ja-kinetic/author-initials",
+          "wp-ja-kinetic/related-posts"
+        ]
+      },
+      {
+        "name": "page-authors",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/authors-directory"
+        ]
+      },
+      {
+        "name": "page-categories",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/categories-index"
+        ]
+      },
+      {
+        "name": "page-contact",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-landing",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-login",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/kinetic-auth-login",
+          "wp-ja-kinetic/kinetic-auth-notice"
+        ]
+      },
+      {
+        "name": "page-no-sidebar",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-password",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/kinetic-auth-notice",
+          "wp-ja-kinetic/kinetic-auth-password"
+        ]
+      },
+      {
+        "name": "page-register",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/kinetic-auth-notice",
+          "wp-ja-kinetic/kinetic-auth-register"
+        ]
+      },
+      {
+        "name": "page-tags",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/tags-cloud"
+        ]
+      },
+      {
+        "name": "page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "pricing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/section-cta-final"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/kinetic-search-form",
+          "wp-ja-kinetic/kinetic-search-results"
+        ]
+      },
+      {
+        "name": "single",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/article-byline-meta",
+          "wp-ja-kinetic/article-foot",
+          "wp-ja-kinetic/author-initials",
+          "wp-ja-kinetic/related-posts"
+        ]
+      },
+      {
+        "name": "tag",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-kinetic/current-term-name",
+          "wp-ja-kinetic/kinetic-pagination"
+        ]
+      }
+    ],
+    "parts": [
+      {
+        "name": "footer",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 3,
+        "customBlocks": [
+          "acymailing/subscription-form"
+        ]
+      },
+      {
+        "name": "header",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 1,
+        "customBlocks": [
+          "wp-ja-kinetic/mega-menu"
+        ]
+      }
+    ],
+    "patterns": [
+      {
+        "file": "patterns/cards.php",
+        "slug": "tracy/cards",
+        "title": "Cards",
+        "categories": [
+          "query"
+        ],
+        "blockTypes": [
+          "core/query"
+        ],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/landing.php",
+        "slug": "tracy/landing",
+        "title": "Landing page",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/pricing.php",
+        "slug": "tracy/pricing",
+        "title": "Pricing table",
+        "categories": [
+          "text"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-contact.php",
+        "slug": "tracy/section-contact",
+        "title": "Contact",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-final.php",
+        "slug": "tracy/section-cta-final",
+        "title": "Call to action, final",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-inline.php",
+        "slug": "tracy/section-cta-inline",
+        "title": "Call to action, inline",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-faq.php",
+        "slug": "tracy/section-faq",
+        "title": "FAQ",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-features.php",
+        "slug": "tracy/section-features",
+        "title": "Features",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-gallery.php",
+        "slug": "tracy/section-gallery",
+        "title": "Gallery",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-how-it-works.php",
+        "slug": "tracy/section-how-it-works",
+        "title": "How it works",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-listing.php",
+        "slug": "tracy/section-listing",
+        "title": "Listing",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pillars.php",
+        "slug": "tracy/section-pillars",
+        "title": "Value pillars",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-problem.php",
+        "slug": "tracy/section-problem",
+        "title": "Problem",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-proof.php",
+        "slug": "tracy/section-proof",
+        "title": "Proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-social-proof.php",
+        "slug": "tracy/section-social-proof",
+        "title": "Social proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-styleguide.php",
+        "slug": "tracy/section-styleguide",
+        "title": "Style guide",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-team.php",
+        "slug": "tracy/section-team",
+        "title": "Team",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-accordion.php",
+        "slug": "wp-ja-kinetic/section-accordion",
+        "title": "FAQ accordion",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [
+          "core/details"
+        ],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 36,
+        "namedBlocks": 50,
+        "own": true
+      },
+      {
+        "file": "patterns/section-bento.php",
+        "slug": "wp-ja-kinetic/section-bento",
+        "title": "Bento grid",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 12,
+        "namedBlocks": 15,
+        "own": true
+      },
+      {
+        "file": "patterns/section-bento-style-2.php",
+        "slug": "wp-ja-kinetic/section-bento-style-2",
+        "title": "Bento grid, incident layout",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 18,
+        "namedBlocks": 23,
+        "own": true
+      },
+      {
+        "file": "patterns/section-clients.php",
+        "slug": "wp-ja-kinetic/section-clients",
+        "title": "Client logos",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 26,
+        "namedBlocks": 38,
+        "own": true
+      },
+      {
+        "file": "patterns/section-clients-style-2.php",
+        "slug": "wp-ja-kinetic/section-clients-style-2",
+        "title": "Client logos, grouped grid",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 79,
+        "namedBlocks": 103,
+        "own": true
+      },
+      {
+        "file": "patterns/section-cta.php",
+        "slug": "wp-ja-kinetic/section-cta",
+        "title": "Call to action",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 7,
+        "own": true
+      },
+      {
+        "file": "patterns/section-faq-support.php",
+        "slug": "wp-ja-kinetic/section-faq-support",
+        "title": "FAQ support card",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 3,
+        "own": true
+      },
+      {
+        "file": "patterns/section-features-intro.php",
+        "slug": "wp-ja-kinetic/section-features-intro",
+        "title": "Features intro",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 13,
+        "namedBlocks": 22,
+        "own": true
+      },
+      {
+        "file": "patterns/section-features-ledger.php",
+        "slug": "wp-ja-kinetic/section-features-ledger",
+        "title": "Features ledger",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 35,
+        "namedBlocks": 47,
+        "own": true
+      },
+      {
+        "file": "patterns/section-features-ledger-metrics.php",
+        "slug": "wp-ja-kinetic/section-features-ledger-metrics",
+        "title": "Features ledger, metrics",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 17,
+        "namedBlocks": 21,
+        "own": true
+      },
+      {
+        "file": "patterns/section-features-ledger-stats.php",
+        "slug": "wp-ja-kinetic/section-features-ledger-stats",
+        "title": "Features ledger, stats",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 15,
+        "namedBlocks": 21,
+        "own": true
+      },
+      {
+        "file": "patterns/section-hero.php",
+        "slug": "wp-ja-kinetic/section-hero",
+        "title": "Hero",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 9,
+        "namedBlocks": 9,
+        "own": true
+      },
+      {
+        "file": "patterns/section-incident-timeline.php",
+        "slug": "wp-ja-kinetic/section-incident-timeline",
+        "title": "Incident timeline",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 52,
+        "namedBlocks": 73,
+        "own": true
+      },
+      {
+        "file": "patterns/section-kineticql-split.php",
+        "slug": "wp-ja-kinetic/section-kineticql-split",
+        "title": "KineticQL split",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 11,
+        "namedBlocks": 11,
+        "own": true
+      },
+      {
+        "file": "patterns/section-page-masthead.php",
+        "slug": "wp-ja-kinetic/section-page-masthead",
+        "title": "Page masthead",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/section-pricing.php",
+        "slug": "wp-ja-kinetic/section-pricing",
+        "title": "Pricing plans",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 25,
+        "namedBlocks": 28,
+        "own": true
+      },
+      {
+        "file": "patterns/section-pricing-matrix.php",
+        "slug": "wp-ja-kinetic/section-pricing-matrix",
+        "title": "Pricing comparison matrix",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [
+          "core/table"
+        ],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/section-prose-quote.php",
+        "slug": "wp-ja-kinetic/section-prose-quote",
+        "title": "Prose with pull quote",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/section-teams.php",
+        "slug": "wp-ja-kinetic/section-teams",
+        "title": "Team grid",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 43,
+        "namedBlocks": 52,
+        "own": true
+      },
+      {
+        "file": "patterns/section-testimonials.php",
+        "slug": "wp-ja-kinetic/section-testimonials",
+        "title": "Testimonials",
+        "categories": [
+          "wp-ja-kinetic",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 15,
+        "namedBlocks": 18,
+        "own": true
+      }
+    ],
+    "variations": [
+      {
+        "id": "ja-kinetic",
+        "title": "WP Kinetic",
+        "inspiration": "ja-kinetic"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "wp-ja-kinetic/archive-months",
+        "title": "Archive by-month rail",
+        "version": "0.1.0",
+        "attributes": [
+          "archivedOnly"
+        ],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/archive-months"
+      },
+      {
+        "name": "wp-ja-kinetic/article-byline-meta",
+        "title": "Article byline meta",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/article-byline-meta"
+      },
+      {
+        "name": "wp-ja-kinetic/article-foot",
+        "title": "Article foot (hidden)",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/article-foot"
+      },
+      {
+        "name": "wp-ja-kinetic/author-identity",
+        "title": "Author identity card",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/author-identity"
+      },
+      {
+        "name": "wp-ja-kinetic/author-initials",
+        "title": "Author initials chip",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/author-initials"
+      },
+      {
+        "name": "wp-ja-kinetic/authors-directory",
+        "title": "Authors directory",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/authors-directory"
+      },
+      {
+        "name": "wp-ja-kinetic/blog-ledger-header",
+        "title": "Blog ledger header",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/blog-ledger-header"
+      },
+      {
+        "name": "wp-ja-kinetic/blog-rail",
+        "title": "Blog topics rail",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/blog-rail"
+      },
+      {
+        "name": "wp-ja-kinetic/blog-topics-items",
+        "title": "Blog topics strip items",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/blog-topics-items"
+      },
+      {
+        "name": "wp-ja-kinetic/categories-index",
+        "title": "Categories index",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/categories-index"
+      },
+      {
+        "name": "wp-ja-kinetic/category-card-part",
+        "title": "Category card part",
+        "version": "0.1.0",
+        "attributes": [
+          "part"
+        ],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/category-card-part"
+      },
+      {
+        "name": "wp-ja-kinetic/category-siblings",
+        "title": "Category siblings card",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/category-siblings"
+      },
+      {
+        "name": "wp-ja-kinetic/current-term-name",
+        "title": "Current term name",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/current-term-name"
+      },
+      {
+        "name": "wp-ja-kinetic/field-notes-featured",
+        "title": "Field notes featured read",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/field-notes-featured"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-auth-account",
+        "title": "Kinetic account view",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-auth-account"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-auth-login",
+        "title": "Kinetic login card",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-auth-login"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-auth-notice",
+        "title": "Kinetic auth notice",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-auth-notice"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-auth-password",
+        "title": "Kinetic password reset card",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-auth-password"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-auth-register",
+        "title": "Kinetic register card",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-auth-register"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-contact-form",
+        "title": "Kinetic contact form",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-contact-form"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-pagination",
+        "title": "Kinetic pagination",
+        "version": "0.1.0",
+        "attributes": [
+          "counterClassName",
+          "counterFirst"
+        ],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-pagination"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-search-form",
+        "title": "Kinetic search form",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-search-form"
+      },
+      {
+        "name": "wp-ja-kinetic/kinetic-search-results",
+        "title": "Kinetic search results",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/kinetic-search-results"
+      },
+      {
+        "name": "wp-ja-kinetic/mega-menu",
+        "title": "Mega menu",
+        "version": "0.1.0",
+        "attributes": [
+          "label"
+        ],
+        "render": "file:./render.php",
+        "editorScript": "file:./editor.js",
+        "dir": "blocks/mega-menu"
+      },
+      {
+        "name": "wp-ja-kinetic/popular-tags",
+        "title": "Popular tags",
+        "version": "0.1.0",
+        "attributes": [
+          "className",
+          "linkClassName",
+          "numberOfTags"
+        ],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/popular-tags"
+      },
+      {
+        "name": "wp-ja-kinetic/post-readtime",
+        "title": "Post read time",
+        "version": "0.1.0",
+        "attributes": [
+          "dateFormat",
+          "suffix",
+          "wrapperClassName"
+        ],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/post-readtime"
+      },
+      {
+        "name": "wp-ja-kinetic/post-topic-eyebrow",
+        "title": "Post topic eyebrow",
+        "version": "0.1.0",
+        "attributes": [
+          "categoryOnly",
+          "className"
+        ],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/post-topic-eyebrow"
+      },
+      {
+        "name": "wp-ja-kinetic/related-posts",
+        "title": "Related posts",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/related-posts"
+      },
+      {
+        "name": "wp-ja-kinetic/tags-cloud",
+        "title": "Tags cloud",
+        "version": "0.1.0",
+        "attributes": [],
+        "render": "file:./render.php",
+        "editorScript": null,
+        "dir": "blocks/tags-cloud"
+      }
+    ],
+    "enqueued": [
+      {
+        "kind": "style",
+        "handle": "tracy",
+        "path": "assets/css/tracy.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy",
+        "path": "assets/js/tracy.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-fixture-page",
+        "path": "assets/css/fixture-page.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-layout",
+        "path": "assets/css/layout.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-motion",
+        "path": "assets/css/tracy-motion.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-motion",
+        "path": "assets/js/tracy-motion.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-preview",
+        "path": "assets/js/tracy-preview.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-sections",
+        "path": "assets/css/sections.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-kinetic",
+        "path": "assets/css/wp-ja-kinetic.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-kinetic-article",
+        "path": "assets/css/wp-ja-kinetic-article.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-kinetic-auth-finder",
+        "path": "assets/js/wp-ja-kinetic-auth-finder.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-kinetic-back-to-top",
+        "path": "assets/js/wp-ja-kinetic-back-to-top.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-kinetic-contact",
+        "path": "assets/js/wp-ja-kinetic-contact.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-kinetic-dark",
+        "path": "assets/js/wp-ja-kinetic-dark.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-kinetic-drawer",
+        "path": "assets/js/wp-ja-kinetic-drawer.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-kinetic-finder-auth",
+        "path": "assets/css/wp-ja-kinetic-finder-auth.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-kinetic-mega",
+        "path": "assets/js/wp-ja-kinetic-mega.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-kinetic-sections",
+        "path": "assets/css/wp-ja-kinetic-sections.css",
+        "file": "inc/extra.php"
+      }
+    ],
+    "optionsRead": [
+      "admin_email",
+      "default_role",
+      "tracy_contact_to",
+      "tracy_hero",
+      "tracy_inspiration",
+      "tracy_motion",
+      "tracy_nav",
+      "users_can_register",
+      "wp_ja_kinetic_redirects"
+    ],
+    "hooks": [
+      {
+        "kind": "action",
+        "hook": "admin_post_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "admin_post_nopriv_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "auto_update_theme",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "document_title_parts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "get_avatar",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "get_the_archive_title",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "get_the_author_description",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "get_the_author_display_name",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "get_the_excerpt",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "get_the_terms",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/owner-text.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "language_attributes",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "login_url",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "lostpassword_url",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "page_template_hierarchy",
+        "file": "inc/list-pages.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "posts_orderby",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "pre_get_avatar_data",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "pre_get_document_title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "pre_get_posts",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "action",
+        "hook": "pre_get_posts",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "action",
+        "hook": "pre_get_posts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "pre_render_block",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_loop_block_query_vars",
+        "file": "inc/list-pages.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/list-pages.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "register_url",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "inc/tag-parity.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/list-pages.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/paragraph",
+        "file": "inc/owner-text.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-excerpt",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_data",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_data",
+        "file": "inc/owner-text.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/list-pages.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "retrieve_password_message",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "retrieve_password_title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "run_wptexturize",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "run_wptexturize",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "show_admin_bar",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_author",
+        "file": "inc/item-ids.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_content",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_posts",
+        "file": "inc/blog-dynamic.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "update_themes_github.com",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "functions.php"
+      }
+    ],
+    "overlay": {
+      "dir": "wp-ja-kinetic",
+      "files": [
+        "assets/css/wp-ja-kinetic-article.css",
+        "assets/css/wp-ja-kinetic-finder-auth.css",
+        "assets/css/wp-ja-kinetic-sections.css",
+        "assets/css/wp-ja-kinetic.css",
+        "assets/fonts/fa-solid-900.woff2",
+        "assets/fonts/fontawesome-webfont.woff2",
+        "assets/fonts/ibm-plex-sans-variable.woff2",
+        "assets/fonts/jetbrains-mono-variable.woff2",
+        "assets/fonts/space-grotesk-variable.woff2",
+        "assets/images/hero-terminal-panel-blueprint.webp",
+        "assets/images/hero-terminal-panel-signal.webp",
+        "assets/images/hero-terminal-panel-terminal.webp",
+        "assets/images/kineticql-code-panel-blueprint.webp",
+        "assets/images/kineticql-code-panel-signal.webp",
+        "assets/images/kineticql-code-panel-terminal.webp",
+        "assets/js/wp-ja-kinetic-auth-finder.js",
+        "assets/js/wp-ja-kinetic-back-to-top.js",
+        "assets/js/wp-ja-kinetic-contact.js",
+        "assets/js/wp-ja-kinetic-dark.js",
+        "assets/js/wp-ja-kinetic-drawer.js",
+        "assets/js/wp-ja-kinetic-mega.js",
+        "blocks/archive-months/block.json",
+        "blocks/archive-months/render.php",
+        "blocks/article-byline-meta/block.json",
+        "blocks/article-byline-meta/render.php",
+        "blocks/article-foot/block.json",
+        "blocks/article-foot/render.php",
+        "blocks/author-identity/block.json",
+        "blocks/author-identity/render.php",
+        "blocks/author-initials/block.json",
+        "blocks/author-initials/render.php",
+        "blocks/authors-directory/block.json",
+        "blocks/authors-directory/render.php",
+        "blocks/blog-ledger-header/block.json",
+        "blocks/blog-ledger-header/render.php",
+        "blocks/blog-rail/block.json",
+        "blocks/blog-rail/render.php",
+        "blocks/blog-topics-items/block.json",
+        "blocks/blog-topics-items/render.php",
+        "blocks/categories-index/block.json",
+        "blocks/categories-index/render.php",
+        "blocks/category-card-part/block.json",
+        "blocks/category-card-part/render.php",
+        "blocks/category-siblings/block.json",
+        "blocks/category-siblings/render.php",
+        "blocks/current-term-name/block.json",
+        "blocks/current-term-name/render.php",
+        "blocks/field-notes-featured/block.json",
+        "blocks/field-notes-featured/render.php",
+        "blocks/kinetic-auth-account/block.json",
+        "blocks/kinetic-auth-account/render.php",
+        "blocks/kinetic-auth-login/block.json",
+        "blocks/kinetic-auth-login/render.php",
+        "blocks/kinetic-auth-notice/block.json",
+        "blocks/kinetic-auth-notice/render.php",
+        "blocks/kinetic-auth-password/block.json",
+        "blocks/kinetic-auth-password/render.php",
+        "blocks/kinetic-auth-register/block.json",
+        "blocks/kinetic-auth-register/render.php",
+        "blocks/kinetic-contact-form/block.json",
+        "blocks/kinetic-contact-form/render.php",
+        "blocks/kinetic-pagination/block.json",
+        "blocks/kinetic-pagination/render.php",
+        "blocks/kinetic-search-form/block.json",
+        "blocks/kinetic-search-form/render.php",
+        "blocks/kinetic-search-results/block.json",
+        "blocks/kinetic-search-results/render.php",
+        "blocks/mega-menu/block.json",
+        "blocks/mega-menu/editor.asset.php",
+        "blocks/mega-menu/editor.js",
+        "blocks/mega-menu/render.php",
+        "blocks/popular-tags/block.json",
+        "blocks/popular-tags/render.php",
+        "blocks/post-readtime/block.json",
+        "blocks/post-readtime/render.php",
+        "blocks/post-topic-eyebrow/block.json",
+        "blocks/post-topic-eyebrow/render.php",
+        "blocks/related-posts/block.json",
+        "blocks/related-posts/render.php",
+        "blocks/tags-cloud/block.json",
+        "blocks/tags-cloud/render.php",
+        "inc/blog-dynamic.php",
+        "inc/extra.php",
+        "inc/item-ids.php",
+        "inc/list-pages.php",
+        "inc/owner-text.php",
+        "inc/tag-parity.php",
+        "inc/update.php",
+        "parts/footer.html",
+        "parts/header.html",
+        "patterns.map.json",
+        "patterns/section-accordion.php",
+        "patterns/section-bento-style-2.php",
+        "patterns/section-bento.php",
+        "patterns/section-clients-style-2.php",
+        "patterns/section-clients.php",
+        "patterns/section-cta.php",
+        "patterns/section-faq-support.php",
+        "patterns/section-features-intro.php",
+        "patterns/section-features-ledger-metrics.php",
+        "patterns/section-features-ledger-stats.php",
+        "patterns/section-features-ledger.php",
+        "patterns/section-hero.php",
+        "patterns/section-incident-timeline.php",
+        "patterns/section-kineticql-split.php",
+        "patterns/section-page-masthead.php",
+        "patterns/section-pricing-matrix.php",
+        "patterns/section-pricing.php",
+        "patterns/section-prose-quote.php",
+        "patterns/section-teams.php",
+        "patterns/section-testimonials.php",
+        "posts.contract.json",
+        "readme.txt",
+        "style.css",
+        "templates/404.html",
+        "templates/author.html",
+        "templates/category-engineering.html",
+        "templates/category-field-notes-from-the-on-call.html",
+        "templates/category.html",
+        "templates/date.html",
+        "templates/front-page.html",
+        "templates/index.html",
+        "templates/page-account.html",
+        "templates/page-archive.html",
+        "templates/page-article.html",
+        "templates/page-authors.html",
+        "templates/page-categories.html",
+        "templates/page-contact.html",
+        "templates/page-landing.html",
+        "templates/page-login.html",
+        "templates/page-no-sidebar.html",
+        "templates/page-password.html",
+        "templates/page-register.html",
+        "templates/page-tags.html",
+        "templates/page.html",
+        "templates/search.html",
+        "templates/single.html",
+        "templates/tag.html",
+        "theme.config.json",
+        "theme.overlay.json"
+      ]
+    },
+    "fileCount": 179,
+    "fingerprints": {
+      "assets/css/artifacts/form/ja-kinetic.css": "sha256:e81c3aadb5a417b05d52ba26ba083f648ec6408bb4730ae8143022ec62465e2b",
+      "assets/css/artifacts/landing/ja-kinetic.css": "sha256:6089dbec9dc4f6e87bfb96b61109f12a92b79faa4dc3b55c2668e3a86c2b5642",
+      "assets/css/artifacts/typography/ja-kinetic.css": "sha256:51129a6994ad575cbca90a81077a49270c5c6d765ca265c8c3dbcf842999aa09",
+      "assets/css/fixture-page.css": "sha256:d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+      "assets/css/fixtures/ja-kinetic.css": "sha256:bd3e7c3fa64a4f293ed687d54f8829c22adce3186414a4eacb6103384adcbd8e",
+      "assets/css/layout.css": "sha256:dca7d68d13067d81e306200f1ec08e2a5fa03b05bf3b46202ebe69ae86d9c06f",
+      "assets/css/sections.css": "sha256:d287eb0b26beee53654bdab114c23195e72b212240d9e5703d9546252a130a3f",
+      "assets/css/tracy-motion.css": "sha256:6a13c448d945837ad0b6fc02502060a43d02112f700b4912142f7f3a49de5e81",
+      "assets/css/tracy.css": "sha256:e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+      "assets/css/wp-ja-kinetic-article.css": "sha256:b133707c8f288aa376c63e3d04b837702cfee700912a69e61bb3d959708a98fb",
+      "assets/css/wp-ja-kinetic-finder-auth.css": "sha256:6b54de2f22eb00b14e87d649d21ccedb736074d4bad983e1726da6fab782ac5a",
+      "assets/css/wp-ja-kinetic-sections.css": "sha256:b8a47f345604e1acdb6ef08391a544101fcebe668252ffdac8a91e0a7106698f",
+      "assets/css/wp-ja-kinetic.css": "sha256:be250d2edd606c63bf3ec115d2b290457243c7bcc570c4c01a9b7b074cdd663f",
+      "assets/fonts/fa-solid-900.woff2": "sha256:9834b82ad26e2a37583d22676a12dd2eb0fe7c80356a2114d0db1aa8b3899537",
+      "assets/fonts/fontawesome-webfont.woff2": "sha256:2adefcbc041e7d18fcf2d417879dc5a09997aa64d675b7a3c4b6ce33da13f3fe",
+      "assets/fonts/ibm-plex-sans-variable.woff2": "sha256:056e4e2459f57a0033c8c9c844ff19d6e42ac8602027803d4345823bcc939818",
+      "assets/fonts/jetbrains-mono-variable.woff2": "sha256:2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "assets/fonts/space-grotesk-variable.woff2": "sha256:a0d054c4af557de20afd6ca59f47ab353bcaec49c63ff04b6c9d39d0f8910557",
+      "assets/images/hero-terminal-panel-blueprint.webp": "sha256:c90ed5036faae28c388b72a71482104947069b0352baabcd0cc8048537f6f390",
+      "assets/images/hero-terminal-panel-signal.webp": "sha256:6560a2d7285eb5e710a14bb53b79cba0759bb2846fb6be225baba59564d140f4",
+      "assets/images/hero-terminal-panel-terminal.webp": "sha256:052677312dc20a8e17ca8c0429420558b9f81cf693e21a5312229d9decb9c121",
+      "assets/images/kineticql-code-panel-blueprint.webp": "sha256:767899724083386db464b4b39c0df41be285aa5c7c0fe18c24c090d4b7e4d346",
+      "assets/images/kineticql-code-panel-signal.webp": "sha256:1bdf715310f6de32958e4b0cfac4c39b16ba45c95c0884b78148034649fe11b5",
+      "assets/images/kineticql-code-panel-terminal.webp": "sha256:f41a46f4a0030a2d861ebef8d6a9c8cab6a7b42a55d2130ef2fca1676ebabec6",
+      "assets/img/hero-placeholder.svg": "sha256:76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+      "assets/js/tracy-motion.js": "sha256:5e683668832ee13a1b80ecb9a460ef9c34a14cdfe9ff7361e68be489dd1b8c5e",
+      "assets/js/tracy-preview.js": "sha256:b0b1916d5a7a7bef48ebbd992ac569c60ca0d6d85903c2bd1b9497b6a5f344ba",
+      "assets/js/tracy.js": "sha256:88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+      "assets/js/wp-ja-kinetic-auth-finder.js": "sha256:62050d60e4f0963a80d553d4c6442784387806387e8b9831ff5edd95f8ab0fef",
+      "assets/js/wp-ja-kinetic-back-to-top.js": "sha256:624f07f4a80f45f98572e97120ad3a59d8be85145cca47c6e2d102d2481b5673",
+      "assets/js/wp-ja-kinetic-contact.js": "sha256:b891d6b4d7bd3e03f25cd9d41b35c6d816ee00b5db0e853025acb03bd5cef552",
+      "assets/js/wp-ja-kinetic-dark.js": "sha256:b94ea057148ba9112402175d94971d2d842c1d01bbb3ff480fc713146467cf9f",
+      "assets/js/wp-ja-kinetic-drawer.js": "sha256:268bc0a8790f092d342245b75d4027dc98b48a42604d63697662f4a0557ba924",
+      "assets/js/wp-ja-kinetic-mega.js": "sha256:53a1fffbce86769b006099d62716cca0a812a775e3f4989cab4536d4c2857843",
+      "blocks/archive-months/block.json": "sha256:1152fc899d41d09b8a1621ce41b67fae36dfa12f1c47dd1f28a66732a80d8324",
+      "blocks/archive-months/render.php": "sha256:c7607bc1be93d573e2a58ac6b22f0bcb1980fd585c8297badaad95413debe3df",
+      "blocks/article-byline-meta/block.json": "sha256:d059c6120e7603f3bab7e20ec2f09b6b64b2c98f3ba3243cac5cf2346a09133d",
+      "blocks/article-byline-meta/render.php": "sha256:87ff2c02b823512c3443dabba9ee7c8de2a1f653d51dfc16e3430ea6e5603ba8",
+      "blocks/article-foot/block.json": "sha256:fb4866307d0105ae69fc38df34cff5c23690cdd1bb4c6a4cb30bb2ebd520f4c6",
+      "blocks/article-foot/render.php": "sha256:91eb6460e67574c863a71cfb9028414f908450fa82e65ab15cdc1b1530d8648f",
+      "blocks/author-identity/block.json": "sha256:3b663f5b751eb4eb2a511bbd2753ac926b464ca594bd65a69c4b91128f576383",
+      "blocks/author-identity/render.php": "sha256:b9c2961e2e0a66f15e3cb915c4950c54a54781953aa918b49a4d67766342597a",
+      "blocks/author-initials/block.json": "sha256:1947653cdb8fdedb1ce6ca1490ad50a49db3a5a45ad0867fafb05c76bcdd312c",
+      "blocks/author-initials/render.php": "sha256:2768c4ded9367d886c6d1e0d85b0204876104bb74af13e9d653891805e85a775",
+      "blocks/authors-directory/block.json": "sha256:97372fabd752f1f985ee2a69c82f1bcb2a1c97eca1839284298c9d4d3d6ff15c",
+      "blocks/authors-directory/render.php": "sha256:04dba4d4a716f8a30e2aea38e6bd19dde2d6a933cc5f1e6c62da6d63ea620a6f",
+      "blocks/blog-ledger-header/block.json": "sha256:8f3356aae49a6559cded940107c2fa09f979178449f5215ce3215321ba793a50",
+      "blocks/blog-ledger-header/render.php": "sha256:7aae110a5d51491f6ea092ed92588bc5fd3ae41403d070ebb4b9db8dc31d20cb",
+      "blocks/blog-rail/block.json": "sha256:3c782eec7be1c35e80441a49563c92fced9b99dfdba9af21235d6a61ba3e1452",
+      "blocks/blog-rail/render.php": "sha256:2523553823298f9bae72ff38cc0f23c11d4daa7f677bbc8472fe93a0e26f1176",
+      "blocks/blog-topics-items/block.json": "sha256:de64036b8772a3d8559b132d62bda80632206e16b2254b14b7f66c95b0b5f71b",
+      "blocks/blog-topics-items/render.php": "sha256:ece9ab3ad3f2d2db30b27beb13e6e540dbc13252da62df294f369a6bdeace147",
+      "blocks/categories-index/block.json": "sha256:95de2c21894dbe5ca945c8938b667dc1ab2121ac54ac76228f931e3eac3dec22",
+      "blocks/categories-index/render.php": "sha256:cdda292f210d5df2f3d40f42657d927b0daea6e03eaf6899e3d5215ee8a2ff80",
+      "blocks/category-card-part/block.json": "sha256:321cf041d34cee256edb257d015dcfae8166e1c2389e02d00845d08fa6ed4ee6",
+      "blocks/category-card-part/render.php": "sha256:66d9eaa23f4f7516f0157fa52a34b92338e73b259d1756494445d8712d6b45e7",
+      "blocks/category-siblings/block.json": "sha256:ee8cb0c8c59e33de0f66bc1da573650aa19695e04c4eb1143b7988cf29607f63",
+      "blocks/category-siblings/render.php": "sha256:e1d9daca44a6543ca7fd45a5a8a22fceae0048f8a24677e39910670925a02d01",
+      "blocks/current-term-name/block.json": "sha256:d33433aa3410aabe6f68ba8d455a89f156d508ea641a70747bd1b66cd8f77662",
+      "blocks/current-term-name/render.php": "sha256:6813d447c4c55e4196e0b4778059ee9eab0fdd2ef5c86eb18db5d2489d7b50ee",
+      "blocks/field-notes-featured/block.json": "sha256:dfa5799fcef0de475c759ee75dbbc5646570f30eb1b50c1fa55c625000447ae6",
+      "blocks/field-notes-featured/render.php": "sha256:067409c7f884965465289525dc96f4fa1e54707944649eaf44d1540327382ed3",
+      "blocks/kinetic-auth-account/block.json": "sha256:31a8560daac65eb647ac4d6f32299c2b3d00b169d837000cce727dc0419bf2d2",
+      "blocks/kinetic-auth-account/render.php": "sha256:79f08f4816c31dba1008b5f2d6d0cd220189ef1c96b3225298a46fff29d1b711",
+      "blocks/kinetic-auth-login/block.json": "sha256:07ca3ac28b5940b2ed3f082c16b59512d88b58a2b8535f820a5b98466c56582f",
+      "blocks/kinetic-auth-login/render.php": "sha256:857a34bcded9a212bc0efa53693b40671d14402d8d5b62d13eadbf2f3ffb00f7",
+      "blocks/kinetic-auth-notice/block.json": "sha256:f51577ab1af917d447ab401f81b586ede955c8cf459794dbdb91a44d9b7165a7",
+      "blocks/kinetic-auth-notice/render.php": "sha256:edaa4d8f999713b395a7c7530deba5b40b0a948ed88dd662b9a843eaf08aca60",
+      "blocks/kinetic-auth-password/block.json": "sha256:ea7370b81a3f9320129f6847d505e5b876c1edea813cf9f0b6628c2429266763",
+      "blocks/kinetic-auth-password/render.php": "sha256:218889a6eb76e6e4d70a1de438d381a1d8d81e089a2005d39e79e1dc553e530c",
+      "blocks/kinetic-auth-register/block.json": "sha256:ca83742d689f06818d1176276399522395fb104a0050ddba5b9573ceeafe46a8",
+      "blocks/kinetic-auth-register/render.php": "sha256:aaa38d89a760f8b6fbefc989a4cd02e1266a0da11c581dcff97357d71d5b26ce",
+      "blocks/kinetic-contact-form/block.json": "sha256:708159c65900661c83659c1a47d81784f3f69539783ec1fb6616d84bb129a242",
+      "blocks/kinetic-contact-form/render.php": "sha256:6cdbe7db185b33c43ea3262bf83eeb129e226698e8c92b4eac79d15172930160",
+      "blocks/kinetic-pagination/block.json": "sha256:8e334b190d469ee95c8f8a5ef5463495018e7cbcff230bfbf88c660082c9274a",
+      "blocks/kinetic-pagination/render.php": "sha256:57e181307bc740b4e41dbd600ac70a0c47c85b42136157a31449bafd43885d6e",
+      "blocks/kinetic-search-form/block.json": "sha256:b98e71c33cfbd90ee38226509550f5e73729d507e8fb4ddb48fae9c004c6ac8a",
+      "blocks/kinetic-search-form/render.php": "sha256:e28db7b9590781ca3d5e69eccbe103d17e4a0f0f5577ae606b770ddf36e1630e",
+      "blocks/kinetic-search-results/block.json": "sha256:7577b9572bfc27949e671599b632d98cb67104e3d2f606381b55775195134a40",
+      "blocks/kinetic-search-results/render.php": "sha256:c479f3e23167efbafcf496e24600ec6d9eea137397c8fe10a7102c54c8ff5b8d",
+      "blocks/mega-menu/block.json": "sha256:0aabc25880ffbf0d5c403ae8df043770b810dd649b5d01546e55e0aefb4963fd",
+      "blocks/mega-menu/editor.asset.php": "sha256:ced3eca10f1f42122ca774924ffa434ea3e07060e733ac7ea4989eafe8c4f143",
+      "blocks/mega-menu/editor.js": "sha256:73ee3495e46bcaa41ec09fc5c34590a450560edd3dcb6c8996af5427b6913666",
+      "blocks/mega-menu/render.php": "sha256:cccd9664036c3379ecfee2c91a82f6581df717cf4bd67e2a7e8864cdf57d46a7",
+      "blocks/popular-tags/block.json": "sha256:6d2fce079412d4c287c1fbadca699b664ed6c0940d4eea5b29aab88374f0b038",
+      "blocks/popular-tags/render.php": "sha256:9d2f0fd0582800a389f95d1e1521d71ada5c93f44912edeac0df62c4c4265427",
+      "blocks/post-readtime/block.json": "sha256:1c6509701e5455a33e0937eb323dc0ed1b3f34b5d6624caf9e55c09fd59c0f41",
+      "blocks/post-readtime/render.php": "sha256:b5c91e72a965c2bf9ff6dd680266c3b844315555bc01b6c51624f3b8e68c40a7",
+      "blocks/post-topic-eyebrow/block.json": "sha256:007ebba2e31a59a5667b308ddf2e5ec1dff8984063424ab3600ce31791d0281d",
+      "blocks/post-topic-eyebrow/render.php": "sha256:cbcfb3d116339b457fd0145b83f8ecd3d6b79358814f3a5045e72ae8c22aeae4",
+      "blocks/related-posts/block.json": "sha256:80ea772023a84c3d55099aecdde7c16e09d8bfe6bac335e58e330f0ceafb8036",
+      "blocks/related-posts/render.php": "sha256:7161c5bae000129a6292383308b0f24b6824195c7c5ce0250a83b9c9f73836f4",
+      "blocks/tags-cloud/block.json": "sha256:7035f170f4871c9ad37ddc076d8e305ae7c7e9795369889a91fd4158554e90d5",
+      "blocks/tags-cloud/render.php": "sha256:1dfef0a9402ee4a7f801bb8e9e1ed03b7bf899838e35ffaedc6f76441aca50a6",
+      "functions.php": "sha256:2e6096f01c5a17abdd3708a87d31181d53e6e0f4aeb1bfe9c68351180bc49127",
+      "inc/blog-dynamic.php": "sha256:e46c3c10b6a5db03f8887feb1f9da3a9c322b6373e87d0d2ccacdc39314ddc98",
+      "inc/extra.php": "sha256:d1b473687ee57ad6e3bc8792a3ccb53498ef52a1880c077e120cfc502f11507c",
+      "inc/item-ids.php": "sha256:0542ba4c1118942a91d71edbf7d2af2dadedc252fb9dc91e97c85f77afb2a77f",
+      "inc/list-pages.php": "sha256:fc24766b13cd2e66c0d9642970bc1852fe83813f49a4a46ae34f16a740d6943d",
+      "inc/motion-head.php": "sha256:e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+      "inc/owner-text.php": "sha256:af9d722d16a7726eff36842585f284a475800e227ac328fc80ab03a308e44b95",
+      "inc/tag-parity.php": "sha256:30e2726f3b1b81a9bcd723ced0e4963e4da8d64abb21052a2d17e2f7d93ecd88",
+      "inc/update.php": "sha256:87f91d7093a0d214a99d2ae54e5f30bbe54425ee5fd02c724f19198096e20ccf",
+      "inspirations.json": "sha256:7a0044a73ceddedb8c490a0c74995a45decec7e273c398f63292b65703b2d9be",
+      "parts/footer.html": "sha256:9670e4251dce20d4aaebf18b911c2ae2ff21dba877900774c59c5e32e8ca6be2",
+      "parts/header.html": "sha256:44c1c7667f385330f95f38605634fd4f4cd52d2815e730c4499d61abfb515985",
+      "patterns/cards.php": "sha256:b9cff6d1aebcff1665eb25508e27b38d9527e406740683b56035a715b57b3f85",
+      "patterns/landing.php": "sha256:8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+      "patterns/pricing.php": "sha256:31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+      "patterns/section-accordion.php": "sha256:814526d025f6c7973c6f552c55f1a2b12c88d7fdbb23aee80e7aef6b5ec80443",
+      "patterns/section-bento-style-2.php": "sha256:0e7dacb6ae09cda182a150b527f0e64d317d16297231aed5a44ef05f5e621bdc",
+      "patterns/section-bento.php": "sha256:2818edb54af906fefb2095ef45d6cfcc92cd048ac39de5d785ad198982105023",
+      "patterns/section-clients-style-2.php": "sha256:f3fef20cbee2a82bdb42db7d5f0ae50c6451bc3b31b43025a3ee9a8975611b91",
+      "patterns/section-clients.php": "sha256:587421e4740fc0ab13fc0c0cb498f217ebb0a8b1b1a84cc6884d3acdf7ff0e9b",
+      "patterns/section-contact.php": "sha256:60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+      "patterns/section-cta-final.php": "sha256:ecd60c0133ebf1d5a02cec4f4eca766ea449864f5c767e0c10a84745d61c547e",
+      "patterns/section-cta-inline.php": "sha256:462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+      "patterns/section-cta.php": "sha256:eb45b971d933fa1ce1f60e6f6add39738785eec6e78b70b042ba58379df8d654",
+      "patterns/section-faq-support.php": "sha256:e437951599042f08d57931bb661fd34348554d2553ea6ff8587dfe2697d8f44c",
+      "patterns/section-faq.php": "sha256:2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+      "patterns/section-features-intro.php": "sha256:1d555373fe4c11a38f63b2b21db15868b39655202168c82fc6c3154d0d61c1b9",
+      "patterns/section-features-ledger-metrics.php": "sha256:6da3f16109c3ebd9f53420d6bbf72c4d8ff84d9564739abeeb67fb7a2f479726",
+      "patterns/section-features-ledger-stats.php": "sha256:8c9d7243b5a5aeb4b5fe875555171bff128a55be4b997751917652b6fc1c5acc",
+      "patterns/section-features-ledger.php": "sha256:0dfe1774bc981a243633cbbdd5ee6bf6c4468541a0dd136b09b4c6bc93a07664",
+      "patterns/section-features.php": "sha256:abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+      "patterns/section-gallery.php": "sha256:05eca35fed040a5da189dc458a03cd86a3c3000a50bc14ccc65f98e01976a0df",
+      "patterns/section-hero.php": "sha256:c60d46f0b6ffe51d91ab78e107bc3b6e971db24198145c02d4974b061071d8b1",
+      "patterns/section-how-it-works.php": "sha256:39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+      "patterns/section-incident-timeline.php": "sha256:a2b0ca988515b2978ad56e6a24f952dbe3ebba91e43c55462702cc0c8735b5a0",
+      "patterns/section-kineticql-split.php": "sha256:47896f411d85558b12946ca20e2c4ff0933ebf931897e7180f021182b6a00240",
+      "patterns/section-listing.php": "sha256:1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+      "patterns/section-page-masthead.php": "sha256:4e0e96f4f667e878ffc088d2965b1ba5a79a135707dae2f66b96496c71819b56",
+      "patterns/section-pillars.php": "sha256:dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+      "patterns/section-pricing-matrix.php": "sha256:a0b95cb95c790dc60304b5125302bec7418c636da306649060b5d75e7177dff9",
+      "patterns/section-pricing.php": "sha256:37f8dfd8257223d1bc2661db5e917337bebebe44c3c9311c644ffcd83189d99d",
+      "patterns/section-problem.php": "sha256:c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+      "patterns/section-proof.php": "sha256:2ece2c6165809cfa08aeec8ec68620bcecd9a4762dfd7de8b1b1e1c060bcfc09",
+      "patterns/section-prose-quote.php": "sha256:bf854c1ab5772ec6630a30dfaea74fd38bf4511845c7a82a12a7bc7985b031b6",
+      "patterns/section-social-proof.php": "sha256:3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+      "patterns/section-styleguide.php": "sha256:036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+      "patterns/section-team.php": "sha256:539399cdefc0989bfdc07cc6ef300e1a632db5d1c40e067cfcae545adff68092",
+      "patterns/section-teams.php": "sha256:a2decc87a18c43861e63ec16482a779416a0c12c3888d60a9c4bdcf284947cf7",
+      "patterns/section-testimonials.php": "sha256:53246ac87d477959ff3d0045b8744573375ea7f4a1ee5c398b879be4b9440659",
+      "posts.contract.json": "sha256:c9f1d4283af9306802d4db8813efbe8f3718493263d9e23e47ebcb7dfe72b56d",
+      "readme.txt": "sha256:58dee91a34ac2fe99ff52fe38d5e99c726a948fbaf696ca349851052bdab01fb",
+      "screenshot.png": "sha256:f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+      "style.css": "sha256:ab2324a4b8d87bbe1e9806970f5cdfd2725a15ba11bee65b2fbb3a2519400257",
+      "styles/ja-kinetic.json": "sha256:c75bbfa90ae6ac0e823f1f82a2cf77115b9a0fb5f5417a811ae031c6fbe00fb8",
+      "templates/404.html": "sha256:7eed8963641425e43496e12156ed8872aea00c062dbb247f10a4387f98868d85",
+      "templates/archive.html": "sha256:507d8a89c4a2e6f54c7155328a29d9f1cd8fe7fedfec79f1f8894141e34907cc",
+      "templates/artifact.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/author.html": "sha256:0445722a9b44e71f763b4308fc8db30c999a9f11ac0c418d186b64c4f5e3ec7f",
+      "templates/category-engineering.html": "sha256:7378be3d4c60f054c8253bec0c4b7d7d07d16f812f5ad88cd3e5aca44844081f",
+      "templates/category-field-notes-from-the-on-call.html": "sha256:25a4c63c6a48aaf83bcfbcf7d18e7af73717498771ace09f061b34ad6cc4d3c4",
+      "templates/category.html": "sha256:d6b60b623d3cdce26e54d51ea3df8387f97c2241f54a17b7707a3b8b7cf12db1",
+      "templates/date.html": "sha256:79b7a9b8d79cacc8a5779b839a399bfefd7f8a1dd210c5ebbb5bc88bd5075dcf",
+      "templates/fixture.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/front-page.html": "sha256:6cb9abec049fd3b216666f113e2ace956ffb4fbf7c6912d749b92a96cff3d8b6",
+      "templates/home.html": "sha256:461fdfdeb3b1e2901d90c4a41781805d25f3bef6bc2044a30a5605c90881e3ca",
+      "templates/index.html": "sha256:16d866e356b7ea5dd6b4104fb7b5436960cb4b700b1167074d5882ca70b78a26",
+      "templates/landing.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-account.html": "sha256:2fad56dd22a5376a3b42b674915f6b1d4cec0436c488f2b6413083bd60820203",
+      "templates/page-archive.html": "sha256:43bc6495e593304a6438d1d7256d7049279608234d90f3ddf4bed17de6a14a18",
+      "templates/page-article.html": "sha256:85204a70214d85a11c7e99383c0e3014e71ffde227a43cb5bbaad4bfbf828d42",
+      "templates/page-authors.html": "sha256:713d415a1e6923df7e01100fd53c006175b9f9888964f00a605625a851ea7a36",
+      "templates/page-categories.html": "sha256:0b82ac59ae68e8c3312663f924fe4d8f53f96911580d91000824dc0ab0dba075",
+      "templates/page-contact.html": "sha256:5538ded6266d84a45f757dd95aa6d2aa74da1a9e5647621cd1480320f4d2e4f5",
+      "templates/page-landing.html": "sha256:20f8a9aa520599970a24960e6cd63ac11930ad715378ccec382177e1037369fc",
+      "templates/page-login.html": "sha256:d9ddd6187a4dce3f1b303015487012aebc2e8d6736078bbedb6968fc4b15cf56",
+      "templates/page-no-sidebar.html": "sha256:7863f4dd60b4d573658d9c481664a2feb6d60108d643fca44812f9b3893eef71",
+      "templates/page-password.html": "sha256:3420d37cc91f43d643528fd7544dd61543ec3ceb2231a1df5586beb4ab922101",
+      "templates/page-register.html": "sha256:bb75ea066d99cbb84eda1ed5801424f5096961143a81b6175cafeed366659d13",
+      "templates/page-tags.html": "sha256:699abe4507c8de1f5613c3521edb5f45b1b42308a365bf8fc4288eb25bf7e3dd",
+      "templates/page.html": "sha256:bedde30d87fb8981a2f4ebd0df4cb363412f832765c5c78cd2274ba15c625b24",
+      "templates/pricing.html": "sha256:4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+      "templates/search.html": "sha256:91e462425697bff2371d45b2213c930587ce55617eb6b9b2d67bbc9701dcff88",
+      "templates/single.html": "sha256:45b79a7deee37b4825e02c3d68fd70391e4274ce2c49b2a3323c986042cfa6db",
+      "templates/tag.html": "sha256:d82b5f7143d6ca94b95d92fcfd46151619d73a9dcd9223d99efbe2945fae945f",
+      "theme.json": "sha256:427ecdbe484872e406431df954607085a05215a72187a92a6d4421152eff8252"
+    }
+  },
+  "spec": {
+    "dir": "spec",
+    "theme": {
+      "palette": {
+        "light": {
+          "primary": "#4D7C0F",
+          "secondary": "#65A30D",
+          "body_bg": "#FBFCFA",
+          "text": "#46514B"
+        },
+        "dark": null
+      },
+      "darkDerived": true,
+      "fonts": {
+        "body": "IBM Plex Sans",
+        "heading": "Space Grotesk"
+      },
+      "hook": {
+        "selector": "html",
+        "attribute": "data-theme",
+        "lightValue": "light",
+        "darkValue": "dark"
+      }
+    },
+    "routes": [
+      {
+        "path": "/",
+        "view": "front-page",
+        "title": "Terminal"
+      },
+      {
+        "path": "/404",
+        "view": "404",
+        "title": "Not found"
+      },
+      {
+        "path": "/company/about",
+        "view": "page",
+        "title": "About Helix"
+      },
+      {
+        "path": "/company/contact",
+        "view": "page-contact",
+        "title": "Contact"
+      },
+      {
+        "path": "/company/team",
+        "view": "page",
+        "title": "Our Team"
+      },
+      {
+        "path": "/index.php/product/blog/134-continuous-profiling-intro",
+        "view": "single",
+        "title": "Why unified telemetry beats three dashboards"
+      },
+      {
+        "path": "/pages/author",
+        "view": "author",
+        "title": "Author"
+      },
+      {
+        "path": "/pages/engineering",
+        "view": "category",
+        "title": "Engineering"
+      },
+      {
+        "path": "/pages/helixql",
+        "view": "page",
+        "title": "How HelixQL plans a query across three signal types"
+      },
+      {
+        "path": "/pages/landing",
+        "view": "page-landing",
+        "title": "Landing"
+      },
+      {
+        "path": "/pages/login",
+        "view": "page-login",
+        "title": "Login"
+      },
+      {
+        "path": "/pages/profile",
+        "view": "page-account",
+        "title": "Profile"
+      },
+      {
+        "path": "/pages/register",
+        "view": "page-register",
+        "title": "Register"
+      },
+      {
+        "path": "/pages/remind",
+        "view": "page-password",
+        "title": "Username Reminder"
+      },
+      {
+        "path": "/pages/reset",
+        "view": "page-password",
+        "title": "Password Reset"
+      },
+      {
+        "path": "/pages/search",
+        "view": "search",
+        "title": "Search"
+      },
+      {
+        "path": "/pages/tags",
+        "view": "page",
+        "title": "All Tags"
+      },
+      {
+        "path": "/pricing",
+        "view": "page",
+        "title": "Pricing"
+      },
+      {
+        "path": "/privacy-policy",
+        "view": "page",
+        "title": "Privacy Policy"
+      },
+      {
+        "path": "/product/all-categories",
+        "view": "page",
+        "title": "All Categories"
+      },
+      {
+        "path": "/product/article-archive",
+        "view": "date",
+        "title": "Article Archive"
+      },
+      {
+        "path": "/product/authors",
+        "view": "author",
+        "title": "Our Writers"
+      },
+      {
+        "path": "/product/blog",
+        "view": "category",
+        "title": "Blog"
+      },
+      {
+        "path": "/product/changelog",
+        "view": "page",
+        "title": "Changelog"
+      },
+      {
+        "path": "/product/faq",
+        "view": "page",
+        "title": "FAQ"
+      },
+      {
+        "path": "/product/features",
+        "view": "page",
+        "title": "Features"
+      },
+      {
+        "path": "/product/integrations",
+        "view": "page",
+        "title": "Integrations"
+      },
+      {
+        "path": "/terms-of-service",
+        "view": "page",
+        "title": "Terms of Service"
+      }
+    ],
+    "routesByView": {
+      "404": 1,
+      "author": 2,
+      "category": 2,
+      "date": 1,
+      "front-page": 1,
+      "page": 12,
+      "page-account": 1,
+      "page-contact": 1,
+      "page-landing": 1,
+      "page-login": 1,
+      "page-password": 2,
+      "page-register": 1,
+      "search": 1,
+      "single": 1
+    },
+    "gaps": 2,
+    "menus": [
+      {
+        "slug": "mainmenu",
+        "title": "mainmenu",
+        "items": 30
+      },
+      {
+        "slug": "footer-product",
+        "title": "footer-product",
+        "items": 4
+      },
+      {
+        "slug": "footer-dev",
+        "title": "footer-dev",
+        "items": 4
+      },
+      {
+        "slug": "footer-company",
+        "title": "footer-company",
+        "items": 4
+      },
+      {
+        "slug": "legal",
+        "title": "legal",
+        "items": 2
+      }
+    ],
+    "redirects": 1,
+    "inputs": {
+      "page-map.json": "sha256:ef433a4bf625cb762406a2fa06ff04b8cfd20368f581ec6696371ba344423a00",
+      "menus.json": "sha256:730a46effd3fb2d62b3d2673829cf015b7d37219270d8ae7219e4eb987a5999d",
+      "redirects.json": "sha256:fcad41a476e5189d23dbac3b5b5b84160e1a04cd912fff7d7b19f82971e0bf3a"
+    }
+  },
+  "seed": {
+    "file": "report-s17.json",
+    "startedAt": "2026-09-25T01:39:06.150Z",
+    "label": "at seed time, not live",
+    "counts": {
+      "authors": {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 1
+      },
+      "categories": {
+        "total": 9,
+        "created": 0,
+        "updated": 0,
+        "skipped": 9
+      },
+      "navigation": {
+        "total": 5,
+        "created": 0,
+        "updated": 0,
+        "skipped": 5
+      },
+      "options": {
+        "total": 6,
+        "created": 0,
+        "updated": 0,
+        "skipped": 6
+      },
+      "pages": {
+        "total": 32,
+        "created": 0,
+        "updated": 0,
+        "skipped": 32
+      },
+      "posts": {
+        "total": 240,
+        "created": 0,
+        "updated": 0,
+        "skipped": 240
+      },
+      "templateParts": {
+        "total": 2,
+        "created": 0,
+        "updated": 0,
+        "skipped": 2
+      }
+    },
+    "navigation": [
+      "footer-company",
+      "footer-dev",
+      "footer-product",
+      "legal",
+      "mainmenu"
+    ],
+    "templateParts": [
+      "footer",
+      "header"
+    ],
+    "redirects": 2,
+    "sections": {
+      "total": 64,
+      "byKind": {
+        "acm": 64
+      },
+      "byPattern": {
+        "wp-ja-kinetic/section-accordion": 2,
+        "wp-ja-kinetic/section-bento": 1,
+        "wp-ja-kinetic/section-bento-style-2": 3,
+        "wp-ja-kinetic/section-clients": 4,
+        "wp-ja-kinetic/section-clients-style-2": 1,
+        "wp-ja-kinetic/section-cta": 13,
+        "wp-ja-kinetic/section-faq-support": 1,
+        "wp-ja-kinetic/section-features-intro": 3,
+        "wp-ja-kinetic/section-features-ledger": 1,
+        "wp-ja-kinetic/section-features-ledger-metrics": 5,
+        "wp-ja-kinetic/section-features-ledger-stats": 1,
+        "wp-ja-kinetic/section-hero": 4,
+        "wp-ja-kinetic/section-incident-timeline": 5,
+        "wp-ja-kinetic/section-kineticql-split": 3,
+        "wp-ja-kinetic/section-page-masthead": 8,
+        "wp-ja-kinetic/section-pricing": 1,
+        "wp-ja-kinetic/section-pricing-matrix": 1,
+        "wp-ja-kinetic/section-prose-quote": 1,
+        "wp-ja-kinetic/section-teams": 2,
+        "wp-ja-kinetic/section-testimonials": 4
+      },
+      "pages": 12
+    },
+    "routes": {
+      "checked": 31,
+      "ok": 31
+    },
+    "media": {
+      "files": 64,
+      "imported": 0
+    },
+    "notes": [
+      "slug the-anatomy-of-a-five-minute-mttr is shared by 2 source articles; \"The anatomy of a five-minute MTTR\" takes its own alias five-minute-mttr",
+      "slug writing-your-first-helixql-query is shared by 2 source articles; \"Writing your first HelixQL query\" takes its own alias first-helixql",
+      "slug error-budgets-without-the-politics is shared by 2 source articles; \"Error Budgets Without the Politics\" takes its own alias error-budgets-without-the-politics-2026",
+      "slug on-call-rotations-that-do-not-burn-people-out is shared by 2 source articles; \"On-Call Rotations That Do Not Burn People Out\" takes its own alias on-call-rotations-that-do-not-burn-people-out-2026",
+      "the theme draws the contact form (wp-ja-kinetic/kinetic-contact-form); Contact Form 7 not installed, no form created",
+      "post authors from the bylines: editorial \"Kinetic Editorial\"",
+      "177 hero.image_terminal: attr src+alt not handled",
+      "177 hero.image_blueprint: attr src+alt not handled",
+      "177 hero.image_signal: attr src+alt not handled",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "179 bento.tile-title: block bento.tile-title.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-icon: block bento.tile-icon.<n> not in pattern",
+      "181 kineticql-split.image_terminal: attr src+alt not handled",
+      "181 kineticql-split.image_blueprint: attr src+alt not handled",
+      "181 kineticql-split.image_signal: attr src+alt not handled",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "184 cta.btn2-link: block cta.btn2 not in pattern",
+      "190 cta.chip-link: block cta.chip not in pattern",
+      "177 hero.image_terminal: attr src+alt not handled",
+      "177 hero.image_blueprint: attr src+alt not handled",
+      "177 hero.image_signal: attr src+alt not handled",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "179 bento.tile-title: block bento.tile-title.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-icon: block bento.tile-icon.<n> not in pattern",
+      "181 kineticql-split.image_terminal: attr src+alt not handled",
+      "181 kineticql-split.image_blueprint: attr src+alt not handled",
+      "181 kineticql-split.image_signal: attr src+alt not handled",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "184 cta.btn2-link: block cta.btn2 not in pattern",
+      "177 hero.image_terminal: attr src+alt not handled",
+      "177 hero.image_blueprint: attr src+alt not handled",
+      "177 hero.image_signal: attr src+alt not handled",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.group-title: block clients.group-title.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-image: block clients.item-image.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-name: block clients.item-name.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "178 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "179 bento.tile-title: block bento.tile-title.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-stat: block bento.tile-stat.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-span: block bento.item.<n> not in pattern",
+      "179 bento.tile-icon: block bento.tile-icon.<n> not in pattern",
+      "181 kineticql-split.image_terminal: attr src+alt not handled",
+      "181 kineticql-split.image_blueprint: attr src+alt not handled",
+      "181 kineticql-split.image_signal: attr src+alt not handled",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "182 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "184 cta.btn2-link: block cta.btn2 not in pattern",
+      "194 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "194 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "194 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "194 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "194 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "194 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "194 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "194 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "194 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "194 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "194 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "194 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "195 cta.chip-link: block cta.chip not in pattern",
+      "209 clients.caption: block clients.caption not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.logo-name: block clients.logo-name.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "209 clients.group-title: block clients.group-title.<n> not in pattern",
+      "211 cta.chip-link: block cta.chip not in pattern",
+      "211 cta.btn2-link: block cta.btn2 not in pattern",
+      "214 cta.chip-link: block cta.chip not in pattern",
+      "207 cta.chip-link: block cta.chip not in pattern",
+      "197 prose-quote.body: block prose-quote.body.<n> not in pattern",
+      "233 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "233 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "233 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "233 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "233 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "233 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "233 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "233 features-ledger.item-title: block features-ledger.item-title.<n> not in pattern",
+      "233 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "233 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "233 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "233 features-ledger.icon: block features-ledger.icon.<n> not in pattern",
+      "199 teams.initials: block teams.initials.<n> not in pattern",
+      "199 teams.initials: block teams.initials.<n> not in pattern",
+      "199 teams.initials: block teams.initials.<n> not in pattern",
+      "199 teams.initials: block teams.initials.<n> not in pattern",
+      "201 cta.chip-link: block cta.chip not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "203 teams.initials: block teams.initials.<n> not in pattern",
+      "204 cta.chip-link: block cta.chip not in pattern",
+      "204 cta.btn2-link: block cta.btn2 not in pattern",
+      "230 cta.chip-link: block cta.chip not in pattern",
+      "232 cta.chip-link: block cta.chip not in pattern",
+      "215 hero.image_terminal: attr src+alt not handled",
+      "215 hero.image_blueprint: attr src+alt not handled",
+      "215 hero.image_signal: attr src+alt not handled",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.group-title: block clients.group-title.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-image: block clients.item-image.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-name: block clients.item-name.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "216 clients.item-desc: block clients.item-desc.<n> not in pattern",
+      "217 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "217 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "217 bento.tile-eyebrow: block bento.tile-eyebrow.<n> not in pattern",
+      "217 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "217 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "217 bento.tile-unit: block bento.tile-unit.<n> not in pattern",
+      "217 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "217 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "217 bento.tile-image: block bento.tile-image.<n> not in pattern",
+      "217 bento.tile-span: block bento.item.<n> not in pattern",
+      "217 bento.tile-span: block bento.item.<n> not in pattern",
+      "217 bento.tile-span: block bento.item.<n> not in pattern",
+      "218 features-ledger.card_label: block features-ledger.card_label not in pattern",
+      "218 features-ledger.card_badge: block features-ledger.card_badge not in pattern",
+      "218 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "218 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "218 features-ledger.number: block features-ledger.number.<n> not in pattern",
+      "220 cta.chip-link: block cta.chip not in pattern",
+      "4 top-level item(s) dropped: the header part draws them as a mega-menu block (Home, Product, Company, Pages)",
+      "no page with view home in the page-map; page_for_posts left unset",
+      "single view: redirected to article 134 (metrics-logs-traces-and-now-continuous-profiling)"
+    ],
+    "hash": "sha256:def5d908dc42d190a6528fac21b6179ad5f28adedb85f80710564a8a1cfa54bf"
+  }
+}

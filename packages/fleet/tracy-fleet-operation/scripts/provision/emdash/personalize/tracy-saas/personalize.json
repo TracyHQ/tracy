@@ -1,0 +1,530 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of the Tracy SaaS template (Kinetic) from their questionnaire answers (seed/questions.json: name / sector / contact). The demo business is Helix Labs, an observability product, and almost everything it says about itself is a CLAIM: named customer logos, 99.99% uptime, 1.2M events/min, three priced tiers, four named founders, quotes from named engineers. None of that is rewritten for the customer - it is REMOVED, because a made-up '99.99% uptime' is a lie in their name. `identity` writes their own words exactly; `replace` swaps the demo brand everywhere; `copy` is prose a model writes for their sector with the demo text as the length reference; `facts` are removed; `hide` unpublishes pages that are nothing but claims. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "social",
+      "slug": "footer-brand",
+      "field": "brand",
+      "value": "{name}"
+    },
+    {
+      "collection": "footerlegal",
+      "slug": "footer-copyright",
+      "field": "copyright",
+      "value": "(c) {year} {name}."
+    }
+  ],
+  "replace": [
+    {
+      "find": "Helix Labs, Inc.",
+      "with": "{name}"
+    },
+    {
+      "find": "Helix Labs",
+      "with": "{name}"
+    },
+    {
+      "find": "HELIX",
+      "with": "{NAME}"
+    },
+    {
+      "find": "Helix",
+      "with": "{name}"
+    }
+  ],
+  "copy": [
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "eyebrow",
+      "brief": "the line above the headline, what this business is about",
+      "maxWords": 5
+    },
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "title",
+      "brief": "the home page headline: what this business does for the visitor",
+      "maxWords": 9
+    },
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "sub",
+      "brief": "one sentence under the headline saying what the visitor gets",
+      "maxWords": 30
+    },
+    {
+      "collection": "hero",
+      "slug": "landing-hero",
+      "field": "title",
+      "brief": "a landing page headline for this business",
+      "maxWords": 9
+    },
+    {
+      "collection": "hero",
+      "slug": "landing-hero",
+      "field": "sub",
+      "brief": "one sentence under that headline",
+      "maxWords": 30
+    },
+    {
+      "collection": "bento",
+      "slug": "home-bento",
+      "field": "eyebrow",
+      "brief": "the label above the what-you-get grid",
+      "maxWords": 5
+    },
+    {
+      "collection": "bento",
+      "slug": "home-bento",
+      "field": "title",
+      "brief": "what this business offers, as one heading",
+      "maxWords": 8
+    },
+    {
+      "collection": "bento",
+      "slug": "home-bento",
+      "field": "sub",
+      "brief": "two lines on what this business brings the customer",
+      "maxWords": 28
+    },
+    {
+      "collection": "incident_timeline",
+      "slug": "home-incident-timeline",
+      "field": "eyebrow",
+      "brief": "the label above the how-it-works steps",
+      "maxWords": 5
+    },
+    {
+      "collection": "incident_timeline",
+      "slug": "home-incident-timeline",
+      "field": "title",
+      "brief": "how working with this business goes, as one heading",
+      "maxWords": 9
+    },
+    {
+      "collection": "social",
+      "slug": "footer-brand",
+      "field": "heading",
+      "brief": "one line in the footer saying what this business does",
+      "maxWords": 20
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "pricing-masthead",
+      "field": "title",
+      "brief": "what this business charges for, in its own terms",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "features-masthead",
+      "field": "title",
+      "brief": "what this business offers",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "about-masthead",
+      "field": "title",
+      "brief": "who this business is",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "team-masthead",
+      "field": "title",
+      "brief": "the people of this business",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "faq-masthead",
+      "field": "title",
+      "brief": "questions this business is asked",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "integrations-masthead",
+      "field": "title",
+      "brief": "what this business works with",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "changelog-masthead",
+      "field": "title",
+      "brief": "what is new at this business",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "contact-masthead",
+      "field": "title",
+      "brief": "how to reach this business",
+      "maxWords": 8
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "pricing-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: what this business charges for, in its own terms",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "features-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: what this business offers",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "about-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: who this business is",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "team-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: the people of this business",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "faq-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: questions this business is asked",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "integrations-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: what this business works with",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "changelog-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: what is new at this business",
+      "maxWords": 26
+    },
+    {
+      "collection": "page_masthead",
+      "slug": "contact-masthead",
+      "field": "sub",
+      "brief": "one sentence under that heading: how to reach this business",
+      "maxWords": 26
+    },
+    {
+      "collection": "cta",
+      "slug": "home-cta",
+      "field": "title",
+      "brief": "the invitation to get in touch with this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "cta",
+      "slug": "features-cta",
+      "field": "title",
+      "brief": "the invitation to get in touch with this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "cta",
+      "slug": "about-cta",
+      "field": "title",
+      "brief": "the invitation to get in touch with this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "cta",
+      "slug": "contact-cta",
+      "field": "title",
+      "brief": "the invitation to get in touch with this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "cta",
+      "slug": "blog-cta",
+      "field": "title",
+      "brief": "the invitation to get in touch with this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "cta",
+      "slug": "landing-cta",
+      "field": "title",
+      "brief": "the invitation to get in touch with this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "cta",
+      "slug": "home-cta",
+      "field": "sub",
+      "brief": "one sentence under that invitation",
+      "maxWords": 24
+    },
+    {
+      "collection": "cta",
+      "slug": "features-cta",
+      "field": "sub",
+      "brief": "one sentence under that invitation",
+      "maxWords": 24
+    },
+    {
+      "collection": "cta",
+      "slug": "about-cta",
+      "field": "sub",
+      "brief": "one sentence under that invitation",
+      "maxWords": 24
+    },
+    {
+      "collection": "cta",
+      "slug": "contact-cta",
+      "field": "sub",
+      "brief": "one sentence under that invitation",
+      "maxWords": 24
+    },
+    {
+      "collection": "cta",
+      "slug": "blog-cta",
+      "field": "sub",
+      "brief": "one sentence under that invitation",
+      "maxWords": 24
+    },
+    {
+      "collection": "cta",
+      "slug": "landing-cta",
+      "field": "sub",
+      "brief": "one sentence under that invitation",
+      "maxWords": 24
+    }
+  ],
+  "blocks": [
+    {
+      "collection": "bento",
+      "slug": "home-bento",
+      "field": "items",
+      "itemFields": ["tile_title", "tile_text"],
+      "brief": "one thing this business offers, as a tile on the home page — no counts, no numbers"
+    },
+    {
+      "collection": "bento",
+      "slug": "landing-bento",
+      "field": "items",
+      "itemFields": ["tile_title", "tile_text"],
+      "brief": "one thing this business offers, as a tile on the landing page — no counts, no numbers"
+    },
+    {
+      "collection": "incident_timeline",
+      "slug": "home-incident-timeline",
+      "field": "items",
+      "itemFields": ["step_title", "step_text"],
+      "brief": "one step of how a visit to this business goes, in order"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "integrations-how-it-connects",
+      "field": "items",
+      "itemFields": ["item_title", "item_text"],
+      "brief": "one thing this business works with or offers"
+    },
+    {
+      "collection": "accordion",
+      "slug": "faq-accordion",
+      "field": "items",
+      "itemFields": ["q", "a"],
+      "brief": "one question a visitor asks this business, with its answer — no prices, no counts"
+    }
+  ],
+  "rewrite": [],
+  "facts": [
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "trust",
+      "why": "'Trusted by 2,000+ on-call teams' - a count of customers"
+    },
+    {
+      "collection": "hero",
+      "slug": "landing-hero",
+      "field": "trust",
+      "why": "the same count on the landing page"
+    },
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "cta2_label",
+      "why": "'helix init' - a command of the demo product, not of this business"
+    },
+    {
+      "collection": "clients",
+      "slug": "home-trust-logos",
+      "field": "items",
+      "why": "named companies presented as this business's customers"
+    },
+    {
+      "collection": "clients",
+      "slug": "home-trust-logos",
+      "field": "caption",
+      "why": "'Trusted by engineering teams shipping at scale'"
+    },
+    {
+      "collection": "clients",
+      "slug": "home-trust-logos",
+      "field": "ticker",
+      "why": "live numbers: events per minute, p95 latency, uptime"
+    },
+    {
+      "collection": "clients",
+      "slug": "integrations-logos",
+      "field": "items",
+      "why": "named companies presented as integrations"
+    },
+    {
+      "collection": "clients",
+      "slug": "landing-clients",
+      "field": "items",
+      "why": "the same named companies on the landing page"
+    },
+    {
+      "collection": "features_ledger",
+      "slug": "home-three-signals",
+      "field": "items",
+      "why": "product metrics presented as measured"
+    },
+    {
+      "collection": "features_ledger",
+      "slug": "features-ledger",
+      "field": "items",
+      "why": "the same, on the features page"
+    },
+    {
+      "collection": "features_ledger",
+      "slug": "features-in-production",
+      "field": "items",
+      "why": "'in production' numbers"
+    },
+    {
+      "collection": "features_ledger",
+      "slug": "landing-ledger",
+      "field": "items",
+      "why": "the same on the landing page"
+    },
+    {
+      "collection": "features_ledger",
+      "slug": "about-stats",
+      "field": "items",
+      "why": "company statistics: size, years, scale"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "home-testimonials",
+      "field": "items",
+      "why": "quotes attributed to named people at named companies"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "landing-testimonials",
+      "field": "items",
+      "why": "the same quotes on the landing page"
+    },
+    {
+      "collection": "teams",
+      "slug": "about-team",
+      "field": "items",
+      "why": "named founders and staff with roles"
+    },
+    {
+      "collection": "teams",
+      "slug": "team-members",
+      "field": "items",
+      "why": "the full named staff list"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing-plans",
+      "field": "items",
+      "why": "three priced tiers of the demo product"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing-plans",
+      "field": "meta",
+      "why": "'3 TIERS - NO SEAT FEES'"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing-plans",
+      "field": "inc_desc",
+      "why": "what every plan includes, including a 99.99% uptime SLA"
+    },
+    {
+      "collection": "pricing_matrix",
+      "slug": "pricing-comparison-matrix",
+      "field": "items",
+      "why": "the feature-by-tier comparison of the demo product"
+    },
+    {
+      "collection": "hero",
+      "slug": "landing-hero",
+      "field": "cta2_label",
+      "why": "'helix init' on the landing page — a command of the demo product"
+    },
+    {
+      "collection": "cta",
+      "slug": "home-cta",
+      "field": "chip",
+      "why": "'helix init' — the demo product's CLI, shown as a button"
+    },
+    {
+      "collection": "cta",
+      "slug": "blog-cta",
+      "field": "chip",
+      "why": "the same CLI chip on the blog"
+    },
+    {
+      "collection": "cta",
+      "slug": "article-cta",
+      "field": "chip",
+      "why": "the same CLI chip on an article"
+    }
+  ],
+  "hide": [
+    {
+      "collection": "pages",
+      "slug": "pricing",
+      "menu": "mainmenu",
+      "why": "a price list for a product this business does not sell; every line is a claim"
+    },
+    {
+      "collection": "pages",
+      "slug": "team",
+      "menu": "mainmenu",
+      "why": "four named founders of the demo company; a customer writes their own people or has none"
+    },
+    {
+      "collection": "pages",
+      "slug": "changelog",
+      "menu": "mainmenu",
+      "why": "release notes of the demo product"
+    },
+    {
+      "collection": "pages",
+      "slug": "helixql",
+      "menu": "mainmenu",
+      "why": "a page about the demo product's query language"
+    }
+  ]
+}

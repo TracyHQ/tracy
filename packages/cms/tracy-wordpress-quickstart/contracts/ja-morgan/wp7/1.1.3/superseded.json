@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "tracy-quickstart-superseded/wordpress/v1",
+  "$comment": "Earlier bytes of this released profile a sealed site may still be bound to. The receiver accepts a binding to one of these base hashes only while presentation-lock.json is the same bytes, and moves the binding to this profile on its next validated write. Regenerate with scripts/build-wordpress-superseded.mjs after the profile; never list a base whose presentation lock differs.",
+  "contract": "ja-morgan/wp7/1.1.3",
+  "baseHash": "7a4e187ebfc4ea637518ed5e4d546fd65a2df1a534651534abb180fc38615ebe",
+  "presentationLock": "f6c53dff4817901165a846ccb3ef55f21fb89d3301ba805d0b7cc2ea33f60935",
+  "demoTrimHash": null,
+  "accepts": []
+}

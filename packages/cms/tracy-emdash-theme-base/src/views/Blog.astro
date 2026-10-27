@@ -1,0 +1,156 @@
+---
+/**
+ * Blog lists: every published post newest first (`/blog`), one category
+ * (`/blog/category/<slug>`) or one tag (`/blog/tag/<slug>`), paged by `?page=` in steps of
+ * `settings.postsPerPage`. A page past the end and an unknown term answer 404.
+ *
+ * Shape follows the source's blog category view (`resources/blog.html`): page title, then the
+ * three-column card grid. Category pages add the magazine layout's left column (sections +
+ * latest, `resources-mag-procurement`), which the source only gives its three magazine
+ * categories; here EVERY category page gets it, because the CMS has no "magazine" flag and the
+ * column lists every category anyway. With the column present the grid drops to two columns.
+ */
+import { getEmDashEntry, getSiteSettings, getTaxonomyTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import BlogSidebar from '@/components/site/BlogSidebar.astro'
+import Pagination from '@/components/site/Pagination.astro'
+import PostCard from '@/components/site/PostCard.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { loadPosts, paginate } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  category?: string
+  tag?: string
+}
+const { chrome, locale, category, tag } = Astro.props
+const { site } = chrome
+const [{ entry }, settings, categories] = await Promise.all([
+  getEmDashEntry('blog', 'blog', { locale }),
+  getSiteSettings(),
+  getTaxonomyTerms('category', { locale, includeCounts: false })
+])
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const b = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'blog', entry)
+const $site = stampFor(Astro.request, 'site', site)
+
+// The term this list is scoped to, if any. An unknown slug is a 404, not an empty list.
+const term = category
+  ? categories.find((t) => t.slug === category)
+  : tag
+    ? (await getTaxonomyTerms('tag', { locale, includeCounts: false })).find((t) => t.slug === tag)
+    : undefined
+if ((category || tag) && !term) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+// `where` filters by taxonomy term through a JOIN (emdash 0.37 CollectionFilter docs; measured on
+// this site: website-planning → 5, t4-framework → 1).
+const where: Record<string, string> | undefined = category ? { category } : tag ? { tag } : undefined
+const posts = await loadPosts(locale, where)
+
+const perPage = Number(settings.postsPerPage) > 0 ? Number(settings.postsPerPage) : 9
+// `?page=` must be a positive integer; anything else (`0`, `abc`) is a 404, not a silent page 1,
+// so the canonical URL never carries junk.
+const askedRaw = Astro.url.searchParams.get('page')
+const asked = askedRaw === null ? 1 : /^\d+$/.test(askedRaw) ? Number(askedRaw) : 0
+const { pages, page, slice, outOfRange } = paginate(posts, asked, perPage)
+if (outOfRange || asked < 1) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+
+const basePath = category ? `/blog/category/${category}` : tag ? `/blog/tag/${tag}` : '/blog'
+const pageUrl = (n: number) => `${href(locale, basePath)}${n > 1 ? `?page=${n}` : ''}`
+const title = term?.label ?? b.title
+const intro = term ? term.description : b.intro
+const withSidebar = Boolean(category)
+// The left column: "All articles" then every category, and the six newest posts site-wide.
+const sections = withSidebar
+  ? [
+      { label: b.all_label, url: href(locale, '/blog'), active: false, stamp: $page('all_label') },
+      ...categories.map((t) => ({
+        label: t.label,
+        url: href(locale, `/blog/category/${t.slug}`),
+        active: t.slug === category
+      }))
+    ].filter((s) => s.label)
+  : []
+const latest = withSidebar ? (await loadPosts(locale)).slice(0, 6) : []
+// The crumb for the blog is the menu's label ("Blog"), not the page's h1 ("Content guides").
+const blogMenuLabel = chrome.resourcesRead.find((i) => i.url === href(locale, '/blog'))?.label
+const blogLabel = blogMenuLabel ?? b.title
+// A menu label is not a Content API record: the crumb is stamped only when it fell back to the blog title.
+const blogCrumbStamp = blogMenuLabel == null ? $page('title') : {}
+const crumbs = [
+  { label: site.breadcrumb_home, url: href(locale, '/'), stamp: $site('breadcrumb_home') },
+  term
+    ? { label: blogLabel, url: href(locale, '/blog'), stamp: blogCrumbStamp }
+    : { label: blogLabel, stamp: blogCrumbStamp },
+  ...(term ? [{ label: term.label }] : [])
+]
+// Only the unscoped list is the `blog` entry itself; term lists have no entry to translate from.
+// A term list prints the term's label and description (taxonomy, not an entry): only the unscoped
+// list's title and intro are the blog entry's fields.
+const titleStamp = term ? {} : $page('title')
+const introStamp = term ? {} : $page('intro')
+const content = term ? null : { collection: 'blog', id: entry.data.id, slug: 'blog', toPath: () => '/blog' }
+---
+
+<Base chrome={chrome} title={title} description={intro} currentPath="/blog" content={content}>
+	<Breadcrumb items={crumbs} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-6">
+		<PageOwner stamp={$page} />
+		<header class="mb-8">
+			<h1 class="h-page" {...titleStamp}>{title}</h1>
+			{intro && <p class="lead mt-3 max-w-[720px]" {...introStamp}>{intro}</p>}
+		</header>
+		{withSidebar ? (
+			<div class="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)]">
+				<BlogSidebar sections={sections} latest={latest} locale={locale} site={site} class="order-2 lg:order-1" />
+				<div class="order-1 lg:order-2">
+					{slice.length > 0 && <div class="grid gap-8 md:grid-cols-2">{slice.map((p) => <PostCard post={p} locale={locale} site={site} />)}</div>}
+					<Pagination page={page} pages={pages} url={pageUrl} meta={fill(site.page_meta, { page, pages })} prevLabel={site.prev_label} nextLabel={site.next_label} />
+				</div>
+			</div>
+		) : (
+			<>
+				{slice.length > 0 && <div class="card-grid blog-card-grid">{slice.map((p) => <PostCard post={p} locale={locale} site={site} />)}</div>}
+				<Pagination page={page} pages={pages} url={pageUrl} meta={fill(site.page_meta, { page, pages })} prevLabel={site.prev_label} nextLabel={site.next_label} />
+			</>
+		)}
+	</main>
+</Base>
+
+<style>
+	/* Source card wrappers add 17px above and 34px below the 32px grid gutter. */
+	.blog-card-grid {
+		row-gap: 83px;
+	}
+	@media (max-width: 1023px) {
+		.blog-card-grid {
+			column-gap: 24px;
+			row-gap: 75px;
+		}
+	}
+	@media (max-width: 767px) {
+		.blog-card-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	@media (max-width: 575.98px) {
+		.blog-card-grid {
+			row-gap: 58px;
+		}
+	}
+</style>

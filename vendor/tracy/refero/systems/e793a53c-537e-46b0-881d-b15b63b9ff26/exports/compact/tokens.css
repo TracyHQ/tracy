@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-white: #ffffff;
+  --color-bright-gray: #eeeeee;
+  --color-medium-gray: #bcbcbc;
+  --color-muted-gray: #a3a3a3;
+  --color-graphite: #3f3f3f;
+  --color-surface: #1e1e1;
+  --color-abyss: #171717;
+  --color-amethyst: #7c3aed;
+  --color-lavender: #a78bfa;
+  --color-tag-background: #8a5cf5;
+  --color-success-green: #4ade80;
+  --color-warning-yellow: #facc15;
+  --color-error-red: #f87171;
+
+  /* Typography — Font Families */
+  --font-ui-sans-serif-system-ui: 'ui-sans-serif, system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

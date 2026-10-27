@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1216-getting-started-menu-show",
+  "kind": "feat",
+  "title": "Getting started's header button is a two-way switch: Hide from account menu / Show in account menu, the screen stays open, and the account menu row comes back at once",
+  "pr": 1216,
+  "area": "onboard/header",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-onboard mount, menu-row and surface tests (node:test, jsdom page, fake /api/onboarding doors) and the tracy-web onboarding door test (Postgres).",
+    "S2: the end-to-end form: open Getting started, press Hide from account menu (the screen stays, the button reads Show in account menu), press it again, open the account menu: the Getting started row is there without a reload."
+  ],
+  "expect": [
+    "Not hidden: [data-action='hide-menu'] reads 'Hide from account menu' (aria-label the same, data-state='shown', title mentions Settings › Help & about). Pressing it posts /api/onboarding/menu-hide only, never POST /api/onboarding; the screen stays open.",
+    "Hidden: the same button reads 'Show in account menu' (data-state='hidden', title 'Puts the Getting started row back in the account menu.'); pressing it posts /api/onboarding/menu-show and the account flag is cleared; the screen stays open.",
+    "An account that hid the row opens the screen on 'Show in account menu'. A refused door (403) keeps the screen and the button says what the account says.",
+    "The account menu row goes on Hide and comes back with its count on Show, without a reload.",
+    "accountStore.showMenu posts /api/onboarding/menu-show with the session cookie, never rejects, warns once; the desktop surface sends both to the account door.",
+    "POST /api/onboarding/menu-show answers {menuHiddenAt: null} and clears the flag (GET reads null; a later hide records a new time); 401 NOT_SIGNED_IN without a session, 403 CSRF_ORIGIN from a sibling host; one account never shows another's row."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/menu-row.test.mjs",
+      "packages/ui/tracy-onboard/test/surface.test.mjs",
+      "apps/tracy-web/test/onboarding-door.test.mjs"
+    ],
+    "tests": [
+      "the header: \"Hide from account menu\" records the flag and keeps the screen; the button becomes \"Show in account menu\", which clears it",
+      "the header: an account that hid the row opens the screen on \"Show in account menu\"",
+      "the header: on a desktop app the toggle goes to the account door; a refused door (403) keeps the screen and says the flag did not change",
+      "the row opens the screen; \"Hide from account menu\" there takes the row away and \"Show in account menu\" brings it back, without a reload",
+      "showMenu posts to /api/onboarding/menu-show with the session cookie",
+      "showMenu never fails the caller: a refused door and no network both resolve, warned once",
+      "the desktop surface: hideMenu and showMenu go to the account door",
+      "menu-show: clears a hide so the row comes back; a later hide records a new time; showing twice is harmless",
+      "menu-show: 401 without a session, 403 from a sibling host, and one account never shows another",
+      "menu-show: a session whose account has no row yet answers null"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 240
+  },
+  "fence": "the menu flag lives on the account behind two doors (hide, show); the button never closes the screen and draws what the account answers after the press",
+  "selectors": {
+    "toggle": "[data-action='hide-menu'][data-state]",
+    "menuRow": "[data-menu-item='getting-started']",
+    "door": "POST /api/onboarding/menu-show"
+  }
+}

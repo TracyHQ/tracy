@@ -1,0 +1,17 @@
+{
+  "failed": "Kan pdf niet weergeven: {message}",
+  "loading": "Document renderen...",
+  "pageImage": "PDF-pagina {page}",
+  "password": "Deze pdf vereist een wachtwoord. Voorbeelden van met een wachtwoord beveiligde bestanden worden niet ondersteund.",
+  "rendering": "Pagina renderen…",
+  "retry": "Opnieuw proberen",
+  "title": "PDF",
+  "unsupported": "Voor een pdf-voorbeeld is de volledige bestandsinhoud nodig.",
+  "workerFailed": "Het renderproces van de pdf kon niet doorgaan. Probeer het opnieuw.",
+  "zoomControls": "Zoomknoppen",
+  "zoomFitWidth": "Aanpassen aan breedte",
+  "zoomIn": "Inzoomen",
+  "zoomMenu": "Zoomniveau kiezen",
+  "zoomOut": "Uitzoomen",
+  "zoomValue": "{percent}%"
+}

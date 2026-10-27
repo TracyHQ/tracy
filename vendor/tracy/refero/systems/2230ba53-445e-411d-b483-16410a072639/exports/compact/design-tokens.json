@@ -1,0 +1,74 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#e4dfd9",
+      "$type": "color",
+      "$description": "Cream Paper — Page background canvas, hero overlays, editorial section backdrops — the warm off-white that sets the entire system apart from generic SaaS grays"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, product UI mockups, input fields, text on dark photography"
+    },
+    "charcoal-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, strong borders, icon strokes, logo wordmark — the maximum-contrast voice"
+    },
+    "near-black": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Near Black — Body text and heading color for subtle warmth below pure black"
+    },
+    "pressed-graphite": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Pressed Graphite — Filled button backgrounds, dark UI surfaces, photo overlay scrims"
+    },
+    "slate": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Slate — Secondary text, subtle heading borders, metadata — the 60% voice"
+    },
+    "iron": {
+      "$value": "#4b4b4b",
+      "$type": "color",
+      "$description": "Iron — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "stone": {
+      "$value": "#999694",
+      "$type": "color",
+      "$description": "Stone — Muted body text, caption-level copy, placeholder text"
+    },
+    "pewter": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Pewter — Hairline borders on low-emphasis elements, dividers"
+    },
+    "fog": {
+      "$value": "#c7c7c7",
+      "$type": "color",
+      "$description": "Fog — Hairline borders, subtle dividers, ghost outlines — the most frequent border color in the system"
+    }
+  },
+  "font": {
+    "rules-font": {
+      "$value": "Rules Font",
+      "$type": "fontFamily",
+      "$description": "Editorial display face for all headings — the weight-500 medium is deliberately non-bold, creating a literary, hand-set quality rather than a SaaS marketing shout. Tight -0.02em letter-spacing at 69px tightens the large headline to a single confident line. Substitute: 'Söhne Breit', 'GT America', or 'Inter' at weight 500"
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "System sans-serif for all functional text — body copy at 400/16px, UI labels and button text at 500, emphasized sub-labels at 600. The neutral system face keeps the interface quiet so the Rules Font headlines carry all the personality. Substitute: 'Inter', 'Söhne', or 'Geist'"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.useparallel.com",
+      "siteName": "Home",
+      "extractedAt": "2026-06-03T15:53:28.456Z",
+      "variant": "compact"
+    }
+  }
+}

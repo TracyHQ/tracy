@@ -1,0 +1,29 @@
+---
+/**
+ * The brand in a header. The customer's logo when they gave one (core `settings.logo` for the light theme, the site
+ * entry's `logo_dark` for the dark one, `src/lib/brand.ts`); in a theme without a picture, the source's SVG wordmark:
+ * rounded outline square, accent dot, the name in the system face.
+ */
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import type { Attrs } from '@/lib/stamps'
+
+interface Props {
+  name: string
+  class?: string
+  /** Provenance stamp of the field `name` is read from (`src/lib/stamps.ts`). */
+  stamp?: Attrs
+  /** The site entry's `logo_dark` image value; absent on a release whose schema has no such field. */
+  logoDark?: unknown
+}
+const { name, class: className = '', stamp = {}, logoDark } = Astro.props
+const logos = brandLogos(await getSiteSettings(), logoDark, name)
+---
+
+<BrandLogo spots={logoSpots(logos, "themed")} alt={logos.alt} imgClass="h-8 w-auto max-w-[min(200px,100%)] object-contain">
+	<span class:list={["inline-flex min-w-0 max-w-full items-center gap-[10px] text-fg", className]}>
+		<svg class="shrink-0" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="0.75" y="0.75" width="30.5" height="30.5" rx="9" fill="none" stroke="currentColor" stroke-opacity="0.22" /><circle cx="16" cy="16" r="6" fill="var(--color-accent)" /></svg>
+		<span class="min-w-0 [overflow-wrap:anywhere] text-[17px] font-semibold tracking-[-0.4px]" {...stamp}>{name}</span>
+	</span>
+</BrandLogo>

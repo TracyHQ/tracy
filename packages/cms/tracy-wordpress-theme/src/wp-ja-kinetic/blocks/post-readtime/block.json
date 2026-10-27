@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/post-readtime",
+  "version": "0.1.0",
+  "title": "Post read time",
+  "category": "design",
+  "icon": "clock",
+  "description": "The source's per-row \"N min\" reading estimate (`kinetic_blog_readtime()`/`kinetic_au_readtime()`, ~200 wpm): no core block computes one, so this reads the current loop post's content directly. Attributes select the source's own output shapes: plain \"N min\" (blog rows, template.css `.hx-blogread`), \"N min read\" (article meta line), or with `dateFormat` the author row's whole \"Jul 8 · 2 min\" meta line (`author_posts.php:44`).",
+  "textdomain": "wp-ja-kinetic",
+  "attributes": {
+    "suffix": {
+      "type": "string",
+      "default": "min"
+    },
+    "wrapperClassName": {
+      "type": "string",
+      "default": "hx-blogread"
+    },
+    "dateFormat": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

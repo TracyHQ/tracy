@@ -1,0 +1,79 @@
+{
+  "vi": {
+    "greeting": "Chào đội ngũ {place},",
+    "body": "Tôi đã làm một website demo miễn phí cho {place}: {url}",
+    "expiry": "Mời bạn xem thử. Bản demo được giữ đến {expires}.",
+    "kept": "Mời bạn xem thử bản demo.",
+    "subject": "Website demo cho {place}"
+  },
+  "de": {
+    "greeting": "Hallo liebes Team von {place},",
+    "body": "Ich habe eine kostenlose Demo-Website für {place} erstellt: {url}",
+    "expiry": "Schauen Sie gern vorbei. Die Demo ist bis zum {expires} verfügbar.",
+    "kept": "Schauen Sie sich die Demo gern an.",
+    "subject": "Eine Demo-Website für {place}"
+  },
+  "it": {
+    "greeting": "Buongiorno al team di {place},",
+    "body": "Ho creato un sito web demo gratuito per {place}: {url}",
+    "expiry": "Date un’occhiata. La demo è disponibile fino al {expires}.",
+    "kept": "Date un’occhiata alla demo.",
+    "subject": "Un sito web demo per {place}"
+  },
+  "fr": {
+    "greeting": "Bonjour à l’équipe de {place},",
+    "body": "J’ai créé un site web de démonstration gratuit pour {place} : {url}",
+    "expiry": "Venez le découvrir. La démonstration est disponible jusqu’au {expires}.",
+    "kept": "Venez découvrir la démonstration.",
+    "subject": "Un site web de démonstration pour {place}"
+  },
+  "nl": {
+    "greeting": "Hallo team van {place},",
+    "body": "Ik heb een gratis demo-website voor {place} gemaakt: {url}",
+    "expiry": "Neem gerust een kijkje. De demo is beschikbaar tot {expires}.",
+    "kept": "Neem gerust een kijkje bij de demo.",
+    "subject": "Een demo-website voor {place}"
+  },
+  "zh": {
+    "greeting": "{place} 团队您好：",
+    "body": "我为 {place} 制作了一个免费的网站演示：{url}",
+    "expiry": "欢迎看看。演示网站保留至 {expires}。",
+    "kept": "欢迎查看演示网站。",
+    "subject": "为 {place} 制作的网站演示"
+  },
+  "es": {
+    "greeting": "Hola, equipo de {place}:",
+    "body": "He creado un sitio web de demostración gratuito para {place}: {url}",
+    "expiry": "Echen un vistazo. La demostración estará disponible hasta el {expires}.",
+    "kept": "Echen un vistazo a la demostración.",
+    "subject": "Un sitio web de demostración para {place}"
+  },
+  "th": {
+    "greeting": "สวัสดีทีมงาน {place}",
+    "body": "ฉันได้ทำเว็บไซต์ตัวอย่างฟรีสำหรับ {place}: {url}",
+    "expiry": "ลองเข้าชมได้เลย เว็บไซต์ตัวอย่างจะเปิดให้ชมถึงวันที่ {expires}",
+    "kept": "ลองเข้าชมเว็บไซต์ตัวอย่างได้เลย",
+    "subject": "เว็บไซต์ตัวอย่างสำหรับ {place}"
+  },
+  "ja": {
+    "greeting": "{place}の皆さま",
+    "body": "{place}の無料デモサイトを作成しました：{url}",
+    "expiry": "ぜひご覧ください。デモサイトの公開期限は{expires}です。",
+    "kept": "ぜひデモサイトをご覧ください。",
+    "subject": "{place}のデモサイトのご案内"
+  },
+  "ko": {
+    "greeting": "{place} 팀 여러분, 안녕하세요.",
+    "body": "{place}의 무료 데모 웹사이트를 만들었습니다: {url}",
+    "expiry": "한번 살펴보세요. 데모는 {expires}까지 이용하실 수 있습니다.",
+    "kept": "데모 웹사이트를 한번 살펴보세요.",
+    "subject": "{place}의 데모 웹사이트"
+  },
+  "id": {
+    "greeting": "Halo tim {place},",
+    "body": "Saya telah membuat situs web demo gratis untuk {place}: {url}",
+    "expiry": "Silakan lihat. Demo ini tersedia hingga {expires}.",
+    "kept": "Silakan lihat situs web demonya.",
+    "subject": "Situs web demo untuk {place}"
+  }
+}

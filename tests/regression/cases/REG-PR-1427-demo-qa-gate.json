@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1427-demo-qa-gate",
+  "kind": "feat",
+  "title": "Demo QA gate: a template stylesheet recompiled into SCSS (marigoldhoian) and a demo widget that holds the page (OpenTable) fail css-intact and pages-load against the hand-off baseline, and pass once undone",
+  "pr": 1427,
+  "area": "website-opportunities/demo-qa",
+  "cms": ["any"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: chrome-watch --status; if Chrome is not running, start it with chrome-watch.",
+    "S2: From the TCH checkout run: node tests/regression/scripts/REG-PR-1427-demo-qa-gate.mjs. It serves a fixture site on 127.0.0.1 (home and /menu, a 301-rule templates/ja_impact/css/template.css ending in .footer-end, an empty custom.css) and reads it with apps/tracy-host/src/demo-qa-browser.js on the watched Chrome over CDP, judged by apps/tracy-host/src/demo-qa.js: first as handed over (the baseline), then broken (SCSS source and an unclosed block pasted into template.css, and <script src=\"//secure.opentable.com/frontdoor/default.aspx…\"> in the head), then repaired (template.css restored, a rule added to custom.css, the script gone).",
+    "S3: Read every 'ok -' / 'not ok -' line and the exit code."
+  ],
+  "expect": [
+    "Baseline: the pages read are '/ /menu' (home, then its nav); template.css has 301 rules and its sentinel is the .footer-end rule.",
+    "Broken: css-intact fails, naming templates/ja_impact/css/template.css with fewer rules read than the baseline (measured 100 of 301) and the SCSS left in it (variable $brand, @include, an unclosed block).",
+    "Broken: pages-load fails, naming the blocked request to secure.opentable.com on each page; no-third-party-demo fails.",
+    "Repaired: css-intact, pages-load and no-third-party-demo pass; custom.css growing is not a failure.",
+    "The script prints ALL CHECKS PASSED and exits 0."
+  ],
+  "selectors": {
+    "host_door": "POST /_host/demo-qa (signed) → {checks: [{id, pass, measured, expected, detail}], baseline: {cssRules, pictures, texts}, pages, durationMs}",
+    "web_state": "wo_build.qa {state: pending|retry|passed|failed}; handoff.state completed | needs-review"
+  },
+  "evidence": "marigoldhoian (18/10/2026, stand wo): the hand-off agent recompiled templates/ja_impact/css/template.css into raw SCSS with a stray }, and the browser read 2,223 of its 3,701 rules; ja-restaurant's OpenTable script held headless Chromium's load (browser.js boundOtherOrigins). Both were found by a person, no gate stopped them (tasks/plan-wo-qa-gate-and-fb-photos.md §1).",
+  "fence": "The real browser half and the real judge of tracy-host on a fixture site, in the watched Chrome. Not covered here: the signed door itself and its wiring (apps/tracy-host/test/demo-qa.test.mjs), the rounds, repair prompts and needs-review in tracy-web (apps/tracy-web/test/website-opportunities-demo-qa.test.mjs), a real Joomla/WordPress/EmDash site on a stand.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1427-demo-qa-gate.mjs"],
+    "needs": ["chrome"]
+  }
+}

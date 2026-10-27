@@ -1,0 +1,15 @@
+{
+  "group.mode": "Modus",
+  "group.platform": "Plattform",
+  "lockedHint": "Diese Session hat bereits einen Verlauf. Modus und Plattform gelten nur für eine neue Session",
+  "noDescription": "Keine Beschreibung",
+  "platform.adds": "fügt {tools} Tool · {skills} Skill hinzu",
+  "platform.nothingYet": "noch nichts: Agents arbeiten nur mit ihrem Modus",
+  "platform.siteRuns": "diese Site läuft mit {platform}",
+  "role.designer": "Designer",
+  "role.developer": "Entwickler",
+  "role.seo-geo": "SEO/GEO",
+  "role.writer": "Texter",
+  "seatHint": "Modus und Plattform für die nächste Session",
+  "switchRefused": "{name} wurde abgelehnt: {reason}"
+}

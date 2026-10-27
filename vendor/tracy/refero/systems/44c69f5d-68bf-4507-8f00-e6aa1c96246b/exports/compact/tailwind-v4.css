@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-highlighter-lime: #faff00;
+  --color-onyx-black: #0a0a0a;
+  --color-zinc-hairline: #27272a;
+  --color-carbon: #18181b;
+  --color-pure-white: #ffffff;
+  --color-steel-gray: #9d9d9d;
+  --color-ash-gray: #6c6c6c;
+  --color-smoke: #3b3b3b;
+
+  /* Typography */
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-tomorrow: 'Tomorrow', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

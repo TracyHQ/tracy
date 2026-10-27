@@ -1,0 +1,139 @@
+{
+  "color": {
+    "signal-green": {
+      "$value": "#71d083",
+      "$type": "color",
+      "$description": "Signal Green — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "led-green": {
+      "$value": "#366740",
+      "$type": "color",
+      "$description": "LED Green — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "moss-border": {
+      "$value": "#2d5736",
+      "$type": "color",
+      "$description": "Moss Border — Subtle green-tinted border accent for highlighted cards and notification states — keeps the green theme at low intensity"
+    },
+    "forest-wash": {
+      "$value": "#1d3a24",
+      "$type": "color",
+      "$description": "Forest Wash — Tinted card background for highlighted/featured panels — dark green surface that sets apart spotlighted content"
+    },
+    "fern-ground": {
+      "$value": "#1b2a1e",
+      "$type": "color",
+      "$description": "Fern Ground — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "link-blue": {
+      "$value": "#70b8ff",
+      "$type": "color",
+      "$description": "Link Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lilac-accent": {
+      "$value": "#baa7ff",
+      "$type": "color",
+      "$description": "Lilac Accent — Decorative icon accent and secondary highlight — soft violet for visual variety in feature icons and subtle UI flourishes"
+    },
+    "plum-edge": {
+      "$value": "#291f43",
+      "$type": "color",
+      "$description": "Plum Edge — Muted violet border tint for tag/label outlines — secondary border color for grouped metadata"
+    },
+    "iris-border": {
+      "$value": "#473876",
+      "$type": "color",
+      "$description": "Iris Border — Mid-violet link and body accent — used for inline code links and grouped label borders"
+    },
+    "lavender-mist": {
+      "$value": "#e2ddfe",
+      "$type": "color",
+      "$description": "Lavender Mist — Pale lavender text accent for highlighted inline labels and decorative typography touches"
+    },
+    "carbon": {
+      "$value": "#04040b",
+      "$type": "color",
+      "$description": "Carbon — Page canvas — the base near-black that everything sits on"
+    },
+    "graphite": {
+      "$value": "#121113",
+      "$type": "color",
+      "$description": "Graphite — First surface lift — card backgrounds, nav header surface, elevated panels"
+    },
+    "obsidian": {
+      "$value": "#1a191b",
+      "$type": "color",
+      "$description": "Obsidian — Second surface lift — nested cards, secondary panels, footer surface"
+    },
+    "slate": {
+      "$value": "#232225",
+      "$type": "color",
+      "$description": "Slate — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "basalt": {
+      "$value": "#2b292d",
+      "$type": "color",
+      "$description": "Basalt — Borders and dividers — the primary hairline color separating surfaces and defining card edges"
+    },
+    "iron": {
+      "$value": "#323035",
+      "$type": "color",
+      "$description": "Iron — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "pewter": {
+      "$value": "#3c393f",
+      "$type": "color",
+      "$description": "Pewter — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "steel": {
+      "$value": "#49474e",
+      "$type": "color",
+      "$description": "Steel — Mid-gray borders and muted icon strokes — subtle structural lines"
+    },
+    "fog": {
+      "$value": "#7c7a85",
+      "$type": "color",
+      "$description": "Fog — Muted body text, footer text, nav inactive items, secondary copy"
+    },
+    "silver": {
+      "$value": "#b5b2bc",
+      "$type": "color",
+      "$description": "Silver — Secondary text, placeholder text, button text on dark fills, icon outlines"
+    },
+    "ash": {
+      "$value": "#eeeef0",
+      "$type": "color",
+      "$description": "Ash — Primary body text — high-contrast off-white for reading copy"
+    },
+    "chalk": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Chalk — Headings and primary headings — the brightest text for display type"
+    }
+  },
+  "font": {
+    "red-hat-display-variable": {
+      "$value": "Red Hat Display Variable",
+      "$type": "fontFamily",
+      "$description": "Display and heading type — used at 48-60px for hero headlines with weight 700, at 36px for section headings with weight 600. The negative tracking at display sizes (-0.025em) tightens the letterforms for a compressed, industrial look. Weight drops to 400-500 for subheadings and feature card titles. Substitute: Inter, Space Grotesk"
+    },
+    "red-hat-text-variable": {
+      "$value": "Red Hat Text Variable",
+      "$type": "fontFamily",
+      "$description": "Body and UI text — the workhorse family for paragraphs, nav items, button labels, and all functional text. The positive tracking (0.025em) at all sizes is a signature choice: body copy breathes with slightly loosened letterspacing, which gives the dense dark UI an airy, readable quality. Weight 500-600 for emphasis, 400 for default body. Substitute: Inter, IBM Plex Sans"
+    },
+    "red-hat-mono-variable": {
+      "$value": "Red Hat Mono Variable",
+      "$type": "fontFamily",
+      "$description": "Code snippets, terminal-style labels, build status indicators — the monospace voice for developer-context content. Appears in the CI workflow comparison section for job names like 'Job picked up', 'Install dependencies'. Substitute: JetBrains Mono, IBM Plex Mono"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://depot.dev",
+      "siteName": "Depot",
+      "extractedAt": "2026-06-03T19:57:10.436Z",
+      "variant": "compact"
+    }
+  }
+}

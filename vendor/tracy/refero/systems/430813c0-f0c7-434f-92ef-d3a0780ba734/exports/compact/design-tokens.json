@@ -1,0 +1,59 @@
+{
+  "color": {
+    "soft-pebble": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Soft Pebble — Page canvas, card surfaces, and the dominant background tone — a warm-leaning gray that reads as handmade paper rather than digital white"
+    },
+    "carbon-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, nav labels, icons, and the default state of unselected interactive controls. Carries all typographic and chrome weight in the system"
+    },
+    "ash": {
+      "$value": "#bbbab7",
+      "$type": "color",
+      "$description": "Ash — Hairline borders and dividers on buttons and structural elements — just visible enough to define edges without ever competing with text"
+    },
+    "stone": {
+      "$value": "#8d8c8a",
+      "$type": "color",
+      "$description": "Stone — Muted helper text — product prices, secondary metadata, and any label that should recede behind the primary content"
+    },
+    "sunlit-marigold": {
+      "$value": "#ecca53",
+      "$type": "color",
+      "$description": "Sunlit Marigold — The sole chromatic accent — active filter pills, selected nav states, and the only place a UI element may be filled with color. The warmth against Soft Pebble creates an almost-handmade yellow, not a digital primary"
+    }
+  },
+  "font": {
+    "ts-unused": {
+      "$value": "ts-unused",
+      "$type": "fontFamily",
+      "$description": "ts-unused — detected in extracted data but not described by AI"
+    },
+    "macan": {
+      "$value": "Macan",
+      "$type": "fontFamily",
+      "$description": "Single-family type system used for display, heading, body, nav, and UI. The signature choice is weight 500 at 95px with -0.04em tracking for the hero headline — a tight, modern geometric sans that feels like a custom craft brand, not a tech platform. Substitute with Inter (free) or Söhne (commercial) for the closest matching grotesque feel."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    },
+    "a1-gothic-m": {
+      "$value": "A1 Gothic M",
+      "$type": "fontFamily",
+      "$description": "A1 Gothic M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.woset.world",
+      "siteName": "Woset",
+      "extractedAt": "2026-06-03T17:43:16.733Z",
+      "variant": "compact"
+    }
+  }
+}

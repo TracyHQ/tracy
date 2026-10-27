@@ -1,0 +1,160 @@
+{
+  "source": "quickstart/ja-phio/j6@1.0.5 https://ja-phio-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "light",
+  "capturedAt": "2026-10-14",
+  "note": "preview without scripts as develop serves it: data-aos blocks at opacity 0",
+  "plain": {
+    "hidden": [],
+    "total": 0
+  },
+  "worn": {
+    "hidden": [
+      {
+        "at": "div.hero-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 460,
+        "area": 378744
+      },
+      {
+        "at": "div.hero-lead[data-aos=fade-right]",
+        "why": "opacity",
+        "top": 835,
+        "area": 32500
+      },
+      {
+        "at": "div.hero-desc[data-aos=fade-left]",
+        "why": "opacity",
+        "top": 835,
+        "area": 40820
+      },
+      {
+        "at": "div.stats-asset[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1293,
+        "area": 28998
+      },
+      {
+        "at": "div.stats-asset[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1293,
+        "area": 28998
+      },
+      {
+        "at": "div.stats-asset[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1293,
+        "area": 28998
+      },
+      {
+        "at": "div.stats-asset[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1293,
+        "area": 28998
+      },
+      {
+        "at": "div.stats-desc[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1473,
+        "area": 32240
+      },
+      {
+        "at": "h3.module-title[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1765,
+        "area": 47250
+      },
+      {
+        "at": "div.category-projects-list.article-list[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 1964,
+        "area": 2762537
+      },
+      {
+        "at": "div.testimonial-left[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 4505,
+        "area": 219024
+      },
+      {
+        "at": "div.testimonial-right[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 4543,
+        "area": 197568
+      },
+      {
+        "at": "div.features-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5093,
+        "area": 429750
+      },
+      {
+        "at": "div.features-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5093,
+        "area": 429750
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5945,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5945,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5945,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5945,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 5945,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 6076,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 6076,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 6076,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 6076,
+        "area": 31911
+      },
+      {
+        "at": "div.col.client-item[data-aos=fade-up]",
+        "why": "opacity",
+        "top": 6076,
+        "area": 31911
+      }
+    ],
+    "total": 24
+  }
+}

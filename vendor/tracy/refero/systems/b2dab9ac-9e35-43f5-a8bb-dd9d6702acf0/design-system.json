@@ -1,0 +1,323 @@
+{
+  "dos": [
+    "Use Electric Iris (#6248ff) exclusively for the single highest-intent action per surface — never two violet CTAs competing on the same screen.",
+    "Apply the ember→crimson→iris gradient via background-clip:text on exactly one word per headline, and as a 2px border on the prompt input — these are the only places the gradient should appear.",
+    "Set display headlines (32px and above) to weight 500 with -0.02em to -0.03em tracking; the combination of medium weight and tight spacing is what gives Relative its confident, compressed stance.",
+    "Card radius: 16px for feature cards and images, 8px for buttons, inputs, and badges. Never mix these — the two-tier system is the spatial grammar.",
+    "Pair Paper (#ffffff) card surfaces with Cream (#f1f0ee) page canvas and a 1px Bone (#e4e2df) border. The contrast between card and canvas carries hierarchy before any shadow is applied.",
+    "Use Fog (#686868) for all secondary/muted text. Reserve Ink (#161616) for headings, primary copy, and dark outline button text only.",
+    "Stagger floating preview cards around hero headlines at slight rotation to suggest a working canvas — the product IS the decoration."
+  ],
+  "donts": [
+    "Don't introduce a second chromatic accent. The site is 1% colorful by design — every new color dilutes the violet's impact.",
+    "Don't use shadows larger than the dual-layer card shadow (8/10/-4px + 2/10/2px). The shadow system is whisper-thin; anything heavier breaks the cream-canvas lightness.",
+    "Don't set body text below 14px or above 18px. The 14–18px band is the readable comfort zone; captions sit at 12–13px only for legal/meta.",
+    "Don't apply the gradient to backgrounds, buttons, or large surfaces. It belongs only on text (background-clip) and the 2px input border.",
+    "Don't use the Acid Lemon (#f0f41a) as a fill on light surfaces — it's a dark-surface accent only and will vibrate uncomfortably on Cream.",
+    "Don't combine a violet button with a dark outline button on the same hero — pick one. The dark outline lives in the nav; the violet lives in the prompt.",
+    "Don't break the single-font rule. Every level of hierarchy, including the 224px display, stays inside Relative. Introducing a second face fragments the typographic voice."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#6248ff",
+      "name": "Electric Iris",
+      "role": "Violet action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand",
+      "gradient": "linear-gradient(100deg, rgb(255, 116, 72), rgb(255, 72, 72) 42%, rgb(98, 72, 255) 85%)"
+    },
+    {
+      "hex": "#b8adf5",
+      "name": "Soft Lilac",
+      "role": "Decorative icon strokes, subtle border accents, secondary violet UI",
+      "group": "brand"
+    },
+    {
+      "hex": "#e0daff",
+      "name": "Iris Mist",
+      "role": "Hover wash on violet buttons, soft chip backgrounds, tinted surface",
+      "group": "brand"
+    },
+    {
+      "hex": "#161616",
+      "name": "Ink",
+      "role": "Primary text, primary outline-button border, dark CTA text on light surfaces, icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Graphite",
+      "role": "Secondary dark text, body text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Slate",
+      "role": "Muted image labels, dim link text, tertiary content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4d4c",
+      "name": "Iron",
+      "role": "Subheadings, mid-emphasis labels, structural borders on dark sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#686868",
+      "name": "Fog",
+      "role": "Muted helper text, meta labels, link text, badge text, secondary copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e2df",
+      "name": "Bone",
+      "role": "Hairline card borders, image placeholder backgrounds, soft dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f0ee",
+      "name": "Cream",
+      "role": "Page canvas, icon stroke backgrounds, neutral badge fills, base surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, elevated panels, input fields, button backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f41a",
+      "name": "Acid Lemon",
+      "role": "Occasional high-energy accent wash on dark surfaces, highlight tags",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content on a full-bleed Cream canvas. The hero is a centered headline stack (224px 'Websites designed & built faster with AI') with floating preview cards scattered at slight rotations around the edges — asymmetric, playful, never grid-locked. Below the prompt input, sections alternate between a 3-column equal feature card grid and full-width centered-band sections (logo strip, secondary 'Ship faster' hero). Section gap is 64px with generous internal padding (24-48px). The secondary hero uses a 2-column split: text-left at 40% width, product preview-right at 60%, with the gradient-text 'faster' word as the visual anchor. Navigation is a minimal 64px-tall top bar with no sticky behavior, transparent over the cream canvas. Card grids use 3 columns at desktop with 24px gaps, collapsing to 1 column on mobile. The overall rhythm is: one big hero moment, three-card feature row, logo proof band, one secondary hero moment — a 4-beat structure that repeats.",
+  "imagery": "Imagery is product-first, not lifestyle: tight crops of website mockups, sitemap diagrams, and wireframe panels rendered as the heroes of their own cards. The floating cards in the hero show real product output (sitemaps, style guides, wireframes) at slight rotation — the tool's own output IS the decoration. Photography is absent; the site speaks through UI screenshots and the occasional portrait thumbnail inside testimonial chips. Color treatment on product screenshots is untouched (raw browser output), but testimonial avatars sit on Soft Lilac or Acid Lemon circular backgrounds. Icons are inline and minimal: a hexagon mark for the wordmark, and 1.5px-stroke line icons elsewhere. The overall density is image-light — most visual weight comes from typography and whitespace, not from pictures.",
+  "similar": [
+    {
+      "why": "Same single-accent restraint: a near-white canvas with one vivid chromatic (violet for Linear, iris for Relume) and tight grotesque type. Both sites use oversized display headlines as the primary visual element.",
+      "business": "Linear"
+    },
+    {
+      "why": "Minimal palette (cream/white canvas + one accent) with a custom-feeling geometric sans, oversized headlines, and product UI screenshots as the decorative element. Relume's floating preview cards echo Vercel's template gallery approach.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Product-first marketing where the tool's own output serves as the hero imagery. Both use a light warm-neutral canvas and let UI screenshots and feature cards do the visual work.",
+      "business": "Frame.io"
+    },
+    {
+      "why": "Same 'your output is the decoration' philosophy and a comparable custom-display-font approach. Both target designers with a confident, slightly playful tone and oversized type.",
+      "business": "Webflow"
+    },
+    {
+      "why": "Large-scale display typography on a light canvas with a single accent color and product mockups floating as the hero visual. The 224px headline scale and the centered-headline-with-floating-cards pattern are nearly identical.",
+      "business": "Framer"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "pills": "320px",
+      "badges": "8px",
+      "inputs": "8px",
+      "buttons": "8px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64px",
+    "cardPadding": "16-24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#f1f0ee",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Page background, base of all sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Feature cards, product preview panels, input fields"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Elevated",
+      "level": 3,
+      "purpose": "Hover-lifted cards, modal surfaces, dropdowns"
+    },
+    {
+      "hex": "#e0daff",
+      "name": "Tinted",
+      "level": 4,
+      "purpose": "Soft violet wash for hover states and tinted chips"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 1px 3px rgba(0, 0, 0, 0.08), 0px 1px 2px rgba(0, 0, 0, 0.04)",
+      "element": "Primary Button"
+    },
+    {
+      "style": "0px 8px 10px -4px rgba(0, 0, 0, 0.08), 0px 2px 10px 2px rgba(0, 0, 0, 0.05)",
+      "element": "Feature Card"
+    }
+  ],
+  "northStar": "Cream canvas, one violet spark.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "display-xl",
+      "size": 96,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "display-hero",
+      "size": 224,
+      "lineHeight": 1,
+      "letterSpacing": -0.03
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action (e.g., 'Generate', 'Start for free')",
+      "description": "Solid Electric Iris (#6248ff) background, white text, 8px radius, 12px vertical / 20px horizontal padding, Relative 16px weight 500. Soft 1px-offset shadow. Hover: iris mist (#e0daff) background tint. Used for the highest-intent single action per surface."
+    },
+    {
+      "name": "Dark Outline Button",
+      "role": "Secondary top-bar action ('Start for free' in header)",
+      "description": "Ink (#161616) 1px border, transparent or Paper (#ffffff) fill, Ink text, 8px radius, 12px vertical / 20px horizontal padding, Relative 16px weight 500. The dark outline against the cream canvas reads as confident without competing with the violet primary."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Nav links and tertiary actions",
+      "description": "No border, no background, Ink (#161616) text, 16px weight 500, hover shows Fog (#686868) color shift. Used for 'Log in' and most nav items."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Trust signal, inline meta label",
+      "description": "320px border-radius, Paper (#ffffff) background, 1px Bone (#e4e2df) border, 6px vertical / 12px horizontal padding, 14px weight 500 text. The '1 Million+' badge uses a violet text accent (#6248ff) on the number for emphasis."
+    },
+    {
+      "name": "Feature Card (Sitemap/Wireframe/Style Guide)",
+      "role": "Three-column feature showcase in the primary product row",
+      "description": "Paper (#ffffff) background, Bone (#e4e2df) 1px border, 16px radius, 24px internal padding, dual-layer shadow (8/10/-4px + 2/10/2px). Category label at top in colored 14px (violet/teal/coral), title at 40px weight 500, description at 16px weight 400 in Fog (#686868), ghost 'Give it a try' link button. Contains a 16px-radius image preview that bleeds nearly to the card edge."
+    },
+    {
+      "name": "Category Label",
+      "role": "Color-coded eyebrow above feature card titles",
+      "description": "14px weight 500, colored per slot: Electric Iris ('Plan'), a teal/blue for ('Structure'), and Ember coral ('Conceptualise') drawn from the gradient stops. Centered above the card title, 4px below the card top edge."
+    },
+    {
+      "name": "Prompt Input Bar",
+      "role": "Hero CTA — the 'describe a company' input that generates output",
+      "description": "Container has a 2px gradient border (ember→crimson→iris, linear 100deg) at 320px-radius, wrapping a Paper (#ffffff) input field with 8px radius. Input text 16px weight 400, placeholder in Fog (#686868). Submit button is the Primary CTA Button nested inside. This is the most distinctive component — the gradient border is the brand's visual signature applied to its most important UI."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof band above the secondary hero",
+      "description": "Horizontal row of partner logos in Iron (#4d4d4c), evenly spaced, 32px tall, centered. No background, no border, sits directly on the Cream canvas."
+    },
+    {
+      "name": "Gradient Display Text",
+      "role": "Highlighted word inside a headline",
+      "description": "A single word inside a larger headline (e.g., 'faster' inside 'Ship faster') is filled with the signature 3-stop gradient using background-clip: text. The rest of the headline is Fog (#686868) at 96px. This is the one place color is allowed to shout."
+    },
+    {
+      "name": "Floating Preview Card",
+      "role": "Decorative site mockups flanking the hero headline",
+      "description": "8px radius, Paper (#ffffff) background, 1px Bone border, contains a website mockup screenshot. Scattered around the hero at slight rotation to suggest a canvas of work. Not interactive — purely atmospheric."
+    },
+    {
+      "name": "Testimonial Chip",
+      "role": "Person label on the floating preview cards",
+      "description": "Small pill with Soft Lilac (#b8adf5) or Acid Lemon (#f0f41a) background, name in Ink at 13px weight 500, 8px radius, floats as a tag on the preview card corner."
+    },
+    {
+      "name": "Primary Nav Bar",
+      "role": "Top-level site navigation",
+      "description": "Cream canvas background, no border, 64px tall, Relume mark at left (hexagon glyph + wordmark), nav links center-left in Ink 16px, 'Log in' + Dark Outline Button at right. Spacing between nav items: 24px."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI text — display headlines at 224/96/56/48px weight 500, body at 16–18px weight 400, captions at 12–14px weight 400. The single-family approach is deliberate: by keeping every level inside Relative, the brand avoids the 'body sans vs display sans' split most sites fall into, creating a unified typographic voice. Tight tracking (-0.02em to -0.03em) on all display sizes gives the large headlines a compressed, confident stance without becoming stencil-like.",
+      "sizes": "12, 13, 14, 15, 16, 17, 18, 20, 24, 32, 40, 48, 56, 224",
+      "family": "Relative",
+      "weight": "400, 500",
+      "lineHeight": "1.00–1.50",
+      "substitute": "Inter, with 'cv11' and 'ss01' features enabled to approximate Relative's geometric quirks",
+      "letterSpacing": "-0.03em at 56px and above, -0.02em at 32–48px, normal at body sizes",
+      "fontFeatureSettings": "\"ss01\" on, \"cv11\" on"
+    },
+    {
+      "role": "Reserved for the largest display moment (the secondary 'Ship faster' hero). A faux/display variant with slightly looser proportions, used once per page as a typographic exclamation point. Distinguishes that one moment from the standard Relative display weight elsewhere.",
+      "sizes": "96",
+      "family": "Relative Faux",
+      "weight": "400",
+      "lineHeight": "1.10",
+      "substitute": "Inter Display",
+      "letterSpacing": "-0.02em"
+    }
+  ],
+  "description": "Relume is a light-mode, warm-neutral AI design tool that pairs a cream canvas with confident oversized type and a single electric violet as its only chromatic accent. The visual language is built on a custom grotesque ('Relative') that runs from a 224px hero down to 12px captions without ever leaving the family, giving the site one continuous typographic voice. A signature three-stop orange-to-red-to-violet gradient punctuates the page — applied to text on the word 'faster' and as a hairline border on the primary prompt input — making the otherwise restrained palette feel switched on. Cards float on white against the warm canvas with soft shadows and 16px radii, while the primary CTA button is a solid violet (#6248ff) that doesn't fight for attention but always wins it.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #161616 Ink\n- text (muted): #686868 Fog\n- background (canvas): #f1f0ee Cream\n- background (card): #ffffff Paper\n- border: #e4e2df Bone\n- accent / primary action: #6248ff (filled action)\n- gradient: ember (#ff7448) → crimson (#ff4848) → iris (#6248ff)\n\n**3-5 Example Component Prompts**\n\n1. *Build a hero with gradient-text accent*: Cream (#f1f0ee) full-bleed background. Centered headline at 224px Relative weight 500, color Ink (#161616), letter-spacing -0.03em. Replace the word 'faster' with the ember→crimson→iris gradient applied via background-clip:text. Body subtext at 18px weight 400, color Fog (#686868), 1.5 line-height, max-width 600px centered. Three floating preview cards scattered at the hero edges: 8px radius, Paper (#ffffff) background, 1px Bone (#e4e2df) border, slight 2-4° rotation.\n\n2. *Build the prompt input bar (signature component)*: 2px gradient border (ember→crimson→iris, 100deg) at 320px-radius wrapping a Paper (#ffffff) inner field at 8px radius. Input text 16px weight 400, placeholder in Fog (#686868). Nested submit button: Electric Iris (#6248ff) background, white text, 8px radius, 12px vertical / 20px horizontal padding, Relative 16px weight 500, with 1px-offset contact shadow.\n\n3. *Build a feature card (3-column grid item)*: Paper (#ffffff) background, 1px Bone (#e4e2df) border, 16px radius, 24px internal padding. Category eyebrow at top: 14px weight 500, Electric Iris (#6248ff) color, 4px below top edge. Title at 40px Relative weight 500 in Ink, 16px below the eyebrow. Description at 16px weight 400 in Fog, 1.5 line-height, 8px below the title. Ghost 'Give it a try' link button at bottom: Ink text, underline on hover, 16px weight 500. Image preview at 16px radius fills the lower 60% of the card. Dual-layer shadow: 0px 8px 10px -4px rgba(0,0,0,0.08) + 0px 2px 10px 2px rgba(0,0,0,0.05).\n\n4. *Build a dark outline button (nav action)*: Transparent fill, 1px Ink (#161616) border, 8px radius, 12px vertical / 20px horizontal padding, 16px Relative weight 500, Ink text. 1px-offset contact shadow on hover. Use in top-right of the nav bar.\n\n5. *Build a logo proof band*: Horizontal row on Cream canvas, 6 partner logos at 32px height, color Iron (#4d4d4c), 32px gap between logos, vertically centered, no background, no border. Sits between two content sections as a single full-width row."
+    },
+    {
+      "title": "Gradient System",
+      "content": "The ember→crimson→iris gradient (orange #ff7448 → red #ff4848 → violet #6248ff, 100deg) is the brand's emotional punctuation. It appears in exactly three contexts, and only three: (1) as background-clip:text on a single headline word per page, (2) as a 2px border on the prompt input bar, (3) as a horizontal accent line or divider in rare cases. Never as a button fill, never as a card background, never as a section background. The gradient is loud; the discipline is keeping it quiet."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are whisper-thin and achromatic — the cream canvas and soft card borders carry spatial hierarchy before shadows ever do. A dual-layer shadow (tight contact shadow + diffuse ambient) gives cards lift without the look of 'dropped paper'. Buttons get only a 1px-offset contact shadow so they feel pressed into the surface rather than floating."
+}

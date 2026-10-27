@@ -1,0 +1,41 @@
+---
+title: "Tracy Cowork — dựng và sửa website của bạn bằng AI"
+description: "Tracy Cowork dựng và sửa website WordPress, Joomla hay EmDash của bạn khi bạn nhờ trong khung chat, cho thấy mọi thay đổi và cho bạn hoàn tác."
+template: splash
+hero:
+  title: "Tracy Cowork — dựng và sửa website của bạn bằng AI"
+  tagline: "Nhờ trong khung chat, Tracy sửa ngay trên site WordPress, Joomla hay EmDash thật của bạn — rồi cho bạn thấy mọi thay đổi để xem lại và hoàn tác."
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: "Bắt đầu"
+      link: /vi/get-started/
+      icon: right-arrow
+    - text: "Tải ứng dụng"
+      link: /vi/desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="Bắt đầu" icon="rocket">
+    Đăng nhập, thêm site đầu tiên và nhờ Tracy sửa một chỗ. [Bắt đầu](/vi/get-started/)
+  </Card>
+  <Card title="Ứng dụng desktop" icon="laptop">
+    Tracy cho macOS, Windows và Linux. Ứng dụng tự cập nhật. [Tải ứng dụng](/vi/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    Kết nối ChatGPT, Claude, Claude Code, Cursor hoặc Codex với website Tracy của bạn. [Thiết lập MCP](/vi/mcp/getting-started/)
+  </Card>
+  <Card title="Làm việc với site của bạn" icon="pencil">
+    Chat, comment trên trang, Site changes, hoàn tác và Backup. [Dùng Tracy](/vi/using-tracy/)
+  </Card>
+  <Card title="Nhật ký thay đổi" icon="document">
+    Ghi lại theo ngày: đã đổi gì, và khi nào — trong [Tracy Cowork](/vi/changelog/desktop/), trên web lẫn trong app, và trong [API](/vi/changelog/).
+  </Card>
+  <Card title="Dành cho nhà phát triển & agent" icon="seti:json">
+    Tracy API: đọc và sửa một site do Tracy lưu trữ qua HTTPS, bằng một khoá gắn với ghế của bạn. [Tổng quan API](/vi/api/)
+  </Card>
+</CardGrid>

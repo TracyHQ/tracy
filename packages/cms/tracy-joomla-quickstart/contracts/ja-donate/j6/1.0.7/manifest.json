@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-donate/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_donate",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-donate",
+    "id": "quickstart/ja-donate/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_donate",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-donate-j6-webroot-1.0.7.tar.gz",
+        "bytes": 49349441,
+        "sha256": "11c28886790de95db064bc7a9a5507922b2e586dc2a43a5288d86196528a6635"
+      },
+      "database": {
+        "file": "ja-donate-j6-database-1.0.7.sql.gz",
+        "bytes": 105179,
+        "sha256": "70ff110e8bf76567fe3ba0aeca5419aad41c224e67db89dbb51efcc952fa5e95"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T20:50:24.324Z",
+    "builtFrom": {
+      "from": "quickstart/ja-donate/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 396 files replaced (templates/ja_donate/component.php, templates/ja_donate/error.php, templates/ja_donate/favicon.ico, templates/ja_donate/helper.php, templates/ja_donate/index.html, templates/ja_donate/index.php, templates/ja_donate/offline.php, templates/ja_donate/templateDetails.xml, templates/ja_donate/templateHook.php, templates/ja_donate/templateInfo.php, templates/ja_donate/template_preview.png, templates/ja_donate/template_thumbnail.png, templates/ja_donate/thememagic.xml, templates/ja_donate/css, templates/ja_donate/etc, templates/ja_donate/fonts, templates/ja_donate/html, templates/ja_donate/images, templates/ja_donate/js, templates/ja_donate/language, templates/ja_donate/less, templates/ja_donate/tpls, templates/ja_donate/acm); demo content: 1 edits (module-91); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-donate/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

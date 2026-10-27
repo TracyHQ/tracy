@@ -1,0 +1,333 @@
+{
+  "dos": [
+    "Use Void Canvas #020618 as the default page field and Midnight Panel #080e21 for contained product surfaces.",
+    "Set display headlines in Public Sans 700 at 72px/72px or 48px/48px with -1.8px or -1.2px tracking.",
+    "Use Nuxt Signal #00dc82 for filled getting-started actions, release markers, logo treatment, and isolated headline emphasis.",
+    "Apply 6px radii to controls and inputs; use 8px radii for standard cards.",
+    "Build spacing from the 4px base unit, using 8px element gaps, 12px card padding, and 64px section gaps.",
+    "Outline panels and controls with 1px Steel Outline #1d293d or inset Blue Steel #314158 rings instead of soft cast shadows.",
+    "Keep body and inactive navigation copy in Muted Fog #90a1b9; reserve Signal White #ffffff for headings and selected states."
+  ],
+  "donts": [
+    "Do not use gradients; the interface relies on flat blue-black planes and single-color green punctuation.",
+    "Do not round controls into 9999px pills except compact release markers and badge-like status controls.",
+    "Do not use shadows with blur or vertical offset; use the 0 0 0 1px #1d293d panel ring.",
+    "Do not turn all buttons green; use #00dc82 only for conversion-oriented public actions and use dark or white utility variants elsewhere.",
+    "Do not introduce large soft cards around feature-grid items; feature cells remain borderless on #020618.",
+    "Do not set display headings at semibold weights or positive tracking; retain Public Sans 700 and -0.025em tracking.",
+    "Do not use ecosystem link colors #42b883, #a156fe, or #fb848e as global semantic status colors."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#020618",
+      "name": "Void Canvas",
+      "role": "Page background, header field, dark controls, command surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#080e21",
+      "name": "Midnight Panel",
+      "role": "Card surfaces, code-editor body, contained product panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0f172b",
+      "name": "Deep Slate",
+      "role": "Selected dark tabs, secondary dark buttons, inset control surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d293d",
+      "name": "Steel Outline",
+      "role": "Hairline card outlines, image frames, dark raised button fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#314158",
+      "name": "Blue Steel",
+      "role": "Inset control rings, subdued control borders, navigation separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#90a1b9",
+      "name": "Muted Fog",
+      "role": "Body copy, inactive navigation, secondary labels, supporting metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e2e8f0",
+      "name": "Pale Frost",
+      "role": "High-emphasis navigation text, secondary button labels, light icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Signal White",
+      "role": "Display headings, selected tab labels, inverted button fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#00dc82",
+      "name": "Nuxt Signal",
+      "role": "Filled getting-started buttons, logo, release markers, highlighted display words — vivid green acts as a precise activation signal in the blue-black interface",
+      "group": "brand"
+    },
+    {
+      "hex": "#42b883",
+      "name": "Vue Link",
+      "role": "Partner-technology links and small ecosystem references",
+      "group": "accent"
+    },
+    {
+      "hex": "#a156fe",
+      "name": "Vite Link",
+      "role": "Vite ecosystem links and compact technology references",
+      "group": "accent"
+    },
+    {
+      "hex": "#fb848e",
+      "name": "Nitro Link",
+      "role": "Nitro ecosystem links and compact technology references",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page is a full-width, blue-black documentation-marketing composition within a 1440px container system. A fixed-feeling 64px top bar runs across the canvas; the hero below uses a left-aligned text block and right-aligned editor demonstration, with a release pill above the 72px display and a small command line below the action row. Subsequent sections are separated by thin horizontal rules and broad 64px vertical rhythm: a left-aligned 48px heading introduces a four-column feature grid, then a left-aligned modules introduction leads into a three-card horizontal carousel with centered pagination dots. Content stays compact inside sections, with 8px and 16px local gaps, rather than alternating into large colored bands.",
+  "imagery": "The page is text- and UI-dominant, with the editor demonstration serving as the hero visual and repository cards acting as product-data tiles. Graphics are contained rather than full-bleed: dark framed panes, small monochrome or green line icons, and compact code syntax sit on blue-black fields. There is no lifestyle photography, illustration, or decorative gradient atmosphere; visual space is allocated to real interface anatomy, file trees, tabs, command snippets, and metrics.",
+  "similar": [
+    {
+      "why": "Dark developer-platform pages use high-contrast typography, contained product demonstrations, and hairline interface framing.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Framework marketing combines oversized technical headlines with documentation-like feature grids and compact developer controls.",
+      "business": "Astro"
+    },
+    {
+      "why": "Open-source framework presentation uses bold product messaging alongside code and ecosystem content rather than lifestyle imagery.",
+      "business": "Svelte"
+    },
+    {
+      "why": "Dark surfaces are separated by precise low-contrast borders and sparse saturated accent color.",
+      "business": "Linear"
+    },
+    {
+      "why": "Product visuals are framed as dark, dense application panes with restrained navigation and compact utility controls.",
+      "business": "Raycast"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "6px",
+      "cards": "8px",
+      "pills": "16777200px",
+      "images": "6px",
+      "inputs": "6px",
+      "buttons": "6px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "12px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#020618",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Global page field, header, dark command controls"
+    },
+    {
+      "hex": "#080e21",
+      "name": "Midnight Panel",
+      "level": 1,
+      "purpose": "Cards, editor bodies, contained module surfaces"
+    },
+    {
+      "hex": "#0f172b",
+      "name": "Deep Slate",
+      "level": 2,
+      "purpose": "Selected editor rows, dark button fills, inset control states"
+    },
+    {
+      "hex": "#1d293d",
+      "name": "Steel Outline",
+      "level": 3,
+      "purpose": "Panel boundaries, image frames, subtle raised dark controls"
+    }
+  ],
+  "northStar": "terminal glow in deep space. Build dark, contained interface planes where green appears as a switched-on signal against blue-black surfaces.",
+  "typeScale": [
+    {
+      "role": "micro-label",
+      "size": 10,
+      "family": "Public Sans",
+      "weight": 500,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "caption",
+      "size": 12,
+      "family": "Public Sans",
+      "weight": 400,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "nav",
+      "size": 14,
+      "family": "Public Sans",
+      "weight": 500,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "feature-title",
+      "size": 14,
+      "family": "Public Sans",
+      "weight": 600,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "code",
+      "size": 14,
+      "family": "ui-monospace",
+      "weight": 400,
+      "lineHeight": 1.71,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "family": "Public Sans",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-strong",
+      "size": 16,
+      "family": "Public Sans",
+      "weight": 500,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "eyebrow-heading",
+      "size": 18,
+      "family": "Public Sans",
+      "weight": 500,
+      "lineHeight": 1.56,
+      "letterSpacing": 0
+    },
+    {
+      "role": "section-display",
+      "size": 48,
+      "family": "Public Sans",
+      "weight": 700,
+      "lineHeight": 1,
+      "letterSpacing": -1.2
+    },
+    {
+      "role": "hero-display",
+      "size": 72,
+      "family": "Public Sans",
+      "weight": 700,
+      "lineHeight": 1,
+      "letterSpacing": -1.8
+    }
+  ],
+  "components": [
+    {
+      "name": "Global Header",
+      "role": "64px-tall top navigation with brand, documentation links, utility controls, and repository count",
+      "description": "Use a 64px-high Void Canvas #020618 bar with a 1px Steel Outline #1d293d bottom divider. Keep navigation at 14px/500 Public Sans in Muted Fog #90a1b9, reserve Pale Frost #e2e8f0 for active utility labels, and space compact groups on the 8px grid."
+    },
+    {
+      "name": "Release Announcement Pill",
+      "role": "Small version or release-status link",
+      "description": "Set 12px/600 Public Sans Nuxt Signal #00dc82 inside a fully pill-shaped 16777200px-radius control. Use a 6px internal rhythm and keep the treatment compact enough to sit above a hero heading."
+    },
+    {
+      "name": "Nuxt Signal Button",
+      "role": "Filled public conversion button",
+      "description": "Use a #00dc82 fill, 6px radius, and 8px 12px padding. Label text is 16px/500 Public Sans in Deep Slate #0f172b; do not add a drop shadow."
+    },
+    {
+      "name": "White Utility Button",
+      "role": "High-contrast secondary public button",
+      "description": "Use Signal White #ffffff fill with Deep Slate #0f172b text, 16px/500 Public Sans, 6px radius, and 8px 12px padding. This is the light counterweight to the green conversion button."
+    },
+    {
+      "name": "Dark Outline Button",
+      "role": "Secondary media, navigation, or product-demo control",
+      "description": "Use transparent or Void Canvas #020618 backing with Pale Frost #e2e8f0 text, a 1px inset Blue Steel #314158 ring, 6px radius, and 6px 10px padding. Maintain 16px/500 Public Sans for labeled controls."
+    },
+    {
+      "name": "Ghost Navigation Control",
+      "role": "Low-emphasis text control for inactive nav and tab choices",
+      "description": "Use transparent background, Muted Fog #90a1b9 text, 4px radius, and no added padding beyond its navigation layout. Keep labels at 14px/500 Public Sans and separate adjacent items by 16px or 24px."
+    },
+    {
+      "name": "Editor Demonstration Panel",
+      "role": "Contained product showcase with a tab rail, file tree, and code area",
+      "description": "Build the outer panel on Midnight Panel #080e21 with an 8px radius and 1px Steel Outline #1d293d ring. Use Deep Slate #0f172b for the selected file row, Signal White #ffffff for selected labels, Muted Fog #90a1b9 for inactive tabs, and 14px/400 ui-monospace for code."
+    },
+    {
+      "name": "Editor Tab",
+      "role": "Product-demo mode selector",
+      "description": "Use a 6px radius tab with 6px 10px padding; selected tabs sit on Deep Slate #0f172b with Signal White #ffffff text, while unselected tabs are transparent with Muted Fog #90a1b9 text."
+    },
+    {
+      "name": "Module Repository Card",
+      "role": "Carousel item for a package, description, and repository metrics",
+      "description": "Use Midnight Panel #080e21 with an 8px radius and a 1px Steel Outline #1d293d ring. Apply 12px internal padding, 16px/500 Pale Frost #e2e8f0 package text, 14px/400 Muted Fog #90a1b9 description text, and 8px gaps between icon, title, and metrics."
+    },
+    {
+      "name": "Feature Capability Item",
+      "role": "Borderless feature-grid cell",
+      "description": "Keep the cell flush to Void Canvas #020618 with no card fill or shadow. Use a small Nuxt Signal #00dc82 outline icon, a 14px/600 Pale Frost #e2e8f0 title, 14px/400 Muted Fog #90a1b9 copy, and 8px vertical separation."
+    },
+    {
+      "name": "Command Snippet",
+      "role": "Copyable installation or terminal command",
+      "description": "Use Void Canvas #020618 with a 1px Steel Outline #1d293d border and 6px radius. Set the command in 14px/400 ui-monospace with Pale Frost #e2e8f0 text, use 8px vertical and 12px horizontal padding, and place a compact copy icon at the trailing edge."
+    },
+    {
+      "name": "Carousel Pagination Dot",
+      "role": "Compact state indicator below horizontal card collections",
+      "description": "Use small circular markers on Void Canvas #020618 with 6px gaps. The active marker is Signal White #ffffff; inactive markers use Steel Outline #1d293d."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The universal UI and editorial face: 16px/400 body text, 14px/500 navigation, 14px/600 section labels, 16px/500 buttons, and 48px or 72px/700 displays. The -0.025em tracking at 48px and 72px compresses the heavy display weight into framework-tool directness rather than oversized marketing softness.",
+      "sizes": "10px, 12px, 14px, 15px, 16px, 18px, 20px, 48px, 72px",
+      "family": "Public Sans",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00, 1.14, 1.20, 1.33, 1.40, 1.43, 1.50, 1.56, 1.60, 1.71",
+      "substitute": "Inter, Arial, sans-serif",
+      "letterSpacing": "-1.2px at 48px and -1.8px at 72px; normal at UI sizes"
+    },
+    {
+      "role": "Code editor content, terminal commands, and implementation snippets; the system monospace face makes product demonstrations read as live tooling rather than decorative mockups.",
+      "sizes": "14px",
+      "family": "ui-monospace",
+      "weight": "400",
+      "lineHeight": "1.71",
+      "substitute": "SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Nuxt — terminal-lit framework workshop. The site holds a near-black blue canvas beneath a thin, glassy header, then punctuates documentation-like density with white display type and electric #00dc82 green. Large 72px and 48px Public Sans headlines are tightly tracked and bluntly bold, while compact feature copy, hairline outlines, code panes, and quiet muted-blue navigation keep the page grounded in a developer tool rather than a promotional poster.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Void Canvas: #020618 — Page background, header field, dark controls, command surfaces\n- Midnight Panel: #080e21 — Card surfaces, code-editor body, contained product panels\n- Deep Slate: #0f172b — Selected dark tabs, secondary dark buttons, inset control surfaces\n- Steel Outline: #1d293d — Hairline card outlines, image frames, dark raised button fills\n- Blue Steel: #314158 — Inset control rings, subdued control borders, navigation separators\n- Muted Fog: #90a1b9 — Body copy, inactive navigation, secondary labels, supporting metadata\n- Pale Frost: #e2e8f0 — High-emphasis navigation text, secondary button labels, light icon strokes\n- Signal White: #ffffff — Display headings, selected tab labels, inverted button fills\n- Nuxt Signal: #00dc82 — Filled getting-started buttons, logo, release markers, highlighted display words — vivid green acts as a precise activation signal in the blue-black interface\n- Vue Link: #42b883 — Partner-technology links and small ecosystem references\n- Vite Link: #a156fe — Vite ecosystem links and compact technology references\n- Nitro Link: #fb848e — Nitro ecosystem links and compact technology references\n\nCreate a left-aligned framework hero on Void Canvas #020618 with a Public Sans 72px/72px 700 white headline at -1.8px tracking; color one short phrase Nuxt Signal #00dc82 and place an 8px-radius Midnight Panel #080e21 code editor to the right.\nCreate a 4-column feature grid on Void Canvas #020618: each borderless cell has a Nuxt Signal #00dc82 outline icon, a 14px/20px Public Sans 600 Pale Frost #e2e8f0 title, and 14px/24px Muted Fog #90a1b9 copy.\nCreate a 3-card module carousel using 8px-radius Midnight Panel #080e21 cards with 1px Steel Outline #1d293d rings, 12px padding, Pale Frost #e2e8f0 package names, and Muted Fog #90a1b9 metadata.\nCreate a command snippet with 14px/24px ui-monospace Pale Frost #e2e8f0 text on Void Canvas #020618, a 1px Steel Outline #1d293d border, 6px radius, and 8px by 12px padding.\nCreate a public action pair: a Nuxt Signal #00dc82 6px-radius button with 16px/24px Public Sans 500 Deep Slate #0f172b text beside a dark outlined control with Pale Frost #e2e8f0 text and a 1px inset Blue Steel #314158 ring."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is drawn as exact 1px perimeter or inset rings, never as floating blur. Panels use 0 0 0 1px #1d293d, while compact controls use 0 0 0 1px inset #314158; this keeps every surface reading like an editor pane or terminal window."
+}

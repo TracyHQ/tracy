@@ -1,0 +1,280 @@
+{
+  "dos": [
+    "Use the Title serif at weight 400 for all display headlines (36–64px) with -0.02em tracking — never bold or semi-bold the serif.",
+    "Fill primary buttons with #000000 background and #f7f8fb text at 9999px radius; this is the only filled color action in the system.",
+    "Apply border-radius 64px to feature/showcase cards to create the signature pill-card shape — do not use standard 8–16px card radii for these containers.",
+    "Use rgba(12,41,126,0.07) 0px 0px 0px 1px inset as the shadow token for elevated surfaces — never use outset drop shadows.",
+    "Keep the palette achromatic for all UI chrome; introduce color only through semantic states (error #a10214, warning #7c4b01, success #02a745) and the structural accent tint rgba(55,80,155,0.04) on card backgrounds.",
+    "Apply negative letter-spacing to all Base-Variable UI text: -0.026em at 13px scaling to -0.015em at 25px — loose tracking is never correct.",
+    "Reserve #777d90 for all subdued borders, placeholder text, and partner/supporting iconography — it is the system's workhorse mid-gray."
+  ],
+  "donts": [
+    "Never introduce chromatic accent colors (blue, purple, green) as UI button fills or background washes — the system is intentionally achromatic outside semantic states.",
+    "Never use the Title serif below 36px — it is a display-only typeface; all body and UI text uses Base-Variable.",
+    "Never apply drop shadows or elevation halos (box-shadow: 0 4px 24px ...) — the only allowed shadow is the inset blue-tinted ring rgba(12,41,126,0.07).",
+    "Never use a border-radius below 20px for major container panels or modal sheets — the system skews large-radius throughout.",
+    "Never set Base-Variable at weight 400 or below — minimum weight is 500 to maintain the compact, confident stroke density.",
+    "Never use #9fa5ba or lighter grays as body text color — they are border and ghost-UI colors only; minimum body text is #777d90.",
+    "Never stack multiple button styles of the same hierarchy — one black pill + one ghost pill per action group; do not add a third tier."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Pure Canvas",
+      "role": "Primary page background, modal/dialog background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f8fb",
+      "name": "Frost Surface",
+      "role": "Secondary surface, subtle background containers, nav pill background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Midnight Ink",
+      "role": "Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#13151b",
+      "name": "Deep Charcoal",
+      "role": "Near-black text for dense UI labels, active nav tab text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2d313f",
+      "name": "Graphite",
+      "role": "Navigation link text, secondary headings, mid-level labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#525769",
+      "name": "Slate",
+      "role": "Tertiary text, supporting body copy, muted label text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#777d90",
+      "name": "Ash",
+      "role": "Subdued body text, hairline borders, icon strokes, placeholder text — the dominant mid-gray in this system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9fa5ba",
+      "name": "Fog",
+      "role": "Light borders, icon outlines, de-emphasized link borders, ghost UI outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0c2970",
+      "name": "Modal Veil",
+      "role": "Inset ring shadow on elevated cards/surfaces — blue-tinted at 7% opacity creates structural definition without neutral gray shadows",
+      "group": "accent"
+    }
+  ],
+  "imagery": "Product UI screenshots are the primary visual content — contained inside the 64px-radius pill-cards, cropped tightly to show interface grids and chat flows. No photography, no illustration, no 3D. The screenshots are presented raw-edged within the rounded card container, creating a framed product showcase. Icons throughout are outlined, single-color (#777d90 or #000000), with consistent ~1.5px apparent stroke weight — never filled multicolor. The visual density is low: large amounts of white space surround a single centered product demo panel, making the screenshots the sole focal object on each screen.",
+  "similar": [
+    {
+      "why": "Same achromatic palette with black pill buttons and weight-400 serif headlines as the sole expressive element",
+      "business": "Linear"
+    },
+    {
+      "why": "White canvas with black-only action buttons, minimal navigation, and product screenshots as primary hero content",
+      "business": "Vercel"
+    },
+    {
+      "why": "Editorial serif headlines at light weight against white, with ghost secondary buttons and muted gray supporting text",
+      "business": "Pitch"
+    },
+    {
+      "why": "Centered hero with large display text and contained product UI screenshot as the dominant visual below the headline",
+      "business": "Loom"
+    },
+    {
+      "why": "Custom variable sans for UI text paired with serif display type, achromatic primary actions, inset surface shadows",
+      "business": "Framer"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "8px",
+      "cards": "64px",
+      "small": "4px",
+      "inputs": "12px",
+      "modals": "24px",
+      "panels": "20px",
+      "buttons": "9999px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Base page background for all content sections"
+    },
+    {
+      "hex": "#f7f8fb",
+      "name": "Frost Surface",
+      "level": 2,
+      "purpose": "Secondary containers: nav segmented control background, subtle section washes"
+    },
+    {
+      "hex": "#f4f5fb",
+      "name": "Card Tint",
+      "level": 3,
+      "purpose": "Feature cards at rgba(55,80,155,0.04) over white — barely-perceptible blue-gray tint distinguishing card from canvas"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Elevated Panel",
+      "level": 4,
+      "purpose": "Modal dialogs, product demo frames — white surface defined by inset ring shadow rather than color change"
+    }
+  ],
+  "northStar": "Editorial ink on white marble — a typographer's product page where the serif headline IS the brand, and everything else stays out of its way.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.34
+    },
+    {
+      "role": "body-sm",
+      "size": 15,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.38
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading",
+      "size": 25,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.38
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.28,
+      "letterSpacing": -0.72
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.12,
+      "letterSpacing": -1.28
+    }
+  ],
+  "components": [
+    {
+      "html": "<div style=\"--color-pure-canvas: #ffffff; --color-frost-surface: #f7f8fb; --color-midnight-ink: #000000; --color-deep-charcoal: #13151b; --color-graphite: #2d313f; --color-slate: #525769; --color-ash: #777d90; --color-fog: #9fa5ba; --font-title: 'Playfair Display', Georgia, serif; --font-base: 'Inter', 'DM Sans', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 48px 32px; background: var(--color-pure-canvas); font-family: var(--font-base);\"><a href=\"#\" style=\"display: inline-flex; align-items: center; justify-content: center; background: var(--color-midnight-ink); color: var(--color-frost-surface); font-family: var(--font-base); font-size: 15px; font-weight: 600; letter-spacing: -0.025em; padding: 12px 24px; border-radius: 9999px; text-decoration: none; border: none; cursor: pointer; white-space: nowrap;\">How to install</a><a href=\"#\" style=\"display: inline-flex; align-items: center; justify-content: center; background: transparent; color: var(--color-graphite); font-family: var(--font-base); font-size: 15px; font-weight: 600; letter-spacing: -0.025em; padding: 12px 24px; border-radius: 9999px; text-decoration: none; border: 1px solid var(--color-fog); cursor: pointer; white-space: nowrap;\">Try live demo</a></div>",
+      "name": "Button Group — Primary + Secondary",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<div style=\"--color-pure-canvas: #ffffff; --color-frost-surface: #f7f8fb; --color-midnight-ink: #000000; --color-deep-charcoal: #13151b; --color-graphite: #2d313f; --color-ash: #777d90; --color-fog: #9fa5ba; --shadow-subtle: rgba(12,41,126,0.07) 0px 0px 0px 1px inset; --font-base: 'Inter', 'DM Sans', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; padding: 48px 32px; background: var(--color-pure-canvas);\"><div style=\"display: inline-flex; align-items: center; background: var(--color-frost-surface); border-radius: 9999px; padding: 4px; gap: 2px;\"><button style=\"display: inline-flex; align-items: center; justify-content: center; background: var(--color-pure-canvas); color: var(--color-deep-charcoal); font-family: var(--font-base); font-size: 15px; font-weight: 600; letter-spacing: -0.025em; padding: 6px 18px; border-radius: 9999px; border: none; cursor: pointer; box-shadow: rgba(12,41,126,0.07) 0px 0px 0px 1px inset; white-space: nowrap; line-height: 1.4;\">Web</button><button style=\"display: inline-flex; align-items: center; justify-content: center; background: transparent; color: var(--color-ash); font-family: var(--font-base); font-size: 15px; font-weight: 500; letter-spacing: -0.025em; padding: 6px 18px; border-radius: 9999px; border: none; cursor: pointer; white-space: nowrap; line-height: 1.4;\">iOS</button></div></div>",
+      "name": "Platform Toggle — Web / iOS Segmented Control",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<div style=\"--color-pure-canvas: #ffffff; --color-frost-surface: #f7f8fb; --color-midnight-ink: #000000; --color-deep-charcoal: #13151b; --color-graphite: #2d313f; --color-slate: #525769; --color-ash: #777d90; --color-fog: #9fa5ba; --font-title: 'Playfair Display', Georgia, serif; --font-base: 'Inter', 'DM Sans', system-ui, sans-serif; background: var(--color-pure-canvas); padding: 56px 40px 48px; text-align: center; max-width: 600px; box-sizing: border-box;\"><div style=\"display: inline-flex; align-items: center; gap: 6px; margin-bottom: 28px;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" style=\"flex-shrink:0;\"><path d=\"M7 1L8.2 5.5H13L9.4 8.2L10.6 12.8L7 10L3.4 12.8L4.6 8.2L1 5.5H5.8L7 1Z\" fill=\"#525769\"/></svg><span style=\"font-family: var(--font-base); font-size: 13px; font-weight: 500; letter-spacing: -0.026em; color: var(--color-slate); line-height: 1.4;\">Refero MCP for AI agents</span></div><h1 style=\"font-family: var(--font-title); font-size: 50px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; color: var(--color-midnight-ink); margin: 0 0 20px; padding: 0;\">Give your AI agent design taste</h1><p style=\"font-family: var(--font-base); font-size: 15px; font-weight: 500; letter-spacing: -0.025em; color: var(--color-ash); line-height: 1.55; margin: 0 auto 36px; max-width: 420px;\">Refero MCP connects your agent to a curated library of real product interfaces and user flows. It studies before it builds — and the output looks designed, not generated.</p><div style=\"display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;\"><a href=\"#\" style=\"display: inline-flex; align-items: center; justify-content: center; background: var(--color-midnight-ink); color: var(--color-frost-surface); font-family: var(--font-base); font-size: 15px; font-weight: 600; letter-spacing: -0.025em; padding: 12px 24px; border-radius: 9999px; text-decoration: none; border: none; cursor: pointer;\">How to install</a><a href=\"#\" style=\"display: inline-flex; align-items: center; justify-content: center; background: transparent; color: var(--color-graphite); font-family: var(--font-base); font-size: 15px; font-weight: 600; letter-spacing: -0.025em; padding: 12px 24px; border-radius: 9999px; text-decoration: none; border: 1px solid var(--color-fog); cursor: pointer;\">Try live demo</a></div></div>",
+      "name": "Announcement Chip + Hero Headline Block",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Black Pill Button (Primary)",
+      "role": "Primary call-to-action, install/demo actions",
+      "description": "Background #000000, text #f7f8fb at 15px Base-Variable weight 600, letter-spacing -0.025em. Padding 12px 24px. Border-radius 9999px. No shadow. The filled black pill against white is the sole high-contrast action affordance in the system — all other interactive elements are ghost or text links."
+    },
+    {
+      "name": "Ghost Pill Button (Secondary)",
+      "role": "Secondary action alongside the primary pill",
+      "description": "Background transparent, border 1px solid #9fa5ba, text #2d313f at 15px Base-Variable weight 600, letter-spacing -0.025em. Padding 12px 24px. Border-radius 9999px. Sits directly beside the black pill; the border-only treatment recedes while maintaining shape parity."
+    },
+    {
+      "name": "Platform Toggle (Web / iOS)",
+      "role": "Segmented control for switching platform context in nav",
+      "description": "Container background #f7f8fb, border-radius 9999px, padding 4px. Active tab: background #ffffff, text #13151b at 15px weight 600, radius 9999px, shadow rgba(12,41,126,0.07) 0px 0px 0px 1px inset. Inactive tab: text #777d90 at 15px weight 500. Height ~36px."
+    },
+    {
+      "name": "Search Bar",
+      "role": "Global AI-query input in top navigation",
+      "description": "Background transparent, border-bottom 1px solid #000000 (underline only, borderRadius 0px), padding-left 8px. Placeholder text #9fa5ba at 16px Base-Variable weight 500. Full-width inside its container. The underline-only input is the most minimal possible treatment — no box, no rounded container."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Content showcase containers for product screenshots/feature blocks",
+      "description": "Background rgba(55,80,155,0.04) — a barely-there blue tint distinguishes card from pure white canvas without introducing visible color. Border-radius 64px — extremely large radius creates a pill-like container card, the most distinctive shape token in the system. Padding 0px (content bleeds to edges). No box-shadow."
+    },
+    {
+      "name": "Inset Surface Ring",
+      "role": "Elevated UI panels, chat interface frames",
+      "description": "Background #ffffff, border-radius 12px–24px. Box-shadow: rgba(12,41,126,0.07) 0px 0px 0px 1px inset — the blue-tinted inset ring replaces an outset shadow; it defines the panel boundary without lifting it off the page. Used on the product demo screenshot panel."
+    },
+    {
+      "name": "Logo / Brand Badge",
+      "role": "Circular brand mark in top-left navigation",
+      "description": "Black circle with white 'R' lettermark. 32px diameter, border-radius 9999px. Background #000000, icon #ffffff. Compact, no text label beside it."
+    },
+    {
+      "name": "Partner Logomark Row",
+      "role": "Social proof / compatibility strip (Claude, Cursor, Lovable, Codex)",
+      "description": "Inline row of partner logos in #777d90 (muted gray), horizontally spaced at 24px gaps. No backgrounds, no cards — floating text-weight logotypes on white. The gray tint de-emphasizes them as supporting context rather than primary content."
+    },
+    {
+      "name": "Announcement Chip",
+      "role": "Top-of-hero contextual label ('Refero MCP for AI agents')",
+      "description": "Small inline label: 13px Base-Variable weight 500, #525769, letter-spacing -0.026em. Diamond/astisk icon at 12px preceding text. No background fill, no border — pure text label with icon punctuation. Sits centered above the main headline."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Top navigation text links (Pricing, How It Works)",
+      "description": "Text #2d313f at 15px Base-Variable weight 500, letter-spacing -0.025em. No underline at rest. Hover state transitions color using 0.2s ease. No background, no border. Minimal by design — these links recede relative to the black pill action."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All editorial headlines and display text — the expressive backbone of the brand. Weight 400 for a serif at 64px is anti-convention; most product sites use weight 700+, but this regular-weight serif creates authority through ink texture rather than mass. The -0.02em tracking tightens large display lines without condensing smaller ones.",
+      "sizes": "36px, 40px, 50px, 64px",
+      "family": "Title (custom serif)",
+      "weight": "400",
+      "lineHeight": "1.12–1.28",
+      "substitute": "Playfair Display 400, or Georgia for fallback",
+      "letterSpacing": "-0.02em at all display sizes"
+    },
+    {
+      "role": "All UI text: navigation, buttons, body copy, labels, captions, input text. Variable font exploited for precise weight stepping — 650 for strong UI labels, 600 for subheadings, 500 for body and supporting text. Negative tracking throughout (-0.015em to -0.026em) keeps the sans from spreading loose.",
+      "sizes": "13px, 15px, 16px, 17px, 20px, 25px",
+      "family": "Base-Variable (custom sans)",
+      "weight": "500, 600, 650",
+      "lineHeight": "1.40–1.60 for body, 0.96–1.20 for tight UI labels",
+      "substitute": "Inter Variable or DM Sans",
+      "letterSpacing": "-0.026em at 13px, -0.025em at 15px, -0.022em at 16px, -0.020em at 17–20px, -0.015em at 25px",
+      "fontFeatureSettings": "\"tnum\""
+    }
+  ],
+  "description": "Refero uses a white-canvas editorial language where a high-contrast serif headline font (Title) carries nearly all expressive weight against an otherwise achromatic UI. The page breathes with generous vertical rhythm, letting black-on-white hierarchy do the work that other systems hand to color. The single accent move is a filled black pill button against white — no gradients, no color splashes, just ink-weight contrast. Borders and muted grays form a quiet structural grid, while the inset blue-tinted shadow on surface elements is the only chromatic whisper in an otherwise monochrome system.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #000000\n- text (secondary): #777d90\n- text (nav links): #2d313f\n- background: #ffffff\n- surface (secondary): #f7f8fb\n- border (default): #777d90\n- border (light): #9fa5ba\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\n1. **Hero Section**: White background (#ffffff). Display headline at 64px Title serif weight 400, color #000000, letter-spacing -1.28px, line-height 1.12, centered, max-width 800px. Sub-headline at 17px Base-Variable weight 500, color #777d90, letter-spacing -0.34px, centered, max-width 560px. Two pill buttons side by side, gap 12px: primary = background #000000, text #f7f8fb, 15px weight 600, padding 12px 24px, radius 9999px; secondary = background transparent, border 1px solid #9fa5ba, text #2d313f, same font/padding/radius. Announcement chip above headline: 13px weight 500, color #525769, letter-spacing -0.34px, diamond icon preceding text.\n\n2. **Feature Showcase Card**: Background rgba(55,80,155,0.04), border-radius 64px, padding 0. Contains a product screenshot image that fills the card with rounded overflow. Below the card, small caption at 13px Base-Variable weight 500, color #777d90, letter-spacing -0.34px.\n\n3. **Elevated Panel / Demo Frame**: Background #ffffff, border-radius 24px, box-shadow rgba(12,41,126,0.07) 0px 0px 0px 1px inset. Internal padding 24px. Text inside at 15px Base-Variable weight 500, color #2d313f.\n\n4. **Search Input (Nav)**: Full-width container, background transparent, no top/side/bottom border except border-bottom 1px solid #000000. Padding-left 8px. Placeholder text 'AI chat interface' at 16px Base-Variable weight 500, color #9fa5ba, letter-spacing -0.35px. Border-radius 0px.\n\n5. **Platform Toggle (Segmented Control)**: Outer pill: background #f7f8fb, radius 9999px, padding 4px. Two tabs side by side: active tab background #ffffff, radius 9999px, box-shadow rgba(12,41,126,0.07) 0px 0px 0px 1px inset, text #13151b 15px weight 600; inactive tab background transparent, text #777d90 15px weight 500. Total height ~36px."
+    }
+  ],
+  "elevationPhilosophy": "Refero deliberately avoids outset drop shadows. Elevation is communicated through the inset ring shadow rgba(12,41,126,0.07) 0px 0px 0px 1px inset — a blue-tinted 1px inset border that defines surface edges without creating depth illusion. This keeps the page fully flat while still distinguishing panels from background. The blue tint at 7% opacity is the only chromatic element in the structural layer."
+}

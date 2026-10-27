@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-aubergine-ink: #290a08;
+  --color-vintage-burgundy: #810c00;
+  --color-buttery-highlight: #fff3cc;
+  --color-parchment-canvas: #f6f0e1;
+  --color-linen-card: #fffaec;
+  --color-hairline-mist: #e5e7eb;
+  --color-paper-white: #ffffff;
+
+  /* Typography */
+  --font-jannon-neo: 'Jannon Neo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-modale-antique: 'Modale Antique', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

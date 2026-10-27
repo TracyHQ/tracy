@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-carbon: #0a0a0a;
+  --color-graphite: #18181b;
+  --color-frost: #ffffff;
+  --color-ash: #bababa;
+  --color-smoke: #9d9d9d;
+  --color-slate: #858484;
+  --color-reactor-lime: #ebfb10;
+  --color-plasma-blue: #1019ec;
+
+  /* Typography — Font Families */
+  --font-abcoracle: 'abcOracle', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtpantheon: 'gtPantheon', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

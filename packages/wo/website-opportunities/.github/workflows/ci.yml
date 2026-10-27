@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit and database tests
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Tests that need a database read this and skip themselves without it.
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
+      - name: Tests (unit, and database tests against the Postgres service)
+        run: npm test
+
+  public-leaks:
+    # Going public exposes every commit, so the tree AND every pushed commit are scanned: Vietnamese text, internal
+    # names and hosts, people's names, private or server IP addresses, secrets and tracked .env or key files.
+    name: Public-leak scan (tree and pushed commits)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Scan the tree
+        run: node scripts/check-public.mjs
+      - name: Scan the pushed commit range
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+        run: |
+          if [ "$EVENT" = pull_request ]; then
+            range="$PR_BASE..$PR_HEAD"
+          elif [ -z "$BEFORE" ] || [ "$BEFORE" = 0000000000000000000000000000000000000000 ] \
+            || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            # A new branch, a force push or a first push: nothing earlier is known to be clean, so scan all history.
+            range="$SHA"
+          else
+            range="$BEFORE..$SHA"
+          fi
+          echo "scanning $range"
+          node scripts/check-public.mjs --history "$range"
+
+  english-only:
+    # Public surfaces are English. The check runs on what `npm pack` ships, so it sees the published files exactly
+    # as a consumer receives them, generated ones included, not only the source tree.
+    name: English-only check on packed output
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Pack and unpack
+        run: |
+          mkdir -p "$RUNNER_TEMP/packed"
+          npm pack --pack-destination "$RUNNER_TEMP"
+          tar -xzf "$RUNNER_TEMP"/website-opportunities-*.tgz -C "$RUNNER_TEMP/packed"
+      - name: Scan the packed files
+        run: node scripts/check-public.mjs --dir "$RUNNER_TEMP/packed/package"
+
+  clean-consumer:
+    # The package must install and run in an empty project: no workspace, no sibling packages, no host application.
+    name: Clean consumer
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17.6
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: website-opportunities
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: website-opportunities/.nvmrc
+      - name: Pack the package
+        working-directory: website-opportunities
+        run: npm pack --pack-destination "$RUNNER_TEMP"
+      - name: Install into an empty project
+        run: |
+          mkdir "$RUNNER_TEMP/consumer"
+          cd "$RUNNER_TEMP/consumer"
+          npm init -y
+          npm install --no-audit --no-fund "$RUNNER_TEMP"/website-opportunities-*.tgz
+          # The host brings its own Postgres driver; the package takes a pool.
+          npm install --no-audit --no-fund pg@8.23.0
+      - name: Import the public entry points
+        working-directory: ${{ runner.temp }}/consumer
+        run: |
+          node --input-type=module -e "
+            const route = await import('website-opportunities/src/route.js')
+            const domain = await import('website-opportunities/domain')
+            if (!Object.keys(route).length || !Object.keys(domain).length) throw new Error('an entry point exports nothing')
+            console.log('route exports', Object.keys(route).length, '- domain exports', Object.keys(domain).length)
+          "
+      - name: Migrate an empty database twice
+        working-directory: ${{ runner.temp }}/consumer
+        run: |
+          node --input-type=module -e "
+            import pg from 'pg'
+            import { migrate } from 'website-opportunities/src/schema/index.js'
+            const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+            const first = await migrate(pool)
+            const second = await migrate(pool)
+            await pool.end()
+            if (!first.applied.length) throw new Error('nothing applied to an empty database')
+            if (second.applied.length) throw new Error('a second run applied ' + second.applied.join(', '))
+            console.log('applied', first.applied.join(', '), '- second run applied nothing')
+          "

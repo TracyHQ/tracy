@@ -1,0 +1,104 @@
+{
+  "color": {
+    "void-navy": {
+      "$value": "#041734",
+      "$type": "color",
+      "$description": "Void Navy — Page background, hero canvas, section bands — the deep-space base on which all other UI floats"
+    },
+    "signal-blue": {
+      "$value": "#0075ff",
+      "$type": "color",
+      "$description": "Signal Blue — Blue text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "probe-cyan": {
+      "$value": "#008ef0",
+      "$type": "color",
+      "$description": "Probe Cyan — Hover/active accent variant for buttons and interactive states"
+    },
+    "hub-navy": {
+      "$value": "#002652",
+      "$type": "color",
+      "$description": "Hub Navy — Secondary surface tint, logo wordmark — a slightly lighter shade of the void used for depth"
+    },
+    "orbit-slate": {
+      "$value": "#0f172a",
+      "$type": "color",
+      "$description": "Orbit Slate — Card surfaces, inset panels, terminal block backgrounds — the next level up from the void"
+    },
+    "deck-charcoal": {
+      "$value": "#1a1f36",
+      "$type": "color",
+      "$description": "Deck Charcoal — Elevated card surfaces, nested panel backgrounds — sits above Orbit Slate for layered depth"
+    },
+    "deep-hull": {
+      "$value": "#1f2937",
+      "$type": "color",
+      "$description": "Deep Hull — Borders on dark surfaces, section dividers within dark bands"
+    },
+    "steel-edge": {
+      "$value": "#374151",
+      "$type": "color",
+      "$description": "Steel Edge — Borders and dividers on cards and panels — the most common structural border"
+    },
+    "console-gray": {
+      "$value": "#445458",
+      "$type": "color",
+      "$description": "Console Gray — Secondary body text, muted labels, icon fills — readable on dark without competing with white headings"
+    },
+    "slate-mute": {
+      "$value": "#64748b",
+      "$type": "color",
+      "$description": "Slate Mute — Helper text, captions, tertiary metadata — drops information below the primary read"
+    },
+    "mist": {
+      "$value": "#a7babe",
+      "$type": "color",
+      "$description": "Mist — De-emphasized text, disabled labels, low-priority inline content"
+    },
+    "halo": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Halo — Hairline borders on dark surfaces, subtle dividers, the dominant structural line color"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, filled button background, logo fills — maximum contrast against the void"
+    },
+    "status-green": {
+      "$value": "#4ade80",
+      "$type": "color",
+      "$description": "Status Green — Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary UI and heading typeface. Weight 300 for display headlines creates whisper-quiet authority; weight 400 for body; weight 500–600 for nav, buttons, and labels."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Code blocks, terminal output, CLI commands like `npx checkly init`. The custom font signal 'this is executable'."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "System monospace fallback for inline code, tab indicators, secondary code contexts"
+    },
+    "consolas": {
+      "$value": "Consolas",
+      "$type": "fontFamily",
+      "$description": "Consolas — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.checklyhq.com",
+      "siteName": "Checkly",
+      "extractedAt": "2026-06-03T15:52:38.926Z",
+      "variant": "compact"
+    }
+  }
+}

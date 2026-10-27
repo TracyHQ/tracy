@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-893-bind-failure-says-why",
+  "kind": "fix",
+  "title": "WordPress provision: a bind or inspect answer that is not JSON says curl's exit code and HTTP status; Apply's note about an unbound site claims no cause",
+  "pr": 893,
+  "area": "tracy-fleet-operation/provision wordpress.sh + tracy-web brief-engines/shared",
+  "cms": ["wp"],
+  "needs": ["node", "bash", "curl"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs",
+    "S2: Run: node --test --test-reporter=tap apps/tracy-web/test/brief-shared.test.mjs",
+    "S3: Record each run's exit code and '# tests', '# pass', '# fail' lines, and whether the tests 'a bind or inspect answer that is not JSON says what curl saw, and never the token' (S1) and 'an unbound site is said without a cause the refusal does not give' (S2) are 'ok'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'; the named test is 'ok': an empty reply (curl exit 52) and an HTTP 502 with an empty body each produce a '!!' line naming the curl exit code and HTTP status, the bound / already bound / refused paths keep their words, and the token appears in no output.",
+    "S2 exits 0 with '# fail 0'; the named test is 'ok': the unbound note reads 'this site is not bound to its template’s content contract, so it keeps the template’s words' and names no plugin or profile."
+  ],
+  "selectors": {
+    "provision": "packages/fleet/tracy-fleet-operation/scripts/provision/platform/wordpress.sh (tracy_wp_contract_post, tracy_wp_bind_contract)",
+    "note": "apps/tracy-web/src/sites/brief-engines/shared.js (sayUnbound)"
+  },
+  "evidence": "05/10/2026 local stand: a ja-kinetic wp7 1.0.3 site was handed over unbound after '!! the Claude Cowork plugin did not answer the bind with JSON: ' (empty; 1 of 265 binds on the host); minutes later an inspect with the same contract answered fine, and Apply said the plugin did not carry the profile, which it did (ledger L29).",
+  "fence": "Only what is logged and said changes; what binds, when, and the refusal paths do not. The root cause of the empty answer is still unknown.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-893-bind-failure-says-why.mjs"]
+  }
+}

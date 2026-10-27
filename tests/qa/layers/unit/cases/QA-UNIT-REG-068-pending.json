@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-068-pending",
+  "itemIds": ["regression:REG-068"],
+  "requirement": "The agent's ask_user_question opens the Questions tab in the right pane with the whole set, a PointerCard replaces dsh's one-question card, Ask me follow-up questions makes the agent ask a new set, and the tab-questions switch off brings dsh's card back",
+  "oracle": {
+    "source": "tests/regression/cases/REG-068-ask-form-right-pane.json",
+    "ref": "PR #862 (feat); fix evidence: tasks/evidence/ask-form/README.md (stand askform, 04/10/2026): three sessions on askwp1 — Send answer, Decide for me, Ask me follow-up questions — and the switch turned off and on.",
+    "invariant": "The build check prints a count >= 1 and a path. HIDDEN_ON === false. TAB_ACTIVE === true and ITEMS1 lists every question id of CALL1 (the whole set, not one at a time). POINTER matches /question(s)? (is|are) waiting in the right pane/ and DSH_CARD === false (dsh's one-question card is not in the chat column while the form holds the request). R1 has exactly one entry; it parses (up to its first newline) as JSON with action 'follow_up', and it contains the line 'The customer asked for follow-up questions before deciding; ask only what is new, do not repeat answered questions.' CALL2 is not null, its callId differs from CALL1's, and its set of question ids is not equal to CALL1's (the agent asked a new set instead of repeating the same one). ITEMS2 equals CALL2's question ids (the tab opened again with the new set). PUT_OFF is 200, HIDDEN_OFF === true, OFF_POINTER === false, OFF_FORM === false and OFF_DSH_CARD === true (dsh's own card asks again). PUT_BACK is 200 and HIDDEN_BACK === false. Model-dependent: if the agent never asks, or answers the follow-up press in plain text with no new ask_user_question call, the verdict is FAIL with the reply text quoted — never PASS.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, model, seat:owner, seat:tracy_admin"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:model", "need:seat:owner", "need:seat:tracy_admin"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-068"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "flaky-model", "owner:harness"],
+  "regression": {
+    "id": "REG-068",
+    "pr": 862,
+    "kind": "feat",
+    "area": "chat/ask-form",
+    "file": "tests/regression/cases/REG-068-ask-form-right-pane.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": true,
+  "command": [],
+  "needs": ["stand", "model", "seat:owner", "seat:tracy_admin"]
+}

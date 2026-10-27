@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1426-widget-spoken-auth",
+  "kind": "fix",
+  "title": "Voice sign-in asks for spoken email and keeps confirmation, private OTP and shared microphone",
+  "pr": 1426,
+  "area": "widget/voice-sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the listed Node and own headless browser fixtures. Speech, OTP, TTS and APIs are synthetic; never send email, call cloud providers or touch the user browser."
+  ],
+  "expect": [
+    "EN and VI guides ask the person to say their email, then confirm before requesting a code, including regional language tags.",
+    "Spoken email fills the panel and is read back; no OTP request occurs before yes or đúng.",
+    "Spoken six digits verify once on the same microphone, with no credentials in model turns or sessionStorage; the next normal utterance resumes website context.",
+    "Rejected email, partial code, paused listening and stale code callbacks after Google/phase changes never submit a code."
+  ],
+  "selectors": {
+    "routes": "/widget/api/auth/email, /widget/api/auth/verify",
+    "dom": "#auth-email, .auth-confirm, #auth-code, #voice-status"
+  },
+  "fence": "Explicit email confirmation, epoch-bound OTP timer and speech cursor routing; browser fixtures do not establish canonical STT/TTS acceptance.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget-auth-conversation.test.mjs",
+      "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs"
+    ],
+    "tests": [
+      "spoken auth happy path fills email, confirms before OTP, verifies six digits and resumes without a model turn",
+      "email rejection does not send OTP; paused or changed-phase queued code cannot verify",
+      "voice sign-in confirms the spoken email and verifies OTP without replacing the microphone",
+      "Vietnamese regional voice guide accepts spoken confirmation and six digits on the same microphone"
+    ]
+  }
+}

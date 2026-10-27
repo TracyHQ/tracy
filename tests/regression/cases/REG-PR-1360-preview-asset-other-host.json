@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1360-preview-asset-other-host",
+  "kind": "fix",
+  "title": "Design system preview assets: stylesheets of a demo on another host read at its public address",
+  "pr": 1360,
+  "area": "design-system/preview",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Ask GET /api/design-system/preview-asset for a stylesheet of a demo row on host fleet01 (this server dev) whose <label>.fleet01-sites.tracy.site name throws and whose public address serves the file, with innerOf wired to siteReadOrigin.",
+    "S2: Ask the same door for a font and a stylesheet of a demo on this host, then for a picture, a page, an escape and an unknown demo."
+  ],
+  "expect": [
+    "S1: 200 text/css with the file's bytes, only the public address fetched.",
+    "S2: 200 read on its container only; 400 for a picture, a page or an escape, 404 for an unknown demo, nothing fetched for them."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/design-system-preview-assets.test.mjs"
+  },
+  "evidence": "14/10/2026 on cowork.tracy.site after PR #1356: every preview-asset request of the 24 Joomla demos on fleet01 answered 502 DEMO_UNREADABLE and the Add site preview showed an unstyled page; the same CSS at the demo's public address answered 200",
+  "fence": "Door test in node with a fake fetch; the wiring in route.js is checked on cowork.tracy.site after deploy, not by this case",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/design-system-preview-assets.test.mjs"]
+  }
+}

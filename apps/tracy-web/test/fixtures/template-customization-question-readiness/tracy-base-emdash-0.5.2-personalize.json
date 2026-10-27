@@ -1,0 +1,1159 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of Tracy Base from the questionnaire answers (seed/questions.json: name · sector · contact). Same five kinds as Tracy Business (D38): `identity` is written exactly from the answers (a missing answer EMPTIES the field, never keeps the demo value); `replace` rewrites the demo brand everywhere; `copy` is prose a model writes for the sector, the demo text being the length reference; `facts` are claims about a real business (counts, prices, years, named clients, named people) and are REMOVED, never invented; `blocks` and `rewrite` let the model redo whole cards and entries for the sector. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}. A contact line the customer did not give (phone, e-mail, address, opening hours: the questions never ask for them) keeps the template's value as a placeholder the customer fills in later (`\"unanswered\": \"keep-demo\"`); a rule with `requires` is written only when every fact it names is given.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_name",
+      "value": "{name}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "not_found_back_label",
+      "value": "Back to {name}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "social_handle",
+      "value": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "social",
+      "value": [],
+      "from": "social",
+      "networks": ["instagram", "facebook", "linkedin", "youtube", "x", "tiktok"],
+      "item": { "platform": "{network}", "url": "{url}" }
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "nav_brand",
+      "value": "{name}"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "footer_brand",
+      "value": "{name}"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "email",
+      "value": "{email}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "email_label",
+      "value": "",
+      "requires": ["email"]
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "social",
+      "value": [],
+      "from": "social",
+      "item": { "label": "{name}", "url": "{url}" }
+    }
+  ],
+  "replace": [
+    {
+      "find": "Tracy Base",
+      "with": "{name}"
+    },
+    {
+      "find": "@tracybasedemo",
+      "with": ""
+    }
+  ],
+  "copyNote": "Read by Tracy's template readiness check, not by tools/personalize.mjs (TCH #1013, D6 + D7): demoCompanyNames is every spelling of the demo company's name, each renamed by a replace rule above; keptText is demo text kept on purpose (collection/slug for an entry, collection/slug.field for one field). The design system page and the marketing samples page show the template's own design (type scale, colours, spacing, sample layouts), not the business, so their words stay as the template has them and are translated like labels. Every `*image_alt` kept describes a demo picture that stays on the customer's site (this template draws no new pictures: `images` is empty), so the words still match the picture. The one-page footer credit names the template's designer.",
+  "demoCompanyNames": ["Tracy Base"],
+  "keptText": [
+    "design_system/design_system",
+    "marketing/marketing.samples",
+    "onepage/onepage.footer_credit",
+    "services/website-strategy.image_alt",
+    "services/brand-and-interface-design.image_alt",
+    "services/website-development.image_alt",
+    "services/content-and-photography.image_alt",
+    "services/event-invitation-emails-best-practices-and-examples-you-can-steal.image_alt",
+    "people/how-to-curabitur-tempus-lacus-id-orci-feugiat.image_alt",
+    "people/create-donec-lacinia-urna-a-metus-iaculis-ultrices.image_alt",
+    "people/unlimited-nam-id-sem-eu-enim-sagittis-mollis.image_alt",
+    "people/save-pellentesque-habitant-morbi-tristique-senectus-et-netus.image_alt",
+    "posts/how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus.image_alt",
+    "posts/how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel.image_alt",
+    "posts/how-to-write-like-hemingway.image_alt",
+    "posts/want-new-customers-faster-avoid-this-rookie-marketing-habit.image_alt",
+    "posts/how-to-write-bullet-points-people-actually-want-to-read.image_alt",
+    "posts/why-being-naive-can-make-your-fortune.image_alt",
+    "posts/how-to-write-bullet-points-people-actually-want-to-read-22.image_alt",
+    "posts/abb-group-develops-rpa-solutions-for-construction.image_alt",
+    "posts/draas-vs-disaster-recovery-which-one-is-right-for-you.image_alt",
+    "posts/how-next-gen-embedded-analytics-power-data-driven-action.image_alt",
+    "posts/servicenow-integrates-with-microsoft-to-boost-cybersecurity.image_alt",
+    "posts/five-steps-to-creating-a-post-pandemic-workplace.image_alt",
+    "posts/how-to-expand-the-cloud-native-technology-workforce.image_alt",
+    "posts/liverpool-trials-free-5g-to-help-monitor-health-conditions.image_alt",
+    "posts/becoming-more-human-in-a-hyper-connected-world.image_alt",
+    "posts/uk-government-approves-44bn-o2-virgin-media-merger.image_alt",
+    "posts/deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise.image_alt",
+    "posts/opinion-how-the-m-a-landscape-is-reshaping-post-pandemic.image_alt",
+    "posts/why-china-is-cracking-down-on-crypto-mining-and-trading.image_alt",
+    "posts/people-moves-apac-ubs-flipkart-aon-heineken-fullerton.image_alt",
+    "posts/opinion-the-future-of-the-city-is-smart-and-sustainable.image_alt",
+    "posts/double-suspendisse-luctus-justo-convallis-blandit-facilisis.image_alt",
+    "posts/delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.image_alt",
+    "posts/phasellus-rutrum-turpis-mattis-aliquet-pharetra.image_alt",
+    "posts/create-curabitur-tempus-lacus-id-orci-feugiat.image_alt",
+    "posts/vivamus-maximus-ante-in-ligula-egestas-fringilla.image_alt",
+    "posts/donec-vitae-efficitur-erat-at-sodales-sem.image_alt",
+    "posts/quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique.image_alt",
+    "posts/create-curabitur-tempus-lacus-id-orci-feugiat-studio-life.image_alt",
+    "site/site.mega_resources_image_alt",
+    "onepage/onepage.hero_image_alt",
+    "landing/landing.hero_image_alt",
+    "landing/landing.chapter1_image_alt",
+    "landing/landing.chapter2_image_alt",
+    "home_2/home_2.chapter_image_alt",
+    "about/about.chapter1_image_alt",
+    "about/about.chapter2_image_alt"
+  ],
+  "labelsNote": "The entries whose labels tools/personalize.mjs translates when the root is written in another language than its own (chromeLabelsOf, TCH #1013): the chrome (header, footer, search, 404) and every page's own headings, buttons, eyebrows and captions; the menus are translated beside them. Addresses, names and fields another rule decides are left alone.",
+  "labels": [
+    { "collection": "site", "slug": "site" },
+    { "collection": "home", "slug": "home" },
+    { "collection": "onepage", "slug": "onepage" },
+    { "collection": "landing", "slug": "landing" },
+    { "collection": "home_2", "slug": "home_2" },
+    { "collection": "product", "slug": "product" },
+    { "collection": "services_page", "slug": "services_page" },
+    { "collection": "pricing", "slug": "pricing" },
+    { "collection": "blog", "slug": "blog" },
+    { "collection": "team", "slug": "team" },
+    { "collection": "about", "slug": "about" },
+    { "collection": "careers", "slug": "careers" },
+    { "collection": "help", "slug": "help" },
+    { "collection": "contact", "slug": "contact" },
+    { "collection": "design_system", "slug": "design_system" },
+    { "collection": "marketing", "slug": "marketing" },
+    { "collection": "services", "fields": ["faq_eyebrow", "faq_heading", "cta_btn_label", "cta_link_label"] },
+    { "collection": "people", "fields": ["image_caption"] },
+    { "collection": "posts", "fields": ["image_caption"] }
+  ],
+  "copy": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_tagline",
+      "brief": "what the business does, under the logo",
+      "maxWords": 5
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_eyebrow",
+      "brief": "a short promise in the hero, three or four words",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_title",
+      "brief": "the home page headline for this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_lead",
+      "brief": "one sentence under the headline: who the business serves and how",
+      "maxWords": 30
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_note",
+      "brief": "a small reassurance line under the buttons",
+      "maxWords": 14
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "proof_line",
+      "brief": "an uppercase line introducing the list of what the business offers",
+      "maxWords": 10
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "problem_title",
+      "brief": "a question a customer of this business asks themselves",
+      "maxWords": 12
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "problem_lead",
+      "brief": "one sentence framing that question",
+      "maxWords": 30
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "value_title",
+      "brief": "headline of the section listing what the customer gets",
+      "maxWords": 8
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "value_lead",
+      "brief": "one sentence under it",
+      "maxWords": 24
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "how_title",
+      "brief": "headline of the section explaining how the business works",
+      "maxWords": 8
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "how_lead",
+      "brief": "three words, one per step",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "inline_cta_title",
+      "brief": "an invitation to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "inline_cta_text",
+      "brief": "one line under the invitation",
+      "maxWords": 16
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "features_title",
+      "brief": "headline of the section about lasting value",
+      "maxWords": 8
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "features_lead",
+      "brief": "one sentence under it",
+      "maxWords": 26
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "team_title",
+      "brief": "headline of the people section",
+      "maxWords": 8
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "team_lead",
+      "brief": "one sentence introducing the people",
+      "maxWords": 20
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "faq_title",
+      "brief": "headline of the questions section",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "pricing_title",
+      "brief": "headline of the plans section",
+      "maxWords": 10
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "pricing_lead",
+      "brief": "one sentence under it, no prices",
+      "maxWords": 24
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "final_title",
+      "brief": "the closing invitation of the home page",
+      "maxWords": 12
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "final_text",
+      "brief": "two sentences inviting a conversation",
+      "maxWords": 36
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "hero_eyebrow",
+      "brief": "a short promise, three or four words",
+      "maxWords": 6
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "hero_title",
+      "brief": "the landing headline for this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "hero_lead",
+      "brief": "one sentence under the headline",
+      "maxWords": 30
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "chapter1_statement",
+      "brief": "a bold one-line statement about the business",
+      "maxWords": 10
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "chapter1_support",
+      "brief": "two sentences supporting it",
+      "maxWords": 40
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "chapter2_statement",
+      "brief": "a bold one-line statement about what customers keep",
+      "maxWords": 10
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "chapter2_support",
+      "brief": "two sentences supporting it",
+      "maxWords": 40
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "hero_title",
+      "brief": "the headline of the second home variant",
+      "maxWords": 10
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "hero_lead",
+      "brief": "one sentence under it",
+      "maxWords": 30
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "chapter_statement",
+      "brief": "a bold one-line statement",
+      "maxWords": 10
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "chapter_support",
+      "brief": "two sentences supporting it",
+      "maxWords": 40
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "nav_sub",
+      "brief": "what the business is, three words",
+      "maxWords": 4
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "hero_eyebrow",
+      "brief": "three nouns the business stands for",
+      "maxWords": 6
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "hero_title_a",
+      "brief": "first line of a two-line headline",
+      "maxWords": 6
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "hero_title_b",
+      "brief": "second line of the headline",
+      "maxWords": 6
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "hero_lead",
+      "brief": "two sentences about the business",
+      "maxWords": 40
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "about_title",
+      "brief": "headline of the about section",
+      "maxWords": 8
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "about_text_1",
+      "brief": "first paragraph about the business",
+      "maxWords": 40
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "about_text_2",
+      "brief": "second paragraph about how it works",
+      "maxWords": 40
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "contact_title",
+      "brief": "the closing question inviting a conversation",
+      "maxWords": 12
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "contact_text",
+      "brief": "two sentences inviting the visitor to write",
+      "maxWords": 36
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "intro",
+      "brief": "one sentence introducing what the business delivers",
+      "maxWords": 24
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "hero_title",
+      "brief": "headline of the product page",
+      "maxWords": 10
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "hero_lead",
+      "brief": "one sentence under it",
+      "maxWords": 30
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter1_statement",
+      "brief": "the about page headline",
+      "maxWords": 10
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter1_support",
+      "brief": "two sentences about the business",
+      "maxWords": 40
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter2_statement",
+      "brief": "a statement about lasting value",
+      "maxWords": 10
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "chapter2_support",
+      "brief": "two sentences supporting it",
+      "maxWords": 40
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "intro",
+      "brief": "one sentence inviting people to work here",
+      "maxWords": 24
+    },
+    {
+      "collection": "help",
+      "slug": "help",
+      "field": "intro",
+      "brief": "one sentence introducing the questions",
+      "maxWords": 20
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "title",
+      "brief": "the contact page headline",
+      "maxWords": 8
+    },
+    {
+      "collection": "services_page",
+      "slug": "services_page",
+      "field": "intro",
+      "brief": "one sentence introducing the services",
+      "maxWords": 20
+    },
+    {
+      "collection": "blog",
+      "slug": "blog",
+      "field": "intro",
+      "brief": "one sentence introducing the articles",
+      "maxWords": 20
+    },
+    {
+      "collection": "team",
+      "slug": "team",
+      "field": "intro",
+      "brief": "one sentence introducing the people",
+      "maxWords": 24
+    },
+    {
+      "collection": "marketing",
+      "slug": "marketing",
+      "field": "lead",
+      "brief": "one sentence about the business, for the samples page",
+      "maxWords": 24
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "mega_service_text",
+      "brief": "one line under the services menu: what the business offers",
+      "maxWords": 14
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "mega_resources_text",
+      "brief": "one line under the resources menu: what the articles help with",
+      "maxWords": 12
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "services_title",
+      "brief": "headline of the services section",
+      "maxWords": 10
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "services_lead",
+      "brief": "one sentence inviting the visitor to bring a need or a question",
+      "maxWords": 18
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "product_title",
+      "brief": "headline of the section on what the customer gets",
+      "maxWords": 8
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "product_lead",
+      "brief": "one sentence on what the customer keeps after working with the business",
+      "maxWords": 24
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "process_title",
+      "brief": "headline of the process section",
+      "maxWords": 8
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "process_lead",
+      "brief": "one sentence on how the work moves from start to finish",
+      "maxWords": 18
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "team_title",
+      "brief": "headline of the people section",
+      "maxWords": 8
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "team_lead",
+      "brief": "one sentence introducing the people, naming no one",
+      "maxWords": 14
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "features_title",
+      "brief": "headline of the section on what the business does",
+      "maxWords": 10
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "features_lead",
+      "brief": "one sentence under it",
+      "maxWords": 22
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "stats_heading",
+      "brief": "headline of the section on how the business works",
+      "maxWords": 8
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "pricing_heading",
+      "brief": "headline of the plans section, no prices",
+      "maxWords": 10
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "testimonials_heading",
+      "brief": "headline of the section on working with the business",
+      "maxWords": 10
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "team_heading",
+      "brief": "headline of the people section",
+      "maxWords": 8
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "carousel_intro",
+      "brief": "one sentence introducing what the business delivers",
+      "maxWords": 20
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "tabs_heading",
+      "brief": "headline of the section on how the business works",
+      "maxWords": 8
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "pricing_heading",
+      "brief": "headline of the plans section, no prices",
+      "maxWords": 10
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    },
+    {
+      "collection": "blog",
+      "slug": "blog",
+      "field": "topics_intro",
+      "brief": "one sentence introducing the topics the articles cover",
+      "maxWords": 16
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "stats_heading",
+      "brief": "headline of the section on how the business works",
+      "maxWords": 8
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "team_heading",
+      "brief": "headline of the people section",
+      "maxWords": 8
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "timeline_heading",
+      "brief": "headline of the section on how the business grew, with no years",
+      "maxWords": 8
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "cta_support",
+      "brief": "one or two sentences inviting people to ask about working here",
+      "maxWords": 28
+    },
+    {
+      "collection": "services",
+      "slug": "service-detail",
+      "field": "cta_statement",
+      "brief": "a closing call to action inviting the visitor to get in touch",
+      "maxWords": 12
+    },
+    {
+      "collection": "services",
+      "slug": "service-detail",
+      "field": "cta_support",
+      "brief": "one or two sentences on what to send and what happens next",
+      "maxWords": 28
+    }
+  ],
+  "copySettings": {
+    "tagline": {
+      "brief": "what the business does, five words",
+      "maxWords": 6
+    }
+  },
+  "facts": [
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "stats",
+      "why": "counts about the toolkit, not this business"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "team_quotes",
+      "why": "named demo people with roles"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "team_note",
+      "why": "refers to the demo profiles"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "pricing_tiers",
+      "why": "prices and plan scopes are an offer"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "pricing_note",
+      "why": "refers to demo plans"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "pricing_disclaimer",
+      "why": "refers to demo plans"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "stats_figures",
+      "why": "counts"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "hero_notes",
+      "why": "claims about tokens"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "pricing_tiers",
+      "why": "prices"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "testimonials_quotes",
+      "why": "named demo people"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "clients_marks",
+      "why": "named client marks"
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "stats_figures",
+      "why": "counts"
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "team_members",
+      "why": "named demo people"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "team_members",
+      "why": "named demo people"
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "stats_figures",
+      "why": "counts"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "stats_figures",
+      "why": "counts"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "team_members",
+      "why": "named demo people"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "timeline_entries",
+      "why": "years and milestones of another company"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "pricing_tiers",
+      "why": "prices"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "notice",
+      "why": "says the site is the Tracy Base studio demo and its company details are illustrative (TCH #1013)"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "footer_note",
+      "why": "says the page is a company introduction demo with illustrative profiles (TCH #1013)"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "notice",
+      "why": "says the contact page is a demonstration (TCH #1013)"
+    },
+    {
+      "collection": "marketing",
+      "slug": "marketing",
+      "field": "note",
+      "why": "says the site is the Tracy Base studio demo and its forms are previews (TCH #1013)"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "pricing_intro",
+      "why": "says the plans are the demo studio’s examples"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "pricing_intro",
+      "why": "says the plans are the demo studio’s examples"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "timeline_intro",
+      "why": "refers to the demo company’s milestones"
+    },
+    {
+      "collection": "people",
+      "field": "name",
+      "why": "a named demo person"
+    },
+    {
+      "collection": "posts",
+      "field": "author",
+      "why": "a named person of the demo"
+    }
+  ],
+  "hide": [],
+  "rewrite": [
+    {
+      "collection": "services",
+      "brief": "one service this business offers",
+      "fields": ["title", "excerpt"],
+      "body": "content",
+      "bodyWords": 140,
+      "batch": 3,
+      "decides": ["title"]
+    },
+    {
+      "collection": "people",
+      "brief": "one role in this business’s team, described without naming a person (the profile’s name is left for the customer to fill in)",
+      "fields": ["title", "role", "excerpt"],
+      "body": "content",
+      "bodyWords": 120,
+      "batch": 2,
+      "decides": ["title"]
+    },
+    {
+      "collection": "posts",
+      "brief": "one practical article this business would publish for its customers",
+      "fields": ["title", "excerpt"],
+      "body": "content",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": ["title"]
+    }
+  ],
+  "blocks": [
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "problem_items",
+      "itemFields": ["title", "text"],
+      "brief": "one problem a customer of this business has"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "value_items",
+      "itemFields": ["title", "text"],
+      "brief": "one thing the customer gets"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "how_steps",
+      "itemFields": ["title", "text"],
+      "brief": "one step of how the business works"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "features_items",
+      "itemFields": ["title", "text"],
+      "brief": "one lasting benefit"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "faq_items",
+      "itemFields": ["question", "answer"],
+      "brief": "one question a customer asks before starting"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "services_items",
+      "itemFields": ["title", "text"],
+      "brief": "one service this business offers"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "process_steps",
+      "itemFields": ["title", "text"],
+      "brief": "one step of the process"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "faq_items",
+      "itemFields": ["question", "answer"],
+      "brief": "one question a customer asks"
+    },
+    {
+      "collection": "help",
+      "slug": "help",
+      "field": "faq_items",
+      "itemFields": ["question", "answer"],
+      "brief": "one question a customer asks"
+    },
+    {
+      "collection": "onepage",
+      "slug": "onepage",
+      "field": "product_parts",
+      "itemFields": ["title", "text"],
+      "brief": "one part of what the customer gets from this business"
+    },
+    {
+      "collection": "landing",
+      "slug": "landing",
+      "field": "features_cards",
+      "itemFields": ["title", "text"],
+      "brief": "one thing this business does for its customers"
+    },
+    {
+      "collection": "home_2",
+      "slug": "home_2",
+      "field": "faq_items",
+      "itemFields": ["question", "answer"],
+      "brief": "one question a customer asks before starting"
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "carousel_slides",
+      "itemFields": ["title", "text"],
+      "brief": "one part of what this business delivers"
+    },
+    {
+      "collection": "product",
+      "slug": "product",
+      "field": "tabs_tabs",
+      "itemFields": ["title", "body"],
+      "brief": "one step of how this business works with a customer, in order"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "faq_items",
+      "itemFields": ["question", "answer"],
+      "brief": "one question a customer asks about working together, no prices"
+    },
+    {
+      "collection": "services",
+      "slug": "service-detail",
+      "field": "faq_items",
+      "itemFields": ["question", "answer"],
+      "brief": "one question a customer asks about this service"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": ["posts"],
+      "brief": "a category of article this business publishes"
+    }
+  ],
+  "forms": [
+    {
+      "slug": "contact",
+      "fields": {
+        "subject": "what the visitor is writing about"
+      },
+      "brief": "the contact form of this business"
+    }
+  ],
+  "images": [],
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, TCH #1013 D9): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none.",
+    "logoDark": {
+      "collection": "site",
+      "slug": "site",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  }
+}

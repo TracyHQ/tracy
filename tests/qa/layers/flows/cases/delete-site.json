@@ -1,0 +1,109 @@
+[
+  {
+    "assertionIds": [
+      "delete-site-gone#db-row-gone",
+      "delete-site-gone#outside-http-not-served",
+      "delete-site-gone#no-containers-of-label",
+      "delete-site-gone#no-volumes-of-label"
+    ],
+    "edgeTags": ["cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http", "docker"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-delete-site-cleanup-delete-proof",
+    "itemIds": ["flow:delete-site", "capability:build-a-new-site"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "after delete the database row is gone, the site answers nothing from outside and no container or volume of its label is left",
+      "ref": "§6 Build a new site; ADR 0014 §3",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "docker", "site"],
+    "redProof": null,
+    "ref": "delete-site-gone",
+    "requirement": "Delete a site — delete proof (cleanup)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J12#verdict"],
+    "edgeTags": ["cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http", "docker"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-delete-site-cleanup-legacy-lifecycle",
+    "itemIds": ["flow:delete-site", "capability:build-a-new-site", "journey:J12"],
+    "kind": "legacy",
+    "legacyIds": ["J12"],
+    "oracle": {
+      "invariant": "after delete the database row is gone, the site answers nothing from outside and no container or volume of its label is left",
+      "ref": "§6 Build a new site; ADR 0014 §3",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J12",
+    "requirement": "Delete a site — legacy lifecycle (cleanup) [journey J12: session and site life cycle]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["repeat"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http", "docker"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-delete-site-repeat-delete-twice",
+    "itemIds": ["flow:delete-site", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "after delete the database row is gone, the site answers nothing from outside and no container or volume of its label is left",
+      "ref": "§6 Build a new site; ADR 0014 §3",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Delete a site — delete twice (repeat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["rollback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http", "docker"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-delete-site-rollback-delete-then-recreate-label",
+    "itemIds": ["flow:delete-site", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "after delete the database row is gone, the site answers nothing from outside and no container or volume of its label is left",
+      "ref": "§6 Build a new site; ADR 0014 §3",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Delete a site — delete then recreate label (rollback)",
+    "targets": ["local"]
+  }
+]

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "408d0b89-be7d-4a09-bc29-8a8ce13d0a7b",
+  "status": "complete",
+  "name": "Wizz",
+  "url": "https://styles.refero.design/style/408d0b89-be7d-4a09-bc29-8a8ce13d0a7b",
+  "sourceWebsite": "https://wizzapp.com",
+  "extractedAt": "2026-06-03T22:02:37.017Z",
+  "capturedAt": "2026-10-08T05:10:47.649400+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Neon pink highlighter on a black-and-white editorial — like a single fluorescent mark on a fashion magazine spread.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/74bd926c-978c-49fd-a0db-5c0e207ab385.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a644be90-f675-4d95-8aef-2c0085f9396e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d8f73f65-c455-4c7d-b736-676a17b18a65.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6b19228d-22da-4697-8cb9-39839d0d9231.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/97924ac0-f928-4001-afb5-ec8f6efaa2b1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d2619b2b3a5b247f9ce457c0658c94e207b93e305bc7b4d46079d3df366c02eb",
+      "bytes": 23734
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "cf25dae70d90f2a274ba5a78596ed402ed5b8041dd9e6b4259081d3969ed4b14",
+      "bytes": 94613
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d7045bdfcf8451f971961c70554140b339e4df69d747f4b46e5a42d101a6dad5",
+      "bytes": 19166
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "53127cadf212cedd8551dda57818687d66a98414fcadb5fe1577bb78b547819d",
+      "bytes": 13418
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7a15fe53748892324d8b707c7e59e1453f6dafb829bc4b67e75e714d204e2222",
+      "bytes": 14190
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "32c02f6a96fa1c18ef6b6de249c0c6ee5c55f07d3976143c4489fafee7a4872c",
+      "bytes": 3090
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b37aee5a2e7f68cd64d5b14385689800cbd01c8065fa1c06c805d3d30d502c14",
+      "bytes": 1033
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c4854c67ee098f82080dff151a942d10abb1c1b78eb30f69a8967f83b13479ec",
+      "bytes": 1050
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d7b1be7317911037e8ea392d46d1cca2ea29853d90d568a6c742a14c27e15d7d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b65a3b8fe03b1f7c26b0841f153d9ce6a37572a746cb3079d723f6f68188a24f",
+      "bytes": 46658
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0656aba05b049649c591bb9089af2a2c4fda601e6ba04b748a4a40f1f64e58c7",
+      "bytes": 24460
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "31e446c835058a40aef041a3cdbc65a94ae479af27dbce24dd59bba07b0e061d",
+      "bytes": 49609
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e0438d5c019b16c27a52af6c5aa815ae7490169b8132ed29a86b6b9e9a48e765",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "54e9e5c20089cc09880562c816031621525c67b0f14fd2f7be056aec993ffcad",
+      "bytes": 2001
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1cc3b3d87e1ac4dd415d7ab3cdff606d5f675f706b7a6ec82dc4de4ead0df291",
+      "bytes": 2741
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "029d3ce0-0fe5-4a8c-99c4-4f9d704f1c60",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "408d0b89-be7d-4a09-bc29-8a8ce13d0a7b",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "6d9b6fe6-51f4-4978-82dd-a791c28db5cf",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "8d37e9dd-1d6b-4b60-a636-55aa3e0fc238",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "c5326639-873a-4257-ad1a-7da9111e9286",
+    "ca4708f7-7175-4da2-a47f-ce8f5e601f99",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "dae5e893-ca18-44c3-8f83-358cb52af237",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729",
+    "e869e214-f672-4ac3-bfc2-bd25de7b003b",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

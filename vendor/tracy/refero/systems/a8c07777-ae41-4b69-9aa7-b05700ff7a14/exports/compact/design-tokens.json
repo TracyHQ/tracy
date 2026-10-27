@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text on light surfaces, dark section backgrounds, inverse text on light cards — the void that carries the constellation"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light section text on dark backgrounds, card surfaces, button backgrounds on dark hero — the positive space"
+    },
+    "hairline-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline Gray — Hairline borders, dividers, card outlines — the most-used neutral at 1500+ occurrences forms the structural skeleton"
+    },
+    "mid-gray": {
+      "$value": "#757575",
+      "$type": "color",
+      "$description": "Mid Gray — Secondary text, muted link borders, disabled states, tertiary metadata"
+    },
+    "warm-bone": {
+      "$value": "#f2f1e9",
+      "$type": "color",
+      "$description": "Warm Bone — Input field borders, warm off-white fills — a slight warm shift from the achromatic scale"
+    },
+    "ash": {
+      "$value": "#acaba6",
+      "$type": "color",
+      "$description": "Ash — Tertiary borders, muted icon fills — the quietest neutral in the system"
+    },
+    "signal-green": {
+      "$value": "#00ec97",
+      "$type": "color",
+      "$description": "Signal Green — Primary action buttons, active link backgrounds, accent text, and any element that must pulse — the only chromatic function color in the system"
+    },
+    "mint-sage": {
+      "$value": "#c7f5d8",
+      "$type": "color",
+      "$description": "Mint Sage — Full-bleed light section backgrounds — a flat, desaturated mint that reads as ambient rather than decorative, providing visual rest between dark bands"
+    },
+    "teal-pulse": {
+      "$value": "#17d9d4",
+      "$type": "color",
+      "$description": "Teal Pulse — Secondary accent within the AI text-tile pattern and illustration details — cool teal offset against Signal Green adds chromatic depth without competing"
+    }
+  },
+  "font": {
+    "fkgrotesk": {
+      "$value": "FKGrotesk",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI, headings, and body — a geometric grotesque that handles the extreme 16-to-80px range without losing character. Weight 500 carries display headlines, allowing scale (80px) to do the work that weight 700 would do in a conventional system. The tight letter-spacing and near-1.0 line-height at large sizes make headlines feel architectural rather than editorial."
+    },
+    "mona-sans": {
+      "$value": "Mona Sans",
+      "$type": "fontFamily",
+      "$description": "Caption/eyebrow labels and micro-copy — weight 600 at 12px creates compact, all-caps-feeling tags that sit beside larger FKGrotesk text as functional punctuation"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://near.org",
+      "siteName": "NEAR",
+      "extractedAt": "2026-06-03T20:01:05.474Z",
+      "variant": "compact"
+    }
+  }
+}

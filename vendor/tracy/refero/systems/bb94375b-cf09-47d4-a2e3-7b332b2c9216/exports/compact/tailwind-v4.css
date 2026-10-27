@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #1a1a1a;
+  --color-paper: #ffffff;
+  --color-stage-black: #000000;
+  --color-concrete: #959595;
+  --color-stone: #90867a;
+  --color-sky-tint: #94bbff;
+  --color-deep-sky: #71a0ff;
+  --color-brand-blue: #002a57;
+
+  /* Typography */
+  --font-oracle: 'Oracle', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

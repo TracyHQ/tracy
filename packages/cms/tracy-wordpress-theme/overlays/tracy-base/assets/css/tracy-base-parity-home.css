@@ -1,0 +1,492 @@
+/* tracy-base — front-page parity with the Joomla source's OpenDesign landing (Tracy Base j6):
+ * each section's cards, type and spacing as the Joomla page computes them, and the product mock
+ * under the hero. Values measured on the Joomla site; colours are the variation's variables.
+ * Loaded after tracy-base.css. */
+
+/* ---- front page, section by section, against the Joomla landing ---- */
+
+/* Hero: the secondary is a bordered button, not a ring. */
+.tracy.home .tracy-hero .wp-block-button + .wp-block-button .wp-block-button__link {
+  border-color: var(--wp--preset--color--border);
+  box-shadow: none;
+}
+
+/* Social proof: the trust line and its label share one row; the caption under it is the spaced
+   capitals line; the service names are quiet. */
+.tracy.home .tracy-social-proof { padding-top: 64px; padding-bottom: 8px; margin-top: 0; }
+.tracy.home .tracy-social-proof .tracy-section__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 10px;
+}
+.tracy.home .tracy-social-proof .tracy-section__inner > * { margin: 0; }
+.tracy.home p.tracy-social-proof__rating.tracy-meta.text-fg-2 {
+  font-size: var(--wp--preset--font-size--base);
+  letter-spacing: 2px;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--warn));
+}
+.tracy.home p.tracy-eyebrow.tracy-social-proof__label.has-text-align-center {
+  display: block;
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  text-transform: none;
+  color: var(--wp--preset--color--muted);
+}
+.tracy.home .tracy-social-proof__label + p {
+  flex: 0 0 100%;
+  margin: 24px 0 !important;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: var(--wp--preset--font-size--xs);
+  line-height: 1.47;
+  color: var(--wp--preset--color--meta);
+}
+.tracy.home .tracy-social-proof .tracy-logos {
+  flex: 0 0 100%;
+  column-gap: 56px;
+  row-gap: 24px;
+  margin-top: 0;
+}
+.tracy.home .tracy-social-proof .tracy-logos li {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--wp--preset--color--meta);
+}
+
+/* Problem cards: a white card with a soft edge, a red dot before the title, the text in the
+   quiet grey and cut at three lines. */
+.tracy.home .tracy-problem .tracy-cards { gap: 20px; }
+.tracy.home .tracy-problem .tracy-card {
+  position: relative;
+  padding: 32px 32px 32px 52px;
+  background: var(--wp--preset--color--bg);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: none;
+}
+.tracy.home .tracy-problem .tracy-card::before {
+  content: '';
+  position: absolute;
+  left: 32px;
+  top: 41px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--wp--preset--color--danger);
+}
+.tracy.home .tracy-problem .tracy-card h3,
+.tracy.home .tracy-pillars h3,
+.tracy.home .tracy-how h3 {
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+.tracy.home .tracy-problem .tracy-card p {
+  margin-top: 0;
+  color: var(--wp--preset--color--meta);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Value pillars: the icon tile sits on the surface grey, the title is the 28px card title. */
+.tracy.home .tracy-pillars .tracy-pillar { padding: 32px; }
+.tracy.home .tracy-pillars .tracy-pillar > * { margin-top: 0; margin-bottom: 0; }
+.tracy.home .tracy-pillars .tracy-visual > div {
+  background: var(--wp--preset--color--surface) !important;
+  margin-bottom: 20px;
+}
+/* Icon tiles carry the accent inline as their ink; a system whose accent is too light to read on
+   the tile (a yellow) gives its accent-text role instead. Unset at template default: the accent. */
+.tracy :is(.tracy-visual, .zig-visual) > div[style*="color:var(--wp--preset--color--accent)"] {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent)) !important;
+}
+.tracy.home .tracy-pillars h3 { margin-bottom: 8px; }
+.tracy.home .tracy-pillars .tracy-pillar p { color: var(--wp--preset--color--muted); }
+
+/* How it works: the visual on the page ground, then a small accent number beside the title. */
+.tracy.home .tracy-how .tracy-steps { gap: 48px; }
+.tracy.home .tracy-how .tracy-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+  align-content: start;
+}
+.tracy.home .tracy-how .tracy-step > * { margin: 0; }
+.tracy.home .tracy-how .tracy-step > .tracy-visual { grid-column: 1 / -1; margin-bottom: 20px; }
+.tracy.home .tracy-how .tracy-visual > div {
+  border-radius: var(--wp--custom--radius--lg) !important;
+  background: var(--wp--preset--color--bg) !important;
+}
+.tracy.home .tracy-how p.tracy-step__n {
+  width: 19px;
+  height: 26px;
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 600;
+  border-radius: 50%;
+}
+.tracy.home .tracy-how .tracy-step > h3 { margin: 0; }
+.tracy.home .tracy-how .tracy-step > h3 + p {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  max-width: 34ch;
+  color: var(--wp--preset--color--muted);
+}
+
+/* Inline CTA: a surface box with the plain border, not an accent tint. */
+.tracy.home .tracy-cta-inline__box {
+  padding: 36px 48px;
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-card-radius, 20px);
+}
+.tracy.home .tracy-cta-inline__box h3 { font-size: 28px; line-height: 1.05; letter-spacing: -0.015em; }
+.tracy.home .tracy-cta-inline__box p { margin-top: 4px; font-size: var(--wp--preset--font-size--base); color: var(--wp--preset--color--muted); }
+
+/* Features: rows alternate sides, the link is a ghost pill in the accent. */
+.tracy.home .tracy-features .tracy-zig { column-gap: 72px; }
+.tracy.home .tracy-features .tracy-zig h3 { font-size: 28px; line-height: 1.05; letter-spacing: -0.015em; margin-bottom: 12px; }
+.tracy.home .tracy-features .tracy-zig__text > p:not(.tracy-eyebrow):not(:last-child) {
+  font-size: 21px;
+  line-height: 1.47;
+  color: var(--wp--preset--color--muted);
+  max-width: 46ch;
+}
+.tracy.home .tracy-features .tracy-zig__text > p:last-child { margin-top: 24px; }
+.tracy.home .tracy-features .tracy-zig__text > p:last-child a {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--wp--custom--radius--pill);
+  line-height: 1.2;
+  letter-spacing: -0.006em;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+.tracy.home .tracy-features .tracy-zig__text > p:last-child a:focus-visible { outline: 0; box-shadow: var(--wp--custom--focus-ring); }
+.tracy.home .tracy-features .tracy-zig__visual { box-shadow: none; overflow: visible; }
+.tracy.home .tracy-features .zig-visual {
+  background: var(--wp--preset--color--bg) !important;
+  border-radius: var(--wp--custom--radius--lg) !important;
+  box-shadow: 0 8px 28px -16px var(--wp--preset--color--surface) !important;
+}
+.tracy.home .tracy-features .zig-visual > div:first-child,
+.tracy.home .tracy-features .zig-visual > div:last-child > div:first-child { background: var(--wp--preset--color--surface) !important; }
+.tracy.home .tracy-features .zig-visual > div:nth-child(2) { background: var(--wp--preset--color--surface) !important; }
+.tracy.home .tracy-features .zig-visual > div:nth-child(3) { background: var(--wp--preset--color--surface-warm) !important; }
+@media (min-width: 782px) {
+  .tracy.home .tracy-features .tracy-zig:nth-of-type(odd) .tracy-zig__visual { order: -1; }
+}
+
+/* Statistics: 46px figures, the label at 78% of the band's text colour. */
+.tracy.home .tracy-stats { padding-block: 64px; }
+.tracy.home .tracy-stats .tracy-stats__grid { gap: 32px; }
+.tracy.home .tracy-stats .tracy-stat__n { font-size: 46px; line-height: 1.05; letter-spacing: -0.02em; }
+.tracy.home .tracy-stats p.tracy-stat__label { margin-top: 4px; font-size: var(--wp--preset--font-size--xs); color: color-mix(in srgb, var(--wp--preset--color--accent-on) 78%, transparent); opacity: 1; }
+
+/* The people: white cards; a 21px quote, then the name and role beside an initials badge. */
+.tracy.home .tracy-testimonials .tracy-card {
+  padding: 24px;
+  background: var(--wp--preset--color--bg);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: 0 1px 2px var(--wp--preset--color--surface-warm);
+}
+.tracy.home .tracy-testimonials .acm-testimonials__quote { font-size: 21px; line-height: 1.6; margin-bottom: 24px; }
+
+/* Final CTA: a 28px-corner accent box with two soft circles, a white primary and a text link. */
+.tracy.home .tracy-cta-final__box {
+  position: relative;
+  overflow: hidden;
+  padding: 84px 64px;
+  border-radius: var(--ds-card-radius, 28px);
+}
+.tracy.home .tracy-cta-final__box::before,
+.tracy.home .tracy-cta-final__box::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.tracy.home .tracy-cta-final__box::before { top: -100px; right: -90px; width: 320px; height: 320px; background: var(--wp--preset--color--accent-hover); opacity: 0.5; }
+.tracy.home .tracy-cta-final__box::after { bottom: -120px; left: -80px; width: 260px; height: 260px; background: var(--wp--preset--color--accent-active); opacity: 0.45; }
+.tracy.home .tracy-cta-final__box > * { position: relative; z-index: 1; }
+.tracy.home .tracy-cta-final__box h2 { max-width: 20ch; margin-inline: auto; margin-bottom: 20px; }
+.tracy.home .tracy-cta-final__box .tracy-lead { max-width: 540px; margin-bottom: 32px; font-size: 21px; color: color-mix(in srgb, var(--wp--preset--color--accent-on) 88%, transparent); opacity: 1; }
+.tracy.home .tracy-cta-final__box .wp-block-button__link { border: 0; }
+.tracy.home .tracy-cta-final__box .wp-block-button + .wp-block-button .wp-block-button__link {
+  background: transparent;
+  color: color-mix(in srgb, var(--wp--preset--color--accent-on) 92%, transparent);
+}
+.tracy.home .tracy-cta-final__box .tracy-btn--inverse.tracy-btn { background: transparent; border-color: transparent; }
+
+/* Questions: a 736px list, rules between the rows (none above the first), 20px row padding in
+   the body face, the answer muted at 90% width; the open mark is the plus turned to a cross. */
+.tracy.home .tracy-faq .tracy-faq__list { max-width: 736px; border-bottom: 0; }
+.tracy.home .tracy-faq .tracy-faq__item { padding: 0; border-top: 0; border-bottom: 1px solid var(--wp--preset--color--border-soft); }
+.tracy.home .tracy-faq .tracy-faq__item summary {
+  padding-block: 20px;
+  gap: 20px;
+  align-items: center;
+  font-family: var(--wp--preset--font-family--body);
+}
+.tracy.home .tracy-faq .tracy-faq__item summary::after {
+  content: '+';
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  transition: transform 0.18s ease;
+}
+.tracy.home .tracy-faq .tracy-faq__item[open] summary::after { content: '+'; transform: rotate(45deg); }
+.tracy.home .tracy-faq .tracy-faq__item p { margin: 0; padding-bottom: 20px; max-width: 90%; color: var(--wp--preset--color--muted); }
+
+/* The people: badge of initials beside the name and role (built by tracy-base-sections.js). */
+.tracy .tracy-testimonials .acm-testimonials__person { display: flex; align-items: center; gap: 12px; }
+.tracy .tracy-testimonials .acm-testimonials__badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--wp--preset--color--surface);
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.tracy .tracy-testimonials .acm-testimonials__who { min-width: 0; }
+.tracy .tracy-testimonials .acm-testimonials__name { font-size: var(--wp--preset--font-size--base); font-weight: 600; margin: 0; }
+.tracy .tracy-testimonials .acm-testimonials__role { font-size: var(--wp--preset--font-size--xs); color: var(--wp--preset--color--meta); margin: 0; }
+
+/* Section heads keep a 12px gap under the heading and a muted lead, the people head included. */
+.tracy.home .tracy-testimonials .tracy-section__head h2 { margin-bottom: 12px; }
+.tracy.home .tracy-testimonials .tracy-lead { color: var(--wp--preset--color--muted); }
+.tracy.home .tracy-features .tracy-zig { margin-bottom: 0; }
+.tracy.home .tracy-features .tracy-zig + .tracy-zig { margin-top: 96px; }
+
+/* Plans: white cards (the middle one framed in the accent), the name and its badge on one row,
+   a small description, the price with its period on one line, ticks in the success colour, a
+   full-width pill under the list. */
+.tracy.home .tracy-plans .tracy-plans__grid { max-width: 1000px; margin-inline: auto; gap: 20px; }
+.tracy.home .tracy-plans .tracy-plan {
+  flex-flow: row wrap;
+  align-items: baseline;
+  align-content: flex-start;
+  padding: 32px;
+  background: var(--wp--preset--color--bg);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: 0 1px 2px var(--wp--preset--color--surface-warm);
+}
+.tracy.home .tracy-plans .tracy-plan:nth-child(2) {
+  border: 2px solid var(--wp--preset--color--accent);
+  box-shadow: 0 12px 32px var(--wp--preset--color--surface);
+}
+.tracy.home .tracy-plans .tracy-plan > * { flex: 0 0 100%; margin: 0; }
+.tracy.home .tracy-plans .tracy-plan > p.tracy-eyebrow {
+  flex: 1 1 auto;
+  align-self: center;
+  margin-bottom: 8px;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+  text-transform: none;
+  color: var(--wp--preset--color--fg);
+}
+.tracy.home .tracy-plans .tracy-plan > .tracy-eyebrow + p:has(+ p) {
+  flex: 0 0 auto;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  margin-bottom: 8px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  font-size: var(--wp--preset--font-size--xs);
+  line-height: 1;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--sm);
+}
+.tracy.home .tracy-plans .tracy-plan > p:has(+ h3) { margin-bottom: 20px; font-size: var(--wp--preset--font-size--xs); line-height: 1.47; color: var(--wp--preset--color--meta); }
+.tracy.home .tracy-plans .tracy-plan > h3.tracy-plan__price { flex: 0 0 auto; margin-bottom: 24px; font-size: 32px; line-height: 1; letter-spacing: -0.01em; }
+.tracy.home .tracy-plans .tracy-plan > h3 + p.tracy-meta { flex: 0 0 auto; margin: 0 0 24px 4px; font-size: var(--wp--preset--font-size--xs); color: var(--wp--preset--color--muted); }
+.tracy.home .tracy-plans .tracy-plan__list { margin: 0 0 32px; padding: 0; list-style: none; }
+.tracy.home .tracy-plans .tracy-plan__list li.border-border-soft {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  border: 0;
+  font-size: var(--wp--preset--font-size--base);
+  line-height: 1.47;
+  color: var(--wp--preset--color--muted);
+}
+.tracy.home .tracy-plans .tracy-plan__list li::before { content: '✓'; font-weight: 600; }
+.tracy.home .tracy-plans .tracy-plan .tracy-actions .wp-block-button__link {
+  border-color: var(--wp--preset--color--border);
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+}
+.tracy.home .tracy-plans .tracy-plan:nth-child(2) .tracy-actions .wp-block-button__link {
+  border-color: transparent;
+  background: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--accent-on);
+}
+.tracy.home .tracy-plans .tracy-plans__note { margin-top: 24px; }
+.tracy.home .tracy-plans .tracy-plans__note + p {
+  padding: 20px 16px 0;
+  font-size: var(--wp--preset--font-size--xs);
+  line-height: 1.5;
+  text-align: center;
+}
+.tracy.home .tracy-cta-final { padding-top: 0; padding-bottom: 104px; }
+
+/* Narrow screens, as the source sets them: the zig-zag puts every picture first (one column below
+   881px, alternating only above), the card titles step down to 20px and section headings to 28px,
+   the inline CTA spans the screen 24px inside, the statistics stay two by two and the final call
+   is 48px × 24px inside an 18px corner with its line cut at two. */
+@media (max-width: 880px) {
+  .tracy.home .tracy-features .tracy-zig .tracy-zig__visual { order: -1; }
+}
+@media (min-width: 782px) and (max-width: 880px) {
+  .tracy.home .tracy-features .tracy-zig { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .tracy.home .tracy-problem .tracy-card h3,
+  .tracy.home .tracy-pillars h3,
+  .tracy.home .tracy-how h3,
+  .tracy.home .tracy-features .tracy-zig h3,
+  .tracy.home .tracy-cta-inline__box h3 { font-size: 20px; letter-spacing: -0.015em; }
+  .tracy.home .tracy-section__head h2,
+  .tracy.home .tracy-cta-final__box h2 { font-size: 28px; line-height: 1.05; }
+  .tracy.home .tracy-cta-inline { padding-inline: 0; }
+  .tracy.home .tracy-cta-inline__box { padding: 24px; }
+  /* layout.css stacks every .tracy-grid to one column with !important below 641px; the source keeps
+     the four figures two by two. */
+  .tracy.home .tracy-stats .tracy-stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 32px; }
+  .tracy.home .tracy-cta-final__box { padding: 48px 24px; border-radius: var(--ds-card-radius, 18px); }
+  .tracy.home .tracy-cta-final__box .tracy-lead {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+/* ---- front-page product mock: the source draws a sidebar of four rows, a title bar with a
+   button, a bar chart and two small cards. Drawn here on the caption paragraph (rows, bars and
+   lines as background layers), its ::after (the chart card) and ::before (the two side cards). ---- */
+.tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-']) {
+  --mock-side: 200px;
+  padding-left: 95px;
+  background:
+    radial-gradient(circle at 22px 24px, color-mix(in oklab, var(--wp--preset--color--danger), transparent 45%) 0 5px, transparent 5.5px),
+    radial-gradient(circle at 40px 24px, color-mix(in oklab, var(--wp--preset--color--warn), transparent 45%) 0 5px, transparent 5.5px),
+    radial-gradient(circle at 58px 24px, color-mix(in oklab, var(--wp--preset--color--success), transparent 45%) 0 5px, transparent 5.5px),
+    linear-gradient(var(--wp--preset--color--accent), var(--wp--preset--color--accent)) 23px 71px / 14px 14px no-repeat,
+    linear-gradient(var(--wp--preset--color--border), var(--wp--preset--color--border)) 23px 103px / 14px 14px no-repeat,
+    linear-gradient(var(--wp--preset--color--border), var(--wp--preset--color--border)) 23px 135px / 14px 14px no-repeat,
+    linear-gradient(var(--wp--preset--color--border), var(--wp--preset--color--border)) 23px 167px / 14px 14px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) 45px 106px / 81px 8px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) 45px 138px / 81px 8px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) 45px 170px / 81px 8px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) 13px 64px / 175px 28px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) 221px 75px / 180px 14px no-repeat,
+    linear-gradient(var(--wp--preset--color--accent), var(--wp--preset--color--accent)) right 21px top 68px / 96px 28px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) calc(58.33% + 165px) 127px / 108px 8px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface), var(--wp--preset--color--surface)) calc(58.33% + 213px) 143px / 190px 14px no-repeat,
+    linear-gradient(var(--wp--preset--color--surface-warm), var(--wp--preset--color--surface-warm)) 0 0 / 100% 47px no-repeat,
+    linear-gradient(var(--wp--preset--color--border-soft), var(--wp--preset--color--border-soft)) 0 47px / 100% 1px no-repeat,
+    linear-gradient(var(--wp--preset--color--border-soft), var(--wp--preset--color--border-soft)) var(--mock-side) 48px / 1px 100% no-repeat,
+    var(--wp--preset--color--bg);
+}
+/* The chart card: 1.4 of the main area's two columns; eight bars sharing the inner width. */
+.tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-'])::after {
+  left: 221px;
+  top: 112px;
+  bottom: auto;
+  width: calc((100% - 257px) * 0.5833);
+  height: 216px;
+  box-sizing: border-box;
+  padding: 16px;
+  border-radius: var(--wp--custom--radius--lg);
+  background:
+    linear-gradient(color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 65%), color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 65%)) 0% 100% / calc((100% - 56px) / 8) 42% no-repeat,
+    linear-gradient(color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 15%), color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 15%)) 14.286% 100% / calc((100% - 56px) / 8) 68% no-repeat,
+    linear-gradient(var(--wp--preset--color--accent), var(--wp--preset--color--accent)) 28.571% 100% / calc((100% - 56px) / 8) 54% no-repeat,
+    linear-gradient(var(--wp--preset--color--accent-active), var(--wp--preset--color--accent-active)) 42.857% 100% / calc((100% - 56px) / 8) 82% no-repeat,
+    linear-gradient(color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 65%), color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 65%)) 57.143% 100% / calc((100% - 56px) / 8) 64% no-repeat,
+    linear-gradient(color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 15%), color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--bg) 15%)) 71.429% 100% / calc((100% - 56px) / 8) 96% no-repeat,
+    linear-gradient(var(--wp--preset--color--accent), var(--wp--preset--color--accent)) 85.714% 100% / calc((100% - 56px) / 8) 72% no-repeat,
+    linear-gradient(var(--wp--preset--color--accent-active), var(--wp--preset--color--accent-active)) 100% 100% / calc((100% - 56px) / 8) 58% no-repeat;
+  background-origin: content-box;
+  background-clip: content-box;
+}
+/* The two side cards: one drawn, the second a ring shadow 72px lower (its two lines are left out:
+   the ring's fill would hide them). */
+.tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-'])::before {
+  content: '';
+  position: absolute;
+  right: 21px;
+  top: 112px;
+  width: calc((100% - 257px) * 0.4167);
+  height: 60px;
+  box-sizing: border-box;
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: 0 72px 0 -1px var(--wp--preset--color--bg), 0 72px 0 0 var(--wp--preset--color--border-soft);
+  pointer-events: none;
+}
+/* Phones: the source stacks the sidebar over the main area (window 449px tall): four full-width
+   rows, then the title bar and button, the chart card (1.4 parts) and the two side cards. */
+@media (max-width: 669px) {
+  .tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-']) {
+    height: 449px;
+    background-size:
+      auto, auto, auto,
+      14px 14px, 14px 14px, 14px 14px, 14px 14px,
+      45.5% 8px, 45.5% 8px, 45.5% 8px,
+      calc(100% - 25px) 28px,
+      180px 14px,
+      96px 28px,
+      38px 8px, 67px 14px,
+      100% 47px, 100% 1px, 0 0;
+    background-position:
+      0 0, 0 0, 0 0,
+      23px 71px, 23px 103px, 23px 135px, 23px 167px,
+      45px 106px, 45px 138px, 45px 170px,
+      13px 64px,
+      21px 231px,
+      right 21px top 224px,
+      calc(58.33% + 40px) 283px, calc(58.33% + 57px) 299px,
+      0 0, 0 47px, 0 0;
+  }
+  .tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-'])::after {
+    left: 21px;
+    right: auto;
+    top: 268px;
+    width: calc((100% - 58px) * 0.5833);
+    height: 160px;
+    background-position: 0% 100%, 14.286% 100%, 28.571% 100%, 42.857% 100%, 57.143% 100%, 71.429% 100%, 85.714% 100%, 100% 100%;
+  }
+  .tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-'])::before {
+    top: 268px;
+    width: calc((100% - 58px) * 0.4167);
+  }
+}

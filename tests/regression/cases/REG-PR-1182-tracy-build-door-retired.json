@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1182-tracy-build-door-retired",
+  "kind": "fix",
+  "title": "The retired /__tracy/build door answers Tracy's 404 for GET and POST and never reaches the customer's copy",
+  "pr": 1182,
+  "area": "web/site-address",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, with TEST_DATABASE_URL pointing at a PostgreSQL the suite may create schemas in: node --test --test-reporter=tap apps/tracy-web/test/bar.test.mjs",
+    "S2: Read the line for the test named in expect."
+  ],
+  "expect": [
+    "'/__tracy/build is retired' is ok: GET and POST http://build1.tracy.test/__tracy/build both answer 404 with Tracy's page (no 'built' in the body) and the site proxy is never called (pre-fix: GET answered 200 {\"built\":null})."
+  ],
+  "selectors": {
+    "door": "GET/POST <site>/__tracy/build",
+    "function": "apps/tracy-web/src/bar/route.js serveTracyPage"
+  },
+  "evidence": "E2E 04/10/2026 J15.2: GET https://e2ef-wp.tracy.site/__tracy/build answered {\"built\":null}; 11/10 also e2e1085b and ja-restaurant-joomla. site_build on dev held 0 rows: nothing writes a manifest.",
+  "fence": "No route answers /__tracy/build; every unknown /__tracy/ path is Tracy's own 404 page, never forwarded to the site.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/bar.test.mjs"],
+    "tests": ["/__tracy/build is retired"],
+    "needs": ["postgres"]
+  }
+}

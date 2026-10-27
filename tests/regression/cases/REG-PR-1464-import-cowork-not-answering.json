@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1464-import-cowork-not-answering",
+  "kind": "fix",
+  "title": "A Joomla import whose token reaches no Claude Cowork door stops as cowork_not_answering, before registering or reading",
+  "pr": 1464,
+  "area": "add-site/import",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the real startRun (packages/site/tracy-add-site/src/host/run.ts) for a Joomla site with a pasted token and webRootUrl, fetch mocked: the front door answers 404 {\"error\":true,\"code\":404,\"message\":\"Komponente nicht gefunden\"}, the administrator door answers 401.",
+    "S2: Read the settled run state and the recorded requests."
+  ],
+  "expect": [
+    "S1: the run settles with state error and error cowork_not_answering.",
+    "S2: both doors were asked for info twice (4 calls), no PUT to /component-credential, no db.tables or files.pack call."
+  ],
+  "selectors": {
+    "test": "packages/site/tracy-add-site/test/handover-recovery.test.mjs",
+    "code": "joomla.resolveDoor found, run.ts cowork_not_answering"
+  },
+  "evidence": "Production 19/10/2026, yido.eu: three pasted-token imports ended call_failed in 4 s; com_claudecowork was not on the site and three dead site_component rows were registered",
+  "fence": "The door check between getting a token and registering it: a run with no answering door never registers a credential or reads",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/handover-recovery.test.mjs"
+    ],
+    "tests": ["a pasted token no door answers on stops as cowork_not_answering"]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "faec4b0c-cf93-4150-97de-0a8e7eed1840",
+  "status": "complete",
+  "name": "Discord",
+  "url": "https://styles.refero.design/style/faec4b0c-cf93-4150-97de-0a8e7eed1840",
+  "sourceWebsite": "https://discord.com",
+  "extractedAt": "2026-04-11T18:08:26.644Z",
+  "capturedAt": "2026-10-08T05:19:52.273979+00:00",
+  "theme": "dark",
+  "industry": null,
+  "description": "Game world behind a chat bubble — every section is a self-contained environment with its own lighting and cast of characters.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/042a4589-4f5c-4d77-9212-3aeb5f7032c2.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/3ff1c1fd-3dea-40ad-a731-f4317283b84f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ec67ea4e-5de7-4520-b39b-fbd01a2289f0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a968eb74-2545-4964-b6d1-afdf5d7d3fb2.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ed6ea420-f81b-43dd-9f4b-9f26e68be75b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "27459d1ec17d7d788ea665e67100d0dd2688daff98f8d7d0e4f65e333331f82e",
+      "bytes": 25176
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "68747cb0bc0f5406d5093e61443d2e007d67320a956a0f3797f3aaf6bf736ec3",
+      "bytes": 121566
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "50b2f1e846c16ff402484cdea8714528edf60fc1f252c2925b5e0e6992d7986b",
+      "bytes": 34098
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a69e2b3669ec65b1ba14110c0e5910282fa84bf4571901a5da8e54e543295fc0",
+      "bytes": 11969
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "d6b20763868d67d55a5a73d4a00e1b511b84ccdd26340db21289290b7ac061bc",
+      "bytes": 15145
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a7a7cf06282f8c2164e04d8546504af09d301613a886a74430889913cb52e980",
+      "bytes": 4725
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f707dda81f715c5755678a85cee29a7d7d1580f977488b1bbb2c82063be750e4",
+      "bytes": 1113
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f9c3a4025bc0ee87262d494491942662283c4b3a7b958147a477ff4dbdb00d63",
+      "bytes": 1130
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0dbefe34d74e860caa1f8b6a3007f9a51925ace4026c635dd10a33c1c2f22391",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "076d520dc5cb17ca6a7b1925d1c44203b54104fe30d19a5ad79d1e079902d9f6",
+      "bytes": 53852
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f3a5c991fb0d1d4eb2c8724146d26be23ddf6065e01ede0fdf4a5827d60a0dd7",
+      "bytes": 26707
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "082c58d91cdf24dafa3f8a8c5ba890b6b9ec364c8617ede0765fb56039ed3122",
+      "bytes": 53557
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "cb31b2936e1ea41a93fae2562bf9fdbdab5b0cd04242a12914f560d651f59467",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "61e3d12d2bf1a7e61f65f113f8a82ee6e93b251e8fe861858cfaa24bdf3c195b",
+      "bytes": 2070
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a751a5365c62dd9f6fc763fdb31918978c46e2e15a921e844c9d82222f292e86",
+      "bytes": 2696
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "109e52eb-e70f-493e-9527-84d672b00c7b",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "40030487-56e3-447d-904f-b955ebadd0b5",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "bc4fb98b-37ec-480a-b7a9-acd197cbebb9",
+    "c3ceca5c-d329-4559-b947-016172941ba2",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "faec4b0c-cf93-4150-97de-0a8e7eed1840"
+  ]
+}

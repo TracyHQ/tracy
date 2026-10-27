@@ -1,0 +1,3730 @@
+[
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/style-guide",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:31:48.130Z",
+    "url": "http://127.0.0.1:8212/resources/style-guide",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "80px",
+              "fontWeight": "700",
+              "lineHeight": "84px",
+              "letterSpacing": "-1.2px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(4)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2)",
+            "styles": {
+              "gap": "16px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-swatch",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(1)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(2)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(3)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(4)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(5)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(6)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(7)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(8)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(9)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/style-guide",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:31:48.949Z",
+    "url": "http://127.0.0.1:8212/resources/style-guide",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "80px",
+              "fontWeight": "700",
+              "lineHeight": "84px",
+              "letterSpacing": "-1.2px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(4)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2)",
+            "styles": {
+              "gap": "16px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-swatch",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(1)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(2)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(3)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(4)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(5)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(6)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(7)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(8)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(9)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/style-guide",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:31:49.921Z",
+    "url": "http://127.0.0.1:8212/resources/style-guide",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(4)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2)",
+            "styles": {
+              "gap": "16px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-swatch",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(1)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(2)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(3)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(4)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(5)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(6)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(7)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(8)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(9)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/style-guide",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:31:50.854Z",
+    "url": "http://127.0.0.1:8212/resources/style-guide",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2) > p:nth-child(4)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > section:nth-child(2)",
+            "styles": {
+              "gap": "16px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-swatch",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(1)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(2)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(3)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(4)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(5)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(6)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(7)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(8)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > section:nth-child(2) > article:nth-child(9)",
+            "styles": {
+              "borderRadius": "12px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:31:51.684Z",
+    "url": "http://127.0.0.1:8212/",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "80px",
+              "fontWeight": "700",
+              "lineHeight": "84px",
+              "letterSpacing": "-1.2px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 28,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:31:53.850Z",
+    "url": "http://127.0.0.1:8212/",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "80px",
+              "fontWeight": "700",
+              "lineHeight": "84px",
+              "letterSpacing": "-1.2px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 28,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:31:56.763Z",
+    "url": "http://127.0.0.1:8212/",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 28,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:31:57.817Z",
+    "url": "http://127.0.0.1:8212/",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(12) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(14) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(8) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(15) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(11) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(13) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > p:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 28,
+    "unclassified": []
+  }
+]

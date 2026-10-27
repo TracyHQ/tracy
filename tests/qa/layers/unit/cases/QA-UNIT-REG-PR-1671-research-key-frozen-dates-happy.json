@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1671-research-key-frozen-dates-happy",
+  "itemIds": ["regression:REG-PR-1671-research-key-frozen-dates"],
+  "requirement": "A demo brief made from a frozen research read hashes like the live read, so it does not show research changed right after it is made",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1671-research-key-frozen-dates.json",
+    "ref": "PR #1671 (fix); fix evidence: e2e dev 24/10/2026: every agent demo brief showed research changed as soon as it was made; rawSources[].updated_at hashed as {} live and as an ISO string once frozen",
+    "invariant": "S1/S2: the two hashes are equal. S3: the hash is unchanged and no new snapshot is published. S4: the ISO string comes back, not an empty object.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/opportunities-build/agent-demo.js:47",
+      "apps/tracy-web/src/opportunities-build/revisions.js:20",
+      "apps/tracy-web/src/wo-host.js:36"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "a brief made from a frozen research read hashes like the live read it froze",
+    "a Retry whose source answers the same keeps the snapshot, the brief and the logo research",
+    "evidence keeps a Date as its ISO string, not an empty object"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1671-research-key-frozen-dates"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1671-research-key-frozen-dates",
+    "pr": 1671,
+    "kind": "fix",
+    "area": "website-opportunities/revisions",
+    "file": "tests/regression/cases/REG-PR-1671-research-key-frozen-dates.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/website-opportunities-place-retry-source.test.mjs",
+    "apps/tracy-web/test/wo-research-key-dates.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "a brief made from a frozen research read hashes like the live read it froze",
+    "a Retry whose source answers the same keeps the snapshot, the brief and the logo research",
+    "evidence keeps a Date as its ISO string, not an empty object"
+  ],
+  "timeoutS": 600
+}

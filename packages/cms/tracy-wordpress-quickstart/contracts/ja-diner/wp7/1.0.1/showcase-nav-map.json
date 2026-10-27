@@ -1,0 +1,401 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-diner/wp7/1.0.1",
+  "baseHash": "ddf4806328254a915bc1670f5cbf98e424072472ceec8d30e732f4e09ae6f88e",
+  "baseFiles": {
+    "manifest.json": "2c1d7d96495aa954f752376692384d6919f95319cead0f75f79f50bf38c245ed",
+    "content-map.json": "e81737fc88f5618c8357c3772348c48b4361a9c85069bfe6bcf201283f737697",
+    "presentation-lock.json": "e17873f139d2ce0ef91be648347a448d5b0ed641e2d985578905556cc856497b"
+  },
+  "inputs": {
+    "navigation-source.json": "aa908a6dd6d66d0684b66e7764671665624748c6b69a485d0f216853847f77f5",
+    "inventory.json": "acdb931d5d02bb31299aab992cfda62cbb14af708a402db0d07c46151998a2d7"
+  },
+  "decisionsHash": "21343786b2f22ee48077e7c775f6ea56617600d3cdd7cec68fcd4f4f1102293f",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 93,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home - Red",
+        "pageId": 85
+      },
+      "label": "Home - Red",
+      "path": [
+        "Home",
+        "Home - Red"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "the red colour variant of the demo home page",
+      "key": "navigation-93",
+      "before": "f265fc8c075d7a2dc3ae35858f18cd2544b16bec4edc327bea2d7faf5cf7fa64",
+      "after": "7402a43c00b3d3beb16fca7ffb7b6bd0bdcd53605a2eee2435f82f3d0fdb0162"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 93,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home - Pink",
+        "pageId": 86
+      },
+      "label": "Home - Pink",
+      "path": [
+        "Home",
+        "Home - Pink"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "the pink colour variant of the demo home page",
+      "key": "navigation-93",
+      "before": "7402a43c00b3d3beb16fca7ffb7b6bd0bdcd53605a2eee2435f82f3d0fdb0162",
+      "after": "dd615fe0af901a82f5b7819e62179fe7537092b670f3bd597e7af1cedae2cd15"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 93,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home - Green",
+        "pageId": 87
+      },
+      "label": "Home - Green",
+      "path": [
+        "Home",
+        "Home - Green"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "the green colour variant of the demo home page",
+      "key": "navigation-93",
+      "before": "dd615fe0af901a82f5b7819e62179fe7537092b670f3bd597e7af1cedae2cd15",
+      "after": "ed70893a1b5e0609196412c03367c607587678f044aa82f2a2a3c97b62bc780a"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 93,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home - Blue",
+        "pageId": 88
+      },
+      "label": "Home - Blue",
+      "path": [
+        "Home",
+        "Home - Blue"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "the blue colour variant of the demo home page",
+      "key": "navigation-93",
+      "before": "ed70893a1b5e0609196412c03367c607587678f044aa82f2a2a3c97b62bc780a",
+      "after": "dbd4f83d4588d9972bd80c346609aff00ca6c20b2d5ccdb199f3f4b107f73b61"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 278,
+        "slug": "site-pages"
+      },
+      "link": {
+        "label": "Error Page",
+        "pageId": 82
+      },
+      "label": "Error Page",
+      "path": [
+        "Other Pages",
+        "Error Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Error Page\" is one of the template's own screens",
+      "key": "navigation-278",
+      "before": "fe2b3d4b4493de909ec9e1b7ae3f67343953f9e5ae241d52f684be7508ed7f9e",
+      "after": "f019ae891617207f7919bc78b9de143481f936d1ca238d5beae42196e24400af"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 278,
+        "slug": "site-pages"
+      },
+      "link": {
+        "label": "Offline Page",
+        "pageId": 83
+      },
+      "label": "Offline Page",
+      "path": [
+        "Other Pages",
+        "Offline Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Offline Page\" is one of the template's own screens",
+      "key": "navigation-278",
+      "before": "f019ae891617207f7919bc78b9de143481f936d1ca238d5beae42196e24400af",
+      "after": "9e3e05094c15467c5e38bee0c6c6ea3e77270b4aeb51803f80bab64582a04ad6"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 278,
+        "slug": "site-pages"
+      },
+      "link": {
+        "label": "Content",
+        "pageId": null
+      },
+      "label": "Content",
+      "path": [
+        "Content"
+      ],
+      "contains": [
+        "Content › All categories",
+        "Content › Fetured Articles",
+        "Content › Tagged Items",
+        "Content › Typography"
+      ],
+      "rule": "hide.empty-heading",
+      "reason": "a submenu that opens nothing itself and whose every entry leaves the navigation",
+      "key": "navigation-278",
+      "before": "9e3e05094c15467c5e38bee0c6c6ea3e77270b4aeb51803f80bab64582a04ad6",
+      "after": "f7f9c5146c55dab524ae5b36f9479c3e14f2c8d84d23f0aefe20711b546766ba"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-93",
+      "before": "f265fc8c075d7a2dc3ae35858f18cd2544b16bec4edc327bea2d7faf5cf7fa64",
+      "after": "dbd4f83d4588d9972bd80c346609aff00ca6c20b2d5ccdb199f3f4b107f73b61"
+    },
+    {
+      "key": "navigation-278",
+      "before": "fe2b3d4b4493de909ec9e1b7ae3f67343953f9e5ae241d52f684be7508ed7f9e",
+      "after": "f7f9c5146c55dab524ae5b36f9479c3e14f2c8d84d23f0aefe20711b546766ba"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-93",
+      "where": "wp_navigation 93 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 63,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-93",
+      "where": "wp_navigation 93 (mainmenu)",
+      "label": "About Us",
+      "path": [
+        "About Us"
+      ],
+      "pageId": 67,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-93",
+      "where": "wp_navigation 93 (mainmenu)",
+      "label": "Reservation",
+      "path": [
+        "Reservation"
+      ],
+      "pageId": 68,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-93",
+      "where": "wp_navigation 93 (mainmenu)",
+      "label": "Offers",
+      "path": [
+        "Offers"
+      ],
+      "pageId": 66,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-93",
+      "where": "wp_navigation 93 (mainmenu)",
+      "label": "Our Blog",
+      "path": [
+        "Our Blog"
+      ],
+      "pageId": 75,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-93",
+      "where": "wp_navigation 93 (mainmenu)",
+      "label": "Contact Us",
+      "path": [
+        "Contact Us"
+      ],
+      "pageId": 65,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-94",
+      "where": "wp_navigation 94 (usermenu)",
+      "label": "Your Profile",
+      "path": [
+        "Your Profile"
+      ],
+      "pageId": 64,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-94",
+      "where": "wp_navigation 94 (usermenu)",
+      "label": "Submit an Article",
+      "path": [
+        "Submit an Article"
+      ],
+      "pageId": 63,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-94",
+      "where": "wp_navigation 94 (usermenu)",
+      "label": "Site Administrator",
+      "path": [
+        "Site Administrator"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-94",
+      "where": "wp_navigation 94 (usermenu)",
+      "label": "Template Settings",
+      "path": [
+        "Template Settings"
+      ],
+      "pageId": 63,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-94",
+      "where": "wp_navigation 94 (usermenu)",
+      "label": "Site Settings",
+      "path": [
+        "Site Settings"
+      ],
+      "pageId": 63,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "J! Pages",
+      "path": [
+        "J! Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.decision",
+      "reason": "\"J! Pages\" holds the account pages a customer site uses: Login (published with a core/loginout block), Registration, User Profile and Edit User Profile; at install the site's own address replaces the demo one, so they work"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "Login",
+      "path": [
+        "J! Pages",
+        "Login"
+      ],
+      "pageId": 76,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "Registration",
+      "path": [
+        "J! Pages",
+        "Registration"
+      ],
+      "pageId": 77,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "User Profile",
+      "path": [
+        "J! Pages",
+        "User Profile"
+      ],
+      "pageId": 78,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "Edit User Profile",
+      "path": [
+        "J! Pages",
+        "Edit User Profile"
+      ],
+      "pageId": 79,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "Other Pages",
+      "path": [
+        "Other Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-278",
+      "where": "wp_navigation 278 (site-pages)",
+      "label": "Smart Search",
+      "path": [
+        "Other Pages",
+        "Smart Search"
+      ],
+      "pageId": 89,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 7,
+    "templateParts": 0,
+    "kept": 18,
+    "unresolved": 0
+  }
+}

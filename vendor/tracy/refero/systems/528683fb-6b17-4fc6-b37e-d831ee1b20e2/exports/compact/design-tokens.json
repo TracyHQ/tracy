@@ -1,0 +1,59 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, image surfaces, inverted text on dark chips"
+    },
+    "gallery-gray": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Gallery Gray — Card and product tile backgrounds — sets objects apart from the page with a whisper of warmth"
+    },
+    "hairline-gray": {
+      "$value": "#cfcfcf",
+      "$type": "color",
+      "$description": "Hairline Gray — Dividers, secondary borders, placeholder structure"
+    },
+    "caption-gray": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Caption Gray — Secondary text, metadata, timestamps, muted helper labels"
+    },
+    "ink-black": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, filled filter chips, button borders, headings — the dominant interface color"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Hard borders and text where maximum contrast is needed"
+    },
+    "signature-red": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Signature Red — The wordmark only — a pure, unmoderated red used at oversized scale behind the header as a brand watermark; never used for buttons, links, or functional UI"
+    }
+  },
+  "font": {
+    "times-new-roman": {
+      "$value": "Times New Roman",
+      "$type": "fontFamily",
+      "$description": "Primary body and interface type — used for descriptions, product metadata, and general reading text. The serif choice signals editorial/archive intent; a humanist serif substitute like EB Garamond or Lora preserves the curatorial atmosphere"
+    },
+    "arial-narrow": {
+      "$value": "Arial Narrow",
+      "$type": "fontFamily",
+      "$description": "Secondary structural type — condensed sans for compact labels, filter chips, navigation, and the 42px brand name in the header. The narrow proportions contrast the serif body and create catalog/inventory utility. Substitute with a condensed grotesk like Barlow Condensed or Roboto Condensed"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.myrch.club",
+      "siteName": "Myrch Club",
+      "extractedAt": "2026-06-03T22:06:20.457Z",
+      "variant": "compact"
+    }
+  }
+}

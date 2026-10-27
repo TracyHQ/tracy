@@ -1,0 +1,270 @@
+{
+  "dos": [
+    "Use #fff116 exclusively for the primary action button and the brand wordmark — never as a background, border, or text color elsewhere",
+    "Maintain the 0px border-radius across all components — cards, buttons, badges, and inputs must remain sharp-edged",
+    "Set body text at 16px/400 in Apercu with 0.002–0.003em letter-spacing; reserve 32px/700 for editorial display headlines only",
+    "Use full-bleed lifestyle photography as the primary visual element; the page background #f7f7f7 should be visible only at section edges and around card grids",
+    "Keep product cards on pure #ffffff with no borders or shadows — let whitespace and the #f7f7f7 canvas create separation",
+    "Uppercase Apercu 12px/500 with 0.04em tracking for all eyebrow labels, category names, and nav items",
+    "Use #0600ff Cobalt only for NEW or status badges — never as a CTA, link, or decorative accent"
+  ],
+  "donts": [
+    "Don't introduce rounded corners, drop shadows, or gradients — the system is deliberately flat and sharp",
+    "Don't use #fff116 as a hover state, border, or background fill for non-button elements — it dilutes the primary action's power",
+    "Don't use color to create typographic hierarchy — rely on Apercu weight (400/500/700) and size steps instead",
+    "Don't add borders or backgrounds to product cards; the #ffffff surface against #f7f7f7 canvas provides all needed separation",
+    "Don't use #666666 for primary text; reserve it for helper copy, metadata, and placeholders only",
+    "Don't center-align body copy or product descriptions — left-align everything except hero display type and section intros",
+    "Don't use more than one yellow element per viewport; the accent's power depends on its scarcity"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fff116",
+      "name": "Glossier Yellow",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Primary text, nav links, body copy, footer text, icon strokes, hairline borders; the dominant typographic and structural color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Product card surfaces, input fills, elevated panels; the brightest surface level in the stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f7f7",
+      "name": "Fog",
+      "role": "Page canvas, section backgrounds, image-to-page transitions; the base surface the entire site sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#faf2f4",
+      "name": "Blush",
+      "role": "Footer background, soft warm section breaks; a barely-perceptible pink-tinted off-white that adds warmth to the bottom of pages",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f0f0",
+      "name": "Mist",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e8e8e8",
+      "name": "Ash",
+      "role": "Input borders, badge backgrounds, hairline dividers; the structural border color for cards and form elements",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Graphite",
+      "role": "Secondary text, helper copy, muted labels, form placeholder text; the only mid-gray for typographic hierarchy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#464545",
+      "name": "Slate",
+      "role": "Product list and card swatch fills; the darkest functional gray for catalog imagery placeholders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0600ff",
+      "name": "Cobalt Tag",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page is a vertically stacked series of full-bleed sections, each designed as a standalone editorial spread. The hero is a full-viewport photograph with a floating white overlay card (top-left) and a massive yellow wordmark bleeding across the bottom. Below the hero, sections alternate between full-bleed imagery and contained card grids. A two-column 50/50 image split separates category zones (skincare/makeup) with no visible border — only the image seam divides them. Product catalog uses a 4-column grid of square cards on the #f7f7f7 canvas. Navigation is a minimal top bar with a utility announcement strip above it. Section gaps are generous (64px) but the between-section transitions are seamless — no dividers, no alternating background colors except the warm footer. The overall rhythm is: photograph, text, photograph, grid, photograph — like flipping through a fashion magazine.",
+  "imagery": "Photography is the dominant visual language. Full-bleed lifestyle and portrait images fill the viewport — warm golden-hour backlighting, soft skin close-ups, hands holding product bottles against sun flares. The color palette within photography is warm and desaturated: peach skies, terracotta skin tones, deep ocean blues. Images are always edge-to-edge with no rounded corners, no borders, and no overlays except for white text cards or the yellow wordmark. Product photography on catalog cards is shot on pure white seamless with flat, even lighting. The ratio of image to text is approximately 70/30 — images carry emotion, text carries function. No illustrations, no abstract graphics, no 3D renders.",
+  "similar": [
+    {
+      "why": "Same editorial restraint with warm-neutral palette, serif-adjacent sans-serif typography, and photography that occupies the full viewport",
+      "business": "Aesop"
+    },
+    {
+      "why": "Similar DTC beauty aesthetic with full-bleed lifestyle photography, generous whitespace, and a single accent color anchoring the brand",
+      "business": "Goop"
+    },
+    {
+      "why": "Clean product grid layouts with white cards on warm-gray canvas, minimal chrome, and high-contrast black-and-white photography",
+      "business": "Mejuri"
+    },
+    {
+      "why": "Shared flat 0px-radius component language and a design philosophy where restraint and whitespace carry more weight than ornamentation",
+      "business": "Aesop / Mansur Gavriel / & Other Stories"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "badges": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#f7f7f7",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Base background for the entire site; visible behind product grids, between sections, and as the default body color"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Product Card",
+      "level": 1,
+      "purpose": "Elevated surface for catalog items and content blocks; sits one step above the canvas without borders or shadows"
+    },
+    {
+      "hex": "#faf2f4",
+      "name": "Footer",
+      "level": 2,
+      "purpose": "Warm blush-tinted surface for the footer; adds subtle color temperature shift at the page bottom"
+    },
+    {
+      "hex": "#fff116",
+      "name": "Accent",
+      "level": 3,
+      "purpose": "Brand signal surface — appears only as the CTA button fill and the wordmark, never as a sustained background"
+    }
+  ],
+  "northStar": "Sunlit beauty editorial — paper white, ink black, one flash of yellow",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.48
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.06
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.1
+    }
+  ],
+  "components": [
+    {
+      "name": "Yellow Primary Button",
+      "role": "The sole call-to-action style across the site",
+      "description": "Filled #fff116 background, #000000 text in Apercu 14px/500, uppercase tracking at 0.04em, 0px border-radius, padding 12px 24px, no shadow. This button is the loudest thing on any page and must be used sparingly — one per viewport maximum."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Default inline and navigation links",
+      "description": "No background, #000000 text in Apercu 14–16px/400, underline appears on hover only. Inherits color from parent when nested in muted contexts."
+    },
+    {
+      "name": "Outlined Secondary Button",
+      "role": "Secondary actions like 'Choose set' on product cards",
+      "description": "Transparent background, 1px solid #000000 border, #000000 text in Apercu 14px/500, 0px radius, full-width within card, padding 14px 16px. Sits below the product card as a full-width action strip."
+    },
+    {
+      "name": "Product Card",
+      "role": "Catalog item in grid views",
+      "description": "#ffffff background, 0px border-radius, no shadow. Product image fills the card top with 1:1 or 4:5 aspect ratio. Below image: product name in Apercu 16px/500 #000000, short descriptor in 14px/400 #666666, price in 16px/500 #000000. No card border — whitespace separates cards from the #f7f7f7 page background."
+    },
+    {
+      "name": "NEW Badge",
+      "role": "Editorial product tag",
+      "description": "Solid #0600ff background, white text in Apercu 12px/700 uppercase, 0px radius, 4px 8px padding. Positioned top-left of product images."
+    },
+    {
+      "name": "Utility Announcement Bar",
+      "role": "Site-wide promotional strip",
+      "description": "Full-bleed #000000 background, #ffffff text in Apercu 12px/400, centered, 1px paddingTop and paddingBottom. Houses shipping announcements and promotional copy."
+    },
+    {
+      "name": "Top Navigation",
+      "role": "Primary site navigation",
+      "description": "White background, #000000 logo in Apercu bold (left), horizontal category links in Apercu 12px/500 uppercase (center), utility icons and account links (right). Sticky on scroll, 0px radius, 1px solid #e8e8e8 bottom border on scroll."
+    },
+    {
+      "name": "Hero Overlay Card",
+      "role": "Contextual product callout over hero imagery",
+      "description": "White background card with no border or radius, floating top-left over a full-bleed lifestyle photograph. Contains eyebrow label (Apercu 12px/500 uppercase), headline (20–32px/700), body copy (14px/400 #666666), and yellow CTA button. Creates editorial magazine cover energy."
+    },
+    {
+      "name": "Text Input",
+      "role": "Form fields for email, search, checkout",
+      "description": "#ffffff background, 1px solid #e8e8e8 border, 0px radius, padding 12px 16px, Apercu 14px/400 #000000 text. Placeholder in #666666. Focus state thickens border to 2px solid #000000."
+    },
+    {
+      "name": "Full-Bleed Image Section",
+      "role": "Lifestyle and atmospheric photography blocks",
+      "description": "Edge-to-edge photograph, no padding, no border. The Glossier wordmark in #fff116 Apercu 700 overlays at massive scale (200px+), often bleeding off-screen edges for editorial drama."
+    },
+    {
+      "name": "Two-Column Image Split",
+      "role": "Side-by-side category navigation blocks",
+      "description": "Two 50/50 panels, each a full-bleed photograph with a white text card centered: eyebrow label in Apercu 12px/500 uppercase, CTA in 14px/500. Separates skincare from makeup categories with no visible border — only the image seam."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer with navigation, newsletter, legal",
+      "description": "#faf2f4 warm blush background, 0px radius, generous 64px top padding. Apercu 14px/400 #000000 link lists in 4-column grid, newsletter signup inline, copyright in 12px/400 #666666."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across all UI — body at 16px/400, navigation and labels at 12–14px/500, subheadings at 20px/500, editorial headlines at 32px/700. Apercu's geometric humanist construction gives the brand its compressed, contemporary voice; the near-zero letter-spacing (0.002–0.003em) keeps type tight and magazine-like rather than airy or friendly. Weight 700 is reserved for editorial display moments, not UI chrome.",
+      "sizes": "12, 14, 16, 20, 32",
+      "family": "Apercu",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.00–1.70",
+      "substitute": "Inter, Suisse Int'l, or Söhne",
+      "letterSpacing": "0.0020em to 0.0030em at body sizes; 0.0400em on small caps/eyebrow labels"
+    },
+    {
+      "role": "Micro-utility typography for order metadata, tracking numbers, and code-adjacent labels; the monospaced cousin creates technical texture against the proportional body face",
+      "sizes": "12",
+      "family": "Apercu Mono",
+      "weight": "400",
+      "lineHeight": "1.40",
+      "substitute": "JetBrains Mono or IBM Plex Mono"
+    },
+    {
+      "role": "GTStandard-M — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "GTStandard-M",
+      "weight": "400",
+      "lineHeight": "1.5"
+    }
+  ],
+  "description": "Glossier operates as a digital beauty magazine: a near-monochrome canvas of paper-white and ink-black, disrupted by one electric yellow accent that functions as both the brand wordmark and the singular call to action. The system is editorial in restraint — huge Apercu headlines, generous breathing room, full-bleed lifestyle photography that carries most of the emotional weight — and utilitarian in execution, with flat product cards, hairline borders, and zero decorative ornament. The yellow is not a secondary brand color; it IS the brand, deployed sparingly so each appearance feels like a flashbulb. Everything else must recede: neutrals are warm grays with a faint blush undertone, borders are barely-there, type is tight and compressed. The result is a storefront that reads as confident, understated, and unapologetically modern.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text: #000000 (Ink)\n- Background: #f7f7f7 (Fog)\n- Border: #e8e8e8 (Ash)\n- Accent: #fff116 (Glossier Yellow)\n- Surface: #ffffff (Paper)\n- Muted text: #666666 (Graphite)\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. **Product Card**: White #ffffff surface, no border or shadow, 0px radius. Product image fills top at 4:5 aspect ratio. Product name in Apercu 16px weight 500 #000000, descriptor in 14px weight 400 #666666, price in 16px weight 500 #000000. Below card, a full-width outlined button: transparent background, 1px solid #000000 border, 0px radius, Apercu 14px weight 500, padding 14px 16px.\n\n\n4. **Utility Bar**: Full-bleed #000000 background, #ffffff text in Apercu 12px weight 400, centered, padding 4px vertical.\n\n5. **NEW Badge**: Solid #0600ff background, white text in Apercu 12px weight 700 uppercase, 0px radius, padding 4px 8px, positioned top-left of product images."
+    }
+  ]
+}

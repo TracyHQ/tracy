@@ -1,0 +1,51 @@
+meta {
+  name: view pages
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "view": "pages" }
+  }
+}
+
+script:post-response {
+  const body = res.body || {};
+  if (body.version) bru.setVar("version", body.version);
+  const pages = Array.isArray(body.pages) ? body.pages : [];
+  if (pages.length > 0) {
+    bru.setVar("contentId", pages[0].id);
+    bru.setVar("pageLink", pages[0].url);
+  }
+  const withNative = pages.find((page) => Array.isArray(page.native) && page.native.length > 0);
+  if (withNative) {
+    const native = withNative.native[0];
+    bru.setVar("nativeKind", native.kind);
+    bru.setVar("nativeId", native.id !== undefined ? native.id : native.key);
+  }
+}
+
+docs {
+  # Every address on the site
+
+  Tracy walks the component's whole listing and answers one `tracy-content-pages/v1`
+  document: every page with its `id`, `title`, `url`, `path`, `locale`, `status` and, when the
+  component names them, its `native` records.
+
+  Look for:
+  - `version` (`cv1.…`): a fingerprint of this walk. "not modified" and "changes since" use it;
+  - `truncated: true`: the walk stopped before the end, so the list is incomplete;
+  - `later`: the exact call to ask what changed since this answer.
+
+  After the answer these runtime variables are set for later requests:
+  `version`, `contentId` (first page's id), `pageLink` (first page's url), and
+  `nativeKind` / `nativeId` (the first `native` record found).
+}

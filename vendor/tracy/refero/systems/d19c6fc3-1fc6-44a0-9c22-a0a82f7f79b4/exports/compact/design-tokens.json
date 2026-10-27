@@ -1,0 +1,49 @@
+{
+  "color": {
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page background, card surfaces, text on dark/action backgrounds"
+    },
+    "absolute-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Black — Body text, headings, icon strokes, hairline borders, image overlays"
+    },
+    "mid-graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Mid Graphite — Input text, secondary text content"
+    },
+    "light-silver": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Light Silver — Input borders, subtle form dividers"
+    },
+    "hyper-blue": {
+      "$value": "#0000ff",
+      "$type": "color",
+      "$description": "Hyper Blue — Filled action buttons, footer background, interactive accent — the single chromatic punctuation against an otherwise achromatic system"
+    }
+  },
+  "font": {
+    "studiofeixensans": {
+      "$value": "Studiofeixensans",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface. Used uppercase at 72–90px with line-heights compressed to 0.89–1.0 so massive headlines stack into dense typographic blocks. Weights 400 and 700 — the lighter weight carries sub-headlines, 700 owns the display statements. Custom font; substitute with Archivo or Space Grotesk for its tight, geometric, slightly condensed character."
+    },
+    "dm-sans": {
+      "$value": "DM Sans",
+      "$type": "fontFamily",
+      "$description": "Body and interface text. Single weight 400 across 14–20px. Used for form labels, card body copy, navigation, and supporting paragraphs. DM Sans stays quiet so Studiofeixensans can dominate at the top of the hierarchy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://hyperaktiv.li",
+      "siteName": "HyperAktiv",
+      "extractedAt": "2026-06-03T18:07:18.039Z",
+      "variant": "compact"
+    }
+  }
+}

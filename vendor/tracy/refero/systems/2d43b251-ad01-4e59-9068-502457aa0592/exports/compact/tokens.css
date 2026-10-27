@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-ultraviolet: #c692ff;
+
+  /* Typography — Font Families */
+  --font-polysans-slim: 'PolySans-Slim', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-polysans-neutral: 'PolySans-Neutral', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-polysans-bulky: 'PolySans-Bulky', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

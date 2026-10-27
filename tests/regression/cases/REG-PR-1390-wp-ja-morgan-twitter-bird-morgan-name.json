@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name",
+  "kind": "fix",
+  "title": "WP JA Morgan 1.1.19 draws the source's Twitter bird (core's twitter service, not x) in the top bar and both footers, and the demo site name the seeder writes to blogname is \"Morgan\"",
+  "pr": 1390,
+  "area": "wordpress-theme/wp-ja-morgan",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In packages/cms/tracy-wordpress-theme run: node --test --test-reporter=tap test/wp-ja-morgan.test.mjs",
+    "S2: Read the exit code and the fail/skipped counts."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures and 0 skipped tests.",
+    "parts/header.html, parts/footer.html and patterns/part-footer-hs3.php in overlays/ and src/ carry \"service\":\"twitter\",\"label\":\"Twitter\" and no \"service\":\"x\".",
+    "assets/css/wp-ja-morgan.css styles .social-follow .wp-social-link-twitter beside .wp-social-link-x for the square and the bird mask.",
+    "tasks/ja-morgan-wp7/spec/content.json site.name and content-contract.json facts[\"site.name\"].value are both \"Morgan\"; parts/header.html still prints the site title."
+  ],
+  "selectors": {
+    "markup": "<!-- wp:social-link {\"url\":…,\"service\":\"twitter\",\"label\":\"Twitter\"} --> in packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan/parts/*.html and patterns/part-footer-hs3.php",
+    "css": ".social-follow .wp-social-link-twitter, .social-follow .wp-social-link-x",
+    "site_name": "site.name in tasks/ja-morgan-wp7/spec/content.json"
+  },
+  "evidence": "Source pages draw `fa fa-twitter`; WordPress 7.1.2 core social-link.php draws the X mark for service x and the bird for service twitter (D-81, tasks/ja-morgan-wp7/DECISIONS.md).",
+  "fence": "Theme files and the quickstart spec, read from the tree. Not exercised: a rendered site on a stand, and the next quickstart cut's copy.json (ABOUT-3).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/wp-ja-morgan.test.mjs"],
+    "cwd": "packages/cms/tracy-wordpress-theme",
+    "tests": [
+      "overlays: every Twitter social link is core's twitter service",
+      "src: every Twitter social link is core's twitter service",
+      "the demo site name the seeder writes to blogname is \"Morgan\""
+    ]
+  }
+}

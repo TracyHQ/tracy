@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+  "status": "complete",
+  "name": "Galileo-ft",
+  "url": "https://styles.refero.design/style/10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+  "sourceWebsite": "https://www.galileo-ft.com",
+  "extractedAt": "2026-06-03T20:06:02.697Z",
+  "capturedAt": "2026-10-08T05:08:21.203051+00:00",
+  "theme": "dark",
+  "industry": "fintech",
+  "description": "deep-space command deck with electric blue signals",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cb1af2b6-896e-4b2b-8382-72899a32bb22.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4532e249-df98-4c73-afcc-fc34ab7da566.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/29cc1319-9426-498d-853f-d4fb5a4040d0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3001ccdb-d5ad-4585-98c3-485f42b92019.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/24035982-add1-4ce8-a8ef-00ca76d8d945.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6711bcbc8920eda4d0c2640813ce53727c7aed95a010f15a82dcf6a1bdc2611e",
+      "bytes": 24377
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d771cd97cbbc528e9ad1ab597f176f621231c4193438f550867757d5a570abb7",
+      "bytes": 137306
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b1b6646464d4af6f5d17045a31c5a01ad560594b6baed4360d7f4afce2c3957b",
+      "bytes": 20028
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9e8b5f331ee0cf112bb9d71d5526ff2512b0ab1ac3271ef3ca1a782083a2d68c",
+      "bytes": 10448
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5e7b0bbeb55ac4e292a8d1663e659c6f51a8fb08f83570ec0f3d36964e42e989",
+      "bytes": 14432
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "831174f878baecaedd3cdeab477c581f2d0d632544533c3e4a5dbb9f7e7c2bd1",
+      "bytes": 4439
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ddb9428fbed91becae2d192593eaa102f1b2faf939cc8bfc254fbb22bce0e3b8",
+      "bytes": 1082
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "09194ce862287ff3e1709349e52f5c53cfe0c37282ce4ddb60e044e612144dd7",
+      "bytes": 1200
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cd577a865717713a398f851c296278244f26c26947ba8ef3cd83e4c0048a2741",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5aabb8bd92481f67fbbb4ea5261baae0bfdb3ee7c430309f29e44fc873e4c53c",
+      "bytes": 47089
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f8d5b078960fd19c431884d0601e40ed6cbc3e8f02458dbf85a0aef3fa0873fc",
+      "bytes": 25015
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "861b6610b1d996f4cc8cab20e0b4cf6aec07cba4437a65d98a63e86b6d786fd3",
+      "bytes": 58011
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "17e8c4aff6b0269cbdd7fc152cccfb54e1e6b98084ad810c079549bd2f465d6c",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cba4ea32ff2ae2cdf2a43aef7fd0beffaf324d40dc1940ba670b11e36dc330ae",
+      "bytes": 2042
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f0f9c24e3987008401e25d069f48fe08e889e6dc225a5a65efe6dac21b256c0e",
+      "bytes": 2667
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "bcfc6cb0-1b39-4f3f-a95e-bd7b563b0efc",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

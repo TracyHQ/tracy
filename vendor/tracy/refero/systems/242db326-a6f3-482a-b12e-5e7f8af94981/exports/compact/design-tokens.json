@@ -1,0 +1,114 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page background, primary canvas — the void that everything else sits on. Also used for filled primary buttons, nav background, card borders, and the vast majority of interface borders"
+    },
+    "carbon": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Carbon — Card surface layer, elevated panels, secondary background — barely lifted from the void to suggest depth without leaving the dark family"
+    },
+    "obsidian": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Obsidian — Higher elevation cards and modal surfaces — the second step up from the page"
+    },
+    "graphite": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Graphite — Top-tier surface for popovers, tooltips, and deeply nested panels"
+    },
+    "slate": {
+      "$value": "#242424",
+      "$type": "color",
+      "$description": "Slate — Mid-tone fills, hover states, subtle panel backgrounds"
+    },
+    "fog": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Fog — Button hover, pressed states, and darker UI fills"
+    },
+    "ash": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Ash — Muted text, secondary labels, disabled states, subtle borders"
+    },
+    "smoke": {
+      "$value": "#8c8c8c",
+      "$type": "color",
+      "$description": "Smoke — Helper text, tertiary metadata, thin dividers"
+    },
+    "silver": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Silver — Secondary text, body copy at lower emphasis, border dividers"
+    },
+    "bone": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Bone — Light borders, subtle dividers on dark surfaces"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text, headings, filled button backgrounds, light-on-dark iconography — the dominant foreground against the void"
+    },
+    "deep-harbor": {
+      "$value": "#021f33",
+      "$type": "color",
+      "$description": "Deep Harbor — Deep blue-black for box-shadows and subtle tinted surface washes — carries the brand's cool undertone into elevation"
+    },
+    "electric-cyan": {
+      "$value": "#0099ff",
+      "$type": "color",
+      "$description": "Electric Cyan — Brand accent: link underlines, active nav state, focus rings, outlined button borders, decorative card borders, and text selection — appears only on edges and micro-states, never as a fill"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "gt-walsheim": {
+      "$value": "GT Walsheim",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines. The ultra-condensed geometric character with aggressive negative tracking at 85–110px creates the editorial, almost cinematic weight that defines Framer's voice. At 110px the line-height compresses to 0.85, letting the headline feel like a single block of mass. Substitute: Inter Tight or Mona Sans as a free alternative."
+    },
+    "inter-variable": {
+      "$value": "Inter Variable",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body font. The extensive character variant alternates (cv01–cv11, ss02–ss07) tune individual glyphs — switching between straight and curved tails, alternate g shapes, and stylistic sets depending on context. Body text uses subtle negative tracking (-0.01em to -0.02em); uppercase labels use positive tracking (0.03em). Substitute: Inter (Google Fonts) with matching feature settings."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary text, nav items, links, form labels, and button text. Weights 500–700 for emphasized UI elements. Tracking tightens dramatically at larger sizes (22px at -0.05em). Substitute: Inter from Google Fonts."
+    },
+    "mona-sans": {
+      "$value": "Mona Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary display and text accents. Used at 62px for section headers, with extremely tight tracking (-0.05em) giving it a dense, graphic feel. Substitute: Mona Sans (GitHub)."
+    },
+    "open-runde": {
+      "$value": "Open Runde",
+      "$type": "fontFamily",
+      "$description": "Micro-labels and oversized tagline micro-text. Substitute: Inter at 600 weight."
+    },
+    "gt-walsheim-framer-medium": {
+      "$value": "GT Walsheim Framer Medium",
+      "$type": "fontFamily",
+      "$description": "GT Walsheim Framer Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.framer.com",
+      "siteName": "Framer",
+      "extractedAt": "2026-06-03T22:02:30.970Z",
+      "variant": "compact"
+    }
+  }
+}

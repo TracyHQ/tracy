@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5d210b76-702a-45cf-97ed-ed90c47b1eb0",
+  "status": "complete",
+  "name": "Adnaut",
+  "url": "https://styles.refero.design/style/5d210b76-702a-45cf-97ed-ed90c47b1eb0",
+  "sourceWebsite": "https://www.adnaut.digital",
+  "extractedAt": "2026-06-03T19:52:14.316Z",
+  "capturedAt": "2026-10-08T05:12:05.319548+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "After-hours mission control lit by sodium lamps",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f9594525-2193-4bb2-af06-c7502c182f1d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4940c77e-c52b-4a75-9955-c7a8f685eda0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c5275f92-45a7-4bfa-8adc-734c96e64e75.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/33aa80e2-3443-49e4-b85e-5ef212e6d04d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/02752f6d-0d1a-4466-8b5c-ff518df504f5.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "af1da970325d3622719d5f55431bbc5173b7dee608a9caa7dbf2764d4f147436",
+      "bytes": 21186
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2278afe2e357d963dea9b79de554642c80bb0b780abc0709957da12921cbd26d",
+      "bytes": 92113
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ba61dfdf46731156bb6f99fa479e572e3abec6d91228d59101fffffbe5cf7985",
+      "bytes": 18598
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "506f6c9a9bf54acc1523de0371ca7de21930f4f97b91a2a62bf7812b3809414e",
+      "bytes": 12227
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "14b3c308a9dffcf61b189b94279e062a9dc175274db38d4a41e51efd0bfc38fe",
+      "bytes": 13782
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2cd236caf5d96557fb2cfc6a1b7226e02385e846e12b8ac8f9254c1c690318fb",
+      "bytes": 3704
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ae9ab84ea69ae36f6bfc788031628cd82adfeac404a8ac3842911dea943f57e6",
+      "bytes": 669
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "eb5850f6c4b63308af3ad9606135f6a1bcefd21951497b30fc51367e32961526",
+      "bytes": 686
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "63c068e38a5d4bc05ecfccadc8ef23a3302e782afc05e282adc955129561a6b6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a627b90954b7141337e1a1379baa4a8066e29564284c6fb02de64692c7a3f0db",
+      "bytes": 46753
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1abe257bd8b6471e6e43dd5252ae0295dc6d2c30555108d414ee079f49e2c60a",
+      "bytes": 24463
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d10ef9f959e3c34e428d4de6a597bcdefa96bcadf8818e558703ccc1fe4618da",
+      "bytes": 54062
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8110836b26102f768728f0cc18ff925f0e74c6e249d5114fea7d97506b510e60",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "91c81357260abc8416cfde1b0aa81fd5661b1d8a13e2c6de51d75daf08ba6973",
+      "bytes": 1386
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2b58d3c3dcdd96b377cf65e88dde27ba97d0f88d76761e83dd6439c4a00586c2",
+      "bytes": 2031
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2d4ced28-e579-4fa0-84bc-836dd008034f",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "5d210b76-702a-45cf-97ed-ed90c47b1eb0",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "77b723ca-9583-4349-9b5e-2ef8b4fde002",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "ad98aac8-347c-47da-91c5-9c020febeb92",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

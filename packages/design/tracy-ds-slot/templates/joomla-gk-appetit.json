@@ -1,0 +1,235 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "minVersion": {
+    "quickstart/gavick-gk-appetit/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/gavick-gk-appetit/j6": "1.0.1"
+  },
+  "applies": "a GavickPro Gavern (gk_*) quickstart: the same site module as the JA families, in the earliest position its layout renders. Gavern has no runtime colour variables: its compiled stylesheets read the slot once tokenized (a JoomlArt re-release), and the slot's own selector rules do the rest",
+  "tokenScope": ":root",
+  "runtime": {},
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "displaySize": "h1.heading",
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "bodyFace": ["body"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#404040",
+      "fg-2": "#171717",
+      "accent": "#a12918",
+      "accent-hover": "#1a1a1a",
+      "meta": "#737373",
+      "border": "#ebe8e1",
+      "muted": "#636565",
+      "surface": "#ffffff"
+    },
+    {
+      "bg": "#ffffff"
+    },
+    {
+      "accent-hover": "#171717",
+      "border": "#dddddd",
+      "border-soft": "#e9e8e8",
+      "surface-warm": "#f2f2f2",
+      "danger": "#cd341f"
+    },
+    {
+      "accent-hover": "#262626",
+      "border-soft": "#eeeeee",
+      "surface-warm": "#f5f5f5",
+      "border": "#e5e5e5"
+    },
+    {
+      "accent-hover": "#111111",
+      "surface-warm": "#f9f9f9"
+    },
+    {
+      "accent-hover": "#222222"
+    },
+    {
+      "accent-hover": "#151515"
+    }
+  ],
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here; everything reads --ds-c-*",
+  "classifyText": true,
+  "template": "joomla/gk-appetit",
+  "release": "quickstart/gavick-gk-appetit/j6@1.0.1",
+  "roles": {
+    "page": "#gkTemplateTop",
+    "display": "h1.heading"
+  },
+  "measuredPage": "/index.php/news",
+  "measuredPageNote": "the home page is one hero, a logo and a Book a table badge: no paragraph, no link in the content, so its text kinds had no sample under the unified probe (12/10/2026). The News page carries the running text, the content links and the same header; the home page's own heading and logo are measured in the evidence too. Appetit renders no footer on any page (home, Our Story, Menu, Our Chefs, Contact, News checked), so there is no footer kind",
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 50px"
+  },
+  "keepScopes": [".btn-special"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on quickstart/gavick-gk-appetit/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-gk-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 89%–100% of the page follows; the 1.0.1 build itself (release-batch.mjs build, restored from its zip) measured the same: 12/12; the home page is one hero, a logo and a Book a table badge, so the contrast judged is the heading and the logo; the badge (.btn-special, text on a yellow picture) is kept as the template paints it. The page colours follow only from 1.0.1 (~/tracy-bench-work/RELEASE-DS-GAVICK.sh, not yet uploaded); minVersion keeps 1.0.0 sites out (TEMPLATE_NEEDS_UPDATE). Re-measured 12/10/2026 with the unified probe (fix/ds-reverify-d) on the published 1.0.1: the home page (heading, logo) 12/12, but four of its six text kinds found nothing to read there; measured on the News page (measuredPageNote) with the footer kind dropped: 12/12, controls 0 differences, 98%–100% of the page follows, no text made less readable than the template's own (tasks/evidence/ds-reverify-d-2026-10-12/gk-appetit)",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#404040",
+    "--fg-2": "#171717",
+    "--accent": "#a12918",
+    "--accent-hover": "#1a1a1a",
+    "--meta": "#737373",
+    "--border": "#ebe8e1",
+    "--muted": "#636565",
+    "--surface": "#ffffff",
+    "--font-display": "\"NewYork\", sans-serif",
+    "--font-body": "\"CabinetGrotesk-Regular\", sans-serif"
+  },
+  "darkTokens": {},
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (66 line colours, 119 text colours seen)",
+  "contrast": {
+    "accent-text": "#gkPageContent a:not([class*=btn]):not(:has(img))",
+    "muted": "#gkBg p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#gkPageContent p, #gkPageContent li",
+    "heading": "#gkBg :is(h1, h2, h3, h4)",
+    "logo": ".gkLogo"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "masthead",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 25 tried (byte 11920); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#171717",
+      "uses": 31,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#1a1a1a",
+      "distance": 5
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 26,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e1",
+      "distance": 18
+    },
+    {
+      "hex": "#e9e8e8",
+      "uses": 24,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#262626",
+      "uses": 22,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#1a1a1a",
+      "distance": 21
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 17
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#cd341f",
+      "uses": 13,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#dc2626",
+      "distance": 22
+    },
+    {
+      "hex": "#111111",
+      "uses": 13,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#1a1a1a",
+      "distance": 16
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 12
+    },
+    {
+      "hex": "#222222",
+      "uses": 7,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#1a1a1a",
+      "distance": 14
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e1",
+      "distance": 8
+    },
+    {
+      "hex": "#151515",
+      "uses": 5,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#1a1a1a",
+      "distance": 9
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-50"],
+  "followRulesNote": "15/10/2026 (look review v8): fourteen rules write near-black text (#262626) the tokenizer took for the accent’s hover (base --accent-hover #1a1a1a); the article body read in the accent under every system. They take the strong text.",
+  "followRules": {
+    "#gkUser a, .breadcrumb .active span, #gkFooterNavWrap .gkLogo.text, .gkPopupWrap h3 a, .gkMainMenu > .gkmenu > li div.childcontent li > a, .gkMainMenu > .gkmenu > li div.childcontent li > span, .blog .article-info > dd a, .blog-featured .article-info > dd a, .page-header h2 a, .category-blog .title h5 a, .category-blog .title h1 a, .category-blog .article-top-meta a, .edit.item-page fieldset legend, .pagination ul li a, .pagination__wrapper ul li a, .infinity-wrap #infinity-next i, .item-page div[itemprop='articleBody']": {
+      "color": "fg-2"
+    },
+    "#gkMobileMenu #static-aside-menu-toggler, #gkSocial .fa-share-alt": {
+      "background-color": "fg"
+    }
+  },
+  "keepDefaults": {},
+  "keepColors": {
+    ".btn-special": "rgb(64, 64, 64)"
+  },
+  "licence": "gk_appetit 1.1.0 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2022 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/ja-products), and its less/ sources carry JoomlArt's $JA#COPYRIGHT$ header: re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
+  "selectorsNote": "no section-heading size: the home page's h2 are its news titles (#gkBg h2, about 13px in a narrow two-column grid), not section headings, so a system's heading size (Airbnb's and Linear's 48px) stood them six lines tall over the BOOK A TABLE badge (eye check 13/10/2026); they keep the template's size and wear the system's face and weight (headingsAll)"
+}

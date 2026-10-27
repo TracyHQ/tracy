@@ -1,0 +1,17 @@
+{
+  "charts": "biểu đồ",
+  "conditionalFormatting": "định dạng có điều kiện",
+  "encoding": "Không đọc được bảng mã văn bản này. Hãy lưu tệp dưới dạng UTF-8 hoặc UTF-16 có BOM rồi thử lại.",
+  "featureSeparator": ", ",
+  "formulaWarning": "Bảng tính này có công thức. Kết quả hiển thị có thể thiếu hoặc không chính xác.",
+  "images": "hình ảnh",
+  "invalid": "Không mở được bảng tính này. Hãy kiểm tra định dạng, nội dung hoặc mật khẩu bảo vệ của nó.",
+  "language": "en",
+  "loading": "Đang hiển thị tài liệu...",
+  "retry": "Thử lại",
+  "shapes": "hình vẽ",
+  "timeout": "Mở bảng tính này quá thời gian. Hãy thử một tệp nhỏ hơn.",
+  "title": "Bảng tính",
+  "tooLarge": "Bảng tính này vượt giới hạn dung lượng xem trước.",
+  "unsupportedNotice": "Bản xem trước này không hỗ trợ {features} trong bảng tính này. Hãy mở bằng ứng dụng của hệ thống để xem đầy đủ."
+}

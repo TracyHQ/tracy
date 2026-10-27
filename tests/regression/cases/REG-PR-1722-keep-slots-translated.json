@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1722-keep-slots-translated",
+  "kind": "fix",
+  "title": "Joomla site written in another language: every keep slot a visitor reads is translated, a heading split into styled pieces as one phrase (JA Boxing 1.0.4 Vietnamese: THE WORKOUT, Our Classes, Join over 100k…)",
+  "pr": 1722,
+  "area": "site-creation/brief",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/brief-joomla.test.mjs with the name pattern 'JA Boxing 1.0.4 in Vietnamese' (real JA Boxing j6 1.0.4 contract, About and Name given, languages vi, prepare + apply through the site double)",
+    "S2: node --test apps/tracy-web/test/keep-words.test.mjs (grouping of styled pieces, answer checks, fallback)"
+  ],
+  "expect": [
+    "S1: every keep text slot with letters that is not a fact, a template string, a user or a site setting is written with words other than its English sample; THE|WORKOUT, Our| Classes , Join over |100k| of inspiring creatives and Sign up for the |Boxing| newsletter are each asked as one phrase",
+    "S2: all three tests pass"
+  ],
+  "selectors": {
+    "engine": "brief-engines/keep-words.js translateKeep, brief-engines/joomla.js keepWords, prepared.translatedKeep, apply keepWritten"
+  },
+  "evidence": "accept-boxing-104-vi.tracy.site, acceptance scan 25/10/2026 (VI class A list)",
+  "fence": "keep keeps the meaning, never the template's language",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=JA Boxing 1.0.4 in Vietnamese|the pieces of one styled heading|an answer keeps each piece|a phrase whose answer cannot be used",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/keep-words.test.mjs"
+    ],
+    "tests": [
+      "JA Boxing 1.0.4 in Vietnamese",
+      "the pieces of one styled heading",
+      "an answer keeps each piece",
+      "a phrase whose answer cannot be used"
+    ],
+    "timeout_s": 600
+  }
+}

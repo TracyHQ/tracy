@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-bone: #ffffff;
+  --color-graphite: #1e1e1e;
+  --color-ash: #bababa;
+
+  /* Typography — Font Families */
+  --font-matter: 'Matter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-matter-mono: 'Matter Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

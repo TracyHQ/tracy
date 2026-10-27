@@ -1,0 +1,212 @@
+/*
+ * Forms plugin markup (.ec-form .ec-form-*) dressed in the Tracy Base field styles. Imported only by
+ * the views that embed a form (Contact), never by global.css: the plugin's own stylesheet ships
+ * hard-coded greys, and every colour below is a token so dark mode follows html[data-theme].
+ * Measures: the source's contact form (site-repairs.scss .tracy-contact-page .tracy-field*):
+ * fields 24px apart, inputs 1px line / radius 12, textarea 180px, capsule accent submit.
+ */
+.ec-form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+.ec-form .ec-form-page {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	min-width: 0;
+}
+.ec-form .ec-form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+	min-width: 0;
+}
+/* The source stacks every contact field full width; a half field keeps its own row here too. */
+.ec-form .ec-form-field--half {
+	width: 100%;
+}
+.ec-form .ec-form-label {
+	font-size: 15px;
+	line-height: 1.4;
+	font-weight: 400;
+	color: var(--color-fg);
+}
+.ec-form .ec-form-required {
+	color: var(--color-danger-text);
+	margin-left: 4px;
+}
+.ec-form .ec-form-input,
+.ec-form select,
+.ec-form textarea {
+	width: 100%;
+	box-sizing: border-box;
+	font: inherit;
+	font-size: 17px;
+	line-height: 1.47;
+	padding: 12px 16px;
+	color: var(--color-fg);
+	background: var(--color-bg);
+	border: 1px solid var(--color-line);
+	border-radius: var(--ds-input-radius, var(--radius-md));
+	transition:
+		border-color 150ms var(--ease-standard),
+		box-shadow 150ms var(--ease-standard);
+}
+/* A locked field reads the disabled roles; unworn it keeps the field's own ground and text. */
+.ec-form .ec-form-input:disabled,
+.ec-form select:disabled,
+.ec-form textarea:disabled {
+	background: var(--ds-c-disabled-bg, var(--color-bg));
+	color: var(--ds-c-disabled-fg, var(--color-fg));
+}
+.ec-form textarea {
+	min-height: 160px;
+	height: 180px;
+	resize: vertical;
+}
+.ec-form .ec-form-input:focus,
+.ec-form select:focus,
+.ec-form textarea:focus {
+	outline: none;
+	border-color: var(--color-accent);
+	box-shadow: var(--shadow-focus);
+}
+.ec-form .ec-form-input[aria-invalid="true"] {
+	border-color: var(--color-danger);
+}
+/* Consent row: a 20px box top-aligned with a wrapping sentence (source: .form-check-label flex). */
+.ec-form .ec-form-checkbox-label {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--color-fg);
+	cursor: pointer;
+}
+.ec-form .ec-form-checkbox-label input {
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	margin: 3px 0 0;
+	padding: 0;
+	accent-color: var(--color-accent);
+	border-radius: var(--ds-input-radius, 6px);
+}
+.ec-form .ec-form-checkbox-label input:focus-visible {
+	outline: none;
+	box-shadow: var(--shadow-focus);
+}
+.ec-form .ec-form-radio-group,
+.ec-form .ec-form-checkbox-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+.ec-form .ec-form-radio-label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 15px;
+	color: var(--color-fg);
+	cursor: pointer;
+}
+.ec-form .ec-form-help {
+	font-size: 14px;
+	color: var(--color-fg-muted);
+}
+.ec-form .ec-form-error {
+	font-size: 14px;
+	color: var(--color-danger-text);
+	min-height: 0;
+}
+.ec-form .ec-form-error:empty {
+	display: none;
+}
+/* Action row; the submit is the design's primary capsule (.btn-primary, global.css). */
+.ec-form .ec-form-nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+	margin-top: 8px;
+}
+.ec-form .ec-form-submit,
+.ec-form .ec-form-next,
+.ec-form .ec-form-prev {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 12px 20px;
+	border-radius: var(--ds-btn-radius, var(--radius-pill));
+	font: inherit;
+	font-size: 17px;
+	line-height: 1.2;
+	font-weight: 400;
+	letter-spacing: -0.005em;
+	border: 1px solid transparent;
+	cursor: pointer;
+	transition:
+		background-color 150ms var(--ease-standard),
+		color 150ms var(--ease-standard),
+		border-color 150ms var(--ease-standard);
+}
+.ec-form .ec-form-submit,
+.ec-form .ec-form-next {
+	background: var(--color-accent);
+	color: var(--color-accent-on);
+}
+.ec-form .ec-form-submit:hover,
+.ec-form .ec-form-next:hover {
+	background: var(--color-accent-hover);
+	opacity: 1;
+}
+.ec-form .ec-form-submit:active {
+	background: var(--color-accent-active);
+}
+.ec-form .ec-form-submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+.ec-form .ec-form-prev {
+	background: var(--color-bg);
+	color: var(--color-fg);
+	border-color: var(--color-line);
+}
+.ec-form .ec-form-progress {
+	font-size: 14px;
+	color: var(--color-fg-muted);
+}
+/* Result line under the actions: a tinted card in the design's own colours, both themes. */
+.ec-form .ec-form-status {
+	padding: 14px 18px;
+	border-radius: var(--ds-card-radius, var(--radius-md));
+	font-size: 15px;
+	line-height: 1.47;
+	/* the neutral result line is the info state */
+	border: 1px solid var(--ds-c-info, var(--color-line-soft));
+	background: var(--ds-c-info-bg, var(--color-surface));
+	color: var(--ds-c-info-text, var(--color-fg));
+}
+.ec-form .ec-form-status:empty {
+	display: none;
+}
+.ec-form .ec-form-status--success {
+	border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+	background: var(--ds-c-success-bg, color-mix(in srgb, var(--color-success) 10%, var(--color-bg)));
+	color: var(--ds-c-success-text, var(--color-fg));
+}
+.ec-form .ec-form-status--error {
+	border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+	background: var(--ds-c-danger-bg, color-mix(in srgb, var(--color-danger) 10%, var(--color-bg)));
+	color: var(--ds-c-danger-text, var(--color-fg));
+}

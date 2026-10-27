@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-warm-paper: #fafafa;
+  --color-graphite: #595959;
+  --color-ink: #1c1c1c;
+
+  /* Typography */
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wealthsimple-sans-display: 'Wealthsimple Sans Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

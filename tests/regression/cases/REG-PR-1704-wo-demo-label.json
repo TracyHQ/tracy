@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1704-wo-demo-label",
+  "kind": "fix",
+  "title": "/v1/demos never hands the business name to the build as its site label (INVALID_LABEL for \"Khách sạn ATM\")",
+  "pr": 1704,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/public-demos",
+  "steps": [
+    "S1: POST /v1/demos for a business named \"Khách sạn ATM\" against the test Postgres and read the queued wo_demo_action label."
+  ],
+  "expect": ["S1: the label is empty/null or passes siteLabelRefusal; the wo-public-demos suite passes."],
+  "selectors": {
+    "door": "POST /v1/demos (apps/tracy-web/src/opportunities-build/public-demos-route.js)",
+    "tool": "tests/regression/scripts/REG-PR-1704-wo-demo-label.mjs"
+  },
+  "evidence": "Stranger run 24/10/2026: wo_demo_action.label \"Khách sạn ATM\", build receipt {code: INVALID_LABEL, reason: shape}",
+  "fence": "Label passed from the /v1/demos accept to acceptDemoActions",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1704-wo-demo-label.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

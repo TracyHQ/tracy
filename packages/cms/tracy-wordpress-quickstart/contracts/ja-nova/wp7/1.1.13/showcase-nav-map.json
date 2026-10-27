@@ -1,0 +1,378 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-nova/wp7/1.1.13",
+  "baseHash": "fe01b2083e533393c01ea33fe819edda3dad0aa0b952459114f82389efa0fe4e",
+  "baseFiles": {
+    "manifest.json": "101866a1111d13cfdda5e71e535cb47447f80261aab714590cd2a0c638b81987",
+    "content-map.json": "8bf52f9d925ac0c819dff1d80d87b4322217b9109b334b26a9c5340be4d837a8",
+    "presentation-lock.json": "d0c598d94704b9ba1ff087e158f6bfd54571a7395a79687074559f897d346223"
+  },
+  "inputs": {
+    "navigation-source.json": "7a1cf362a220be0ea2ff3e4a386449c91bd795c5070c1d0760c7bdb006c6d04c"
+  },
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 181,
+        "slug": "jpages"
+      },
+      "link": {
+        "label": "Error Page",
+        "pageId": 154
+      },
+      "label": "Error Page",
+      "path": [
+        "Error Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Error Page\" is one of the template's own screens",
+      "key": "navigation-181",
+      "before": "fa550e144e3976de0cb3c8dfce1e596c37e469319558b2405f006ff6513134af",
+      "after": "20abed15021bc89de1dc045ca284720cda9d17a01a1b1e859d7c74003df0613d"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 181,
+        "slug": "jpages"
+      },
+      "link": {
+        "label": "Offline Pages",
+        "pageId": 155
+      },
+      "label": "Offline Pages",
+      "path": [
+        "Offline Pages"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Offline Pages\" is one of the template's own screens",
+      "key": "navigation-181",
+      "before": "20abed15021bc89de1dc045ca284720cda9d17a01a1b1e859d7c74003df0613d",
+      "after": "3e3476d9c364a42ca2b741c18d6f7bb6f518c8b42258702c34dd36cb405161c3"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 181,
+        "slug": "jpages"
+      },
+      "link": {
+        "label": "Typography",
+        "pageId": 156
+      },
+      "label": "Typography",
+      "path": [
+        "Typography"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Typography\" is one of the template's own screens",
+      "key": "navigation-181",
+      "before": "3e3476d9c364a42ca2b741c18d6f7bb6f518c8b42258702c34dd36cb405161c3",
+      "after": "a7c45bb113a00a583082d0c7945fcd9087d73afc4285ff693b8e27b3bdb4ce61"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-181",
+      "before": "fa550e144e3976de0cb3c8dfce1e596c37e469319558b2405f006ff6513134af",
+      "after": "a7c45bb113a00a583082d0c7945fcd9087d73afc4285ff693b8e27b3bdb4ce61"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 150,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "About Us",
+      "path": [
+        "About Us"
+      ],
+      "pageId": 159,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Career",
+      "path": [
+        "About Us",
+        "Career"
+      ],
+      "pageId": 173,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Contact",
+      "path": [
+        "About Us",
+        "Contact"
+      ],
+      "pageId": 172,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Project",
+      "path": [
+        "Project"
+      ],
+      "pageId": 158,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Branding",
+      "path": [
+        "Project",
+        "Branding"
+      ],
+      "pageId": 174,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "UI/UX design",
+      "path": [
+        "Project",
+        "UI/UX design"
+      ],
+      "pageId": 175,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Illustration",
+      "path": [
+        "Project",
+        "Illustration"
+      ],
+      "pageId": 176,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Project Detail",
+      "path": [
+        "Project",
+        "Project Detail"
+      ],
+      "pageId": 145,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-179",
+      "where": "wp_navigation 179 (mainmenu)",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": 160,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-180",
+      "where": "wp_navigation 180 (users)",
+      "label": "Login Form",
+      "path": [
+        "Login Form"
+      ],
+      "pageId": 151,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-180",
+      "where": "wp_navigation 180 (users)",
+      "label": "Registration Form",
+      "path": [
+        "Registration Form"
+      ],
+      "pageId": 152,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-180",
+      "where": "wp_navigation 180 (users)",
+      "label": "User Profile",
+      "path": [
+        "User Profile"
+      ],
+      "pageId": 153,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-181",
+      "where": "wp_navigation 181 (jpages)",
+      "label": "Smart Search",
+      "path": [
+        "Smart Search"
+      ],
+      "pageId": 168,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (jcontent)",
+      "label": "Category Blog",
+      "path": [
+        "Category Blog"
+      ],
+      "pageId": 169,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (jcontent)",
+      "label": "Featured Articles",
+      "path": [
+        "Featured Articles"
+      ],
+      "pageId": 157,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (jcontent)",
+      "label": "Author listting",
+      "path": [
+        "Author listting"
+      ],
+      "pageId": 170,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (jcontent)",
+      "label": "Blog Detail",
+      "path": [
+        "Blog Detail"
+      ],
+      "pageId": 108,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "Illustration",
+      "path": [
+        "Illustration"
+      ],
+      "pageId": 161,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "Development",
+      "path": [
+        "Development"
+      ],
+      "pageId": 162,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "Mobile Application",
+      "path": [
+        "Mobile Application"
+      ],
+      "pageId": 163,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "Cloud solutions",
+      "path": [
+        "Cloud solutions"
+      ],
+      "pageId": 164,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "IT infrastructure",
+      "path": [
+        "IT infrastructure"
+      ],
+      "pageId": 165,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "Cybersecurity",
+      "path": [
+        "Cybersecurity"
+      ],
+      "pageId": 166,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (services)",
+      "label": "Virtualization",
+      "path": [
+        "Virtualization"
+      ],
+      "pageId": 167,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 3,
+    "templateParts": 0,
+    "kept": 25,
+    "unresolved": 0
+  }
+}

@@ -1,0 +1,269 @@
+{
+  "dos": [
+    "Use Druk Condensed for all display headings at 58px or larger — this font is the brand voice, not a decoration",
+    "Set display type to line-height 0.78-0.85 to create the poster-stacked overlap effect",
+    "Use Lavender Shock (#e894ff) as the ONLY chromatic color on Deep Plum (#23002b) sections — let the duotone do the work",
+    "Apply 9999px border-radius to every button, tag, and pill element — no sharp corners in the UI",
+    "Break the page rhythm with white (#ffffff) sections after dark plum sections — the contrast IS the layout",
+    "Use Mint Signal (#93ffe4) and Amber Pulse (#ffac47) only as small accents under 20% of viewport — they are punctuation, not surfaces",
+    "Keep Neue Montreal at 12-16px for all UI chrome — it must stay quiet enough that Druk dominates"
+  ],
+  "donts": [
+    "Don't use any font other than Druk Condensed for display type — system serifs or regular sans-serifs at 200px+ will collapse the poster energy",
+    "Don't place Lavender Shock (#e894ff) on white or light backgrounds — the contrast is designed for dark plum only",
+    "Don't add box-shadows to cards or buttons — the design uses flat color layering, not elevation",
+    "Don't use line-height above 1.0 for display type — the tight vertical compression is the signature",
+    "Don't mix the accent colors (mint, amber) into the dark plum sections — they belong in light/transition zones only",
+    "Don't use border-radius smaller than 6px on any interactive element — the system is built on pills and soft corners",
+    "Don't center-align display headlines — left-align pushes type to the viewport edge for the broadside effect"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#23002b",
+      "name": "Deep Plum",
+      "role": "Hero canvas, dark section backgrounds, page-level ground — sets the exclusive nighttime club mood",
+      "group": "brand"
+    },
+    {
+      "hex": "#e894ff",
+      "name": "Lavender Shock",
+      "role": "Pink supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#291900",
+      "name": "Espresso Brown",
+      "role": "Warm near-black for card backgrounds, dark UI surfaces, warm-tinted borders — adds subtle warmth to the otherwise cool palette",
+      "group": "neutral"
+    },
+    {
+      "hex": "#002629",
+      "name": "Ink Teal",
+      "role": "Cool near-black for body text, deep card surfaces, cool borders — the teal undertone distinguishes dark text from the plum background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Slate",
+      "role": "Primary body text on light sections, icon strokes, dense UI text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Charcoal",
+      "role": "Headlines on light sections, heavy text blocks, near-black emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Black",
+      "role": "Maximum-contrast text on white sections, solid fills for condensed display type in light zones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Light section canvas, reverse text on dark plum, card surfaces in light zones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#93ffe4",
+      "name": "Mint Signal",
+      "role": "Accent punctuation: highlight washes, badge backgrounds, small functional moments — cool contrast against lavender",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffac47",
+      "name": "Amber Pulse",
+      "role": "Accent punctuation: warm highlight moments, secondary badges, energy markers — warm contrast against the cool palette",
+      "group": "accent"
+    }
+  ],
+  "imagery": "Iconography is the primary visual language: simple line-art sport figures (tennis player, golfer) rendered as single-stroke outlines in white or lavender, used inside pill toggles. No photography, no illustrations, no 3D renders. The display type itself is the imagery — the huge condensed words function as visual art on the plum canvas. Any photographic content would need to be tightly cropped sports imagery with high contrast and minimal background.",
+  "similar": [
+    {
+      "why": "Same dark-canvas + ultra-condensed display type approach for sports community branding",
+      "business": "The Players' Tribune"
+    },
+    {
+      "why": "Bold condensed type filling the viewport, single accent color against dark, poster-scale typography",
+      "business": "On Running"
+    },
+    {
+      "why": "Dark-first interface with a single saturated accent (lavender/electric) on deep neutral ground",
+      "business": "WHOOP"
+    },
+    {
+      "why": "High-contrast display type pushing to viewport edges, club/community energy through typographic scale",
+      "business": "Gymshark"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "6px",
+      "cards": "14px",
+      "pills": "9999px",
+      "buttons": "9999px",
+      "special": "24px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#23002b",
+      "name": "Deep Plum Ground",
+      "level": 0,
+      "purpose": "Hero and dark section canvas — the primary brand surface"
+    },
+    {
+      "hex": "#291900",
+      "name": "Espresso Card",
+      "level": 1,
+      "purpose": "Dark card surfaces, warm-tinted elevated elements on plum ground"
+    },
+    {
+      "hex": "#002629",
+      "name": "Ink Teal Card",
+      "level": 2,
+      "purpose": "Cool-tinted card surfaces and deep text on light sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 3,
+      "purpose": "Light section canvas, reverse text, high-contrast break sections"
+    }
+  ],
+  "northStar": "midnight sports broadside — a vintage club poster screaming from a plum-dark wall",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.22
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.22
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 0.85,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "heading",
+      "size": 58,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.22
+    },
+    {
+      "role": "display",
+      "size": 187,
+      "lineHeight": 0.85,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "display-xl",
+      "size": 317,
+      "lineHeight": 0.78,
+      "letterSpacing": 0.05
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Display Headline",
+      "role": "Full-bleed poster-scale word stack",
+      "description": "Druk Condensed 317px at line-height 0.78, color Lavender Shock (#e894ff) on Deep Plum (#23002b) ground. Letters push to the edges of the viewport with near-zero padding. No line-wrap — each word is a separate element. Secondary connecting words ('YOUR', 'OF') sit in Neue Montreal 58px at 600 weight, breaking the display rhythm. The extreme vertical compression (line-height 0.78) causes descenders and ascenders to overlap adjacent lines, creating the poster-stacked effect."
+    },
+    {
+      "name": "Sport Toggle Pill",
+      "role": "Two-option selector for sport type (tennis/golf)",
+      "description": "Pill shape (9999px radius), 80×48px frame, Deep Plum (#23002b) background. Active state: Lavender Shock (#e894ff) fill with dark icon. Inactive: outlined with 1px Lavender Shock border on transparent. Icon is a simple white-line sport figure centered within."
+    },
+    {
+      "name": "Filled Lavender Button",
+      "role": "Primary action — Join, Sign Up, CTA",
+      "description": "Pill shape (9999px radius), 12px 20px padding, Lavender Shock (#e894ff) background, Deep Plum (#23002b) text, Neue Montreal 14px 500 weight. No border, no shadow. On hover: slight brightness shift to 100% saturation. Compact — this is a one-word button."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent over hero, 64px tall, horizontal: logo left, nav links center, action button right. Links in Neue Montreal 14px, Paper White (#ffffff) on dark sections, Slate (#333333) on light sections. Active link gets Lavender Shock underline or color shift. No background bar — the nav floats directly on the section canvas."
+    },
+    {
+      "name": "Wordmark Logo",
+      "role": "Brand identity mark",
+      "description": "Stacked text logo: 'CHAMPIONS FOR GOOD CLUB' in three lines, Druk Condensed 400 weight at ~20px, Lavender Shock (#e894ff). Preceded by a small mark icon. No tagline, no subtext — the mark IS the identity."
+    },
+    {
+      "name": "Light Section Display Block",
+      "role": "Headline blocks on white canvas sections",
+      "description": "Druk Condensed 187px at line-height 0.85, Black (#000000) or Charcoal (#121212) fill, left-aligned. Words stack vertically with tight tracking. White space dominates right side of the layout. This is the 'poster' moment on light sections — same type treatment as hero, different color."
+    },
+    {
+      "name": "Card Surface",
+      "role": "Content card on either dark or light ground",
+      "description": "14px border-radius, 20px padding, no shadow. Dark variant: Espresso Brown (#291900) background with Paper White (#ffffff) text. Light variant: Paper White background with Slate (#333333) text and 1px hairline border in #e5e5e5."
+    },
+    {
+      "name": "Badge / Tag",
+      "role": "Small status or category label",
+      "description": "6px border-radius, 3-5px vertical padding, 8-10px horizontal padding. Mint Signal (#93ffe4), Amber Pulse (#ffac47), or Lavender Shock (#e894ff) fills with dark text. Neue Montreal 12px 500 weight, uppercase optional."
+    },
+    {
+      "name": "Footer Link List",
+      "role": "Bottom-of-page navigation",
+      "description": "Neue Montreal 14px, Paper White on dark footer sections, Slate on light. 8px row-gap between links, left-aligned columns. No decoration — just dense, readable type."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and section headings — extreme condensed bold that fills containers edge-to-edge; 151-317px for hero-scale words, 24-44px for subheadings",
+      "sizes": "24px, 29px, 32px, 43px, 44px, 151px, 187px, 317px",
+      "family": "Druk Condensed Super Desktop",
+      "weight": "400, 500",
+      "lineHeight": "0.78, 0.85, 1.00",
+      "substitute": "Oswald (700, condensed) or Bebas Neue for free alternatives; Anton as last resort",
+      "letterSpacing": "+0.005em to +0.008em — slightly positive tracking prevents the ultra-condensed letterforms from feeling claustrophobic at display sizes"
+    },
+    {
+      "role": "UI body, navigation, buttons, supporting copy — geometric sans-serif that stays quiet so Druk can shout; 58px is the bridge size between UI and display",
+      "sizes": "12px, 14px, 15px, 16px, 58px",
+      "family": "Neue Montreal",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.10, 1.20, 1.30, 1.40, 1.43",
+      "substitute": "Inter, Manrope, or DM Sans",
+      "letterSpacing": "-0.022em — negative tracking tightens the UI type into a compact, confident block that visually anchors against the sprawling display type"
+    },
+    {
+      "role": "System fallback for body text rendering",
+      "sizes": "14px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.43",
+      "substitute": "system-ui, sans-serif"
+    }
+  ],
+  "description": "Champions4good is a dark-first club poster: deep plum canvas, one screaming lavender accent, and ultra-condensed display type that fills the screen like a vintage sports broadside. The visual hierarchy is brutally simple — everything chromatic is lavender-pink (#e894ff) against the plum ground, and supporting accents (mint, amber) appear as small functional punctuation rather than competing for attention. Body sections break to white canvas with the same condensed display type rendered in dense black, creating a high-contrast section rhythm. The type attitude is anti-restraint: Druk Condensed at 200-300px with tight tracking and tight line-height pushes the display copy to the edges of its container, while Neue Montreal handles UI chrome at human sizes. Components are minimal — pill toggles, a single filled lavender button, sparse navigation — letting the typography and the plum-to-white contrast do the work.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference:**\n- text: #ffffff (on dark) / #333333 (on light)\n- background: #23002b (dark sections) / #ffffff (light sections)\n- border: rgba(255,255,255,0.2) on dark / #e5e5e5 on light\n- accent: #e894ff\n- signal: #93ffe4 (mint), #ffac47 (amber)\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts:**\n\n1. *Create a hero section:* Deep Plum (#23002b) full-bleed background. Display headline in Druk Condensed 317px weight 500, line-height 0.78, color Lavender Shock (#e894ff), letter-spacing +0.008em. Secondary words in Neue Montreal 58px weight 600. Two pill toggles (9999px radius, 80×48px) centered above the headline, one filled Lavender Shock, one outlined with 1px Lavender Shock border.\n\n2. *Create a filled action button:* Pill shape (9999px radius), 12px 20px padding, Lavender Shock (#e894ff) background, Deep Plum (#23002b) text, Neue Montreal 14px weight 500, no border, no shadow.\n\n3. *Create a light-section display block:* White (#ffffff) background. Druk Condensed 187px weight 500, line-height 0.85, color Black (#000000), left-aligned, occupying 60% of viewport width. 64px top padding.\n\n4. *Create a card on dark ground:* 14px border-radius, 20px padding, Espresso Brown (#291900) background, Paper White (#ffffff) body text in Neue Montreal 15px weight 400. Optional Mint Signal (#93ffe4) badge tag (6px radius, 4px 10px padding) in top-left corner.\n\n5. *Create a navigation bar:* Transparent background, 64px height, 20px horizontal padding. Logo left (Druk Condensed 20px Lavender Shock), nav links center (Neue Montreal 14px Paper White with 32px gap), filled action button right (Lavender Shock pill, 12px 20px padding)."
+    }
+  ]
+}

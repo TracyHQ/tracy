@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1238-tracy-base-emdash-0-5-2",
+  "kind": "fix",
+  "title": "Tracy Base EmDash 0.5.2 passes the readiness rules its personalize map decides (ABOUT-2, ABOUT-3, LANG-1, LANG-2, PAGE-8)",
+  "pr": 1238,
+  "area": "cms/emdash",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read packages/cms/tracy-emdash-theme-base package.json, template.config.json, Dockerfile, docs/generated/inventory.json; the tracy-base/emdash-0.x row of apps/tracy-web/src/lib/template-profiles.json; maxVersion of packages/design/tracy-ds-slot/templates/emdash-base.json.",
+    "S2: node tools/distribution.mjs pack qa.contract.json <tmp>/pack in the theme; zip it as tracy-base-emdash-quickstart-0.5.2.zip in <tmp>/release beside a tracy_setting.json whose languages are template.config.json locales; node scripts/template-customization-question-readiness.mjs <tmp>/release --tag tracy-base/emdash-0.x --only <rule> --offline --json for ABOUT-2, ABOUT-3, LANG-1, LANG-2, PAGE-8.",
+    "S3: node --test tests/personalize-labels, personalize-facts, personalize-rewrite-trade, personalize-gate, empty-claims (cwd the theme).",
+    "All of it: node tests/regression/scripts/REG-PR-1238-tracy-base-emdash-0-5-2.mjs"
+  ],
+  "expect": [
+    "S1: 0.5.2 in all four places; a template-profiles row 0.5.2; slot maxVersion 0.5.2.",
+    "S2: each of the five rules is pass (0.5.1 failed ABOUT-2 with 330 demo pieces, ABOUT-3 with no demoCompanyNames, LANG-2 with only the site entry in labels, LANG-1 and PAGE-8 with no languages in tracy_setting.json).",
+    "S3: the suites pass with 0 failures."
+  ],
+  "selectors": {
+    "map": "packages/cms/tracy-emdash-theme-base/seed/personalize.json (labels, demoCompanyNames, keptText, copy, blocks, rewrite, facts)",
+    "rules": "apps/tracy-web/src/lib/template-customization-question-readiness/rules/about-2-demo-paragraphs.js, about-3-demo-company-name.js, lang-2-one-language-everywhere.js"
+  },
+  "fence": "No stand, no model, no network. Nothing is published here; the 0.5.2 upload and the tracy_setting.json switch are for a person to run.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1238-tracy-base-emdash-0-5-2.mjs"],
+    "needs": [],
+    "timeout_s": 900
+  }
+}

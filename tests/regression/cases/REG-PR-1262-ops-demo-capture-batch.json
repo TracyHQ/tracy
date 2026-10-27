@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1262-ops-demo-capture-batch",
+  "kind": "fix",
+  "title": "/ops: a heavy listing page is shot in one load, a queued baseline says it waits, the install door answers at once and never 502, shots are named per release, a stale tab is told to reload, and the whole template row opens it",
+  "pr": 1262,
+  "area": "ops/demos",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-host/test/capture.test.mjs",
+    "S2: Run: node --test packages/fleet/tracy-fleet-operation/test/webroot-heavy-lock-queue.test.mjs",
+    "S3: With TEST_DATABASE_URL set to a Postgres the suite may make scratch schemas in, run: node --test apps/tracy-web/test/ops-demos.test.mjs apps/tracy-web/test/ops-capture.test.mjs",
+    "S4: Run: node --test apps/tracy-host/test/provision.test.mjs",
+    "S5: Run: node --test packages/web/tracy-harness/test/bundle-freshness.test.mjs packages/web/tracy-harness/test/templates-row-hit.test.mjs",
+    "S6: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "S1: a shot over the byte ceiling opens ONE context and calls goto once; the lighter steps are screenshots of that page, the retake with scale 'css'.",
+    "S2: while another process holds the heavy lock, stderr carries '==> waiting for another site's webroot baseline' and no building line; once released, '==> building the webroot baseline (ADR 0073)' follows and stdout's last line is JSON with ok true.",
+    "S3: a host answering 502 HTML gives 503 application/json with error DEMO_HOST_UNAVAILABLE, host, reason and Retry-After 60; a host that never answers is answered in under 3 s; a slow host gives 202 at once with jobId equal to keyedJobId(jobKey) and a second press 409; a host that never takes the job leaves the job state failed with a 'did not answer' reason and the next press reuses the jobKey with no teardown.",
+    "S3: tracy-business/j6 and tracy-business/emdash-0.x shooting key home store tracy-business-j6-home-1440.png and tracy-business-emdash-0-x-home-1440.png, and a pre-existing tracy-business-home-1440.png keeps its bytes.",
+    "S4: two POST /_host/teardown with the same jobKey answer the same keyed id (second with reused true) and run teardown once; a jobKey with a space is 400.",
+    "S5: a changed /ops entry script is reported once; a click on the thumbnail, name, version chip, warnings pill, warnings cell, chevron cell and chevron each opens the template once; the row has tabindex 0, nothing inside is a tab stop, Enter opens it."
+  ],
+  "selectors": {
+    "shooter": "makeShoot in apps/tracy-host/src/browser.js",
+    "heavy_lock": "run_heavy in packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-git.sh",
+    "install_door": "POST /api/ops/demos/install (handOff in apps/tracy-web/src/ops/demos.js)",
+    "capture_door": "POST /api/ops/templates/:templateId/capture (shotName, releaseShotPart)",
+    "bundle_watch": "watchBundle in packages/web/tracy-harness/src/shell/bundle-freshness.ts",
+    "template_row": "tr[data-template] in packages/web/tracy-harness/src/cms/Templates.tsx"
+  },
+  "evidence": "cowork.tracy.site, 12/10/2026: ja-vogue category-2 'shot timed out after 30000ms' x4; 8 fleet01 installs all on 'building the webroot baseline' for 10+ min; 13 Cloudflare 502 pages on POST /api/ops/demos/install after a 40 s press; tracy-business wp7 and emdash sharing tracy-business-<key>-<width>.png; a pre-#1255 tab stuck on Reading…; the Warnings cell of a Templates row opening nothing.",
+  "fence": "Real makeShoot with a fake Playwright, the real webroot-git.sh with a real flock, the real doors over a fake demo host and real Postgres, the harness modules on linkedom. Not exercised: Chromium itself, fleet01's load, Cloudflare.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1262-ops-demo-capture-batch.mjs"],
+    "needs": ["postgres"]
+  }
+}

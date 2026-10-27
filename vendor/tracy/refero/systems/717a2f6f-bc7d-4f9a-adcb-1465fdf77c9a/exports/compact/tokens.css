@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-graphite: #333333;
+  --color-bone: #f7f7f7;
+  --color-steel: #525252;
+
+  /* Typography — Font Families */
+  --font-neue-montreal: 'Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neue-montreal-variable: 'Neue Montreal Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

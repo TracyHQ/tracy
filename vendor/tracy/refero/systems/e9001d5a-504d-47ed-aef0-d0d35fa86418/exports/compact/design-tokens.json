@@ -1,0 +1,69 @@
+{
+  "color": {
+    "deep-ink": {
+      "$value": "#130e30",
+      "$type": "color",
+      "$description": "Deep Ink — Primary text color, heading ink, card borders, secondary button fills — near-black violet that adds warmth over pure black"
+    },
+    "hi-yellow": {
+      "$value": "#ffe228",
+      "$type": "color",
+      "$description": "Hi-Yellow — Primary action fill (filled CTA buttons), hero pill backgrounds, accent highlights — bright highlighter yellow with near-black text for maximum contrast"
+    },
+    "moss-green": {
+      "$value": "#59e25d",
+      "$type": "color",
+      "$description": "Moss Green — Decorative organic shape fill behind hero — warm leaf green used in background blobs, not UI controls"
+    },
+    "fuchsia": {
+      "$value": "#e261e5",
+      "$type": "color",
+      "$description": "Fuchsia — Decorative organic shape fill behind hero — vivid pink used in background blobs, not UI controls"
+    },
+    "slate": {
+      "$value": "#5f5c6e",
+      "$type": "color",
+      "$description": "Slate — Body text, helper copy, muted icons, subtle borders — cool desaturated gray for secondary information"
+    },
+    "canvas": {
+      "$value": "#f9fbf2",
+      "$type": "color",
+      "$description": "Canvas — Page background, button ghost fills, lightest surface — near-white with slight green-warmth"
+    },
+    "soft-meadow": {
+      "$value": "#eff2e5",
+      "$type": "color",
+      "$description": "Soft Meadow — Card surfaces, nav background, elevated panels, hero backdrop — green-tinted off-white for soft surface separation"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Secondary dark button text and borders, nav dividers — softer than pure black for dark UI elements"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Logo mark, nav text, input borders, fine stroke details — true black for highest-contrast elements"
+    }
+  },
+  "font": {
+    "hedvig-letters-serif": {
+      "$value": "Hedvig Letters Serif",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — all hero/section headlines, used at large sizes with tight letter-spacing. The warm humanist serif is the brand's voice; it gives the compliance product a literary, trustworthy quality instead of a sterile SaaS feel. The 700 weight carries the headlines, while 400 appears in larger pull-quote contexts."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI and body text — nav links, button labels, form fields, card copy, footer text, small caps labels. Inter handles the functional layer with neutral efficiency, letting the serif carry the personality. Weight 500 for nav and labels, 400 for body, 600 for emphasis."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://trustditto.com",
+      "siteName": "Ditto",
+      "extractedAt": "2026-06-03T18:10:42.858Z",
+      "variant": "compact"
+    }
+  }
+}

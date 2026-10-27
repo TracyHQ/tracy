@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-ash-gray: #808080;
+  --color-paper-white: #ffffff;
+  --color-system-blue: #007aff;
+
+  /* Typography */
+  --font-sf-pro-display: 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-text: 'SF Pro Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

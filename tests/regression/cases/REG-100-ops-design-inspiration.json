@@ -1,0 +1,62 @@
+{
+  "id": "REG-100",
+  "kind": "feat",
+  "title": "The /ops Design inspiration screen shows exactly the cards GET /api/templates offers, says why the others are held back, and Unpublish/Publish moves a build off and back",
+  "pr": 898,
+  "area": "ops/design-inspiration",
+  "cms": ["any"],
+  "needs": [
+    "stand:isolated-ops-routes",
+    "postgres:TEST_DATABASE_URL",
+    "build:harness-web",
+    "browser:cdp-9222",
+    "playwright"
+  ],
+  "flaky_model": false,
+  "steps": [
+    "From this checkout: pnpm --filter @tracy/harness-web build (the stand serves packages/web/tracy-harness/dist as /ops, the way the image does).",
+    "Export TEST_DATABASE_URL: a Postgres the script may create and drop one scratch schema on (the local compose stand prints it in deploy/.env as TEST_DATABASE_URL; any reachable one works). Nothing else is written there.",
+    "Run chrome-watch --status; if no Chrome listens on 127.0.0.1:9222, run chrome-watch. Do not restart or close the borrowed browser.",
+    "Run PLAYWRIGHT_MODULE=<absolute path of node_modules/.pnpm/playwright@*/node_modules/playwright/index.mjs> TEST_COMMIT=$(git rev-parse HEAD) EVIDENCE_DIR=/tmp/ops-design-inspiration-regression node tasks/evidence/ops-design-inspiration/verify.mjs. The script starts its own localhost stand from the real buildApp (real quickstarts routes, real guard, real /ops static serving) on a migrated scratch schema seeded with a fixture shelf, signs in an owner and an editor seat of the tracy_admin workspace with mintSession, and stubs GitHub so nothing leaves the machine.",
+    "Read checks.json in EVIDENCE_DIR and look at desktop-light.png and desktop-dark.png."
+  ],
+  "expect": [
+    "The script exits 0 and prints verdict PASS checks 19.",
+    "The rail lists Design inspiration directly above Quickstarts and still lists Repo catalogue; #ops-topbar-slot is empty on this screen (no environment picker).",
+    "The rows of Shown are exactly the template ids of GET /api/templates (5), and the four stat tiles equal the counts computed from that answer (5 / Joomla 4 / WordPress 3 / EmDash 1).",
+    "tracy-business is one row with three builds (Joomla, WordPress, EmDash); groups are Bold & Expressive, Professional & Corporate, Starter, in that order.",
+    "A warnings badge is on tracy-base, ja-nova and ja-vega only; their tooltips read 'WordPress: No demo on this server to preview', 'The demo on this server runs 1.0.2, not the release’s 1.0.4' and '1 of 1 pictures are not on this server yet: ja-vega-home-1440.png', equal to the API's warnings.",
+    "Filters: EmDash 1, WordPress 3, Joomla 4, All 5 rows; category Starter → tracy-base; search 'voy' → ja-voyara.",
+    "Not shown lists quickstart/ja-vogue/j6 ('Unpublished from Design inspiration') and quickstart/ja-morgan/wp7 (the draft sentence); No card lists quickstart/ja-kinetic/j6; tracy-airbnb/j6 (design pack) appears on no tab and in neither answer.",
+    "On Quickstarts the releases whose On Tracy badge is titled 'On Design inspiration…' are exactly the builds GET /api/templates lists.",
+    "Unpublish tracy-business/wp7 from the sheet: tracy-business stays with two builds, /api/templates drops wp7, Not shown gains it with 'Unpublished from Design inspiration'. Publish from the same sheet: three builds again and Not shown is back to two.",
+    "Editor seat: the design-systems switch has aria-disabled=true, Refresh from GitHub is disabled, Publish and Unpublish in the sheet are disabled, and DELETE /api/ops/quickstart/inspiration answers 403.",
+    "No pageerror, no console error (the browser's own favicon probe is listed separately as ignoredConsole), and no request left the stand (outbound is empty)."
+  ],
+  "selectors": {
+    "screen": "[data-ops-inspiration]",
+    "row": "tr[data-template]",
+    "build": "[data-build][data-platform]",
+    "category": "[data-category]",
+    "warnings": "[data-warnings]",
+    "warningList": "[data-warning-list] li",
+    "stat": "[data-stat='shown|joomla|wordpress|emdash']",
+    "cmsFilter": "[data-cms='all|joomla|wordpress|emdash']",
+    "categoryFilter": "[data-category-filter]",
+    "search": "[data-search]",
+    "tab": "[data-tab='shown|held|none']",
+    "releaseRow": "tr[data-release]",
+    "why": "[data-why]",
+    "editCard": "[data-edit-card]",
+    "cardRelease": "[data-card-release]",
+    "publish": "[data-card-publish]",
+    "unpublish": "[data-card-unpublish]",
+    "designSystemsSwitch": "[data-design-systems-switch]",
+    "refresh": "[data-refresh]",
+    "quickstartRow": "tr[data-tag]",
+    "envSlot": "#ops-topbar-slot",
+    "doors": "GET /api/ops/inspiration, GET /api/templates, GET /api/ops/quickstarts, PUT|DELETE /api/ops/quickstart/inspiration?tag="
+  },
+  "evidence": "tasks/todo-ops-design-inspiration.md (dev 04/10/2026: the Quickstarts column and /api/templates disagreed on tracy/wp7; tracy-business/j6 released 1.2.0 with its demo on 1.1.0)",
+  "fence": "One predicate (shownOnInspiration) decides what customers see and what the operations screen and Quickstarts column call shown; warnings never take a card off; the screen reads live server state with no ref picker; only owner/admin seats can change a card. The fixture stand checks the real routes and SPA; the dsh customer-side plugin and real GitHub are outside this case."
+}

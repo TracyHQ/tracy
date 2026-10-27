@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-soot: #24241f;
+  --color-limestone: #d1d3cf;
+  --color-chalk: #e5e5e5;
+  --color-graphite: #333333;
+
+  /* Typography — Font Families */
+  --font-gp: 'GP', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

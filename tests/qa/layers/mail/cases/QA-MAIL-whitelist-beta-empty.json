@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-whitelist-beta-empty",
+  "itemIds": [
+    "direct:whitelist-beta:en",
+    "direct:whitelist-beta:vi",
+    "direct:whitelist-beta:de",
+    "direct:whitelist-beta:it",
+    "direct:whitelist-beta:fr",
+    "direct:whitelist-beta:nl",
+    "direct:whitelist-beta:zh",
+    "direct:whitelist-beta:es"
+  ],
+  "requirement": "the whitelist (beta) letter with names, sites or a website missing steps down to a plainer sentence",
+  "oracle": {
+    "source": "emails.js docblocks (steps down through what is known)",
+    "ref": "emails.js docblocks (steps down through what is known)",
+    "invariant": "no hole, no \"undefined\""
+  },
+  "edgeTags": ["empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.empty:whitelist-beta"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,8 @@
+{
+  "contract": "emdash-conditional-writes/1",
+  "version": "1.1.0",
+  "commit": "22eef378e12fcb5ecfefd6e94fcbae719c9cfafc",
+  "sha256": "32831c337092555da67fab6b11fe84083d6f798cf2875307393b2f89508348d5",
+  "sourceBundle": "tasks/evidence/wo-editorial-quality/seven/emdash-quality-current.bundle",
+  "license": "MIT"
+}

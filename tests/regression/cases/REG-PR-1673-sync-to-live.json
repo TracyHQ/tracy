@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1673-sync-to-live",
+  "kind": "feat",
+  "title": "Sync to live: a preview after a forward sync lists what Tracy changed per kind; apply writes only places the live site still holds as the base (compare-and-set), keeps a customer's edit as a conflict, maps new records through the id map, and a forward sync after it adds no duplicate; undo puts the live site back where nothing moved since; phase 2: files the engine writes (Joomla images/ and media/templates/, a WordPress Media Library picture) by their bytes, PHP files only linted and with their own OK, settings through site.identity, template styles, T4 site profiles, WordPress options, theme mods and Additional CSS, and everything else named with why",
+  "pr": 1673,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs packages/fleet/tracy-fleet-operation/test/live-write.test.mjs packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs packages/core/tracy-core/test/publish-push-dom.test.mjs"
+  ],
+  "expect": [
+    "S1: changesets for Joomla and WordPress fixtures; CAS, conflict, lot fallback, limits, deletes, retries, resume, media and undo against a fake engine; every kind on real MariaDB; no duplicate after the push's sync; the whole Joomla flow (preview, customer edit kept as conflict, new article mapped, no duplicate, undo); the Publish tab flow's groups, confirm, result and undo; phase 2: file and setting items per CMS (groups files/settings/php, reasons for the rest, PHP lint), file CAS/conflict/undo and setting CAS/conflict/undo against the fake engine, theme mods, custom CSS and template styles on real MariaDB, and the Joomla flow pushes a media/ stylesheet and the site name, then Undo puts both back on live while the copy keeps them"
+  ],
+  "selectors": {
+    "host": "live_push.py; live-write.mjs; webroot-live-push.sh; live_sync.py --pushed; live_sync.py files --pushed; live-push lint",
+    "web": "sites/live-push.js; site-tabs/publish/PushStep.tsx (the Publish tab's Sync to live flow)"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-to-live.md",
+  "fence": "Tracy never writes over a change the customer made on the live site",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs",
+      "packages/core/tracy-core/test/publish-push-dom.test.mjs"
+    ]
+  }
+}

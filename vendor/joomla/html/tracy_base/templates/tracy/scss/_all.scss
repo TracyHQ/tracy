@@ -1,0 +1,66 @@
+//
+// Templates Assets
+// ---------------------------------------------
+
+// Tracy token layer — must come first: every rule below reads var(--*)
+// NO token import. The 56 names this template is written against arrive from
+// `css/styles/<design system>.css`, chosen by the style's `typelist-theme` param — which is what
+// lets ONE template wear any of them. Compiling a token block in here would pin the template to one
+// design system, and that is how the first attempt ended up as two templates.
+
+// Global styles
+@import "global";
+
+// Core style
+@import "../../../plugins/system/t4/themes/base/scss/core";
+
+// All form elements style
+@import "forms";
+
+// Component styles
+@import "components";
+
+// Utilityies style
+@import "utilities";
+
+// Navigation styles
+@import "navigations";
+
+// Modules style
+@import "modules";
+
+// Joomla styles
+@import "joomla";
+
+// Typography
+@import "typo";
+
+// Megamenu
+@import "megamenu";
+
+//Offcanvas menu
+@import "offcanvas";
+
+// Template styles
+@import "styles";
+
+// Legacy style
+@import "../../../plugins/system/t4/themes/base/scss/legacy";
+
+@import "frontend-edit.scss";
+
+// Tracy component layer — last, so it wins at equal specificity
+@import "chrome";
+
+// Tracy com_content override layer — after "base", so it wins at equal specificity
+@import "overrides-content";
+
+// Tracy com_contact / com_finder / com_tags / com_newsfeeds / com_wrapper override layer
+@import "overrides-misc";
+
+// The three Design pages mirror the OpenDesign fixtures class for class
+@import "fixture-pages";
+
+// Reconciliations between the layers above — must be last
+@import "overrides-spine";
+@import "overrides-users";

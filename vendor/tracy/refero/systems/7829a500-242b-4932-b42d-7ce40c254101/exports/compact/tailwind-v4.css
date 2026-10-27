@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-forest-ink: #003329;
+  --color-chartreuse-sprig: #e6ffa3;
+  --color-deep-moss: #042725;
+  --color-vivid-lime: #9bff48;
+  --color-mist-paper: #e5e7eb;
+  --color-white-sheet: #ffffff;
+  --color-graphite: #000000;
+  --color-sage-dust: #52756e;
+  --color-pine-shadow: #33544c;
+
+  /* Typography */
+  --font-untitledsans: 'UntitledSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-boogybrutposter: 'BoogyBrutPoster', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

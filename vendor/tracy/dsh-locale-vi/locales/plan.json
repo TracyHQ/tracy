@@ -1,0 +1,21 @@
+{
+  "chip.exitFailed": "Không thoát được plan mode",
+  "chip.label": "Plan",
+  "chip.off.aria": "Plan mode đang tắt, bấm để bật",
+  "chip.off.title": "Plan mode đang tắt — bấm để bật (/plan)",
+  "chip.on.aria": "Plan mode đang bật, bấm để tắt",
+  "chip.on.title": "Plan mode đang bật — bấm để tắt (/plan off)",
+  "preview.action": "Mở",
+  "preview.document": "Kế hoạch · Markdown",
+  "preview.expired": "Bản xem trước tạm thời của kế hoạch này đã hết hạn. Hãy mở lại từ thẻ đang chờ duyệt.",
+  "preview.failed": "Không tải được kế hoạch",
+  "preview.full": "Xem toàn bộ kế hoạch",
+  "preview.historyUnavailable": "Lịch sử phiên không khả dụng",
+  "preview.invalidAddress": "Địa chỉ kế hoạch không hợp lệ",
+  "preview.loading": "Đang tải kế hoạch…",
+  "preview.notFound": "Không tìm thấy kế hoạch này",
+  "preview.open": "Mở kế hoạch ở thanh bên",
+  "preview.openNamed": "Mở kế hoạch: {title}",
+  "preview.title": "Kế hoạch",
+  "preview.unavailable": "Không xem trước được kế hoạch"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@tracy/docs",
+  "version": "0.1.0",
+  "description": "The public documentation site of Tracy (the desktop app and the API), served by tracy-web at the root of its own host (DOCS_ORIGIN, docs.tracy.ai): Astro Starlight pages plus three generated from the reference tables",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "dev": "node scripts/generate.mjs && astro dev",
+    "build": "node scripts/generate.mjs && astro build",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../scripts/ci/turbo-setup.mjs --check --task-part owner=apps/tracy-docs"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.4",
+    "astro": "7.3.5",
+    "js-yaml": "4.3.2"
+  },
+  "license": "MIT"
+}

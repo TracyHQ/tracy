@@ -1,0 +1,70 @@
+{
+  "id": "QA-UNIT-REG-PR-1216-getting-started-help-row-happy",
+  "itemIds": ["regression:REG-PR-1216-getting-started-help-row"],
+  "requirement": "Settings › Help & about has a Getting started row that always reopens the screen: ring + progress line, All set when done, a note when hidden from the account menu, Open",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1216-getting-started-help-row.json",
+    "ref": "PR #1216 (feat); fix evidence: none recorded",
+    "invariant": "In progress (web, no AI account): .ts-help-row[data-help-item='getting-started'] with title 'Getting started', a decorative (aria-hidden) ring whose arc offset is C·(1−2/3), the line '2 of 3 setup steps complete.' and a button 'Open' wearing the class the section hands over. Every step done: the ring shows a tick instead of the arc and the line reads 'All set. Open it again any time.'; the row stays. Hidden from the account menu: the line ends with '· Hidden from the account menu' (the dot aria-hidden); the row stays. Open opens the screen in reopened mode; Show in account menu there clears the note underneath without a reload. Operator switch 'onboarding' off: no row. Through apply(): registered into settings.help.item with id tracy-onboard.getting-started, order 10, locale tracy-onboard. Help & about renders settings.help.item once, after the update row and its switches and before the release notes (web: after the web line, before the links), handing over buttonClassName equal to the class of its own 'Check for updates' button.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-onboard/test/help-row.test.mjs:79 require() with a computed specifier",
+      "packages/ui/tracy-settings/test/help-about.test.mjs:86 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "in progress: the section's row, the ring at 2 of 3, the line and an Open button with the section's class",
+    "every step done: a tick in the ring and \"All set. Open it again any time.\" — the row stays",
+    "hidden from the account menu: the line says so after a separator — the row stays",
+    "Open opens the screen in reopened mode; Show in account menu there clears the note underneath",
+    "the operator switched Getting started off: no row",
+    "through apply(): the row registers into settings.help.item after the updates",
+    "the help items sit after the update row and its switches, before the release notes",
+    "on the web the help items follow the web line, inside the first box, before the links",
+    "the section as registered renders the settings.help.item slot, handing over the button class"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1216-getting-started-help-row"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-onboard", "tracy-onboard"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1216-getting-started-help-row",
+    "pr": 1216,
+    "kind": "feat",
+    "area": "onboard/help-row",
+    "file": "tests/regression/cases/REG-PR-1216-getting-started-help-row.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-onboard/test/help-row.test.mjs",
+    "packages/ui/tracy-settings/test/help-about.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "in progress: the section's row, the ring at 2 of 3, the line and an Open button with the section's class",
+    "every step done: a tick in the ring and \"All set. Open it again any time.\" — the row stays",
+    "hidden from the account menu: the line says so after a separator — the row stays",
+    "Open opens the screen in reopened mode; Show in account menu there clears the note underneath",
+    "the operator switched Getting started off: no row",
+    "through apply(): the row registers into settings.help.item after the updates",
+    "the help items sit after the update row and its switches, before the release notes",
+    "on the web the help items follow the web line, inside the first box, before the links",
+    "the section as registered renders the settings.help.item slot, handing over the button class"
+  ],
+  "timeoutS": 120
+}

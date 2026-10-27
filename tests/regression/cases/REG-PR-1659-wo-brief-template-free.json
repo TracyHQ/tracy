@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-1659-wo-brief-template-free",
+  "kind": "feat",
+  "title": "A site brief names no CMS or template: one brief of a research feeds demos on any CMS and template, the build freezes its choice, one live build per (brief, choice), and collected data still wins over sample content",
+  "pr": 1659,
+  "area": "website-opportunities/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: buildBrief on a full research read; validateBrief on it; briefForBuild of it for one CMS and template.",
+    "S2: makeBuildChoice and withBuildChoice for one build of a brief; choiceKey of two choices.",
+    "S3: through the doors, the same research asked twice for a brief, then a Settings change, then a new build.",
+    "S4: a second demo action with the same CMS and template while the first build is live.",
+    "S5: buildBrief on a research that collected some dishes, reviews and a rating, and lacks the rest."
+  ],
+  "expect": [
+    "S1: the brief is valid and holds no cms, cmsSource, resolvedAt or template; the build's view carries them and is valid.",
+    "S2: the choice carries CMS, template, workflow and the acceptance lines naming them; the stored brief is untouched; the key differs only on what makes two demos different.",
+    "S3: the same research answers the same brief; the Settings change reaches only the next build.",
+    "S4: refused BUILD_EXISTS before any charge.",
+    "S5: acceptance says collected prices, dishes, reviews and ratings are shown as held and sample content only fills what was not collected."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/tracy-website-opportunities/domain/brief.mjs apps/tracy-web/src/opportunities/build-choice.js apps/tracy-web/src/opportunities/revisions.js apps/tracy-web/src/opportunities/builds.js apps/tracy-web/src/db/migrations/165-wo-brief-template-free.sql",
+    "dom": ""
+  },
+  "fence": "briefForBuild and validateBrief's optional cms/template, makeBuildChoice/withBuildChoice/choiceKey, revisionForAction's reuse by research_hash, liveBuildOf keyed on (revision, choice_key)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/wo/website-opportunities/test/domain-brief.test.mjs",
+      "apps/tracy-web/test/wo-build-choice.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a full brief is valid and names no CMS or template: one brief serves every build",
+      "a brief seen from a build carries the build’s CMS and template, and is valid",
+      "what the research did not collect is left to sample content, a suggestion for the owner; collected data wins",
+      "a choice carries the CMS, the template, the workflow and the lines that name them, frozen with the build",
+      "a revision read for one build looks as a revision with a template did; the stored brief stays untouched",
+      "the build key names what makes two demos of one brief different, and nothing that does not",
+      "a brief is a research snapshot: the same research answers it again, and a Settings change only reaches the next build",
+      "build: one live demo per (brief, choice) — the same CMS and template again is refused BUILD_EXISTS before any charge"
+    ]
+  }
+}

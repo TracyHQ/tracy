@@ -1,0 +1,33 @@
+---
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  title: string
+  text?: string
+  label?: string
+  url?: string
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { title?: string; text?: string; label?: string }
+}
+const { title, text, label, url, stamp, fields } = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [url])
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+---
+
+<section class="wrap" data-block="inline-cta">
+	<div class="flex flex-wrap items-center justify-between gap-6 rounded-[var(--ds-card-radius,clamp(14px,2vw,20px))] border border-line-card bg-surface px-[clamp(24px,5vw,48px)] py-[clamp(24px,4vw,36px)]">
+		<div>
+			<h3 class="h-card mb-1" {...at("title")}>{title}</h3>
+			{text && <p class="text-[15px] text-fg-muted" {...at("text")}>{text}</p>}
+		</div>
+		{label && live(url) && <a href={url || "#"} class="btn btn-primary" {...at("label")}>{label}</a>}
+	</div>
+</section>

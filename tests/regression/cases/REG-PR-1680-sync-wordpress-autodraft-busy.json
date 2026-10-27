@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1680-sync-wordpress-autodraft-busy",
+  "kind": "fix",
+  "title": "WordPress Sync from live with a site fingerprint: WP-Cron moving wp_options is no busy read; an unchanged site answers unchanged by its rows without merging; a live post at a number the copy holds only as an auto-draft keeps its number; renumbering names the live record this read moved",
+  "pr": 1680,
+  "area": "sync/live",
+  "cms": ["wp", "jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: checksum-path cron ticks are not busy and a real option edit is busy with names; unchanged:'rows' only for housekeeping; the S5-shaped flow keeps the live post at its number with Tracy's posts intact; a stale remembered number is not reused; the Joomla sync and push flows still pass"
+  ],
+  "selectors": {
+    "host": "live-pull.mjs pullDatabase sameRows; live_sync_wordpress.py yield_auto_drafts; live_sync.py IdMap.apply clash YIELD"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-wordpress-autodraft-busy.md",
+  "fence": "WordPress's own housekeeping never stops or slows a sync, and never hides a live record",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+    ]
+  }
+}

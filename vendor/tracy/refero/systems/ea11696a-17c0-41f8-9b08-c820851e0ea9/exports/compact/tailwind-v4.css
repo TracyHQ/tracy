@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-graphite-ink: #3a3a3e;
+  --color-deep-carbon: #090b11;
+  --color-ash-veil: #b5b0b0;
+  --color-apricot-wash: #ffcf9e;
+  --color-iris-mist: #babfff;
+  --color-fuchsia-bloom: #e3a2ef;
+  --color-polar-blue: #bfe0f7;
+
+  /* Typography */
+  --font-instrument-sans: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f99856e1-3627-4624-a811-f6053a978b62",
+  "status": "complete",
+  "name": "Metaview",
+  "url": "https://styles.refero.design/style/f99856e1-3627-4624-a811-f6053a978b62",
+  "sourceWebsite": "https://metaview.ai",
+  "extractedAt": "2026-06-03T18:25:36.140Z",
+  "capturedAt": "2026-10-08T05:19:48.739316+00:00",
+  "theme": "dark",
+  "industry": "ai",
+  "description": "Bioluminescent control room — a near-black instrument panel lit by a single living mint signal.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7d9cb949-5a15-483d-bd9b-af9817099378.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5818634d-3c03-4b2a-977c-04c028baa213.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d2c655cc-8700-4d07-ac3a-9eaee01ad40a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/af550c96-d9bb-44d9-969c-235b81a20e66.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ea0daed6-9117-41bb-b530-0c2b4c796d64.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ed950f3d9a90c7bd1a411dd0bb2f460ad4205ef438d54312de7f8267ba53d40c",
+      "bytes": 22977
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fe14c112fae77574ba13fbedfca65b561f19c39bd9fb704863760a03520978f2",
+      "bytes": 100109
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "edf80286a32d8e331563f84fd55e6775c89da9f8c598b39c3cd5ed112b30dd07",
+      "bytes": 18909
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "386d717c66120e58af705c471ff27bf9771e027368da23f97ca6ee43dfbf477a",
+      "bytes": 14110
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3157da6544d21c9eaf1d428e4b7fe203022a296b29932a424f3dee465abf5ddf",
+      "bytes": 14194
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "5d3548805dffa20b978b86f085380edeff057985565070bb9a9c5f45f4db3b3f",
+      "bytes": 4090
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "efa3f2cf5973118a15fc5d0ac3b398d3eb0190b1890ecc9110bf392b61ee510f",
+      "bytes": 711
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7d871c3e9cbdbac190ff60266dbec8f72e7f622ad9d043e327dcff3ad913459c",
+      "bytes": 974
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cc8103d2b5279a4c95d04a8df4b64d25657a7d4231f8ebcc0e7edd714f9247fb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "126244808893a300b2c1107c9e75f0d88a4d6a8c2c95070375c0584e8a1676d4",
+      "bytes": 47477
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5e2373d8ce73fc5b029f5d376d90240d2ee80f1f24e0a649af2b0875062b6795",
+      "bytes": 24923
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "617262ad1ddd6197c2d096104d58362620d6309788b21e80aa33775d4620a2ab",
+      "bytes": 57671
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4b39f39d59569fbdc22516bc2d171b8237a267f8b105c2f404391c4197c29cb5",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6337f195b25e2c28446f4946c744441c4ec6a61cdb94f44d69db8323b62b9e69",
+      "bytes": 2079
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f83a6916e104efb471ce12efbba6dd4f33e23f7d255855536f48e1f17b220069",
+      "bytes": 2898
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "80099f79-72b7-4367-b2e9-6a3d4a3e9e6a",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b136f0a0-8064-4978-a18e-db54b9362c24",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "cfab7b43-ed24-41e9-9272-c858700b865b",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f99856e1-3627-4624-a811-f6053a978b62",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

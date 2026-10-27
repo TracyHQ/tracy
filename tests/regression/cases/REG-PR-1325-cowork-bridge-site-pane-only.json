@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1325-cowork-bridge-site-pane-only",
+  "kind": "fix",
+  "title": "The cowork's bridge listener takes context only from the site pane's own window",
+  "pr": 1325,
+  "area": "core/cowork",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap packages/core/tracy-core/test/cowork-bridge-source.test.mjs",
+    "S2: Read the line for the test whose name starts with 'a bridge message from any window but the site pane is ignored'."
+  ],
+  "expect": [
+    "That test reports ok: bridge messages posted from a stranger iframe, from the agent pane and with no source never reach the context panel, and the same message posted from the site pane iframe's contentWindow does (pre-fix: the message with no source was shown, because the listener only read the sender-written `source: 'tracy-bridge'` field)."
+  ],
+  "selectors": {},
+  "evidence": "Security review 13/10/2026: packages/core/tracy-core/src/Cowork.tsx accepted any window's postMessage whose data claimed to come from the bridge. Measured with the new test against the old listener: 'FROM-NOWHERE' appeared in the panel.",
+  "fence": "packages/core/tracy-core/src/Cowork.tsx: onMessage returns unless event.source === sitePane.current.contentWindow.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/cowork-bridge-source.test.mjs"
+    ],
+    "tests": ["a bridge message from any window but the site pane is ignored"]
+  }
+}

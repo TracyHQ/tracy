@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c08ebca5-87d4-4c19-a5d7-ae5e670dae11",
+  "status": "complete",
+  "name": "Atlassian",
+  "url": "https://styles.refero.design/style/c08ebca5-87d4-4c19-a5d7-ae5e670dae11",
+  "sourceWebsite": "https://www.atlassian.com",
+  "extractedAt": "2026-06-03T22:08:59.894Z",
+  "capturedAt": "2026-10-08T05:17:02.854027+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Confetti-edged engineering blueprint. A clean white enterprise canvas interrupted by dark navy editorial panels framed in torn geometric color — vivid violet, taxicab yellow, electric blue, leaf green — like precise diagrams pinned between paint-splattered dividers.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/08acfd61-1b97-4681-9c9a-ae7f0c956589.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e57520a8-7f12-486a-8400-f19c93ad9485.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b1c27c84-8fa4-4ca6-8108-d241a1974516.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/373e4944-90df-46af-b75f-980f8d5d070d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/cae7cc8a-7a78-4058-b7bc-86358fe280af.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c87457339e73c95e32d05cf87cb82f87adf47dce509c3124565378841320c08d",
+      "bytes": 21620
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1b353f7efad4399533a6df338ab908a5e37bcf75cbbc89d1ec1cf6d49215eb73",
+      "bytes": 133624
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "92c3212e257ebb1027c8b4970a9c1d7f1626243149d642225cecb96a289b88d1",
+      "bytes": 18128
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a9319f5ef99e5e66ac3812fbebb189cf61e5a3cc8935be4549ed2bd76ae8af25",
+      "bytes": 17571
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e75987574794808766852c7fed00a4b7bfbec50eafbcfb37eba587c69d904788",
+      "bytes": 13172
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1d405008de4543f4a972e915c1c5f85f2981a46e0977afa7644709c3b677a4a6",
+      "bytes": 3464
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d562aca6006f7509b7205a6b2e7b954464e0c2c32e38ef2e65000186c953c093",
+      "bytes": 680
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "21001e069d596ef2c87aac5ee24efe3b88f01c895fdd96913376f63ff1991ddd",
+      "bytes": 873
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9fe026d34b4b5ed97266eeb047a7e1c9cb789db671c558a5bdc06dd4c1e5aa79",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "566a224115747ba365f90be517206c16e8b6ed398fce683e3932b145a4a8cb5c",
+      "bytes": 47508
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "215ab06070e7d8216936a302df2ea90319dca39d071c0d41e2e444c024473105",
+      "bytes": 25338
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a9ad39f3d14a3e80288757b52d9366bcbab37edcaac72303389c2c0275c8b1ea",
+      "bytes": 66050
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "96c099950014c86d91dfb7ceadb857e629c2462318b13c585bc92b3d2da7ef31",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3a4abcdd320ff7af9d36a767939be5993466be919027847df8c75495aeef4871",
+      "bytes": 1789
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "97fa665b607f9ef4a9bbaf2828117a8c9f06b031770bb4aa5993c898e6b3672a",
+      "bytes": 2628
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "206c6c51-df38-425f-8d07-b0cc9dd065cf",
+    "2db41cd9-c898-4f59-b704-3042c0d87f45",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "62f89392-609d-45b7-b9df-7a5acd529864",
+    "6b2a0513-df80-4140-87a8-38b1fef34313",
+    "71451d9e-9a8a-4858-9a91-fbe44047e110",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "c08ebca5-87d4-4c19-a5d7-ae5e670dae11",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "e1c7cab3-dae7-47c3-bb2c-c8f616a8124f",
+    "e26cb9b0-f876-41ff-9f24-fd67a6b9776c",
+    "ea8a4150-e062-4c0e-94ca-668a3033eb63",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

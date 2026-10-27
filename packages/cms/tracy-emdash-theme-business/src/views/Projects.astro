@@ -1,0 +1,149 @@
+---
+import { getEmDashCollection, getEmDashEntry, getTaxonomyTerms, getTermsForEntries } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Chips from '@/components/site/Chips.astro'
+import Photo from '@/components/site/Photo.astro'
+import NumberedList from '@/components/site/NumberedList.astro'
+import CtaBox from '@/components/site/CtaBox.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { referencedEntry } from '@/lib/references'
+import { stampFor, stampsFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  sector?: string | null
+}
+const { chrome, locale, sector = null } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const [{ entry }, sectors] = await Promise.all([
+  getEmDashEntry('projects_page', 'projects', { locale, references: { featured_project: true } }),
+  getTaxonomyTerms('sector', { locale })
+])
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const term = sector ? sectors.find((t) => t.slug === sector) : null
+if (sector && !term) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const p = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'projects_page', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+const { entries: all } = await getEmDashCollection('projects', {
+  locale,
+  status: 'published',
+  orderBy: { sort: 'asc' },
+  limit: 200,
+  ...(sector ? { where: { sector } } : {})
+})
+const featured = await referencedEntry(entry as any, 'featured_project', 'projects', locale)
+// A project keeps its slug in every locale, so the grid drops the featured one by slug.
+const grid = all.filter((x: any) => (!sector && featured ? x.data.slug !== featured.data.slug : true))
+const terms = await getTermsForEntries(
+  'projects',
+  grid.map((x: any) => x.data.id),
+  'sector',
+  { locale }
+)
+const chips = [
+  {
+    label: site.all_label ?? 'All',
+    url: href(locale, '/projects'),
+    active: !sector,
+    stamp: $site('all_label')
+  },
+  ...sectors.map((t) => ({
+    label: t.label,
+    url: href(locale, `/projects/sector/${t.slug}`),
+    active: t.slug === sector
+  }))
+]
+const crumbs = [
+  { label: site.home_label, url: href(locale, '/'), stamp: $site('home_label') },
+  ...(sector
+    ? [
+        { label: p.breadcrumb, url: href(locale, '/projects'), stamp: $page('breadcrumb') },
+        { label: term!.label }
+      ]
+    : [{ label: p.breadcrumb, stamp: $page('breadcrumb') }])
+]
+---
+
+<Base chrome={chrome} title={sector ? `${term!.label} — ${p.breadcrumb}` : p.breadcrumb || p.title} description={p.lede} heroImage={mediaUrl(p.featured_image ?? featured?.data.image)} currentPath="/projects" content={sector ? null : { collection: "projects_page", id: entry.data.id, slug: "projects", toPath: () => "/projects" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={crumbs} />
+		<section class="container-site pb-9 pt-16">
+			<h1 class="h-page mb-5" {...(sector ? {} : $page("title"))}>{sector ? term!.label : p.title}</h1>
+			<p class="mb-7 max-w-[44em] text-[17.5px] leading-[1.68] text-fg-2" {...$page("lede")}>{p.lede}</p>
+			<Chips items={chips} />
+		</section>
+
+		{!sector && featured && (
+			<section class="container-site pb-16">
+				<div class="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] border border-line">
+					<Photo image={p.featured_image ?? featured.data.image} stamp={$("projects", featured)("image")} alt={featured.data.title} placeholder={slots.project} class="min-h-[clamp(260px,30vw,380px)] min-w-0 !border-0" priority />
+					<div class="flex min-w-0 flex-col gap-4 bg-paper-2 p-9">
+						<div class="text-[11.5px] font-bold uppercase tracking-[.16em] text-signal-text" {...$page("featured_label")}>{p.featured_label}</div>
+						{p.featured_title && <h2 class="h-section-sm" {...$page("featured_title")}>{p.featured_title}</h2>}
+						{p.featured_text && <p class="text-[16px] leading-[1.65] text-fg-2" {...$page("featured_text")}>{p.featured_text}</p>}
+						{(p.featured_facts ?? []).length > 0 && <div class="grid-lines grid-cols-[repeat(auto-fit,minmax(120px,1fr))]">
+							{(p.featured_facts ?? []).map((f: any) => <div class="px-4 py-3.5" {...$page.block("featured_facts")}><div class="text-[11.5px] uppercase tracking-[.1em] text-fg-meta" {...$page("featured_facts.key")}>{f.key}</div><div class="mt-1 text-[16px] font-semibold" {...$page("featured_facts.value")}>{f.value}</div></div>)}
+						</div>}
+						<a href={href(locale, `/projects/${featured.data.slug}`)} class="link-underline mt-1 self-start !text-[15px]" {...$page("featured_cta")}>{p.featured_cta} →</a>
+					</div>
+				</div>
+			</section>
+		)}
+
+		<section class="container-site pb-[72px]">
+			<div class="mb-7 flex flex-wrap items-baseline justify-between gap-5 border-b border-line pb-3.5">
+				<h2 class="h-section-sm" {...$page("grid_title")}>{p.grid_title}</h2>
+				<span class="text-[14px] text-fg-meta" {...$page("grid_text")}>{p.grid_text}</span>
+			</div>
+			{grid.length === 0 && <p class="text-[15px] text-fg-meta">—</p>}
+			<div class="grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-[30px]">
+				{grid.map((it: any) => {
+					const t = (terms.get(it.data.id) ?? [])[0];
+					return (
+						<a href={href(locale, `/projects/${it.slug}`)} class="block text-fg hover:text-forest-text" {...$("projects", it)()}>
+							<Photo image={it.data.image} stamp={$('projects', it)("image")} alt={it.data.title} placeholder={slots.projectSm} class="h-[210px]" />
+							<div class="mt-3 flex items-center gap-2.5 text-[12px] font-bold uppercase tracking-[.1em] text-signal-text"><span {...$('projects', it)("type_label")}>{it.data.type_label || t?.label}</span>{it.data.year && <span class="text-line-faint">·</span>}{it.data.year && <span class="font-semibold text-fg-meta" {...$('projects', it)("year")}>{it.data.year}</span>}</div>
+							<div class="mt-[7px] text-[17.5px] font-semibold leading-[1.35] text-fg" {...$('projects', it)("title")}>{it.data.title}</div>
+							<div class="mt-1.5 text-[14.5px] text-fg-muted">{[it.data.area, it.data.city].filter(Boolean).join(" · ")}</div>
+							<div class="mt-[9px] text-[14px] font-semibold text-forest-text" {...$page("view_label")}>{p.view_label} →</div>
+						</a>
+					);
+				})}
+			</div>
+		</section>
+
+		{!sector && (
+			<section class="band-paper2">
+				<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-16">
+					<div>
+						<h2 class="h-section-sm mb-5" {...$page("sectors_title")}>{p.sectors_title}</h2>
+						{(p.sectors ?? []).map((s: any) => (
+							<div class="border-b border-line py-4" {...$page.block("sectors")}>
+								<div class="flex items-baseline justify-between gap-4"><a href={href(locale, `/projects/sector/${s.sector}`)} class="text-[17px] font-semibold text-fg hover:text-forest-text" {...$page("sectors.title")}>{s.title}</a><span class="whitespace-nowrap text-[14.5px] font-semibold text-forest-text" {...$page("sectors.count")}>{s.count}</span></div>
+								<div class="mt-1.5 text-[15px] leading-[1.6] text-fg-muted" {...$page("sectors.text")}>{s.text}</div>
+							</div>
+						))}
+					</div>
+					<div>
+						<h2 class="h-section-sm mb-5" {...$page("how_title")}>{p.how_title}</h2>
+						<NumberedList items={p.how} stamp={$page} field="how" />
+					</div>
+				</div>
+			</section>
+		)}
+		<CtaBox variant="ink" title={p.cta_title} text={p.cta_text} button={p.cta_button} url={p.cta_url || href(locale, "/contact")} altLabel={p.cta_alt_label} altUrl={p.cta_alt_url || href(locale, "/services")} stamp={$page} fields={{ title: "cta_title", text: "cta_text", button: "cta_button", altLabel: "cta_alt_label" }} />
+	</main>
+</Base>

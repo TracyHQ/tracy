@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1479-picture-exif-shape",
+  "kind": "fix",
+  "title": "A phone photo stored on its side is measured upright and cut to the crop's shape, never stretched",
+  "pr": 1479,
+  "area": "site-brief/pictures",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: imageInfo (apps/tracy-web/src/opportunities/media-info.js) on a 1200x900 JPEG with EXIF orientation 6, then 8, then 1 and 3.",
+    "S2: cutForPlace (apps/tracy-web/src/lib/picture-cut.js) on a 1200x900 JPEG with EXIF orientation 6, crop {aspect 16/9, source 1200x675, output 640x360, strategy centre}."
+  ],
+  "expect": [
+    "S1: orientations 6 and 8 give 900x1200; 1 and 3 give 1200x900.",
+    "S2: the cut is 640x360 and the region taken (rect) is 16:9 within 1%, inside 900x1200."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/website-opportunities-media-info.test.mjs, apps/tracy-web/test/picture-cut.test.mjs",
+    "code": "imageInfo turned size, cutForPlace one-factor fit"
+  },
+  "evidence": "Review 19/10/2026: a 1200x900 orientation-6 JPEG cut for 16:9 used a 900x675 (4:3) region stretched to 640x360",
+  "fence": "The planner reads the shown size, and a cut never changes the crop's shape before its fill resize",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-media-info.test.mjs",
+      "apps/tracy-web/test/picture-cut.test.mjs"
+    ],
+    "tests": [
+      "a phone photo stored on its side is measured upright, as every cut turns it",
+      "a phone photo on its side with a crop planned from its stored size is cut to the crop’s shape, never stretched"
+    ]
+  }
+}

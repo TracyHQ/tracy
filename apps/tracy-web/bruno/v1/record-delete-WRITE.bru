@@ -1,0 +1,26 @@
+meta {
+  name: record delete WRITE
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{baseUrl}}/v1/sites/{{site}}/records/article/{{recordId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Tracy-Apply-Id: bruno-trash-1
+}
+
+vars:pre-request {
+  recordId: 1
+}
+
+docs {
+  # WRITES: trash one record
+
+  `content.delete`. `Tracy-Apply-Id` is REQUIRED (`400 APPLY_ID_REQUIRED` without it): the trash
+  is recorded under it and "revert" brings the record back. Point at a test site.
+}

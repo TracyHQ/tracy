@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1505-wo-ops-customer-journey",
+  "kind": "fix",
+  "title": "Ops uses the customer journey and status instead of the obsolete eight-step pipeline",
+  "pr": 1505,
+  "area": "website-opportunities/ops",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Set TEST_DATABASE_URL to a test PostgreSQL instance. The test helper creates and removes only its own scratch database.",
+    "Run the command in run.cmd from the repository root. Require zero skipped tests.",
+    "Read assertions comparing Ops with the customer API, and status parity with the actual customer statusView."
+  ],
+  "expect": [
+    "Zero failures and zero skipped tests.",
+    "Ops/customer stages and Attention agree for completed research, stopped refresh, accepted demo action, latest QA failure and deleted demo across accounts.",
+    "Done with pictures and no handoff/QA is Needs review in Demo, not uploading or LEASED.",
+    "Customer milestone filters exclude Attention; All retains loaded rows. New stage URLs round-trip and legacy numerical links still work.",
+    "Missing account scope is refused by the shared SQL helper."
+  ],
+  "run": {
+    "cwd": ".",
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "apps/tracy-web/test/website-opportunities-my-list.test.mjs",
+      "packages/web/tracy-harness/test/wo-api.test.mjs",
+      "packages/web/tracy-harness/test/wo-address.test.mjs"
+    ]
+  },
+  "selectors": { "stage": "customerStage", "attention": "customerAttention", "status": "customerStatus" }
+}

@@ -1,0 +1,341 @@
+{
+  "dos": [
+    "Use General Sans Variable 700 for all display text and headlines; the geometric bold weight IS the brand identity",
+    "Use Ink (#1c1917) for primary action buttons and all primary text — never pure black (#000000) for UI chrome, only for SVG fills",
+    "Use 99px border-radius for every button, tag, and pill element to maintain the capsule-button identity",
+    "Apply negative letter-spacing at scale: -0.04em at 55px, -0.03em at 45px, tightening as type size increases",
+    "Use Flame Orange (#fe551b) sparingly — only for badges, the floating Ask widget, and decorative 3D elements, never for body text or backgrounds of large areas",
+    "Keep the interface monochromatic by default; let orange be punctuation, not atmosphere",
+    "Use Bone (#fafaf9) for card surfaces to create paper-on-paper elevation without shadows"
+  ],
+  "donts": [
+    "Don't use chromatic colors for buttons or actions — the primary CTA is always neutral dark (Ink), not orange or blue",
+    "Don't use border-radius values between 12-24px on cards — stick to 8px or 16px from the design system",
+    "Don't use pure black (#000000) for text or backgrounds — use Ink (#1c1917) for warmth",
+    "Don't apply shadows to cards — use background color shifts (white → Bone → Pebble) for elevation",
+    "Don't use General Sans below 20px for headings — it loses impact at small sizes; switch to Inter",
+    "Don't add decorative gradients — the system is flat; depth comes from surface color hierarchy",
+    "Don't use multiple accent colors — orange is the single chromatic accent; resist adding secondary colors"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fe551b",
+      "name": "Flame Orange",
+      "role": "Orange outline accent for tags, dividers, and focused UI edges.",
+      "group": "brand"
+    },
+    {
+      "hex": "#1c1917",
+      "name": "Ink",
+      "role": "Primary action buttons, headlines, body text, primary borders — warm near-black replaces pure black for a softer, editorial feel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page canvas, button text on dark fills, card surfaces — the dominant background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafaf9",
+      "name": "Bone",
+      "role": "Card backgrounds, subtle surface elevation above the white canvas, link/button ghost states",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efeeed",
+      "name": "Pebble",
+      "role": "Nested surface backgrounds, secondary card layers, muted button backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#57534d",
+      "name": "Charcoal",
+      "role": "Secondary body text, muted borders, description copy — warm gray for paragraph content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#79716b",
+      "name": "Stone",
+      "role": "Tertiary text, placeholder text, inactive labels, subtle borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#948d89",
+      "name": "Ash",
+      "role": "Disabled states, very muted helper text, subtle dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "True Black",
+      "role": "SVG icon fills, sharp borders where maximum contrast is needed, logo marks",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with generous horizontal padding. Hero is centered headline over subtext, then a full-bleed product screenshot that extends beyond the container with orange shapes bleeding off the edges. Below the hero: a centered grayscale logo bar for social proof, then alternating full-width white and Bone sections. Feature sections use 2-column card grids (not 3 or 4 — keeps content scannable). Section headings are left-aligned, not centered, creating a editorial left-rail reading rhythm. The page is spacious with large vertical gaps (64-80px) between sections despite the compact element-level spacing. Navigation is a simple top bar, no sidebar or mega-menu.",
+  "imagery": "Minimal photography. The visual identity relies on a 3D product mockup (the Acme docs UI screenshot) with kinetic orange gradient shapes bleeding from behind it. Abstract 3D decorative elements (ribbed spheres, rounded organic forms in Flame Orange) are used in feature card illustrations. Company logos in the social proof bar are grayscale. The overall tone is product-focused and clean — the product UI IS the hero, not lifestyle photography.",
+  "similar": [
+    {
+      "why": "Same monochromatic light theme with a single vivid accent color (purple/blue for Linear, orange for GitBook), geometric bold display type, pill buttons, and flat minimal surfaces",
+      "business": "Linear"
+    },
+    {
+      "why": "Same documentation/knowledge-base aesthetic with warm off-white backgrounds, clean geometric typography, and paper-like card surfaces without heavy shadows",
+      "business": "Notion"
+    },
+    {
+      "why": "Same editorial large-headline approach with negative letter-spacing at scale, monochromatic palette with black primary action, and minimal chrome",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same generous whitespace rhythm, large confident headlines as the primary visual element, and grayscale social proof logos",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same product-screenshot-as-hero approach where the actual product UI serves as the primary visual content, with colorful decorative elements supporting rather than competing",
+      "business": "Figma"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "99px",
+      "cards": "8-16px",
+      "images": "4-8px",
+      "inputs": "8px",
+      "buttons": "99px"
+    },
+    "elementGap": "10-12px",
+    "sectionGap": "64-80px",
+    "cardPadding": "16-24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background, the dominant white space"
+    },
+    {
+      "hex": "#fafaf9",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Elevated card surfaces, product screenshot containers, subtle differentiation from canvas"
+    },
+    {
+      "hex": "#efeeed",
+      "name": "Nested",
+      "level": 2,
+      "purpose": "Deeper nested surfaces, secondary card layers, muted backgrounds"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.15) 0px 4px 12px 0px",
+      "element": "Product Screenshot Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.25) 0px 1px 2px 0px",
+      "element": "Floating Ask Widget"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 3px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px -1px",
+      "element": "Primary Action Button"
+    }
+  ],
+  "northStar": "warm-white architecture studio with orange highlighter marks",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-lg",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "display",
+      "size": 45,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "hero",
+      "size": 55,
+      "lineHeight": 1,
+      "letterSpacing": -0.04
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page promotion strip",
+      "description": "Centered, minimal-height bar with small orange badge (Flame Orange background, white text, 99px radius, ~4px 10px padding), 12px caption text in Charcoal, and right arrow. Full-width on white background, ~36-40px height."
+    },
+    {
+      "name": "New/Beta Badge",
+      "role": "Status tag on features and sections",
+      "description": "Pill badge, Flame Orange (#fe551b) background, white text, General Sans Variable 700 at 10-12px, 99px border-radius, ~3px 8px padding. Always paired with a label like 'New' or 'Beta' in Charcoal."
+    },
+    {
+      "name": "Primary Action Button",
+      "role": "Main CTA — 'Start for free', 'Read the story'",
+      "description": "Ink (#1c1917) background, white text, General Sans Variable 700 at 14-16px, 99px border-radius, 10px 16px padding. Includes right arrow icon. No shadow, flat fill. This is the only filled button variant used for primary actions."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Secondary action — 'Talk to us', 'View the docs'",
+      "description": "Transparent background, no border, Charcoal (#57534d) text at 14-16px, 99px border-radius, same padding as primary. Paired with primary button to create visual hierarchy through weight, not color."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Content card for product features",
+      "description": "Bone (#fafaf9) background, 16px border-radius, 0 border, no shadow (or very subtle rgba(0,0,0,0.05) 0px 1px 3px). Contains: orange eyebrow label (10-12px uppercase General Sans 700), heading (General Sans 700 at 20-24px, Ink), body text (Inter 400 at 14-16px, Charcoal), and optional ghost/light CTA link."
+    },
+    {
+      "name": "Product Screenshot Card",
+      "role": "Hero product UI mockup container",
+      "description": "Rounded frame (~8px radius) with subtle shadow rgba(0,0,0,0.15) 0px 4px 12px, contains a full product UI screenshot on white background. Orange 3D decorative shapes bleed out from edges."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "White background, no shadow, left-aligned logo (GitBook wordmark with orange dot accent), centered nav links (Inter 400 at 14px, Ink), right-aligned utility actions: text 'Login' (Charcoal), ghost 'Got a demo' pill button, and filled 'Start for free' button. ~64px height."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social proof — trusted-by companies",
+      "description": "Horizontal row of 6-7 company logos (NVIDIA, Ericsson, Carto, Verifone, Cisco, FreedomPay) rendered in grayscale. Equal spacing, centered, ~60-80px height. Logos sit flat with no backgrounds."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Customer quote with attribution",
+      "description": "Left-aligned avatar (rounded, ~64px), large quote text (Inter 400 at 18-20px, Ink), attribution (General Sans 500 at 14px, Charcoal with company name in Ink), two action buttons (filled 'Read the story' + ghost 'View the docs'). White background, no card chrome."
+    },
+    {
+      "name": "Section Heading Block",
+      "role": "Section-level title and description",
+      "description": "Left-aligned, no centering. Heading: General Sans Variable 700 at 32-38px, Ink, -0.02em tracking. Subhead: Inter 400 at 16-18px, Charcoal, max-width ~560px. Generous space below before content grid."
+    },
+    {
+      "name": "Floating Ask Widget",
+      "role": "Persistent help/chat trigger",
+      "description": "Fixed bottom-right, Flame Orange (#fe551b) background, white 'Ask' text with small icon, ~36-40px height, 99px border-radius. Acts as a floating accent element — the only persistent splash of color."
+    },
+    {
+      "name": "Pill Tag/Label",
+      "role": "Small categorical labels",
+      "description": "99px border-radius, 2-4px 8-10px padding, 10-12px General Sans 700 text. Variants: orange fill with white text (New/Beta), transparent with Ink border, or Bone background with Charcoal text."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px, 16px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "All display headlines, section headings, card titles, button labels, and emphasis text. Weight 700 is the single weight used — GitBook leans into geometric bold for its editorial authority. Negative tracking tightens at scale: -0.04em at 55px, -0.03em at 45px, -0.02em at 32px. This is the primary visual identity font.",
+      "sizes": "18px",
+      "family": "General Sans Variable",
+      "weight": "700",
+      "lineHeight": "1.00-1.60",
+      "substitute": "Inter Tight, Switzer, Satoshi, or DM Sans (700)",
+      "letterSpacing": "-0.04em at 55px, -0.03em at 45px, -0.02em at 30-38px, -0.01em at 20-24px, normal at 12-16px",
+      "fontFeatureSettings": "\"blwf\", \"cv03\", \"cv04\", \"cv09\", \"cv11\""
+    },
+    {
+      "role": "Lead paragraph and subheading body copy. Weight 500 (medium) is heavier than typical body text — this is the descriptive copy directly under headlines, giving it subtle emphasis without crossing into heading territory.",
+      "sizes": "18px",
+      "family": "General Sans",
+      "weight": "500",
+      "lineHeight": "1.60",
+      "substitute": "Inter (500), Switzer (500)",
+      "letterSpacing": "-0.01em"
+    },
+    {
+      "role": "Body text, paragraph copy, table data, dense information areas, and any secondary UI text. Inter is the workhorse — used wherever content density matters. Open-source, system-fallback friendly.",
+      "sizes": "10px, 11px, 12px, 14px, 15px, 16px, 20px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.08-1.60",
+      "substitute": "Inter is already free — use directly or fall back to system-ui",
+      "letterSpacing": "-0.03em at 10px, -0.01em at larger sizes",
+      "fontFeatureSettings": "\"blwf\", \"cv03\", \"cv04\", \"cv09\", \"cv11\""
+    },
+    {
+      "role": "Code snippets, technical labels, keyboard shortcuts, and monospaced data. Weight 600 gives code blocks presence against the Inter body.",
+      "sizes": "10px, 14px",
+      "family": "Geist Mono",
+      "weight": "600",
+      "lineHeight": "1.00, 1.30",
+      "substitute": "JetBrains Mono, IBM Plex Mono, Fira Code (600)",
+      "letterSpacing": "-0.0200em"
+    },
+    {
+      "role": "General Sans Variable Variable Bold — detected in extracted data but not described by AI",
+      "sizes": "12px, 14px, 16px, 20px, 24px, 30px, 32px, 38px, 45px, 55px",
+      "family": "General Sans Variable Variable Bold",
+      "weight": "700",
+      "lineHeight": "1, 1.2, 1.3, 1.4, 1.5, 1.6",
+      "letterSpacing": "-0.04, -0.03, -0.02, 0.01",
+      "fontFeatureSettings": "\"blwf\", \"cv03\", \"cv04\", \"cv09\", \"cv11\""
+    },
+    {
+      "role": "Space Mono — detected in extracted data but not described by AI",
+      "sizes": "8px",
+      "family": "Space Mono",
+      "weight": "400",
+      "lineHeight": "1.3"
+    }
+  ],
+  "description": "GitBook projects the calm authority of a well-edited reference book: warm-white pages, generous breathing room, and near-black type that commands without shouting. A single vivid orange acts as a highlighter — appearing only in badges, the 'New' pill, the floating Ask widget, and the kinetic 3D shapes that bleed into the hero screenshot. The interface stays almost entirely monochromatic; color is punctuation, not atmosphere. Typography is the visual identity: a geometric bold display face at 45-55px with tight negative tracking creates editorial weight, while Inter handles the dense body copy. Components are paper-like — flat cards, hairline borders, pill buttons, minimal shadow. Everything reads as a knowledge product: structured, legible, confident.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Text (primary): #1c1917 (Ink)\n- Text (secondary): #57534d (Charcoal)\n- Text (muted/placeholder): #79716b (Stone)\n- Background (canvas): #ffffff\n- Background (card/surface): #fafaf9 (Bone)\n- Border (subtle): #efeeed (Pebble)\n- Accent: #fe551b (Flame Orange)\n- primary action: #1c1917 (filled action)\n\nExample Component Prompts:\n\n1. Create a hero section: #ffffff background. Centered announcement pill (Flame Orange badge 'New' + Charcoal text + arrow, 99px radius, 10px 16px padding). Headline at 55px General Sans Variable weight 700, #1c1917, letter-spacing -0.04em, line-height 1.0. Subtext at 18px General Sans weight 500, #57534d, line-height 1.6. Two buttons: filled Ink (#1c1917) with white text 'Start for free →' (99px radius, 10px 16px padding) and ghost with Charcoal text 'Talk to us' (99px radius, no border). Below: full-width product screenshot card (8px radius, rgba(0,0,0,0.15) 0px 4px 12px shadow) with Flame Orange 3D shapes bleeding from behind.\n\n2. Create a feature card: #fafaf9 background, 16px border-radius, no shadow. Orange eyebrow label (10px General Sans Variable 700, Flame Orange background, white text, 99px radius, 3px 8px padding). Card heading at 24px General Sans Variable 700, #1c1917, letter-spacing -0.01em. Body text at 16px Inter weight 400, #57534d, line-height 1.5. 24px padding all sides.\n\n3. Create a navigation bar: #ffffff background, no shadow, 64px height. Left: logo with orange dot accent. Center: nav links in Inter 400 at 14px, #1c1917. Right: 'Login' text link in #57534d, ghost button 'Got a demo' (99px radius, Charcoal text), filled button 'Start for free' (99px radius, #1c1917 background, white text, 10px 16px padding).\n\n4. Create a testimonial block: #ffffff background, no card chrome. Left: 64px circular avatar. Right: quote at 20px Inter weight 400, #1c1917, line-height 1.5. Attribution: 14px General Sans weight 500, #57534d with company name in #1c1917. Two action buttons below: filled 'Read the story →' (Ink) and ghost 'View the docs' (Charcoal), both 99px radius.\n\n5. Create a logo bar: #ffffff background, centered horizontal row of 6 grayscale company logos (rendered in #79716b), equal 40-60px spacing, ~60px total height. No borders or backgrounds on logos."
+    },
+    {
+      "title": "Surface Philosophy",
+      "content": "GitBook's surface system is paper-like, not digital-skeuomorphic. The stack goes: white canvas → Bone (#fafaf9) for first-level cards → Pebble (#efeeed) for nested elements. Each surface shift is subtle (differences of 5-10 luminance points) to create hierarchy without visual noise. There is no glass morphism, no blur, no gradient fills on surfaces. Cards sit on the page like printed pages on a desk."
+    }
+  ],
+  "elevationPhilosophy": "GitBook avoids shadows almost entirely. Depth is created through surface color hierarchy (white → Bone → Pebble) rather than box-shadow. The only shadows that appear are on the product screenshot card (to separate it as a visual artifact) and on the floating Ask widget (to lift it off the page). Buttons are completely flat — no shadow, no gradient."
+}

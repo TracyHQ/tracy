@@ -1,0 +1,241 @@
+/* tracy-base — chrome parity with the Joomla source (Tracy Base j6, the approved reference): the
+ * page's letter-spacing, the sticky translucent header and its 80px menu items, the buttons'
+ * border and focus ring, the footer columns and strip, and the phone header and drawer. Every
+ * value was measured on the Joomla site (computed styles, 1440 and 390, light and dark) and is
+ * written with the active variation's variables, so a design system still repaints it. Loaded
+ * after tracy-base.css. */
+
+/* ---- global type: the Joomla source tracks body text at -0.022em ---- */
+body.tracy { letter-spacing: -0.022em; }
+
+/* ---- header: sticky, translucent ground with a blur, as the source bar ---- */
+.tracy .tracy-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: color-mix(in srgb, var(--wp--preset--color--bg) 80%, transparent);
+  -webkit-backdrop-filter: saturate(1.8) blur(20px);
+  backdrop-filter: saturate(1.8) blur(20px);
+}
+.tracy .tracy-header__brand .tracy-brand { font-weight: 500; letter-spacing: -0.011em; }
+.tracy .tracy-header__cta .wp-block-button__link:hover { background: var(--wp--preset--color--accent); box-shadow: none; opacity: 0.85; }
+
+/* ---- buttons: the source's 1px border (transparent on the primary), 46px tall, no lift on
+   hover, a 4px accent ring on keyboard focus ---- */
+.tracy .wp-block-button__link { border: 1px solid transparent; letter-spacing: -0.005em; }
+.tracy .wp-block-button.is-style-outline .wp-block-button__link,
+.tracy .tracy-btn--ghost .wp-block-button__link { border-color: var(--wp--preset--color--border); box-shadow: none; }
+.tracy .wp-block-button__link:hover,
+.tracy .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.tracy .tracy-btn--ghost .wp-block-button__link:hover { box-shadow: none; }
+.tracy .wp-block-button__link:focus-visible { outline: 0; box-shadow: var(--wp--custom--focus-ring); }
+
+/* ---- header menu items: the source's 80px-tall items (20px × 17px around a 40px line), no gap
+   between them, and no caret on the mega triggers at desktop width (they open on hover). ---- */
+.tracy .tracy-header__links { gap: 0; }
+.tracy .tracy-header__link a,
+.tracy .tracy-mega__trigger {
+  padding: 20px 17px;
+  line-height: 40px;
+  letter-spacing: -0.016em;
+}
+.tracy .tracy-mega__caret { display: none; }
+
+/* Outline buttons keep the same 4px focus ring (their resting rule clears the shadow). The header
+   Contact pill has no border and a 1px focus offset; the theme toggle is a borderless circle in
+   the text colour that takes the surface on hover. */
+.tracy .wp-block-button.is-style-outline .wp-block-button__link:focus-visible,
+.tracy .tracy-btn--ghost .wp-block-button__link:focus-visible,
+.tracy.home .tracy-hero .wp-block-button + .wp-block-button .wp-block-button__link:focus-visible { box-shadow: var(--wp--custom--focus-ring); }
+.tracy .tracy-header__cta .wp-block-button__link { border-width: 0; }
+.tracy .tracy-header__cta .wp-block-button__link:focus-visible { outline-offset: 1px; }
+.tracy .tracy-theme-toggle {
+  border: 0;
+  border-radius: 50%;
+  color: var(--wp--preset--color--fg);
+}
+.tracy .tracy-theme-toggle:hover { background: var(--wp--preset--color--surface); color: var(--wp--preset--color--fg); }
+
+/* ---- footer, against the Joomla footnav and footer rows ---- */
+.tracy .tracy-footer__band { padding-block: 48px; }
+.tracy .tracy-footer__columns { gap: 32px; }
+.tracy .tracy-footer__links .wp-block-navigation__container { gap: 8px; }
+.tracy .tracy-footer__links .wp-block-navigation-item__content {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  letter-spacing: -0.022em;
+}
+.tracy .tracy-footer__links .wp-block-navigation-item__content:focus-visible { color: var(--wp--preset--color--accent-hover); }
+/* Social: one row per network, the mark then the handle (the handle copied onto each row by
+   tracy-base-sections.js; the paragraph it comes from is kept for editing and hidden then). */
+.tracy .tracy-footer__social .acm-social-links.has-row-handles .acm-social-links__handle { display: none; }
+.tracy .tracy-footer__social .acm-social-links.has-row-handles .wp-block-social-links {
+  display: grid;
+  gap: 12px;
+}
+.tracy .tracy-footer__social .acm-social-links.has-row-handles .wp-block-social-link-anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: 1.4;
+}
+.tracy .tracy-footer__social .wp-block-social-link-anchor svg { width: 21px; height: 21px; }
+.tracy .tracy-footer__social .acm-social-links.has-row-handles .wp-social-link { font-size: var(--wp--preset--font-size--sm); line-height: 1.4; }
+.tracy .tracy-footer__social .wp-block-social-link-anchor .acm-social-links__row-handle {
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: 1.4;
+  color: var(--wp--preset--color--muted);
+}
+/* The strip: the demo notice only, 13px, half the row wide (the source has no copyright line, and neither has the footer part). */
+.tracy .tracy-footer__strip .acm-site-notice { padding-block: 24px; }
+.tracy .tracy-footer__strip p.tracy-site-notice.wp-block-paragraph.mb-0 {
+  max-width: min(520px, var(--wp--custom--container--max));
+  margin-inline: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: -0.022em;
+}
+.tracy .tracy-footer__strip .acm-site-notice { max-width: calc(var(--wp--custom--container--max) + var(--wp--custom--container--gutter-desktop) * 2); margin-inline: auto; box-sizing: border-box; }
+@media (max-width: 781px) {
+  .tracy .tracy-footer__columns { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; row-gap: 32px; }
+  .tracy .tracy-footer__strip .acm-site-notice { padding: 24px 16px; }
+}
+
+/* ---- narrow screens: the source switches to its off-canvas menu below 992px, the bar is 56px
+   tall below 768px, and below 576px the Contact button goes and the brand shrinks to 26px. ---- */
+@media (max-width: 991px) {
+  .tracy .tracy-header__menu .tracy-header__links { display: none; }
+  .tracy .tracy-header__menu .tracy-nav { display: block; }
+  .tracy .tracy-header__menu { flex: 0 0 auto; order: 3; }
+  .tracy .tracy-header__actions { margin-inline-start: auto; }
+}
+@media (max-width: 767px) {
+  .tracy .tracy-header__inner { min-height: 56px; }
+}
+@media (max-width: 575px) {
+  .tracy .tracy-header__cta { display: none; }
+  .tracy .tracy-header__brand .tracy-brand,
+  .tracy .tracy-header__brand .tracy-brand a { font-size: 14px; }
+  .tracy .tracy-header__brand .tracy-brand::before { width: 26px; height: 26px; border-radius: 8px; }
+}
+
+/* The hamburger: three accent bars in a 59 × 47 pill, as the source's toggle. */
+.tracy .tracy-header .wp-block-navigation__responsive-container-open {
+  width: 59px;
+  height: 47px;
+  padding: 12px 20px;
+  border-radius: var(--wp--custom--radius--pill);
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  background:
+    linear-gradient(currentColor, currentColor) center calc(50% - 7px) / 19px 3px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 19px 3px no-repeat,
+    linear-gradient(currentColor, currentColor) center calc(50% + 7px) / 19px 3px no-repeat;
+}
+.tracy .tracy-header .wp-block-navigation__responsive-container-open svg { visibility: hidden; }
+
+/* The open overlay: a surface top bar with the brand and the close button, then the drawer
+   (tracy-base-drawer.js): 28px items, a chevron on each group, and a drilled sub-list of 18px
+   links under a small back link. */
+.tracy .tracy-header .wp-block-navigation__responsive-container,
+.tracy .tracy-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open {
+  padding: 0;
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+}
+.tracy .tracy-header .is-menu-open .wp-block-navigation__responsive-close,
+.tracy .tracy-header .is-menu-open .wp-block-navigation__responsive-dialog { margin: 0; max-width: none; width: 100%; }
+.tracy .tracy-drawer__bar {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 70px;
+  padding: 12.75px 25.5px;
+  background: var(--wp--preset--color--surface);
+}
+.tracy .tracy-drawer__bar .tracy-header__brand { pointer-events: none; }
+.tracy .tracy-header .is-menu-open .wp-block-navigation__responsive-container-close {
+  top: 13px;
+  right: 25px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--fg);
+}
+.tracy .tracy-header .is-menu-open .wp-block-navigation__responsive-container-content.has-drawer {
+  display: block;
+  padding: 17px 24px 24px;
+}
+.tracy .has-drawer > .wp-block-navigation__container { display: none !important; }
+.tracy .tracy-drawer__list { margin: 0; padding: 0; list-style: none; }
+.tracy .tracy-drawer__item { display: flex; align-items: center; justify-content: space-between; }
+.tracy .tracy-drawer > .tracy-drawer__list .tracy-drawer__link {
+  display: block;
+  padding: 20px 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+  cursor: pointer;
+}
+.tracy .tracy-drawer__open,
+.tracy .tracy-drawer__back {
+  appearance: none;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  color: var(--wp--preset--color--meta);
+}
+.tracy .tracy-drawer__open {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(currentColor, currentColor) 0 0 / 0 0 no-repeat;
+  position: relative;
+}
+.tracy .tracy-drawer__open::before,
+.tracy .tracy-drawer__back::before {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+}
+.tracy .tracy-drawer__open::before { left: 17px; top: 18px; transform: rotate(-45deg); }
+.tracy .tracy-drawer__back {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 12px 34px;
+  text-align: start;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 500;
+  color: var(--wp--preset--color--muted);
+}
+.tracy .tracy-drawer__back::before { left: 16px; top: 19px; transform: rotate(135deg); }
+.tracy .tracy-drawer.is-drilled > .tracy-drawer__list { display: none; }
+.tracy .tracy-drawer__sub .tracy-drawer__link {
+  display: block;
+  padding: 12.75px 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.47;
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+/* The header's backdrop blur makes it the containing block of fixed children; the open overlay
+   must cover the viewport, so the blur steps aside while it is open. */
+.tracy .tracy-header:has(.wp-block-navigation__responsive-container.is-menu-open) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give EMPTIES the field — it never keeps the demo value); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients, prices — and those are REMOVED, never written, because a made-up \"380 projects since 2004\" is a lie in the customer's name. `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed. Fill every list for this template's own collections, slugs and fields — an empty map means a customer's site keeps the demo words.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_name",
+      "value": "{name}"
+    }
+  ],
+  "replace": [
+    {
+      "find": "__THE DEMO BRAND, LONGEST FORM FIRST__",
+      "with": "{name}"
+    }
+  ],
+  "copy": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "__a field whose demo words a model must write for this sector__",
+      "brief": "what this text is for, in the author's words",
+      "maxWords": 12
+    }
+  ],
+  "rewrite": [],
+  "facts": [
+    {
+      "collection": "__page__",
+      "slug": "__page__",
+      "field": "__a field that CLAIMS something about the business__",
+      "why": "counts, years, certifications, named clients or prices — removed, never invented"
+    }
+  ],
+  "hide": [],
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
+    "logoDark": {
+      "collection": "site",
+      "slug": "site",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  }
+}

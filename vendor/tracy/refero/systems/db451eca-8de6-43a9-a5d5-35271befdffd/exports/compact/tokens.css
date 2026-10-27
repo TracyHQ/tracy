@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-phoenix-orange: #e8400d;
+  --gradient-phoenix-orange: radial-gradient(386.06% 162.79% at 3.76985% -12.1005%, rgb(232, 64, 13) 0%, rgb(255, 238, 216) 31.14%, rgb(208, 178, 255) 81.98%);
+  --color-midnight-indigo: #10054d;
+  --color-charcoal: #272625;
+  --color-ink: #111111;
+  --color-canvas-white: #ffffff;
+  --color-cream-wash: #f6f5f3;
+  --color-ash: #6d6c6b;
+  --color-stone: #b1b1af;
+  --color-pearl: #ecebea;
+  --color-petal-pink: #ffd7f0;
+  --color-mint-green: #b7efb2;
+  --color-canary-yellow: #ffef99;
+  --color-soft-violet: #e2ddfd;
+  --color-aqua: #99fff9;
+  --color-indigo-deep: #2e2460;
+
+  /* Typography — Font Families */
+  --font-labil-grotesk-variable: 'Labil Grotesk Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,65 @@
+{
+  "id": "REG-PR-1207-invitations-real-campaign",
+  "kind": "feat",
+  "title": "Real campaign review preserves snapshot groups, image templates, permissions and expiry without sending mail",
+  "pr": 1207,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the synthetic HTTP handoff and focused review regressions from this branch with private PostgreSQL, a private key vault and the owned browser used by the real preview test."
+  ],
+  "expect": [
+    "The HTTP handoff imports 1340 recipients with all 43 source cells and five original groups, five image templates and no outbound transport.",
+    "A supplementary CSV preview expires no later than its campaign and rolls back when the campaign expires or is revoked during persistence.",
+    "Expiry during extension rolls back and permanently revokes its key; one unavailable vault cannot block other cleanup.",
+    "Manual to column and back retains source cells and inactive overrides while invalidating approval without overwriting customized text.",
+    "Authorization is rechecked after a campaign lock wait and after a delayed upload, before private data is read or published.",
+    "Draft and template editors stay locked through their saved detail refresh, and responses after unmount cannot overwrite another editor.",
+    "Replacement reaches all 230 recipients only through explicitly confirmed batches; cancellation preserves its cursor.",
+    "Authenticated managed images fit desktop and mobile; the opaque preview runs no script, form, navigation or third-party request and disappears after revocation."
+  ],
+  "selectors": {
+    "real": "/api/ops/invitations/real",
+    "recipientQuery": "/api/ops/invitations/real/campaigns/:id/recipients/query",
+    "asset": "/api/ops/invitations/real/campaigns/:id/assets/:assetId"
+  },
+  "fence": "Synthetic customers only; acceptance creates and closes its actual loopback HTTP stand. Private PostgreSQL and vault; no credentials, live source or mailbox transport. Send remains disabled.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-acceptance.test.mjs",
+      "apps/tracy-web/test/invitations-real-import.test.mjs",
+      "apps/tracy-web/test/invitations-real-keys.test.mjs",
+      "apps/tracy-web/test/invitations-real-retention.test.mjs",
+      "apps/tracy-web/test/invitations-real-approval.test.mjs",
+      "apps/tracy-web/test/invitations-real-content.test.mjs",
+      "apps/tracy-web/test/invitations-real-routes.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-flow.test.mjs",
+      "packages/web/tracy-harness/test/e2e/invitations-real-preview.test.mjs"
+    ],
+    "tests": [
+      "real campaign HTTP handoff preserves 1340 by 43",
+      "supplementary CSV preview TTL cannot outlive its campaign",
+      "supplementary CSV preview rolls back and revokes staged key when campaign is expired during persistence",
+      "supplementary CSV preview rolls back and revokes staged key when campaign is revoked during persistence",
+      "expiry during extension rolls back and permanently revokes the extended ledger",
+      "a missing live key cannot block expired previews, orphan keys or later campaigns",
+      "vault sweep isolates corrupt ledgers and stale locks",
+      "manual to column and back preserves inactive overrides, raw source and customized drafts",
+      "a recipient request waiting for its campaign lock rechecks revoked access before decrypting",
+      "revocation during body upload cannot publish /settings",
+      "revocation during body upload cannot publish /imports/preview",
+      "draft save keeps editors and navigation locked through the delayed detail refresh",
+      "template save keeps group and editor locked until refresh and ignores a refresh after unmount",
+      "replacement cursor reaches all 230 recipients",
+      "replacement continues across three explicitly confirmed batches",
+      "authenticated ZIP previews isolate scripts, links, forms and network"
+    ]
+  }
+}

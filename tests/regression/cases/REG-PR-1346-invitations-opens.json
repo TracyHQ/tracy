@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1346-invitations-opens",
+  "kind": "feat",
+  "title": "Only a customer invitation carries the estimated-opens image; its load is counted, a test send never is, and the image door is public and cookie-free",
+  "pr": 1346,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the send ledger, unsubscribe wiring and mounted UI suites from this branch against a private PostgreSQL (TEST_DATABASE_URL), with the fake Google that records every raw message and a fake aMember."
+  ],
+  "expect": [
+    "A test send has opens null and its HTML has no /o/ image; /sending opens is null before any customer invitation.",
+    "A customer invitation's HTML has one 1x1 image /o/<43-character token>.gif after UNSUBSCRIBE; its row has opens {firstAt:null,count:0}; /sending opens is {tracked:1,opened:0}.",
+    "Three loads of the image answer 200 image/gif GIF89a, no-store, no Set-Cookie; the row then has count 3 and a firstAt; /sending opens is {tracked:1,opened:1}; the database holds the token's hash, not the token.",
+    "Unknown or malformed /o/ paths answer the same image and count nothing.",
+    "Through the full app, /o/<token>.gif is mounted and sets no cookie.",
+    "Review content shows Estimated opens 1 of 2 and an invitation row with Opened (estimated)."
+  ],
+  "selectors": {
+    "image": "/o/:file",
+    "status": "/api/ops/invitations/real/sending",
+    "ledger": "invitations_real_send.open_token_hash"
+  },
+  "fence": "Fake Google and fake aMember only; no credential, no real mailbox, no customer address. Private PostgreSQL and a temporary key vault.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs",
+      "apps/tracy-web/test/notification-unsubscribe.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-flow.test.mjs"
+    ],
+    "tests": [
+      "estimated opens: only a customer invitation carries the image; a load is counted once as opened, never on a test",
+      "the invitation open image is mounted, public and sets no cookie",
+      "Send to customer asks once more, then posts no address; the server picks the customer"
+    ]
+  }
+}

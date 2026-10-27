@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-parchment-cream: #fcfbf7;
+  --color-pure-linen: #ffffff;
+  --color-warm-linen: #e7e4e0;
+  --color-ink-black: #0d0d0f;
+  --color-espresso: #2b1b1b;
+  --color-carbon: #000000;
+  --color-bitter-brown: #100401;
+  --color-acid-lime: #99ff66;
+
+  /* Typography */
+  --font-magicuipro: 'MagicUIPro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

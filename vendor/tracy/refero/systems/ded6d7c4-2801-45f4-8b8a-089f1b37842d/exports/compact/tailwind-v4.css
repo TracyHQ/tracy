@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-parchment: #f7f3ec;
+  --color-ink: #121212;
+  --color-black: #000000;
+  --color-paper: #ffffff;
+  --color-mist: #bebebe;
+  --color-olive-branch: #6c853b;
+  --color-bone: #121c0f;
+
+  /* Typography */
+  --font-neuehaasdisplay: 'neueHaasDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neuehaastext: 'neueHaasText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

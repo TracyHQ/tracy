@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e1afed53-6854-40dd-8157-dfc1dd3505f0",
+  "status": "complete",
+  "name": "Hatch",
+  "url": "https://styles.refero.design/style/e1afed53-6854-40dd-8157-dfc1dd3505f0",
+  "sourceWebsite": "https://www.hatch.fm",
+  "extractedAt": "2026-06-03T18:38:37.954Z",
+  "capturedAt": "2026-10-08T05:18:31.787081+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Hand-drawn zine meets pastel candy store. A cream-paper canvas splashed with mint highlights, confetti dots, and pill-shaped CTAs, where a chunky bold serif whispers fun and a blue mascot winks from the corner.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/89e06157-0568-4db2-8794-355dccb1f2b4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/adfa82b7-31eb-45c2-9780-539f4e1e561d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2a519bc8-71f0-4dbf-860b-4e273dd49bcd.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0da92053-7cff-4512-a2c1-49c4d131455a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/72098b57-af2c-42ea-9777-0d0084c619e5.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "abf06387b6e3d58552175b2558145107b66acd0c9619d8d195bf4ce7975a1720",
+      "bytes": 22595
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "0f7a4e67e146cafac183e048446e73a79ed45c06563cb31853a3614f84135542",
+      "bytes": 104154
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "71a4ef3a9c7c34e17ec8d61962a5e8f61cb7d6e1bcd8734072c1a7a0c1d5c03b",
+      "bytes": 18651
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "870879d80743648d7bec9f265042c0547ff8feaedee67be14330b855776d77a1",
+      "bytes": 11988
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "632070f0e4120663f94366c7d80724686ba0f24b74f648457451630302adec57",
+      "bytes": 12739
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6b431b541725ca41bd019ef6f39161b86c0dc462366ef73aa3128e9ff6183bd9",
+      "bytes": 3698
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b4e4a1f780441ceb468baf0e8e6be26db14f25827d6a084fbaee18f47a73f093",
+      "bytes": 666
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f33b2e6550bf0d3939c865eb9eeb50cb3bc1e51ada3ca5cccf5dcc17eec33f0f",
+      "bytes": 683
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a02adf2c14d51b0b9ac92e7170817ce2cf0f901a26bbbda6a5ac65537e7e8ce2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "220baa211ff2e7362b04a4486fd0b9cb9e266475e475f264e6b6ce748cc84897",
+      "bytes": 46648
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0ef00713f3c2851346971afc5b4e698f1a063c125cadf1591e9bb146220745b8",
+      "bytes": 24533
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "841d9d1486bfd9301bafb4dd6d30e767b8ffaf54e95056f408a92cf6956fe2d1",
+      "bytes": 52300
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b48c8e0ff03b3efc3c1310ed8f956cd6c3649fedd1801a510142000fc02bc657",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cf8999f9c3ad9ab889cac752d05b319c3f16782331901f1297a333b63b75eaf7",
+      "bytes": 1918
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "bc5a182b79b5cd7577636550673f4282a3c316929f1a5d6418a6b822abf794cb",
+      "bytes": 2480
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "2cfd1a08-e5b1-4bd8-9270-29aa08f80aa0",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e100552-a8ad-4179-b89a-6aa5113b92e1",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6b2777fd-7021-4a96-add3-ec4a32374214",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "c21fd0f0-1375-4094-83e7-0de484940100",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "e1afed53-6854-40dd-8157-dfc1dd3505f0",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

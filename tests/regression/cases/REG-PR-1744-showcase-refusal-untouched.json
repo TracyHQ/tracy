@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1744-showcase-refusal-untouched",
+  "kind": "fix",
+  "title": "A showcase-navigation apply refused on its first call is logged as nothing written, not as partly hidden menus",
+  "pr": 1744,
+  "area": "fleet/provision/showcase-nav",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs — showcaseNav.apply answers {ok:false,error:'contract_failed'} on its first call (the second-language guard), then the same refusal after one running answer"
+  ],
+  "expect": [
+    "S1: first-call refusal — one '!! showcase navigation:' line naming the plugin's refusal and ending 'nothing was written, the template showcase stays in the menus'; no 'partly hidden' or 'revert did not' text; no showcaseNav.revert call; the contract inspect still runs last; settled as 'failed — …' and the receipt removed, on WordPress and Joomla",
+    "S1: refusal after a running answer (or a lost one) — still reverted, and a failed revert still says 'apply stopped part-way and the revert did not complete — the menus may be partly hidden'"
+  ],
+  "selectors": {
+    "seam": "tracy_wp_showcase_job status 5 / tracy_wp_showcase_nav (platform/wordpress.sh); TracyShowcaseUntouched / tracy_showcase_phase (joomla-bootstrap.php)"
+  },
+  "evidence": "dev 25/10/2026, Tracy Business wp7 with Claude Cowork WP 0.18.32: showcaseNav.apply refused with contract_failed ('This site already has a second language… Nothing has been written.') and the provision logged 'apply stopped part-way and the revert did not complete — the menus may be partly hidden'",
+  "fence": "only a refusal on the first apply call, with no answer before it, lost or running, is read as nothing written",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs"
+    ],
+    "tests": [
+      "a new site has its template showcase taken out of the menus; skips, losses and refusals are said",
+      "an apply refused on its first call wrote nothing",
+      "a refusal, an ok that is not true over HTTP 200, or a stall is said, reverted, and the pairing goes on"
+    ],
+    "timeout_s": 300
+  }
+}

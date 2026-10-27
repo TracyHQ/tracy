@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1006-ja-impact-wp7-theme-name-1-0-6",
+  "kind": "fix",
+  "title": "JA Impact wp7 1.0.6: the theme is listed in WordPress as \"WP Impact\" and the site is otherwise unchanged",
+  "pr": 1006,
+  "area": "wordpress-theme/wp-ja-impact",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the shipped wp-ja-impact style.css and the overlay style.css in the checkout: both must read Theme Name: WP Impact; the shipped one reads Version: 1.0.6 and the overlay's theme.config.json carries version 1.0.6.",
+    "S2: Read tasks/ja-impact-wp7/release/fix-measure.json: it was taken by site-sweep.mjs on the released zip (its sha256 equals the wp-ja-impact-1.0.6.zip line of SHA256SUMS) and all 11 checks pass."
+  ],
+  "expect": [
+    "S1: both stylesheets carry the display name WP Impact and the version is 1.0.6.",
+    "S2: the release measure is bound to the released zip and 11/11 checks pass."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1006-ja-impact-wp7-theme-name-1-0-6.mjs",
+    "evidence": "tasks/ja-impact-wp7/release/fix-measure.json"
+  },
+  "evidence": "Full site sweep of 07/10/2026 UTC on the clean restore of the packed 1.0.6 site against the local Joomla source: 11/11 checks, 0 open groups, accepted groups unchanged from 1.0.5; wp theme list shows WP Impact 1.0.6 active",
+  "fence": "Static presence of the display name and version in the shipped and overlay sources plus the recorded release measure; the site's look is covered by the sweep that produced the measure",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1006-ja-impact-wp7-theme-name-1-0-6.mjs"]
+  }
+}

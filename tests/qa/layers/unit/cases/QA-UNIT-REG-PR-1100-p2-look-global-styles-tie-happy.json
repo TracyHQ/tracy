@@ -1,0 +1,73 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p2-look-global-styles-tie-happy",
+  "itemIds": ["regression:REG-PR-1100-p2-look-global-styles-tie"],
+  "requirement": "look.set on a WordPress block theme beats a rule in global styles itself (a design-system slot's) strictly, since Additional CSS is printed before theme.json's own styles.css there",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p2-look-global-styles-tie.json",
+    "ref": "PR #1100 (fix); fix evidence: dskeepwp 10/10/2026, WordPress 7.1.3: a block theme's Additional CSS is merged into global-styles-inline-css after variables/styles/presets and before theme.json's styles.css, where tracy-ds-slot writes its :root×6 rules — a selector equally specific there loses by order (look.set answered LOOK_SET_NO_EFFECT).",
+    "invariant": "S1 exits 0. The token set on `:root:root:root:root:root:root` is set again in Additional CSS on `:root:root:root:root:root:root:not(.\\#)` (0,7,0), more specific than the slot's (0,6,0). The token set on `:root` (theme.json's variables, printed before Additional CSS) is set again on `:root` alone, as before.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/look-set.mjs:424",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:210",
+      "packages/tools/tracy-site-tools/src/host/look-undo.mjs:130"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-site-tools/lib/index.js:11629 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11743 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11771 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11836 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11856 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11859 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:16457 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:17322 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:17541 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:18346 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:2481 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:44607 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:44784 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9961 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9972 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9975 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1178 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1792 execFile() runs a computed command",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1792 execFile() runs computed arguments",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1846 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1961 execFile() runs a computed command",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1961 execFile() runs computed arguments",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:301 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:341 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:644 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["🔒 WordPress, a block theme: a token a design-system slot sets in global styles"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p2-look-global-styles-tie"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p2-look-global-styles-tie",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "site-tools/look",
+    "file": "tests/regression/cases/REG-PR-1100-p2-look-global-styles-tie.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "test/look-set.test.mjs"],
+  "cwd": "packages/tools/tracy-site-tools",
+  "needs": [],
+  "tests": ["🔒 WordPress, a block theme: a token a design-system slot sets in global styles"],
+  "timeoutS": 600
+}

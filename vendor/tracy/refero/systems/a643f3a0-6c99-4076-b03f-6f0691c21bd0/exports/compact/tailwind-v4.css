@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-whatsapp-green: #25d366;
+  --color-link-blue: #0373e9;
+  --color-charcoal: #1c1e21;
+  --color-ink-black: #111b21;
+  --color-cream-canvas: #fcf5eb;
+  --color-pure-white: #ffffff;
+  --color-warm-gray: #5e5e5e;
+  --color-pale-blue-wash: #f0f4f9;
+
+  /* Typography */
+  --font-whatsapp-sans-var: 'WhatsApp Sans Var', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

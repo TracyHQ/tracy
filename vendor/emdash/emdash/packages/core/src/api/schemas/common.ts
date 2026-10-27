@@ -1,0 +1,109 @@
+import { z } from "zod";
+
+import { LOCALE_CODE_PATTERN } from "../../i18n/config.js";
+
+// ---------------------------------------------------------------------------
+// Role level
+// ---------------------------------------------------------------------------
+
+/** Valid role level values */
+export const VALID_ROLE_LEVELS = new Set([10, 20, 30, 40, 50]);
+
+/** Role level — coerces string/number to valid RoleLevel (10|20|30|40|50) */
+export const roleLevel = z.coerce
+	.number()
+	.int()
+	.refine((n): n is 10 | 20 | 30 | 40 | 50 => VALID_ROLE_LEVELS.has(n), {
+		message: "Invalid role level. Must be 10, 20, 30, 40, or 50",
+	});
+
+// ---------------------------------------------------------------------------
+// Pagination
+// ---------------------------------------------------------------------------
+
+/** Pagination query params — cursor-based */
+export const cursorPaginationQuery = z
+	.object({
+		cursor: z.string().max(2048).optional().meta({ description: "Opaque cursor for pagination" }),
+		limit: z.coerce.number().int().min(1).max(100).optional().default(50).meta({
+			description: "Maximum number of items to return (1-100, default 50)",
+		}),
+	})
+	.meta({ id: "CursorPaginationQuery" });
+
+/** Pagination query params — offset-based */
+export const offsetPaginationQuery = z
+	.object({
+		limit: z.coerce.number().int().min(1).max(100).optional().default(50),
+		offset: z.coerce.number().int().min(0).optional().default(0),
+	})
+	.meta({ id: "OffsetPaginationQuery" });
+
+// ---------------------------------------------------------------------------
+// Shared primitives
+// ---------------------------------------------------------------------------
+
+/** Slug pattern: lowercase letters, digits, underscores; starts with letter */
+export const slugPattern = /^[a-z][a-z0-9_]*$/;
+
+/** Matches http(s) scheme at start of URL */
+const HTTP_SCHEME_RE = /^https?:\/\//i;
+
+/** Validates that a URL string uses http or https scheme. Rejects javascript:/data: URI XSS vectors. */
+export const httpUrl = z
+	.url()
+	.refine((url) => HTTP_SCHEME_RE.test(url), "URL must use http or https");
+
+/**
+ * BCP 47 locale code — language with optional script/region subtags (e.g. en, en-US, pt-BR, es-419, zh-Hant).
+ * Validation is case-insensitive, but the value is preserved verbatim because the site config, stored
+ * `locale` columns, and public query path all keep the raw BCP-47 casing.
+ */
+export const localeCode = z.string().regex(LOCALE_CODE_PATTERN, "Invalid locale code");
+
+/** Shared `?locale=xx` query shape for endpoints that filter by locale. */
+export const localeFilterQuery = z
+	.object({
+		locale: localeCode.optional(),
+	})
+	.meta({ id: "LocaleFilterQuery" });
+
+// ---------------------------------------------------------------------------
+// OpenAPI: Shared response schemas
+// ---------------------------------------------------------------------------
+
+/** Standard API error response */
+export const apiErrorSchema = z
+	.object({
+		success: z.literal(false).meta({ description: "Discriminant: always false for errors" }),
+		error: z.object({
+			code: z
+				.string()
+				.meta({ description: "Machine-readable error code", examples: ["NOT_FOUND"] }),
+			message: z.string().meta({ description: "Human-readable error message" }),
+		}),
+	})
+	.meta({ id: "ApiError" });
+
+/** Wrap a data schema in the standard success envelope: { success: true, data: T } */
+export function successEnvelope<T extends z.ZodType>(dataSchema: T) {
+	return z.object({
+		success: z.literal(true).meta({ description: "Discriminant: always true for success" }),
+		data: dataSchema,
+	});
+}
+
+/** Standard delete response */
+export const deleteResponseSchema = z.object({ deleted: z.literal(true) }).meta({
+	id: "DeleteResponse",
+});
+
+/** Media delete response: `storageDeleted` is false when the stored file survived and is retried by cleanup */
+export const mediaDeleteResponseSchema = deleteResponseSchema
+	.extend({ storageDeleted: z.boolean() })
+	.meta({ id: "MediaDeleteResponse" });
+
+/** Standard count response */
+export const countResponseSchema = z
+	.object({ count: z.number().int().min(0) })
+	.meta({ id: "CountResponse" });

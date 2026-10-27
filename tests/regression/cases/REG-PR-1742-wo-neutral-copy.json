@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1742-wo-neutral-copy",
+  "kind": "feat",
+  "title": "WO resolves missing facts to approved neutral wording in the site language and validates slot provenance",
+  "pr": 1742,
+  "area": "website-opportunities/neutral-copy",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From the checkout, run the command in run.",
+    "Check the domain tests and the tests reading the three committed slot-role sidecars. No database or network is needed."
+  ],
+  "expect": [
+    "Every neutral key used by the vocabulary and sidecars resolves in all ten site languages; unknown locales fall back to English.",
+    "Contact requires a contact page, email or phone; Call requires a phone even when its policy omits the requirement.",
+    "Step indices 0 and 1 render 01 and 02; missing facts never create people, prices, claims or forbidden filler.",
+    "The manifest accepts the four supported states and rejects duplicate slots, invalid fields and contradictory provenance.",
+    "All tests pass."
+  ],
+  "selectors": {
+    "functions": "neutralFor, validateSlotFillManifest, forbiddenFillerText"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-neutral-copy.test.mjs",
+      "packages/wo/website-opportunities/test/domain-slot-fill-manifest.test.mjs",
+      "scripts/test/wo-neutral-copy-sidecars.test.mjs"
+    ],
+    "needs": []
+  }
+}

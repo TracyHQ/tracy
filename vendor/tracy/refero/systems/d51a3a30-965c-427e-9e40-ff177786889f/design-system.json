@@ -1,0 +1,303 @@
+{
+  "dos": [
+    "Use Noto Serif at 49–77px for every primary headline and pair it with Manrope 16–19px body beneath — the serif/sans contrast is the typographic signature.",
+    "Pull from the four-color prism set (#2969ff, #f75cc3, #ffd363, #5ab040) when you need accent color; never introduce a fifth hue.",
+    "Apply the iridescent gradient (pink → blue → yellow → green) only as a full-bleed section wash or behind a single large graphic — never as a button fill or card background.",
+    "Use the four pastel wash surfaces (#fffdea, #eaffed, #fff3fb, #e5f5ff) keyed to the matching prism color when you need a tinted card or badge.",
+    "Set eyebrows (TRUSTED BY, section kickers) at 11px Manrope weight 500 with 0.06em tracking in all caps.",
+    "Reach for #090a1 Midnight Ink for both primary text and the filled primary CTA — a single dark token carries the brand's seriousness.",
+    "Separate surfaces with 1px borders in #e0e0e0 or #c3dae3; never use drop shadows."
+  ],
+  "donts": [
+    "Don't use drop shadows, glows, or any elevation effects — flatness is intentional.",
+    "Don't use fully rounded (9999px) buttons; the 7px radius is a deliberate near-square.",
+    "Don't render icons in more than one color at a time, and never use filled multicolor icon sets.",
+    "Don't place body text directly on the iridescent gradient without a white scrim or overlay treatment — the contrast fails below AA.",
+    "Don't introduce a new accent hue; the four-color prism is closed.",
+    "Don't use Noto Serif for body copy or UI controls — it is reserved for editorial headlines only.",
+    "Don't use pure #000000 for body text; Midnight Ink (#090a1e) is warmer and on-brand."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#090a1e",
+      "name": "Midnight Ink",
+      "role": "Primary text, primary CTA fill, strong borders — the dominant brand dark; a slightly blue-tinted near-black that reads warmer than pure black on white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button text on dark fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e0e0e0",
+      "name": "Ash Border",
+      "role": "Default hairline borders, button outlines, icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Carbon Nav",
+      "role": "Navigation text and thin nav borders — sits one step lighter than Midnight Ink",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c3dae3",
+      "name": "Mist Blue",
+      "role": "Cool-tinted card borders and subtle section dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "SVG fills, icon glyphs, and high-contrast decorative shapes only — not used for UI text or backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2969ff",
+      "name": "Prism Blue",
+      "role": "Brand accent and logo mark — the cool anchor of the rainbow; also acts as info/state accent on badges and borders; Signature iridescent gradient — the through-line of the brand, sweeping pink → blue → yellow → green like light through a prism",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, #f75cc3, #2969ff, #ffd363, #5ab040)"
+    },
+    {
+      "hex": "#f75cc3",
+      "name": "Prism Pink",
+      "role": "Accent stroke and badge accent — warm half of the prism spectrum",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffd363",
+      "name": "Prism Yellow",
+      "role": "Accent stroke and warning/state highlight",
+      "group": "accent"
+    },
+    {
+      "hex": "#5ab040",
+      "name": "Prism Green",
+      "role": "Accent stroke and success state highlight",
+      "group": "semantic"
+    },
+    {
+      "hex": "#fffdea",
+      "name": "Cream Wash",
+      "role": "Soft tinted surface for cards and badges tied to the yellow accent",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eaffed",
+      "name": "Mint Wash",
+      "role": "Soft tinted surface for cards and badges tied to the green accent",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fff3fb",
+      "name": "Blush Wash",
+      "role": "Soft tinted surface for cards and badges tied to the pink accent",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5f5ff",
+      "name": "Sky Wash",
+      "role": "Soft tinted surface tied to the blue accent — appears in gradient fills and decorative washes",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with generous horizontal padding. The hero is a single centered column (headline → subtext → CTA pair → prism graphic) rather than a split layout. Sections stack vertically with 80px+ gaps, no alternating background bands — everything sits on white, with color appearing only in discrete gradient panels or card tints. Feature grids use a 2-column layout for benefit cards, with each card being compact and left-aligned (icon top, title, bullets). The comparison section breaks the centered rhythm with a full-bleed split: a left 'chaos' half on white and a right 'clarity' half on an iridescent gradient that reaches the page edge. Navigation is a single minimal top bar; no sidebar, no mega-menu, no sticky behavior beyond standard scroll. The page reads as one long editorial scroll, not a dashboard.",
+  "imagery": "Imagery is minimal and almost entirely abstract. The hero uses a single iridescent glass-diamond/prism graphic — faceted, translucent, throwing pink/blue/yellow/green refraction at its edges — that functions as the brand's only 'product photo'. Supporting sections use full-bleed pastel gradient washes (pink → blue → yellow → green) with feathered edges, never hard rectangular banners. No photography of people, offices, or devices appears. The comparison section relies on scattered pill-shaped text chips to evoke visual noise, and the right-side 'solution' half uses a flowing rainbow gradient to evoke clarity. Icons throughout the UI are flat, single-weight outlines in Midnight Ink or a single prism accent color — never multicolor, never filled. The whole visual language is about light and color doing the work that stock photography would do elsewhere.",
+  "similar": [
+    {
+      "why": "Same restrained light-mode canvas, single dark CTA, minimal chrome, and emphasis on one signature graphic (their gradient/3D mark) over photography.",
+      "business": "Linear"
+    },
+    {
+      "why": "Both lean on iridescent gradient washes and pastel-tinted surfaces to add color without borders or shadows, with editorial serif headlines paired with clean sans body.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Shares the minimal white-canvas aesthetic, generous spacing, single dark filled CTA, and a preference for abstract gradient/iridescent visuals over stock imagery.",
+      "business": "Resend"
+    },
+    {
+      "why": "Same serif-headline-over-soft-gradient language, restrained palette punctuated by a few vivid accents, and flat components with hairline borders instead of shadows.",
+      "business": "Pitch"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "7px",
+      "badges": "7px",
+      "buttons": "7px",
+      "featureCards": "24.5px"
+    },
+    "elementGap": "14-18px",
+    "sectionGap": "80px",
+    "cardPadding": "28px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Page canvas, default background across all sections"
+    },
+    {
+      "hex": "#fffdea",
+      "name": "Tinted Pastel Cards",
+      "level": 1,
+      "purpose": "Soft-tinted card and badge surfaces keyed to each accent color (cream/mint/blush/sky variants)"
+    },
+    {
+      "hex": "#2969ff",
+      "name": "Prism Gradient Field",
+      "level": 2,
+      "purpose": "Full-bleed iridescent wash used in hero bleed and the 'Vetric Does it Better' comparison panel"
+    }
+  ],
+  "elevation": [],
+  "northStar": "Iridescent prism refracting clarity — a white room with one glass diamond that throws pink, blue, yellow, and green light across every surface.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.66
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "subheading",
+      "size": 26,
+      "lineHeight": 1.33,
+      "letterSpacing": -1.04
+    },
+    {
+      "role": "heading-sm",
+      "size": 35,
+      "lineHeight": 1.2,
+      "letterSpacing": -1.75
+    },
+    {
+      "role": "heading",
+      "size": 49,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.96
+    },
+    {
+      "role": "heading-lg",
+      "size": 63,
+      "lineHeight": 1.06,
+      "letterSpacing": -3.15
+    },
+    {
+      "role": "display",
+      "size": 77,
+      "lineHeight": 1.06,
+      "letterSpacing": -3.85
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Filled dark button for the single most important action on a screen",
+      "description": "Background #090a1, text #ffffff, Manrope 14–16px weight 500, padding 11px 28px, border-radius 7px, no border. Used for 'Book an Intro Call'. Sits directly beside a ghost secondary."
+    },
+    {
+      "name": "Ghost Secondary Button",
+      "role": "Outlined paired action beside the primary CTA",
+      "description": "Transparent background, 1px border #090a1 or #e0e0e0, text #090a1, Manrope 14–16px weight 500, padding 11px 28px, border-radius 7px. Used for 'Join the Team'."
+    },
+    {
+      "name": "Prism Hero",
+      "role": "Above-the-fold brand signature",
+      "description": "Centered composition on #ffffff with Noto Serif 77px display headline (Midnight Ink, -0.05em), 18px Manrope subtext, CTA pair, and a large iridescent glass-diamond/prism graphic that bleeds pink, blue, yellow, and green gradient edges into the surrounding white. The prism is the only hero artwork."
+    },
+    {
+      "name": "Feature Card (Compact)",
+      "role": "Small bordered card for benefit statements under 'We Do the Heavy Lifting'",
+      "description": "Background #ffffff, 1px border #e0e0e0, border-radius 7px, padding 18–25px. Contains a small monochrome icon (top-left, 20–24px), Noto Serif or Manrope title at 19–23px, Manrope body at 14–16px, and a 3-bullet list. Stacks in a 2-column grid."
+    },
+    {
+      "name": "Tinted Pastel Card",
+      "role": "Accent-keyed surface for category highlights or status cards",
+      "description": "Background uses one of the four pastel washes (#fffdea, #eaffed, #fff3fb, #e5f5ff), 1px border tinted to the matching prism hue, border-radius 7–24.5px, padding 25–28px. Lets the rainbow accent system apply to whole regions, not just strokes."
+    },
+    {
+      "name": "Tracked Eyebrow Label",
+      "role": "Section kicker above a headline ('TRUSTED BY', 'We Do the Heavy Lifting')",
+      "description": "Manrope 11px weight 500, letter-spacing 0.06em (0.66px), color Midnight Ink or a muted gray. All-caps. Sits centered or left-aligned directly above a serif headline."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social-proof row of partner/client marks",
+      "description": "Horizontal row of monochrome or light-tinted wordmarks at uniform height (~24px), separated by generous 35–42px gaps. Rendered in muted gray (#222 or #e0e0e0), never in full color."
+    },
+    {
+      "name": "Comparison Split Section",
+      "role": "Two-column 'problem vs. solution' panel",
+      "description": "Left column on #ffffff with scattered chaotic tags/pills, right column on a full-bleed iridescent gradient (pink → blue → yellow → green) with white-tinted supporting text. The visual contrast IS the message."
+    },
+    {
+      "name": "Pill / Tag Chip",
+      "role": "Small inline label in the comparison section and feature lists",
+      "description": "Background #ffffff, 1px border #e0e0e0, border-radius 7px, padding 6px 14px, Manrope 13–14px. In the 'Struggle' column these float in scattered, overlapping positions to suggest disorder."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site header",
+      "description": "White background, 1px bottom border #e0e0e0 or transparent, 64–72px tall. Logo (blue diamond + 'vetric' wordmark) left, 4–5 text links (Products ▾, Use Cases, About, Careers) right in Manrope 14–16px weight 500 Midnight Ink. No background fill, no shadow."
+    },
+    {
+      "name": "Prism Gradient Banner",
+      "role": "Full-width decorative section background",
+      "description": "Horizontal linear gradient sweeping #f75cc3 → #2969ff → #ffd363 → #5ab040 with soft feathered edges so it dissolves into white. Used to make text appear 'illuminated' without any chrome."
+    },
+    {
+      "name": "Borderless Feature Row",
+      "role": "Icon + title + paragraph unit without a card container",
+      "description": "No border, no background. Icon (24px, Midnight Ink or a single prism color) above, Noto Serif 26–35px title, Manrope 16–18px body. Used when the section already has its own surface treatment."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All editorial headlines and section titles — the serif against a sans UI gives the brand an editorial, almost magazine-like voice. Used at 77px for hero display, scaling down through 63/49/42/35/26px for h1→h5.",
+      "sizes": "26px, 35px, 42px, 49px, 63px, 77px",
+      "family": "Noto Serif",
+      "weight": "400, 500",
+      "lineHeight": "1.06, 1.20, 1.33, 1.40, 1.43",
+      "substitute": "Source Serif 4, Lora, Crimson Text",
+      "letterSpacing": "-0.05em to -0.04em"
+    },
+    {
+      "role": "Body copy, UI controls, navigation, button labels, badges, and large numeric display. 18–19px for body, 14–16px for compact UI, 11px with +0.06em tracking for eyebrow labels like 'TRUSTED BY' and section kickers. The geometric construction balances the serif headlines.",
+      "sizes": "11px, 14px, 16px, 18px, 19px, 23px, 26px, 70px",
+      "family": "Manrope",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.30, 1.33, 1.50",
+      "substitute": "Inter, Geist, DM Sans",
+      "letterSpacing": "-0.02em body, 0.06em eyebrow"
+    }
+  ],
+  "description": "Vetric uses an iridescent-prism visual language: a bright white canvas, near-black ink for text and actions, and a four-color rainbow accent set (blue, pink, yellow, green) that refracts across soft pastel washes like light through a glass diamond. The system pairs a humanist serif (Noto Serif) for headlines with a geometric sans (Manrope) for UI, creating a deliberate tension between editorial calm and technical confidence. Components stay light and flat — thin borders, gentle radii, no drop shadows — so the prismatic gradients and colored accents carry all the visual energy. The result reads as 'data made luminous': the chrome recedes, the color talks.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #090a1e (Midnight Ink)\n- background: #ffffff (Paper White)\n- border: #e0e0e0 (Ash)\n- accent: #2969ff (Prism Blue) — and the full prism set: #f75cc3, #ffd363, #5ab040\n- primary action: #090a1e (filled action)\n\n**3 Example Component Prompts**\n1. Create a Primary Action Button: #090a1e background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. *Feature card:* #ffffff background, 1px solid #e0e0e0 border, 7px radius, 25px padding. 24px monochrome outline icon in #090a1e at top-left. Title Noto Serif 23px weight 500 #090a1e. Body Manrope 14px weight 400 #090a1e. Three bullet points in Manrope 13px.\n\n3. *Tinted accent card:* #fff3fb (Blush Wash) background, 1px solid #f75cc3 border, 7px radius, 28px padding. Title Manrope 16px weight 600 #090a1e. Body Manrope 14px weight 400 #090a1e. The pink border and pink-tinted surface key the card to the Prism Pink accent."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids drop shadows. Separation is achieved through hairline borders (1px #e0e0e0 or #c3dae3) and occasional tinted pastel backgrounds. The flatness makes the prismatic gradients feel like the only thing casting light."
+}

@@ -1,0 +1,50 @@
+{
+  "id": "QA-UNIT-REG-PR-1715-plus-menu-design-system-happy",
+  "itemIds": ["regression:REG-PR-1715-plus-menu-design-system"],
+  "requirement": "Design system can be listed in the right column's + menu by the launch-design-system switch (off by default), only while the Design system feature is on",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1715-plus-menu-design-system.json",
+    "ref": "PR #1715 (feat); fix evidence: none recorded",
+    "invariant": "S1: launch-design-system is in group right-launcher, defaultOn false, tabs [tracy:design-system]; LAUNCHER_TABS lists tracy:design-system right after tracy:design-inspiration; isListed is false by default and true once /api/ui hides nothing. S2: the plugin registers tracy:design-system without hidden; available() is true with toolbar-design-system on and false with it hidden; the side card's refreshAvailable is called once the switches land; opened with no site the tab says 'Open a site to choose its design system.'",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/ui-switches.test.mjs:286 import '../src/ui-switches/catalogue.json' does not resolve to a source file",
+      "packages/core/tracy-core/test/ui-switches.test.mjs:305 import '../src/ui-switches/catalogue.json' does not resolve to a source file"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1715-plus-menu-design-system.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1715-plus-menu-design-system"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/core/tracy-core", "tracy-core"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1715-plus-menu-design-system",
+    "pr": 1715,
+    "kind": "feat",
+    "area": "ui-switches/right-launcher",
+    "file": "tests/regression/cases/REG-PR-1715-plus-menu-design-system.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/core/tracy-core/test/ui-switches.test.mjs",
+    "packages/design/tracy-design-inspiration/test/design-system-launcher.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

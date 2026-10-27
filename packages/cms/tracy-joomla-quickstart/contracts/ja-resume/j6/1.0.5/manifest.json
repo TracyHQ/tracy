@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resume/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_resume",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resume",
+    "id": "quickstart/ja-resume/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_resume",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resume-j6-webroot-1.0.5.tar.gz",
+        "bytes": 70008591,
+        "sha256": "544049eae4cbd32c706295e1282b69ce43f40f20c258915587830ad771f87f9a"
+      },
+      "database": {
+        "file": "ja-resume-j6-database-1.0.5.sql.gz",
+        "bytes": 203674,
+        "sha256": "5b57541edae45d5baaf89e48304605bf5826cafdda863efc34add513f527788f"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T02:26:21.927Z",
+    "builtFrom": {
+      "from": "quickstart/ja-resume/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 601 files replaced (templates/ja_resume/component.php, templates/ja_resume/error.php, templates/ja_resume/favicon.ico, templates/ja_resume/helper.php, templates/ja_resume/index.html, templates/ja_resume/index.php, templates/ja_resume/offline.php, templates/ja_resume/templateDetails.xml, templates/ja_resume/templateHook.php, templates/ja_resume/templateInfo.php, templates/ja_resume/template_preview.png, templates/ja_resume/template_thumbnail.png, templates/ja_resume/thememagic.xml, templates/ja_resume/acm, templates/ja_resume/css, templates/ja_resume/etc, templates/ja_resume/fonts, templates/ja_resume/html, templates/ja_resume/images, templates/ja_resume/js, templates/ja_resume/language, templates/ja_resume/less, templates/ja_resume/tpls); demo content: 1 edits (menuItem-131); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-resume/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,240 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-spa",
+  "minVersion": {
+    "quickstart/ja-spa/j6": "1.0.2"
+  },
+  "maxVersion": {
+    "quickstart/ja-spa/j6": "1.0.8"
+  },
+  "maxVersionNote": "1.0.8 21/10/2026 (TEXT-1 batch 3): built from 1.0.7 (release-batch.mjs --overlay); only css/template.css, css/tpl/theme.tpl.css differ (and their SCSS/LESS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); unworn the page is the release's own (VERIFICATION.json). 1.0.7 16/10/2026 (batch 2): the template reads the design-system role variables (--ds-c-*, corners, faces) with its own values as fallback; Bootstrap components read the roles; unworn the page is the release's own (VERIFICATION.json). 1.0.3 and 1.0.4 checked 11/10/2026 (ds-minversion-audit): 530 var(--ds-c- reads in the template css as 1.0.2; their changes are the font name Muli → Mulish (media/t4/css/13.css, error.css, offline.css) 1.0.6 16/10/2026 (#1375): re-cut of 1.0.5 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-spa/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1",
+    "body": "div.mod-articles-category-introtext",
+    "container": "div.t4-section-inner.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 40px",
+    "displayFace": "Marcellus 400, tracking 0em",
+    "body": "running text of the service cards (15px, 400); re-probed 11/10/2026: the hero p.lead and the features .lead are weighed 300 by the template itself (Bootstrap .lead), not body copy",
+    "container": "first content container, max-width 1140px",
+    "displayPhone": "the same heading at 390 on the published release: 26px"
+  },
+  "keepScopes": [".ja-masthead"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fff8f5",
+    "--fg": "#6f6f6f",
+    "--fg-2": "#1a1a1a",
+    "--accent": "#2a7768",
+    "--accent-hover": "#193d39",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212529",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#dfbcbc",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Marcellus\", sans-serif",
+    "--font-body": "\"Mulish\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fff8f5",
+      "fg": "#6f6f6f",
+      "fg-2": "#1a1a1a",
+      "accent": "#2a7768",
+      "accent-hover": "#193d39",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#dfbcbc",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#fff8f5",
+      "fg": "#ffffff",
+      "fg-2": "#9e9e9e"
+    },
+    {
+      "accent": "#2a7768"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#ffffff",
+      "surface-warm": "#1a1a1a",
+      "border-soft": "#dddddd",
+      "warn": "#fdce03"
+    },
+    {
+      "surface": "#eaedf1",
+      "surface-warm": "#1d2124"
+    },
+    {
+      "surface": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (84 line colours, 114 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.infinity-wrap .btn, .btn-danger, .btn-success, .btn-info, .btn-warning)"],
+    "buttonPrimary": [".btn-primary:not(.infinity-wrap .btn)"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".mod-articles-category-introtext, .features-item .description span, .features-content > span",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "followRules": {
+    "#t4-footer": {
+      "background-color": "bg",
+      "color": "fg"
+    },
+    "#t4-footer a:not(.nav-link)": {
+      "color": "accent-text"
+    },
+    ".features-item .icon-action, .features-item .img-icon.mask-icon": {
+      "background-color": "surface!"
+    },
+    ".view-latest-list .action-latest, .view-latest-list .action-latest a": {
+      "border-color": "border!"
+    },
+    ".active > .heading-link, .heading-link:hover, .heading-link:focus": {
+      "color": "accent-text"
+    }
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 22 tried (byte 6029); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 78,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 10
+    },
+    {
+      "hex": "#1a1a1a",
+      "uses": 7,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 20
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    },
+    {
+      "hex": "#1d2124",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 8
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on quickstart/ja-spa/j6 1.0.2 (published; tasks/evidence/ds-remeasure-5-2026-10-11/ja-spa): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 82%–98% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). The older probe passed it; the current one found the white footer kept while its links took the system's muted (Moxie 3.86, Toggl Track 3.42): the footer now follows (followRules: ground bg, text fg, its other links accent-text). The body probe read the hero p.lead the template weighs 300 itself; it now reads the service cards' running text, and contrast kind body (no element before) reads the card texts",
+  "bands": {
+    ".t4-section.t4-section-5.t4-palette-brown": {
+      "ground": "#6a3332",
+      "texts": ["#f8f9fa"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".section-title span", ".sub-heading", ".gallery-desc"]
+    },
+    ".ja-masthead": {
+      "ground": "#615f5e",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 14/10/2026 (visual review, /index.php/services): the inner page-title band (.ja-masthead) is a photo under a 50% black veil (about #615f5e) with the template’s white title and breadcrumb; under a light system they followed the page’s dark text onto the dark photo (Stripe slate, about 1.1:1). It is a kept picture band now: its words keep their white. The drafted cardLike .wrap-info was dropped: on /services it is the white text card laid over the service photo, square at the bottom where its edge meets the photo’s (8px 8px 0 0), which a card radius would round; on the home it is a 40px row",
+  "contractNotes1317": "Round 4 (14/10): the feature icons' mint discs (.icon-action, .img-icon.mask-icon, #f0fffc) take the system surface and the latest-news action rules (#9e9e9e) its border: under Moxie on a desktop they were 11 of the 17 left paints, and the page followed 84.5%.",
+  "followNote": "15/10/2026 (final measure, /services): the current tab's heading link (.active > .heading-link) and the links' hover are T4's literal primary #2a7768 from its generated stylesheet: teal on Moxie's black, 3.94:1; they take the readable accent",
+  "sideRules": {
+    "light": {
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 3): menu, title, footer and tag links read one role at rest and on hover under some systems (Moxie, 5fd3), so hover and focus also underline; buttons, dropdown items, the logo and pagination keep their own states. The same underline is written on the link's inner words (span, strong, em, b, small, headings, p): the probe reads the cue on the element that holds the words, and an underline set on the link alone does not change that element's computed style."
+}

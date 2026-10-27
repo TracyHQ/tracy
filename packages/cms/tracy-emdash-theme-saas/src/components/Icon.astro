@@ -1,0 +1,33 @@
+---
+/**
+ * One icon set for every section (DECISIONS D12): content stores an icon NAME in kebab case
+ * ("git-branch", "message-square"); this renders the matching lucide glyph server-side (no island).
+ * An unknown or empty name renders nothing — never a substitute glyph that says something else.
+ */
+import { icons } from 'lucide-react'
+import { createElement } from 'react'
+
+interface Props {
+  name?: string | null
+  size?: number
+  strokeWidth?: number
+  class?: string
+}
+const { name, size = 20, strokeWidth = 1.8, class: className } = Astro.props
+// Names stored in content outlive lucide's renames; map the old name instead of rewriting content.
+const RENAMED: Record<string, string> = { filter: 'funnel' }
+const pascal = String(RENAMED[String(name ?? '').trim()] ?? name ?? '')
+  .trim()
+  .split('-')
+  .filter(Boolean)
+  .map((part) => part[0].toUpperCase() + part.slice(1))
+  .join('')
+const Glyph = pascal ? (icons as Record<string, any>)[pascal] : null
+const svg = Glyph
+  ? (await import('react-dom/server')).renderToStaticMarkup(
+      createElement(Glyph, { size, strokeWidth, 'aria-hidden': true, className })
+    )
+  : ''
+---
+
+{svg && <Fragment set:html={svg} />}

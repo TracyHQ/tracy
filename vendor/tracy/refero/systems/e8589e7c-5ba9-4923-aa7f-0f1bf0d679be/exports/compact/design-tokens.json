@@ -1,0 +1,99 @@
+{
+  "color": {
+    "campfire-orange": {
+      "$value": "#ff6b1a",
+      "$type": "color",
+      "$description": "Campfire Orange — Logo badge, notification pills, and brand-punctuation moments — a single warm coral that anchors the entire palette against the cream canvas"
+    },
+    "ember-brown": {
+      "$value": "#451a03",
+      "$type": "color",
+      "$description": "Ember Brown — Deep brown accent for paint-splash illustration shadows and inline highlight text in testimonials"
+    },
+    "sunlit-cream": {
+      "$value": "#fef3c7",
+      "$type": "color",
+      "$description": "Sunlit Cream — Soft warm wash behind tags, badges, and inline highlights"
+    },
+    "forest-pulse": {
+      "$value": "#22c55e",
+      "$type": "color",
+      "$description": "Forest Pulse — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "ember-alert": {
+      "$value": "#ef4444",
+      "$type": "color",
+      "$description": "Ember Alert — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "midnight-ink": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, headings, icon strokes, and dark filled buttons"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated panels, and the top of the surface stack"
+    },
+    "parchment": {
+      "$value": "#fffdf9",
+      "$type": "color",
+      "$description": "Parchment — Page canvas — a barely-warm off-white that gives the whole site its sunlit feel"
+    },
+    "fog-gray": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Fog Gray — Muted backgrounds, secondary surface fills, and input field chrome"
+    },
+    "linen": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Linen — Subtle dividers, hover wash on rows, and tag backgrounds"
+    },
+    "ash-gray": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Ash Gray — Muted helper text, placeholder copy, and disabled labels"
+    },
+    "slate": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Slate — Secondary text, timestamps, and metadata in lists"
+    },
+    "graphite": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text and muted icon strokes"
+    },
+    "stone": {
+      "$value": "#8f7668",
+      "$type": "color",
+      "$description": "Stone — Warm muted accent for body copy that should feel quieter than Midnight Ink"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across UI, headings, and body — no display or serif counterpart. The single-family commitment is deliberate: Inter's geometric neutrality keeps focus on content, and the three-weight range (400 body, 500 metadata, 600 display) carries all hierarchy."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Inline code fragments and keyboard shortcuts inside the feed"
+    },
+    "emoji": {
+      "$value": "emoji",
+      "$type": "fontFamily",
+      "$description": "emoji — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://campsite.design",
+      "siteName": "Campsite",
+      "extractedAt": "2026-06-03T17:34:49.763Z",
+      "variant": "compact"
+    }
+  }
+}

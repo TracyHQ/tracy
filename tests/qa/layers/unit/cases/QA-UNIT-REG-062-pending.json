@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-062-pending",
+  "itemIds": ["regression:REG-062"],
+  "requirement": "Tracy's own EmDash media uploads (media.upload and tracy_emdash media_upload) are reported with the media id and never show as Unknown in Site changes",
+  "oracle": {
+    "source": "tests/regression/cases/REG-062-emdash-tracy-media-upload-not-unknown.json",
+    "ref": "PR #869 (fix); fix evidence: tasks/evidence/emdash-attribution/findings.md §3 (media rows); tests: apps/tracy-web/test/activity-source.test.mjs (C1 media), packages/tools/tracy-site-tools/test/emdash.test.mjs and handler.test.mjs (C1 media).",
+    "invariant": "The web build check prints >= 1; both upload answers have ok:true and name an id (M1, M2 distinct). site_write gained exactly two rows from the uploads, in order: action 'media_upload', outcome 'ok', via 'emdash-mcp', actor A, target kind 'media', target id M1; then the same with target id M2 (before the fix: no row at all for media.upload, and a row with target null for tracy_emdash media_upload). site_cms_change holds exactly one 'upload' row for M1 and one for M2, both with no account (EmDash 1.0.1's audit-log logs every upload with no user). counts.unknown after the uploads = U0 (before the fix: U0 + 2). No V2 item has evidence.cmsRecordRef naming either upload row ('emdash-audit-log:<cursor_key>'), and the cms-log door lists neither. The cleanup: two more site_write rows, action 'media_delete', outcome 'ok', target {kind 'media', id M1 / M2}; site_cms_change gains no delete row for M1 or M2 (EmDash fires no hook for a media delete); U2 = U0. index.reg062.js, /tmp/act-as-person.mjs and /site/$LABEL/reg062-$RUN.png are gone from $DSH at the end.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer flows, needs stand, site:em, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:em", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-062"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:flows"],
+  "regression": {
+    "id": "REG-062",
+    "pr": 869,
+    "kind": "fix",
+    "area": "site-changes/record",
+    "file": "tests/regression/cases/REG-062-emdash-tracy-media-upload-not-unknown.json"
+  },
+  "ownerLayer": "flows",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:em", "seat:owner"]
+}

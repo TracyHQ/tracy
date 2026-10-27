@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-999-wp-theme-display-name",
+  "kind": "feat",
+  "title": "WordPress themes ported from JoomlArt templates are named \"WP <Name>\" (Nova, Vega, Morgan, Kinetic, Impact)",
+  "pr": 999,
+  "area": "wordpress-theme/naming",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: For each of wp-ja-nova, wp-ja-vega, wp-ja-morgan, wp-ja-kinetic, wp-ja-impact read, in both overlays/<slug> and src/<slug> of packages/cms/tracy-wordpress-theme: the Theme Name line of style.css, the first line of readme.txt, the label of register_block_pattern_category in inc/extra.php, and themeName in overlays/<slug>/theme.config.json.",
+    "S2: In the same files count lines that still carry the old name in those four places."
+  ],
+  "expect": [
+    "S1: each reads \"WP <Name>\" (WP Nova, WP Vega, WP Morgan, WP Kinetic, WP Impact).",
+    "S2: none."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-wordpress-theme/{overlays,src}/wp-ja-*/{style.css,readme.txt,inc/extra.php}",
+    "tool": "tests/regression/scripts/REG-PR-999-wp-theme-display-name.mjs"
+  },
+  "evidence": "Before this change WordPress listed the five themes as \"JA <Name>\" under Appearance > Themes",
+  "fence": "Static read of the name in the committed overlay and built theme trees; the build check keeps the two trees in step",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-999-wp-theme-display-name.mjs"]
+  }
+}

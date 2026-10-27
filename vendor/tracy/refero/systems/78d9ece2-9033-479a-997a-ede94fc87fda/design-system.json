@@ -1,0 +1,292 @@
+{
+  "dos": [
+    "Use ABC Favorit (or GT Super / Source Serif 4 substitute) for all display headlines 26px and above — never substitute Inter at display sizes, the typographic contrast is the brand",
+    "Set display headlines at weight 400 with -0.03em letter-spacing and line-height 1.03–1.15 — the tight tracking and light weight are the signature, do not bold them",
+    "Use #010110 (Obsidian Ink) for all filled primary buttons, not #635bff — the violet is reserved for the announcement bar and links only",
+    "Reserve #635bff (Iris Pulse) for exactly three contexts: announcement bar fill, inline link hover, and decorative chart strokes — never use it for body text, borders, or large fills",
+    "Use pill radius (100px) for all buttons and tags, 8px radius for all cards and images, 2px for icons — do not mix additional radius values into the system",
+    "Use hairline 1px borders in #010110 at reduced opacity for dividers and card edges, not colored borders or shadows for separation",
+    "Place the Iris Pulse announcement bar as a full-bleed band above the nav, not inside it — the chromatic break must hit before any other UI"
+  ],
+  "donts": [
+    "Do not use #635bff as a CTA button fill — the primary action is always #010110; violet belongs only in the announcement band and link contexts",
+    "Do not set headlines in Inter at 40px+ — the custom serif (or its substitute) is mandatory for display sizes",
+    "Do not add drop shadows to cards or buttons — the system relies on flat surfaces, hairline borders, and background tone shifts for hierarchy",
+    "Do not introduce additional accent colors (greens, blues, oranges) — the palette is monochrome plus one violet, period",
+    "Do not use letter-spacing above -0.02em for body text or above -0.03em for display — the system is aggressively tight-tracked",
+    "Do not use the dark surface palette (#111117, #22222a) on light-mode pages — dark is a sectional choice, not a theme toggle",
+    "Do not mix radius values between 8px and 100px — cards and images get exactly 8px, buttons and tags get exactly 100px"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "role": "Page background, card surfaces, input fields — the dominant neutral that everything else sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#010110",
+      "name": "Obsidian Ink",
+      "role": "Primary text, nav borders, icon strokes, filled primary buttons, input borders — the structural near-black that reads as pure black at body sizes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111117",
+      "name": "Carbon",
+      "role": "Dark-mode card surfaces, elevated dark panels, secondary dark backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#22222a",
+      "name": "Graphite",
+      "role": "Highest elevation in dark mode — feature card backgrounds, overlaid panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#73737c",
+      "name": "Fog",
+      "role": "Muted helper text, secondary body copy, subtle borders — the only neutral that drops to medium contrast intentionally",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Ash",
+      "role": "Decorative dot pattern, hairline dividers, inactive surface washes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#635bff",
+      "name": "Iris Pulse",
+      "role": "Announcement bar fill, link hover states, the single chromatic accent — violet against monochrome creates a strobe effect that draws the eye to time-sensitive copy",
+      "group": "brand"
+    },
+    {
+      "hex": "#072723",
+      "name": "Deep Teal",
+      "role": "Decorative illustration fills, abstract graphic washes inside hero imagery — carries no UI function, lives only in artwork",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content with full-bleed background bands. The hero uses a two-column split: left half holds the headline (Favorit 56–76px), subtext (Inter 18px), and dual CTAs (filled + ghost, pill-shaped); right half is dominated by the abstract painted wash with overlapping phone and dashboard mockups. Below the hero, a horizontal logo strip of partner brands on white. Mid-page switches to a full-bleed dark section with centered headline and a 3-column feature card grid. Footer returns to white with a dotted halftone pattern across the upper portion and a 4-column link grid. Section gaps are ~80px. The layout rhythm alternates white → dark band → white, with the dark band as the only tonal break.",
+  "imagery": "Imagery is minimal and editorial: a single large abstract green/teal painted wash appears in the hero behind phone mockups, giving the only organic texture on the page. The dark feature section uses 3D isometric line-art illustrations in near-black-on-near-black (#333–#444 on #22222a) — these are geometric, architectural, not playful. Product mockups (phone and dashboard) are shown at a slight angle, overlapping the abstract wash, with realistic UI inside white frames. Iconography is monochrome outlined at 16–20px, stroke weight 1.5px. No photography, no lifestyle imagery, no decorative gradients.",
+  "similar": [
+    {
+      "why": "Same near-monochrome palette with a single accent color, same custom-feeling display type, same pill buttons and restrained flat surfaces",
+      "business": "Stripe"
+    },
+    {
+      "why": "Both use a single chromatic accent against a monochrome canvas, both favor custom display type over system fonts, both keep components flat and minimal",
+      "business": "Linear"
+    },
+    {
+      "why": "Same editorial-restraint aesthetic: black-and-white default, high-contrast typography, hairline borders, no decorative shadows",
+      "business": "Vercel"
+    },
+    {
+      "why": "Similar fintech infrastructure positioning expressed through editorial type and monochrome surfaces with a single blue accent",
+      "business": "Plaid"
+    },
+    {
+      "why": "Same crypto-infrastructure audience, same product-mockup-over-abstract-graphic hero treatment",
+      "business": "Rainbow (Web3 wallet)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "8px",
+      "tags": "9999px",
+      "cards": "8px",
+      "images": "8px",
+      "buttons": "100px"
+    },
+    "elementGap": "12-16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background, dominant surface"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Product preview cards, dashboard panels — same as canvas with 8px radius and internal structure"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Subtle Wash",
+      "level": 2,
+      "purpose": "Decorative pattern overlay, hairline dividers, inactive states"
+    },
+    {
+      "hex": "#111117",
+      "name": "Carbon",
+      "level": 3,
+      "purpose": "Dark mode section background — full-bleed band"
+    },
+    {
+      "hex": "#22222a",
+      "name": "Graphite",
+      "level": 4,
+      "purpose": "Dark mode elevated card — one tone above Carbon"
+    }
+  ],
+  "northStar": "ink-on-marble editorial spread. White marble canvas, black serif headlines compressed tight, a single violet banner cutting across the top — restraint as authority.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 26,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.78
+    },
+    {
+      "role": "heading",
+      "size": 38,
+      "lineHeight": 1.15,
+      "letterSpacing": -1.14
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.07,
+      "letterSpacing": -1.68
+    },
+    {
+      "role": "display",
+      "size": 76,
+      "lineHeight": 1.03,
+      "letterSpacing": -2.28
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main action button — 'Get started' in the hero",
+      "description": "Fill #010110, text #ffffff at 15px Inter weight 500, letter-spacing -0.02em. Padding 12px 20px. Radius 100px (full pill). No border. No shadow — the dark fill against white canvas is the elevation. Arrow icon (→) at 14px in the same color as text, 6px gap from label."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action — 'Talk to sales', 'Learn more'",
+      "description": "Transparent fill, 1px border in #010110. Text #010110 at 15px Inter weight 500. Padding 12px 20px. Radius 100px. On hover: fill #010110, text inverts to #ffffff."
+    },
+    {
+      "name": "Pill Link Button (Header)",
+      "role": "Inline link styled as pill — 'Learn more' in announcement bar",
+      "description": "Transparent fill, 1px border in #ffffff. Text #ffffff at 13–14px Inter. Padding 6px 14px. Radius 100px."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page banner with time-sensitive copy",
+      "description": "Full-width band, fill #635bff (Iris Pulse violet). Text #ffffff at 13px Inter weight 500, centered. Inline pill link on the right with 1px white border. Padding 10px 24px. The violet against the white canvas below creates the only chromatic break in the system."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "White background (#ffffff), 1px bottom border in #010110 at 10–20% opacity. Logo left (16px Inter weight 700, #010110), nav links center (15px Inter weight 400, #010110, 10px row-gap between icon+label clusters). Right cluster: text links + outlined 'Log in' button (1px #010110 border, 100px radius, 15px Inter). Height ~64px."
+    },
+    {
+      "name": "Dark Feature Card",
+      "role": "Three-up grid card in dark sections ('Secure by design', 'Whitelabel and modular', 'Scales as you grow')",
+      "description": "Background #22222a (Graphite) on a #111117 (Carbon) section background — subtle 1-tone separation. 8px radius. Padding 24–32px. 3D isometric illustration at top in #333333-to-#444444 line art. Heading in Inter weight 500 at 18–20px, #ffffff. Body in Inter weight 400 at 14–15px, #73737c (Fog). No border, no shadow."
+    },
+    {
+      "name": "Phone Mockup Card",
+      "role": "Product UI shown over hero artwork",
+      "description": "White device frame with 24–32px radius. Internal UI uses #ffffff background, #010110 text, 8px radii for inner elements. Sits over a textured green/teal abstract background with subtle gradient washes."
+    },
+    {
+      "name": "Dashboard Preview Panel",
+      "role": "Desktop product screenshot overlay in hero",
+      "description": "White surface (#ffffff) with 8px radius. Internal cards use #ffffff on #f7f7f7 backgrounds. Data tables with 1px #d9d9d9 row dividers. Mini chart elements use #635bff stroke for accent lines on a #ffffff background."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer with link columns and decorative pattern",
+      "description": "White background with a light dotted/halftone pattern overlay in #d9d9d9 at 20% opacity covering the upper half. Four-column link grid: headings 14px Inter weight 700 #010110, links 14px Inter weight 400 #73737c, 10px row-gap. Bottom row: copyright + social icons (16px, #010110) + brand quote in 14px Inter."
+    },
+    {
+      "name": "Text Link",
+      "role": "Inline and standalone links",
+      "description": "Color #010110, no underline by default. 1px underline appears on hover. Arrow glyph (→) in same color, used for directional/CTA links. Transitions are 150ms ease."
+    },
+    {
+      "name": "Logo Wordmark",
+      "role": "Brand mark in nav and footer",
+      "description": "Small dot (8px circle #010110) + 'privy' in Inter weight 700 at 16px, #010110, letter-spacing -0.02em. Optional '/stripe company' suffix at 13px Inter weight 400 in #73737c."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Display and heading face — used for hero headlines (52–76px), section headings (26–28px), and the occasional large inline link. The weight-400 setting is anti-convention: most fintech sites use 600–700 for headlines, but Favorit's high-contrast serifs at regular weight deliver authority through typographic personality rather than stroke weight. Letter-spacing -0.03em at 56px gives a compressed, editorial feel — words read as dense blocks of ink.",
+      "sizes": "16px, 26px, 28px, 52px, 56px, 76px",
+      "family": "ABC Favorit Variable",
+      "weight": "400",
+      "lineHeight": "1.03–1.29",
+      "substitute": "GT Super, Tiempos Headline, or Source Serif 4 (closest free match for the high-contrast serif feel)",
+      "letterSpacing": "-0.03em at all display sizes (≈ -1.68px at 56px, -2.28px at 76px)"
+    },
+    {
+      "role": "Body, UI, and navigation face — used for paragraphs (16–18px), nav items (14–15px), buttons (14–16px), captions (12–13px), and the occasional subheading (20–21px). Weight 500 for emphasized inline text, 700 reserved for small-caps-style labels and tag-like UI. Letter-spacing -0.02em tightens the geometric sans so it doesn't feel too generic next to Favorit.",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 17px, 18px, 20px, 21px, 38px",
+      "family": "Inter",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.20–1.90",
+      "substitute": "Inter (already Google-hosted)",
+      "letterSpacing": "-0.02em (≈ -0.28px at 14px, -0.32px at 16px, -0.36px at 18px)"
+    },
+    {
+      "role": "ABC Favorit Unlicensed Trial — detected in extracted data but not described by AI",
+      "sizes": "56px",
+      "family": "ABC Favorit Unlicensed Trial",
+      "weight": "400",
+      "lineHeight": "1.07",
+      "letterSpacing": "-0.03"
+    }
+  ],
+  "description": "Privy operates as an editorial crypto-fintech system: a near-monochrome canvas interrupted by a single vivid violet announcement band and one heavy near-black button. Typography carries the brand more than color — a custom display face (ABC Favorit) sets headlines in weight 400 at remarkably tight tracking (-0.03em) and very tight line-heights (1.03–1.15), giving even the 56px+ words a compressed, journalistic presence rather than a tech-SaaS feel. Surfaces stay flat and high-contrast: white canvas, near-black ink (#010110) for body and primary actions, with dark mode introduced selectively as full-bleed bands rather than a themable surface. Components are minimal — pill buttons (100px radius), 8px-radius cards, 1px hairline borders — letting the custom serif and the violet accent do the heavy lifting.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #010110 (Obsidian Ink)\n- background: #ffffff (Canvas)\n- border: #010110 at 1px (hairline)\n- accent: #635bff (Iris Pulse — announcement bar and links only)\n- muted text: #73737c (Fog)\n- primary action: #010110 (filled action)\n\n3-5 Example Component Prompts:\n1. Create a hero section: white #ffffff background, max-width 1200px centered. Headline in ABC Favorit weight 400, 56px, #010110, letter-spacing -1.68px, line-height 1.07. Subtext in Inter weight 400, 18px, #73737c. primary action: #010110 (filled action)\n2. Create a dark feature section: full-bleed #111117 background, centered headline in ABC Favorit weight 400, 38px, #ffffff, letter-spacing -1.14px. Below: a 3-column grid of dark feature cards. Each card: #22222a background, 8px radius, padding 24px. Isometric line-art icon at top in #444444 strokes. Card heading in Inter weight 500, 18px, #ffffff. Card body in Inter weight 400, 14px, #73737c.\n3. Create a top announcement bar: full-width #635bff background, padding 10px 24px, centered text in Inter weight 500, 13px, #ffffff reading an announcement. Right-aligned inline pill link: transparent fill, 1px #ffffff border, #ffffff text 13px Inter, padding 6px 14px, radius 100px, with a → arrow glyph.\n4. Create a footer: white #ffffff background with a #d9d9d9 dotted halftone pattern at 20% opacity covering the top 60%. Below: a 4-column grid of link groups. Group headings in Inter weight 700, 14px, #010110. Links in Inter weight 400, 14px, #73737c, row-gap 10px. Bottom row: copyright in Inter 12px #73737c, social icons (16px, #010110) right-aligned.\n5. Create a navigation bar: white #ffffff background, 1px bottom border in #010110 at 15% opacity, height 64px. Logo left: 8px black dot + 'privy' in Inter weight 700, 16px, #010110. Center nav: 4 items, each with a 14px icon above a 13px Inter label, 10px row-gap, #010110. Right cluster: 'Docs' and 'Demo' text links in Inter 14px #010110, then a 'Log in' ghost pill button: transparent fill, 1px #010110 border, 15px Inter weight 500, padding 8px 18px, radius 100px."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is communicated through background tone shifts and hairline borders, never shadows. Dark mode uses a two-tone stack (#111117 base → #22222a cards) for depth. Light mode relies on the contrast between #ffffff cards and #d9d9d9 decorative patterns. This flatness is deliberate — it keeps focus on the custom display typography."
+}

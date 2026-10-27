@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e327d332-270d-4779-a55c-cd82b8624d2a",
+  "status": "complete",
+  "name": "bella Kitchen Appliances",
+  "url": "https://styles.refero.design/style/e327d332-270d-4779-a55c-cd82b8624d2a",
+  "sourceWebsite": "https://bellakitchenware.com",
+  "extractedAt": "2026-06-03T17:39:42.820Z",
+  "capturedAt": "2026-10-08T05:18:35.704207+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunlit kitchen counter at golden hour — warm cream surfaces with a single pop of coral.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/fdab8a95-5e5c-4ef5-aeb4-94750ced9b36.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e22fcf9c-2a64-4a70-a119-27f2dc02a422.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d177a2f7-5e5f-409c-b036-293d9735c51c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c078f16f-9a86-4743-9aee-0ccb3c6bc46d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b1e5dab4-46c6-448f-86bf-068210b19eff.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bd9da4b4c24f5103bdf611afcaad0e832051b05cda1213f50f90747755a8f5ce",
+      "bytes": 19732
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "93a47be9ab532560f4876b7c4fc18aa62314abcb60c0f4deccd6c4681e11e81f",
+      "bytes": 88603
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "45c3d595b0472702ce1d7a5f5783e4fe8e23c0b1305bb9f2b41f9f61830b081b",
+      "bytes": 16935
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f656c04c366c73c7d1262074c6d275bd35eda4aba8ed83d3b40050545fb34d84",
+      "bytes": 7597
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dfa2c09fdd31e782c229546a168a36910966ae4fd9c26ed1c2bc366a970e134e",
+      "bytes": 12448
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2419d2ed64ecd4ebe01d107a6835d27381c679c1e072dfe117df39ae9677aad4",
+      "bytes": 1980
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ba34a4166e0027e7af3cdb6d94a2b599df386dc6494674280644fb9186d10330",
+      "bytes": 459
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "eeb950d00ea55bf28b2a7e7481bcd00d91bc7770740e5442cb09459e9d6a68db",
+      "bytes": 476
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a497df42f7bf6bb1181f18338af659339d00e6770a20b8d6da4c63225f30bf7f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f0a1ead8253f70babd4e971b7c2ea1d92e6eb3f6aced54657f303c1f3e30f027",
+      "bytes": 40391
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3d9b03e49bbf6eed2046b1ed4bd9084c345419611d32b041387b11e985f8b69d",
+      "bytes": 21034
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7a456044e3424c4312f5ad393812c0ea63837929d5b8085ec6f6672d7a6d9421",
+      "bytes": 37828
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "de4c84943c77992d3b1f2a70d80f9d83595a1bb6081aaea3587572a5b5add5c5",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1da1d2b0b5628ffcb09fc8397ad6ec1071982b3a53d1afe2e9a5a64d241c573a",
+      "bytes": 1324
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d934fa1c8046d452b4438956fc9eb34c8f1c9ce3bc3866dc4226e04e3ce5d022",
+      "bytes": 1813
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "51734338-9046-47eb-a595-77ffa37b4725",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "7fdd9506-0a85-41a5-b2a7-c5ce1f31d863",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

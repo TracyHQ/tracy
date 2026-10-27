@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-893-wp-one-language-site-language-steps",
+  "kind": "fix",
+  "title": "A one-language WordPress site answers 'single' to the language steps of Apply and Build instead of failing",
+  "pr": 893,
+  "area": "seeder/wordpress-languages",
+  "cms": ["wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of the case named \"a site with no translation plugin has one language\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 10).",
+    "The named case is 'ok': retire, relabel and site language answer status 'single' on the plugin's 'unavailable' + 'no translation plugin' answer, and another 'unavailable' answer still rejects."
+  ],
+  "selectors": {
+    "door": "retireWordPressOthers, relabelWordPressSource, setWordPressSiteLanguage in packages/cms/tracy-seeder/src/wordpress-contract-door.mjs",
+    "plugin answer": "{ok:false, error:'unavailable', message:'this site has no translation plugin, …'} (claude-cowork wordpress/cowork/lib/Engine.php)"
+  },
+  "evidence": "05/10/2026, local stand, develop b21c158bc: Apply on the Design inspiration card ja-kinetic (WordPress, no Polylang) wrote the text, then site_brief ended 'failed': 'this site has no translation plugin, so it has no editions to retire'.",
+  "fence": "Only the plugin's no-translation-plugin answer becomes 'single'; every other refusal of the three language steps is still thrown and said.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs"
+    ]
+  }
+}

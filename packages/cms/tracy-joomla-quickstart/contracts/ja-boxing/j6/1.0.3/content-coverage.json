@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage",
+    "version": "1.1.0"
+  },
+  "contract": {
+    "id": "ja-boxing/j6/1.0.3",
+    "contentMapSha256": "351581fedbb316a7f11684109ebec56e2a2c9d70566cd5620a18a96d30d96f79",
+    "presentationLockSha256": "21535c15b599f5e114fbb6517e04e7e16a5f2485cfe9c28bd2eff9f6b6e35703"
+  },
+  "measuredAt": "2026-10-24T16:11:33.795Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "pages": {
+    "audited": 59,
+    "inMap": 19,
+    "notInMap": 40,
+    "failed": 0,
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 647,
+      "matched": 491,
+      "locked": 0,
+      "capture": 5,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 151,
+      "unknown": 0,
+      "ignored": 15
+    },
+    "images": {
+      "total": 111,
+      "matched": 110,
+      "locked": 1,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 25,
+      "matched": 23,
+      "locked": 0,
+      "capture": 1,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "ignored": 59
+    }
+  },
+  "coverage": {
+    "text": 99,
+    "images": 100,
+    "links": 95.8
+  },
+  "holes": [
+    {
+      "kind": "meta:author",
+      "value": "Stand Admin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#42.name",
+      "pages": 10,
+      "firstPage": "/index.php?Itemid=159",
+      "accepted": "The stand's own Super User account (users id 42), carried into every customer site by the quickstart; provision only resets its password (the customer signs in through a separate Tracy Access account), and the brand step renames its display name to the business name the customer gave, or the site name when none was given (brand-joomla-author.js). Not demo content."
+    },
+    {
+      "kind": "text",
+      "value": "Stand Admin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#42.name",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=165",
+      "accepted": "The stand's own Super User account (users id 42), carried into every customer site by the quickstart; provision only resets its password (the customer signs in through a separate Tracy Access account), and the brand step renames its display name to the business name the customer gave, or the site name when none was given (brand-joomla-author.js). Not demo content."
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Stand Admin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#42.name",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=165",
+      "accepted": "The stand's own Super User account (users id 42), carried into every customer site by the quickstart; provision only resets its password (the customer signs in through a separate Tracy Access account), and the brand step renames its display name to the business name the customer gave, or the site name when none was given (brand-joomla-author.js). Not demo content."
+    },
+    {
+      "kind": "meta:title",
+      "value": "stand admin -",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#42.name",
+      "pages": 3,
+      "firstPage": "/index.php/index.php/pages/j-content/author-listting/author/standadmin",
+      "accepted": "The stand's own Super User account (users id 42), carried into every customer site by the quickstart; provision only resets its password (the customer signs in through a separate Tracy Access account), and the brand step renames its display name to the business name the customer gave, or the site name when none was given (brand-joomla-author.js). Not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.joomla.org",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "module param outside jatools-config: news_url (mod_loginsupport)",
+      "evidence": "modules#90.params -> news_url (mod_loginsupport \"Login Support\") (contains)",
+      "pages": 59,
+      "firstPage": "/index.php?Itemid=101",
+      "accepted": "Joomla core 'Joomla! is Free Software' footer link of the admin-only Login Support module (mod_loginsupport); not demo content."
+    },
+    {
+      "kind": "attr:title",
+      "value": "linkedin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#42.profile_value -> user_social3.social_name",
+      "pages": 11,
+      "firstPage": "/index.php?Itemid=165",
+      "accepted": "Social icon name from the stand admin profile; its links are '#' placeholders, nothing of the demo brand."
+    }
+  ],
+  "hygiene": []
+}

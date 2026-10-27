@@ -1,0 +1,159 @@
+/* wp-ja-restaurant: menus group (tabs, menu, happyhours). Only what the carried source rules (assets/css/source/acm-*.css) do not already give. */
+
+/* Tabs: the source draws every pane inside .tab-content; the panes are menu sections moved there by groups/menus.js. */
+.acm-container-tabs .jr-tabs-nav {
+  list-style: none;
+  margin-left: 0;
+}
+.acm-container-tabs .jr-tabs-nav li > a {
+  cursor: pointer;
+}
+.acm-container-tabs .jr-tabs-nav li > a:focus-visible {
+  outline: 1px solid var(--ds-c-accent, currentColor);
+  outline-offset: 2px;
+}
+.acm-container-tabs .jr-tabs-panels > .t3-section-module {
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+.acm-container-tabs .jr-tabs-panels > .t3-section-module > .t3-section-inner {
+  padding: 0;
+}
+.acm-container-tabs .jr-tabs-panels .t3-section-title,
+.acm-container-tabs .jr-tabs-panels .t3-section-description {
+  display: none;
+}
+.jr-tab-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Menu: core block wrappers around the source tree. */
+.acm-menu .menu-items p {
+  margin-block: 0 15px; /* the source's `p { margin-bottom }`; core's :last-child rule would zero it */
+}
+.acm-menu .menu-items figure {
+  margin-block: 0;
+}
+.acm-menu .style-1 .dish-price,
+.acm-menu .style-2 .dish-price,
+.acm-menu .style-3 .dish-price {
+  display: block;
+}
+.acm-menu .style-2 .dish-name,
+.acm-menu .style-3 .dish-name {
+  display: inline-block;
+}
+.acm-menu .style-2 .dish-name + .badge,
+.acm-menu .style-3 .dish-name + .badge {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 0.5em;
+}
+.acm-menu .style-2 .dish-item figure.dish-image {
+  display: contents;
+}
+.acm-menu .style-3 .dish-item .dish-img figure {
+  display: contents;
+}
+
+/* Happy hours: the picture is an Image block laid under the content (the source sets it as a CSS background). */
+.acm-happyhours .hp-inner > p,
+.acm-happyhours .hp-inner p,
+.acm-happyhours .hp-inner h2,
+.acm-happyhours .hp-inner figure {
+  margin-block: 0;
+}
+.acm-happyhours .hp-inner > .jr-hp-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.acm-happyhours .hp-inner > .jr-hp-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
+.acm-happyhours.style-1 .hp-inner,
+.acm-happyhours.style-2 .hp-inner {
+  isolation: isolate;
+}
+.acm-happyhours .hp-brand img,
+.acm-happyhours .hp-img img {
+  max-width: 100%;
+  height: auto;
+}
+.acm-happyhours .hp-link p {
+  margin: 0;
+}
+/* The badge text sits in a paragraph where the source has <strong>; same rules. */
+.acm-happyhours .hg-badge .jr-hg-strong {
+  margin: 0;
+}
+.acm-happyhours.style-1 .hp-info .hg-badge .jr-hg-strong {
+  border: 2px solid var(--ds-c-border-soft, #ffffff);
+  border-radius: 50%;
+  display: block;
+  height: 130px;
+  font-weight: normal;
+  padding: 30px;
+  width: 130px;
+}
+@media (max-width: 767px) {
+  .acm-happyhours.style-1 .hp-info .hg-badge .jr-hg-strong {
+    padding: 8px;
+    height: 60px;
+    width: 60px;
+  }
+}
+.acm-happyhours.style-2 .hp-info .hg-badge .jr-hg-strong {
+  background-color: var(--ds-c-accent, #d24a24);
+  border: 2px solid var(--ds-c-border-soft, #ffffff);
+  border-radius: 50%;
+  display: block;
+  height: 90px;
+  font-weight: normal;
+  padding: 15px;
+  width: 90px;
+}
+
+/* acm-menu.css is loaded site-wide here and its bare `.style-3` rule (a menu list bleeding 15px) also reaches the
+   Special Offers style-3 block; in the source that file is only on pages with a menu module. */
+.acm-happyhours.style-3 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* A boxed section whose pattern has no `.container` wrapper (menu patterns): the source frame has one, so give the
+   section inner the container's own width and gutters. */
+.t3-section-module.jr-boxed > .t3-section-inner:not(:has(> .container)) {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+@media (min-width: 768px) {
+  .t3-section-module.jr-boxed > .t3-section-inner:not(:has(> .container)) {
+    width: 768px;
+  }
+}
+@media (min-width: 992px) {
+  .t3-section-module.jr-boxed > .t3-section-inner:not(:has(> .container)) {
+    width: 990px;
+  }
+}
+@media (min-width: 1200px) {
+  .t3-section-module.jr-boxed > .t3-section-inner:not(:has(> .container)) {
+    width: 1190px;
+  }
+}

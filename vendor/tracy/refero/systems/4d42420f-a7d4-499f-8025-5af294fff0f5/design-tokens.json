@@ -1,0 +1,728 @@
+{
+  "color": {
+    "electric-grape": {
+      "$value": "#5b00ed",
+      "$type": "color",
+      "$description": "Electric Grape — Hero and promotional-field backgrounds, decorative graphic fills, and gradient endpoints — the saturated violet makes product packaging and white headline copy appear switched on; Use for high-energy promotional banners and featured product graphics"
+    },
+    "deep-concord": {
+      "$value": "#3f0791",
+      "$type": "color",
+      "$description": "Deep Concord — Primary headings, navigation accents, 2px outlines, filled conversion buttons, product-link text, and icon linework — this dark violet anchors the otherwise sugary pastel palette"
+    },
+    "bubblegum-flash": {
+      "$value": "#e30ba6",
+      "$type": "color",
+      "$description": "Bubblegum Flash — Magenta endpoint for promotional violet gradients and occasional decorative graphic energy"
+    },
+    "sky-scoop": {
+      "$value": "#bfefff",
+      "$type": "color",
+      "$description": "Sky Scoop — Pale blue promotional bands, cool-text accents, and gradient washes behind product content; Use for broad section transitions behind subscription and shopping content"
+    },
+    "lilac-aisle": {
+      "$value": "#dad9ff",
+      "$type": "color",
+      "$description": "Lilac Aisle — Dominant page canvas, product-navigation strip, and quiet lavender section backgrounds"
+    },
+    "soft-grape": {
+      "$value": "#cac4f4",
+      "$type": "color",
+      "$description": "Soft Grape — Muted lavender category-control fills and secondary surface transitions"
+    },
+    "marshmallow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Marshmallow — Card surfaces, hero controls, reversed text, borders, and product-image grounds"
+    },
+    "midnight-cereal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Cereal — Footer ground, dark utility surfaces, and monochrome icon fills"
+    }
+  },
+  "font": {
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "The core family for all commerce UI, navigation, body copy, product tiles, and display headings. Use 700 at 60px/63px for white hero headlines and 64px/64px for dark violet section headlines; this heavy, tightly stacked geometry deliberately resembles the compact type printed on cereal cartons."
+    },
+    "mabry-pro": {
+      "$value": "Mabry Pro",
+      "$type": "fontFamily",
+      "$description": "Use the custom face for emphatic review counts and compact promotional proof points, particularly 900 at 16px in uppercase. Its denser, less geometric mass makes review proof feel stamped onto the bright retail surface rather than set as ordinary UI text."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Reserve for embedded third-party widget controls and utility fragments only; do not introduce it into branded editorial or shopping UI."
+    },
+    "font-awesome-5-pro": {
+      "$value": "Font Awesome 5 Pro",
+      "$type": "fontFamily",
+      "$description": "Font Awesome 5 Pro — detected in extracted data but not described by AI"
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "10px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "10px",
+        "fontWeight": 700,
+        "lineHeight": 1.6,
+        "letterSpacing": "0.07em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 10px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "12px",
+        "fontWeight": 900,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "Font Awesome 5 Pro",
+        "fontSize": "12px",
+        "fontWeight": 300,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Arial",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.23,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "Mabry Pro",
+        "fontSize": "16px",
+        "fontWeight": 900,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "base-7": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-7 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "18px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "xl-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 900,
+        "lineHeight": 1.2,
+        "letterSpacing": "0.037em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-3 at 20px"
+    },
+    "xl-4": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 900,
+        "lineHeight": 1,
+        "letterSpacing": "0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-4 at 20px"
+    },
+    "xl-5": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 700,
+        "lineHeight": 2.95,
+        "letterSpacing": "0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-5 at 20px"
+    },
+    "xl-6": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-6 at 20px"
+    },
+    "xl-7": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 2.95,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-7 at 20px"
+    },
+    "xl-8": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "22px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-8 at 22px"
+    },
+    "xl-9": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "22px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-9 at 22px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "24px",
+        "fontWeight": 700,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "24px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "2xl-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "24px",
+        "fontWeight": 700,
+        "lineHeight": 1.08,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-3 at 24px"
+    },
+    "2xl-4": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 0.67,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-4 at 24px"
+    },
+    "2xl-5": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.42,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-5 at 24px"
+    },
+    "2xl-6": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "24px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-6 at 24px"
+    },
+    "2xl-7": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "26px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-7 at 26px"
+    },
+    "2xl-8": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "28px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-8 at 28px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Mabry Pro",
+        "fontSize": "30px",
+        "fontWeight": 700,
+        "lineHeight": 1.8,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 30px"
+    },
+    "3xl-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "32px",
+        "fontWeight": 600,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-2 at 32px"
+    },
+    "3xl-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "32px",
+        "fontWeight": 700,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-3 at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "48px",
+        "fontWeight": 400,
+        "lineHeight": 0.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "48px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 48px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "60px",
+        "fontWeight": 700,
+        "lineHeight": 1.05,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 60px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "64px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 64px"
+    },
+    "5xl-5": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "64px",
+        "fontWeight": 900,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-5 at 64px"
+    },
+    "5xl-6": {
+      "$value": {
+        "fontFamily": "Poppins",
+        "fontSize": "80px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-6 at 80px"
+    }
+  },
+  "spacing": {
+    "5": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Spacing 5px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "9": {
+      "$value": "9px",
+      "$type": "dimension",
+      "$description": "Spacing 9px"
+    },
+    "10": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Spacing 10px"
+    },
+    "15": {
+      "$value": "15px",
+      "$type": "dimension",
+      "$description": "Spacing 15px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "18": {
+      "$value": "18px",
+      "$type": "dimension",
+      "$description": "Spacing 18px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "22": {
+      "$value": "22px",
+      "$type": "dimension",
+      "$description": "Spacing 22px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "25": {
+      "$value": "25px",
+      "$type": "dimension",
+      "$description": "Spacing 25px"
+    },
+    "30": {
+      "$value": "30px",
+      "$type": "dimension",
+      "$description": "Spacing 30px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "50": {
+      "$value": "50px",
+      "$type": "dimension",
+      "$description": "Spacing 50px"
+    },
+    "137": {
+      "$value": "137px",
+      "$type": "dimension",
+      "$description": "Spacing 137px"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "12.5px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "xl-2": {
+      "$value": "15px",
+      "$type": "dimension",
+      "$description": "Border radius xl-2"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "25px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "28px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "52px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgb(255, 255, 255) 0px 0px 0px 2px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "xl": {
+      "$value": "rgba(0, 0, 0, 0.08) 0px 15px 50px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    },
+    "xl-2": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 20px 60px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl-2"
+    }
+  },
+  "surface": {
+    "lilac-aisle": {
+      "$value": "#dad9ff",
+      "$type": "color",
+      "$description": "Surface level 0: Default pastel canvas and category-navigation field."
+    },
+    "sky-scoop": {
+      "$value": "#bfefff",
+      "$type": "color",
+      "$description": "Surface level 1: Cool promotional section background and gradient wash."
+    },
+    "marshmallow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 2: Product tiles, selectors, inputs, and high-contrast content surfaces."
+    },
+    "electric-grape": {
+      "$value": "#5b00ed",
+      "$type": "color",
+      "$description": "Surface level 3: Hero and high-energy promotional field."
+    },
+    "midnight-cereal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 4: Footer and dark utility surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://magicspoon.com",
+      "siteName": "High Protein",
+      "extractedAt": "2026-09-24T17:41:21.018Z",
+      "variant": "extended"
+    }
+  }
+}

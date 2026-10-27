@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#1a1a17",
+      "$type": "color",
+      "$description": "Ink — Primary text, filled buttons, dark surface backgrounds, heading strokes — a warm-tinted near-black that replaces pure #000 throughout the system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, light section backgrounds, button borders on dark surfaces"
+    },
+    "ash": {
+      "$value": "#5f5f5d",
+      "$type": "color",
+      "$description": "Ash — Secondary body text, helper text, muted borders, low-emphasis UI metadata"
+    }
+  },
+  "font": {
+    "nyght-serif": {
+      "$value": "Nyght Serif",
+      "$type": "fontFamily",
+      "$description": "Reserved exclusively for display and heading levels (26-72px). Weight 300 is the signature: most systems reach for 600-700 serif, this whisper-weight creates editorial gravitas through restraint. Letter-spacing widens slightly at smaller sizes (0.03em) and tightens at display sizes (0.01em) to preserve optical balance."
+    },
+    "switzer": {
+      "$value": "Switzer",
+      "$type": "fontFamily",
+      "$description": "Workhorse for nav, body, buttons, labels, card metadata, and small headings. Tracking runs consistently at 0.03em — a subtle positive letter-spacing that gives the grotesque a calm, considered cadence. Weight 500 for emphasis, 600 for button text and nav active states."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.getburnt.ai",
+      "siteName": "Getburnt",
+      "extractedAt": "2026-06-03T18:41:18.806Z",
+      "variant": "compact"
+    }
+  }
+}

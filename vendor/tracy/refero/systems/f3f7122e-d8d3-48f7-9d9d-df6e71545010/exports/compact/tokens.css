@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-ink-black: #030303;
+  --color-paper-white: #ffffff;
+  --color-parchment-cream: #f6eada;
+  --color-ash-gray: #cccccc;
+  --color-stone-gray: #dad9d5;
+  --color-pencil-gray: #807e81;
+
+  /* Typography — Font Families */
+  --font-founders-grotesk: 'Founders Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-founders-grotesk-mono: 'Founders Grotesk Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

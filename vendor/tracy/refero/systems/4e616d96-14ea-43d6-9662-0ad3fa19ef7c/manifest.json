@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4e616d96-14ea-43d6-9662-0ad3fa19ef7c",
+  "status": "complete",
+  "name": "How Many Plants",
+  "url": "https://styles.refero.design/style/4e616d96-14ea-43d6-9662-0ad3fa19ef7c",
+  "sourceWebsite": "https://howmanyplants.com",
+  "extractedAt": "2026-06-03T20:33:29.895Z",
+  "capturedAt": "2026-10-08T05:11:27.107933+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Golden botanical broadside on cream paper — a illustrated shelf system where the page title sits inside bands of potted plants and brass instruments.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1ff99d3f-6938-4808-bb08-c736c251f5c6.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5c060a272a80323d07eb073360b41229a30c59fee4e8be10810ad4e66aafde35",
+      "bytes": 17946
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "30fdd8b1e1eecd00111b37700344873f94bfe4d2f594b42fac33ca17d7155717",
+      "bytes": 203445
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b427b02a4b0af2408fe443ad23cd6a8d9e18b2366143ccffda18f3363c7e783b",
+      "bytes": 15862
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b8956ec547969d82b8b010eb22b1180ff4cc77e9eb325ac769734280430fa066",
+      "bytes": 7398
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "981a7ca89ad0311676900556edafa2812ed87ba8a4e86ea41fd4813dce9455ca",
+      "bytes": 11155
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a48a79141ee6a470693b7a98d2f3db5a7092914ed3187eb156cc6466194e1a5f",
+      "bytes": 2266
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c2180f6c4d9baf05c3e5104f1b0abb4ee58941b7abecce5ff6ae380f555bdb1f",
+      "bytes": 477
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1fa112916d2d4bdc60d9e7fcd85aab9dee57a9780398351e6d2ddaa43d31e2fc",
+      "bytes": 494
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "18db7af868183c35986e5470f4f7b9afe419dd4f1ac29d7dcceb26d070f77945",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "308db334f92253df90f861a3f245dcc49c8f41299ac723e8d4550d6355b8d60f",
+      "bytes": 40505
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a3ead83f45ff4d383f02701a068a528b629f8b31ce380faffba8e06ad3adabc7",
+      "bytes": 20871
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "62c43cf5714782429ae788ced5b3063ba560cae316bf4270080df3a4585ecf8c",
+      "bytes": 31250
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7fe46ad2a0f76e923b521b59d3d456e7ab6dae8ba138a348511c90b14825c503",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "27a0ad4d7bccd30f9653070e3913b5fded4171bd52234e213a5091f74c2e61df",
+      "bytes": 1023
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "db9934e6f2cf9ee15d9bc88caef4a15d0b7a2bb925a3cceed640b782acfe73d4",
+      "bytes": 1531
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "329075e8-97ed-4722-8952-d9bf001de233",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "4e616d96-14ea-43d6-9662-0ad3fa19ef7c",
+    "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "7fdd9506-0a85-41a5-b2a7-c5ce1f31d863",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "9c92c3d1-a2fe-4a27-a324-826b19501774",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "ded6d7c4-2801-45f4-8b8a-089f1b37842d",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

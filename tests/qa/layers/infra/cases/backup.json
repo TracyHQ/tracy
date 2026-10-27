@@ -1,0 +1,186 @@
+[
+  {
+    "id": "QA-INFRA-backup-point-flipped-byte-same-size",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/lib/backup_points.py"],
+    "requirement": "a dump with one flipped byte (same size) is not ok: mismatch",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["bad-hash"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["python3", "git"],
+    "assertionIds": ["database-verdict"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-backup-point-intact-dump-is-full",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/lib/backup_points.py"],
+    "requirement": "a point whose dump is present and matches the trailer hash is reported ok (control)",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["python3", "git"],
+    "assertionIds": ["database-verdict"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-backup-point-missing-dump",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/lib/backup_points.py"],
+    "requirement": "a point whose dump file is gone is not ok: missing",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["missing-asset", "restore"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["python3", "git"],
+    "assertionIds": ["database-verdict"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-backup-point-no-trailer-pre-adr-point",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/lib/backup_points.py"],
+    "requirement": "a point with no Tracy-Database trailer carries database: null (never reported as restorable)",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["empty", "upgrade-compat"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["python3", "git"],
+    "assertionIds": ["database-verdict"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-backup-point-retention-expired-dump",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/lib/backup_points.py"],
+    "requirement": "a dump removed by retention (expired marker) is reported removed, not missing",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["missing-asset"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["python3", "git"],
+    "assertionIds": ["database-verdict"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-backup-point-truncated-dump",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/lib/backup_points.py"],
+    "requirement": "a truncated dump is not ok: mismatch",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["bad-hash", "partial-failure"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["python3", "git"],
+    "assertionIds": ["database-verdict"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-restore-snapshot-live",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/restore.sh"],
+    "requirement": "provision/restore.sh (S3 snapshot restore) is a different path from the Backup feature; restoring a snapshot reproduces file bytes and database rows",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["restore"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["a Docker daemon, an S3-compatible store (MinIO) and a database"],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-webroot-backup-restore-everything-live",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-backup.sh"],
+    "requirement": "webroot-backup.sh --op restore-everything restores files and database to a point, takes a Before-restore backup first, and rolls back when the database load fails",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "backup-full-needs-hash",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable"
+    },
+    "edgeTags": ["restore", "partial-failure", "rollback"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch site"],
+      "mail": false,
+      "model": false,
+      "containers": true
+    },
+    "prerequisites": ["a Docker daemon and a database image (the restore swaps a real database)"],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  }
+]

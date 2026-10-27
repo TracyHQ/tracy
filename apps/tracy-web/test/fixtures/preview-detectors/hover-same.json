@@ -1,0 +1,3974 @@
+{
+  "kind": "hover-same",
+  "about": "Probe data of hover-unreadable (its probe, which hover-same judges through dataOf), cut from the samples of fixtures/preview-detectors/hover-unreadable.json (preview-check.mjs PREVIEW_DATA=1, 14/10/2026). Broken: JA Smallbiz Joomla's btn-primary \"more info\" and JA Voyara Joomla's hero search button darken on hover on the template's page and do not move under Moxie dark. Clean: JA Seven Joomla, whose hovers all change under Moxie (or became unreadable, HOVER-1's). Recorded before the probe read cue, so cue is absent and compares equal.",
+  "broken": [
+    {
+      "source": "quickstart/ja-smallbiz/j6@1.0.2 (https://ja-smallbiz-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#7a786a",
+        "#858273",
+        "#868474",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "JA Smallbiz",
+            "rest": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:1/a:1",
+            "at": "a.dropdown-toggle",
+            "text": "Home",
+            "rest": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "About us",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Contact us",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:3/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:4/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4/div:1/div:2/a:1",
+            "at": "a.btn.btn-border.btn-lg",
+            "text": "Purchase Now",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:3/div:1/a:1",
+            "at": "a",
+            "text": "template.placeholder@gmail.com",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/footer:1/section:1/div:1/div:1/small:1/a:1",
+            "at": "a",
+            "text": "JoomlArt.com",
+            "rest": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "JA Smallbiz",
+            "rest": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 61,
+                "g": 45,
+                "b": 25,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:1/a:1",
+            "at": "a.dropdown-toggle",
+            "text": "Home",
+            "rest": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "About us",
+            "rest": {
+              "fg": {
+                "r": 29,
+                "g": 29,
+                "b": 29,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Contact us",
+            "rest": {
+              "fg": {
+                "r": 29,
+                "g": 29,
+                "b": 29,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 79,
+                "g": 58,
+                "b": 32,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 79,
+                "g": 58,
+                "b": 32,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:3/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 79,
+                "g": 58,
+                "b": 32,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:4/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "more info",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 79,
+                "g": 58,
+                "b": 32,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4/div:1/div:2/a:1",
+            "at": "a.btn.btn-border.btn-lg",
+            "text": "Purchase Now",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:3/div:1/a:1",
+            "at": "a",
+            "text": "template.placeholder@gmail.com",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 29,
+                "g": 29,
+                "b": 29,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 29,
+                "g": 29,
+                "b": 29,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:1/div:1/footer:1/section:1/div:1/div:1/small:1/a:1",
+            "at": "a",
+            "text": "JoomlArt.com",
+            "rest": {
+              "fg": {
+                "r": 115,
+                "g": 85,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 61,
+                "g": 45,
+                "b": 25,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 (https://ja-voyara-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand-link",
+            "text": "Voyara",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:1/a:1",
+            "at": "a.nav-link.dropdown-toggle",
+            "text": "Home",
+            "rest": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:2/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Destinations",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Experiences",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Pricing",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:5/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Resources",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:6/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Pages",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/a:1",
+            "at": "a.voy-signin",
+            "text": "Sign in",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/a:2",
+            "at": "a.voy-cta",
+            "text": "Plan a trip",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1/button:1",
+            "at": "button.acm-hero-search-btn",
+            "text": "Find trips",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/a:1",
+            "at": "a.acm-dest-browse",
+            "text": "Browse all destinations",
+            "rest": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Where to eat in Naples: the real pizza c",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dawn at Angkor: why you must arrive befo",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Kyoto and Nara: Temples, Gardens and Old",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.9",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 3.6,
+                "g": 3.6,
+                "b": 3,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Everest Base Camp Trek",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet your designer",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.acm-cta-btn",
+            "text": "Start planning free",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand.voy-brand-link.logo-text",
+            "text": "Voyara",
+            "rest": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "Destinations",
+            "rest": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "bg": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand-link",
+            "text": "Voyara",
+            "rest": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:1/a:1",
+            "at": "a.nav-link.dropdown-toggle",
+            "text": "Home",
+            "rest": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:2/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Destinations",
+            "rest": {
+              "fg": {
+                "r": 43,
+                "g": 36,
+                "b": 32,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Experiences",
+            "rest": {
+              "fg": {
+                "r": 43,
+                "g": 36,
+                "b": 32,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Pricing",
+            "rest": {
+              "fg": {
+                "r": 43,
+                "g": 36,
+                "b": 32,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:5/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Resources",
+            "rest": {
+              "fg": {
+                "r": 43,
+                "g": 36,
+                "b": 32,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:6/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Pages",
+            "rest": {
+              "fg": {
+                "r": 43,
+                "g": 36,
+                "b": 32,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/a:1",
+            "at": "a.voy-signin",
+            "text": "Sign in",
+            "rest": {
+              "fg": {
+                "r": 43,
+                "g": 36,
+                "b": 32,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/a:2",
+            "at": "a.voy-cta",
+            "text": "Plan a trip",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 166,
+                "g": 69,
+                "b": 31,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1/button:1",
+            "at": "button.acm-hero-search-btn",
+            "text": "Find trips",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 166,
+                "g": 69,
+                "b": 31,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/a:1",
+            "at": "a.acm-dest-browse",
+            "text": "Browse all destinations",
+            "rest": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 166,
+                "g": 69,
+                "b": 31,
+                "a": 1
+              },
+              "bg": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Where to eat in Naples: the real pizza c",
+            "rest": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dawn at Angkor: why you must arrive befo",
+            "rest": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Kyoto and Nara: Temples, Gardens and Old",
+            "rest": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.9",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 145.2,
+                "g": 141,
+                "b": 135,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Everest Base Camp Trek",
+            "rest": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet your designer",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.acm-cta-btn",
+            "text": "Start planning free",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 194,
+                "g": 86,
+                "b": 47,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand.voy-brand-link.logo-text",
+            "text": "Voyara",
+            "rest": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "Destinations",
+            "rest": {
+              "fg": {
+                "r": 138,
+                "g": 126,
+                "b": 114,
+                "a": 1
+              },
+              "bg": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "bg": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-seven/j6@1.0.2 (https://ja-seven-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#868474",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#858273",
+        "#b7b39f",
+        "#7a786a",
+        "#060605",
+        "#93b6fb",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:1/a:1",
+            "at": "a.nav-link.dropdown-toggle",
+            "text": "Home",
+            "rest": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:2/a:1",
+            "at": "a.nav-link",
+            "text": "About Us",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:3/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Portfolio",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:4/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "News",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:5/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Page",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:6/a:1",
+            "at": "a.nav-link",
+            "text": "Contact",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/span:1/div:1/a:1",
+            "at": "a.btn.btn-outline-dark",
+            "text": "Get In Touch",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-dark",
+            "text": "More about us",
+            "rest": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-outline-dark",
+            "text": "Start your project now",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-outline-dark",
+            "text": "Join our team",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-outline-dark",
+            "text": "View all our projects",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "Mirror of darkness",
+            "rest": {
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "La minervetta",
+            "rest": {
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "Covid-19 poster",
+            "rest": {
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:4/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "All about hidration",
+            "rest": {
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:4/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:5/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "FW 2021 Must haves",
+            "rest": {
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:5/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-outline-dark.w-100",
+            "text": "Choose plan",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:2/a:1",
+            "at": "a.btn.btn-outline-dark.w-100",
+            "text": "Choose plan",
+            "rest": {
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "(201) 555-0124",
+            "rest": {
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              },
+              "bg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:1/a:1",
+            "at": "a.nav-link.dropdown-toggle",
+            "text": "Home",
+            "rest": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:2/a:1",
+            "at": "a.nav-link",
+            "text": "About Us",
+            "rest": {
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 95,
+                "g": 84,
+                "b": 203,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:3/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Portfolio",
+            "rest": {
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 95,
+                "g": 84,
+                "b": 203,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:4/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "News",
+            "rest": {
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 95,
+                "g": 84,
+                "b": 203,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:5/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Page",
+            "rest": {
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 95,
+                "g": 84,
+                "b": 203,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:6/a:1",
+            "at": "a.nav-link",
+            "text": "Contact",
+            "rest": {
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 95,
+                "g": 84,
+                "b": 203,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/span:1/div:1/a:1",
+            "at": "a.btn.btn-outline-dark",
+            "text": "Get In Touch",
+            "rest": {
+              "fg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-dark",
+            "text": "More about us",
+            "rest": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-outline-dark",
+            "text": "Start your project now",
+            "rest": {
+              "fg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-outline-dark",
+            "text": "Join our team",
+            "rest": {
+              "fg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "bg": {
+                "r": 248,
+                "g": 249,
+                "b": 250,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-outline-dark",
+            "text": "View all our projects",
+            "rest": {
+              "fg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "Mirror of darkness",
+            "rest": {
+              "fg": {
+                "r": 24,
+                "g": 24,
+                "b": 24,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "La minervetta",
+            "rest": {
+              "fg": {
+                "r": 24,
+                "g": 24,
+                "b": 24,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "Covid-19 poster",
+            "rest": {
+              "fg": {
+                "r": 24,
+                "g": 24,
+                "b": 24,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:4/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "All about hidration",
+            "rest": {
+              "fg": {
+                "r": 24,
+                "g": 24,
+                "b": 24,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:4/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:5/div:1/div:1/div:2/div:1/div:1/h3:1/a:1",
+            "at": "a.heading-link",
+            "text": "FW 2021 Must haves",
+            "rest": {
+              "fg": {
+                "r": 24,
+                "g": 24,
+                "b": 24,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:1/div:5/div:1/div:1/div:2/div:2/a:1",
+            "at": "a",
+            "text": "Brand identityeditorial design",
+            "rest": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 130,
+                "g": 130,
+                "b": 130,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-outline-dark.w-100",
+            "text": "Choose plan",
+            "rest": {
+              "fg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:2/a:1",
+            "at": "a.btn.btn-outline-dark.w-100",
+            "text": "Choose plan",
+            "rest": {
+              "fg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "bg": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              }
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "(201) 555-0124",
+            "rest": {
+              "fg": {
+                "r": 24,
+                "g": 24,
+                "b": 24,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            "on": {
+              "fg": {
+                "r": 41,
+                "g": 26,
+                "b": 189,
+                "a": 1
+              },
+              "bg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

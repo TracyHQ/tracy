@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-absolute-canvas: #ffffff;
+  --color-structural-ink: #000000;
+  --color-graphite-metadata: #595959;
+  --color-boundary-frame: #e2e2e2;
+  --color-context-action-violet: #4d49fc;
+  --color-angular-teal: #33dfdf;
+  --gradient-angular-teal: conic-gradient(rgb(51, 223, 223) 0deg, rgb(51, 223, 223) 18deg, rgba(0, 0, 0, 0) 18deg, rgba(0, 0, 0, 0) 30deg);
+
+  /* Typography — Font Families */
+  --font-figmasans: 'figmaSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-figmamono: 'figmaMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

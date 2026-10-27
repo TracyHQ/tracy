@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-sovereign-ink: #0a0f1f;
+  --color-signal-white: #ffffff;
+  --color-mist-surface: #f6f7fc;
+  --color-cool-hairline: #e5e7eb;
+  --color-shadow-lichen: #d8d7e2;
+  --color-carbon-gray: #4e4e4e;
+  --color-ash-gray: #999999;
+  --color-sovereign-violet: #6b2bea;
+  --gradient-sovereign-violet: linear-gradient(rgba(107, 43, 234, 0.06) 0%, rgb(247, 248, 252) 100%);
+  --color-violet-wash: #afa9fd;
+  --color-cyber-cyan: #28d3fe;
+  --color-alert-crimson: #dc2626;
+  --gradient-alert-crimson: radial-gradient(circle at 70% 35%, rgba(220, 38, 38, 0.22) 0%, rgba(0, 0, 0, 0) 60%);
+  --color-crimson-glow: #f4baba;
+  --color-info-blue: #2563eb;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

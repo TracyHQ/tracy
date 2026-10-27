@@ -1,0 +1,59 @@
+{
+  "color": {
+    "bumble-honey": {
+      "$value": "#ffdb5b",
+      "$type": "color",
+      "$description": "Bumble Honey — Yellow state accent for badges, validation surfaces, and short status labels."
+    },
+    "pollen": {
+      "$value": "#fff386",
+      "$type": "color",
+      "$description": "Pollen — Lighter yellow accent surface for secondary card frames and tonal variation against Honey"
+    },
+    "bumble-ink": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Bumble Ink — Primary text, filled action buttons, all borders and dividers — the structural near-black that carries 2,100+ UI instances and is the de facto primary action color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills, body text inverse"
+    },
+    "mist": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Mist — Subtle elevated card surface for sections that need to step forward from the white page without going dark"
+    },
+    "charcoal": {
+      "$value": "#3b3b3b",
+      "$type": "color",
+      "$description": "Charcoal — Secondary borders, muted icon strokes, and supplementary divider lines when Ink feels too heavy"
+    },
+    "graphite": {
+      "$value": "#575656",
+      "$type": "color",
+      "$description": "Graphite — Muted helper text, inactive nav borders, and low-emphasis UI labels"
+    },
+    "onyx": {
+      "$value": "#343333",
+      "$type": "color",
+      "$description": "Onyx — Badge borders and badge text — the slightly warmer dark used inside pill-shaped tags"
+    }
+  },
+  "font": {
+    "bumblesans": {
+      "$value": "BumbleSans",
+      "$type": "fontFamily",
+      "$description": "Single typeface for the entire product — nav, body, headings, buttons, badges, hero wordmark. Weights 400-500 for body and nav, 600 for subheadings and emphasis, 700 for display headlines."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bumble.com",
+      "siteName": "Bumble",
+      "extractedAt": "2026-06-03T17:46:44.528Z",
+      "variant": "compact"
+    }
+  }
+}

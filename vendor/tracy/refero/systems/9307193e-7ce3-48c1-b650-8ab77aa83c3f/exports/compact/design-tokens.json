@@ -1,0 +1,59 @@
+{
+  "color": {
+    "brick-red": {
+      "$value": "#e82c2a",
+      "$type": "color",
+      "$description": "Brick Red — Red accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "press-black": {
+      "$value": "#212529",
+      "$type": "color",
+      "$description": "Press Black — Primary body and paragraph text, hero supporting text, and darkest surface accents where deeper contrast than white-on-red is needed"
+    },
+    "cream-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cream White — Page canvas, image backgrounds, nav fill, and card surface base — the warm white that makes Brick Red feel printed rather than digital"
+    },
+    "soft-grey": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Soft Grey — Product card surface and elevated panels, one subtle step below the white canvas to separate scrolled content blocks"
+    },
+    "carbon": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Carbon — Dark anchor for footer, inverse panels, and the few dark-on-light UI elements that need more weight than Press Black provides"
+    }
+  },
+  "font": {
+    "surt": {
+      "$value": "Surt",
+      "$type": "fontFamily",
+      "$description": "Body, nav links, buttons, card labels, and all functional UI. Positive tracking (0.013–0.05em) is consistent across sizes, giving the type a typeset, slightly old-style feel that pairs with the editorial display serif. Replaces body and UI text at every level."
+    },
+    "editorial-old": {
+      "$value": "Editorial Old",
+      "$type": "fontFamily",
+      "$description": "Display headlines only. The weight-300 thin serif at 100–150px with ~1.0 line-height is the signature — anti-convention, never bold, letting the letterforms carry the page rather than weight. Enable 'clig' and 'liga' for contextual alternates."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "Micro-labels and uppercase taglines (e.g. 'For Coffee Drinkers' banner). Tight 10px with 0.06em tracking mimics letterpress taglines."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "system-ui — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://redbrick.coffee",
+      "siteName": "Redbrick Coffee",
+      "extractedAt": "2026-06-03T18:15:41.140Z",
+      "variant": "compact"
+    }
+  }
+}

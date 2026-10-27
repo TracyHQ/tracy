@@ -1,0 +1,167 @@
+/* tracy sections — the hand-written remainder after Tailwind.
+ *
+ * Layout and looks live as utilities in sections/<name>.html and are compiled by scripts/build.mjs
+ * from tailwind.css. What is left here is what a utility cannot say: pseudo-elements, the
+ * WordPress block rules a section has to neutralise, and rules keyed on a parent the section does
+ * not control. Same contract: token names only (var(--accent) …), no root block, no literal colour. */
+
+/* WordPress flow layout puts a top margin between siblings (:where, specificity 0); grids set their own gap. */
+.tracy-grid > *,
+.tracy-hero__inner > * {
+  margin-block-start: 0;
+}
+
+/* A section inside a page that already frames it (style guide, contact, pricing): no second rhythm. */
+.tracy-page__body > .tracy-section,
+.tracy-pricing-page__body > .tracy-section {
+  padding: 0;
+}
+
+/* WordPress list and quote blocks bring their own indents and rules. */
+.tracy-logos.wp-block-list,
+.tracy-plan__list.wp-block-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tracy-quote.wp-block-quote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-style: normal;
+}
+
+.tracy-quote cite {
+  display: block;
+  font-style: normal;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* FAQ: summary and cite carry no class (a class there breaks the core block), so they are styled here. */
+.tracy-faq__item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.tracy-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.tracy-faq__item summary::after {
+  content: '+';
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.tracy-faq__item[open] summary::after {
+  content: '–';
+}
+
+/* Plan features: a check before each line. A status colour set as text reads the shade a worn design system
+   makes readable on its page (--ds-c-<status>-text, tracy-ds-slot); unworn it is the token itself. */
+.tracy-plan__list li::before {
+  content: '✓ ';
+  color: var(--ds-c-success-text, var(--success));
+}
+
+/* Button variants that live inside sections: the inner anchor is what carries the colour on WordPress. */
+.tracy-btn--inverse .wp-block-button__link,
+.tracy-btn--inverse.tracy-btn {
+  background: var(--accent-on);
+  color: var(--accent);
+  border-color: var(--accent-on);
+}
+
+.tracy-cta-final__box .tracy-btn--ghost .wp-block-button__link,
+.tracy-cta-final__box .tracy-btn--ghost {
+  color: inherit;
+  border-color: currentColor;
+  background: transparent;
+}
+
+/* The form as real CSS, not only the utilities on the library's own markup: on Joomla the contact
+   form is com_contact's, rendered by the template's `html/com_contact/` override, and its inputs
+   carry Joomla's classes, not ours. Same values as the utilities the library writes, so the two
+   render alike. */
+.tracy-form {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+}
+
+.tracy-field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.tracy-field__label {
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+}
+
+.tracy-field input,
+.tracy-field textarea,
+.tracy-field select {
+  font: inherit;
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* The form's inputs: focus is a state, not a class. */
+.tracy-field__input:focus-visible,
+.tracy-field :focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* The form's submit sits at the start of its grid row, not stretched across it. */
+.tracy-form .tracy-btn {
+  justify-self: start;
+}
+
+/* What each CMS says after a send: Joomla redirects with its own message, WordPress comes back
+   with `?contact=sent` and the theme prints this line. */
+.tracy-form__note {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.tracy-form__note--ok {
+  color: var(--ds-c-success-text, var(--success));
+}
+
+.tracy-form__note--bad {
+  color: var(--ds-c-danger-text, var(--danger));
+}
+
+/* The current page of a listing. A utility cannot say "this one, because of its state", and the
+   pagination row is the only place in the library where one item of a set is marked. */
+.tracy-pagination__item.is-current {
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* An entry title is a link that should read as a heading, not as body-text link decoration. */
+.tracy-entry__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy-entry__title a:hover {
+  color: var(--accent);
+}

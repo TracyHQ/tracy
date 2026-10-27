@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page background, card surfaces, inverted text on pink fills"
+    },
+    "parchment": {
+      "$value": "#efe6d8",
+      "$type": "color",
+      "$description": "Parchment — Primary body and heading text — warm near-white with sepia undertone, replaces the typical cool white of dark UIs"
+    },
+    "bone": {
+      "$value": "#aca69c",
+      "$type": "color",
+      "$description": "Bone — Secondary text, button borders, metadata — mid-tone warm gray"
+    },
+    "ash": {
+      "$value": "#736e68",
+      "$type": "color",
+      "$description": "Ash — Muted body text, subtle link borders, inactive labels"
+    },
+    "charcoal": {
+      "$value": "#605c56",
+      "$type": "color",
+      "$description": "Charcoal — Hairline dividers, low-emphasis borders, heading underlines on dark"
+    },
+    "neon-petal": {
+      "$value": "#ffa1f7",
+      "$type": "color",
+      "$description": "Neon Petal — Primary action buttons, active nav states, selected markers, occasional heading accents — the single chromatic punctuation in the system"
+    },
+    "acid-lime": {
+      "$value": "#4dff00",
+      "$type": "color",
+      "$description": "Acid Lime — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface — medium and semibold weights, tight negative tracking at -0.013em to -0.031em. Used for body copy, links, navigation, and small headings."
+    },
+    "geist-pixel-triangle": {
+      "$value": "Geist Pixel Triangle",
+      "$type": "fontFamily",
+      "$description": "Display and section-label typeface — pixel/decorative variant used for all-caps section headers like 'SELECTED WORK' and the year range '2015 — 2026'. The pixel treatment gives editorial weight without serifs."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Metadata typeface — timestamps, email, technical labels, year stamps. The monospace signals system/data language against the proportional body."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://akashtyagi.com",
+      "siteName": "Akash Tyagi",
+      "extractedAt": "2026-06-03T22:04:07.519Z",
+      "variant": "compact"
+    }
+  }
+}

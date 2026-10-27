@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-podcast/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_podcast",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-podcast",
+    "id": "quickstart/ja-podcast/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_podcast",
+    "parts": {
+      "installer": {
+        "file": "ja-podcast-j6-quickstart-1.0.2.zip",
+        "bytes": 78205198,
+        "sha256": "7d2f14d18d0268033bc1ca9f4922e7f0b820695d6783a355e310d355a3cf00ea"
+      }
+    },
+    "release": "quickstart/ja-podcast/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-09T13:15:34.412Z",
+    "builtFrom": {
+      "from": "quickstart/ja-podcast/j6@1.0.1",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

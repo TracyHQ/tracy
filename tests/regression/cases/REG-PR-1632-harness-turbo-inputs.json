@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1632-harness-turbo-inputs",
+  "kind": "fix",
+  "title": "Harness growth runtime tests hash every backend source they read",
+  "pr": 1632,
+  "area": "ci/turbo",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the harness Turbo input audit with an isolated TEST_DATABASE_URL. Record the test summary and input coverage verdict."
+  ],
+  "expect": [
+    "The harness suite passes without skipped tests. Every backend source read by growth-report-runtime.test.mjs is covered by its Turbo inputs, including new matching files discovered by listing lib/. The audit exits zero."
+  ],
+  "selectors": {
+    "config": "packages/web/tracy-harness/turbo.json",
+    "test": "packages/web/tracy-harness/test/growth-report-runtime.test.mjs"
+  },
+  "evidence": "CI run 39911298412 job 120274842065 and the local audit both reported 17 uncovered backend paths before the fix.",
+  "fence": "Read-only audit with a private local PostgreSQL instance; no shared Docker cluster.",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "scripts/ci/turbo-setup.mjs",
+      "--check",
+      "--task-part",
+      "owner=packages/web/tracy-harness"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "hero.title": "Hôm nay bạn muốn thay đổi gì?",
+  "appearance.dark": "Tối",
+  "appearance.light": "Sáng",
+  "appearance.system": "Hệ thống",
+  "appearance.title": "Giao diện",
+  "font.code.description": "Khối mã và terminal",
+  "font.code.title": "Font mã",
+  "font.default": "Mặc định",
+  "font.global.description": "Chữ trên toàn giao diện",
+  "font.global.title": "Font giao diện",
+  "fontSize.decrease": "Giảm cỡ chữ",
+  "fontSize.description": "Chỉ ảnh hưởng nội dung hội thoại",
+  "fontSize.increase": "Tăng cỡ chữ",
+  "fontSize.title": "Cỡ chữ",
+  "primary.description": "Màu nhấn cho nút, link và vùng chọn",
+  "primary.hex": "Mã màu hex",
+  "primary.swatch": "Dùng {color}",
+  "primary.title": "Màu chủ đạo"
+}

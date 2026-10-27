@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-deep-violet: #0825c6;
+  --gradient-deep-violet: linear-gradient(180deg, #0825c6 0%, #6b6ce0 100%);
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+
+  /* Typography — Font Families */
+  --font-newyork: '_NewYork', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

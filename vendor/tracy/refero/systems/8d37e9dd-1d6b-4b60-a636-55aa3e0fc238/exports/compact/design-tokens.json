@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#0d0d0d",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, nav links, all borders, button outlines"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on yellow fill"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, image borders, link underlines, muted dividers"
+    },
+    "signal-yellow": {
+      "$value": "#ffd600",
+      "$type": "color",
+      "$description": "Signal Yellow — CTA button fill, in-app active tabs, decorative blob shapes behind mockups, active state highlights — the single chromatic accent that makes actions feel switched on"
+    },
+    "alert-magenta": {
+      "$value": "#ff0062",
+      "$type": "color",
+      "$description": "Alert Magenta — Red outline accent for tags, dividers, and focused UI edges"
+    }
+  },
+  "font": {
+    "cofo-sans": {
+      "$value": "Cofo Sans",
+      "$type": "fontFamily",
+      "$description": "Display headlines at 72px weight 700 with extremely tight tracking read like editorial poster type — the weight does the work, not the size alone. Also used for nav links, button labels, and small caps text at 18–22px weight 600/700. The 700 weight is the signature: most sites use 500–600 for heroes, this goes maximum weight to create authority through volume rather than restraint."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for body copy and secondary text at 14px — deliberately quiet, never competes with the Cofo Sans display moments"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://prisma-ai.com",
+      "siteName": "Prisma Labs",
+      "extractedAt": "2026-06-03T21:28:44.582Z",
+      "variant": "compact"
+    }
+  }
+}

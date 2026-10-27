@@ -1,0 +1,296 @@
+{
+  "dos": [
+    "Use Inter for all text — no secondary typefaces, no serif, no display face",
+    "Set display headlines at 88px with -1.85px letter-spacing and 0.95 line-height for tight, machined blocks of type",
+    "Reserve Signal Blue (#2a4af5) exclusively for filled primary actions — never use it for decoration, icons, or text emphasis",
+    "Apply 12px radius to all buttons, 20px to cards, 9999px to tags and pills",
+    "Build the surface stack as Midnight Ink (#09101c) → Slate Depth (#131d2f) → Graphite Plate (#3a4049) for elevation",
+    "Use device mockups as the primary visual content — the product UI carries the page, not photography",
+    "Alternate dark and light sections with 80px gaps to create breathing rhythm across the page"
+  ],
+  "donts": [
+    "Don't use Status Violet (#7140fd) for buttons, links, or actions — it is brand-identity only (logo, gradients, decorative moments)",
+    "Don't introduce shadows stronger than rgba(9,16,28,0.08) 0px 4px 20px — the system avoids heavy elevation",
+    "Don't use lifestyle photography, stock imagery, or contextual scenes — device mockups and abstract gradients only",
+    "Don't set body text above 16px or below 13px — the 15-16px range is the readable sweet spot",
+    "Don't apply gradients to text — gradients are atmospheric backgrounds only",
+    "Don't use saturated colors for icons in feature grids unless they represent a specific brand token (crypto symbol, etc.)",
+    "Don't mix light and dark within a single section — section background must be uniform, transitions happen at section boundaries"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#09101c",
+      "name": "Midnight Ink",
+      "role": "Page canvas, card backgrounds, primary surface — the near-black base that absorbs everything else",
+      "group": "neutral"
+    },
+    {
+      "hex": "#131d2f",
+      "name": "Slate Depth",
+      "role": "Elevated surface for buttons and interactive containers, one step above the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1b273d",
+      "name": "Steel Edge",
+      "role": "Primary border color, link underlines, nav separators — defines structural edges at very high frequency",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3a4049",
+      "name": "Graphite Plate",
+      "role": "Secondary card surface, subtle elevation tier above Midnight Ink",
+      "group": "neutral"
+    },
+    {
+      "hex": "#647084",
+      "name": "Slate Mist",
+      "role": "Muted body text, helper copy, secondary labels — readable but recessive",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1abbd",
+      "name": "Ash Light",
+      "role": "Icon fills, tertiary text, nav inactive states — the lightest non-white neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dce0e5",
+      "name": "Pale Mist",
+      "role": "Light-section borders, hairline dividers, outlines on light backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f2f5",
+      "name": "Cloud",
+      "role": "Lightest neutral border, soft dividers in light sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Light-section canvas, primary text on dark, inverted surface — dual-role neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2a4af5",
+      "name": "Signal Blue",
+      "role": "Primary action fill, brand-action emphasis — the only saturated button color, single violet-blue signal against the dark canvas",
+      "group": "brand"
+    },
+    {
+      "hex": "#7140fd",
+      "name": "Status Violet",
+      "role": "Violet text accent for links, tags, and emphasized short phrases",
+      "group": "brand"
+    },
+    {
+      "hex": "#2a799b",
+      "name": "Deep Teal",
+      "role": "Accent hue in gradient washes, illustrative moments, secondary brand color in art; Brand gradient wash for decorative sections, hero accents, and section backgrounds",
+      "group": "accent",
+      "gradient": "linear-gradient(78deg, rgb(42, 121, 155) -30%, rgb(246, 176, 60) 8%, rgb(255, 51, 163) 98%)"
+    },
+    {
+      "hex": "#f6b03c",
+      "name": "Amber Glow",
+      "role": "Warm accent in gradient compositions and illustrative highlights — the yellow stop in tri-color gradients",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with 24px horizontal padding. Hero is full-bleed dark with centered text-left headline (88px display) and right-aligned device mockup that extends partially beyond the container. The page alternates between dark sections (#09101c) and light sections (#ffffff) with generous 80px vertical gaps. Feature sections use a 3-column grid with 40px gaps on light backgrounds. Product showcase sections are 2-column (text left, mockup right) with asymmetric device sizing. Navigation is a fixed top bar that transitions from transparent to Midnight Ink on scroll. The rhythm is: dark hero → light features → dark product → light features → dark illustration footer.",
+  "imagery": "Product-first visual language: device mockups (phone, tablet, desktop) showing the Status wallet and messenger UI are the dominant imagery. The device IS the hero — no lifestyle photography, no people, no contextual scenes. Illustrations are expressive and surreal (e.g., a hand reaching through space for floating crypto coins) in a flat, line-art style with full color fills. Icons in feature grids are small (32-40px), flat, and multicolored — each representing a concept (security shield, megaphone, gift box). Background atmosphere comes from large radial gradient orbs in brand colors. No stock photography anywhere.",
+  "similar": [
+    {
+      "why": "Same dark canvas + single violet/blue action accent + device mockup hero approach for crypto wallet identity",
+      "business": "Phantom"
+    },
+    {
+      "why": "Dark-mode product UI with gradient atmospheric backgrounds and device-first hero compositions",
+      "business": "Rainbow Wallet"
+    },
+    {
+      "why": "Deep-near-black canvas, orange/violet brand accent, and product-mockup-dominant visual language for web3 audience",
+      "business": "MetaMask"
+    },
+    {
+      "why": "Encrypted-messaging aesthetic with midnight canvas, steel borders, and deliberate security-infrastructure surface language",
+      "business": "Element (Matrix)"
+    },
+    {
+      "why": "Same 4px-based comfortable spacing rhythm, pill-shaped controls, and tight Inter type scale at all sizes",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "20px",
+      "pills": "9999px",
+      "images": "24px",
+      "buttons": "12px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#09101c",
+      "name": "Midnight Ink",
+      "level": 0,
+      "purpose": "Base page canvas, the near-black foundation of all dark sections"
+    },
+    {
+      "hex": "#131d2f",
+      "name": "Slate Depth",
+      "level": 1,
+      "purpose": "First elevation tier — buttons, interactive containers, subtle card lift"
+    },
+    {
+      "hex": "#3a4049",
+      "name": "Graphite Plate",
+      "level": 2,
+      "purpose": "Second elevation tier — card surfaces that need to read as lifted from the canvas"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 3,
+      "purpose": "Inverted surface for light feature sections, maximum contrast moment"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(9, 16, 28, 0.08) 0px 4px 20px 0px",
+      "element": "Card (Product Showcase)"
+    },
+    {
+      "style": "rgba(9, 16, 28, 0.04) 0px 2px 20px 0px",
+      "element": "Link (Hover/Focus)"
+    }
+  ],
+  "northStar": "encrypted vault behind midnight glass — a dark security console where the only color is a single violet signal lamp",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 16,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "body-md",
+      "size": 16,
+      "lineHeight": 23.5,
+      "letterSpacing": -0.08
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 26.6,
+      "letterSpacing": -0.17
+    },
+    {
+      "role": "heading-sm",
+      "size": 27,
+      "lineHeight": 32.1,
+      "letterSpacing": -0.43
+    },
+    {
+      "role": "heading",
+      "size": 64,
+      "lineHeight": 67.8,
+      "letterSpacing": -1.28
+    },
+    {
+      "role": "display",
+      "size": 88,
+      "lineHeight": 83.6,
+      "letterSpacing": -1.85
+    }
+  ],
+  "components": [
+    {
+      "name": "Download CTA Button (Filled)",
+      "role": "Primary download action for desktop and mobile platforms",
+      "description": "Filled button with Signal Blue (#2a4af5) background, white text, 12px radius, 8-16px padding. Contains platform icon (Apple/Windows/Android) left of label. Weight 500, 15px text."
+    },
+    {
+      "name": "Download CTA Button (Outlined)",
+      "role": "Secondary download action, ghost variant",
+      "description": "Transparent background with 1px Steel Edge (#1b273d) border on dark surfaces or Pale Mist (#dce0e5) on light surfaces. 12px radius, 8-16px padding, 15px weight 500 text. Platform icon left of label."
+    },
+    {
+      "name": "Pill Tag",
+      "role": "Category labels, section markers, product tags",
+      "description": "Full-pill radius (9999px), 4-8px vertical padding, 12px horizontal padding. 13px weight 500 text. Background: Slate Depth (#131d2f) on dark, Cloud (#f0f2f5) on light. Text: Ash Light (#a1abbd) or Signal Blue (#2a4af5) for active."
+    },
+    {
+      "name": "Top Announcement Banner",
+      "role": "Site-wide promotional/announcement bar",
+      "description": "Full-width strip at top of page, Paper (#ffffff) background, 88% opacity overlay. 13px centered text with embedded link styled as underlined. Fixed/sticky positioning."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Transparent on hero, Midnight Ink (#09101c) on scroll. Logo left, nav links center (15px weight 500, Steel Edge color for inactive, Paper for active), download buttons right. 1px Steel Edge bottom border. Height ~64px."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Grid item in 'Built different' feature sections",
+      "description": "3-column grid card on light Paper (#ffffff) background. No visible card surface — flat layout with generous 40px row gap. Icon at top (32-40px, full color or Status Violet), 27px weight 600 heading, 15px weight 400 body in Slate Mist (#647084)."
+    },
+    {
+      "name": "Product Showcase Card",
+      "role": "Device mockup containers — phone, tablet, desktop wallet UI",
+      "description": "Screenshot/device mockup on Midnight Ink canvas, 20-24px radius, subtle shadow rgba(9,16,28,0.08) 0px 4px 20px. Mockups maintain aspect ratio, often overlapping with float effect."
+    },
+    {
+      "name": "Onramp Info Card",
+      "role": "Payment method information callout",
+      "description": "Light section card with Cloud (#f0f2f5) background, 20px radius, 16-24px padding. Contains heading + body + payment method icon row (Visa, Mastercard, Apple Pay, Google Pay at 32px)."
+    },
+    {
+      "name": "Wallet Asset List Item",
+      "role": "Individual asset row in wallet interface preview",
+      "description": "Horizontal row, 16px vertical padding, Paper background. Token icon (colored circle, 32-40px) left, token name + balance center, fiat value right. Hairline Steel Edge (#1b273d) bottom border."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Visual separation between major page sections",
+      "description": "No hard line — sections flow with background color transitions (dark to light to dark). Where needed, 1px Steel Edge (#1b273d) horizontal line with 40-80px vertical margin."
+    },
+    {
+      "name": "Link (Text)",
+      "role": "Inline links, nav items, footer links",
+      "description": "15px weight 500, Steel Edge (#1b273d) default on dark surfaces, Pale Mist (#dce0e5) on light. 1px underline at offset 4px. Hover: Signal Blue (#2a4af5) or Paper (#ffffff) with no underline shift."
+    },
+    {
+      "name": "Decorative Gradient Orb",
+      "role": "Background atmospheric gradient in hero/section backgrounds",
+      "description": "Large radial gradient (300-600px) positioned absolutely, 70% transparency to transparent. Colors cycle through Status Violet (#7140fd), Signal Blue (#2a4af5), Deep Teal (#2a799b), and Amber Glow (#f6b03c). Creates depth without imagery."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface across every role. Inter is chosen for its monospace-adjacent neutrality — it doesn't compete with the device mockups that dominate the page. The aggressive negative tracking on display sizes (-0.021em at 88px) tightens headlines into dense blocks of type that feel machined rather than editorial. Weight 500 is the workhorse for UI; 700 is reserved for primary headlines and emphasis. No serif, no display face — the system is deliberately sans-only and mono-personality.",
+      "sizes": "11px, 13px, 15px, 16px, 19px, 27px, 64px, 88px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "0.95, 1.06, 1.19, 1.40, 1.42, 1.45, 1.47, 1.50",
+      "substitute": "Inter (Google Fonts), fallback: system-ui, -apple-system, sans-serif",
+      "letterSpacing": "-0.0210em at 88px display, -0.0200em at 64px, -0.0160em at 27px, -0.0090em at 19px, -0.0050em at 15-16px body, -0.0030em at 11-13px caption"
+    }
+  ],
+  "description": "Status presents an encrypted-vault aesthetic: a near-black canvas (#09101c) with steel-toned borders and elevated slate surfaces that read as private infrastructure rather than consumer app. Color is rationed tightly — Status Violet (#7140fd) owns brand identity moments while Signal Blue (#2a4af5) carries the only filled action, and everything else stays in an achromatic 95% palette. Inter handles every typographic role, with display 88px headlines tracking at -0.021em that feel engineered rather than set. Comfortable 4px-based rhythm, 20-24px card radii, and 12px pill-shaped controls create a deliberate, security-first surface language. Product mockups (wallet, messenger) are the primary visual content — the device IS the hero, not lifestyle photography.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "primary action: #2a4af5 (filled action)\nCreate a Primary Action Button: #2a4af5 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is minimal and derived from the canvas color itself — shadows use the near-black Midnight Ink at very low opacity (4-8%), making elevated surfaces feel like they are rising from the dark rather than being lit from above. Most differentiation between surface levels comes from background color shifts, not shadows. The system avoids heavy drop-shadows that would feel consumer-app; instead, cards and mockups float on subtle tints of the canvas color."
+}

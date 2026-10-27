@@ -1,0 +1,54 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, hairline borders, avatar stroke, ghost button outlines — the only ink on the page; borders are the structural device, not shadows"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surface, nav fill — the gallery wall itself"
+    },
+    "plaster-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Plaster Gray — Pill navigation background, subtle surface for tag chips, soft section washes"
+    },
+    "ash-gray": {
+      "$value": "#9b9b9b",
+      "$type": "color",
+      "$description": "Ash Gray — Muted secondary text, caption labels under illustrations, hairline borders on less prominent elements"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Body, captions, labels, links, footer — a deliberate serif choice for UI body copy, the kind of editorial-museum-label voice most portfolios replace with sans-serif"
+    },
+    "universalsans-425": {
+      "$value": "UniversalSans 425",
+      "$type": "fontFamily",
+      "$description": "Headings, emphasized body, link text — a neutral grotesque that steps in when the Times serif is too quiet"
+    },
+    "universalsans-625": {
+      "$value": "UniversalSans 625",
+      "$type": "fontFamily",
+      "$description": "Button text, nav labels, small caps — the only medium weight in the system, used exclusively for clickable elements to give them a slightly firmer voice"
+    },
+    "rza": {
+      "$value": "Rza",
+      "$type": "fontFamily",
+      "$description": "Brand wordmark / logo only — a custom display face that gives the header a distinct editorial signature, never used elsewhere"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.danieltriendl.com",
+      "siteName": "Daniel Triendl",
+      "extractedAt": "2026-06-03T18:51:06.348Z",
+      "variant": "compact"
+    }
+  }
+}

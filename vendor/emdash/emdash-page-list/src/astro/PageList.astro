@@ -1,0 +1,125 @@
+---
+import { loadCollectionItems } from "../lib/collection.js";
+import { loadPageListSettings, resolvePageListConfig } from "../lib/config.js";
+import { loadMenuItems } from "../lib/menu.js";
+import type { PageListProps } from "../lib/types.js";
+import PageListItems from "./PageListItems.astro";
+
+const { class: className, ...inputProps } = Astro.props as PageListProps & { class?: string };
+const settings = await loadPageListSettings();
+const config = resolvePageListConfig(inputProps, settings);
+
+const items =
+	config.sourceType === "collection" && config.collection
+		? await loadCollectionItems(config)
+		: config.sourceType === "menu" && config.menuName
+			? await loadMenuItems(config)
+			: [];
+
+const showExcerpt = config.sourceType === "collection" ? config.showExcerpt : false;
+const showDate = config.sourceType === "collection" ? config.showDate : false;
+---
+
+<section
+	class:list={[
+		"emdash-page-list",
+		`emdash-page-list--${config.style}`,
+		className,
+	]}
+	data-source={config.sourceType}
+	data-style={config.style}
+>
+	{config.heading && <h2 class="emdash-page-list__heading">{config.heading}</h2>}
+
+	{
+		items.length > 0 ? (
+			<PageListItems
+				items={items}
+				style={config.style}
+				showExcerpt={showExcerpt}
+				showDate={showDate}
+			/>
+		) : (
+			<p class="emdash-page-list__empty">{config.emptyState}</p>
+		)
+	}
+</section>
+
+<style is:global>
+	.emdash-page-list {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.emdash-page-list__heading {
+		margin: 0;
+		font-size: 1.25rem;
+		line-height: 1.2;
+	}
+
+	.emdash-page-list__empty {
+		margin: 0;
+		color: color-mix(in srgb, currentColor 70%, transparent);
+	}
+
+	.emdash-page-list__items {
+		display: grid;
+		gap: 0.9rem;
+		margin: 0;
+		padding-left: 1.2rem;
+	}
+
+	.emdash-page-list__items--compact {
+		gap: 0.55rem;
+	}
+
+	.emdash-page-list__items--card {
+		list-style: none;
+		padding-left: 0;
+	}
+
+	.emdash-page-list__items--nested {
+		margin-top: 0.75rem;
+	}
+
+	.emdash-page-list__item {
+		margin: 0;
+	}
+
+	.emdash-page-list__item--card {
+		list-style: none;
+	}
+
+	.emdash-page-list__item-body {
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.emdash-page-list__item--card > .emdash-page-list__item-body {
+		padding: 1rem;
+		border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+		border-radius: 0.875rem;
+		background: color-mix(in srgb, currentColor 2%, transparent);
+	}
+
+	.emdash-page-list__link {
+		color: inherit;
+		text-decoration-thickness: 0.08em;
+		text-underline-offset: 0.15em;
+	}
+
+	.emdash-page-list__label {
+		font-weight: 600;
+	}
+
+	.emdash-page-list__date {
+		font-size: 0.9rem;
+		color: color-mix(in srgb, currentColor 68%, transparent);
+	}
+
+	.emdash-page-list__excerpt {
+		margin: 0;
+		color: color-mix(in srgb, currentColor 82%, transparent);
+		line-height: 1.55;
+	}
+</style>

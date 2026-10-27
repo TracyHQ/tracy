@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+  "status": "complete",
+  "name": "Ingmar Coenen",
+  "url": "https://styles.refero.design/style/f8c92b6b-a3a7-4141-ae61-3d865a106761",
+  "sourceWebsite": "https://ingmarcoenen.com",
+  "extractedAt": "2026-06-03T21:21:27.871Z",
+  "capturedAt": "2026-10-08T05:19:46.788040+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Oversized masthead on white paper — a 295px geometric letterform pressed against a vast white wall, with tiny serif footnotes and pill-shaped navigation floating below.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ad5d8b25-0ef2-4ca4-9b41-a23d1d80ded3.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c99b380bf505e4eead20560d0990ee78315562358ec289777423ceba3f442799",
+      "bytes": 19942
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f43ef76882f459a8a8ee66e647e57f946630e83e0f71fb64f17fe5e8a97c750a",
+      "bytes": 61298
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "489b1f943f63ecf751b54cc1c348d05c3f2c02c8adf972820fe15487db70908a",
+      "bytes": 16410
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "75a4bad9f7624cf92e52569f91c7ffe6f2215bfc96d21683a5831fdff22fd5c2",
+      "bytes": 6948
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0b9efafb6e137f0ad6049c02d12388b21e8e39dc81b734d5e391f25378367580",
+      "bytes": 12322
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ddaf3172d9f2e8be47a5ea4ea6df895278ac6698b7fe5c0e09c8d4996c9971a6",
+      "bytes": 3095
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4f05aa93b89aee28282b67697278ed4f1a044bedef38dde15fc98f3977428ce9",
+      "bytes": 941
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a48fbc03c4f9eb5826f586d7b851f2e3663680194f33dc7f7cf32a527832ed79",
+      "bytes": 958
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "51e23564ca3b268490aedecc326850547b80102ba304bc88c77978e6639d1fbc",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f95cb986e569236e2b7b6d439aa14a0a7314d37ec89a2d3b0a3263363265576d",
+      "bytes": 40827
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4437869fed138d7e7915a9a278b9d3623a7f2841eb1f1350c3dff2bd2dc2e07a",
+      "bytes": 20514
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c7886bb04611520821f9f8ab3336af04108ac13c111c5e571ed5a02f34daae6d",
+      "bytes": 31910
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ba7b06c4cc428b2fd5469b6ecc501023e281179f126da903e5bb82050e5d5f81",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9d5a99920320943f954b76581357d3f03942d7502825f2847340ebdacb8f9b4f",
+      "bytes": 1468
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7884d4404a04a6445b09f088ef8d8f3dd6ef0918296348b38f0c1676c17aac6e",
+      "bytes": 1875
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "24c54bfb-959d-4ca3-b274-e76ba823f3c0",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "5a7ba5ff-0476-4f3f-99f9-0b920534dde5",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6f428c12-ba43-48e3-9a52-299ec1ce509b",
+    "717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "8d1b6c70-e045-4ce6-891d-aba5d5c00e0d",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "c6e55968-fa2d-47c9-b833-2c4ad1e74906",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

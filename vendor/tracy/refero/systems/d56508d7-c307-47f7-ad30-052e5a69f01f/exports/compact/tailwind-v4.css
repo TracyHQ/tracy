@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-sage-paper: #e5ebda;
+  --color-plum-ink: #44394c;
+  --color-paper-white: #ffffff;
+  --color-stone-border: #c0c3b6;
+  --color-ash-border: #b0b2a9;
+
+  /* Typography */
+  --font-montreal: 'Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-grotesk: 'Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

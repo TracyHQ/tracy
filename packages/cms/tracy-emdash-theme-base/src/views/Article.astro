@@ -1,0 +1,121 @@
+---
+import { getEditMeta, getEmDashEntry, getEntryTerms } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import Photo from '@/components/site/Photo.astro'
+import ArticleH2 from '@/components/site/ArticleH2.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import BodyImage from '@/components/site/BodyImage.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, formatDate, href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { childLive, liveLinks } from '@/lib/link-gate'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { loadPosts } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const [{ entry }, pageRes] = await Promise.all([
+  getEmDashEntry('posts', slug, { locale }),
+  getEmDashEntry('blog', 'blog', { locale })
+])
+// A child goes with its list page: Blog unticked, its items answer 404 like the list, unless a page the customer kept still lists it (TCH #1013).
+const reachable = await childLive(Astro.request, locale, `/blog/${slug}`)
+if (!entry || entry.data.status !== 'published' || !reachable) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+const b = (pageRes.entry?.data ?? {}) as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'posts', entry)
+const $blog = stampFor(Astro.request, 'blog', pageRes.entry)
+const $site = stampFor(Astro.request, 'site', site)
+const [cats, tags, all] = await Promise.all([
+  getEntryTerms('posts', entry.data.id, 'category', { locale }),
+  getEntryTerms('posts', entry.data.id, 'tag', { locale }),
+  loadPosts(locale)
+])
+const cat = cats[0]
+// With Blog unticked a post a kept page still lists renders (Team's notes); its links into the blog family are drawn
+// only while their target is reachable (TCH #1013, `src/lib/listed-children.ts`). With Blog on, all of them are live.
+const live = await liveLinks(Astro.request, locale, [
+  '/blog',
+  ...(cat ? [`/blog/category/${cat.slug}`] : []),
+  ...tags.map((t) => `/blog/tag/${t.slug}`),
+  ...all.map((p) => `/blog/${p.slug}`)
+])
+const idx = all.findIndex((p) => p.id === entry.data.id)
+const older = idx >= 0 ? all[idx + 1] : undefined
+const newer = idx > 0 ? all[idx - 1] : undefined
+const prev = older && live(`/blog/${older.slug}`) ? older : undefined
+const next = newer && live(`/blog/${newer.slug}`) ? newer : undefined
+const tagLinks = tags.filter((t) => live(`/blog/tag/${t.slug}`))
+// On a stamped request each text block names itself (`field:content.<_key>`, `stampBlocks`) and is
+// rendered by a renderer that prints it; an ordinary request keeps the renderers it always had.
+// Inline editing needs the original value (its edit metadata is a non-enumerable tag).
+const body = getEditMeta(a.content) ? (a.content ?? []) : stampBlocks($page, 'content', a.content ?? [])
+const bodyComponents = $page.owner
+  ? {
+      block: {
+        normal: ProseBlock,
+        h1: ProseBlock,
+        h2: ArticleH2,
+        h3: ProseBlock,
+        h4: ProseBlock,
+        h5: ProseBlock,
+        h6: ProseBlock,
+        blockquote: ProseBlock
+      },
+      listItem: ProseListItem,
+      type: { image: BodyImage, blockquoteGroup: ProseQuote }
+    }
+  : { block: { h2: ArticleH2 }, type: { image: BodyImage } }
+const blogMenuLabel = chrome.resourcesRead.find((i) => i.url === href(locale, '/blog'))?.label
+const blogLabel = blogMenuLabel ?? b.title
+// A menu label is not a Content API record: the crumb is stamped only when it fell back to the blog title.
+const blogCrumbStamp = blogMenuLabel == null ? $blog('title') : {}
+const meta = [
+  a.author ? `By ${a.author}` : '',
+  cat ? `Category: ${cat.label}` : '',
+  formatDate(a.date, ui(locale).tag)
+].filter(Boolean)
+---
+
+<Base chrome={chrome} title={a.title} description={a.excerpt} image={mediaUrl(a.image)} currentPath="/blog" type="article" content={{ collection: "posts", id: entry.data.id, slug, toPath: (s) => `/blog/${s}` }}>
+	<Breadcrumb items={[{ label: site.breadcrumb_home, url: href(locale, "/"), stamp: $site("breadcrumb_home") }, { label: blogLabel, url: href(locale, "/blog"), stamp: blogCrumbStamp }, ...(cat ? [{ label: cat.label, url: href(locale, `/blog/category/${cat.slug}`) }] : []), { label: a.title, stamp: $page("title") }].filter((i) => !i.url || live(i.url))} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-10">
+		<PageOwner stamp={$page} />
+		<article class="mx-auto max-w-[720px]">
+			<header class="mb-6">
+				<h1 class="h-article mb-4" {...$page("title")}>{a.title}</h1>
+				<div class="meta flex flex-wrap gap-x-4 gap-y-2">{meta.map((m) => <span>{m}</span>)}</div>
+			</header>
+			{a.image && <Photo image={a.image} stamp={$page("image")} alt={a.image_alt} class="mb-8 aspect-[16/9] rounded-[var(--ds-card-radius,18px)]" priority />}
+			{a.excerpt && <p class="lead mb-6 text-fg" {...$page("excerpt")}>{a.excerpt}</p>}
+			<div class="prose-article" {...$page("content")}>
+				<PortableText value={body} components={bodyComponents} />
+			</div>
+			{tagLinks.length > 0 && (
+				<div class="mt-10 flex flex-wrap items-center gap-2 border-t border-line-soft pt-6">
+					{tagLinks.map((t) => <a href={href(locale, `/blog/tag/${t.slug}`)} class="chip">{t.label}</a>)}
+				</div>
+			)}
+			<nav class="mt-10 flex flex-wrap justify-between gap-3 pt-6" aria-label={ui(locale).w.adjacentArticles}>
+				{prev ? <a href={href(locale, `/blog/${prev.slug}`)} class="btn btn-secondary" title={prev.data.title} {...$site("prev_label")}><span aria-hidden="true">‹</span> {site.prev_label}<span class="sr-only" {...stampFor(Astro.request, "posts", prev)("title")}>: {prev.data.title}</span></a> : <span></span>}
+				{next && <a href={href(locale, `/blog/${next.slug}`)} class="btn btn-secondary" title={next.data.title} {...$site("next_label")}>{site.next_label} <span aria-hidden="true">›</span><span class="sr-only" {...stampFor(Astro.request, "posts", next)("title")}>: {next.data.title}</span></a>}
+			</nav>
+		</article>
+
+	</main>
+</Base>

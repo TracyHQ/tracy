@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.left-invalid",
+  "itemIds": [
+    "letter:team.left:en",
+    "letter:team.left:vi",
+    "letter:team.left:de",
+    "letter:team.left:it",
+    "letter:team.left:fr",
+    "letter:team.left:nl",
+    "letter:team.left:zh",
+    "letter:team.left:es"
+  ],
+  "requirement": "team.left refuses an unknown role, wrong-typed facts and header injection",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/letters/team.js and comments.js header comments (approved copy, spec #809)",
+    "ref": "per-kind button, facts and \"never mailed\" rules",
+    "invariant": "the seat book allows four roles only; a letter needing one sends nothing otherwise"
+  },
+  "edgeTags": ["invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.invalid#team.left:"],
+  "redProof": null,
+  "legacyIds": []
+}

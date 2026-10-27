@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1696-wo-hub-feed-contention",
+  "kind": "feat",
+  "title": "Under 16 concurrent publishers the hub change feed stays contiguous and a reader following it sees every change once",
+  "pr": 1696,
+  "area": "website-opportunities/hub",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: 16 publishers append 10 changes each through appendChange while a reader pages the changes feed from the head."
+  ],
+  "expect": [
+    "S1: positions 1..160 without a gap; the reader saw the 160 changes once each, in position order."
+  ],
+  "selectors": {
+    "feed": "packages/wo/website-opportunities/src/hub/feed.js appendChange, readFeed",
+    "bench": "packages/wo/website-opportunities/scripts/bench-hub-feed.mjs"
+  },
+  "evidence": "Measurement added for the counter row; throughput numbers come from the bench script, not this case",
+  "fence": "wo_hub_append_change takes the next position from one locked counter row held until commit",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/hub-feed-contention.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": ["concurrent publishers get contiguous positions"]
+  }
+}

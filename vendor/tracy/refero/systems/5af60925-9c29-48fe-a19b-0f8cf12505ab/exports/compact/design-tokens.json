@@ -1,0 +1,49 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, all surface backgrounds, image negative space"
+    },
+    "obsidian-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian Ink — All text, headings, nav links, button labels, hairline borders, icon strokes, body borders"
+    },
+    "carbon-edge": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Carbon Edge — Near-black border variant for subtle structural dividers, indistinguishable from ink at reading distance"
+    }
+  },
+  "font": {
+    "items-light": {
+      "$value": "Items-Light",
+      "$type": "fontFamily",
+      "$description": "Signature display headline. The custom light serif with extremely tight 0.90 line-height and slight negative tracking — its high stroke contrast and light weight create editorial gravitas without shouting. No other element competes at this scale."
+    },
+    "syndicatgroteskmedium": {
+      "$value": "SyndicatGroteskMedium",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse for nav, body, subheadings, and link text. The medium-weight grotesque with consistent -0.03em tracking acts as the typographic foil to the light serif — denser, more utilitarian, more present. At 44px it serves as secondary headlines; at 16-18px it carries running text and UI labels."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "System serif fallback appearing in link contexts. Subordinate to Items-Light — used when the custom font fails to load, maintaining a serif continuity."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Micro-label workhorse. Used for uppercase project category tags, footer micro-labels, and small UI annotations. The system-sans fallback ensures universal availability for these tiny utility labels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://accompany.group",
+      "siteName": "ACCOMPANY",
+      "extractedAt": "2026-06-03T21:19:44.705Z",
+      "variant": "compact"
+    }
+  }
+}

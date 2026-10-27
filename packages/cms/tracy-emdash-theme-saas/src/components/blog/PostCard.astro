@@ -1,0 +1,130 @@
+---
+// A post as a bordered card row: optional cover on the left, category, title, excerpt and a meta line
+// whose shape depends on where the card sits (catalog, an author's page, the archive).
+import { href, type Locale } from '@/lib/i18n'
+import { dateMedium, dayMonth, postPath, type Post } from '@/lib/posts'
+import { ui } from '@/lib/ui'
+import { fillWords } from '@/lib/ui-words'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  post: Post
+  locale: Locale
+  variant?: 'catalog' | 'author' | 'archive'
+  media?: boolean
+}
+const { post, locale, variant = 'catalog', media = false } = Astro.props
+const { tag, w } = ui(locale)
+const minutes = fillWords(w.minShort, { n: post.minutes })
+const meta =
+  variant === 'author'
+    ? [dayMonth(post.date, tag), minutes]
+    : variant === 'archive'
+      ? [post.author, dateMedium(post.date, tag), minutes]
+      : [post.author, dayMonth(post.date, tag)]
+// Provenance stamps of the post's own fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const $p = stampFor(Astro.request, 'posts', post)
+---
+
+<a class:list={['card', variant]} href={href(locale, postPath(post.slug))} {...$p()}>
+	{media && post.cover && <div class="media"><img src={post.cover} alt="" width="400" height="300" loading="lazy" decoding="async" {...$p('cover')} /></div>}
+	<div class="body">
+		{post.category && <span class="tag">{post.category.label}</span>}
+		<h3 class="title" {...$p('title')}>{post.title}</h3>
+		{post.excerpt && <p class="excerpt" {...$p('excerpt')}>{post.excerpt}</p>}
+		<span class="meta">{meta.filter(Boolean).join(' · ')}</span>
+	</div>
+</a>
+
+<style>
+	.card {
+		display: flex;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+		overflow: hidden;
+		transition: border-color 0.15s;
+	}
+	.card:hover {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.media {
+		position: relative;
+		flex: 0 0 200px;
+		background: var(--k-elevated);
+	}
+	.media img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.body {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 22px 24px;
+	}
+	.tag {
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		line-height: 1.55;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 19px;
+		line-height: 1.26;
+		font-weight: 600;
+		color: var(--k-heading);
+		text-wrap: pretty;
+		transition: color 0.15s;
+	}
+	/* A writer's page lists posts with a one-line excerpt, as the source does. */
+	.author .excerpt {
+		-webkit-line-clamp: 1;
+		line-clamp: 1;
+	}
+	.author .title {
+		font-size: 18px;
+		letter-spacing: -0.2px;
+	}
+	.card:hover .title {
+		color: var(--k-primary);
+	}
+	.excerpt {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.57;
+		color: var(--k-text);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.meta {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		line-height: 1.55;
+		color: var(--k-muted);
+	}
+	@media (max-width: 620px) {
+		.card {
+			flex-direction: column;
+		}
+		.media {
+			flex: none;
+			aspect-ratio: 16 / 9;
+		}
+		.body {
+			padding: 20px;
+		}
+	}
+</style>

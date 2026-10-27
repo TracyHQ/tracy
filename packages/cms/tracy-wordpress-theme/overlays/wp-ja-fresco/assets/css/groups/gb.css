@@ -1,0 +1,471 @@
+/* Group B: the inner landing pages (about, gallery, menu, chiefs, offer, contact). */
+
+/* ---- Features, style 4 (picture beside a section title) ---- */
+.acm-features.style-4 .features-title {
+	font-size: var(--jf-h1);
+}
+
+/* ---- Features, style 5 (icon cards) ---- */
+.acm-features.style-5 .feature-title {
+	font-size: var(--jf-h4);
+}
+
+/* ---- Teams, style 1 (member cards: square picture over a tinted info box, three a row) ---- */
+.acm-teams.style-1 .team-list {
+	display: grid;
+	grid-template-columns: 1fr;
+	column-gap: 32px;
+}
+@media (min-width: 768px) {
+	.acm-teams.style-1 .team-list {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (min-width: 992px) {
+	.acm-teams.style-1 .team-list.acm-teams--cols-3 {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+.acm-teams.style-1 .team-list > *,
+.acm-teams.style-1 .member-ele > *,
+.acm-teams.style-1 .box-info > * {
+	margin: 0;
+}
+.acm-teams.style-1 .team-list > .member-ele {
+	margin-bottom: 2rem;
+	text-align: center;
+}
+.acm-teams.style-1 .member-picture {
+	overflow: hidden;
+	aspect-ratio: 1;
+}
+.acm-teams.style-1 .member-picture img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform .4s, opacity .4s;
+}
+.acm-teams.style-1 .member-ele:hover .member-picture img {
+	opacity: .8;
+	transform: scale(1.02);
+}
+.acm-teams.style-1 .box-info {
+	padding: 2rem;
+	background: rgba(255, 255, 255, .04);
+}
+.acm-teams.style-1 .member-name {
+	font-size: var(--jf-h2);
+}
+.acm-teams.style-1 .box-info > .member-office {
+	margin: 1rem 0;
+	color: var(--jf-accent);
+}
+.acm-teams.style-1 .box-info > .member-desc {
+	margin-bottom: 2rem;
+}
+.acm-teams.style-1 .box-info > .member-social {
+	gap: .75rem;
+	margin-top: 1.5rem;
+	justify-content: center;
+}
+/* The source lifts a disc 2 px on hover; the port keeps it still, since a box that moves under the
+   pointer is what the hover-jump scan forbids. Core's scale(1.1) is cancelled for the same reason. */
+.acm-teams.style-1 .member-social .wp-social-link.wp-social-link {
+	width: 36px;
+	height: 36px;
+	min-width: 36px;
+	margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, .06);
+	color: var(--ds-c-on-ink, #fff);
+	font-size: .875rem;
+}
+.acm-teams.style-1 .member-social .wp-social-link.wp-social-link:hover {
+	transform: none;
+}
+.acm-teams.style-1 .member-social .wp-block-social-link-anchor {
+	padding: 0;
+	color: inherit;
+}
+.acm-teams.style-1 .acm-action {
+	justify-content: center;
+}
+@media (min-width: 992px) {
+	.acm-teams.style-1 .acm-action {
+		margin-top: 3rem;
+	}
+}
+
+/* ---- Happy hours, styles 1-3 (a framed offer card over a full-width picture) ----
+   The source's .content-acm is .hp-inner here, its .txt is .hp-hours and its badge is one paragraph. */
+.acm-happyhours .jf-container:has(> .hp-wrap) {
+	max-width: none;
+	padding-inline: 0;
+}
+.acm-happyhours .hp-wrap {
+	position: relative;
+	padding: 6rem 1.5rem;
+	overflow: visible;
+}
+.acm-happyhours .hp-wrap > *,
+.acm-happyhours .hp-inner > *,
+.acm-happyhours .hp-info > * {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.acm-happyhours .hp-bg {
+	position: absolute;
+	inset: 0;
+	margin: 0;
+}
+.acm-happyhours .hp-bg img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+.acm-happyhours .hp-inner {
+	position: relative;
+	z-index: 1;
+	max-width: 420px;
+	padding: 2rem;
+	box-sizing: border-box;
+	border: 1px solid rgba(225, 225, 225, 0.4); /* ds-keep: translucent frame over the happy-hours photo, a tint of the picture and no page role */
+	background: rgba(0, 0, 0, 0.8);
+	text-align: center;
+}
+.acm-happyhours .hp-inner.align-center {
+	margin-inline: auto;
+}
+.acm-happyhours .hp-inner.align-right {
+	margin-left: auto;
+}
+.acm-happyhours .hp-inner .hp-logo {
+	width: 150px;
+	margin: 1rem auto;
+}
+.acm-happyhours .hp-logo img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.acm-happyhours .hp-inner .hp-title {
+	margin: 0 0 1.5rem;
+	font-size: 36px;
+}
+.acm-happyhours .hp-inner .hp-desc {
+	margin-bottom: 2rem;
+}
+.acm-happyhours .hp-inner .hp-info {
+	color: var(--ds-c-fg, #fff);
+	font-size: 30px;
+	line-height: 1.4;
+}
+.acm-happyhours .hp-info .hp-hours {
+	margin: 2rem 0;
+	color: var(--ds-c-fg, #fff);
+	font-size: inherit;
+	line-height: 1.4;
+}
+.acm-happyhours .hp-info .hg-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	background: var(--ds-c-accent, #5cb85c);
+	color: var(--ds-c-accent-on, #fff);
+	font-size: 28px;
+	line-height: 1.1;
+	text-transform: uppercase;
+	text-align: center;
+}
+.acm-happyhours .hp-inner .hp-link {
+	justify-content: center;
+	margin-bottom: 1.5rem;
+}
+/* Style 1: the hours in a double frame, the badge a ringed disc on its top edge. */
+.acm-happyhours.style-1 .hp-inner .hp-info {
+	position: relative;
+	margin: 6rem 0 2rem;
+	padding: 37px 21px 21px;
+	border: 1px solid rgba(255, 255, 255, 0.5); /* ds-keep: translucent frame over the happy-hours photo, a tint of the picture and no page role */
+}
+.acm-happyhours.style-1 .hp-info::before {
+	content: "";
+	position: absolute;
+	inset: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.5); /* ds-keep: translucent frame over the happy-hours photo, a tint of the picture and no page role */
+	pointer-events: none;
+}
+.acm-happyhours.style-1 .hp-info .hp-hours {
+	font-size: 24px;
+}
+.acm-happyhours.style-1 .hp-info .hg-badge,
+.acm-happyhours.style-2 .hp-info .hg-badge {
+	position: absolute;
+	z-index: 2;
+	width: 110px;
+	height: 110px;
+	padding: 16px;
+	border-radius: 50%;
+	/* The source's white ring 5 px inside the disc. */
+	box-shadow: inset 0 0 0 5px var(--ds-c-accent, #5cb85c), inset 0 0 0 7px var(--ds-c-accent-on, #fff);
+}
+.acm-happyhours.style-1 .hp-info .hg-badge {
+	top: -60px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+/* Style 2: the badge overhangs the card's top right corner. */
+.acm-happyhours.style-2 .hp-inner {
+	padding-top: 4rem;
+}
+.acm-happyhours.style-2 .hp-info .hg-badge {
+	top: -24px;
+	right: -12px;
+}
+/* Style 3: words to the left, the badge a ribbon folding behind the card's left edge. */
+.acm-happyhours.style-3 .hp-inner {
+	padding-top: 6rem;
+	text-align: left;
+}
+.acm-happyhours.style-3 .hp-inner .hp-logo {
+	margin: 0;
+}
+.acm-happyhours.style-3 .hp-inner .hp-link {
+	justify-content: flex-start;
+}
+.acm-happyhours.style-3 .hp-info .hg-badge {
+	position: absolute;
+	top: 2rem;
+	left: -1.1rem;
+	padding: 0.75rem 1rem;
+	font-size: 24px;
+	line-height: 1;
+}
+.acm-happyhours.style-3 .hp-info .hg-badge::before {
+	content: "";
+	position: absolute;
+	bottom: -20px;
+	left: 0;
+	border-top: 20px solid var(--ds-c-accent-active, #357e35);
+	border-left: 18px solid transparent;
+}
+@media (min-width: 576px) {
+	.acm-happyhours .hp-wrap {
+		padding: 8rem 4rem;
+	}
+	.acm-happyhours .hp-inner {
+		padding: 3rem;
+	}
+	.acm-happyhours .hp-inner .hp-title {
+		font-size: 45px;
+	}
+	.acm-happyhours .hp-inner .hp-info {
+		font-size: var(--jf-h2);
+	}
+	.acm-happyhours .hp-info .hg-badge {
+		font-size: 30px;
+	}
+	.acm-happyhours.style-1 .hp-info .hp-hours {
+		font-size: 28px;
+	}
+	.acm-happyhours.style-2 .hp-inner {
+		padding-top: 4rem;
+	}
+	.acm-happyhours.style-2 .hp-info .hg-badge {
+		top: -56px;
+		right: -32px;
+		width: 130px;
+		height: 130px;
+		padding: 24px;
+	}
+	.acm-happyhours.style-3 .hp-inner {
+		padding-top: 8rem;
+	}
+	.acm-happyhours.style-3 .hp-info .hg-badge {
+		font-size: var(--jf-h3);
+	}
+}
+
+/* ---- Contact page (template page-contact) ---- */
+/* The source's com_contact plain style: details left, form right from 992 px, 64 px above and 96 px below (32 / 48 px below 768 px). */
+.jf-contact {
+	padding-top: 64px;
+	padding-bottom: 96px;
+}
+@media (max-width: 767px) {
+	.jf-contact {
+		padding-top: 32px;
+		padding-bottom: 48px;
+	}
+}
+.jf-contact-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	row-gap: 24px;
+}
+.jf-contact-row > * {
+	margin: 0;
+}
+@media (min-width: 992px) {
+	.jf-contact-row {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 96px;
+	}
+}
+.jf-contact h2 {
+	margin: 0 0 24px;
+	font-size: var(--jf-h2);
+}
+.jf-contact .contact-misc {
+	margin: 0 0 48px;
+}
+.jf-contact .contact-address > * {
+	display: flex;
+	align-items: center;
+	margin: 0 0 24px;
+}
+.jf-contact .contact-item .icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	margin-right: 16px;
+	font-size: 20px;
+	line-height: 20px;
+	color: var(--jf-accent);
+	background: rgba(225, 225, 225, 0.15); /* ds-keep: translucent wash behind a contact icon, a tint of the ground and no role of its own */
+}
+/* The source prints a title per line ("Write email", "Visit office", "Mobile") and hides it. */
+.jf-contact .contact-item .title {
+	display: none;
+}
+.jf-contact .contact-item .txt {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.5;
+	color: var(--jf-heading, var(--ds-c-heading, #fff));
+}
+.jf-contact .contact-item .txt a {
+	color: inherit;
+}
+.jf-contact .title-lead {
+	margin: 0 0 48px;
+}
+.jf-contact .title-lead h2 {
+	margin-bottom: 16px;
+}
+.jf-contact .title-lead p {
+	margin: 0;
+}
+@media (max-width: 991px) {
+	.jf-contact .title-lead {
+		margin-bottom: 24px;
+	}
+}
+/* The Contact Form 7 form (S-22): name | email and phone | subject two abreast from 576 px, a message box, an outline button.
+   wpautop wraps each row in a <p> and breaks the labels with <br>; the source hides its labels, so their text has no size. */
+.jf-contact .wpcf7-form > .hidden-fields-container {
+	display: none;
+}
+.jf-contact .wpcf7-form p {
+	margin: 0 0 32px;
+}
+.jf-contact .wtb-form__grid > p {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 32px;
+}
+@media (min-width: 576px) {
+	.jf-contact .wtb-form__grid > p {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+.jf-contact .wtb-form__grid > p > br,
+.jf-contact .wtb-form__field br {
+	display: none;
+}
+.jf-contact .wtb-form__field {
+	display: block;
+	font-size: 0;
+	line-height: 0;
+}
+.jf-contact .wpcf7-form-control-wrap {
+	display: block;
+}
+.jf-contact .wpcf7-form :is(input[type='text'], input[type='email'], input[type='tel'], textarea) {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	height: 43px;
+	margin: 0;
+	padding: 10px 24px;
+	border: 1px solid var(--ds-c-border-soft, rgba(255, 255, 255, 0.07));
+	border-radius: var(--ds-input-radius, 0);
+	background: rgba(255, 255, 255, 0.06);
+	color: var(--jf-heading);
+	font-family: inherit;
+	font-size: 14px;
+	line-height: 21px;
+}
+.jf-contact .wpcf7-form :is(input[type='text'], input[type='email'], input[type='tel'], textarea):focus {
+	border-color: var(--ds-c-border-soft, rgba(255, 255, 255, 0.08));
+	color: var(--jf-heading);
+	outline: 0;
+}
+.jf-contact .wpcf7-form textarea.wpcf7-textarea {
+	height: 246px;
+	padding-top: 24px;
+	resize: vertical;
+}
+.jf-contact .wpcf7-form .wtb-form__actions p {
+	margin: 0;
+}
+.jf-contact .wpcf7-form .wpcf7-submit {
+	display: inline-block;
+	height: auto;
+	margin: 0;
+	padding: 10px 24px;
+	border: 1px solid var(--jf-accent);
+	border-radius: var(--jf-radius);
+	/* The outline button's 160° sweep (shared .btn-outline-primary rule), on an <input> the shared rule cannot reach. */
+	background: linear-gradient(160deg, transparent 50%, var(--jf-accent) 50%) 0 0 / 300% 100% no-repeat;
+	color: var(--jf-accent);
+	font-family: var(--jf-font-body);
+	font-size: 14px;
+	line-height: 21px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: color 0.4s, background-position 0.4s;
+}
+.jf-contact .wpcf7-form .wpcf7-submit:is(:hover, :focus-visible) {
+	background-position: 100% 0;
+	color: var(--jf-accent-on);
+}
+/* The source's Font Awesome 4 glyphs (envelope-o, map-marker, phone-square), as masks in the icon's colour:
+   the theme ships no icon font. */
+.jf-contact .contact-item .icon::before {
+	content: "";
+	width: 20px;
+	height: 20px;
+	background-color: currentColor;
+	-webkit-mask: var(--jf-icon) center / contain no-repeat;
+	mask: var(--jf-icon) center / contain no-repeat;
+}
+.jf-contact .contact-item .fa-envelope-o {
+	--jf-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Crect x='2' y='4.5' width='20' height='15' rx='1.5'/%3E%3Cpath d='M2.5 6l9.5 7 9.5-7'/%3E%3C/svg%3E");
+}
+.jf-contact .contact-item .fa-map-marker {
+	--jf-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1.5a7.5 7.5 0 0 0-7.5 7.5c0 5.6 7.5 13.5 7.5 13.5s7.5-7.9 7.5-13.5A7.5 7.5 0 0 0 12 1.5zm0 10.5a3 3 0 1 1 0-6 3 3 0 0 1 0 6z'/%3E%3C/svg%3E");
+}
+.jf-contact .contact-item .fa-phone-square {
+	--jf-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cmask id='m'%3E%3Crect width='24' height='24' rx='4' fill='%23fff'/%3E%3Cpath transform='translate(5 5) scale(.58)' d='M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z'/%3E%3C/mask%3E%3Crect width='24' height='24' rx='4' mask='url(%23m)'/%3E%3C/svg%3E");
+}

@@ -1,0 +1,17 @@
+{
+  "busy": "Trình xem trước Office đang bận. Hãy thử lại sau ít phút.",
+  "changed": "Tệp đã thay đổi trong lúc đọc. Hãy mở lại bản xem trước.",
+  "closeDetails": "Đóng chi tiết phông chữ",
+  "failed": "Chuyển đổi Office không tạo ra được PDF dùng được. Hãy kiểm tra tệp rồi thử lại.",
+  "invalid": "Không xem trước được tệp Office này. Tệp có thể bị hỏng, được bảo vệ bằng mật khẩu hoặc sai phần mở rộng.",
+  "loading": "Đang hiển thị tài liệu...",
+  "missingFontsCount": "Phông chữ: {count}",
+  "missingFontsDescription": "Bản xem trước này không có các phông chữ dưới đây. Chữ và bố cục có thể khác tài liệu gốc.",
+  "missingFontsTitle": "Thiếu phông chữ",
+  "retry": "Thử lại",
+  "timeout": "Chuyển đổi Office quá thời gian. Hãy thử lại.",
+  "title": "Tài liệu Office",
+  "tooLarge": "Tệp Office hoặc PDF sau chuyển đổi vượt giới hạn dung lượng xem trước. Hãy giảm dung lượng tệp hoặc điều chỉnh cấu hình xem trước.",
+  "unavailable": "Không xem trước được tệp Office. Hãy bật dịch vụ xem trước tài liệu trên máy đang chạy Tracy Cowork.",
+  "viewMissingFonts": "Thiếu phông chữ: {count}. Bấm để xem."
+}

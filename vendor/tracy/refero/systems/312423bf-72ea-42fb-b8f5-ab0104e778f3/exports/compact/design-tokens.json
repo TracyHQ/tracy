@@ -1,0 +1,139 @@
+{
+  "color": {
+    "forest-ink": {
+      "$value": "#0a1d08",
+      "$type": "color",
+      "$description": "Forest Ink — Gray text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "olive-press": {
+      "$value": "#2b390a",
+      "$type": "color",
+      "$description": "Olive Press — Headings at large sizes, high-contrast body text, hover states on filled buttons"
+    },
+    "sage-leaf": {
+      "$value": "#4a6d47",
+      "$type": "color",
+      "$description": "Sage Leaf — Decorative icon accent, badge fills, subtle wash backgrounds on spec cards"
+    },
+    "deep-teal": {
+      "$value": "#2b6b5e",
+      "$type": "color",
+      "$description": "Deep Teal — Secondary category fills, alt-card backgrounds, tonal pair with the dominant greens"
+    },
+    "crimson-specimen": {
+      "$value": "#991e4b",
+      "$type": "color",
+      "$description": "Crimson Specimen — Red text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color"
+    },
+    "amber-pin": {
+      "$value": "#80581c",
+      "$type": "color",
+      "$description": "Amber Pin — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "linen": {
+      "$value": "#f8f9f5",
+      "$type": "color",
+      "$description": "Linen — Page canvas, default surface — warm off-white with a faint green cast"
+    },
+    "bone": {
+      "$value": "#eff2e8",
+      "$type": "color",
+      "$description": "Bone — Card surface, elevated panels, subtle inset containers"
+    },
+    "mist": {
+      "$value": "#e1e6df",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, card outlines, separator strokes"
+    },
+    "slate-hollow": {
+      "$value": "#2a332a",
+      "$type": "color",
+      "$description": "Slate Hollow — Inverse surface for footer and dark bands, modal scrims"
+    },
+    "sage-gray": {
+      "$value": "#6b7860",
+      "$type": "color",
+      "$description": "Sage Gray — Secondary body text, supporting copy, icon strokes"
+    },
+    "sage-mist": {
+      "$value": "#a5ac9f",
+      "$type": "color",
+      "$description": "Sage Mist — Muted helper text, disabled labels, low-emphasis metadata"
+    },
+    "eucalyptus": {
+      "$value": "#c9d5c5",
+      "$type": "color",
+      "$description": "Eucalyptus — Soft surface tints, category tag backgrounds, hover wash"
+    },
+    "lichen": {
+      "$value": "#c5ccb6",
+      "$type": "color",
+      "$description": "Lichen — Outlined-button border color, link underlines, specimen-card borders"
+    },
+    "blush": {
+      "$value": "#e3c9d0",
+      "$type": "color",
+      "$description": "Blush — Decorative alt-card background, tonal contrast specimen"
+    },
+    "sand": {
+      "$value": "#ad9d80",
+      "$type": "color",
+      "$description": "Sand — Decorative card surface, tertiary alt fill"
+    },
+    "sage-foam": {
+      "$value": "#729d92",
+      "$type": "color",
+      "$description": "Sage Foam — Decorative alt-card surface, soft cool counterpoint to the sage family"
+    },
+    "rose-clay": {
+      "$value": "#c27c93",
+      "$type": "color",
+      "$description": "Rose Clay — Decorative alt-card background, warm-tonal specimen"
+    },
+    "surface-glow": {
+      "$value": "#fdfefb",
+      "$type": "color",
+      "$description": "Surface Glow — Surface-highest token, used for elevated card layers above Linen"
+    }
+  },
+  "font": {
+    "akkurat": {
+      "$value": "akkurat",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for body, nav, headings, buttons, cards across the entire system"
+    },
+    "newsreader": {
+      "$value": "Newsreader",
+      "$type": "fontFamily",
+      "$description": "Single display-size serif headline — unexpected literary anchor against the utility sans"
+    },
+    "fragment-mono": {
+      "$value": "Fragment Mono",
+      "$type": "fontFamily",
+      "$description": "Field-note tagging: badges, category labels, button text, code-lite metadata, tracked micro-copy"
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "System mono fallback for the tightest micro-tags (8px, 500 weight, 0.04em tracking)"
+    },
+    "gt-america-mono": {
+      "$value": "GT America Mono",
+      "$type": "fontFamily",
+      "$description": "GT America Mono — detected in extracted data but not described by AI"
+    },
+    "fragmentmono": {
+      "$value": "fragmentMono",
+      "$type": "fontFamily",
+      "$description": "fragmentMono — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.adaline.ai",
+      "siteName": "Adaline",
+      "extractedAt": "2026-07-03T03:02:41.642Z",
+      "variant": "compact"
+    }
+  }
+}

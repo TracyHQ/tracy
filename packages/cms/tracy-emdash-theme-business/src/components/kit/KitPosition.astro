@@ -1,0 +1,7 @@
+---
+// One module position of the style guide's map: its name as code (what an installer types, the same in every language),
+// then, for some, what it is in the page's language in brackets (TCH #1013, LANG-2).
+const { p } = Astro.props
+const { name, note } = typeof p === 'string' ? { name: p, note: undefined } : p
+---
+<code style="font-family:inherit;font-size:inherit">{name}</code>{note && <> ({note})</>}

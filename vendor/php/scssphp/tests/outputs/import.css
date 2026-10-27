@@ -1,0 +1,56 @@
+@import "foo.css";
+@import "foo" screen;
+@import "http://foo.com/bar";
+@import url(foo);
+@import url("https://fontapi.example.com/css?family=Source+Sans+Pro:wght@300;400;700&display=swap");
+div {
+  height: 200px;
+  color: red;
+}
+pre {
+  color: red;
+}
+pre div {
+  height: 200px;
+  color: red;
+}
+code div {
+  height: 200px;
+  color: red;
+}
+code div {
+  height: 200px;
+  color: red;
+}
+#partial {
+  color: blue;
+}
+body {
+  color: #7C2;
+  background: gray;
+}
+a:before {
+  content: "";
+}
+div::before {
+  content: ":)";
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+.fancybox-is-hidden {
+  position: absolute !important;
+}
+.fancybox-navigation .fancybox-button {
+  transition: opacity 0.25s ease, visibility 0s ease 0.25s;
+}
+@media (max-width: 576px) {
+  .fancybox-thumbs {
+    width: 110px;
+  }
+}

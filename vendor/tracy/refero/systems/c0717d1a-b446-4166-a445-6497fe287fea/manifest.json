@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c0717d1a-b446-4166-a445-6497fe287fea",
+  "status": "complete",
+  "name": "Bevel",
+  "url": "https://styles.refero.design/style/c0717d1a-b446-4166-a445-6497fe287fea",
+  "sourceWebsite": "https://www.bevel.health",
+  "extractedAt": "2026-09-24T17:31:24.413Z",
+  "capturedAt": "2026-10-08T05:17:00.864740+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Morning metrics in cloudlight. Build screens as a bright white health journal punctuated by a softly glowing wearable dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/200c5cf3-6b4a-475a-952f-05d7f98b1b02.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e50f1dc0-e346-4568-927e-bb9361305ae1.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/1b2e0aed-a86b-402c-a53b-1caea28755f8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/9c22c7c8-e7a0-46f5-b922-ac94309d4abd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/79911cac-ed44-411d-b72b-569f9ebefa88.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "36b5c21a083eca96115b8d68704466a81434662ab7e2d22cdee5cfd915236e1a",
+      "bytes": 19356
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "46fdf694922cee67018784b5fc3b73301797e06a8c554d5612b1c77bcf62fa48",
+      "bytes": 107197
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8aebd3585ab446d3f3f404b636f2fba33a16860c177143a443da4a6f52c5abbc",
+      "bytes": 15546
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "19bf83e697576983600a35ff37549b73c34506823c592ad605d0665d935faa17",
+      "bytes": 9354
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "32108e7c1cfb621518ba36f2e6aa174ab4c89041cf2b19915988de09d4cdb083",
+      "bytes": 10861
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8767818f1f2f407823496d8ed27efe02e42d79d1ae189f42212ec7c571d9d827",
+      "bytes": 2846
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ba2d0cade722e4687a0657a81fc7bdccf5ab5f15f6adca063d4131e12979f969",
+      "bytes": 613
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "34595fd8872619973eea5f6f0810ceeadee739b9fe4aa30e18c400448ed4a0f2",
+      "bytes": 688
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c87d689c655cc4f3b2132a6ada9e55b6f5a1ec4d987cc860527381112b875ee7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a7d393cce44e327f785d2b5990cdfbd84fbe0af09fac7c13558d4849569e3994",
+      "bytes": 41732
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "669ae31979c5417209e17a3581696caef79c1c03fe40b6c80110fe6808141261",
+      "bytes": 21984
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ad4179b50d9b527b059ad9e8e5cb293b30ad39993458f0e7fd42b1e40090532a",
+      "bytes": 43573
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2c49445b1021abb1b50f0ed56553db358a98b04c0bd656e48f49aa223c43a19d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7575f4a04aee17661bf2d288d8bec18a6063978b495e51087422e9a1a46d7592",
+      "bytes": 2025
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f45dba2bb52cf46315fe9246d5713703ea3dd1f93e9194e037640000e9a6e458",
+      "bytes": 2605
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "035a098b-5a27-48a3-8a3a-c68a698e3eab",
+    "04109c48-f591-4110-9739-622243d4ecc2",
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "18975f37-2e5d-47ca-9367-8b201d20390d",
+    "1e7dae3b-cb34-4fcf-8c32-051152aebbab",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "375e255f-6e7b-4091-bf73-6df42a094263",
+    "6b4e6620-5c06-4dc1-931b-82265116f6f2",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "b44b0bb2-4ba3-4599-9706-3c3e0c8c2522",
+    "c0717d1a-b446-4166-a445-6497fe287fea",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "e9f5e976-53f7-42f5-a882-4e63b3c2f734",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1696-wo-hub-verify-category-hours",
+  "kind": "feat",
+  "title": "The hub's Google verifier checks a contribution's category against the primary type and its opening hours against the normalized weekly periods; email, social profiles and photo references stay unsupported",
+  "pr": 1696,
+  "area": "website-opportunities/hub",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: An account contributes category 'Cafe' and 'bar', and opening_hours as the same weekly periods in another order, as a subset, as one changed time, and as weekday text matching Google's lines up to case and punctuation and as text with another time, for a Google place whose primary type is cafe.",
+    "S2: The same account contributes a social_profile and a photo_ref naming Google as the source.",
+    "S3: fetchPlaceVerification reads a place with primaryType and regularOpeningHours."
+  ],
+  "expect": [
+    "S1: one Google read; 'Cafe' accepted, 'bar' differs_from_source; reordered periods accepted, subset and changed time differs_from_source; matching text accepted, other text differs_from_source.",
+    "S2: both rejected as unsupported_source with no Google read.",
+    "S3: the mask asks for primaryType and regularOpeningHours; the answer carries category and openingHours with only day/hour/minute per period."
+  ],
+  "selectors": {
+    "verifier": "packages/wo/website-opportunities/src/hub/verify-queue.js createGooglePlacesAdapter",
+    "intake": "packages/wo/website-opportunities/src/hub/observations.js HUB_FIELDS.opening_hours, weeklyPeriods",
+    "read": "packages/wo/website-opportunities/domain/gplaces-details.mjs fetchPlaceVerification"
+  },
+  "evidence": "Before: category and opening_hours had no Google check, so every such observation was rejected as unsupported_source",
+  "fence": "createGooglePlacesAdapter judges category by primary type and opening_hours by weeklyPeriods or word-normalized weekday text",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/hub-verify.test.mjs",
+      "packages/wo/website-opportunities/test/hub-observations.test.mjs",
+      "packages/wo/website-opportunities/test/domain-gplaces-details.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "category is judged against the primary type",
+      "email, social profiles and photo references stay unsupported",
+      "the field list is closed and every field has a value check",
+      "fetchPlaceVerification asks for the facts the hub checks"
+    ]
+  }
+}

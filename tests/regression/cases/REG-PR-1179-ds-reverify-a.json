@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1179-ds-reverify-a",
+  "kind": "fix",
+  "title": "Eighteen ready Joomla slot contracts (JA Aiga to JA Directory) re-verified with the unified probe on their 1.0.1 release: all still ready, each readyNote names its evidence",
+  "pr": 1179,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{aiga,alpha,alumni,artsy,athena,beauty,blockk,boxing,campaign,candidate,cityguide,civica,coach,colab,comics,company,diner,directory}.json through loadContract, and tasks/evidence/ds-reverify-a-2026-10-12/<slug>-j6/summary.json.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for each at 1.0.1 and at 1.0.0.",
+    "All of it: node tests/regression/scripts/REG-PR-1179-ds-reverify-a.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: each of the eighteen is ready, minVersion quickstart/<slug>/j6 = 1.0.1, maxVersion set, readyNote names tasks/evidence/ds-reverify-a-2026-10-12/<slug>-j6; its summary.json has every control at 0 differences, no low-contrast entry, all eight system views following at 0.5 or more, and 03-motherduck-desktop.jpg plus 05-apple-desktop.jpg kept.",
+    "S3: each at 1.0.1 -> {contract:'joomla-<slug>'}; at 1.0.0 -> reason TEMPLATE_NEEDS_UPDATE."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-<slug>.json ready, minVersion, maxVersion, readyNote",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf",
+    "evidence": "tasks/evidence/ds-reverify-a-2026-10-12/<slug>-j6/summary.json"
+  },
+  "evidence": "tasks/evidence/ds-reverify-a-2026-10-12/README.md — per-template table, report.md of each flow run, the MotherDuck and Apple desktop pictures (12/10/2026).",
+  "fence": "The measures on Docker stands are in the evidence, not re-run here (each takes 10-20 min on the shared VM). Not covered: judging by eye, and the first-run noise on ja-directory (control) and ja-comics (random module order) that the re-runs explain.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1179-ds-reverify-a.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

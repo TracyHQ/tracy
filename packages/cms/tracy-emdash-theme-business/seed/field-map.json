@@ -1,0 +1,1803 @@
+{
+	"generatedAt": "2026-09-14T18:20:53.554Z",
+	"collections": [
+		{
+			"collection": "site",
+			"routable": false,
+			"urlPattern": null,
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "brand_mark",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "brand_name",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "brand_sub",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "quote_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "quote_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "topbar_phone",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "topbar_email",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "topbar_address",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "home_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "resources_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "kit_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "recent_projects_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "news_column_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "resources_all_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "all_projects_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "all_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "theme_dark_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "theme_light_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "language_name",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "footer_legal_1",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_legal_2",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_services_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_company_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_contact_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hotline",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sales_email",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hours",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_book_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "copyright",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "social",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"name:string",
+						"handle:string",
+						"url:string",
+						"text:string"
+					]
+				},
+				{
+					"slug": "search_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_placeholder",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_next",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_results_line",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_filter_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_popular_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "search_popular",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"term:string"
+					]
+				},
+				{
+					"slug": "not_found_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "not_found_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "not_found_placeholder",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "not_found_back",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "not_found_suggestions_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "not_found_suggestions",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string",
+						"url:string"
+					]
+				},
+				{
+					"slug": "slots",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"key:string",
+						"text:string"
+					]
+				}
+			]
+		},
+		{
+			"collection": "home",
+			"routable": false,
+			"urlPattern": "/",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "hero_badge",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_title_a",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_title_b",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "hero_cta1_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta1_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "stats",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"label:string"
+					]
+				},
+				{
+					"slug": "services_eyebrow",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "services_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "services_all_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "services_all_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "services_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"number:string",
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "projects_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "project_big",
+					"type": "reference",
+					"required": false
+				},
+				{
+					"slug": "project_small_1",
+					"type": "reference",
+					"required": false
+				},
+				{
+					"slug": "project_small_2",
+					"type": "reference",
+					"required": false
+				},
+				{
+					"slug": "about_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "why_eyebrow",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "why_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "why_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "band_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "band_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "band_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "band_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "news_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "news_all_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "clients_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "client_logos",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"logo:image",
+						"name:string"
+					]
+				}
+			]
+		},
+		{
+			"collection": "about",
+			"routable": false,
+			"urlPattern": "/about",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "breadcrumb",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "stats_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "stats",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"label:string"
+					]
+				},
+				{
+					"slug": "mission_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "mission_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "pillars",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "history_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "history",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"year:string",
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "geo_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "geo_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "geo_list",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"city:string",
+						"role:string"
+					]
+				},
+				{
+					"slug": "map_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "team_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "team",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"name:string",
+						"role:string",
+						"text:text",
+						"photo:image"
+					]
+				},
+				{
+					"slug": "cert_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "certs",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "safety_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "safety_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "safety_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "cta_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "cta_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_alt_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_alt_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "services_page",
+			"routable": false,
+			"urlPattern": "/services",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "breadcrumb",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "stats",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"label:string"
+					]
+				},
+				{
+					"slug": "services_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "includes_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "process_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "process",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"number:string",
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "pricing_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "pricing_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "pricing",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"value:string",
+						"text:string"
+					]
+				},
+				{
+					"slug": "cta_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "cta_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_alt_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_alt_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "services",
+			"routable": true,
+			"urlPattern": "/services/{slug}",
+			"entriesPerLocale": 6,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "description",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "includes",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"item:string"
+					]
+				},
+				{
+					"slug": "term",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sort",
+					"type": "integer",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "projects_page",
+			"routable": false,
+			"urlPattern": "/projects",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "breadcrumb",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "featured_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "featured_project",
+					"type": "reference",
+					"required": false
+				},
+				{
+					"slug": "featured_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "featured_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "featured_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "featured_facts",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"key:string",
+						"value:string"
+					]
+				},
+				{
+					"slug": "featured_cta",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "grid_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "grid_text",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "view_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sectors_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sectors",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"sector:string",
+						"title:string",
+						"count:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "how_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "how",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"number:string",
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "cta_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "cta_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_alt_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_alt_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "projects",
+			"routable": true,
+			"urlPattern": "/projects/{slug}",
+			"entriesPerLocale": 10,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "card_tag",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "type_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "year",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "area",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "city",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "summary",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "facts",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"key:string",
+						"value:string"
+					]
+				},
+				{
+					"slug": "scope_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "scope",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"item:string"
+					]
+				},
+				{
+					"slug": "gallery_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "gallery",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"image:image",
+						"caption:string"
+					]
+				},
+				{
+					"slug": "quote",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "quote_by",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "next_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "featured",
+					"type": "boolean",
+					"required": false
+				},
+				{
+					"slug": "sort",
+					"type": "integer",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "news_page",
+			"routable": false,
+			"urlPattern": "/news",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "breadcrumb",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "count_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "page_meta",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "featured_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "all_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sidebar_search_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sidebar_search_placeholder",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "categories_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "latest_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "newsletter_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "newsletter_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "newsletter_placeholder",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "newsletter_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "newsletter_form_id",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "tags_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "prev_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "next_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "related_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "toc_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "downloads_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "aside_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "aside_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "aside_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "aside_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "posts",
+			"routable": true,
+			"urlPattern": "/news/{slug}",
+			"entriesPerLocale": 12,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "short_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "excerpt",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "featured_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "caption",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "author",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "author_role",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "date",
+					"type": "datetime",
+					"required": false
+				},
+				{
+					"slug": "reading_time",
+					"type": "integer",
+					"required": false
+				},
+				{
+					"slug": "content",
+					"type": "portableText",
+					"required": false
+				},
+				{
+					"slug": "downloads",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"format:string",
+						"url:string"
+					]
+				},
+				{
+					"slug": "toc",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string"
+					]
+				},
+				{
+					"slug": "featured",
+					"type": "boolean",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "careers",
+			"routable": false,
+			"urlPattern": "/careers",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "breadcrumb",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "stats",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"label:string"
+					]
+				},
+				{
+					"slug": "open_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "all_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "apply_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "more_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "benefits_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "benefits",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "process_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "steps",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"number:string",
+						"title:string",
+						"text:text"
+					]
+				},
+				{
+					"slug": "life_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "life",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"image:image",
+						"caption:string"
+					]
+				},
+				{
+					"slug": "quote",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "quote_by",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "cta_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_mail",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "vacancies",
+			"routable": false,
+			"urlPattern": null,
+			"entriesPerLocale": 6,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "city",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "type",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "pay",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sort",
+					"type": "integer",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "investors",
+			"routable": false,
+			"urlPattern": "/investors",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "breadcrumb",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "ticker",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "quote",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"key:string",
+						"value:string"
+					]
+				},
+				{
+					"slug": "fin_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "fin_note",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "fin_headers",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string"
+					]
+				},
+				{
+					"slug": "fin_rows",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"metric:string",
+						"a:string",
+						"b:string",
+						"change:string"
+					]
+				},
+				{
+					"slug": "reports_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "reports",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"format:string",
+						"date:string",
+						"url:string"
+					]
+				},
+				{
+					"slug": "disclosures_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "dividends_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "dividends_text",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "dividends",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"period:string",
+						"value:string",
+						"status:string"
+					]
+				},
+				{
+					"slug": "calendar_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "calendar",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"date:string",
+						"text:string"
+					]
+				},
+				{
+					"slug": "governance_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "governance",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string",
+						"url:string"
+					]
+				},
+				{
+					"slug": "contact_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "contact_name",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "contact_mail",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "contact_phone",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "subscribe_placeholder",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "subscribe_button",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "newsletter_form_id",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "contact",
+			"routable": false,
+			"urlPattern": "/contact",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "notice",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "form",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "form_id",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "reset_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hq_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hq_address_1",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hq_address_2",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hotline_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "sales_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hours_label",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "map_image",
+					"type": "image",
+					"required": false
+				},
+				{
+					"slug": "branches_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "branches",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"city:string",
+						"address:string"
+					]
+				},
+				{
+					"slug": "social_title",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "social_text",
+					"type": "text",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "pages",
+			"routable": true,
+			"urlPattern": "/{slug}",
+			"entriesPerLocale": 7,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "lede",
+					"type": "text",
+					"required": false
+				},
+				{
+					"slug": "content",
+					"type": "portableText",
+					"required": false
+				},
+				{
+					"slug": "template",
+					"type": "select",
+					"required": false,
+					"options": [
+						"default",
+						"kit-newsletter",
+						"kit-email",
+						"kit-form",
+						"kit-slides",
+						"kit-style-guide"
+					]
+				},
+				{
+					"slug": "sample",
+					"type": "json",
+					"required": false
+				}
+			]
+		}
+	],
+	"taxonomies": [
+		{
+			"name": "category",
+			"collections": [
+				"posts"
+			],
+			"terms": [
+				"disclosures",
+				"engineering",
+				"projects",
+				"careers",
+				"company"
+			]
+		},
+		{
+			"name": "tag",
+			"collections": [
+				"posts"
+			],
+			"terms": [
+				"machine-foundations",
+				"structures",
+				"vibration",
+				"factory"
+			]
+		},
+		{
+			"name": "sector",
+			"collections": [
+				"projects"
+			],
+			"terms": [
+				"production",
+				"logistics",
+				"energy",
+				"refurbishment",
+				"infrastructure"
+			]
+		},
+		{
+			"name": "department",
+			"collections": [
+				"vacancies"
+			],
+			"terms": [
+				"site",
+				"design",
+				"estimating",
+				"office"
+			]
+		}
+	],
+	"menus": [
+		{
+			"name": "primary",
+			"items": 6
+		},
+		{
+			"name": "topbar",
+			"items": 2
+		},
+		{
+			"name": "resources_kit",
+			"items": 6
+		},
+		{
+			"name": "footer_services",
+			"items": 4
+		},
+		{
+			"name": "footer_company",
+			"items": 5
+		},
+		{
+			"name": "footer_legal",
+			"items": 3
+		}
+	]
+}

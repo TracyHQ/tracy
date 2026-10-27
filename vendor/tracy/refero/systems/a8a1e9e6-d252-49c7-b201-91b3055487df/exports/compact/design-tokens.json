@@ -1,0 +1,59 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, border-on-hover washes — the warm off-white ground that the entire site sits on"
+    },
+    "graphite-ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Graphite Ink — Primary text, wordmark fill, body copy — near-black with a touch of warmth, softer than pure black"
+    },
+    "charcoal": {
+      "$value": "#343434",
+      "$type": "color",
+      "$description": "Charcoal — Navigation text, secondary headings, muted body — the darker of the two navigation grays"
+    },
+    "ash": {
+      "$value": "#aaaaaa",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, inactive nav items, page number indicator — sits behind primary content"
+    },
+    "silver": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Silver — Hairline dividers, section separators, subtle card backgrounds — the structural border color"
+    },
+    "pale-mist": {
+      "$value": "#dbdbdb",
+      "$type": "color",
+      "$description": "Pale Mist — Decorative stroke work, SVG compass/field-line graphics, ultra-faint border accents"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG illustration fills, maximum-contrast moments — used sparingly where the ink needs to be absolute"
+    }
+  },
+  "font": {
+    "tt-hoves-pro-trial": {
+      "$value": "TT Hoves Pro Trial",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for wordmark, nav, labels, body, and metadata. The ultra-light 300 carries the enormous wordmark — a neogrotesque at whisper weight reads as confident editorial restraint rather than display shouting. 400 runs all body and nav copy; 500 is reserved for the rare emphasis moment."
+    },
+    "neuemontreal": {
+      "$value": "NeueMontreal",
+      "$type": "fontFamily",
+      "$description": "Rare secondary face for body paragraphs in the about/descriptive blocks — a warmer geometric that softens the Hoves rigidity in long-form reading"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.magnetism.fr/en",
+      "siteName": "Magnetism",
+      "extractedAt": "2026-06-03T21:25:28.863Z",
+      "variant": "compact"
+    }
+  }
+}

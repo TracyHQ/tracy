@@ -1,0 +1,11 @@
+.DS_Store
+*.bak
+.astro/
+/.orchid/
+/.frigg/
+/.devana/
+/dist/
+/docs/
+/node_modules/
+/specs/
+orchid-validator-*

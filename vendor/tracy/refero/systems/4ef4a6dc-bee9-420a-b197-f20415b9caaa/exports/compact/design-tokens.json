@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff4f2b",
+      "$type": "color",
+      "$description": "Ember Orange — Orange action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, hero background, card surface base, footer — the dominant stage on which everything floats"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Neutral form states, badge text, and quiet UI feedback where color should stay understated."
+    },
+    "graphite-border": {
+      "$value": "#3c3c3c",
+      "$type": "color",
+      "$description": "Graphite Border — Hairline dividers, ghost button borders, section separators — barely-there structural lines"
+    },
+    "steel-mid": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Steel Mid — Secondary metadata, timestamps, muted labels, tertiary body copy"
+    },
+    "fog-light": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Fog Light — Card borders on dark surfaces, secondary text, dimmed paragraph copy — a lighter neutral for readability without full white"
+    },
+    "bone-white": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Bone White — Primary text, headlines, nav items, icon strokes, ghost button borders — the luminous text color across all dark surfaces"
+    }
+  },
+  "font": {
+    "twk-everett": {
+      "$value": "TWK Everett",
+      "$type": "fontFamily",
+      "$description": "Display and heading family. Weight 300 at 60–96px for hero headlines ('We Are Powered Intelligence') — light weight at massive sizes gives a cool, architectural feel. Weight 400 for section headings. Weight 700 for emphasized words inside headlines. Negative tracking tightens the scale."
+    },
+    "switzer": {
+      "$value": "Switzer",
+      "$type": "fontFamily",
+      "$description": "Body text and primary paragraph copy. The neutral geometric grotesque companion to Everett's sharper display cut. 16px for standard body, 18px for hero subtext and larger paragraphs."
+    },
+    "chivo-mono": {
+      "$value": "Chivo Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced labels, nav items, buttons, tags, metadata ('AUTHOR:', '01' section numbers, button text). Gives the system a terminal/data-center texture — every label reads like a system status readout."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ori.co",
+      "siteName": "Ori",
+      "extractedAt": "2026-06-03T19:43:36.282Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ca9bff3b-d488-46e5-8a32-2d858bb5eed2",
+  "status": "complete",
+  "name": "Backlight",
+  "url": "https://styles.refero.design/style/ca9bff3b-d488-46e5-8a32-2d858bb5eed2",
+  "sourceWebsite": "https://www.backlight.co",
+  "extractedAt": "2026-06-03T22:00:10.610Z",
+  "capturedAt": "2026-10-08T05:17:30.748178+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Vermillion stamp on warm vellum — a printed catalog cover where one ink red commands the cream page and everything else stays in quiet grayscale.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/466d9da1-5304-499e-956f-9cc53c6bd8cf.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8765e8c5bfb78208a52513d3481e1f2935862ba51d37ead58024b74edef6a57a",
+      "bytes": 21181
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fc9aeb5252cb291e16d446efc8f5341d59417a2043a778421cea3c4bda510924",
+      "bytes": 102742
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6e856b37f7ddcbd9352db5137701aef1299dd927ab3ce099734a66c8edd9a47b",
+      "bytes": 17794
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "add65b9c14d264c68ea518c23d6dcffa6f3fe2f1b960cd6f4e3b951e3b1b146a",
+      "bytes": 12412
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b9516dbcfa8f1b4f92d356726e33c07f4e0c97fece4f83288c6a2f7f9a12be0a",
+      "bytes": 13339
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b9677b5e57568c3a18dae7b78a79689078dcc2b5eb2e1bcccb09696fc8cae123",
+      "bytes": 3111
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2a1e3810bf84feaa9b15d223d7627d188407d67d642172476e1a4c82b3b01d8e",
+      "bytes": 573
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9537b815c0294a0b3651b1824a6664d3a9f3bc2337287a21a567b7fe7d8f662e",
+      "bytes": 590
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "fd99297edc1d974c81ee2eacda6ce550f285153cc5f66e16aff962ae99d628ec",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fa4badd0f6cdd4f1dc40577ad2a52477f7fc86ca037dbc7c7d3fb2c0683fe20d",
+      "bytes": 43686
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c52c9c24236476d94882929d0ca24189848eb841bb81708ef679fd9d9a593322",
+      "bytes": 23076
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "56668681917bcc604dd6f89b276c8f660ef6155ad5b7d76ddd9f10d916d6839a",
+      "bytes": 48220
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f2676ef93b898abeb1819419f4f1538ca8c0563d91c0bc4c919522e434ff4c21",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e870244d95b67544c57f132cbb62f88a6dcdb3c80105ac76ff30003740cc0c6f",
+      "bytes": 1738
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0e9933c61be0067cab2ecdc51ce475067935c8830ec6596e623018bd69046b88",
+      "bytes": 2351
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "51734338-9046-47eb-a595-77ffa37b4725",
+    "53538d2d-d5a1-4719-9c7a-d7ab1f3a8c8a",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "9ff62d34-e48d-4fcb-9fd9-c018e2747542",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "ca9bff3b-d488-46e5-8a32-2d858bb5eed2",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

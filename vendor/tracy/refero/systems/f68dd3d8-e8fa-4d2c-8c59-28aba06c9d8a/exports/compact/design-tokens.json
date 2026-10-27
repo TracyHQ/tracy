@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Pure black — the structural anchor, used for hairlines, border strokes, and the deepest surface layer beneath imagery"
+    },
+    "graphite": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Graphite — Primary text and dominant UI foreground — body copy, headings, and the off-black tone that softens pure black for large runs of type"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary page canvas and white card surfaces."
+    },
+    "mist": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Mist — Subtle surface wash for cards and elevated panels — the gentlest step off Paper, used where a panel needs to register without shouting"
+    },
+    "ash": {
+      "$value": "#b8b8b8",
+      "$type": "color",
+      "$description": "Ash — Tertiary surface and muted background fills — visible only as quiet backing for inactive states or low-emphasis blocks"
+    },
+    "steel": {
+      "$value": "#7a7a7a",
+      "$type": "color",
+      "$description": "Steel — Secondary text and subtle UI borders — metadata, timestamps, supporting copy, the mid-gray that bridges Graphite and Ash"
+    },
+    "pewter": {
+      "$value": "#a6a6a6",
+      "$type": "color",
+      "$description": "Pewter — Tertiary text and the quietest dividers — labels, tag text, anywhere type needs to recede into the surface"
+    }
+  },
+  "font": {
+    "graphik-medium": {
+      "$value": "Graphik Medium",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all body, headings, and links. The custom Graphik brings humanist warmth that prevents the monochrome palette from feeling cold — paired with aggressive negative tracking (-0.05em at 60px) it compresses headlines into a single film-credit-like line. Weights stay at 400 and 500 only; no bold jumps, only tonal shifts between regular and medium."
+    },
+    "lcddot-tr": {
+      "$value": "LCDDot TR",
+      "$type": "fontFamily",
+      "$description": "Rare digital accent — a pixel/dot-matrix display face used for at most one or two elements per page (counters, timestamps, glitch labels). Its positive tracking (+0.025em to +0.04em) and rigid grid construction create a single moment of machine voice in an otherwise humanist system, like a digital readout appearing in a dark room."
+    },
+    "system-sans-serif": {
+      "$value": "system sans-serif",
+      "$type": "fontFamily",
+      "$description": "Fallback micro-text — utility copy, browser-rendered labels, or fallback rendering when custom fonts fail to load"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://analogueagency.com",
+      "siteName": "Analogue",
+      "extractedAt": "2026-06-03T19:41:45.785Z",
+      "variant": "compact"
+    }
+  }
+}

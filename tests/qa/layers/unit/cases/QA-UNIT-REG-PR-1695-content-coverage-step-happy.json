@@ -1,0 +1,68 @@
+{
+  "id": "QA-UNIT-REG-PR-1695-content-coverage-step-happy",
+  "itemIds": ["regression:REG-PR-1695-content-coverage-step"],
+  "requirement": "The content coverage step on the Road to live reads the coverage file and blocks Publish on undeclared demo content",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1695-content-coverage-step.json",
+    "ref": "PR #1695 (feat); fix evidence: none recorded",
+    "invariant": "S1: every test passes: the step is green for a coverage file with no unaccepted hole and red, carrying the fix loop, for one with an unaccepted hole or page hygiene finding.",
+    "productSources": [
+      "apps/tracy-web/src/lib/content-coverage/judge.js:49",
+      "apps/tracy-web/src/lib/content-coverage/reader.js:39",
+      "apps/tracy-web/src/lib/contracts.js:139",
+      "apps/tracy-web/src/lib/design-system-ready-templates.js:24",
+      "apps/tracy-web/src/lib/road-to-live.js:380",
+      "apps/tracy-web/src/lib/template-design-system-readiness/severity.js:87"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/content-coverage/reader.js:26 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/content-coverage/reader.js:57 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/test/road-to-live.test.mjs:54 readFileSync() with a computed path",
+      "apps/tracy-web/test/road-to-live.test.mjs:55 readFileSync() with a computed path",
+      "apps/tracy-web/test/road-to-live.test.mjs:56 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1695-content-coverage-step.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1695-content-coverage-step"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1695-content-coverage-step",
+    "pr": 1695,
+    "kind": "feat",
+    "area": "quickstart/content-coverage",
+    "file": "tests/regression/cases/REG-PR-1695-content-coverage-step.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=60000",
+    "apps/tracy-web/test/content-coverage.test.mjs",
+    "apps/tracy-web/test/road-to-live.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

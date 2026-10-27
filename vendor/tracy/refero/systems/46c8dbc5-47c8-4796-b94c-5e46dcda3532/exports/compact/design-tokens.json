@@ -1,0 +1,64 @@
+{
+  "color": {
+    "mountain-slate": {
+      "$value": "#193741",
+      "$type": "color",
+      "$description": "Mountain Slate — Dominant structural color — hero backgrounds, dark section surfaces, primary text, navigation links, and the most-used border color in the system. The near-gray teal reads as atmospheric depth rather than saturated color"
+    },
+    "deep-teal": {
+      "$value": "#1d414d",
+      "$type": "color",
+      "$description": "Deep Teal — Slightly lifted variant of Mountain Slate for outlined action borders, hover states, and secondary dark surfaces. Provides subtle differentiation from the primary teal without introducing a new hue family"
+    },
+    "honey-gold": {
+      "$value": "#eac486",
+      "$type": "color",
+      "$description": "Honey Gold — Yellow decorative accent for icons, marks, and small graphic details. Do not promote it to the primary CTA color"
+    },
+    "snow-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow White — Primary page canvas, navigation bar, light content section backgrounds, and ghost button text on dark surfaces"
+    },
+    "warm-parchment": {
+      "$value": "#ebe7e1",
+      "$type": "color",
+      "$description": "Warm Parchment — Cream surface for content bands — sits between pure white and the dark teal sections to create a soft warm middle tone. Reads as aged paper or natural linen"
+    },
+    "stone-gray": {
+      "$value": "#8c9ba0",
+      "$type": "color",
+      "$description": "Stone Gray — Muted text, secondary borders, and subdued UI elements. A cool desaturated gray that sits comfortably between the warm cream and deep teal"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Rare dark accent for button text and select borders where pure black feels too harsh against the teal-and-cream system"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Input field borders, fine icon fills. Used sparingly as a true-black anchor"
+    }
+  },
+  "font": {
+    "avenir-lt-pro-roman": {
+      "$value": "Avenir LT Pro Roman",
+      "$type": "fontFamily",
+      "$description": "All UI, navigation, body copy, buttons, form labels, and small headlines up to 28px. The humanist geometry gives the system a calm, European-civic clarity. Uppercase usage carries generous tracking (0.125em–0.167em) for editorial feel."
+    },
+    "itc-giovanni-std-bold": {
+      "$value": "ITC Giovanni Std Bold",
+      "$type": "fontFamily",
+      "$description": "Exclusively for editorial display headlines, section titles, and large pull quotes. The transitional serif with a bold weight creates contrast against the sans body — a serif headline signals \"this is a moment\" in the page rhythm. Never used below 16px."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.belarosa-chalet.ch",
+      "siteName": "BelArosa Chalet",
+      "extractedAt": "2026-06-03T17:50:24.459Z",
+      "variant": "compact"
+    }
+  }
+}

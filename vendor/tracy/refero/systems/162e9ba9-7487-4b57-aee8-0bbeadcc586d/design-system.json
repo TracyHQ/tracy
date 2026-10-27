@@ -1,0 +1,345 @@
+{
+  "dos": [
+    "Use #55da9b exclusively for the primary CTA button — never as a background fill for sections, badges, or decorative elements",
+    "Apply GT Walsheim Pro weight 700 with line-height 0.90–0.96 at 46–48px for all display headlines; the tight stacking is the signature poster effect",
+    "Use 0.1em letter-spacing on ALL-CAPS metadata labels (11–13px) — MEMBERS, CLASSES, TEACHERS all track wide to distinguish label hierarchy from body text",
+    "Set instructor/creator photography cards to zero padding — images fill 100% of card face with a bottom scrim overlay for text legibility",
+    "Use border-radius 4px for all buttons, inputs, and cards; reserve 100px radius only for pill-shaped tags or badges — never apply 100px to buttons",
+    "On black-background sections, use #232424 as the surface for stat/metric cards to create depth without shadows or borders",
+    "Keep #00ff84 confined to small checkmarks and icon fills on dark backgrounds only — never use it as button background or large fill"
+  ],
+  "tags": [
+    "black-and-white-dominant",
+    "neon-accent",
+    "photography-forward",
+    "poster-typography",
+    "creator-platform",
+    "dark-light-duality",
+    "geometric-sans",
+    "edge-to-edge-images",
+    "flat-elevation",
+    "minimal-color"
+  ],
+  "donts": [
+    "Never use the Creator Violet (#6927ef) or Electric Cyan (#24c2f2) as background fills for large sections — they are micro-accent colors for icons and specific interactive states only",
+    "Never round hero photography or category browse strips — hard edges on full-bleed images are intentional; adding radius breaks the edge-to-edge poster aesthetic",
+    "Never use weight 100 GT Walsheim Pro for any functional text — it appears only in decorative/watermark contexts and is illegible at body sizes on dark backgrounds",
+    "Never place the Skill Green CTA (#55da9b) on a white section as a ghost or outlined variant — it only works as a filled button on both black and white backgrounds",
+    "Never apply box-shadows to dark-theme (#000000 background) components — depth is achieved through #232424 surface elevation, not shadow",
+    "Never mix multiple accent colors in the same section — pick either #55da9b or #24c2f2 per section, never both simultaneously",
+    "Never set body text line-height below 1.40 at sizes 13–18px — tight line-height is reserved for 36px+ display sizes only"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Studio Black",
+      "role": "Primary text, dark section backgrounds, nav background on scroll — full-spectrum black with no tint creates maximum contrast against white sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page background, card surfaces, text on dark sections, button fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0b1215",
+      "name": "Deep Ink",
+      "role": "Body text on white backgrounds, button text on white buttons — near-black with the faintest cool tint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#394649",
+      "name": "Graphite Stroke",
+      "role": "Border color on white buttons, secondary text, dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e0e0e0",
+      "name": "Fog Border",
+      "role": "Input borders, card dividers, subtle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#757575",
+      "name": "Ash Mid",
+      "role": "Placeholder text in inputs, secondary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#232424",
+      "name": "Charcoal Surface",
+      "role": "Elevated dark card backgrounds on black sections — one step lighter than pure black to create surface depth without shadows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#55da9b",
+      "name": "Skill Green",
+      "role": "Primary CTA button fill, brand accent — a muted-vivid green that reads warm against black and cool against white, avoiding both danger and safety connotations",
+      "group": "brand"
+    },
+    {
+      "hex": "#00ff84",
+      "name": "Neon Pulse",
+      "role": "Checkmark icons on feature lists, active fill states — saturated to near-glow, appears only as small marks on black backgrounds where luminosity hits hardest",
+      "group": "brand"
+    },
+    {
+      "hex": "#24c2f2",
+      "name": "Electric Cyan",
+      "role": "Secondary accent, stat highlights, animated elements on dark sections",
+      "group": "accent"
+    },
+    {
+      "hex": "#6927ef",
+      "name": "Creator Violet",
+      "role": "Hover state backgrounds, link accent on specialized flows",
+      "group": "accent"
+    },
+    {
+      "hex": "#5620c1",
+      "name": "Deep Violet",
+      "role": "Active/pressed state for violet interactive elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#1877f2",
+      "name": "Facebook Blue",
+      "role": "Facebook social login icon fill — brand color of the platform, not Skillshare's own",
+      "group": "semantic"
+    },
+    {
+      "hex": "#ea4335",
+      "name": "Google Red",
+      "role": "Google 'G' logo fill in social login button",
+      "group": "semantic"
+    },
+    {
+      "hex": "#f6b60b",
+      "name": "Warning Amber",
+      "role": "Star ratings, achievement indicators",
+      "group": "semantic"
+    }
+  ],
+  "layout": "Max-width ~1280px centered with full-bleed dark and light section bands. Hero is a two-column split: left ~55% white background with oversized stacked headline, right ~45% black background hosting the registration widget — the only page section using this side-by-side light/dark split. Below the hero, full-bleed horizontal photography strips serve as category navigation, spanning 100vw with zero margin. Subsequent sections alternate pure black and white backgrounds with 80–120px vertical padding. Dark feature sections use two-column layout (headline left, checklist right). Instructor grid is a 4-column responsive card grid with 12px gutters. Stat counters use a single-row 4-column flex layout within a dark section. Navigation is a white sticky bar at ~56px height with logo-left, search-center, auth-right arrangement — no mega-menu, no sidebar.",
+  "imagery": "Photography-forward with zero illustration outside of small SVG icons. Instructor portraits are the dominant image type — tight head-and-shoulders crops with natural studio lighting, filling card faces edge-to-edge with no padding or border treatment. Category browse strips use lifestyle photography (hands on tablets, close-up product shots, faces with accessories) at full viewport height in a horizontal scroll strip, each panel hard-edged with no radius. Text overlays use a bottom-anchored gradient scrim (transparent to rgba(0,0,0,0.7)) rather than opaque overlays. Photography is high-contrast with saturated colors — editorial-quality, not stock. Icons are minimal outlined SVGs at 20px, monochrome (#ffffff on dark, #0b1215 on light), stroke-weight consistent at ~1.5px. Imagery occupies roughly 60% of visual space on browse sections; the registration hero is text/UI-dominant with no photography.",
+  "similar": [
+    {
+      "why": "Same photography-dominant dark sections with white display typography and a single brand-color CTA, instructor portraits as hero content",
+      "business": "Masterclass"
+    },
+    {
+      "why": "Split hero layout with sign-up widget on dark right panel alongside headline-left structure, social auth button stacking",
+      "business": "Coursera"
+    },
+    {
+      "why": "Edge-to-edge instructor photography cards with name/title overlay scrims and a creator-community grid browse pattern",
+      "business": "Domestika"
+    },
+    {
+      "why": "Mixed light/dark section alternation with white nav, neon accent on CTA, and category-browse horizontal strips",
+      "business": "LinkedIn Learning"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "4px",
+      "pills": "100px",
+      "inputs": "4px",
+      "buttons": "4px",
+      "elevated": "8px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "80-120px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1280px"
+  },
+  "category": "education",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "level": 0,
+      "purpose": "Dark section backgrounds, hero right panel, feature sections"
+    },
+    {
+      "hex": "#232424",
+      "name": "Charcoal Lift",
+      "level": 1,
+      "purpose": "Stat cards and metric tiles floating on pure black sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White Page",
+      "level": 2,
+      "purpose": "Light section backgrounds, registration panel, card surfaces"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Navigation Bar",
+      "level": 3,
+      "purpose": "Sticky nav — same white as page background, separated by content not chrome"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 2px 4px 0px",
+      "element": "Course Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 2px 4px 0px",
+      "element": "Instructor Portrait Card"
+    },
+    {
+      "style": "rgba(180, 184, 184, 0.5) 0px 2px 4px 0px",
+      "element": "Secondary UI Element"
+    }
+  ],
+  "northStar": "Poster studio on matte black — bold instructor faces, chalk-white type, single neon pulse.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.45,
+      "letterSpacing": 1.1
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading-sm",
+      "size": 28,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading",
+      "size": 38,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "heading-lg",
+      "size": 46,
+      "lineHeight": 0.96
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 0.9
+    }
+  ],
+  "components": [
+    {
+      "html": "<style>\n  :root {\n    --color-studio-black: #000000;\n    --color-pure-white: #ffffff;\n    --color-deep-ink: #0b1215;\n    --color-graphite-stroke: #394649;\n    --color-fog-border: #e0e0e0;\n    --color-ash-mid: #757575;\n    --color-charcoal-surface: #232424;\n    --color-skill-green: #55da9b;\n    --color-neon-pulse: #00ff84;\n    --color-electric-cyan: #24c2f2;\n    --color-creator-violet: #6927ef;\n    --color-facebook-blue: #1877f2;\n    --color-google-red: #ea4335;\n    --color-warning-amber: #f6b60b;\n    --font-gt-walsheim-pro: 'Inter', 'DM Sans', sans-serif;\n  }\n\n  .reg-wrapper {\n    background: var(--color-studio-black);\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    padding: 48px 24px;\n    font-family: var(--font-gt-walsheim-pro);\n  }\n\n  .reg-panel {\n    background: var(--color-pure-white);\n    width: 100%;\n    max-width: 380px;\n    padding: 32px 28px 24px;\n    border-radius: 4px;\n  }\n\n  .reg-heading {\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 22px;\n    font-weight: 700;\n    color: var(--color-deep-ink);\n    text-align: center;\n    line-height: 1.25;\n    margin: 0 0 4px;\n  }\n\n  .reg-heading span {\n    text-decoration: underline;\n    text-decoration-color: var(--color-skill-green);\n    text-underline-offset: 3px;\n  }\n\n  .reg-buttons {\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    margin-top: 24px;\n  }\n\n  .auth-btn {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 12px;\n    width: 100%;\n    padding: 11px 15px;\n    background: var(--color-pure-white);\n    border: 1px solid var(--color-graphite-stroke);\n    border-radius: 4px;\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 15px;\n    font-weight: 500;\n    color: var(--color-deep-ink);\n    cursor: pointer;\n    text-align: center;\n    box-sizing: border-box;\n    text-decoration: none;\n    transition: background 0.15s;\n  }\n\n  .auth-btn:hover {\n    background: #f5f5f5;\n  }\n\n  .auth-btn svg {\n    flex-shrink: 0;\n    width: 20px;\n    height: 20px;\n  }\n\n  .email-link {\n    display: block;\n    margin-top: 16px;\n    text-align: center;\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 14px;\n    font-weight: 500;\n    color: var(--color-creator-violet);\n    text-decoration: none;\n    background: transparent;\n    border: none;\n    cursor: pointer;\n  }\n\n  .email-link:hover {\n    text-decoration: underline;\n  }\n\n  .reg-fine {\n    margin-top: 20px;\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 11px;\n    color: var(--color-ash-mid);\n    line-height: 1.45;\n    text-align: center;\n  }\n\n  .reg-fine a {\n    color: var(--color-deep-ink);\n    font-weight: 600;\n    text-decoration: none;\n  }\n</style>\n<div class=\"reg-wrapper\">\n  <div class=\"reg-panel\">\n    <h2 class=\"reg-heading\">Disfruta <span>7 días gratis</span> de Skillshare</h2>\n    <div class=\"reg-buttons\">\n      <a href=\"#\" class=\"auth-btn\">\n        <svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n          <path d=\"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z\" fill=\"#4285F4\"/>\n          <path d=\"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z\" fill=\"#34A853\"/>\n          <path d=\"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z\" fill=\"#FBBC05\"/>\n          <path d=\"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z\" fill=\"#EA4335\"/>\n        </svg>\n        Continuar con Google\n      </a>\n      <a href=\"#\" class=\"auth-btn\">\n        <svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n          <path d=\"M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z\" fill=\"#1877F2\"/>\n        </svg>\n        Continuar con Facebook\n      </a>\n      <a href=\"#\" class=\"auth-btn\">\n        <svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n          <path d=\"M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z\" fill=\"#000000\"/>\n        </svg>\n        Continuar con Apple\n      </a>\n    </div>\n    <a href=\"#\" class=\"email-link\">Continuar con correo electrónico</a>\n    <p class=\"reg-fine\">\n      Cuando te registras, aceptas los <a href=\"#\">Términos de servicio</a> y\n      <a href=\"#\">Política de privacidad de Skillshare</a> y aceptas recibir\n      comunicaciones de marketing de Skillshare en la dirección de correo electrónico\n      proporcionada. Esta página está protegida por reCAPTCHA y está sujeta a los\n      <a href=\"#\">Términos de Servicio</a> y <a href=\"#\">Política de privacidad</a> de Google.\n    </p>\n  </div>\n</div>",
+      "name": "Registration Panel — Auth Buttons",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>\n  :root {\n    --color-studio-black: #000000;\n    --color-pure-white: #ffffff;\n    --color-deep-ink: #0b1215;\n    --color-charcoal-surface: #232424;\n    --color-ash-mid: #757575;\n    --color-warning-amber: #f6b60b;\n    --font-gt-walsheim-pro: 'Inter', 'DM Sans', sans-serif;\n  }\n\n  .stats-section {\n    background: var(--color-studio-black);\n    padding: 64px 24px;\n    font-family: var(--font-gt-walsheim-pro);\n    box-sizing: border-box;\n  }\n\n  .stats-grid {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    gap: 12px;\n    max-width: 560px;\n    margin: 0 auto;\n  }\n\n  .stat-card {\n    background: var(--color-charcoal-surface);\n    border-radius: 8px;\n    padding: 24px 20px;\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    gap: 6px;\n    box-sizing: border-box;\n  }\n\n  .stat-value {\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 36px;\n    font-weight: 700;\n    color: var(--color-pure-white);\n    line-height: 1.0;\n    margin: 0;\n    display: flex;\n    align-items: center;\n    gap: 6px;\n  }\n\n  .stat-stars {\n    display: inline-flex;\n    gap: 1px;\n    align-items: center;\n  }\n\n  .stat-stars svg {\n    width: 20px;\n    height: 20px;\n    fill: var(--color-warning-amber);\n  }\n\n  .stat-label {\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 11px;\n    font-weight: 500;\n    color: var(--color-ash-mid);\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    margin: 0;\n  }\n</style>\n<div class=\"stats-section\">\n  <div class=\"stats-grid\">\n    <div class=\"stat-card\">\n      <div class=\"stat-value\">425k+</div>\n      <div class=\"stat-label\">Members</div>\n    </div>\n    <div class=\"stat-card\">\n      <div class=\"stat-value\">30k+</div>\n      <div class=\"stat-label\">Classes</div>\n    </div>\n    <div class=\"stat-card\">\n      <div class=\"stat-value\">9k+</div>\n      <div class=\"stat-label\">Teachers</div>\n    </div>\n    <div class=\"stat-card\">\n      <div class=\"stat-value\">\n        4.8\n        <span class=\"stat-stars\">\n          <svg viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"/></svg>\n          <svg viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"/></svg>\n          <svg viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"/></svg>\n          <svg viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"/></svg>\n          <svg viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"/></svg>\n        </span>\n      </div>\n      <div class=\"stat-label\">App Store Rating</div>\n    </div>\n  </div>\n</div>",
+      "name": "Stat Counter Cards — Social Proof Metrics",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>\n  :root {\n    --color-studio-black: #000000;\n    --color-pure-white: #ffffff;\n    --color-neon-pulse: #00ff84;\n    --font-gt-walsheim-pro: 'Inter', 'DM Sans', sans-serif;\n  }\n\n  .feature-section {\n    background: var(--color-studio-black);\n    padding: 64px 32px;\n    font-family: var(--font-gt-walsheim-pro);\n    box-sizing: border-box;\n    max-width: 600px;\n    margin: 0 auto;\n  }\n\n  .feature-layout {\n    display: flex;\n    flex-direction: column;\n    gap: 40px;\n  }\n\n  .feature-heading {\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 46px;\n    font-weight: 700;\n    color: var(--color-pure-white);\n    line-height: 0.96;\n    margin: 0;\n    max-width: 280px;\n  }\n\n  .feature-list {\n    display: flex;\n    flex-direction: column;\n    gap: 20px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }\n\n  .feature-item {\n    display: flex;\n    align-items: flex-start;\n    gap: 14px;\n  }\n\n  .check-icon {\n    flex-shrink: 0;\n    width: 24px;\n    height: 24px;\n    background: var(--color-neon-pulse);\n    border-radius: 50%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    margin-top: 1px;\n  }\n\n  .check-icon svg {\n    width: 13px;\n    height: 13px;\n  }\n\n  .feature-text {\n    font-family: var(--font-gt-walsheim-pro);\n    font-size: 18px;\n    font-weight: 700;\n    color: var(--color-pure-white);\n    line-height: 1.35;\n    margin: 0;\n  }\n</style>\n<div class=\"feature-section\">\n  <div class=\"feature-layout\">\n    <h2 class=\"feature-heading\">Aprendizaje creativo más fácil</h2>\n    <ul class=\"feature-list\">\n      <li class=\"feature-item\">\n        <div class=\"check-icon\">\n          <svg viewBox=\"0 0 13 13\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M2 6.5L5.5 10L11 3\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n        <p class=\"feature-text\">Miles de clases creativas. De principiante a profesional.</p>\n      </li>\n      <li class=\"feature-item\">\n        <div class=\"check-icon\">\n          <svg viewBox=\"0 0 13 13\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M2 6.5L5.5 10L11 3\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n        <p class=\"feature-text\">Impartidas por profesionales creativos e íconos de la industria.</p>\n      </li>\n      <li class=\"feature-item\">\n        <div class=\"check-icon\">\n          <svg viewBox=\"0 0 13 13\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M2 6.5L5.5 10L11 3\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n        <p class=\"feature-text\">Rutas de aprendizaje para ayudarte a alcanzar tus metas.</p>\n      </li>\n      <li class=\"feature-item\">\n        <div class=\"check-icon\">\n          <svg viewBox=\"0 0 13 13\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M2 6.5L5.5 10L11 3\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n        <p class=\"feature-text\">Certificados para celebrar tus logros.</p>\n      </li>\n    </ul>\n  </div>\n</div>",
+      "name": "Feature Checklist — Dark Section",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "Main registration and sign-up actions",
+      "description": "Background #55da9b, text #0b1215 at weight 600, 14–16px GT Walsheim Pro. Border-radius 4px. Padding 5px 15px. No border. Appears in navbar and hero — the only consistent green element on any page section regardless of surrounding theme."
+    },
+    {
+      "name": "White Outlined Auth Button",
+      "role": "Social login options (Google, Facebook, Apple)",
+      "description": "Background #ffffff, text #0b1215 at weight 500, 15px. Border 1px solid #394649, border-radius 4px. Padding 5px 15px. Contains 20px platform icon left-aligned. Full-width within registration panel. Stacked vertically with 8px gaps."
+    },
+    {
+      "name": "Ghost Text Link Button",
+      "role": "Email continuation, secondary navigation actions",
+      "description": "Background transparent, text #6927ef at 500 weight, 14px. No border, no radius, no padding. Underlined on hover. Used as the 'Continuar con correo electrónico' option below the social auth buttons."
+    },
+    {
+      "name": "Instructor Portrait Card",
+      "role": "Teacher browse grid — social proof section",
+      "description": "Background #ffffff, border-radius 4px top, 8px bottom. Box-shadow rgba(0,0,0,0.1) 0px 2px 4px. Zero padding — photography fills 100% of card face. Overlaid at bottom: small 'CONOCE' label at 11px uppercase tracking 0.1em in #ffffff, followed by instructor name at 24px weight 700 #ffffff, title at 12px uppercase #ffffff. Gradient scrim from transparent to rgba(0,0,0,0.7) over bottom 40% of image."
+    },
+    {
+      "name": "Category Browse Card",
+      "role": "Full-bleed horizontal category slider",
+      "description": "No card chrome — full-bleed photographic strip with category label at bottom-left, 18–22px weight 700 #ffffff, with a dark overlay. Cards are 150–200px wide, full viewport height within the slider strip. No border radius — hard edges on left/right, categories run edge-to-edge."
+    },
+    {
+      "name": "Stat Counter Card",
+      "role": "Social proof metrics — Members, Classes, Teachers, Rating",
+      "description": "Background #232424 on a #000000 section. Border-radius 8px. Padding 16px. No shadow. Stat value at 34–38px weight 700 #ffffff. Label below at 11px weight 500, uppercase, tracking 0.1em, #757575. Four cards in a 4-column horizontal grid."
+    },
+    {
+      "name": "Feature Checklist Item",
+      "role": "Benefit list on dark sections",
+      "description": "Horizontal flex: #00ff84 filled checkmark icon (20px) + body text at 16px weight 400 #ffffff. Vertical gap 12px between items. No container — items float on pure black background."
+    },
+    {
+      "name": "Search Input Bar",
+      "role": "Global navigation search",
+      "description": "Background transparent, border 1px solid #e0e0e0, border-radius 4px. Padding 0 38px on both sides (icon gutters). Placeholder text #757575 at 14px GT Walsheim Pro. Search icon 20px left-inset, clear/submit icon right-inset. Appears in white nav bar only."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Sticky top navigation",
+      "description": "Background #ffffff. Height ~56px. Logo left-aligned, 'Navegar' dropdown with chevron center-left. Search bar spans ~50% width. Right side: 'Iniciar sesión' text link in #0b1215 weight 500, then 'Regístrate' green CTA button. No bottom border in hero section — relies on content separation."
+    },
+    {
+      "name": "Dark Split Section",
+      "role": "Feature/benefit alternating sections on black background",
+      "description": "Full-width background #000000. Two-column layout: left column heading at 38–46px weight 700 #ffffff, right column feature checklist items. Section padding 80px vertical. Section headings use tight 0.96 line-height producing poster-stacked effect."
+    },
+    {
+      "name": "Registration Panel",
+      "role": "Right-half hero sign-up widget",
+      "description": "Background #ffffff. Width ~380px. Heading 'Disfruta 7 días gratis de Skillshare' at 22px weight 700 #0b1215 centered. Three stacked auth buttons with 8px gaps. 'Continuar con correo electrónico' ghost link centered below. Fine print at 11px #757575. Panel sits on pure black hero background with no card chrome — the white block floats."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Every UI element — headlines at 700 weight with 0.90 line-height produce a stacked poster effect at 46–48px. Body at 400/16px with 1.50 line-height. Buttons and labels at 500–600. Weight 100 appears only in decorative or watermark contexts. The custom font brings rounded geometric terminals that soften the stark black/white palette.",
+      "sizes": "11px, 12px, 13px, 14px, 15px, 16px, 18px, 20px, 22px, 24px, 28px, 34px, 36px, 38px, 46px, 48px",
+      "family": "GT Walsheim Pro",
+      "weight": "100, 400, 500, 600, 700",
+      "lineHeight": "0.90–1.55 (tight 0.90–0.96 at display sizes 36px+, 1.20–1.50 at body sizes)",
+      "substitute": "Inter, DM Sans",
+      "letterSpacing": "0.1em on uppercase labels (caps tracking for ALL-CAPS metadata like MEMBERS, CLASSES, TEACHERS)",
+      "fontFeatureSettings": "normal"
+    },
+    {
+      "role": "System fallback only — appears in legal/fine-print contexts where custom font fails to load. Not an intentional typographic choice.",
+      "sizes": "16px",
+      "family": "Times",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Georgia"
+    }
+  ],
+  "description": "Skillshare operates in stark black-and-white contrast with a single electric cyan-green accent that fires only on key interactive moments. The hero splits between a chalk-white left panel with bold headline weight and a pure black right panel hosting the registration flow — a literal light/dark duality that mirrors its creator/learner tension. Photo cards of instructors are presented edge-to-edge without padding, letting faces fill the frame; identity replaces ornament. The GT Walsheim Pro typeface at weight 700 for headlines and tight 0.90-0.96 line heights on large sizes creates a stacked, poster-like density. Cyan-green (#55da9b) and the brighter #00ff84 appear exclusively on CTAs and checkmarks — tiny amounts of color doing maximum work against acres of black and white.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Page background (light sections): #ffffff\n- Page background (dark sections): #000000\n- Primary text: #0b1215\n- Reverse text (on dark): #ffffff\n- CTA button fill: #55da9b\n- CTA button text: #0b1215\n- Borders / outlines: #394649 (buttons), #e0e0e0 (inputs)\n- Brand accent (checkmarks, icons): #00ff84\n- Secondary accent: #24c2f2\n\n**Example Component Prompts**\n\n1. **Navigation Bar**: White (#ffffff) sticky bar, 56px tall. Left: 'skillshare' wordmark at 20px GT Walsheim Pro weight 700 #0b1215. Center: search input with transparent fill, 1px #e0e0e0 border, 4px radius, 38px horizontal padding, placeholder #757575. Right: 'Iniciar sesión' text at 14px weight 500 #0b1215, then 'Regístrate' button — #55da9b fill, #0b1215 text, 4px radius, 5px 15px padding.\n\n2. **Hero Section**: Two-column full-bleed split. Left 55%: white background, headline 'Clases creativas impartidas...' at 46px GT Walsheim Pro weight 700 #0b1215 line-height 0.96, stacked 3 lines. Right 45%: pure black (#000000) background with white registration panel (380px wide, no card border) containing 22px weight 700 heading, three 15px weight 500 white outlined buttons (1px #394649, 4px radius, full width), ghost violet link below.\n\n3. **Stat Counter Row**: Full-width black (#000000) section, 80px vertical padding. 4-column grid, each cell: #232424 background, 8px radius, 16px padding. Stat value 38px GT Walsheim Pro weight 700 #ffffff. Label 11px weight 500 uppercase, 0.1em letter-spacing, #757575.\n\n4. **Instructor Portrait Card**: 4-column grid. Card: 4px radius top, 8px bottom, zero padding, box-shadow rgba(0,0,0,0.1) 0 2px 4px. Full-bleed portrait photo. Bottom overlay: gradient transparent → rgba(0,0,0,0.7) over 40% height. Overlay text: 'CONOCE' at 11px uppercase tracking 0.1em #ffffff, name at 22px weight 700 #ffffff, title at 11px uppercase #ffffff.\n\n5. **Feature Checklist on Dark**: Black (#000000) section, two columns. Left: heading 38px weight 700 #ffffff line-height 0.96. Right: vertical list, each item = 20px #00ff84 filled check icon + 16px weight 400 #ffffff text, 12px gap between items."
+    },
+    {
+      "title": "Black/White Duality System",
+      "content": "The design alternates between two modes with no transitional grays: MODE WHITE (#ffffff background, #0b1215 text, #55da9b CTA) and MODE BLACK (#000000 background, #ffffff text, #00ff84 accents, #232424 cards). Sections snap between these two modes — never use a gray or off-white background for section backgrounds. The #394649 graphite appears only as border/stroke on WHITE mode elements; it never appears on black backgrounds. The transition between modes is a hard edge (no gradient, no divider line) — the color change IS the section separator."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are uniformly shallow — 2px blur, 4px spread, 10% black opacity. Dark sections achieve depth entirely through background-color stepping (#000000 → #232424) with zero shadows. Elevation is a light-theme-only concept; dark surfaces stack without any shadow layer."
+}

@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-ember-red: #ee3a49;
+  --color-hyper-green: #0fa64b;
+  --color-signal-blue: #007bff;
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-graphite: #666666;
+
+  /* Typography */
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

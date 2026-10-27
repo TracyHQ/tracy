@@ -1,0 +1,307 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-educatsy",
+  "release": "quickstart/ja-educatsy/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.sub-heading.text-primary",
+    "heading": "h2.sub-heading.text-normal",
+    "body": "p",
+    "button-primary": "div.actions a.btn.btn-primary",
+    "card": "div.features-item.bg-primary-light",
+    "container": "div.container",
+    "section": "#t4-section-1"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 56px",
+    "displayFace": "Barlow 700, tracking 0em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(26, 193, 144)",
+    "card": "repeated rounded box ×5",
+    "container": "first content container, max-width 1336px",
+    "section": "first padded full-width section, padding-top 128px",
+    "displayPhone": "the same heading at 390 on the published release: 21px"
+  },
+  "keepScopes": [".bg-secondary", ".t4-spotlight-1", ".t4-footnav", ".t4-copyright", "#t4-header"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#585858",
+    "--fg-2": "#333333",
+    "--accent": "#1ac190",
+    "--accent-hover": "#1ea684",
+    "--surface": "#f8f9fa",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#f4f4f4",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Barlow\", sans-serif",
+    "--font-body": "\"Barlow\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#240e50"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#585858",
+      "fg-2": "#333333",
+      "accent": "#1ac190",
+      "accent-hover": "#1ea684",
+      "surface": "#f8f9fa",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#f4f4f4",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#585858",
+      "fg-2": "#333333",
+      "accent": "#1ac190",
+      "accent-on": "#ffffff",
+      "border": "#f4f4f4",
+      "surface-warm": "#240e50"
+    },
+    {
+      "accent": "#1ac190"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#faf8ff",
+      "warn": "#fdce03",
+      "border-soft": "#dddddd"
+    },
+    {
+      "surface": "#ececec"
+    },
+    {
+      "surface": "#eaedf1"
+    },
+    {
+      "surface": "#f2f2f2"
+    },
+    {
+      "surface": "#f4f4f4"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (87 line colours, 129 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.sub-heading.text-primary",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.features-item.bg-primary-light", ".card"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#t4-section-1"],
+    "bodyFace": ["body"],
+    "accentText": [
+      ".t4-palette-mainnav .t4-navbar .navbar-nav > li.active > a:not(.active)",
+      ".t4-palette-mainnav .t4-navbar .navbar-nav > li.show > a:not(.active)"
+    ],
+    "cardLike": [".item"],
+    "inkImages": [".client-img img", ".logo-img", ".navbar-brand img", ".logo img", ".t4-logo img"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 19 tried (byte 6022); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#faf8ff",
+      "uses": 31,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 5
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 8,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#ececec",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 23
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 9
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#585858",
+    "--body-link-color": "#1ac190",
+    "--body-link-hover-color": "#1ea684",
+    "--color-primary": "#1ac190",
+    "--color-secondary": "#240e50",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#333333"
+  },
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the 1.0.1 release build itself (~/tracy-bench-work/release/ds-r3e/ja-educatsy/release, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-educatsy-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 88% or more of the page follows, checked by eye on the four systems' screenshots; the header and main menu laid over the kept violet hero keep the template's own colours (keepNote). Earlier: measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-educatsy/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip, T4 building media/t4/css from the tokenized css/tpl/theme.tpl.css on first request: tasks/evidence/ds-contracts-r3e-2026-10-11/templates/ja-educatsy-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 86% or more of the page follows; the course tabs' active pill and the section eyebrows follow through followRules (both painted by T4's generated palette stylesheet); the dark violet band .bg-secondary keeps its own text (keepText); checked by eye on the four systems' screenshots, light and dark",
+  "accentTextNote": "the active menu item is painted by T4's generated palette stylesheet (media/t4/css/<style>.css: `color: #1ac190!important`, a file no release can tokenize): the slot gives it the accent made readable on the page, !important as the palette's own rule; :not(.active): an a.nav-link.active is a filled pill (white on the palette's #1ac190) and keeps that pair",
+  "accentTextImportant": true,
+  "paletteBands": {
+    ".t4-palette-gray": "surface"
+  },
+  "paletteBandsNote": "its course-category band is a T4 palette section (a 5% violet tint, links #1ac190 from T4's generated stylesheet): it takes the surface and the text that reads on it",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "keepText": [".bg-secondary"],
+  "followRules": {
+    ".acm-container-tabs .nav-tabs .nav-link:is(.active, :hover, :focus)": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".acm-container-tabs .nav-tabs .nav-item:has(.nav-link.active)": {
+      "color": "accent-on"
+    },
+    ".section-title span": {
+      "color": "accent-text",
+      "background-color": "surface"
+    }
+  },
+  "followRulesNote": "parts painted by T4's generated palette stylesheet (media/t4/css/<style>.css), which no release can tokenize: the course tabs' active pill (white on #1ac190) takes the accent and its own text colour, so the pill and its label change together (11/10/2026: the label followed the system on the fixed green, 1.11:1 under Toggl Track); the eyebrow over each section title (#1ac190 on a mint chip) takes the accent made readable on the surface it now sits on (the chip stayed mint under Moxie's black page, 2.17:1)",
+  "minVersion": {
+    "quickstart/ja-educatsy/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-educatsy/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "templateVars": {},
+  "templateVarsNote": "none, as measured: written empty so pass-joomla.mjs does not draft T4 theme variables over this measured contract",
+  "keepColors": {
+    "#t4-header": "rgb(255, 255, 255)"
+  },
+  "keepNote": "#t4-header (re-measure of 11/10/2026): the header and main menu are laid over the violet hero band (.bg-secondary, #240e50, kept), so they keep the template's own white text and green current item; the current item took the light systems' readable accent and read 3.0:1 under MotherDuck and 3.4:1 under Apple on the violet at 1440",
+  "bands": {
+    ".bg-secondary": {
+      "ground": "#240e50",
+      "texts": ["#9287a8", "#ffffff"],
+      "important": true
+    },
+    ".t4-spotlight-1": {
+      "ground": "#8327f3",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".stats-inner": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#240e50",
+      "texts": ["#9287a8", "#ffffff"],
+      "important": true
+    },
+    ".t4-copyright": {
+      "ground": "#240e50",
+      "texts": ["#a79fb9", "#ffffff"],
+      "important": true
+    },
+    "#t4-header": {
+      "ground": "#ffffff",
+      "texts": ["#ffffff"],
+      "root": false,
+      "paint": {
+        ".menu-item-title": {
+          "color": "accent"
+        },
+        ".t4-content": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; .t4-spotlight-1 paints its .stats-inner with the band's ground (13/10/2026): the stats lay a translucent light panel over the band, which lifted the system's blue under the white numbers to 4.36:1 (BMW) and 3.92:1 (Vercel)",
+  "sideRules": {
+    "light": {
+      ".cta-wrap.bg-secondary": {
+        "background-blend-mode": "luminosity"
+      }
+    },
+    "dark": {
+      ".cta-wrap.bg-secondary": {
+        "background-blend-mode": "luminosity"
+      }
+    }
+  },
+  "inkNote": "the partners row (.client-img img) is dark grey wordmarks at the template's 50% opacity, drawn for its white page: under a dark system they sat dark on black, all but gone (visual review 14/10/2026); they are shown inverted with their hues kept (selectors.inkImages). The framework's logo pictures are named here too: a contract's inkImages takes the place of the general flipped-logo rule under a dark system, and the wordmark must keep flipping",
+  "sideNote": "the call-to-action card (.cta-wrap.bg-secondary, a kept band) carries its picture inline with !important (cta.png: a flat violet card with two lighter circles), so the band's worn ground never showed and the card stayed the template violet under every system (visual review 14/10/2026). Over the band's worn ground with background-blend-mode: luminosity it keeps the picture's light and dark, so its white words read as released, and takes the hue of the ground the band wears (the system's ink or accent; a kept band's --ds-c-* are reset, so the ground cannot be named by role there). The avatar rings (cta-decor.png) keep the template violet"
+}

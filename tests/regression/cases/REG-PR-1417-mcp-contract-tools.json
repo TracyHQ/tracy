@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1417-mcp-contract-tools",
+  "kind": "fix",
+  "title": "MCP exposes fixed contract tools and refuses hidden operation dispatch",
+  "pr": 1417,
+  "area": "mcp/tools",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Discover tools through tools/list using the MCP harness.",
+    "Call each contract tool and inspect its dispatched REST path.",
+    "Try overriding operation through path, body and top-level arguments; call the removed generic dispatcher.",
+    "Call apply without changes and with declared revision/retry headers."
+  ],
+  "expect": [
+    "Every public contract operation except provisioning-only derive has a separate description, input schema and correct read/write annotations.",
+    "Every tool dispatches only its fixed contract operation.",
+    "Operation overrides and the removed dispatcher return JSON-RPC -32602 without a REST call.",
+    "Apply requires changes and preserves If-Match and Idempotency-Key."
+  ],
+  "selectors": {
+    "list": "MCP tools/list",
+    "call": "MCP tools/call"
+  },
+  "fence": "Fixed operation routes, explicit body properties and transport validation prevent undeclared operation dispatch.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/mcp.test.mjs",
+      "apps/tracy-web/test/module-graph.test.mjs"
+    ],
+    "tests": [
+      "MCP exposes every callable contract operation separately and omits the dispatcher and provisioning",
+      "MCP contract tools dispatch only their fixed operation and reject operation injection before REST",
+      "MCP contract apply requires changes and preserves declared revision and retry headers",
+      "a domain directory imports only lib/ and db/, never another domain"
+    ],
+    "needs": []
+  }
+}

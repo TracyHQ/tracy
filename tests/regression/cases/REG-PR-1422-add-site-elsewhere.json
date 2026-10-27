@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1422-add-site-elsewhere",
+  "kind": "feat",
+  "title": "The Add site wizard follows 409 USE_SHARD (redirect) and 503 SHARD_FULL (createAt) to the server that keeps the person's sites, and follows only an absolute https URL the door sent",
+  "pr": 1422,
+  "area": "add-site/shard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd`; it replaces fetch and calls the real createSite of packages/site/tracy-add-site/src/client/create.ts. No database, no server.",
+    "S2: A 409 USE_SHARD with redirect https://s1.tracy.ai/new/ answers {refusal: elsewhere, url}; a 503 SHARD_FULL with createAt answers the same shape.",
+    "S3: A redirect that is relative, http:, javascript: or scheme-relative, or missing, answers {refusal: other} with no url; a USE_SHARD on 503 or a SHARD_FULL on 409 is not believed.",
+    "S4: TAKEN, HOST_UPDATING and NOT_SIGNED_IN answer as before."
+  ],
+  "expect": [
+    "0 failures and 0 skipped.",
+    "Every test named in run.tests reports ok.",
+    "No outcome carries a url that is not an absolute https URL."
+  ],
+  "selectors": {
+    "door": "POST /api/sites",
+    "test": "packages/site/tracy-add-site/test/create-elsewhere.test.mjs"
+  },
+  "fence": "The wizard only ever navigates to an absolute https URL that the create door itself returned on its own status (409 USE_SHARD, 503 SHARD_FULL); a relative, http:, javascript: or scheme-relative target is refused as a plain error with no url. Pure client logic with a fake fetch, no network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/create-elsewhere.test.mjs"
+    ],
+    "tests": [
+      "409 USE_SHARD with a redirect is elsewhere, with that url",
+      "503 SHARD_FULL with createAt is elsewhere too, read before the 5xx rule",
+      "a url that is not an absolute https one is not followed: the refusal is other, with no url",
+      "the codes are believed only on their own status (doorCode): a 503 USE_SHARD or a 409 SHARD_FULL decides nothing",
+      "the refusals of today are untouched beside the new one",
+      "elsewhereUrl keeps an absolute https URL and nothing else"
+    ]
+  }
+}

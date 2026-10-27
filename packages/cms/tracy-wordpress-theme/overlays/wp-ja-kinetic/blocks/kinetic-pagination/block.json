@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/kinetic-pagination",
+  "version": "0.1.0",
+  "title": "Kinetic pagination",
+  "category": "design",
+  "icon": "controls-forward",
+  "description": "The source's Joomla core pagination widget (`Pagination::getPagesLinks()`/`getPagesCounter()`, a Bootstrap `.pagination` list with first/prev/next/last Lucide chevrons plus a \"Page X of Y\" counter) instead of core WordPress's own `query-pagination` block markup. Reused by every listing/archive template this overlay owns.",
+  "textdomain": "wp-ja-kinetic",
+  "attributes": {
+    "counterFirst": {
+      "type": "boolean",
+      "default": false,
+      "description": "com_tags/tag/default.php:51-58 renders the counter BEFORE the links (every other view this block is used on renders links then counter)."
+    },
+    "counterClassName": {
+      "type": "string",
+      "default": "counter hx-muted"
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

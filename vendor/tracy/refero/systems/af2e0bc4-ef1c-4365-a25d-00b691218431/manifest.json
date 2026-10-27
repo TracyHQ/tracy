@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "af2e0bc4-ef1c-4365-a25d-00b691218431",
+  "status": "complete",
+  "name": "Fictional",
+  "url": "https://styles.refero.design/style/af2e0bc4-ef1c-4365-a25d-00b691218431",
+  "sourceWebsite": "https://fictional-typeface.com",
+  "extractedAt": "2026-06-03T15:04:26.450Z",
+  "capturedAt": "2026-10-08T05:16:14.859190+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Sticker-bombed tabletop — vivid decals scattered across a warm cream surface, held down by chunky rounded type.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/321e0099-7af5-413b-97d1-fa04333b2022.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f6290965-3777-460c-8cd5-6a247353209e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/edaf6e2a-416c-48fc-9fdd-a02e3b25606e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/682b6e7b-81c6-4d1a-abfb-115fc0dcd74e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4c16d8d5-c636-4daf-98a7-78706746068c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3e10b539bbf8cd60fc9f5c824b1865e3f72ee097e76f03ea44b486ace439ce4b",
+      "bytes": 19846
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "62d82948382688320258d4921c297335b0bd89380194694f7d1875bd71f087db",
+      "bytes": 98326
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "860e33e3759583e2756cbec03b3c857705d172e5f115d934b345f639da7c81f7",
+      "bytes": 17488
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "61185a7ec0eff6371a3de088357d918cb81b712995d0251074e7d35b25b9d566",
+      "bytes": 10456
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ea3b45bc2d225203e53eeb3d146e233594fa2864c2d21d24bf3584db4ae80d9b",
+      "bytes": 12310
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6ca835c3f64d02fd576992f5c6bd5fe45777a7fd19df6529791a7e471f426f1e",
+      "bytes": 2963
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5b9d02f5c87bc9784fc62c31e81d975cc4e024157b567d186eab3dfe074c9a55",
+      "bytes": 554
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4b5550362b7ff9e2dfeeed6a67bf0271c2dd50ec3ceada5d5d4f77cc6db667d0",
+      "bytes": 571
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c01f83e6b50dc38fe775aacffc3357d90b99708cbf626e44e2aec20ef606e390",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cacbc52717f50ac2488d0378f8e3911f49a9b8473328d0741d1d774817c720b4",
+      "bytes": 43710
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "048ed4711bc48750b991bd141db921ca2523d20cd18b188b421c81eb06c1d37c",
+      "bytes": 22814
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c8d8ad65aebce9a97f649ce251bba0245b773d389427477de5479cf394e2216d",
+      "bytes": 41517
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "88568d2835db610245ab201e00be5e8a7fa2718cd4919749b0cbf82abcefe6c5",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "99f906fe7fb020d9bdb9aabe2dde45dcb25cad471dab6abf419b4c64ee683731",
+      "bytes": 1711
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5749d84756f1c61dcd07927bd3e283e7b1bb9ff2a124240e1b03975c941e9052",
+      "bytes": 2198
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "134cfb76-12e0-4e2e-9995-5a1617190c56",
+    "1ded7f89-3df0-4e7c-9cac-28218d038575",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "286b6ba8-a45d-48e0-b556-ff6aeac68058",
+    "67bb82e2-d81c-4ead-a882-a8a2534eb221",
+    "6d64a4da-ef40-453e-86f7-4bfabc0c9051",
+    "6ec18fa7-41ff-41e0-8824-94f6fa104a75",
+    "71db2a51-118e-42b1-879d-29872d52142f",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "86de6781-d22b-4879-90df-44acb1fe20f3",
+    "896f0ea9-6f1a-40a6-aba7-fdaa579c7352",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "ab650279-aa18-43e5-a998-34190d7bedc7",
+    "af2e0bc4-ef1c-4365-a25d-00b691218431",
+    "eefc0305-818c-4f57-80ce-a4bc1f7aac92",
+    "ef73c742-1c3b-48b9-a174-de365ecc4691",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

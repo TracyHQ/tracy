@@ -1,0 +1,43 @@
+{
+  "id": "REG-055",
+  "kind": "feat",
+  "title": "Site changes badge: a change recorded after the caller's watermark counts once in /activity/unseen, the V2 answer dates it, and PUT /activity/seen with that answer's readAt brings the count back to 0 — per person, never backwards",
+  "pr": 858,
+  "area": "site-changes/badge",
+  "cms": ["wp"],
+  "needs": ["stand", "site:wp", "seat:owner", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), PG, WEB, A and B with their cookies, api, pq (SELECT/WITH only). Case variables: KEY = site key and LABEL = container prefix of a WordPress site where seat A is owner and seat B holds a seat (scv2: KEY=scv2wp.scv2.tracy.test, LABEL=scv2wp).",
+    "Check the web build: docker exec $WEB grep -c 'countUnseenV2' /opt/tracy-web/src/sites/activity.js must print >= 1 and pq \"select count(*) from schema_migration where name='058-site-activity-seen.sql'\" must print 1; otherwise stop with BLOCKED note web-older-than-this-feature.",
+    "Check WP-CLI in the site: docker exec $LABEL-web-1 wp --allow-root --path=/var/www/html core version must print a version; otherwise BLOCKED note no-wp-cli. POST = docker exec $LABEL-web-1 wp --allow-root --path=/var/www/html post list --post_type=post --post_status=publish --field=ID --posts_per_page=1 (the newest published post id); empty → BLOCKED note no-published-post.",
+    "Baseline for A: U0 = api a GET /api/sites/$KEY/activity/unseen → record U0.count, U0.since, U0.readAt, U0.complete. Then api a PUT /api/sites/$KEY/activity/seen with body {\"readAt\": U0.readAt} → record P0.seenAt. Then U1 = api a GET /api/sites/$KEY/activity/unseen → record U1.count and U1.since.",
+    "Baseline for B: V0 = api b GET /api/sites/$KEY/activity/unseen → record V0.count; api b PUT /api/sites/$KEY/activity/seen {\"readAt\": V0.readAt}; V1 = api b GET /api/sites/$KEY/activity/unseen → record V1.count.",
+    "One CMS admin change under a WordPress account (never through Tracy): STAMP=REG-055-$(date +%s); docker exec $LABEL-web-1 wp --allow-root --path=/var/www/html post update $POST --post_title=\"$STAMP\" --user=1 must print 'Success'. Wait 6 s (the collector settles rows younger than 5 s), then api a POST /api/sites/$KEY/cms-log/pull with body {} (repeat once after 6 s if its 'pulled' is 0). Record ROW = pq \"select id, to_char(pulled_at at time zone 'UTC','YYYY-MM-DD\\\"T\\\"HH24:MI:SS.MS\\\"Z\\\"') from site_cms_change where site_key='$KEY' and source='wordpress-tracy-log' and resource_type='post' and resource_id='$POST' and resource_title='$STAMP' order by id desc limit 1\".",
+    "After, A: U2 = api a GET /api/sites/$KEY/activity/unseen → record U2.count and U2.since. L = api a GET /api/sites/$KEY/activity?version=2&filter=all&limit=5 → record L.readAt, L.seenBefore, and ITEM = the first item of L.items whose kind is 'cms-change' and description.params.title equals STAMP → record ITEM.origin.source, ITEM.occurredAt, ITEM.recordedAt.",
+    "Mark seen with an OLDER time first: api a PUT /api/sites/$KEY/activity/seen {\"readAt\": U1.since} → record PB.seenAt; U3 = api a GET /api/sites/$KEY/activity/unseen → record U3.count. Then with the list's time: api a PUT /api/sites/$KEY/activity/seen {\"readAt\": L.readAt} → record PL.seenAt; U4 = api a GET /api/sites/$KEY/activity/unseen → record U4.count and U4.since.",
+    "Refusals: FUT = HTTP status and body code of api a PUT /api/sites/$KEY/activity/seen {\"readAt\": \"2099-01-01T00:00:00.000Z\"}; BAD = HTTP status of api a PUT /api/sites/$KEY/activity/seen {\"readAt\": \"yesterday\"}; NOAUTH = curl -s -o /dev/null -w '%{http_code}' $O/api/sites/$KEY/activity/unseen (no cookie).",
+    "After, B: V2 = api b GET /api/sites/$KEY/activity/unseen → record V2.count. Clean up: docker exec $LABEL-web-1 wp --allow-root --path=/var/www/html post update $POST --post_title=\"$(docker exec $LABEL-web-1 wp --allow-root --path=/var/www/html post get $POST --field=post_title | sed 's/REG-055-[0-9]*//')\" --user=1 is NOT needed (the stamp is the title now; leave it — it is a test site), but record that nothing else was changed."
+  ],
+  "expect": [
+    "U0.complete === true; U0.since and U0.readAt parse as ISO times with U0.readAt >= U0.since; P0.seenAt === U0.readAt; U1.count === 0 and U1.since === U0.readAt (the watermark moved to the read, and a second ask keeps it).",
+    "V1.count === 0 (B's own watermark, written on B's first ask, independent of A's).",
+    "ROW is one row whose pulled_at is after U1.since (the change was recorded after A looked).",
+    "U2.count === 1 and U2.since === U1.since (one CMS admin change, counted by its pulled_at — the row's occurred_at is earlier than its pulled_at).",
+    "L.seenBefore === U1.since; L.readAt >= ROW.pulled_at; ITEM exists with origin.source 'cms-admin', recordedAt === ROW.pulled_at (ms precision), and recordedAt > ITEM.occurredAt.",
+    "PB.seenAt === U1.since (never backwards) and U3.count === 1 still.",
+    "PL.seenAt === L.readAt; U4.count === 0 and U4.since === L.readAt.",
+    "FUT is HTTP 400 with code 'INVALID_READ_AT'; BAD is HTTP 400; NOAUTH === '401'.",
+    "V2.count === 1 (a CMS account's edit is never matched to a Tracy seat, so B counts it too; B's own chat turns would not count — covered by apps/tracy-web/test/site-activity-unseen.test.mjs (b), (f), (i))."
+  ],
+  "selectors": {
+    "unseenDoor": "GET /api/sites/:key/activity/unseen → {count, since, readAt, complete}",
+    "seenDoor": "PUT /api/sites/:key/activity/seen body {readAt} → {seenAt}; 400 INVALID_READ_AT",
+    "v2Fields": "GET /api/sites/:key/activity?version=2 → readAt, seenBefore, items[].recordedAt",
+    "watermark": "site_activity_seen(site_key, account_id, seen_at) — migration 058",
+    "count": "countUnseenV2 in apps/tracy-web/src/sites/activity-store.js over V2_SOURCES_SQL (recorded_at, actors) with BADGE_SOURCES",
+    "pullDoor": "POST /api/sites/:key/cms-log/pull"
+  },
+  "evidence": "tasks/todo-site-changes-badge-count.md §0 (measured 04/10/2026 on scv2: one wp-admin Update = one V2 row; occurred 10:10:29, pulled 10:14:57); tests: apps/tracy-web/test/site-activity-unseen.test.mjs.",
+  "fence": "The badge compares the watermark with recorded_at (the moment Tracy wrote the row), never with occurred_at; the watermark only moves forward; automatic, deployment and the caller's own Tracy work never count."
+}

@@ -1,0 +1,126 @@
+/**
+ * EmDash content components
+ *
+ * Components for rendering Portable Text and stored block arrays.
+ *
+ * Usage:
+ * ```astro
+ * ---
+ * import { Blocks, PortableText } from "emdash/ui";
+ * import Hero from "./Hero.astro";
+ * ---
+ * <PortableText value={post.data.content} />
+ * <Blocks value={page.data.layout} components={{ hero: Hero }} />
+ * ```
+ *
+ * The PortableText component uses EmDash's built-in renderers by default.
+ * Pass custom components to override specific Portable Text types:
+ *
+ * ```astro
+ * <PortableText value={content} components={{ type: { image: MyImage } }} />
+ * ```
+ */
+
+// Wrapper component with EmDash defaults
+export { default as PortableText } from "./PortableText.astro";
+export { default as Blocks } from "./Blocks.astro";
+export {
+	defineBlockComponents,
+	type BlockComponent,
+	type BlockComponentProps,
+	type BlockComponents,
+	type BlockValue,
+} from "./blocks.js";
+
+// Widget components
+export { default as WidgetArea } from "./WidgetArea.astro";
+
+// Main Image component for EmDash media
+export { default as EmDashImage } from "./EmDashImage.astro";
+
+// Unified Media component (supports all providers)
+export { default as EmDashMedia } from "./EmDashMedia.astro";
+
+// Portable Text block type components
+export { default as Block } from "./Block.astro";
+export { default as Image } from "./Image.astro";
+export { default as Code } from "./Code.astro";
+export { default as Embed } from "./Embed.astro";
+export { default as Gallery } from "./Gallery.astro";
+export { default as Columns } from "./Columns.astro";
+export { default as Break } from "./Break.astro";
+export { default as HtmlBlock } from "./HtmlBlock.astro";
+export { default as Iframe } from "./Iframe.astro";
+export { default as Table } from "./Table.astro";
+export { default as Button } from "./Button.astro";
+export { default as Buttons } from "./Buttons.astro";
+export { default as Cover } from "./Cover.astro";
+export { default as File } from "./File.astro";
+export { default as Pullquote } from "./Pullquote.astro";
+
+// Mark components
+export { default as Superscript } from "./marks/Superscript.astro";
+export { default as Subscript } from "./marks/Subscript.astro";
+export { default as Underline } from "./marks/Underline.astro";
+export { default as StrikeThrough } from "./marks/StrikeThrough.astro";
+export { default as Link } from "./marks/Link.astro";
+
+import BlockComponent from "./Block.astro";
+import BlockquoteGroupComponent from "./BlockquoteGroup.astro";
+import BreakComponent from "./Break.astro";
+import ButtonComponent from "./Button.astro";
+import ButtonsComponent from "./Buttons.astro";
+import CodeComponent from "./Code.astro";
+import ColumnsComponent from "./Columns.astro";
+import CoverComponent from "./Cover.astro";
+import EmbedComponent from "./Embed.astro";
+import FileComponent from "./File.astro";
+import GalleryComponent from "./Gallery.astro";
+import HtmlBlockComponent from "./HtmlBlock.astro";
+import IframeComponent from "./Iframe.astro";
+// Pre-configured components object for PortableText
+import ImageComponent from "./Image.astro";
+import { emdashMarkComponents } from "./marks.js";
+import OrderedListComponent from "./OrderedList.astro";
+import PullquoteComponent from "./Pullquote.astro";
+import TableComponent from "./Table.astro";
+
+/**
+ * Pre-configured components for EmDash Portable Text content
+ *
+ * Includes renderers for:
+ * - Block styles: paragraph, h1..h6, blockquote — with `textAlign` honoured
+ *   as a WordPress-style `has-text-align-{value}` class (#1201)
+ * - Block types: image, code, embed, gallery, columns, break, htmlBlock, iframe,
+ *   table, button, buttons, cover, file, pullquote
+ * - Marks: superscript, subscript, underline, strike-through, link
+ */
+export const emdashComponents = {
+	block: BlockComponent,
+	list: {
+		number: OrderedListComponent,
+	},
+	type: {
+		blockquoteGroup: BlockquoteGroupComponent,
+		image: ImageComponent,
+		code: CodeComponent,
+		embed: EmbedComponent,
+		gallery: GalleryComponent,
+		columns: ColumnsComponent,
+		break: BreakComponent,
+		htmlBlock: HtmlBlockComponent,
+		iframe: IframeComponent,
+		table: TableComponent,
+		button: ButtonComponent,
+		buttons: ButtonsComponent,
+		cover: CoverComponent,
+		file: FileComponent,
+		pullquote: PullquoteComponent,
+	},
+	mark: emdashMarkComponents,
+};
+
+// Public page contribution components
+export { default as EmDashHead } from "./EmDashHead.astro";
+export { default as EmDashBodyStart } from "./EmDashBodyStart.astro";
+export { default as EmDashBodyEnd } from "./EmDashBodyEnd.astro";

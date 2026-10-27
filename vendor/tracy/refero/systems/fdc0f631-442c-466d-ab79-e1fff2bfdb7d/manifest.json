@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+  "status": "complete",
+  "name": "Ragged Edge",
+  "url": "https://styles.refero.design/style/fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+  "sourceWebsite": "https://raggededge.com",
+  "extractedAt": "2026-06-03T20:21:15.980Z",
+  "capturedAt": "2026-10-08T05:19:58.818103+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Editorial brutalism on white marble. Imagine Vogue's typographic confidence merged with a Berlin gallery's color restraint — all ink and air, with one burst of color used as exclamation, never decoration.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/27b1b32a-e58d-4585-8789-d3e5a4e62de7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/238254b4-de80-4f53-afe2-867ca15fe0b8.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a065262e-0651-4319-a7b0-940d62343d84.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f3d30b30-c914-45bc-9515-6021d8c79860.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/809a4ce9-aa81-49d8-8ebb-a64024b9d69b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fbcf40ea476ea6b9f786bca526a13dda3eee03c12950c94c94544209eb62f48b",
+      "bytes": 20332
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b7c9da64e56c84c1a34efec29016286396fe15268642350faae4c74e4c66d7b8",
+      "bytes": 67587
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "25dd334cf963e5e71ba5bdf3c7dd28f13ca5fa02f02398fa78eedef8d84643d6",
+      "bytes": 16666
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7a7a5bc35884e05415b27f01c11a0427931cb3ea4709daa75eb1183ca5c1aee9",
+      "bytes": 10753
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "11caca1dafe6495c1d6905c322c8ae2c2e69e8e8240aa17f9404044138924c07",
+      "bytes": 12105
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "83cccc2c9a985256005e33567d2c0f99bf886c7ccc241512bc1db1f7f930b844",
+      "bytes": 3385
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "df3b5f3e8088e0e62ee00a767e63591ee8bd62b8deb7cdb36769b105fccfd17a",
+      "bytes": 629
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9cee190e726f6b76cf047b1a46e820266234ec5b608c2707746880ecb6a40e41",
+      "bytes": 818
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8d05dc872d145e1c0d4fbdbb7c4b53d7d589ae993d34fd48276c2213863f7d73",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ef85623413cd9e1c44e0d8b2e11d1c5d32f45d4fa65bb7859ab65a0e52c1c831",
+      "bytes": 43452
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2e50493177b797f502e008a8ec733ab5ad632c7252074fc4aead0571eeff1828",
+      "bytes": 22161
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "93efa491aac7d7f53c9a12bb9854677ce7c4c245d5b4712a6af2e3268f3f420c",
+      "bytes": 40689
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "569b088aa73550d6616e3712cf48d8b0a0a9e4670f9ef2ead43031adf255224c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d9ea7ad3fb4134290c0807dcadf9f39cd248bad5316ae93afc0faa54d2f58e1e",
+      "bytes": 1599
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "379c51a4464cc6c7667f599fbf159bcf736c6a66b059338b0930a2fcbfac321b",
+      "bytes": 2316
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3e52dd36-6ab1-48c6-bc40-47ef6d33abc2",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

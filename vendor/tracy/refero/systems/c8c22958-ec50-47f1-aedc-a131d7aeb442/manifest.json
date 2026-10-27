@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+  "status": "complete",
+  "name": "Dialog",
+  "url": "https://styles.refero.design/style/c8c22958-ec50-47f1-aedc-a131d7aeb442",
+  "sourceWebsite": "https://askdialog.com",
+  "extractedAt": "2026-04-12T10:44:14.833Z",
+  "capturedAt": "2026-10-08T05:17:25.064493+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Neutral showroom with one warm price tag. Every surface is a different tone of off-white; the orange CTA is the only color in the room.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/fd7026d6-40c3-4803-85c5-8a21c695300c.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a7a89f95-c979-42ce-a0c7-a84a91899215.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f8f0261a-3d46-4df0-9e22-90ad05fc2770.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6bd85d97-0853-4e30-b7ee-6e76c8114e36.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/12f513a3-6bec-4978-8e73-1df489ffa53d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "dc30e625f3f5e730319507d2442bb7de4df0eb3133cd7581777f6dd25454e577",
+      "bytes": 23861
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "78693265ade31a981adfc2aa0aae058162f967fb9d40da872ca2ab5684420aa5",
+      "bytes": 50709
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "dd96cd094f55dc9a0afffa47ca3f3e2dc8f1e1590be243cbc6fa6a8c00357394",
+      "bytes": 28411
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "061ba6846689beaef80fee8e83c16cd0fc97dea6fe5b5b7c82772e30612a10c4",
+      "bytes": 15379
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b0d9aed4d54c2a28d6fc417d3e3b0920ea4050cd7dd451d2496a4211342baac8",
+      "bytes": 13662
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6f5da47046683f6566e6784e8d77ca8490d7ffd681f5c0d356b2e18892ef2ca9",
+      "bytes": 3925
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "98ff5d404aee5cbe5463e9adee95fa8515f1e2bc44dc8588500041f951335d7d",
+      "bytes": 1092
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a02b227b1960c6e5cad95cf6d69b652fca5e6b8dd83db67486360de69cb13150",
+      "bytes": 1216
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9f34a2eeb9ad96349b8c2d0618587c06bf3d7cd26b582398ec9317138bb34369",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "85dde2820286261cb4b28afcfe182e653f053818c34288c4b9e27a19443f30b6",
+      "bytes": 51897
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d147f24189bb849ab4c797f83d26c3388de596ed67d406315b9323ae1934a8f5",
+      "bytes": 25853
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c7f987bec06d5d3bc86c0958200745d50a66e25c555f5e3c4b0b3e27688ea582",
+      "bytes": 57494
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "1a1d28feaa400b666af80d7b0e94cabbc4cfa19cb470a5d226b77fd6ebf57285",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4875d6996b530207f0d738e67a27053b56e8e6e2975930445ae13301d9aa336f",
+      "bytes": 2469
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "16a70925967bf0035fb0202e1b2738f94d4b0d9881f61d32161cb854cf85beaf",
+      "bytes": 3145
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "2e24c0ca-dd46-4519-b66e-cc03701d3b8c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fe955d4a-c56d-4ab0-a6b3-8d985ab9570c"
+  ]
+}

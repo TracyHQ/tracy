@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d991c31d-2ffa-4a94-ab37-7f7d8f7d6a0c",
+  "status": "complete",
+  "name": "Heavyweight",
+  "url": "https://styles.refero.design/style/d991c31d-2ffa-4a94-ab37-7f7d8f7d6a0c",
+  "sourceWebsite": "https://heavyweight-type.com",
+  "extractedAt": "2026-06-03T21:02:00.456Z",
+  "capturedAt": "2026-10-08T05:18:10.493071+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Paper specimen archive. A wall of photographed letterforms printed on textured stock, hung on a cool off-white gallery wall with hairline frames.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f241dd13-bda8-4d19-b632-5c9c013f762e.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3edb60d32b1181211e33621f666f5ff7b42cf0c6ab7e83c7c4dd36e52775d661",
+      "bytes": 16422
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9f41d3c3f07f68f9dd1291b8e23f420223f0d22b651b468e9656f96482aa63d8",
+      "bytes": 190512
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b8c5debcf2c6c55fa9ecaa0d05df3aedae6b8afd12f93424539658332fce6ba6",
+      "bytes": 14699
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d05e22753c835ffe47a3e585deb57329f05e3ad8dd6ed286c7a33f9477afae5d",
+      "bytes": 5313
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9d4ca227768b30fcebdc1fa9a0d417af92428287ef3085918dfbf3a9665545e0",
+      "bytes": 11692
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "95622c3f228e1e07d3fd8ba4b2b8457cc9587a09470a2102256031cf2062f1ff",
+      "bytes": 2320
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a0496f16286a3456ea0ee464003f0e78056475c0b1b1ff19aaa30cdb85c7085b",
+      "bytes": 354
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cceaaa5b88bdf18809000b8585f6fccf25e8499fa5b91fae4f7ab026dabea6d9",
+      "bytes": 371
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "500277dcd21063be71628ab9a13d7806315c17fab7c29f336e5bee05423cc93d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e7066dd799b6b3074ca8acc4c86b30fbac64c9c39a7d7dde7e5537bd08c238eb",
+      "bytes": 39703
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "19eb29e2d33c767e2bb28520e3b92a5192e7a67f0c6726278812c7ec198a6f78",
+      "bytes": 20868
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "852753ee09bbdc85443ce83370b59b6c1da0ee978a545385fa2ba7f323e93d67",
+      "bytes": 28272
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "eb3b83f29cda831339e98e19d0ec658586ec0dd8196e3fb86dbb4c09f3a090c2",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a8da473b3dfa86105ed42def545d8b0b8face9d0023c2778432746b364a3e65b",
+      "bytes": 766
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b16d2938e50c074cebaf12aa20153834f295a1ee30043c7861c709dc5c0b55d2",
+      "bytes": 1184
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "134cfb76-12e0-4e2e-9995-5a1617190c56",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "348c83bc-bed3-4562-841a-26a30ee19a9b",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6d64a4da-ef40-453e-86f7-4bfabc0c9051",
+    "6ec18fa7-41ff-41e0-8824-94f6fa104a75",
+    "71db2a51-118e-42b1-879d-29872d52142f",
+    "86de6781-d22b-4879-90df-44acb1fe20f3",
+    "973332dc-4e10-4e90-85d8-3bce9c3cd3ed",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "be5cf0d7-fc29-4b7f-bf86-f87185b122fc",
+    "c46ecd77-9c92-4a85-9162-c6d4afd99d95",
+    "d5931dff-2ae3-44c7-b76f-9e5936f90611",
+    "d991c31d-2ffa-4a94-ab37-7f7d8f7d6a0c",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

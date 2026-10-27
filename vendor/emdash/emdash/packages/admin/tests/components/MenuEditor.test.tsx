@@ -1,0 +1,376 @@
+import { Toasty } from "@cloudflare/kumo";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as React from "react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+import { MenuEditor } from "../../src/components/MenuEditor";
+import { render } from "../utils/render.tsx";
+
+vi.mock("@tanstack/react-router", async () => {
+	const actual = await vi.importActual("@tanstack/react-router");
+	return {
+		...actual,
+		Link: ({
+			children,
+			to,
+			...props
+		}: {
+			children: React.ReactNode;
+			to?: string;
+			[key: string]: unknown;
+		}) => (
+			<a href={typeof to === "string" ? to : "#"} {...props}>
+				{children}
+			</a>
+		),
+		useParams: () => ({ name: "main-menu" }),
+		useSearch: () => ({}),
+		useNavigate: () => vi.fn(),
+	};
+});
+
+vi.mock("../../src/lib/api", async () => {
+	const actual = await vi.importActual("../../src/lib/api");
+	return {
+		...actual,
+		fetchMenu: vi.fn(),
+		createMenuItem: vi.fn().mockResolvedValue({ id: "3" }),
+		deleteMenuItem: vi.fn().mockResolvedValue(undefined),
+		updateMenuItem: vi.fn().mockResolvedValue({}),
+		reorderMenuItems: vi.fn().mockResolvedValue([]),
+	};
+});
+
+import * as api from "../../src/lib/api";
+
+const ADD_CUSTOM_LINK_REGEX = /Add Custom Link/;
+
+const defaultMenu = {
+	id: "menu1",
+	name: "main-menu",
+	label: "Main Menu",
+	createdAt: "",
+	updatedAt: "",
+	locale: "en",
+	translationGroup: "menu1",
+	items: [
+		{
+			id: "1",
+			menuId: "menu1",
+			parentId: null,
+			sortOrder: 0,
+			type: "custom",
+			referenceCollection: null,
+			referenceId: null,
+			customUrl: "/",
+			label: "Home",
+			titleAttr: null,
+			target: "_self",
+			cssClasses: null,
+			createdAt: "",
+			locale: "en",
+			translationGroup: "1",
+		},
+		{
+			id: "2",
+			menuId: "menu1",
+			parentId: null,
+			sortOrder: 1,
+			type: "custom",
+			referenceCollection: null,
+			referenceId: null,
+			customUrl: "/about",
+			label: "About",
+			titleAttr: null,
+			target: "_self",
+			cssClasses: null,
+			createdAt: "",
+			locale: "en",
+			translationGroup: "2",
+		},
+	],
+};
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+	const qc = new QueryClient({
+		defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+	});
+	return (
+		<Toasty>
+			<QueryClientProvider client={qc}>{children}</QueryClientProvider>
+		</Toasty>
+	);
+}
+
+describe("MenuEditor", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		vi.mocked(api.fetchMenu).mockResolvedValue(defaultMenu);
+	});
+
+	it("links back to the menus list", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		const backLink = screen.getByRole("link", { name: "Back to menus" });
+		await expect.element(backLink).toHaveAttribute("href", "/menus");
+		await expect.element(backLink).toHaveTextContent(/^Back$/);
+	});
+
+	it("displays menu items in order", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		// Use exact: true to avoid matching "/about" which contains "About"
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+		await expect.element(screen.getByText("About", { exact: true })).toBeInTheDocument();
+	});
+
+	it("add item button opens dialog with label and URL inputs", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByRole("heading", { name: "Main Menu" })).toBeInTheDocument();
+		await screen.getByRole("button", { name: ADD_CUSTOM_LINK_REGEX }).click();
+
+		await expect.element(screen.getByLabelText("Label")).toBeInTheDocument();
+		await expect.element(screen.getByLabelText("URL")).toBeInTheDocument();
+	});
+
+	it("edit item opens dialog", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+
+		const editButtons = screen.getByRole("button", { name: "Edit" });
+		await editButtons.first().click();
+
+		await expect
+			.element(screen.getByRole("heading", { name: "Edit Menu Item" }))
+			.toBeInTheDocument();
+	});
+
+	it("delete item fires immediately without confirmation dialog", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+
+		// Delete buttons have aria-label="Delete"
+		const deleteBtn = screen.getByRole("button", { name: "Delete" });
+		await deleteBtn.first().click();
+
+		// No confirmation dialog should appear
+		expect(screen.getByText("Are you sure").query()).toBeNull();
+		expect(screen.getByText("Confirm").query()).toBeNull();
+	});
+
+	it("up/down reorder buttons — first item up disabled, last item down disabled", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+
+		const disabledButtons = document.querySelectorAll("button[disabled]");
+		// At least 2: first item's up + last item's down
+		expect(disabledButtons.length).toBeGreaterThanOrEqual(2);
+	});
+
+	it("empty state when no items", async () => {
+		vi.mocked(api.fetchMenu).mockResolvedValue({
+			...defaultMenu,
+			items: [],
+		});
+
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("No menu items yet")).toBeInTheDocument();
+		await expect
+			.element(screen.getByText("Add links to build your navigation menu"))
+			.toBeInTheDocument();
+	});
+
+	it("shows menu label as heading", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByRole("heading", { name: "Main Menu" })).toBeInTheDocument();
+	});
+
+	it("shows custom URLs for custom link items", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+		await expect.element(screen.getByText("/about")).toBeInTheDocument();
+	});
+
+	it("URL input accepts relative paths", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await screen.getByRole("button", { name: ADD_CUSTOM_LINK_REGEX }).click();
+
+		const urlInput = screen.getByLabelText("URL");
+		await urlInput.fill("/about");
+
+		// The input should accept the value without browser validation errors
+		const inputEl = urlInput.element() as HTMLInputElement;
+		expect(inputEl.validity.valid).toBe(true);
+	});
+
+	it("URL input accepts absolute https URLs", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await screen.getByRole("button", { name: ADD_CUSTOM_LINK_REGEX }).click();
+
+		const urlInput = screen.getByLabelText("URL");
+		await urlInput.fill("https://example.com");
+
+		const inputEl = urlInput.element() as HTMLInputElement;
+		expect(inputEl.validity.valid).toBe(true);
+	});
+
+	it("URL input rejects bare domains without scheme", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await screen.getByRole("button", { name: ADD_CUSTOM_LINK_REGEX }).click();
+
+		const urlInput = screen.getByLabelText("URL");
+		await urlInput.fill("example.com");
+
+		const inputEl = urlInput.element() as HTMLInputElement;
+		expect(inputEl.validity.valid).toBe(false);
+	});
+
+	it("edit dialog shows a Parent select that excludes the item itself", async () => {
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+		await screen.getByRole("button", { name: "Edit" }).first().click();
+
+		await expect
+			.element(screen.getByRole("heading", { name: "Edit Menu Item" }))
+			.toBeInTheDocument();
+		// Use a native DOM click rather than a Playwright locator click: this
+		// env doesn't load Tailwind CSS, so the Dialog's `fixed` positioning
+		// class has no effect and Base UI's outside-click-capture layer (styled
+		// via inline `position: fixed`) stacks on top per normal paint order,
+		// failing Playwright's pointer-event hit test on the trigger.
+		screen.getByRole("combobox", { name: "Parent" }).element().click();
+
+		await expect.element(screen.getByRole("option", { name: "About" })).toBeInTheDocument();
+		expect(screen.getByRole("option", { name: "Home", exact: true }).query()).toBeNull();
+	});
+
+	it("edit dialog's Parent select excludes descendants to prevent cycles", async () => {
+		vi.mocked(api.fetchMenu).mockResolvedValue({
+			...defaultMenu,
+			items: [
+				...defaultMenu.items,
+				{
+					id: "3",
+					menuId: "menu1",
+					parentId: "1",
+					sortOrder: 0,
+					type: "custom",
+					referenceCollection: null,
+					referenceId: null,
+					customUrl: "/services",
+					label: "Services",
+					titleAttr: null,
+					target: "_self",
+					cssClasses: null,
+					createdAt: "",
+					locale: "en",
+					translationGroup: "3",
+				},
+			],
+		});
+
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Home")).toBeInTheDocument();
+		// Home is the first row; editing it must exclude its own child (Services)
+		// from the Parent options, not just itself.
+		await screen.getByRole("button", { name: "Edit" }).first().click();
+
+		await expect
+			.element(screen.getByRole("heading", { name: "Edit Menu Item" }))
+			.toBeInTheDocument();
+		screen.getByRole("combobox", { name: "Parent" }).element().click();
+
+		await expect.element(screen.getByRole("option", { name: "About" })).toBeInTheDocument();
+		expect(screen.getByRole("option", { name: "Home", exact: true }).query()).toBeNull();
+		expect(screen.getByRole("option", { name: "Services", exact: true }).query()).toBeNull();
+	});
+
+	it("renders nested items indented under their parent", async () => {
+		vi.mocked(api.fetchMenu).mockResolvedValue({
+			...defaultMenu,
+			items: [
+				...defaultMenu.items,
+				{
+					id: "3",
+					menuId: "menu1",
+					parentId: "1",
+					sortOrder: 0,
+					type: "custom",
+					referenceCollection: null,
+					referenceId: null,
+					customUrl: "/services",
+					label: "Services",
+					titleAttr: null,
+					target: "_self",
+					cssClasses: null,
+					createdAt: "",
+					locale: "en",
+					translationGroup: "3",
+				},
+			],
+		});
+
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Services", { exact: true })).toBeInTheDocument();
+		const servicesRow = screen
+			.getByText("Services", { exact: true })
+			.element()
+			.closest("div.border");
+		expect((servicesRow as HTMLElement | null)?.style.marginInlineStart).toBe("1.5rem");
+	});
+
+	it("reorder buttons only compare against siblings, not the whole flat list", async () => {
+		vi.mocked(api.fetchMenu).mockResolvedValue({
+			...defaultMenu,
+			items: [
+				...defaultMenu.items,
+				{
+					id: "3",
+					menuId: "menu1",
+					parentId: "1",
+					sortOrder: 0,
+					type: "custom",
+					referenceCollection: null,
+					referenceId: null,
+					customUrl: "/services",
+					label: "Services",
+					titleAttr: null,
+					target: "_self",
+					cssClasses: null,
+					createdAt: "",
+					locale: "en",
+					translationGroup: "3",
+				},
+			],
+		});
+
+		const screen = await render(<MenuEditor />, { wrapper: Wrapper });
+
+		await expect.element(screen.getByText("Services", { exact: true })).toBeInTheDocument();
+		// "Services" is Home's only child, so both its up and down buttons are
+		// disabled even though it isn't the first/last item in the flat list.
+		const servicesRow = screen
+			.getByText("Services", { exact: true })
+			.element()
+			.closest("div.border") as HTMLElement;
+		const upBtn = servicesRow.querySelector('button[aria-label="Move up"]') as HTMLButtonElement;
+		const downBtn = servicesRow.querySelector(
+			'button[aria-label="Move down"]',
+		) as HTMLButtonElement;
+		expect(upBtn.disabled).toBe(true);
+		expect(downBtn.disabled).toBe(true);
+	});
+});

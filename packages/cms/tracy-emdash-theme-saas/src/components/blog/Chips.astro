@@ -1,0 +1,78 @@
+---
+// Term links as rounded chips. `sm` for rails, `md` for asides and article tags, `lg` for the tag index.
+interface Item {
+  label: string
+  href: string
+  count?: number
+  active?: boolean
+}
+interface Props {
+  items: Item[]
+  size?: 'sm' | 'md' | 'lg'
+}
+const { items, size = 'md' } = Astro.props
+---
+
+{
+	items.length > 0 && (
+		<ul class:list={['chips', size]}>
+			{items.map((i) => (
+				<li>
+					<a href={i.href} class:list={{ active: i.active }} aria-current={i.active ? 'page' : undefined}>
+						<span>{i.label}</span>
+						{i.count !== undefined && <span class="count">{i.count}</span>}
+					</a>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+<style>
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	a {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 5px 10px;
+		border: 1px solid var(--k-border);
+		border-radius: 100px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.55;
+		color: var(--k-text);
+		transition: border-color 0.15s, color 0.15s;
+	}
+	a:hover,
+	a.active {
+		border-color: var(--k-primary);
+		color: var(--k-heading);
+	}
+	.count {
+		font-size: 11px;
+		color: var(--k-muted);
+	}
+	.sm {
+		gap: 7px;
+	}
+	.sm a {
+		padding: 4px 9px;
+		font-size: 11.5px;
+	}
+	.lg {
+		gap: 12px;
+	}
+	.lg a {
+		padding: 10px 18px;
+		background: var(--k-surface);
+		font-size: 14px;
+		line-height: 1;
+	}
+</style>

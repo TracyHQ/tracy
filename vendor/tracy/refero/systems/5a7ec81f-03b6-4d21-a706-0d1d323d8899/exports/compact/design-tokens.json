@@ -1,0 +1,84 @@
+{
+  "color": {
+    "deep-space": {
+      "$value": "#0d1318",
+      "$type": "color",
+      "$description": "Deep Space — Page background, deepest canvas layer, link-on-light contrast"
+    },
+    "obsidian": {
+      "$value": "#121b1f",
+      "$type": "color",
+      "$description": "Obsidian — Hero and large content surface, slightly lifted from canvas"
+    },
+    "carbon-teal": {
+      "$value": "#162129",
+      "$type": "color",
+      "$description": "Carbon Teal — Card surface, button hover backgrounds, elevated containers"
+    },
+    "slate-drift": {
+      "$value": "#283945",
+      "$type": "color",
+      "$description": "Slate Drift — Subtle borders, dividers, muted panel borders, ghost button surfaces"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary text, icon strokes, button text, nav labels"
+    },
+    "ash-gray": {
+      "$value": "#c5cace",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary text, link default state, muted body"
+    },
+    "fog-gray": {
+      "$value": "#b6b8ba",
+      "$type": "color",
+      "$description": "Fog Gray — Tertiary text, nav helper labels, subtle metadata"
+    },
+    "smoke-gray": {
+      "$value": "#86898c",
+      "$type": "color",
+      "$description": "Smoke Gray — Muted paragraph text, de-emphasized descriptions"
+    },
+    "pewter": {
+      "$value": "#9ea1a3",
+      "$type": "color",
+      "$description": "Pewter — Disabled or low-emphasis body text"
+    },
+    "mint-signal": {
+      "$value": "#4ff7d1",
+      "$type": "color",
+      "$description": "Mint Signal — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-teal": {
+      "$value": "#0e342d",
+      "$type": "color",
+      "$description": "Deep Teal — Muted teal surface for announcement banner, subtle teal-tinted backgrounds"
+    },
+    "electric-magenta": {
+      "$value": "#d946ef",
+      "$type": "color",
+      "$description": "Electric Magenta — Secondary accent — beta badges, inline code highlights, experimental product card, code snippet button"
+    },
+    "plum-edge": {
+      "$value": "#a21caf",
+      "$type": "color",
+      "$description": "Plum Edge — Chromatic card border for the open-source / self-hosted product variant"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Single typeface across the entire system. Weight 800 at 72px for hero headlines, weight 600-700 for product card titles and section headings, weight 500 for nav and labels, weight 400 for body and descriptions. Consistent -0.025em tracking tightens the geometric forms and gives the dark UI a compressed, technical feel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://turso.tech",
+      "siteName": "Turso",
+      "extractedAt": "2026-06-03T18:46:29.525Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "736830b5-90b1-47b0-99dd-d79454a0d22a",
+  "status": "complete",
+  "name": "7shifts",
+  "url": "https://styles.refero.design/style/736830b5-90b1-47b0-99dd-d79454a0d22a",
+  "sourceWebsite": "https://www.7shifts.com",
+  "extractedAt": "2026-06-03T18:48:29.978Z",
+  "capturedAt": "2026-10-08T05:13:25.227101+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "warm diner counter with neon chalk accents — a bright restaurant counter where indigo buttons, orange hand-drawn underlines, and lime highlighter marks sit on clean white and warm bone surfaces, with occasional black bands that make the colors glow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/23966029-5672-4da8-b250-687d0c475586.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/dbc8c36a-6126-412f-ad07-1ff099ae7855.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/88868d25-5617-4d17-a66b-0a2c2e1e557f.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c9c55c4b-ec73-43c9-9d57-81281fd7b925.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/bb9bb5d9-b00b-471d-8022-ac31487c4d13.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1caa6e34dbf01b6ffe16ca19e1fb027e94de4a31b6ad967bcb29f4df45bad1d0",
+      "bytes": 25469
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6498ea182e6676acb5bca54fcb2acc3873cbf2ba328d34fa46f98d2d552fbef8",
+      "bytes": 110936
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0603e05950bd03ebce2ae0c2b4cd1be48c14481494d117f1e16c4afa96b18cf0",
+      "bytes": 20264
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "afcf562042355138c606afc187b87758b93cc5b3998f32960685b9b9e8c694a6",
+      "bytes": 21923
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2e7a4e62ccb5d7cf7bd7854b62d450e36cd6a56798b452ee7873f8c9b0680b1f",
+      "bytes": 15140
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c8775fa3e54a117310bc96b3d69fcf2ad0cce8c61a13b703c43c3e48b562bbc6",
+      "bytes": 4911
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e57502a51f9e7104de59a739d30fea1686b3f382d29823f12450375a3680fc93",
+      "bytes": 1344
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e85c1077bdbbbc3c8ef8941e543b2dfea07d55813fb78e429a9c4071682219a5",
+      "bytes": 1361
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3946899f6aa9da5aa637f181e945d33a42dd8a2370487bd0e98e63ce86b1eb68",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "23d175b11ed657db181bc70fc47a833ace62d4822063c453dc3824d6f989aea1",
+      "bytes": 49211
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ec819dc4291839639f2443343f7a729a2243adec03bd0383a166fc1c65131b56",
+      "bytes": 25695
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "cdf365d3625e76bf2363a5f30a41c17b7dd589f2c83c57b62ab8883aa2670641",
+      "bytes": 74157
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a0f7d954a1deaa14144d7f70ed0544c106bc4566bcf9155c8e854c6963216fa1",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f8e85ac9a5cc43290738fd8be79c8da14d516e5f1670ace93a0d236fe4f66d58",
+      "bytes": 2591
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0f3de3ea62df7266026e151264bf4594ec18390458cd6dc1e978e132f7ebd804",
+      "bytes": 3265
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "9946887b-ffa9-4276-af81-ae6352795afb",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

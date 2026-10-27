@@ -1,0 +1,29 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Page canvas, card surfaces, footer — the universal background. Cards do not lift from the canvas; they are demarcated only by hairline white borders"
+    },
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Gallery White — Body text, headings, nav marks, hairline borders, link underlines, list dividers — the sole foreground. Used as 1px structural lines rather than fills"
+    }
+  },
+  "font": {
+    "unica77-ll": {
+      "$value": "Unica77 LL",
+      "$type": "fontFamily",
+      "$description": "The entire interface speaks in a single weight of one custom neo-grotesque. Weight 400 only — no bold, no light, no italic. The signature is the binary scale: 12–18px functional metadata against an isolated 80px display, with nothing in between. This extreme jump is the hierarchy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bibliothequedesign.com",
+      "siteName": "Bibliothèque",
+      "extractedAt": "2026-06-03T20:02:54.340Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1682-rebuild-local-dsh-tag",
+  "kind": "fix",
+  "title": "scripts/rebuild-local.sh recreates tracy-dsh on the tag it just built (not deploy/.env DSH_IMAGE_TAG=dev), and --ref origin/<branch> builds a branch the clone's refspec does not fetch",
+  "pr": 1682,
+  "area": "scripts/local-stand",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run scripts/rebuild-local.sh --here dsh with APP_IMAGE_TAG=local-develop-eeac5aef against a throwaway repo whose deploy/.env pins DSH_IMAGE_TAG=dev, docker stubbed on PATH; read the environment of the compose up for tracy-dsh.",
+    "S2: Run --here web host with APP_IMAGE_TAG unset; read the environment of both compose up calls.",
+    "S3: Run --ref origin/wo/research-again host where remote.origin.fetch lists develop only.",
+    "S4: Run --ref no-such-ref host."
+  ],
+  "expect": [
+    "S1: exit 0; compose up tracy-dsh gets DSH_IMAGE_TAG=local-develop-eeac5aef and DSH_IMAGE=tracy/dsh.",
+    "S2: exit 0; both compose up calls get APP_IMAGE_TAG=dev, WEB_IMAGE=tracy/web, HOST_IMAGE=tracy/host.",
+    "S3: exit 0; stdout names the branch head commit it checked out.",
+    "S4: non-zero exit, stderr names --ref no-such-ref, no docker build ran."
+  ],
+  "selectors": {
+    "tool": "scripts/test/rebuild-local.test.mjs"
+  },
+  "evidence": "24/10/2026 Mac Studio stand: tracy/dsh:local-develop-eeac5aef built, container tracy-dsh ran tracy/dsh:dev; --ref origin/wo/research-again failed with fatal: invalid reference",
+  "fence": "Image references and the git ref rebuild-local.sh hands to docker compose and git worktree; no stand, no real docker",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/rebuild-local.test.mjs"],
+    "tests": [
+      "compose recreates tracy-dsh on the tag the script just built",
+      "compose recreates web and host on the tag just built",
+      "--ref origin/<branch> builds that branch",
+      "--ref that names no commit stops before building anything"
+    ]
+  }
+}

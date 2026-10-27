@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1100-p3-slot-relative-look",
+  "kind": "fix",
+  "title": "On a site wearing a design-system slot the look guidance writes relative to the slot: EmDash's LOOK road and site.rebuild hint say the slot beats tokens.css and the element's leftover literal pins are swapped for the slot's variables, the design line says the same with examples in each CMS's syntax and `!` only before a slot value, look.set scope site refuses a slot-owned token as the system's own with the road for one element, and the EmDash hero button reads the slot's button padding",
+  "pr": 1100,
+  "area": "agent/look",
+  "cms": ["em", "jo"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. In the TCH checkout at the commit under test, with dependencies installed (pnpm install) and lib/index.js of @tracy/dsh-site-tools built, run from the checkout root: node tests/regression/scripts/REG-PR-1100-p3-slot-relative-look.mjs",
+    "S2: Read its 'ok -' / 'not ok -' lines and its exit code."
+  ],
+  "expect": [
+    "ok - EmDash LOOK line: 'A value the design-system slot sets (the Design system line) beats tokens.css: write the element's class relative to the slot's variable (`!py-[calc(var(--ds-btn-pad-y,15px)+4px)]`), never a literal.'",
+    "ok - EmDash LOOK line: 'Swap every literal the element already has for something the slot sets (`!rounded-full` → `!rounded-[var(--ds-btn-radius,0)]`, `!px-[34px]` → `!px-[var(--ds-btn-pad-x,30px)]`); `!` only before a `var(--ds-…)` value, never before a literal.'",
+    "ok - the design line, on all three stand payloads: 'replace every literal the element already carries for one (`rounded-full`, `px-[34px]`, a hex, a font size the slot sets) the same way, asked or not', 'Keep the template's fallback', '`!` (important) only before such a `var()` or `calc(var())` value, never before a literal'; at most 1,400 bytes.",
+    "ok - the design line's examples are in the CMS's syntax: EmDash `!rounded-[var(--ds-btn-radius,0)]` and `!py-[calc(var(--ds-btn-pad-y,15px)+4px)]`; Joomla `border-radius: var(--radius-pill)` and `calc(var(--radius-pill) + 4px)`, no Tailwind class.",
+    "ok - look.set scope site on a token won by <style id=\"tracy-ds-slot\"> (EmDash and Joomla): LOOK_SET_NO_ROAD '--color-signal is set by the design system this site wears (Tracy's design-system slot, …), which owns it on every page', next 'changing it for the whole site is choosing another design system', EmDash: relative to var(--color-signal), Joomla: scope element or page; nothing written, no undo.",
+    "ok - site.rebuild's hint: 'a colour is a token in src/styles/tokens.css, unless the site's design-system slot sets it: then the context's Design system line says how, the element's leftover literals included'.",
+    "ok - Tracy Business Home.astro: the hero CTA is btn-primary !px-[var(--ds-btn-pad-x,28px)] !py-[var(--ds-btn-pad-y,15px)] with no literal padding or radius.",
+    "The script exits 0."
+  ],
+  "selectors": {
+    "lookRoad": "packages/tools/tracy-site-tools/src/host/site-context.mjs LOOK_ROAD.emdash",
+    "lookSet": "packages/tools/tracy-site-tools/src/host/look-set.mjs slotOwned refusal",
+    "rebuildHint": "packages/site/tracy-site-build-emdash/src/host/requests.mjs site.rebuild hint",
+    "hero": "packages/cms/tracy-emdash-theme-business/src/views/Home.astro hero_cta1_label",
+    "designLine": "packages/tools/tracy-site-tools/src/host/site-context.mjs slotLine"
+  },
+  "evidence": "Stand 09–10/10/2026, dskeepem wearing Moxie: 'make the hero button bigger and rounder' became Home.astro:85 '!rounded-full !px-[34px] !py-[17px] !text-[16px]' on a button the system had already made a pill; after a switch to a 2px-radius system it stayed a pill (2147483647px !important). look.set scope site refused '--color-signal … not a file look.set can change'. Stand after #1100 (images from 96a53b266, 10/10/2026, em-I5 'Cho nút chính ở đầu trang chủ to hơn một chút'): the agent wrote `!rounded-full !px-[calc(var(--ds-btn-pad-x,30px)+17px)] !py-[calc(var(--ds-btn-pad-y,15px)+12px)] !text-[17px]` — padding relative, but the leftover `!rounded-full` kept and `!text-[17px]` pinned; under MotherDuck (2px) the hero stayed a pill while the band button followed. Screenshots: tasks/evidence/followups-2026-10-10/p3-design/p3-emdash-*.png.",
+  "fence": "Mechanism only: the guidance texts, the refusal and the template's class. Not covered: a model's choice; the template change reaches customers only with the next Tracy Business EmDash release.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1100-p3-slot-relative-look.mjs"]
+  }
+}

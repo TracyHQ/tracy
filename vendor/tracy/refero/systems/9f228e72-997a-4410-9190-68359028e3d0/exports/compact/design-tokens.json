@@ -1,0 +1,94 @@
+{
+  "color": {
+    "canvas": {
+      "$value": "#fff3e7",
+      "$type": "color",
+      "$description": "Canvas — Main page background, creating a warm, paper-like base."
+    },
+    "ink": {
+      "$value": "#030302",
+      "$type": "color",
+      "$description": "Ink — Primary text, headlines, and filled UI elements."
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Card surfaces, contrast text on dark backgrounds."
+    },
+    "linen": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Linen — Secondary light backgrounds, subtle dividers."
+    },
+    "cloud": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Cloud — Subtle container backgrounds, hover states."
+    },
+    "ash": {
+      "$value": "#e1e1e1",
+      "$type": "color",
+      "$description": "Ash — Borders and dividers."
+    },
+    "stone": {
+      "$value": "#bebbba",
+      "$type": "color",
+      "$description": "Stone — Secondary body text, disabled states."
+    },
+    "graphite": {
+      "$value": "#41413f",
+      "$type": "color",
+      "$description": "Graphite — Sub-headings and secondary text with more emphasis."
+    },
+    "mint": {
+      "$value": "#9bd8a9",
+      "$type": "color",
+      "$description": "Mint — Decorative background shapes, UI tags — a primary brand pastel."
+    },
+    "marigold": {
+      "$value": "#fde99b",
+      "$type": "color",
+      "$description": "Marigold — Decorative background shapes, UI highlights — a warm primary brand pastel."
+    },
+    "periwinkle": {
+      "$value": "#b8caf5",
+      "$type": "color",
+      "$description": "Periwinkle — Decorative background shapes, UI highlights — a cool primary brand pastel."
+    },
+    "sky": {
+      "$value": "#9ed4ef",
+      "$type": "color",
+      "$description": "Sky — Hero background textures and atmospheric elements."
+    },
+    "papaya": {
+      "$value": "#ff4500",
+      "$type": "color",
+      "$description": "Papaya — Accent frames on cards, callouts within illustrations."
+    },
+    "azure": {
+      "$value": "#0087ff",
+      "$type": "color",
+      "$description": "Azure — Interactive icons and links within product mockups."
+    }
+  },
+  "font": {
+    "untitledseriffont": {
+      "$value": "UntitledSerifFont",
+      "$type": "fontFamily",
+      "$description": "Used exclusively for large, impactful headlines (H1/H2). Its literary feel provides a signature contrast to the functional sans-serif UI, making statements feel personal and crafted."
+    },
+    "untitledsansfont": {
+      "$value": "UntitledSansFont",
+      "$type": "fontFamily",
+      "$description": "The workhorse font for all UI elements, including buttons, navigation, body copy, and captions. Provides clarity and readability."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://craft.do",
+      "siteName": "Craft Docs",
+      "extractedAt": "2026-04-11T17:34:08.934Z",
+      "variant": "compact"
+    }
+  }
+}

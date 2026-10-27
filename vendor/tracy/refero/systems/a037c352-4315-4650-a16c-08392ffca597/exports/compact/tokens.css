@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-ink: #100f12;
+  --color-snow: #fbfaff;
+  --color-paper: #ffffff;
+  --color-graphite: #44434e;
+  --color-slate: #65646e;
+  --color-mist: #787685;
+  --color-lavender-wash: #ebe5ff;
+  --color-lilac-edge: #d9cffa;
+  --color-iris: #8d6fde;
+  --color-amethyst: #4a3e8a;
+  --color-dawn-viol: #7748f6;
+  --gradient-dawn-viol: linear-gradient(112deg, rgb(119, 72, 246), rgb(245, 187, 195) 80%);
+  --color-rose-drift: #f5bbc3;
+
+  /* Typography — Font Families */
+  --font-ppmori: 'Ppmori', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

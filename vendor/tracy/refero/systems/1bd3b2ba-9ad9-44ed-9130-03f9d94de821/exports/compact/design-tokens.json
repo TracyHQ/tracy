@@ -1,0 +1,54 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, nav background, icon fill — the default state of the page; everything is built ON the void, not against it"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, heading fill, ghost button stroke, icon stroke — the reading and structural color"
+    },
+    "charcoal": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Charcoal — Elevated card surface, secondary panels — the single quiet step above the canvas that implies elevation without shadow"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Hairline borders, badge outlines, subtle dividers — sits between surface and text, never decorative"
+    },
+    "lamp-cream": {
+      "$value": "#f5f5f0",
+      "$type": "color",
+      "$description": "Lamp Cream — Primary filled action button background — the only chromatic-temperature accent; warm off-white reads as lamplight against pure black and keeps CTAs from feeling sterile"
+    },
+    "smoke": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Smoke — Light text on dark surfaces, inverse labels, and high-contrast captions. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "visueltpro": {
+      "$value": "VisueltPro",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse across all contexts: body (16px/400), nav links (15–16px/500), uppercase labels (10–13px/400–500 with 0.03–0.08em tracking), and narrative headlines (30–54px/300). The whisper-thin 300 weight at 54px is the signature move — most premium sites use bold or serif italic for hero text; Sequel uses hairline sans and lets size + negative tracking do the work."
+    },
+    "bradford": {
+      "$value": "Bradford",
+      "$type": "fontFamily",
+      "$description": "Display serif reserved exclusively for the aspirational/poetic word in a headline — e.g. the italic \"legacy\" inside \"Your legacy, made.\" Appears at display sizes only (57–128px) and only in italic, never as running text. Creates the editorial poetry that distinguishes a family-office brand from a VC."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sequel.co",
+      "siteName": "Sequel",
+      "extractedAt": "2026-07-03T02:56:12.987Z",
+      "variant": "compact"
+    }
+  }
+}

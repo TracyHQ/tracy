@@ -1,0 +1,46 @@
+{
+  "id": "REG-052",
+  "kind": "fix",
+  "title": "A team invitation link works for seven days, and a deployment with no MAIL value reports a mail it did not send as not sent",
+  "pr": 854,
+  "area": "tracy-web/mail",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL unset, run: node --test apps/tracy-web/test/invite-expiry.test.mjs apps/tracy-web/test/mail-unavailable.test.mjs",
+    "S2: Read the exit code and the fail/skipped counts, and the tests named below."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "'F-S3-017: a link 6 days 23 hours old is accepted' and 'F-S3-017: a link exactly 7 days old is still accepted' pass: GET /invite/<token> answers 200 and the pending seat is accepted.",
+    "'F-S3-017: a link 7 days and 1 second old is refused and nothing is written' passes: 410, the heading 'This invitation link has expired', the sentence that a link works for 7 days and to ask for a new invitation, no redirect; the only statement the door makes is its rate count, and the seat row is as it was.",
+    "'F-S3-017: an expired link says so to a signed-out reader too, instead of sending them to sign in' and 'F-S3-017: an expired link takes away nothing a person already holds' pass.",
+    "'F-S3-017: a link dated in the future is refused and nothing is written' and 'F-S3-017: a link with no usable iat is refused and nothing is written' pass: 404 for an iat ahead of the clock, missing, null, a string, a fraction, negative, unsafe, a boolean, an array or an object.",
+    "'F-S3-017: inside the lifetime the seat row still decides — accepted, revoked, declined, requested, gone' and 'F-S3-017: the grant comes from the seat row, never from the role the token names' pass.",
+    "'F-S3-017: inviting again while the seat still waits sends a new link, and the row stays as it was' passes: POST /api/team/invite answers notified:true with outcome invited and renewed:true, one letter is sent, no seat statement is written and the link in the letter accepts the seat. 'F-S3-017: a new seat and waiting seats of the same and of another role — one letter, one result' and 'F-S3-017: when that one letter fails, every invited site reads not mailed and no other site does' pass: one person never gets a second letter, the letter holds exactly the sites answered as invited, and a waiting seat of another role or an accepted seat answers already_granted with no letter; a revoked or declined seat is invited as before; somebody who may not grant the waiting role sends nothing.",
+    "'F-S3-017: the invitation mail states the lifetime from the policy value, text and HTML, in eight languages' and 'F-S3-017: the expired page states the lifetime in each of the eight languages' pass, with no placeholder left unfilled.",
+    "The five 'F-S1-009: sign-in answers that the mail was not sent (…)' tests pass over the real boot with no database, for MAIL unset, empty, blank with preview 0, 'console', and unset in production: POST /login answers 503 {code:'MAIL_UNAVAILABLE'} to JSON and, to a form, 503 with the email step shown, the sentence 'Could not send a code. Try again.' and the 'We sent an email' step hidden; the log holds a line that MAIL is not configured and no letter, no recipient and no six-digit code.",
+    "The five 'F-S1-009: the lane door answers 503 MAIL_UNAVAILABLE (…)' tests pass; an unsigned caller still gets 401.",
+    "'F-S1-009: with the beta gate on, sign-in and the lane still answer that the mail was not sent' passes, including for requests past the hourly cap; nothing is queued and the membership service is not asked.",
+    "'F-S1-009: a team invitation keeps the seat and answers notified:false', 'F-S1-009: a staff invitation keeps the grant and answers 202 notified:false', 'F-S1-009: a removal code that cannot be mailed answers 502 MAIL_NOT_SENT and stays out of the log' and 'F-S1-009: a join request is still recorded, and the answer promises no mail' pass.",
+    "'F-S1-009: with local preview on, sign-in works from the log and the page, as it did' passes: 200 with localCode, the letter in the log, the code signs in, the lane door answers {ok:true}.",
+    "Not covered by this case: PostgreSQL (seat books are fixtures that answer listed statements only; two people accepting one row at once is not exercised), a real mail provider (Resend is the real transport over a recorded fetch), a real browser, anything an edge adds to a response, the whitelist confirmation door, and the MAIL value of any running host."
+  ],
+  "selectors": {
+    "policy": "TEAM_INVITE_TTL_S and TEAM_INVITE_TTL_DAYS in apps/tracy-web/src/lib/policy.js",
+    "invite_door": "GET /invite/:token in apps/tracy-web/src/seats/route.js; teamInviteAge in apps/tracy-web/src/lib/team-invite.js",
+    "transport": "consoleTransport and transportFor in apps/tracy-web/src/mail/transport.js",
+    "sign_in_step": "#email-step, #code-step and [role=\"alert\"] in the page POST /login renders"
+  },
+  "evidence": "Issue #804 (QA audit, re-verified on develop f9c734938), decisions of 04/10/2026. On base 275058417 the same run is red by assertion only: invite-expiry 15 of 29 (a link 7 days and 1 second old, or dated in the future, was accepted with 200; a fraction as iat verified; inviting an address whose seat still waits sent no letter), mail-unavailable 22 of 27 (POST /login answered 200 and showed the code step, the lane door answered {ok:true}, a team invitation answered notified:true, and the whole letter with its sign-in code was written to the log).",
+  "fence": "The real routers and the real boot (no database, a real socket) over statement-listing fixtures, a clock the test holds and tokens signed in the test with the door's secret. Not exercised: PostgreSQL, a mail provider, a browser, edge headers, any host's MAIL value. F-S8-009 (Ops mail log) is decided, no change: every staff role reads it and rows are kept until deleted; F-S5-010 (brand publishing) is decided, no change: ADR 0013 stands.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/invite-expiry.test.mjs",
+      "apps/tracy-web/test/mail-unavailable.test.mjs"
+    ]
+  }
+}

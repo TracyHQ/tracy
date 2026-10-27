@@ -1,0 +1,34 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, wordmark fills, link text, all heading color — the only non-white pigment in the interface"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, inverse text on dark moments"
+    },
+    "terracotta": {
+      "$value": "#af7653",
+      "$type": "color",
+      "$description": "Terracotta — Sole chromatic accent — warm earthen tone for hover states, active indicators, or single-element highlights against the monochrome field"
+    }
+  },
+  "font": {
+    "monument": {
+      "$value": "Monument",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system. Regular variant at 13–23px for nav links, metadata, body micro-copy. Medium variant at 216px for the hero wordmark — the only element that earns the 216px scale, with -0.033em tracking to tighten the ultra-condensed letterforms into a continuous bar of black"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://hausotto.com",
+      "siteName": "Haus Otto",
+      "extractedAt": "2026-06-03T19:18:01.351Z",
+      "variant": "compact"
+    }
+  }
+}

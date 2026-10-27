@@ -1,0 +1,24 @@
+/* Tailwind source for the my-sites tab. Same recipe as tracy-settings/src/client/settings.css:
+   theme + utilities only, NO preflight — this column lives inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+@source '../../../../ui/tracy-ui/src';
+@source '../../../../core/tracy-core/src';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS — the same line as
+   the Design inspiration and Build sheets, so the @tracy/ui buttons (outline, ghost, destructive)
+   and the compound CMS logos turn with the app's own Light/Dark switch. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text and form controls in
+   their own font. Scoped to this plugin's root and placed in `base`, so every utility class on a
+   `@tracy/ui` component still wins. */
+@layer base {
+  .tracy-mysites button, .tracy-mysites input, .tracy-mysites select, .tracy-mysites textarea { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  /* The root too: a dialog carries `tracy-mysites` on its own popup, and its `w-full p-4 border` must
+     stay inside the viewport (03/10: content-box made every My Sites / Team dialog 394px at 360). */
+  .tracy-mysites, .tracy-mysites * { box-sizing: border-box; }
+}

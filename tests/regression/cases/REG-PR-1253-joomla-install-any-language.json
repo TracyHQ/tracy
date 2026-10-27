@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1253-joomla-install-any-language",
+  "kind": "fix",
+  "title": "Importing a Joomla site with a non-English administrator installs Claude Cowork instead of failing with install_failed",
+  "pr": 1253,
+  "area": "add-site/import/joomla-install",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/site/tracy-add-site/test/install-language.test.mjs (a fake Joomla 6 administrator in Polish, driven through the real installCowork)."
+  ],
+  "expect": [
+    "S1: 2 tests, 2 pass, 0 fail: an install that worked returns ok with the component's token and version; an install the site refused returns install_failed after trying both the URL door and the upload door."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/host/joomla.ts",
+    "tool": "packages/site/tracy-add-site/test/install-language.test.mjs"
+  },
+  "evidence": "Production 12/10/2026 12:37 UTC: the first real import (coachingnvc.pl, Joomla 6.1.4, admin pl-pl) raised site.stuck installing/install_failed after 8 seconds because the success sentence was Polish",
+  "fence": "Install success is decided by the component answering on its own token at the latest version, not by the language of Joomla's flash message",
+  "run": {
+    "cmd": ["node", "--test", "packages/site/tracy-add-site/test/install-language.test.mjs"]
+  }
+}

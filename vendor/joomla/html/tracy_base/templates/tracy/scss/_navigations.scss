@@ -1,0 +1,247 @@
+// 
+// Main Navigation
+// -----------------------------------
+
+// Toggle button
+.navbar-toggler {
+  border-radius: 0;
+  border: 0;
+  color: var(--mainnav-link-color);
+  display: block;
+  padding: 0;
+  transition: all 0.35s;
+
+  i {
+    font-size: 22px;
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: var(--mainnav-link-hover-color);
+  }  
+}
+
+.t4-navbar {
+  position: relative;
+  padding: 0;
+  @include clearfix();
+
+  .navbar {
+    float: left;
+
+    &.navbar-expand {
+      @each $breakpoint in map-keys($grid-breakpoints) {
+        $next: breakpoint-next($breakpoint, $grid-breakpoints);
+        $infix: breakpoint-infix($next, $grid-breakpoints);
+
+        &#{$infix} {
+          @include media-breakpoint-down($breakpoint) {
+            float: none;
+            display: block;
+            @include clearfix();
+          }        
+        }
+      }    
+    }
+  }
+
+  // Dropdown
+  .dropdown-item {
+    &.dropdown-toggle {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        right: $spacer;
+        top: 50%;
+        margin-top: -2px;
+      }
+    }
+  }
+
+  .nav-item {
+    position: relative;
+  }
+}
+ 
+@include media-breakpoint-up(md) {
+  #t4-navbar-collapse {
+    display: block !important;
+  }
+
+  .navbar-expand-lg #t4-navbar-collapse {
+    display: flex !important;
+  }
+}
+
+// Show toggler button
+.navbar-expand {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($next, $grid-breakpoints);
+
+    @include media-breakpoint-up($breakpoint) {
+      .navbar-toggler {
+        display: none;
+      }
+    }
+  }
+}
+
+
+//
+// The Nav
+.t4-main-nav {
+  // T4: Need to make the Nav horizontal on lg media.
+  // Because Joomla! add .flex-column to the default menu module
+  @include media-breakpoint-up(lg) {
+    .navbar-nav {
+      flex-direction: row !important;
+    }
+  }
+}
+
+
+//
+// Breadcrumbs
+// -----------------------------------
+.breadcrumb {
+  background-color: transparent;
+  border-radius: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+
+  li.breadcrumb-item {
+    &:first-child {
+      color: $gray-500;
+    }
+  }
+
+  .breadcrumb-item + .breadcrumb-item {
+    padding-left: 0;
+
+    &:before {
+      display: none;
+    }
+  }
+
+  .divider {
+    display: inline-block;
+    padding-right: calc($spacer / 2);
+    text-align: center;
+
+    &:before {
+      color: $gray-400;
+      content: "/";
+      display: inline-block;
+    }
+
+    img {
+      display: none;
+    }
+  }
+
+  .icon {
+    margin-right: calc($spacer / 2);
+  }
+}
+
+
+//
+// Pagination
+// -----------------------------------
+.pagination {
+  margin: $spacer auto;
+
+  .page-link,
+  .pagenav {
+    &.disabled {
+      color: $gray-500;
+
+      &:hover, &:focus, &:active {
+        background-color: transparent;
+        cursor: default;
+        box-shadow: none;
+      }
+    }
+
+    .icon-chevron-left,
+    .icon-chevron-right {
+      font-size: $font-size-xs;
+      text-align: center;
+      margin-right: $spacer-xs;
+    }
+
+    .icon-chevron-right {
+      margin-right: 0;
+      margin-left: $spacer-xs;
+    }
+  }
+
+}
+
+.counter {
+  margin-top: $spacer-sm;
+  color: $gray-dark;
+}
+
+
+// Navigation bar
+//-----------------------------------
+.pagenav {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin: $spacer*2 0;
+  padding: 0;
+  text-align: right;
+
+  @include media-breakpoint-up(lg) {
+    margin-bottom: 0;
+  }
+
+  li {
+    display: inline-block;
+
+    &:first-child {
+      margin-right: calc($spacer / 2);
+    }
+
+    &:last-child {
+      margin-left: calc($spacer / 2);
+    }
+
+    a {
+      background-color: $gray-200;
+      color: $body-color;
+      padding: calc($spacer / 2) $spacer;
+      
+      &:hover, &:focus, &:active {
+        background-color: $gray-300;
+        text-decoration: none;
+      }
+    }
+
+    span:before {
+      color: $gray-700;
+      font-size: $font-size-xs;
+    }
+  }
+}
+
+// Tabs 
+// ----------------------------------
+.nav-tabs {
+  & + .tab-content {
+    padding: $spacer 0;
+  }
+
+  .nav-link.active {
+    border-bottom-color: $white;
+  }
+}

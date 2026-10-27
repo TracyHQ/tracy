@@ -1,0 +1,496 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, footer, white cards, upload controls, and outlined public controls"
+    },
+    "air-wash": {
+      "$value": "#effbff",
+      "$type": "color",
+      "$description": "Air Wash — Pale editor surfaces, soft feature-media cards, and quiet selected-control fills"
+    },
+    "mist-border": {
+      "$value": "#e8eff2",
+      "$type": "color",
+      "$description": "Mist Border — Low-contrast section rules, upload-zone boundaries, and recessed editor framing"
+    },
+    "steel-inset": {
+      "$value": "#d0d6d7",
+      "$type": "color",
+      "$description": "Steel Inset — Fine outlined-control borders and 0.5px inset outlines"
+    },
+    "ash-copy": {
+      "$value": "#7e8486",
+      "$type": "color",
+      "$description": "Ash Copy — Supporting paragraphs, legal text, secondary links, and muted metadata"
+    },
+    "graphite-copy": {
+      "$value": "#434647",
+      "$type": "color",
+      "$description": "Graphite Copy — Secondary headings, inline links, and medium-emphasis explanatory text"
+    },
+    "editorial-ink": {
+      "$value": "#2a2c2d",
+      "$type": "color",
+      "$description": "Editorial Ink — Exposure display headlines, compact editor labels, and hero text"
+    },
+    "charcoal": {
+      "$value": "#1d1f20",
+      "$type": "color",
+      "$description": "Charcoal — Navigation text, body copy, dark filled controls, icon strokes, and strong borders"
+    },
+    "prism-cyan": {
+      "$value": "#00d0ff",
+      "$type": "color",
+      "$description": "Prism Cyan — Selected in-product tool labels and small editor icon details — a cool digital cue inside otherwise monochrome controls"
+    },
+    "sky-fade": {
+      "$value": "#a6ecff",
+      "$type": "color",
+      "$description": "Sky Fade — Feature-panel atmosphere and pale blue visual transitions"
+    },
+    "cyan-halo": {
+      "$value": "#ccf6ff",
+      "$type": "color",
+      "$description": "Cyan Halo — Subtle Prism Cyan control halo and selected-tool inset accent"
+    }
+  },
+  "font": {
+    "exposure-09cb373df0d2138c": {
+      "$value": "Exposure-09cb373df0d2138c",
+      "$type": "fontFamily",
+      "$description": "Display and section headlines. The 48px headings use -0.48px tracking; their broad, editorial forms make the product proposition feel typeset rather than software-standard."
+    },
+    "denimink-fc4757ccf169d42a": {
+      "$value": "DenimINK-fc4757ccf169d42a",
+      "$type": "fontFamily",
+      "$description": "Navigation, buttons, body copy, FAQs, labels, and feature titles. Its restrained 400-weight controls and lightly spaced 13–14px utility text make the editing interface feel like a toolset rather than a campaign page."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "11px",
+        "fontWeight": 500,
+        "lineHeight": 1.45,
+        "letterSpacing": "0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 11px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.38,
+        "letterSpacing": "0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "13px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0.023em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.38,
+        "letterSpacing": "0.023em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.71,
+        "letterSpacing": "0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.3,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.3,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "Exposure-09cb373df0d2138c",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "32px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "3xl-2": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "32px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-2 at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Exposure-09cb373df0d2138c",
+        "fontSize": "48px",
+        "fontWeight": 400,
+        "lineHeight": 1.41,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Exposure-09cb373df0d2138c",
+        "fontSize": "48px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 48px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "DenimINK-fc4757ccf169d42a",
+        "fontSize": "48px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 48px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "Exposure-09cb373df0d2138c",
+        "fontSize": "72px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 72px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "44": {
+      "$value": "44px",
+      "$type": "dimension",
+      "$description": "Spacing 44px"
+    },
+    "52": {
+      "$value": "52px",
+      "$type": "dimension",
+      "$description": "Spacing 52px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "100": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Spacing 100px"
+    },
+    "160": {
+      "$value": "160px",
+      "$type": "dimension",
+      "$description": "Spacing 160px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "xl-2": {
+      "$value": "15px",
+      "$type": "dimension",
+      "$description": "Border radius xl-2"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "30px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "58px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgb(208, 214, 215) 0px 0px 0px 0.5px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "md": {
+      "$value": "rgba(0, 0, 0, 0.05) 0px 4px 10px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md"
+    },
+    "xl": {
+      "$value": "rgba(190, 210, 235, 0.45) 0px 0px 80px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    },
+    "subtle-2": {
+      "$value": "color(srgb 0 0.815686 1 / 0.2) 0px 0px 0px 0.5px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-2"
+    }
+  },
+  "surface": {
+    "paper-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page, footer, white cards, and outlined controls."
+    },
+    "air-surface": {
+      "$value": "#effbff",
+      "$type": "color",
+      "$description": "Surface level 1: Editor workspace, selected product controls, and feature-media containers."
+    },
+    "mist-edge": {
+      "$value": "#e8eff2",
+      "$type": "color",
+      "$description": "Surface level 2: Recessed frames, low-contrast dividers, and upload-zone outlines."
+    },
+    "charcoal-surface": {
+      "$value": "#1d1f20",
+      "$type": "color",
+      "$description": "Surface level 3: Rare filled controls and strongest interface contrast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://captions.ai",
+      "siteName": "Captions",
+      "extractedAt": "2026-09-24T17:33:54.842Z",
+      "variant": "extended"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-987-ja-kinetic-wp7-footer-fixes-1-1-7",
+  "kind": "fix",
+  "title": "JA Kinetic wp7 1.1.7: footer columns keep one line per title and link at 320px, and the 404 footer rows match the source",
+  "pr": 987,
+  "area": "wordpress-theme/wp-ja-kinetic",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout read the shipped theme packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic (style.css, assets/css/wp-ja-kinetic.css) and its overlay under overlays/wp-ja-kinetic.",
+    "S2: Read the release's recorded site sweep tasks/ja-kinetic-wp7/release/fix-measure.json (taken on a clean restore of the 1.0.5 pack against the local Joomla source stand) and tasks/ja-kinetic-wp7/release/SHA256SUMS."
+  ],
+  "expect": [
+    "S1: the theme is version 1.1.7; the shipped stylesheet and the overlay both keep footer titles and links on one line, size the three footer columns to their content, and pad the footer link rows 9.15px.",
+    "S2: the sweep was taken by site-sweep.mjs on the released theme zip, passes 11 of 11 checks with 0 heights defects, and its baseline is 1.1.6 with heights failing."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-987-ja-kinetic-wp7-footer-fixes-1-1-7.mjs",
+    "evidence": "tasks/ja-kinetic-wp7/release/fix-measure.json"
+  },
+  "evidence": "Release chain of 06/10/2026 against the local Joomla source, theme 1.1.7: full 11-check site-sweep (30/30 routes, 584s) passed with 0 open groups, accepted groups only the search result count, the Contact mailbox column and the profile alert band; measure115 9/9 earlier the same day on the same theme CSS",
+  "fence": "The shipped stylesheet carries the rules and the release's sweep record is the one taken on the shipped zip; the script goes red on the parent of the fix.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-987-ja-kinetic-wp7-footer-fixes-1-1-7.mjs"]
+  }
+}

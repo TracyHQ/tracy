@@ -1,0 +1,15 @@
+{
+  "name": "@tracy/design-skill",
+  "version": "0.2.24",
+  "description": "Design skills written by Tracy — run on tools already in the agent image, no dependency on third-party tools",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./package.json": "./package.json",
+    "./matt-enabled.txt": "./matt-enabled.txt"
+  },
+  "files": [
+    "skills",
+    "matt-enabled.txt"
+  ]
+}

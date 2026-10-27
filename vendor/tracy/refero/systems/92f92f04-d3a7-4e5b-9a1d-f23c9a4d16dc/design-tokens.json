@@ -1,0 +1,525 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#f3f2f1",
+      "$type": "color",
+      "$description": "Paper — Page background and low-contrast section surface"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Terminal chrome, badges, light controls, and elevated content surfaces"
+    },
+    "ink": {
+      "$value": "#1c1917",
+      "$type": "color",
+      "$description": "Ink — Primary headings, navigation, body text, icons, and hairline outlined controls"
+    },
+    "charcoal": {
+      "$value": "#272321",
+      "$type": "color",
+      "$description": "Charcoal — Terminal demonstration background and dark text-on-light supporting surface"
+    },
+    "deep-graphite": {
+      "$value": "#3a3532",
+      "$type": "color",
+      "$description": "Deep Graphite — Dark installation-panel fill and inset terminal depth"
+    },
+    "warm-gray": {
+      "$value": "#7c716a",
+      "$type": "color",
+      "$description": "Warm Gray — Body copy, helper text, secondary links, and subdued icons"
+    },
+    "steel": {
+      "$value": "#aaa29d",
+      "$type": "color",
+      "$description": "Steel — Inactive controls and muted icon strokes"
+    },
+    "rule-gray": {
+      "$value": "#cac6c3",
+      "$type": "color",
+      "$description": "Rule Gray — 1px borders, feature-grid dividers, outlined control borders, and muted tiled surfaces"
+    },
+    "aqua-mist": {
+      "$value": "#d3f3f3",
+      "$type": "color",
+      "$description": "Aqua Mist — Pale promotional card surface and cool highlighted section wash"
+    },
+    "aqua-midtone": {
+      "$value": "#8dd9d9",
+      "$type": "color",
+      "$description": "Aqua Midtone — Secondary aqua surface for layered promotional artwork"
+    },
+    "outline-aqua": {
+      "$value": "#9fe4e4",
+      "$type": "color",
+      "$description": "Outline Aqua — Outlined documentation-control border and monospace command highlight"
+    },
+    "butler-teal": {
+      "$value": "#25b1b1",
+      "$type": "color",
+      "$description": "Butler Teal — Filled login control and large conversion panels — saturated teal punctuates the mostly paper-and-ink interface"
+    },
+    "deep-teal": {
+      "$value": "#1d8a8a",
+      "$type": "color",
+      "$description": "Deep Teal — Badge text, command syntax, icon fills, and teal display-text accents"
+    }
+  },
+  "font": {
+    "but-head": {
+      "$value": "But Head",
+      "$type": "fontFamily",
+      "$description": "Display and section headings plus large segmented-control labels. Its narrow, high-contrast serif construction makes 400-weight text feel editorial rather than bold; use 82px/82px for the hero, 60px/60px for section headings, 48px/48px on dark command panels, and 40px/60px for the wordmark."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Navigation, body copy, feature descriptions, badges, links, and UI labels. Keep prose at 16px/24px weight 400, navigation at 14px/16.8px weight 500, and feature titles at 18px/21.6px weight 600."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Terminal commands and code-style instructional text at 14px/21px; its monospaced texture distinguishes executable text from the editorial headline voice."
+    },
+    "source-code-pro": {
+      "$value": "Source Code Pro",
+      "$type": "fontFamily",
+      "$description": "Fallback monospace treatment for small code fragments at 14px/21px."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Geist Mono",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Source Code Pro",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "sm-7": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-7 at 14px"
+    },
+    "sm-8": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-8 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 15px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "15px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 15px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "base-7": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-7 at 16px"
+    },
+    "base-8": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-8 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "18px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "But Head",
+        "fontSize": "40px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 40px"
+    },
+    "4xl-2": {
+      "$value": {
+        "fontFamily": "But Head",
+        "fontSize": "40px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-2 at 40px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "But Head",
+        "fontSize": "48px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "But Head",
+        "fontSize": "60px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 60px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "But Head",
+        "fontSize": "60px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 60px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "But Head",
+        "fontSize": "82px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 82px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "2xl-2": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl-2"
+    },
+    "full": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 1px 6px 0px, rgba(0, 0, 0, 0.2) 0px 24px 44px 3px",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm"
+    },
+    "xl": {
+      "$value": "rgb(58, 53, 50) 0px 4px 100px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    },
+    "xl-2": {
+      "$value": "rgba(0, 0, 0, 0.2) 0px -36px 54px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl-2"
+    }
+  },
+  "surface": {
+    "paper-canvas": {
+      "$value": "#f3f2f1",
+      "$type": "color",
+      "$description": "Surface level 0: Default page and quiet section background."
+    },
+    "white-utility-surface": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Terminal chrome, badges, tab rows, and light elevated controls."
+    },
+    "aqua-mist-panel": {
+      "$value": "#d3f3f3",
+      "$type": "color",
+      "$description": "Surface level 2: Pale promotional and illustrated-card surface."
+    },
+    "teal-promotional-surface": {
+      "$value": "#25b1b1",
+      "$type": "color",
+      "$description": "Surface level 3: Large conversion cards and compact filled conversion controls."
+    },
+    "charcoal-terminal-surface": {
+      "$value": "#272321",
+      "$type": "color",
+      "$description": "Surface level 4: Code demonstrations and terminal content fields."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://gitbutler.com",
+      "siteName": "GitButler",
+      "extractedAt": "2026-09-24T17:36:32.494Z",
+      "variant": "extended"
+    }
+  }
+}

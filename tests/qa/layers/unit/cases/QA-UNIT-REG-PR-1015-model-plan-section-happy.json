@@ -1,0 +1,76 @@
+{
+  "id": "QA-UNIT-REG-PR-1015-model-plan-section-happy",
+  "itemIds": ["regression:REG-PR-1015-model-plan-section"],
+  "requirement": "Account model subscriptions share routing across surfaces and fall back to Tracy AI only with account consent before output",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1015-model-plan-section.json",
+    "ref": "PR #1015 (feat); fix evidence: none recorded",
+    "invariant": "S1: anonymous reads are refused; both accounts can read only safe metadata; changing A does not change B; cross-origin and stale updates are refused; the saved preference is restored. S2: fallback defaults on, disabled consent prevents fallback, account and site fences hold, failures retry at most once, partial output and cancellation cannot replay, and the normal Tracy runtime receives the default model and correct identity.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/csrf.js:228",
+      "apps/tracy-web/src/lib/i18n/index.js:25",
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/seat-plan/broker.js:80",
+      "apps/tracy-web/src/seat-plan/model-context.js:20",
+      "apps/tracy-web/src/seat-plan/providers.js:12",
+      "apps/tracy-web/src/seat-plan/route.js:44",
+      "apps/tracy-web/src/seat-plan/vault.js:4",
+      "apps/tracy-web/src/seat-plan/wire/api-key.js:9",
+      "apps/tracy-web/src/seat-plan/wire/messages.js:2",
+      "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs:45"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "tests/regression/scripts/account-subscriptions.mjs:8 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:postgres"],
+  "assertionIds": [
+    "live account routing is authenticated, isolated, versioned and restored after the probe",
+    "Tracy AI fallback defaults on, follows account consent and remains account fenced",
+    "partial output is never replayed onto a different subscription"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1015-model-plan-section"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1015-model-plan-section",
+    "pr": 1015,
+    "kind": "feat",
+    "area": "model-subscription/account-routing",
+    "file": "tests/regression/cases/REG-PR-1015-model-plan-section.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/regression/scripts/account-subscriptions.mjs",
+    "apps/tracy-web/test/seat-plan-broker.test.mjs",
+    "apps/tracy-web/test/seat-plan-route.test.mjs",
+    "apps/tracy-web/test/seat-plan-vault.test.mjs",
+    "apps/tracy-web/test/seat-plan-model-context.test.mjs",
+    "packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["stand", "postgres"],
+  "tests": [
+    "live account routing is authenticated, isolated, versioned and restored after the probe",
+    "Tracy AI fallback defaults on, follows account consent and remains account fenced",
+    "partial output is never replayed onto a different subscription"
+  ],
+  "timeoutS": 180
+}

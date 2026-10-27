@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-1015-desktop-app-settings-happy",
+  "itemIds": ["regression:REG-PR-1015-desktop-app-settings"],
+  "requirement": "/ops/ui opens on a Desktop App area first in its rail; its switches change GET /api/desktop/config and leave GET /api/ui alone",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1015-desktop-app-settings.json",
+    "ref": "PR #1015 (feat); fix evidence: PR #1015 replaced a per-switch Desktop column (ui_setting.desktop_overrides, /api/ui?surface=desktop) with one Desktop App area holding the app's own settings (07/10/2026).",
+    "invariant": "S1: /api/desktop/config answers 200 with cache-control no-store and exactly the keys llm and tracyModel; /api/ui answers exactly the key hidden, and ?surface=desktop answers the same hidden list. S3: the first rail link reads `Desktop App` and carries aria-current=page; the connect switch is off and the ChatGPT Codex switch is disabled. S4: llm is {connect:true, providers:[claude]} and the ChatGPT Codex switch is enabled. S5: llm is {connect:true, providers:[claude, codex]} (the screen's order). S6: /api/ui still answers only hidden, with the same list as S1.",
+    "productSources": ["apps/tracy-web/src/lib/session.js:101"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["tests/regression/specs/stand.mjs:53 readFileSync() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:chrome"],
+  "assertionIds": ["REG-PR-1015-desktop-app-settings.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1015-desktop-app-settings"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "playwright",
+  "regression": {
+    "id": "REG-PR-1015-desktop-app-settings",
+    "pr": 1015,
+    "kind": "feat",
+    "area": "ops/ui/desktop-app",
+    "file": "tests/regression/cases/REG-PR-1015-desktop-app-settings.json"
+  },
+  "command": [
+    "../../node_modules/.bin/playwright",
+    "test",
+    "-c",
+    "playwright.config.mjs",
+    "specs/REG-PR-1015-desktop-app-settings.spec.mjs"
+  ],
+  "cwd": "tests/regression",
+  "needs": ["stand", "chrome"],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,508 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-healthcare",
+  "release": "quickstart/ja-healthcare/j6@1.0.0",
+  "minVersion": {
+    "quickstart/ja-healthcare/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-healthcare/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "body",
+    "button-primary": "div.module-ct div.mod-custom.custom a.btn.btn-secondary",
+    "section": "div.acm-features.style-1"
+  },
+  "discovered": {
+    "page": "body",
+    "button-primary": "first filled, coloured call to action: rgb(252, 166, 84)",
+    "section": "first padded full-width section, padding-top 96px"
+  },
+  "keepScopes": [".navbar", ".effect-slow", ".t3-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#e6eaf0",
+    "--fg": "#818c98",
+    "--fg-2": "#23263d",
+    "--accent": "#3f6cb2",
+    "--accent-hover": "#2b4a79",
+    "--surface": "#ffffff",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#dddddd",
+    "--muted": "#555555",
+    "--font-display": "\"Helvetica Neue\", sans-serif",
+    "--font-body": "\"Helvetica Neue\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#f2f4f8"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#e6eaf0",
+      "fg": "#818c98",
+      "fg-2": "#222222",
+      "accent": "#3f6cb2",
+      "accent-hover": "#2b4a79",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#dddddd",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#e6eaf0",
+      "surface": "#ffffff",
+      "fg": "#818c98",
+      "fg-2": "#23263d",
+      "accent": "#fca654",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f2f4f8"
+    },
+    {
+      "accent": "#3f6cb2"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "border-soft": "#e6eaf0",
+      "bg": "#eeeeee",
+      "surface-warm": "#fcf8e3",
+      "border": "#e1e1e1",
+      "accent-hover": "#32558c"
+    },
+    {
+      "bg": "#d9edf7",
+      "surface-warm": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "border": "#e0e2e3",
+      "accent-hover": "#30477b"
+    },
+    {
+      "border-soft": "#f2f4f8",
+      "bg": "#e7e7e7",
+      "surface-warm": "#f4effa",
+      "border": "#d5d5d5",
+      "accent-hover": "#2f5185"
+    },
+    {
+      "bg": "#edefef",
+      "border-soft": "#f2f2f2",
+      "border": "#d4d4d4",
+      "surface-warm": "#f6f6f6"
+    },
+    {
+      "bg": "#e6e6e6",
+      "border-soft": "#ebebeb",
+      "surface-warm": "#f9f2f4",
+      "border": "#e3e3e3"
+    },
+    {
+      "bg": "#e8e8e8",
+      "surface-warm": "#fdfbe4",
+      "border-soft": "#e1e1e8"
+    },
+    {
+      "border-soft": "#f7f7f7",
+      "surface-warm": "#f8f8f8"
+    },
+    {
+      "surface-warm": "#f0f0f0",
+      "border-soft": "#e5e7eb"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (75 line colours, 89 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-secondary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-secondary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["div.acm-features.style-1"],
+    "bodyFace": ["body"],
+    "onAccent": [".module-bg.bg-primary"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "top-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 20 tried (byte 6688); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#e6eaf0",
+      "uses": 831,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 287,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#e6eaf0",
+      "distance": 9
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 90,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 24
+    },
+    {
+      "hex": "#d9edf7",
+      "uses": 82,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#e6eaf0",
+      "distance": 15
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 68,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 9
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 66,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 36,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#f2f4f8",
+      "uses": 24,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 19
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 24,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 8
+    },
+    {
+      "hex": "#32558c",
+      "uses": 22,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#2b4a79",
+      "distance": 23
+    },
+    {
+      "hex": "#e7e7e7",
+      "uses": 22,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#e6eaf0",
+      "distance": 10
+    },
+    {
+      "hex": "#edefef",
+      "uses": 20,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#e6eaf0",
+      "distance": 9
+    },
+    {
+      "hex": "#f4effa",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 6
+    },
+    {
+      "hex": "#d5d5d5",
+      "uses": 17,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 14
+    },
+    {
+      "hex": "#e6e6e6",
+      "uses": 17,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#e6eaf0",
+      "distance": 11
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 15
+    },
+    {
+      "hex": "#d4d4d4",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 16
+    },
+    {
+      "hex": "#30477b",
+      "uses": 16,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#2b4a79",
+      "distance": 6
+    },
+    {
+      "hex": "#f6f6f6",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 5
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 13,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 8
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 12,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#e6eaf0",
+      "distance": 8
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#2f5185",
+      "uses": 9,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#2b4a79",
+      "distance": 14
+    },
+    {
+      "hex": "#fdfbe4",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 24
+    },
+    {
+      "hex": "#e1e1e8",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 11
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 23
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 7
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f2f4f8",
+      "distance": 9
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.1 its minVersion names (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-healthcare-j6): 12/12, controls 0, no text worse than the template's own, 82% or more of the page follows; the probe found the navbar and hero slideshow texts changed (they inherit the page text: keepColors) and the eye saw the white Opening Hours words on a light accent fill (Moxie, MotherDuck): fixed in the contract (keepColors, selectors.onAccent, no new release); checked by eye on all four systems, desktop and phone; earlier: measured 11/10/2026 (tasks/evidence/ds-contracts-batch3-2026-10-11/templates/ja-healthcare-j6): default unchanged, no text made less readable than the template's own under the systems tried, 78% or more of the page follows",
+  "keepColors": {
+    ".navbar": "rgb(129, 140, 152)",
+    ".effect-slow": "rgb(129, 140, 152)"
+  },
+  "keepColorsNote": "re-measured 11/10/2026 with the current probe: the navbar and the hero slideshow inherit the page text (#818c98) into their wrappers and separators, so a worn system changed 64 (desktop) / 56 (phone) of their elements; each band gives its texts back the colour they inherited as released",
+  "onAccentNote": "the Opening Hours panel (.module-bg.bg-primary) is filled with the accent and writes white on it: under a light accent that white was unreadable (Moxie #84acfb, MotherDuck #6fc2ff, seen by eye on the phone screenshots; the probe samples no text there): it takes the accent's own text colour",
+  "bands": {
+    ".navbar": {
+      "ground": "#23263d",
+      "texts": ["#d3d4d8", "#ffffff"],
+      "important": true
+    },
+    ".effect-slow": {
+      "ground": "#3f6cb2",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "root": false,
+      "important": true,
+      "paint": {
+        ".mask": {
+          "background-color": "ground"
+        },
+        ".mask::before": {
+          "border-left-color": "ground"
+        }
+      }
+    },
+    ".t3-footer": {
+      "ground": "#23263d",
+      "texts": ["#a7a8b1", "#ffffff"],
+      "paint": {
+        ".copyright small a": {
+          "color": "accent"
+        },
+        ".t3-footnav .t3-module": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".t3-module.module.module-bg.bg-blue.ja-animate.dl-4": {
+      "ground": "#0097d7",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".module-title span", ".mod-custom p"],
+      "paint": {
+        ".btn-default": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      }
+    },
+    ".t3-module.module.module-bg.bg-primary.ja-animate.dl-8": {
+      "ground": "#3f6cb2",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".module-title span", ".module-ct b", ".module-ct span"]
+    },
+    ".feature-info": {
+      "ground": "#3f6cb2",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".info-text h4", ".info-text p"]
+    },
+    ".call-to-actions": {
+      "ground": "#5cb85c",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".t3-module.module.module-bg.bg-gray-dark.ja-animate.dl-1": {
+      "ground": "#23263d",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".module-title span", ".mod-custom p"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the Opening Hours module (the accent fill .module-bg.bg-primary) sets its rows in b and span of its own white: its title took the words that read on a light accent, its rows stayed white (Mailchimp, visual review 14/10/2026). The rows (.module-ct b, .module-ct span) are words of the fill too. The cardLike .item the 14/10 draft added was not kept: on this template .item is the full-width hero slide; 14/10/2026 (visual review, round 3): the Doctors Timetable fill’s Read More (.btn-default) kept the template’s navy (#23263d) whatever the fill turned into — a dark button on the template’s blue, by the template’s own design; it now wears the fill the same way: the words the system sets on the fill (text) as its ground and the fill as its label, so it reads on any fill by construction (no colour of a system); 15/10/2026 (v9 measure): the footer's module columns (.t3-footnav .t3-module) paint the template's navy #23263d themselves (template.css, the same literal as .t3-footer), so under every system the footer showed a navy panel inside the band's worn ground, and the Subscribe button, which wears the band's button pair chosen against that worn ground, sat on the navy instead: Figma's #4d49fc on #23263d 2.59:1 (the template's own #3f6cb2 there 2.82:1), desktop and phone. The columns now wear the band's ground (paint background-color: ground), as one tone with the band as the template draws it; the button then stands 3.58:1 or more on the column under all fifteen featured systems (Figma 3.67:1)",
+  "sideRules": {
+    "light": {},
+    "dark": {}
+  },
+  "sideNote": "the video block’s photo is tinted by .video-thumb::before, the accent at 80% opacity, under a white outline play button: a light accent at full strength turned the photo yellow and the white button vanished (Mailchimp, Linear, visual review 14/10/2026). The tint is the accent mixed 40% toward black on both sides, so the white button reads on it whatever the accent",
+  "followRules": {
+    ".acm-video .btn-play": {
+      "color": "accent-on",
+      "border-color": "accent-on"
+    },
+    ".acm-features .owl-carousel .owl-nav > div .fa": {
+      "color": "muted"
+    },
+    ".acm-features .owl-carousel .owl-nav > div": {
+      "border-color": "border"
+    }
+  },
+  "reviewV8Note": "15/10/2026 (look review v8): the hero caption panel (.mask and its ::before wedge) reads --ds-c-accent inside the kept band .effect-slow, which resets it: it stayed template blue under every system. It is a brand band painted with the worn ground. The video tint’s color-mix turned light accents olive: dropped, the play button takes the accent’s own text. The features slider’s arrows take the muted text and the line colour"
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-tracy-business",
+  "template": "joomla/tracy-business",
+  "minVersion": {
+    "tracy-business/j6": "1.2.6"
+  },
+  "maxVersion": {
+    "tracy-business/j6": "1.2.6"
+  },
+  "splitNote": "19/10/2026 (design system dot 3): from 1.2.6 the footer link's hover underline (a.tb-footlink, _tracy-business-chrome.scss) reads the system accent taken on the root (--tb-ds-accent, the template's --tb-signal unworn) at its source (template-patches/tracy_business), so the sideRules patch the base contract carries for 1.2.5 and older (sites do not update their template) is dropped here. Everything else is the base contract's; sideRules is repeated because a child replaces a top-level key whole.",
+  "sideRules": {
+    "dark": {
+      "body": {
+        "--tb-ink-band": "var(--ds-c-surface-warm)"
+      },
+      ".acm-tb-hero": {
+        "background-color": "var(--tb-ink-band)!important"
+      }
+    }
+  },
+  "sideRulesNote": "16/10/2026 (GROUND-2, BORDER-1 on tracy-business/j6 1.2.4 under Moxie's dark side): in its dark mode the template keeps its ink bands a hair off the page (#0A0C0D on #101214, 1.04:1), while a dark side's ink is its card surface (Moxie #1a1a1a on #000000, 1.21:1): the hero, the footer and every block reading --tb-ink-band stood as grey blocks. On the dark side they take the system's quiet raised surface (--ds-c-surface-warm, set as --tb-ink-band on the body, outside the kept bands that reset --ds-c-*; the footer already paints --tb-ink-band, which keepFollows leaves to the worn value, and the hero takes it as its ground), as JA Kinetic's elevated bands do; the light side keeps the system's ink. The hero picture's frame was painted with the band's secondary TEXT (#b7b3a0 on Moxie's dark ink, 8.26:1, far harder than any line of the system); it takes the band's card shade, a tenth toward its words, as the template's own line mixes 12% of on-ink into ink."
+}

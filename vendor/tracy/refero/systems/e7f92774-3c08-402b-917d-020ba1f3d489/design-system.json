@@ -1,0 +1,322 @@
+{
+  "dos": [
+    "Set body text in Inter V weight 400 at 16px/1.50, color #a8a6b7 or #f4f0ff — never use pure #ffffff for body copy, the lavender cast in #f4f0ff is intentional",
+    "Use AeonikPro weight 500 at 48–72px for all headings — do not bold up to 600/700, the medium weight IS the brand",
+    "Use 5px border-radius for all buttons, inputs, and interactive elements; 16px for all cards and containers; 32px for pill badges; 999px only for the nav container",
+    "Apply inset white glow (rgba(255,255,255,0.04–0.06) 0px 0px 24px 0px inset) to elevated surfaces instead of drop shadows — this creates the rim-light glass effect",
+    "Use #9382ff exclusively for links, active states, focus rings, and small accent icons — keep the violet accent sparse, it's punctuation not paint",
+    "Use the cosmic gradient (#e59cff → #ba9cff → #9cb2ff) only on text and thin decorative strokes, never as a large fill or button background",
+    "Set the page background to #030014 — the violet undertone is essential, do not use pure black #000000"
+  ],
+  "donts": [
+    "Do not use bold (600+) or extra-bold (700+) weights for any text — the entire system is calibrated to medium and regular only",
+    "Do not use drop shadows on cards or panels — all elevation is achieved through inset rim-light glows, not external shadows",
+    "Do not add the brand accent color to large fills, backgrounds, or hero sections — it dilutes the monochromatic quiet",
+    "Do not use border-radius values other than the defined set (5/16/32/999px) — do not default to 8px or 12px for buttons or 24px for cards",
+    "Do not use pure white #ffffff for body text — always use the lavender-tinted #f4f0ff to maintain color harmony with the violet canvas",
+    "Do not introduce semantic colors (red/green/yellow) for status — the system is intentionally achromatic, if states are needed use opacity changes and the lavender accent",
+    "Do not use multiple accent hues — the single lavender #9382ff is the only chromatic voice; introducing a second accent breaks the constellation metaphor"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#030014",
+      "name": "Void Canvas",
+      "role": "Page background, hero canvas, deepest surface layer — the near-black with violet undertone that defines the entire system's mood",
+      "group": "neutral"
+    },
+    {
+      "hex": "#060317",
+      "name": "Midnight Surface",
+      "role": "Elevated surface, card backgrounds, slightly raised panels above the void canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#10093a",
+      "name": "Deep Indigo",
+      "role": "Most elevated surface, hover states, prominent UI panels — a step brighter than midnight surface; Filled button surface, deep brand surface for primary controls sitting on the void canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f0ff",
+      "name": "Lilac White",
+      "role": "Primary text, headings, icons, high-contrast UI elements — white with a lavender cast that harmonizes with the violet canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pearl",
+      "role": "Pure white used sparingly for text on violet-filled elements and maximum-contrast headlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a8a6b7",
+      "name": "Ash",
+      "role": "Secondary body text, card labels — cool neutral with violet undertone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#918ea0",
+      "name": "Fog",
+      "role": "Tertiary text, metadata, helper text, inactive controls, border lines at full opacity",
+      "group": "neutral"
+    },
+    {
+      "hex": "#54525f",
+      "name": "Steel",
+      "role": "Deepest muted text, disabled labels, dark-mode border contrast — the lowest readable neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cdccd0",
+      "name": "Mercury",
+      "role": "Bright neutral used in dividers, subtle borders, and light-on-dark surface tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#72707b",
+      "name": "Dusk",
+      "role": "Mid-neutral for secondary borders, inactive icon strokes, and subtle background tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9382ff",
+      "name": "Lavender Accent",
+      "role": "Brand accent — links, active icons, focus rings, gradient endpoints, highlight punctuation. The single chromatic signal in a monochrome system",
+      "group": "brand"
+    },
+    {
+      "hex": "#5046e4",
+      "name": "Iris",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ba9cff",
+      "name": "Cosmic Gradient",
+      "role": "Decorative gradient running from pink #e59cff through #ba9cff to blue #9cb2ff — used only on accent text and thin highlight strokes, never as a fill",
+      "group": "accent",
+      "gradient": "linear-gradient(90.01deg, #e59cff 0.01%, #ba9cff 50.01%, #9cb2ff 100%)"
+    },
+    {
+      "hex": "#7d62ff",
+      "name": "Aurora",
+      "role": "Vertical violet glow gradient used for divider lines and edge highlights — transparent at both ends, peaks at violet center",
+      "group": "accent",
+      "gradient": "linear-gradient(180deg, rgba(183,164,251,0) 0%, #b7a4fb 50%, #8562ff 100%, rgba(133,98,255,0) 100%)"
+    }
+  ],
+  "layout": "Centered max-width ~1200px container with 24–48px horizontal page padding. Navigation is a floating pill centered at the top (not full-width). Hero is full-bleed with centered headline, subtitle, and a wide product screenshot below. Section rhythm: consistent 96–120px vertical gaps between sections, no alternating background colors (the entire page is the same void canvas). Feature sections use a 4-column grid (8 features in 2 rows of 4). Testimonial section uses a 3-column grid (6 testimonials in 2 rows of 3). All sections are center-aligned with the same max-width. No sidebar, no sticky elements beyond the floating nav pill. The page reads as one continuous dark scroll with rhythmic pauses between sections.",
+  "imagery": "The primary visual element is a full product screenshot embedded in the hero showing the Reflect app interface — a dark-themed notes editor with sidebar navigation (Daily notes, All notes, Tasks, Map) and a monthly calendar widget. The screenshot sits on a subtle star-field background of tiny white dots scattered across the violet-black canvas. Below the hero, the visual content shifts to UI cards and feature blocks — no photography or illustration. Feature icons are stroke-based, 1.5px weight, outlined, and white. Avatars in testimonials are small circular photos. The gradient text on \"Think better\" (pink to blue) is the only chromatic illustration element. Overall: product-screenshot-forward, icons-only for features, no lifestyle photography or 3D renders.",
+  "similar": [
+    {
+      "why": "Dark canvas with single accent color, tight card radii, and medium-weight sans-serif headings — though Reflect is more monochromatic and cosmic",
+      "business": "Notion"
+    },
+    {
+      "why": "Dark mode UI with tight spacing, floating pill nav, and medium-weight display type — but Reflect trades Linear's electric accent for a softer lavender",
+      "business": "Linear"
+    },
+    {
+      "why": "Centered max-width layout, dark canvas, minimal component surfaces relying on subtle borders and glows rather than fills",
+      "business": "Vercel"
+    },
+    {
+      "why": "Knowledge-tool dark theme with violet-tinted canvas and constellation-like dot patterns, matching the \"thinking space\" metaphor",
+      "business": "Obsidian"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "badges": "32px",
+      "inputs": "5px",
+      "buttons": "5px",
+      "navPill": "999px",
+      "featureBlocks": "24px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "96-120px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#030014",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Page background, hero section, deepest base layer"
+    },
+    {
+      "hex": "#060317",
+      "name": "Midnight Surface",
+      "level": 1,
+      "purpose": "Cards, nav pill, slightly elevated panels"
+    },
+    {
+      "hex": "#10093a",
+      "name": "Deep Indigo",
+      "level": 2,
+      "purpose": "Highest surface elevation, prominent UI blocks, button fills on dark canvas"
+    },
+    {
+      "hex": "#060317",
+      "name": "Testimonial Card",
+      "level": 3,
+      "purpose": "Content cards with same surface as nav, differentiated by padding and border-radius rather than color shift"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "inset 0 0 24px rgba(255,255,255,0.04) or inset 0 0 24px rgba(255,255,255,0.06)",
+      "element": "Cards and elevated surfaces"
+    },
+    {
+      "style": "inset 0 -7px 11px rgba(164,143,255,0.12)",
+      "element": "Pill badges and AI labels"
+    }
+  ],
+  "northStar": "starlit violet cosmos — a dark observatory where notes float like constellations against a near-black indigo void.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.17,
+      "letterSpacing": -0.3
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.5
+    }
+  ],
+  "components": [
+    {
+      "name": "Navigation Pill",
+      "role": "Top navigation bar",
+      "description": "Floating pill-shaped container centered on the page, border-radius ~999px, background #060317 with subtle inset white glow shadow (rgba(255,255,255,0.04) inset). Contains logo on the left, nav links (Product, Pricing, Company, Blog, Changelog) in Inter V 15px weight 400 in Lilac White, Login as text link in #918ea0, and a filled CTA button on the right. 40px height, 8px vertical padding, tight horizontal padding."
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "Main call-to-action button",
+      "description": "Filled button with #5046e4 background, 5px border-radius, Inter V 15px weight 500, #ffffff text, 10px 16px padding. Used for \"Start free trial\" in nav and hero. Hover transitions to deeper #10093a or lighter violet wash."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary action or login link",
+      "description": "No background, Inter V 15px weight 400, #918ea0 text color, 5px radius, subtle hover to #f4f0ff. Used for \"Login\" in nav and less prominent actions."
+    },
+    {
+      "name": "AI Badge Pill",
+      "role": "Highlight badge above hero headline",
+      "description": "Pill-shaped badge with 32px border-radius, #060317 background with #5046e4 border, Inter V 13px weight 500 text in Lilac White. Contains sparkle icon + short text. Has inset violet glow: rgba(164,143,255,0.12) 0px -7px 11px 0px inset."
+    },
+    {
+      "name": "Hero Product Screenshot",
+      "role": "Product showcase image in hero",
+      "description": "Full-width app screenshot embedded in hero, showing the notes editor with sidebar, daily notes panel, and calendar widget. 16px border-radius, subtle border in #918ea0 at low opacity, inset white glow to suggest light catching the edge."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Individual feature in 4-column grid",
+      "description": "Minimal card with 16px padding, no visible background or border. Contains: outlined icon (stroke-only, 1.5px, #f4f0ff) at top-left, then AeonikPro 500 at 18–20px title in Lilac White, then Inter V 15px weight 400 description in #918ea0. No card surface — features float directly on canvas."
+    },
+    {
+      "name": "Feature Icon",
+      "role": "Icon component for feature cards",
+      "description": "1.5px stroke weight, outlined style, ~24px size, #f4f0ff color, no fill. Geometric and minimal — clock, globe, phone, lock, calendar, cursor, square, search shapes. Stroke-based, not filled."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "User testimonial in 3-column grid",
+      "description": "16px border-radius, #060317 background, 24px padding. Contains: 40px circular avatar at top, name in Inter V 15px weight 500 #f4f0ff, handle in Inter V 14px weight 400 #918ea0 below, then quote text in Inter V 15px weight 400 #f4f0ff with #9382ff colored @mentions inline. Subtle inset white glow shadow for rim-light effect."
+    },
+    {
+      "name": "Section Header",
+      "role": "Title block for each page section",
+      "description": "Centered, AeonikPro 500 at 48–56px, Lilac White #f4f0ff. Subtitle in Inter V 18px weight 400 #918ea0 below. Sometimes preceded by a small pill badge (e.g. \"Wall of love\", \"Reflect AI\") in the AI Badge style."
+    },
+    {
+      "name": "Text Link with Chevron",
+      "role": "Inline navigation or CTA link",
+      "description": "Inter V 15px weight 500 in #9382ff (lavender accent), with a right-arrow chevron icon. 8px radius. Used for \"Learn more\" and feature deep-links. On hover transitions to #f4f0ff."
+    },
+    {
+      "name": "Star Field Background",
+      "role": "Decorative cosmic backdrop",
+      "description": "Subtle dot/star pattern scattered across the hero section — tiny white dots (1–2px) at low opacity, creating a constellation effect on the #030014 canvas. Purely decorative, not interactive."
+    },
+    {
+      "name": "Aurora Divider",
+      "role": "Section separator with violet glow",
+      "description": "Thin horizontal or vertical line using the Aurora gradient — transparent at endpoints, violet in center. Used to separate sections or decorate feature grids. ~1px height, full width or column-width."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading typeface used exclusively for headings at 24px+ — weight 500 (medium) instead of the conventional 600–800 creates an editorial, restrained voice. The medium weight at 56–72px is the signature choice: other brands shout, Reflect whispers",
+      "sizes": "24px, 32px, 48px, 56px, 72px",
+      "family": "AeonikPro",
+      "weight": "500",
+      "lineHeight": "1.11–1.33",
+      "substitute": "Aeonik, Inter, or DM Sans",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Body and UI typeface for all text below headings, navigation, buttons, inputs, badges, and interface labels. Weight 400 for body, 500 for emphasized UI text and button labels",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 18px",
+      "family": "Inter V",
+      "weight": "400, 500",
+      "lineHeight": "1.20–1.85",
+      "substitute": "Inter, Geist, or system-ui",
+      "fontFeatureSettings": "\"calt\" 0, \"cv10\", \"liga\" 0, \"ss01\""
+    }
+  ],
+  "description": "Reflect Notes is a starlit thinking environment: near-black canvas tinted with violet (#030014), illuminated text in a soft lavender-white, and a single vivid lavender accent (#9382ff) that functions as a point of focus against the dark. The interface stays monochromatic and quiet — surfaces are separated by inset rim-light glows rather than borders or elevation shadows, giving components the feel of dark glass panels catching ambient light. Display headlines use AeonikPro at weight 500 (deliberately medium, not bold), creating a calm editorial voice rather than marketing bombast. A pastel pink-to-violet-to-blue gradient is reserved exclusively for accent text and decorative strokes — never for large fills. Components are compact and tight: 5px button radii, 16px card radii, 4px base spacing. The whole system reads as a constellation map, not a dashboard.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #f4f0ff (Lilac White)\n- text secondary: #a8a6b7 (Ash)\n- background: #030014 (Void Canvas)\n- card surface: #060317 (Midnight Surface)\n- accent: #9382ff (Lavender Accent)\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n1. *Create a centered hero section on #030014 canvas. A 32px-radius pill badge (\"AI-powered\") with #060317 background, #5046e4 border, Inter V 13px weight 500 in #f4f0ff, and an inset violet glow shadow. Below it, a headline \"Think better with [Brand]\" in AeonikPro 500 at 72px, #f4f0ff. Subtitle in Inter V 18px weight 400, #a8a6b7. A product screenshot below at 16px border-radius with subtle inset white glow.*\n2. *Create a 4-column feature grid on #030014 canvas. Each cell: outlined icon (1.5px stroke, #f4f0ff, 24px) top-left, then AeonikPro 500 20px title in #f4f0ff, then Inter V 15px weight 400 description in #918ea0. 16px gap between cards, no card backgrounds.*\n3. *Create a testimonial card: #060317 background, 16px border-radius, 24px padding, inset rgba(255,255,255,0.04) glow shadow. Top: 40px circular avatar. Name in Inter V 15px weight 500 #f4f0ff, handle in Inter V 14px weight 400 #918ea0. Quote in Inter V 15px weight 400 #f4f0ff with @mentions in #9382ff.*\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n**Spacing & Type Rules for All Prompts**\n- Base unit: 4px. Element gap: 8–16px. Section gap: 96–120px. Card padding: 24–32px.\n- Headlines: AeonikPro 500 only — never bold. Body: Inter V 400/500. Font features: \"calt\" 0, \"cv10\", \"liga\" 0, \"ss01\".\n- Radii: buttons 5px, cards 16px, badges 32px, nav 999px. Never use 8/10/12px for buttons or 20/24px for cards."
+    }
+  ],
+  "elevationPhilosophy": "Reflect uses only inset (inner) shadows for elevation — never drop shadows. The rim-light effect (white glow on the inside edge of dark surfaces) mimics light catching the bevel of a dark glass panel. This reinforces the cosmic/observatory metaphor: elements don't cast shadows, they catch starlight."
+}

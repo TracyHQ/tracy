@@ -1,0 +1,801 @@
+{
+ "_provenance": "M6-20: the JA Vega build stand after the 8bd8aa2 seed, as the prune audit of 28/09 reported it (r6/logs/prune-audit-dry.json and cycle-20260928-030413.log: #3 Privacy Policy and #185 Smart Search UNKNOWN, #258 Page not found KEEP by wp_ja_vega_404_page; the stylesheet option wp-ja-vega is the theme slug that option name is built from, seed.mjs notFoundOption). The page-map routes are the path/view/title of the JA Vega spec page-map (a subset). #3 is the draft WordPress creates at install and names in wp_page_for_privacy_policy; #185 is the page seed.mjs writes as a draft for the search view. #590 is a draft nothing records an intent for; #574 is a revision the apply removes.",
+ "pageMap": {
+  "pages": [
+   {
+    "path": "/",
+    "view": "front-page",
+    "title": "Home"
+   },
+   {
+    "path": "/login-form",
+    "view": "page-login",
+    "title": "Login Form"
+   },
+   {
+    "path": "/registration-form",
+    "view": "page-register",
+    "title": "Registration Form"
+   },
+   {
+    "path": "/profile",
+    "view": "page-account",
+    "title": "Profile"
+   },
+   {
+    "path": "/typography",
+    "view": "page",
+    "title": "Typography"
+   },
+   {
+    "path": "/smart-search",
+    "view": "search",
+    "title": "Smart Search"
+   },
+   {
+    "path": "/error-page",
+    "view": "page",
+    "title": "Error Page"
+   },
+   {
+    "path": "/offline-pages",
+    "view": "page",
+    "title": "Offline Pages"
+   },
+   {
+    "path": "/category-blog",
+    "view": "category",
+    "title": "Category Blog"
+   },
+   {
+    "path": "/featured-articles",
+    "view": "page-landing",
+    "title": "Featured Articles"
+   },
+   {
+    "path": "/author-listing",
+    "view": "author",
+    "title": "Author listing"
+   },
+   {
+    "path": "/blog-detail",
+    "view": "single",
+    "title": "Biometrics in Security: Trends and Ethical Considerations 2024"
+   },
+   {
+    "path": "/contact",
+    "view": "page-contact",
+    "title": "Contact"
+   },
+   {
+    "path": "/about-us",
+    "view": "page-landing",
+    "title": "About Us"
+   },
+   {
+    "path": "/portfolio",
+    "view": "category",
+    "title": "Portfolio"
+   },
+   {
+    "path": "/services",
+    "view": "category",
+    "title": "Our Services"
+   },
+   {
+    "path": "/services/cloud-services-2",
+    "view": "page",
+    "title": "Cloud Services "
+   },
+   {
+    "path": "/tagged-items",
+    "view": "tag",
+    "title": "Tagged Items"
+   },
+   {
+    "path": "/404",
+    "view": "404",
+    "title": "Not found"
+   }
+  ]
+ },
+ "stand": {
+  "siteUrl": "http://127.0.0.1:8261",
+  "users": [
+   {
+    "ID": 1,
+    "user_login": "tracyagent",
+    "roles": [
+     "administrator"
+    ]
+   }
+  ],
+  "content": [
+   {
+    "ID": "3",
+    "post_type": "page",
+    "post_status": "draft",
+    "post_name": "privacy-policy",
+    "post_title": "Privacy Policy",
+    "post_parent": "0",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   },
+   {
+    "ID": "185",
+    "post_type": "page",
+    "post_status": "draft",
+    "post_name": "smart-search",
+    "post_title": "Smart Search",
+    "post_parent": "0",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   },
+   {
+    "ID": "258",
+    "post_type": "page",
+    "post_status": "draft",
+    "post_name": "page-not-found",
+    "post_title": "Page not found",
+    "post_parent": "0",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   },
+   {
+    "ID": "590",
+    "post_type": "page",
+    "post_status": "draft",
+    "post_name": "old-landing",
+    "post_title": "Old landing",
+    "post_parent": "0",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   },
+   {
+    "ID": "12",
+    "post_type": "page",
+    "post_status": "publish",
+    "post_name": "contact",
+    "post_title": "Contact",
+    "post_parent": "0",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   },
+   {
+    "ID": "40",
+    "post_type": "page",
+    "post_status": "publish",
+    "post_name": "services",
+    "post_title": "Our Services",
+    "post_parent": "0",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   },
+   {
+    "ID": "41",
+    "post_type": "page",
+    "post_status": "publish",
+    "post_name": "cloud-services-2",
+    "post_title": "Cloud Services",
+    "post_parent": "40",
+    "post_date_gmt": "2026-09-28 03:00:00",
+    "post_modified_gmt": "2026-09-28 03:00:00",
+    "post_content": "",
+    "post_excerpt": ""
+   }
+  ],
+  "revisions": [
+   {
+    "ID": 574,
+    "post_title": "Portfolio",
+    "post_type": "revision",
+    "post_status": "inherit"
+   }
+  ],
+  "meta": [
+   {
+    "post_id": "185",
+    "meta_key": "_tracy_seed",
+    "meta_value": "9f1c0d2e"
+   },
+   {
+    "post_id": "258",
+    "meta_key": "_tracy_seed",
+    "meta_value": "77ab01c3"
+   },
+   {
+    "post_id": "12",
+    "meta_key": "_tracy_seed",
+    "meta_value": "1a2b3c4d"
+   },
+   {
+    "post_id": "590",
+    "meta_key": "_tracy_seed",
+    "meta_value": "5e6f7a8b"
+   }
+  ],
+  "options": [
+   {
+    "option_name": "wp_page_for_privacy_policy",
+    "option_value": "3"
+   },
+   {
+    "option_name": "wp_ja_vega_404_page",
+    "option_value": "258"
+   },
+   {
+    "option_name": "stylesheet",
+    "option_value": "wp-ja-vega"
+   },
+   {
+    "option_name": "show_on_front",
+    "option_value": "page"
+   },
+   {
+    "option_name": "wp_ja_vega_redirects",
+    "option_value": "[{\"from\":\"/smart-search\",\"to\":\"/?s=\",\"status\":302}]"
+   }
+  ]
+ },
+ "tags": {
+  "_provenance": "M6-15: the tag titles and the per-article lists are JA Vega's (m6/ingest/tags.json, read from tr_contentitem_tag_map ⋈ tr_tags on 28/09: article 9 carries business, technology, services, marketing, security, app; the service pages carry the first four). Ids and lft values are chosen so id order differs from tree order; the rows are keyed to the joomla-min fixture articles (#3 a post, #45 a page). Hostile rows: a com_contact.contact row on item 3, an unpublished tag, a tag id #__tags does not hold, a repeated row, and a second tag titled business in another branch.",
+  "tags": [
+   {
+    "id": "1",
+    "parent_id": "0",
+    "lft": "0",
+    "level": "0",
+    "path": "ROOT",
+    "title": "ROOT",
+    "alias": "ROOT",
+    "published": "1"
+   },
+   {
+    "id": "5",
+    "parent_id": "1",
+    "lft": "1",
+    "level": "1",
+    "path": "business",
+    "title": "business",
+    "alias": "business",
+    "published": "1"
+   },
+   {
+    "id": "2",
+    "parent_id": "1",
+    "lft": "3",
+    "level": "1",
+    "path": "technology",
+    "title": "technology",
+    "alias": "technology",
+    "published": "1"
+   },
+   {
+    "id": "8",
+    "parent_id": "1",
+    "lft": "5",
+    "level": "1",
+    "path": "services",
+    "title": "services",
+    "alias": "services",
+    "published": "1"
+   },
+   {
+    "id": "3",
+    "parent_id": "1",
+    "lft": "7",
+    "level": "1",
+    "path": "marketing",
+    "title": "marketing",
+    "alias": "marketing",
+    "published": "1"
+   },
+   {
+    "id": "4",
+    "parent_id": "1",
+    "lft": "9",
+    "level": "1",
+    "path": "security",
+    "title": "security",
+    "alias": "security",
+    "published": "1"
+   },
+   {
+    "id": "6",
+    "parent_id": "1",
+    "lft": "11",
+    "level": "1",
+    "path": "app",
+    "title": "app",
+    "alias": "app",
+    "published": "1"
+   },
+   {
+    "id": "7",
+    "parent_id": "1",
+    "lft": "13",
+    "level": "1",
+    "path": "contact-only",
+    "title": "contact-only",
+    "alias": "contact-only",
+    "published": "1"
+   },
+   {
+    "id": "9",
+    "parent_id": "1",
+    "lft": "15",
+    "level": "1",
+    "path": "retired",
+    "title": "retired",
+    "alias": "retired",
+    "published": "0"
+   },
+   {
+    "id": "10",
+    "parent_id": "1",
+    "lft": "17",
+    "level": "1",
+    "path": "Business",
+    "title": "Business",
+    "alias": "Business",
+    "published": "1"
+   }
+  ],
+  "map": [
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "6",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "2",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "5",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "4",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "8",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "3",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "5",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "9",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "99",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "10",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_contact.contact",
+    "core_content_id": "103",
+    "content_item_id": "3",
+    "tag_id": "7",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "145",
+    "content_item_id": "45",
+    "tag_id": "5",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "145",
+    "content_item_id": "45",
+    "tag_id": "2",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "145",
+    "content_item_id": "45",
+    "tag_id": "8",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   },
+   {
+    "type_alias": "com_content.article",
+    "core_content_id": "145",
+    "content_item_id": "45",
+    "tag_id": "3",
+    "tag_date": "2024-05-01 00:00:00",
+    "type_id": "1"
+   }
+  ],
+  "expect": {
+   "3": [
+    "business",
+    "technology",
+    "services",
+    "marketing",
+    "security",
+    "app"
+   ],
+   "45": [
+    "business",
+    "technology",
+    "services",
+    "marketing"
+   ]
+  }
+ },
+ "slugs": {
+  "_provenance": "M6-19: JA Vega javsrc — menu item 148 (parent 144 services) has alias cloud-services-2 and opens article 77, alias cloud-services; category 13 is services/cloud-services (a category, not a page). Rows are added to a copy of the joomla-min fixture. The other rows are synthetic cases around it: a route below 148 (faq), a -2 alias whose target path a route already holds (151 vs 152), two -N aliases asking for one path (153, 154).",
+  "categories": [
+   {
+    "id": "20",
+    "parent_id": "1",
+    "lft": "20",
+    "rgt": "23",
+    "level": "1",
+    "path": "services",
+    "extension": "com_content",
+    "title": "Our Services",
+    "alias": "services",
+    "description": "",
+    "published": "1"
+   },
+   {
+    "id": "13",
+    "parent_id": "20",
+    "lft": "21",
+    "rgt": "22",
+    "level": "2",
+    "path": "services/cloud-services",
+    "extension": "com_content",
+    "title": "Cloud Services",
+    "alias": "cloud-services",
+    "description": "",
+    "published": "1"
+   }
+  ],
+  "content": [
+   {
+    "id": "77",
+    "title": "Cloud Services ",
+    "alias": "cloud-services",
+    "introtext": "<p>Cloud Services  body.</p>",
+    "fulltext": "",
+    "state": "1",
+    "catid": "14",
+    "created": "2024-01-01 00:00:00",
+    "created_by": "42",
+    "created_by_alias": "",
+    "modified": "2024-01-02 00:00:00",
+    "publish_up": "2024-01-01 00:00:00",
+    "images": "{}",
+    "metadesc": "",
+    "ordering": "77",
+    "featured": "0",
+    "language": "*"
+   },
+   {
+    "id": "78",
+    "title": "Cloud FAQ",
+    "alias": "faq",
+    "introtext": "<p>Cloud FAQ body.</p>",
+    "fulltext": "",
+    "state": "1",
+    "catid": "14",
+    "created": "2024-01-01 00:00:00",
+    "created_by": "42",
+    "created_by_alias": "",
+    "modified": "2024-01-02 00:00:00",
+    "publish_up": "2024-01-01 00:00:00",
+    "images": "{}",
+    "metadesc": "",
+    "ordering": "78",
+    "featured": "0",
+    "language": "*"
+   },
+   {
+    "id": "79",
+    "title": "Managed Services ",
+    "alias": "managed-services",
+    "introtext": "<p>Managed Services  body.</p>",
+    "fulltext": "",
+    "state": "1",
+    "catid": "14",
+    "created": "2024-01-01 00:00:00",
+    "created_by": "42",
+    "created_by_alias": "",
+    "modified": "2024-01-02 00:00:00",
+    "publish_up": "2024-01-01 00:00:00",
+    "images": "{}",
+    "metadesc": "",
+    "ordering": "79",
+    "featured": "0",
+    "language": "*"
+   },
+   {
+    "id": "80",
+    "title": "Managed Services (current)",
+    "alias": "managed-services",
+    "introtext": "<p>Managed Services (current) body.</p>",
+    "fulltext": "",
+    "state": "1",
+    "catid": "14",
+    "created": "2024-01-01 00:00:00",
+    "created_by": "42",
+    "created_by_alias": "",
+    "modified": "2024-01-02 00:00:00",
+    "publish_up": "2024-01-01 00:00:00",
+    "images": "{}",
+    "metadesc": "",
+    "ordering": "80",
+    "featured": "0",
+    "language": "*"
+   },
+   {
+    "id": "81",
+    "title": "App Development",
+    "alias": "app-dev",
+    "introtext": "<p>App Development body.</p>",
+    "fulltext": "",
+    "state": "1",
+    "catid": "14",
+    "created": "2024-01-01 00:00:00",
+    "created_by": "42",
+    "created_by_alias": "",
+    "modified": "2024-01-02 00:00:00",
+    "publish_up": "2024-01-01 00:00:00",
+    "images": "{}",
+    "metadesc": "",
+    "ordering": "81",
+    "featured": "0",
+    "language": "*"
+   },
+   {
+    "id": "82",
+    "title": "App Development (old)",
+    "alias": "app-dev",
+    "introtext": "<p>App Development (old) body.</p>",
+    "fulltext": "",
+    "state": "1",
+    "catid": "14",
+    "created": "2024-01-01 00:00:00",
+    "created_by": "42",
+    "created_by_alias": "",
+    "modified": "2024-01-02 00:00:00",
+    "publish_up": "2024-01-01 00:00:00",
+    "images": "{}",
+    "metadesc": "",
+    "ordering": "82",
+    "featured": "0",
+    "language": "*"
+   }
+  ],
+  "menu": [
+   {
+    "id": "144",
+    "menutype": "tracy",
+    "title": "Our Services",
+    "alias": "services",
+    "path": "services",
+    "link": "index.php?option=com_content&view=category&layout=blog&id=20",
+    "type": "component",
+    "published": "1",
+    "parent_id": "1",
+    "level": "1",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "244",
+    "rgt": "245",
+    "home": "0",
+    "client_id": "0"
+   },
+   {
+    "id": "148",
+    "menutype": "tracy",
+    "title": "Cloud Services",
+    "alias": "cloud-services-2",
+    "path": "services/cloud-services-2",
+    "link": "index.php?option=com_content&view=article&id=77",
+    "type": "component",
+    "published": "1",
+    "parent_id": "144",
+    "level": "2",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "248",
+    "rgt": "249",
+    "home": "0",
+    "client_id": "0"
+   },
+   {
+    "id": "150",
+    "menutype": "tracy",
+    "title": "Cloud FAQ",
+    "alias": "faq",
+    "path": "services/cloud-services-2/faq",
+    "link": "index.php?option=com_content&view=article&id=78",
+    "type": "component",
+    "published": "1",
+    "parent_id": "148",
+    "level": "3",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "250",
+    "rgt": "251",
+    "home": "0",
+    "client_id": "0"
+   },
+   {
+    "id": "151",
+    "menutype": "tracy",
+    "title": "Managed Services",
+    "alias": "managed-services-2",
+    "path": "services/managed-services-2",
+    "link": "index.php?option=com_content&view=article&id=79",
+    "type": "component",
+    "published": "1",
+    "parent_id": "144",
+    "level": "2",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "251",
+    "rgt": "252",
+    "home": "0",
+    "client_id": "0"
+   },
+   {
+    "id": "152",
+    "menutype": "tracy",
+    "title": "Managed Services (current)",
+    "alias": "managed-services",
+    "path": "services/managed-services",
+    "link": "index.php?option=com_content&view=article&id=80",
+    "type": "component",
+    "published": "1",
+    "parent_id": "144",
+    "level": "2",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "252",
+    "rgt": "253",
+    "home": "0",
+    "client_id": "0"
+   },
+   {
+    "id": "153",
+    "menutype": "tracy",
+    "title": "App Development",
+    "alias": "app-dev-2",
+    "path": "services/app-dev-2",
+    "link": "index.php?option=com_content&view=article&id=81",
+    "type": "component",
+    "published": "1",
+    "parent_id": "144",
+    "level": "2",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "253",
+    "rgt": "254",
+    "home": "0",
+    "client_id": "0"
+   },
+   {
+    "id": "154",
+    "menutype": "tracy",
+    "title": "App Development (old)",
+    "alias": "app-dev-3",
+    "path": "services/app-dev-3",
+    "link": "index.php?option=com_content&view=article&id=82",
+    "type": "component",
+    "published": "1",
+    "parent_id": "144",
+    "level": "2",
+    "template_style_id": "11",
+    "params": "{}",
+    "lft": "254",
+    "rgt": "255",
+    "home": "0",
+    "client_id": "0"
+   }
+  ],
+  "routes": [
+   {
+    "id": "144",
+    "path": "/services"
+   },
+   {
+    "id": "148",
+    "path": "/services/cloud-services-2"
+   },
+   {
+    "id": "150",
+    "path": "/services/cloud-services-2/faq"
+   },
+   {
+    "id": "151",
+    "path": "/services/managed-services-2"
+   },
+   {
+    "id": "152",
+    "path": "/services/managed-services"
+   },
+   {
+    "id": "153",
+    "path": "/services/app-dev-2"
+   },
+   {
+    "id": "154",
+    "path": "/services/app-dev-3"
+   }
+  ],
+  "link": "<p>See <a href=\"index.php?option=com_content&amp;view=article&amp;id=77&amp;catid=14&amp;Itemid=148\">our cloud services</a>.</p>"
+ }
+}

@@ -1,0 +1,374 @@
+{
+  "dos": [
+    "Use #ffffff as the main canvas and #0a1217 for major contrast sections.",
+    "Reserve #cdfe00 for Lime Pill Demo Buttons, selected states, announcement emphasis, and graphic framing.",
+    "Set hero display copy in Aspekta 48px weight 650 with -1.2px tracking and 45.6px line-height when it is uppercase.",
+    "Set dark-section display copy in Aspekta 56px weight 650 with -1.96px tracking and 54.88px line-height.",
+    "Use Aspekta 12px weight 550 with 0.96px tracking for uppercase utility links.",
+    "Use 1px #e6e7e8 borders and no shadow for ordinary white cards.",
+    "Use 999px radii for demo buttons and status badges; use 12px for document cards and 24px or 35.2px for major feature panels."
+  ],
+  "donts": [
+    "Do not use gradients; all major surfaces are solid fills.",
+    "Do not apply #cdfe00 as a page background or body-text color outside short highlighted signals.",
+    "Do not replace the #0a1217 feature fields with softer charcoal tones.",
+    "Do not use a 16px default radius for every component; reserve 16px for media and image containers.",
+    "Do not make public navigation heavier than Aspekta 15px weight 400 or utility navigation heavier than 13px weight 350.",
+    "Do not add shadows to standard cards; keep them flat with #e6e7e8 hairlines.",
+    "Do not use semantic badge colors outside compact product-status contexts."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#0a1217",
+      "name": "Drawing Ink",
+      "role": "Primary text, dark product panels, dark feature sections, icons, and structural strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page canvas, card surfaces, light product panels, and reversed text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Drafting Gray",
+      "role": "Muted card surfaces, logo tiles, product-widget backgrounds, and secondary action surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e7e8",
+      "name": "Hairline",
+      "role": "1px card, navigation, and input-like dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#85898b",
+      "name": "Stone",
+      "role": "Muted helper text, secondary metadata, and low-emphasis interface marks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#54595d",
+      "name": "Graphite",
+      "role": "Supporting body copy on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Archive Black",
+      "role": "Footer canvas and the deepest visual anchor",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cdfe00",
+      "name": "Signal Lime",
+      "role": "Filled demo buttons, active selection, announcement highlights, and graphic framing — the acid-lime mark punctures the otherwise monochrome document palette",
+      "group": "brand"
+    },
+    {
+      "hex": "#dceaf8",
+      "name": "Blueprint Wash",
+      "role": "Pale blue feature-card surface for specification and document workflows",
+      "group": "accent"
+    },
+    {
+      "hex": "#f4e3cd",
+      "name": "Material Wash",
+      "role": "Pale warm feature-card surface for architectural content modules",
+      "group": "accent"
+    },
+    {
+      "hex": "#ddefe2",
+      "name": "Site Wash",
+      "role": "Pale green-tinted feature-card surface",
+      "group": "accent"
+    },
+    {
+      "hex": "#5b4678",
+      "name": "Review Status",
+      "role": "In-review status badges in product interfaces",
+      "group": "semantic"
+    },
+    {
+      "hex": "#9a6700",
+      "name": "Input Status",
+      "role": "Needs-input status badges in product interfaces",
+      "group": "semantic"
+    },
+    {
+      "hex": "#1a7f55",
+      "name": "Complete Status",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#24476b",
+      "name": "Plan Blue",
+      "role": "Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page begins with a full-width lime announcement strip, followed by a slim utility row and a white primary header separated by hairline rules. The opening content is a contained two-column split: a broad near-black text panel on the left and a rounded product demonstration on the right. A horizontal trust row follows, then a large left-aligned section heading and a three-column grid of pale product cards. Later content switches to a full-width #0a1217 band with a large left-aligned white headline, arranging oversized pale workflow modules and architecture-plan imagery in asymmetric two-column compositions. The page remains spacious at the section scale but packs product UI with 6px to 12px internal gaps; it closes in a full-width black footer field.",
+  "imagery": "Imagery is product-led rather than lifestyle-led: contained software screenshots show specifications, status lists, progress bars, and document markup, while architecture photography and black-on-white plan drawings provide the domain context. Photography is dark and atmospheric, often cropped behind a floating white product interface; plans are presented as raw technical sheets, sometimes framed by #cdfe00 side blocks. Graphics occupy large rounded modules and alternate with dense UI demonstrations. Icons are small, mostly monochrome outlined utility marks; the visual role is explanatory product proof, not decorative atmosphere.",
+  "similar": [
+    {
+      "why": "High-contrast product demonstrations, compact technical metadata, and restrained use of a single vivid signal color.",
+      "business": "Linear"
+    },
+    {
+      "why": "Document-first product framing with white workspace surfaces, thin dividers, and dense embedded interface previews.",
+      "business": "Notion"
+    },
+    {
+      "why": "Architecture-domain presentation through drawings, material imagery, and oversized editorial software modules.",
+      "business": "Arkitect"
+    },
+    {
+      "why": "Near-black interface stages paired with compact controls and sharply differentiated utility typography.",
+      "business": "Raycast"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "22.4px",
+      "cards": "12px",
+      "links": "8px",
+      "badges": "999px",
+      "images": "16px",
+      "inputs": "8px",
+      "buttons": "999px",
+      "largePanels": "35.2px",
+      "featureCards": "24px"
+    },
+    "elementGap": "6px",
+    "sectionGap": "24px",
+    "cardPadding": "16px",
+    "pageMaxWidth": null
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper Canvas",
+      "level": 0,
+      "purpose": "Primary page background, light cards, and product-document surfaces."
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Drafting Gray Surface",
+      "level": 1,
+      "purpose": "Feature cards, logo tiles, and muted interactive tiles."
+    },
+    {
+      "hex": "#dceaf8",
+      "name": "Pale Workflow Surface",
+      "level": 2,
+      "purpose": "Large contextual workflow panels."
+    },
+    {
+      "hex": "#0a1217",
+      "name": "Drawing Ink Surface",
+      "level": 3,
+      "purpose": "Hero panels, dark content bands, and high-contrast product contexts."
+    },
+    {
+      "hex": "#000000",
+      "name": "Archive Black Surface",
+      "level": 4,
+      "purpose": "Footer and terminal conversion field."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 24px 80px 0px rgba(0, 0, 0, 0.34)",
+      "element": "Floating media card"
+    },
+    {
+      "style": "0px 10px 15px -3px oklab(0 0 0 / 0.15), 0px 4px 6px -4px oklab(0 0 0 / 0.15)",
+      "element": "Elevated button or control"
+    },
+    {
+      "style": "0px 1px 2px 0px rgba(10, 18, 23, 0.15)",
+      "element": "Icon control"
+    }
+  ],
+  "northStar": "lime drafting mark on midnight plans. Build pale, document-like page sections around near-black product stages, then use electric lime as the high-visibility signal for conversion, selection, and architectural annotation.",
+  "typeScale": [
+    {
+      "role": "micro-label",
+      "size": 10,
+      "family": "aspekta",
+      "weight": 500,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "product-tab",
+      "size": 11,
+      "family": "aspekta",
+      "weight": 450,
+      "lineHeight": 1.5,
+      "letterSpacing": 1.1
+    },
+    {
+      "role": "utility-link",
+      "size": 12,
+      "family": "aspekta",
+      "weight": 550,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.96
+    },
+    {
+      "role": "utility-nav",
+      "size": 13,
+      "family": "aspekta",
+      "weight": 350,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "family": "aspekta",
+      "weight": 350,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "trust-heading",
+      "size": 20,
+      "family": "aspekta",
+      "weight": 400,
+      "lineHeight": 1.35,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "card-heading",
+      "size": 24,
+      "family": "aspekta",
+      "weight": 550,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "hero-display",
+      "size": 48,
+      "family": "aspekta",
+      "weight": 650,
+      "lineHeight": 0.95,
+      "letterSpacing": -1.2
+    },
+    {
+      "role": "section-display",
+      "size": 48,
+      "family": "aspekta",
+      "weight": 650,
+      "lineHeight": 1.5,
+      "letterSpacing": -1.2
+    },
+    {
+      "role": "dark-section-display",
+      "size": 56,
+      "family": "aspekta",
+      "weight": 650,
+      "lineHeight": 0.98,
+      "letterSpacing": -1.96
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Strip",
+      "role": "Full-width report or release notice above the navigation.",
+      "description": "Use a #cdfe00 background with #0a1217 text; place the 10px weight-650 label on a #0a1217 dark chip and track it at 1.2px. Keep the following report text compact at 13px with the report link at weight 550."
+    },
+    {
+      "name": "Two-Tier Header",
+      "role": "Public-site navigation with a utility row and primary navigation row.",
+      "description": "Use a #ffffff surface divided by 1px #e6e7e8 rules. Set utility navigation in Aspekta 13px weight 350 and primary navigation in 15px weight 400; preserve small 6px gaps around compact controls."
+    },
+    {
+      "name": "Lime Pill Demo Button",
+      "role": "Public conversion button.",
+      "description": "Fill with #cdfe00, set #0a1217 label text in Aspekta 14px weight 550 with 0.35px tracking, use a 999px radius, horizontal padding of 24px, and no visible border."
+    },
+    {
+      "name": "Secondary Gray Tile Button",
+      "role": "Large muted action or selectable feature tile.",
+      "description": "Use #f1f1f1 fill, #0a1217 text, a 1px #e6e7e8 border, 8px radius, and 36px padding on every side."
+    },
+    {
+      "name": "Dark Product Tab",
+      "role": "Mode switcher embedded over a dark product preview.",
+      "description": "Set inactive tabs as transparent pills with rgba(255,255,255,0.75) text, 22.4px radius, and 8px 14px padding. Use Aspekta 11px weight 450, uppercase, with 0.88px tracking; the selected tab switches to #ffffff with #0a1217 text."
+    },
+    {
+      "name": "Hero Split Panel",
+      "role": "Opening two-column composition pairing product positioning with a product demonstration.",
+      "description": "Use a #0a1217 left panel with 35.2px radius and a neighboring 24px-radius visual panel. Set the title in #ffffff Aspekta 48px weight 650, uppercase, 45.6px line-height, and -1.2px tracking; keep supporting copy in muted light gray."
+    },
+    {
+      "name": "Trust Logo Tile",
+      "role": "Partner-logo container in a horizontal credibility row.",
+      "description": "Place each monochrome mark on #f1f1f1 with an 8px radius and no shadow. Keep logo tiles visually quiet against the #ffffff page canvas."
+    },
+    {
+      "name": "Platform Feature Card",
+      "role": "Three-column product-area overview card.",
+      "description": "Use a #f1f1f1 background, 8px radius, 36px internal padding, and #0a1217 heading text in Aspekta 24px weight 550 with -0.24px tracking. Embed a white product widget with 12px radius and 16px padding near the lower edge."
+    },
+    {
+      "name": "Pale Workflow Module",
+      "role": "Large editorial product module for a single workflow.",
+      "description": "Use one of #dceaf8, #f4e3cd, or #ddefe2 as the panel surface with a 24px or 35.2px radius. Keep the module title in #0a1217 and use the uppercase utility link style: Aspekta 12px weight 550, 0.96px tracking."
+    },
+    {
+      "name": "Dark Workflow Module",
+      "role": "High-contrast workflow module within a dark section.",
+      "description": "Fill with #0a1217 and reverse headings and utility links to #ffffff. Use the 56px weight-650 heading treatment only for the enclosing section title, then retain compact 12px uppercase links inside the module."
+    },
+    {
+      "name": "Product Status Badge",
+      "role": "Compact state label inside software preview cards.",
+      "description": "Use #3e4a50 for drafting, #5b4678 for review, and #9a6700 for needs-input states; every badge uses #ffffff text, 999px radius, 3px vertical and 11px horizontal padding, and Aspekta 13px weight 450."
+    },
+    {
+      "name": "Document Preview Card",
+      "role": "Contained specification or drawing interface preview.",
+      "description": "Use #ffffff with a 12px radius, 16px padding, and 1px #e6e7e8 dividers. Set primary interface copy in #0a1217, metadata in #85898b, completion marks in #1a7f55, and progress strokes in #24476b."
+    },
+    {
+      "name": "Footer Conversion Field",
+      "role": "Deep closing section and footer.",
+      "description": "Use #000000 as the full-width surface with #ffffff display text and #cdfe00 as the only saturated callout. Avoid additional tinted cards; retain broad rounded dark modules only where product content needs containment."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The site-wide sans for display headings, body copy, navigation, buttons, badges, and product UI. Weight 650 carries the broad, tightly packed statements; weight 350 keeps utility navigation and body metadata thin and technical rather than corporate.",
+      "sizes": "9px, 10px, 11px, 12px, 13px, 14px, 15px, 16px, 17px, 18px, 20px, 24px, 32px, 48px, 56px, 72px",
+      "family": "Aspekta",
+      "weight": "350, 400, 450, 500, 550, 600, 650, 700",
+      "lineHeight": "0.95-1.70",
+      "substitute": "Inter",
+      "letterSpacing": "-1.96px at 56px, -1.2px at 48px, -0.4px at 20px, -0.24px at 24px; normal at navigation sizes; +0.96px at 12px uppercase links and +0.88px at 11px uppercase product tabs."
+    },
+    {
+      "role": "Sparse technical labels and machine-like product metadata, set with tight -0.36px tracking to make document references feel system-generated.",
+      "sizes": "12px",
+      "family": "ui-monospace",
+      "weight": "350, 700",
+      "lineHeight": "1.50",
+      "substitute": "Geist Mono",
+      "letterSpacing": "-0.36px at 12px"
+    }
+  ],
+  "description": "Avoice pairs a white architectural workspace with near-black operating-system panels and a single electric lime interruption. Large Aspekta headlines are tightly tracked and heavy at weight 650, while the surrounding navigation and product metadata stay unusually light, creating a deliberate shift between decisive statements and technical detail. Product imagery is treated as evidence: drawings, architecture photography, and compact software panels live inside broad rounded modules rather than decorative illustration.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Drawing Ink: #0a1217 — Primary text, dark product panels, dark feature sections, icons, and structural strokes\n- Paper: #ffffff — Page canvas, card surfaces, light product panels, and reversed text\n- Drafting Gray: #f1f1f1 — Muted card surfaces, logo tiles, product-widget backgrounds, and secondary action surfaces\n- Hairline: #e6e7e8 — 1px card, navigation, and input-like dividers\n- Stone: #85898b — Muted helper text, secondary metadata, and low-emphasis interface marks\n- Graphite: #54595d — Supporting body copy on light surfaces\n- Archive Black: #000000 — Footer canvas and the deepest visual anchor\n- Signal Lime: #cdfe00 — Filled demo buttons, active selection, announcement highlights, and graphic framing — the acid-lime mark punctures the otherwise monochrome document palette\n- Blueprint Wash: #dceaf8 — Pale blue feature-card surface for specification and document workflows\n- Material Wash: #f4e3cd — Pale warm feature-card surface for architectural content modules\n- Site Wash: #ddefe2 — Pale green-tinted feature-card surface\n- Review Status: #5b4678 — In-review status badges in product interfaces\n- Input Status: #9a6700 — Needs-input status badges in product interfaces\n- Complete Status: #1a7f55 — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color\n- Plan Blue: #24476b — Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content\n\nCreate a #0a1217 hero panel with a #ffffff uppercase headline in Aspekta 48px weight 650, 45.6px line-height, and -1.2px tracking; pair it with a 24px-radius architecture-photo product preview and a #cdfe00 999px demo button.\nCreate a three-column #f1f1f1 feature-card grid with 8px radii and 36px padding; use #0a1217 Aspekta 24px weight-550 titles and place a #ffffff, 12px-radius document widget at the card base.\nCreate a dark #0a1217 workflow section with a #ffffff Aspekta 56px weight-650 headline at 54.88px line-height and -1.96px tracking; place a #dceaf8 24px-radius specification module beside a plan image framed in #cdfe00.\nCreate a white document-preview card with 16px padding, 12px radius, and #e6e7e8 dividers; use #85898b metadata, #24476b progress marks, and #1a7f55 completion indicators.\nCreate a compact dark product tab bar using transparent 22.4px-radius tabs with rgba(255,255,255,0.75) Aspekta 11px labels; render the selected tab as #ffffff with #0a1217 text."
+    }
+  ]
+}

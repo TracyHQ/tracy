@@ -1,0 +1,71 @@
+---
+title: Tracy API
+description: 通过 HTTPS 读取和修改 Tracy 托管的网站（Joomla、WordPress 或 EmDash），使用绑定到你在该 Site 上的席位的密钥。
+template: splash
+hero:
+  tagline: 一套 REST API，覆盖 Tracy 托管的每一个网站。密钥绑定到你的席位，资源是你已经熟悉的页面、内容和记录，并且每一次写入都可以撤销。
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: 快速开始
+      link: /zh-cn/quickstart/
+      icon: right-arrow
+    - text: API 参考
+      link: /zh-cn/reference/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## 五分钟内你能做什么
+
+1. 在你持有席位的 Site 的 **Settings → API keys** 中创建一个 API key。
+2. `GET /v1/me` —— 查看这个密钥以谁的身份行事、作用于哪个 Site、拥有哪些 scope。
+3. `GET /v1/sites/{key}/pages` —— 列出该 Site 已发布的页面及其内容 id。
+4. `PATCH /v1/sites/{key}/records/{kind}/{id}` —— 修改一个标题，并记录在一个 `apply_id` 之下。
+5. `POST /v1/sites/{key}/applies/{apply_id}/revert` —— 把它恢复回去。
+
+[快速开始](/zh-cn/quickstart/)用 `curl` 逐一演示了这五次调用。
+
+<CardGrid>
+  <Card title="绑定席位的密钥" icon="seti:lock">
+    密钥以创建它的人的身份行事，只作用于一个 Site，最多拥有该人角色所授予的工具集。撤销一个席位，就一并撤销了它的所有密钥。见[身份认证](/zh-cn/authentication/)。
+  </Card>
+  <Card title="三种 CMS，一种形态" icon="puzzle">
+    页面、内容、块和字段在 Joomla、WordPress 和 EmDash 上读起来完全一样。记录则是 CMS 自己的数据行，在你需要时可用。见[核心概念](/zh-cn/concepts/)。
+  </Card>
+  <Card title="每一次写入都可撤销" icon="rocket">
+    每一处改动都记录在一个 `apply_id` 之下；`POST …/applies/{id}/revert` 会把该 id 下写入的一切恢复回去，从最新的开始。
+  </Card>
+  <Card title="有版本，有更新日志" icon="document">
+    API 的版本 `v1` 写在路径里。新增的功能会在[更新日志](/zh-cn/changelog/)中留下一行带日期的记录；含义的变更则意味着一个新版本。
+  </Card>
+</CardGrid>
+
+## 系统是如何组织的
+
+```text
+Bearer trk_…  (you, your agent, a partner's integration)      cookie tracy_sess (a browser on cowork.*)
+      |  /v1/*  — Bearer only, no cookie                              |  /api/sites/{key}/apply, /api/me/keys
+  api.tracy.ai ── API host ── allowlist ──┐                           |
+                 └─ /docs/api/<document>   (this site: docs.tracy.ai) |
+                                          ▼                           ▼
+                        applyDoor(siteKey, action, params, principal)   ← ONE path: seat · effective permissions ∩ scopes · lease · audit
+                                          |
+                  Claude Cowork plugin (Joomla, WordPress) · Tracy reader (EmDash)
+```
+
+- **`api.tracy.ai`** 只响应 `/v1/*` 和 `/docs/api/` 下的三份机器可读文档（OpenAPI、Claude Cowork 插件、llms.txt）。本文档站和交互式参考位于 **`docs.tracy.ai`**。除此之外别无他物：登录、workspace 和 Ops 工具都在 Tracy 自己的主机名上，在这两个主机上一律回答 `404 NOT_ON_THIS_HOST`。
+- **只有一个入口。** 每条 `/v1` 路由都是 Apply 入口（Apply door）某个动作的薄别名——与 Tracy agent 走的是同一条路：你是谁（密钥的所有者）、你的席位允许什么、Site 的写入租约（lease），以及审计日志。
+- **由 Site 作答。** 在 Joomla 和 WordPress 上，调用会到达安装在该 Site 上的 Claude Cowork 插件；在 EmDash 上，则由 Tracy 自己的读取器处理。Site 拒绝的内容会以文档化的[错误](/zh-cn/reference/errors/)形式返回给你。
+
+## 各处地址
+
+| | |
+|---|---|
+| 基础 URL | `https://api.tracy.ai/v1`（开发环境：`https://api.tracy.site/v1`） |
+| OpenAPI 3.1 | [`/api/openapi.json`](/api/openapi.json) |
+| 交互式参考 | [`/api/reference/`](/api/reference/) |
+| 面向语言模型 | [`/api/llms.txt`](/api/llms.txt) |
+| 健康检查 | `GET /health` → `{ "ok": true }` |

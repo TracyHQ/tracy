@@ -1,0 +1,99 @@
+{
+  "color": {
+    "midnight-forest": {
+      "$value": "#02090a",
+      "$type": "color",
+      "$description": "Midnight Forest — Page canvas, hero backgrounds, section backgrounds"
+    },
+    "deep-lichen": {
+      "$value": "#061a1c",
+      "$type": "color",
+      "$description": "Deep Lichen — Primary card surfaces, elevated panels, content blocks"
+    },
+    "shaded-fern": {
+      "$value": "#072720",
+      "$type": "color",
+      "$description": "Shaded Fern — Navigation bar, secondary cards, subtle panel lift"
+    },
+    "spruce-border": {
+      "$value": "#1e2c31",
+      "$type": "color",
+      "$description": "Spruce Border — Hairline card borders, divider lines, input outlines"
+    },
+    "abyss-indigo": {
+      "$value": "#000a1e",
+      "$type": "color",
+      "$description": "Abyss Indigo — Secondary surface for product/demo embeds, feature panels"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, button fills, heading copy, logo marks"
+    },
+    "mist-gray": {
+      "$value": "#a1a1aa",
+      "$type": "color",
+      "$description": "Mist Gray — Body text, secondary copy, muted labels, footer links"
+    },
+    "sage-gray": {
+      "$value": "#99b3ad",
+      "$type": "color",
+      "$description": "Sage Gray — Body paragraphs, description text with subtle teal warmth"
+    },
+    "faded-steel": {
+      "$value": "#9dabad",
+      "$type": "color",
+      "$description": "Faded Steel — Link text, breadcrumb labels, tertiary copy"
+    },
+    "soft-pearl": {
+      "$value": "#9797a2",
+      "$type": "color",
+      "$description": "Soft Pearl — Helper text, micro-copy, metadata labels"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Icon fills, nav SVG strokes, maximum-contrast text"
+    },
+    "slate": {
+      "$value": "#71717a",
+      "$type": "color",
+      "$description": "Slate — Headings needing reduced emphasis, section eyebrows"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Disabled button backgrounds, inactive control states"
+    },
+    "shopify-mint": {
+      "$value": "#36f4a4",
+      "$type": "color",
+      "$description": "Shopify Mint — Active nav indicators, focus rings, highlight tags, link hover accents — the single chromatic spark that makes interactivity feel switched on against the dark canvas"
+    },
+    "mossy-edge": {
+      "$value": "#133b32",
+      "$type": "color",
+      "$description": "Mossy Edge — Inset borders on elevated cards, subtle separator strokes with teal undertone"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk": {
+      "$value": "Neue Haas Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary type system — display headlines at 70–96px weight 330–400 whisper scale rather than shout it; body at 16–18px weight 400–500; nav and UI at 14–16px weight 500–550. The ultra-light 330 weight at display sizes is the signature: it says confidence through restraint, not volume."
+    },
+    "inter-variable": {
+      "$value": "Inter Variable",
+      "$type": "fontFamily",
+      "$description": "Secondary utility type — used in nav chrome, small UI labels, tab controls, footer micro-copy. The slightly higher x-height and more standard tracking make it more legible at compact sizes. Also serves where weight 420 fills the gap between regular and medium."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.shopify.com",
+      "siteName": "Shopify",
+      "extractedAt": "2026-06-03T22:02:16.499Z",
+      "variant": "compact"
+    }
+  }
+}

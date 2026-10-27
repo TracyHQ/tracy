@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6da76890-6e04-452a-834d-ff019e232c2b",
+  "status": "complete",
+  "name": "Touchy Coffee",
+  "url": "https://styles.refero.design/style/6da76890-6e04-452a-834d-ff019e232c2b",
+  "sourceWebsite": "https://touchycoffee.com",
+  "extractedAt": "2026-06-03T19:59:16.914Z",
+  "capturedAt": "2026-10-08T05:13:02.237619+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "Hand-painted coffee zine — earthy paint bands, typewriter labels, and extreme pill buttons on warm matte surfaces.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1509ae8f-da91-46c6-aea8-b9357775b6c8.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "70b179c603f82f7c05a96043212cf5c2dd6351f83aad551caf993212e1914e9f",
+      "bytes": 19200
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "34c7c52744cdfd4fa4f490c3c1d348a0a5443ba6d8470c9478c68dc39eb17a05",
+      "bytes": 80207
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4093bfdfde9ec74f95d7f7284c1097bdce0d96b3497cbc9757c69ec8ad6cca26",
+      "bytes": 16793
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dd67efc850e3d7bf720d6791ecea982bd6b9b2a21b228853651c99631a4da9c8",
+      "bytes": 6679
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "942727fa77a52f602709b441e4a3dd45bafc7b027f0e98f7a90a04cd4ba0ceb4",
+      "bytes": 11890
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ae1089fcd103311845361151611907defa636c8250cbdf192f2b2c96b3f0c477",
+      "bytes": 3078
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2f85f0365ecda3b019620607b7750a079b4080cdf91ffd7fbc0d797d3d5e2c26",
+      "bytes": 624
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5f83dcf4cf503725b2134f5ba0ca6407ea6728384f48a00c6edeb0c8fa54792d",
+      "bytes": 641
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d51e5205b0b84f793e2499c42b4624c95f24b5bc0c5c72858d090ad72d96f222",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f85073749fb306b9ae2fe7aeb7073d574e3b5da298ad29858885154d38423e57",
+      "bytes": 42795
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3c9555c910907d0ade99a579a61a2991085e5fe61977f37b7384b4de0ce4904f",
+      "bytes": 22050
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "584fb5334a6df12043f802634e20abbd908cf484b799f7768a45dff004492dc8",
+      "bytes": 37400
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0a57c715998a14cbbd06ab6143c0968a6b0a68c1ae0a991938827559e585b4ac",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6c46b06cccd263b4580e63fe13bec1d0be40e8c28c2e23cf8a82b5d295568e80",
+      "bytes": 1062
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c319fdf1f8aa74ea2412e6a291846340554d781e5035a3bb97064796ee5764e9",
+      "bytes": 1578
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "35ae81e1-273c-43d7-9bcd-ea186d062c13",
+    "6da76890-6e04-452a-834d-ff019e232c2b",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "8288950a-2731-44fd-85ef-211aecd8091d",
+    "9307193e-7ce3-48c1-b650-8ab77aa83c3f",
+    "b5532c58-620a-4d69-8861-35b2b6443956",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "ca522706-03ed-48cb-acb3-1bb2a22f2eda",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f4e1b510-6085-4fb8-8597-05d479d3c00c",
+    "fb6ac216-c11a-47c3-88e8-0423541da69c"
+  ]
+}

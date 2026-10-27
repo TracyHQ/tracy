@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1559-wp-skill-road-gates-early",
+  "kind": "fix",
+  "title": "WordPress theme skill checks the /ops road gates at preflight and pilot",
+  "pr": 1559,
+  "area": "wordpress-skill/release",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme run: npm ci, then node --test --test-reporter=tap scripts/test/road-precheck.test.mjs",
+    "S2: Read the result of each test."
+  ],
+  "expect": [
+    "0 failures.",
+    "A missing slot contract blocks at the pilot; a slot marked not ready and an unmeasured preview rule are pending at the pilot and block at release; a missing tracy_site_pages.json blocks at release.",
+    "From a pack holding several versions or products, only the archives of the requested slug and version are taken; none matching is refused with the list."
+  ],
+  "selectors": {
+    "function": "scripts/quickstart/road-precheck.mjs classify, assembleProvisional, checkPrereq",
+    "test": "scripts/test/road-precheck.test.mjs"
+  },
+  "evidence": "The JA Diner WordPress port ran 8 h and ended blocked by TCQR must-fix rules, 37 unmeasured preview rules and a slot contract not ready; nothing checked them before the final release folder.",
+  "fence": "Skill tooling and skill docs only; no theme, pack or fleet change.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/road-precheck.test.mjs"],
+    "cwd": "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme",
+    "tests": [
+      "classify: SLOT-1 missing blocks at the pilot",
+      "classify: unmeasured is pending at the pilot, a preview rule b",
+      "classify: a rule failing only because tracy_site_pages.json i",
+      "assembleProvisional takes only the pack archives of the reque",
+      "assembleProvisional takes the requested slug from a pack that"
+    ],
+    "timeout_s": 600
+  }
+}

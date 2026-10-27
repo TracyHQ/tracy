@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-forest-ink: #0a2414;
+  --color-parchment-cream: #f3fbe9;
+  --color-card-linen: #f9f6f1;
+  --color-sage-charcoal: #283a2e;
+  --color-muted-moss: #607166;
+  --color-vivid-green: #1ad379;
+  --color-deep-botanical: #17b267;
+  --color-coral-blush: #ffbac3;
+  --color-wine-plum: #360003;
+
+  /* Typography */
+  --font-abc-favorit: 'ABC Favorit', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-system-sans-serif: 'System Sans-Serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

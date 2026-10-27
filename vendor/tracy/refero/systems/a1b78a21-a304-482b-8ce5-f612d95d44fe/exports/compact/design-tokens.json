@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ember-rust": {
+      "$value": "#cc6437",
+      "$type": "color",
+      "$description": "Ember Rust — Accent strokes, icon linework, small text highlights — the only chromatic color in an otherwise monochrome system, appearing as a hairline pulse rather than a fill"
+    },
+    "void-black": {
+      "$value": "#0b0b0b",
+      "$type": "color",
+      "$description": "Void Black — Primary page canvas and section backgrounds; the foundation of the entire system"
+    },
+    "charcoal-surface": {
+      "$value": "#272a2a",
+      "$type": "color",
+      "$description": "Charcoal Surface — Card and panel backgrounds on dark sections — one step lighter than the canvas to create surface separation without shadow"
+    },
+    "bone": {
+      "$value": "#edebe7",
+      "$type": "color",
+      "$description": "Bone — Light section backgrounds and off-white surfaces where the system flips from dark to bright"
+    },
+    "bone-darker": {
+      "$value": "#dfddd9",
+      "$type": "color",
+      "$description": "Bone Darker — Subtle variant of Bone for layered light surfaces and warm-tinted off-white elements"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — All body and heading text, ghost button borders, nav elements — the dominant foreground color at 19.7:1 contrast on Void Black"
+    },
+    "abyss": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Abyss — Elevated bar backgrounds (top news strip) — one shade darker than the main canvas to push the bar forward"
+    },
+    "steel": {
+      "$value": "#484848",
+      "$type": "color",
+      "$description": "Steel — Mid-tone border for secondary solid buttons where Pure White would be too stark"
+    },
+    "ash": {
+      "$value": "#cecece",
+      "$type": "color",
+      "$description": "Ash — Hairline borders for pill badges and numbered markers — lighter than Steel to read as fine detail against the dark canvas"
+    }
+  },
+  "font": {
+    "pragmatica-cond": {
+      "$value": "Pragmatica Cond",
+      "$type": "fontFamily",
+      "$description": "Primary display and UI typeface — narrow condensed uppercase at 14px for body, 20px for section labels, 32px for hero wordmark. The extreme narrowness and all-caps setting at 14px body size is the system's most signature choice: body text reads as a whisper of architectural type, not conventional prose. Substitute with Oswald or Barlow Condensed if Pragmatica Cond is unavailable."
+    },
+    "pragmatica": {
+      "$value": "Pragmatica",
+      "$type": "fontFamily",
+      "$description": "Secondary body typeface used for longer-form prose passages (e.g. the 'AI Operating System' card description at 24px, paragraph text at 15px). Slightly wider than Pragmatica Cond for reading comfort in extended blocks, but still 400 weight — no bold ever. Substitute with Inter or Söhne."
+    },
+    "roboto-mono": {
+      "$value": "Roboto Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace micro-type for the top news bar ticker ('NEWS • JUN 15, 2026 • CRUCIBLE EARLY ACCESS IS NOW OPEN'). The only place monospace appears, creating a clear functional distinction: this is system data, not brand voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ciridae.com",
+      "siteName": "Ciridae",
+      "extractedAt": "2026-07-03T03:30:15.366Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1479-wo-research-apify-restart",
+  "kind": "fix",
+  "title": "A research job reclaimed after a restart reads the paid Apify run it started, and a job lost twice stops",
+  "pr": 1479,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: restart during a paid Apify run; the next holder claims the job.",
+    "S2: a place job, same.",
+    "S3: a job whose lease ran out twice."
+  ],
+  "expect": [
+    "S1: the recorded run is read; one run started.",
+    "S2: same, one reservation.",
+    "S3: failed with its reason, not reclaimed."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/website-opportunities-executor.test.mjs, apps/tracy-web/test/website-opportunities-shared-research.test.mjs",
+    "code": "vendor domain/apify.mjs onRun, opportunities executor.js/place-executor.js, store.js claimJob"
+  },
+  "evidence": "Review 19/10/2026: a reclaim paid for a second Apify run; claimJob had no cap",
+  "fence": "Run id checkpointed before waiting; reclaim cap",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-executor.test.mjs",
+      "apps/tracy-web/test/website-opportunities-shared-research.test.mjs"
+    ],
+    "tests": [
+      "a job whose lease ran out twice is not reclaimed a third time: it fails with its reason",
+      "a restart during a paid Apify run: the next holder reads the recorded run instead of starting another",
+      "a restart during a place job’s paid Apify run: the next holder reads the recorded run, one reservation"
+    ],
+    "needs": ["postgres"]
+  }
+}

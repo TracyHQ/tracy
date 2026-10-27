@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-coral-pop: #fa7864;
+  --color-terracotta-whisper: #dc8264;
+  --color-cream-linen: #fff5e6;
+  --color-ink-black: #000000;
+  --color-charcoal: #282828;
+  --color-stone: #707070;
+  --color-bone: #e8e8e1;
+  --color-pure-white: #ffffff;
+  --color-mist: #cccccc;
+
+  /* Typography — Font Families */
+  --font-gascognets: 'GascogneTS', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basis-grotesque-pro: 'Basis Grotesque Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basisgrotesquepro-mono: 'BasisGrotesquePro-Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

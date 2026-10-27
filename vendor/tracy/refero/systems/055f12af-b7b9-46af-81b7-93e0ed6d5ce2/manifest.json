@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "055f12af-b7b9-46af-81b7-93e0ed6d5ce2",
+  "status": "complete",
+  "name": "Krepling",
+  "url": "https://styles.refero.design/style/055f12af-b7b9-46af-81b7-93e0ed6d5ce2",
+  "sourceWebsite": "https://www.krepling.com",
+  "extractedAt": "2026-06-03T15:55:05.943Z",
+  "capturedAt": "2026-10-08T05:07:58.459102+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Quiet white atelier with one violet spark",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3ce2962f-8b81-4d6f-beaa-c814c2621b0b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/04574048-4f38-457f-8c28-1293229c7fea.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4ac5b633-3b93-4b59-a46a-f4b40f69bb08.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/5e460592-bc67-485b-bc1f-6d660b434ec5.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/98a33112-ad21-4af8-b78e-6b44f72b4926.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3efc50aac8bc0e988467af062939b18adcd7d1030a47ece830507356298c7662",
+      "bytes": 17253
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c2538bcf0749392eba58d164dfe45cd5309207e6f098ae8e3f2d2408357f98f3",
+      "bytes": 77421
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4e5dd91220425ea48002c68c50994a9e1ff876f54437c3990a8fb69290d2df0b",
+      "bytes": 14314
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c50f7845344f434e2b7501216cd2dcc4f0728642b61f1d97a9c6e413c252afc6",
+      "bytes": 6605
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6f81c3378614d89256187dc361660154f69933401925b514684bd68151a17faf",
+      "bytes": 10171
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "88e91c6b85cfc76999213af3f3a9295c9119707de206c7afd2f6dc994a22c881",
+      "bytes": 2208
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4fcfedd7f37c78b48d58adad73207a5b52c0a7de46cf8bb565f87e79bfcd6232",
+      "bytes": 546
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4980568fa9946aca388c464fa2afa9ac7c9cef62bb531ba18cdb89612edb88ca",
+      "bytes": 563
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7e9dda84a9563af48bb1ec041fb2c3d9d3d824c5ca2d384acfc1bcbf5048012c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ddec4f6e55088b2c1c2867fe560137004d7650f3b0019b68beb07f4fb25c893e",
+      "bytes": 42136
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "16a6e319c58ed6f19a2bfd4461d839b223b82576d3eeedf9e5d86bc226558437",
+      "bytes": 22729
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "bb6de348f8aae36a6f7367d05c010f7f6cb6e68115b1cf4dfa2f74f5da267a49",
+      "bytes": 43494
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c32e780dd9b96ff3c02e9b4be7278d99165f69a8953acc7d7afe83e36b53bb24",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d4092cd9aab328b9b98ca3cabff89775df400e059370cdd085707bdcecc0211b",
+      "bytes": 1501
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "712a1af4c85c77d3f8ff983b35183780379403a8568bd46508409d1e49f80fb2",
+      "bytes": 1965
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "055f12af-b7b9-46af-81b7-93e0ed6d5ce2",
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a80cb179-2d90-4896-b52d-4e674b421498",
+    "ab1e41e9-7d21-4762-b498-51b8c63ae7ce",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d51a3a30-965c-427e-9e40-ff177786889f",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

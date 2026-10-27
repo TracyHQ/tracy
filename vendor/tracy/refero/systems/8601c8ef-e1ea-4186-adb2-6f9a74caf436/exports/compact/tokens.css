@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-void-base: #0e0918;
+  --color-elevated-surface: #1a1624;
+  --color-deep-panel: #1b1728;
+  --color-muted-shell: #2c2834;
+  --color-border-smoke: #3e3a46;
+  --color-ash-text: #d1cece;
+  --color-fog-text: #9d9797;
+  --color-silver-rail: #e5e7eb;
+  --color-cloud-white: #ffffff;
+  --color-steel-muted: #48556a;
+  --color-ember-cta: #fd8925;
+  --gradient-ember-cta: linear-gradient(30deg, rgb(253, 137, 37), rgb(255, 12, 0));
+  --color-electric-current: #077ac7;
+  --gradient-electric-current: linear-gradient(141deg, rgb(7, 122, 199), rgb(107, 33, 239));
+  --color-ember-scorch: #ff492c;
+  --color-crimson-glow: #56312d;
+
+  /* Typography — Font Families */
+  --font-geomanist: 'geomanist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geomanist-book: 'geomanist-book', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vital/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_vital",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vital",
+    "id": "quickstart/ja-vital/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_vital",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vital-j6-webroot-1.0.5.tar.gz",
+        "bytes": 50721861,
+        "sha256": "4ff4a3d98e4621a4e1ab2e1e5efa0f5da40aa00eacaf364bf707ba376e5b152f"
+      },
+      "database": {
+        "file": "ja-vital-j6-database-1.0.5.sql.gz",
+        "bytes": 126656,
+        "sha256": "d9936a03caebab5a968d5478f2db8dbd38aebf782927348cdb7748ecf8292d89"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T17:05:55.281Z",
+    "builtFrom": {
+      "from": "quickstart/ja-vital/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-vital/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

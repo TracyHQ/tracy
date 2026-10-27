@@ -1,0 +1,263 @@
+{
+  "dos": [
+    "Use 100px border-radius on all buttons and tags — the pill shape is the system's most recognizable signature",
+    "Set hero headlines at 80px weight 800 in white over Deep Indigo (#0d0b33) or mint (#79efbd) over violet — never dilute the display weight below 700",
+    "Use #4a21ef as the dominant mid-page section background — let violet breathe across large vertical bands rather than appearing as small accents",
+    "Pair mint (#79efbd) exclusively as accent text or outlined actions on violet fields — mint should never appear on white surfaces as a fill",
+    "Maintain 80-113px between major sections to preserve the cosmic spaciousness — dense stacking breaks the atmospheric rhythm",
+    "Use isometric illustrations of wallet hardware and phones as floating objects in space, not grounded product shots",
+    "Keep all surfaces shadowless — communicate depth through color contrast and illustration layering only",
+    "Center-align section headings and hero text — asymmetric layouts break the poster-like clarity"
+  ],
+  "donts": [
+    "Never use #4a21ef as a small accent — it must dominate sections or not appear",
+    "Do not apply drop shadows to cards or buttons — the system is flat by design",
+    "Avoid body text below 14px — the scale starts at 12px for captions only",
+    "Never use the mint (#79efbd) as a large background fill for content sections — reserve it for accents and pill buttons",
+    "Do not mix multiple gradient directions in one screen — each gradient should anchor one atmospheric moment",
+    "Avoid outlined rectangular buttons — all interactive elements must use 100px pill radius",
+    "Do not place white text on #f7f6ff — the contrast fails at that combination",
+    "Never use weight 400 for headlines — the system demands 700+ for any heading level"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#4a21ef",
+      "name": "Signal Violet",
+      "role": "Page backgrounds, section bands, gradient anchor — the dominant chromatic field that defines brand presence across mid-page sections; Hero atmospheric gradient bridging mint into violet — sets the cosmic mood",
+      "group": "brand",
+      "gradient": "linear-gradient(154.24deg, rgb(191, 255, 228) 11.19%, rgb(74, 33, 239) 62.38%)"
+    },
+    {
+      "hex": "#79efbd",
+      "name": "Mint Pulse",
+      "role": "Headline text on violet fields, outlined action borders, pill button fills, accent highlights — the sole warm punctuation against the cool violet",
+      "group": "brand"
+    },
+    {
+      "hex": "#18d26e",
+      "name": "Terminal Green",
+      "role": "Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#0d0b33",
+      "name": "Deep Indigo",
+      "role": "Hero background, darkest surface layer, text on light surfaces, gradient terminus; Dark section backgrounds, depth gradient behind illustrations",
+      "group": "neutral",
+      "gradient": "linear-gradient(124.15deg, rgb(13, 11, 51) 0%, rgb(75, 62, 211) 218.07%)"
+    },
+    {
+      "hex": "#1d1d1d",
+      "name": "Carbon",
+      "role": "Body text, heading text on light surfaces, high-contrast typography color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f6ff",
+      "name": "Lavender Mist",
+      "role": "Light card surfaces, subtle tints, nav backgrounds, gentle surface lift over white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, text on dark backgrounds, footer surfaces, badge fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Steel Gray",
+      "role": "Muted body text, secondary labels, dividers, icon strokes at rest",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed sections with no max-width constraint on backgrounds — only text and content containers are constrained to ~1200px. Hero is dark with centered headline over isometric illustration cluster. Mid-page sections alternate between solid violet (#4a21ef) bands and lighter treatments with centered headings. Card grids are 3-column for testimonials and product showcases, with generous gutters (24-32px). Navigation is a fixed top bar with transparent-on-hero behavior. Sections flow seamlessly with no visible dividers — transitions are marked by color field changes. Content rhythm is spacious: 80-113px between sections creates breathing room for the cosmic atmosphere.",
+  "imagery": "Illustration-driven with strong isometric perspective. Hardware wallets, smartphones, and crypto coins are rendered as angular 3D objects with deep indigo outlines, white faces, and mint-green accent details. Objects float in space without ground planes, scattered at varied scales and rotations. No photography of people or environments. The treatment is graphic-poster style — think vector illustration meets product render. Sparkle marks and small star shapes add cosmic atmosphere around larger objects. Decorative purple gradient orbs appear behind some compositions to add depth.",
+  "similar": [
+    {
+      "why": "Same dark cosmic crypto-wallet visual language with hardware product illustrations and a single brand color dominating sections",
+      "business": "Ledger"
+    },
+    {
+      "why": "Similar violet-and-dark crypto branding with pill-shaped CTAs and bold display headlines",
+      "business": "Phantom Wallet"
+    },
+    {
+      "why": "Dark hero sections with floating 3D product illustrations and vibrant gradient transitions",
+      "business": "Trust Wallet"
+    },
+    {
+      "why": "Crypto product showcase style with monochromatic hero and illustration-driven product pages",
+      "business": "MetaMask"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "12px",
+      "cards": "24px",
+      "other": "48px",
+      "buttons": "100px"
+    },
+    "elementGap": "12-16px",
+    "sectionGap": "80-113px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#0d0b33",
+      "name": "Cosmic Canvas",
+      "level": 0,
+      "purpose": "Hero and dark section base — deepest surface"
+    },
+    {
+      "hex": "#4a21ef",
+      "name": "Signal Field",
+      "level": 1,
+      "purpose": "Primary brand section backgrounds — mid-page bands"
+    },
+    {
+      "hex": "#79efbd",
+      "name": "Mint Accent",
+      "level": 2,
+      "purpose": "Highlight surfaces, pill button fills, accent zones"
+    },
+    {
+      "hex": "#f7f6ff",
+      "name": "Lavender Lift",
+      "level": 3,
+      "purpose": "Subtle card tint over white"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 4,
+      "purpose": "Top-level card and content surfaces"
+    }
+  ],
+  "northStar": "Electric violet cosmos with mint stars. SafPal lives in a deep indigo night where the only warmth is a neon mint accent and a single violet that burns like a signal flare.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.57
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.17
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Primary Button",
+      "role": "Main call-to-action",
+      "description": "Fully rounded 100px radius, mint (#79efbd) fill, Deep Indigo (#0d0b33) text, weight 700, 16px size, 12px 24px padding. The pill shape is the most recognizable interaction element."
+    },
+    {
+      "name": "Pill Ghost Button",
+      "role": "Secondary or navigation action",
+      "description": "100px radius, transparent or white fill, mint (#79efbd) border at 1-2px, white or mint text. Used for download CTAs in nav."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Display-level section heading",
+      "description": "80px size, weight 800, white or Deep Indigo text depending on field, line-height 1.0. Sets the monumental, ownership-staking tone of the brand."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Mid-page section title",
+      "description": "48px size, weight 800, white text on violet or mint text on dark. Centered alignment with generous above-spacing."
+    },
+    {
+      "name": "Wallet Card",
+      "role": "Product showcase card",
+      "description": "24px radius, white (#ffffff) fill, no visible shadow, 24px padding. Contains product imagery with floating illustration treatment."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof card",
+      "description": "24px radius, white fill, 24-32px padding, no border, no shadow. Contains quote text, avatar circle, and attribution with role label."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent over hero, white surface on scroll. 12px radius on dropdown elements. Logo left, links centered, language selector and pill download button right."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Site-wide news strip",
+      "description": "Violet (#4a21ef) fill, white text, centered, thin height. Link text underlined with mint accent."
+    },
+    {
+      "name": "Isometric Illustration Set",
+      "role": "Decorative hero and section visuals",
+      "description": "Angular isometric renders of hardware wallets, phones, and crypto objects. Deep indigo outlines with mint and white fills. Float in space at varied scales with no ground plane."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Product feature highlight",
+      "description": "24px radius, lavender (#f7f6ff) or white fill, generous padding, icon at top, heading + body text below. Minimal decoration."
+    },
+    {
+      "name": "Badge Tag",
+      "role": "Category or status label",
+      "description": "Pill or 12px radius, mint fill with dark text, small 12px size, 4-8px padding. Used for token tags and status indicators."
+    },
+    {
+      "name": "Footer Surface",
+      "role": "Bottom site navigation",
+      "description": "White or dark surface, multi-column link grid, logo, social icons. Generous 48-64px padding top and bottom."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All interface text — custom geometric sans with extreme weight range. Display uses 800 for assertive headlines; body sits at 400 with comfortable 1.5+ line-height. The 137px size enables wall-scale hero typography. Heavy weights (800–1000) are used sparingly to avoid visual fatigue.",
+      "sizes": "12px, 14px, 16px, 18px, 24px, 32px, 48px, 80px, 137px",
+      "family": "AlibabaPuHuiTi-2",
+      "weight": "400, 700, 800, 900, 1000",
+      "lineHeight": "1.00–1.60",
+      "substitute": "Inter, DM Sans, or Poppins at matching weights"
+    }
+  ],
+  "description": "SafePal speaks in a cosmic violet vernacular: deep indigo canvases recede into atmospheric space while mint-green punctuation snaps focus back to the surface. The visual system rides on a vivid electric violet (#4a21ef) that saturates mid-page sections, paired with a luminous mint (#79efbd) that functions as the sole chromatic accent for headings, tags, and outlined action borders. Typography is monumental and assertive — the display headline at 80px with weight 800 demands ownership of the viewport, while body copy sits at a calm 16px. The 100px pill radius on buttons is the most recognizable shape signature, creating a soft contrast against the 24px card radius and the angular isometric illustrations of hardware wallets and phones that float in deep space. Surfaces stack from white cards over violet fields, with almost no shadows — depth is communicated through color contrast and illustrative floating elements rather than elevation.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- background (dark): #0d0b33\n- background (brand): #4a21ef\n- surface (light): #ffffff\n- accent/text on violet: #79efbd\n- body text: #1d1d1d\n- primary action: #79efbd (filled action)\n\n## Example Component Prompts\n\n1. **Hero Section**: Full-bleed Deep Indigo (#0d0b33) background. Centered headline at 80px AlibabaPuHuiTi-2 weight 800 in white, line-height 1.0. Subtext at 18px weight 400 in #79efbd. Floating isometric illustration of a hardware wallet and phone below the headline. 80-113px vertical padding.\n\n2. **Pill Outline Button**: 100px border-radius, transparent fill, 2px #79efbd border, #79efbd text, 16px size weight 700, 12px 24px padding. Used for download or secondary actions.\n\n3. **Violet Section Banner**: Full-bleed #4a21ef background, 113px vertical padding. Centered section heading at 48px weight 800 in white. Centered body text at 16px weight 400 in white with 0.8 opacity. 3-column card grid below with white cards at 24px radius and 24px padding.\n\n4. **Testimonial Card**: White (#ffffff) fill, 24px border-radius, 32px padding, no shadow. Quote text at 16px weight 400 in #1d1d1d. Attribution block at bottom with 40px circular avatar, name in 14px weight 700 #1d1d1d, role in 14px weight 400 #666666.\n\n5. **Navigation Bar**: Transparent background over hero, 12px radius on dropdown elements. Logo left (white), nav links centered in 16px weight 400 white, language globe icon + 'English' label, and a ghost pill button (100px radius, white border, white text) on the far right."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is communicated through color contrast and floating isometric illustrations rather than drop shadows. Surfaces separate by hue and saturation step — white cards sit on violet fields, mint pills sit on indigo — with no visible shadow stacks. This flat-elevation approach keeps the visual system graphic and poster-like."
+}

@@ -1,0 +1,691 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage",
+    "version": "1.1.0"
+  },
+  "contract": {
+    "id": "ja-boxing/j6/1.0.2",
+    "contentMapSha256": "3a494ed5db339aab3c809533a0d668eb5df5bdfe24264c7523125da42efbbc6a",
+    "presentationLockSha256": "2898d3e60f1572c4f392f3e09106460dfd57864c88b75898422af60937da31e8"
+  },
+  "measuredAt": "2026-10-24T09:14:25.306Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "pages": {
+    "audited": 62,
+    "inMap": 19,
+    "notInMap": 43,
+    "failed": 0,
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 637,
+      "matched": 431,
+      "locked": 0,
+      "capture": 28,
+      "captureLocked": 4,
+      "template": 18,
+      "core": 159,
+      "unknown": 1,
+      "ignored": 15
+    },
+    "images": {
+      "total": 112,
+      "matched": 101,
+      "locked": 1,
+      "capture": 8,
+      "captureLocked": 0,
+      "template": 1,
+      "core": 1,
+      "unknown": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 23,
+      "matched": 21,
+      "locked": 0,
+      "capture": 1,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "ignored": 64
+    }
+  },
+  "coverage": {
+    "text": 90.2,
+    "images": 91.8,
+    "links": 95.5
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "(239) 555-0108",
+      "class": "capture",
+      "lock": "locked",
+      "cause": "ACM field skipped by type/name filter (mod_ja_acm)",
+      "evidence": "modules#177.params -> jatools-config.features-intro.features-intro[info-desc].0 (mod_ja_acm \"Private Training\") (contains)",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=193"
+    },
+    {
+      "kind": "text",
+      "value": "available throughout",
+      "class": "capture",
+      "lock": "locked",
+      "cause": "article attribs -> classes-type (T4/JA extra fields) not captured",
+      "evidence": "content#15.attribs -> classes-type",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "text",
+      "value": "Includes 1 fixed calendars:",
+      "class": "capture",
+      "lock": "locked",
+      "cause": "article attribs -> classes-type (T4/JA extra fields) not captured",
+      "evidence": "content#14.attribs -> classes-type",
+      "pages": 6,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "text",
+      "value": "Includes 2 fixed calendars:",
+      "class": "capture",
+      "lock": "locked",
+      "cause": "article attribs -> classes-type (T4/JA extra fields) not captured",
+      "evidence": "content#2.attribs -> classes-type",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "text",
+      "value": "Cora Stephens",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#49.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Cora Stephens",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#49.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Cora Stephens",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#49.name",
+      "pages": 3,
+      "firstPage": "/index.php/pages/j-content/category-blog/inside-boxing-techniques"
+    },
+    {
+      "kind": "text",
+      "value": "Corey Gibson",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#48.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Corey Gibson",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#48.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Corey Gibson",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#48.name",
+      "pages": 3,
+      "firstPage": "/index.php/pages/j-content/category-blog/title-defense-strategies"
+    },
+    {
+      "kind": "text",
+      "value": "Daniel Vasquez",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#45.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Daniel Vasquez",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#45.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Daniel Vasquez",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#45.name",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=166"
+    },
+    {
+      "kind": "text",
+      "value": "Drew Stokes",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#44.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Drew Stokes",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#44.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Drew Stokes",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#44.name",
+      "pages": 2,
+      "firstPage": "/index.php/pages/j-content/category-blog/classic-boxing-rivalries"
+    },
+    {
+      "kind": "text",
+      "value": "Franklin Wagner",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#46.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Franklin Wagner",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#46.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Franklin Wagner",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#46.name",
+      "pages": 3,
+      "firstPage": "/index.php/pages/j-content/category-blog/boxings-finest-moments"
+    },
+    {
+      "kind": "text",
+      "value": "Gene Roberts",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#51.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Gene Roberts",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#51.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Gene Roberts",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#51.name",
+      "pages": 2,
+      "firstPage": "/index.php/about-us/learning-center/global-perspectives-on-the-sport-of-boxing"
+    },
+    {
+      "kind": "text",
+      "value": "Lorene Bass",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#47.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Lorene Bass",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#47.name",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "meta:author",
+      "value": "Lorene Bass",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#47.name",
+      "pages": 3,
+      "firstPage": "/index.php/pages/j-content/category-blog/boxings-impact-on-culture"
+    },
+    {
+      "kind": "text",
+      "value": "Tracy Dev Admin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#52.name",
+      "pages": 2,
+      "firstPage": "/index.php/pages/j-content/author-listting?start=8"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "Tracy Dev Admin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "author name (users table, never in a contract)",
+      "evidence": "users#52.name",
+      "pages": 2,
+      "firstPage": "/index.php/pages/j-content/author-listting?start=8"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.joomla.org",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "module param outside jatools-config: news_url (mod_loginsupport)",
+      "evidence": "modules#90.params -> news_url (mod_loginsupport \"Login Support\") (contains)",
+      "pages": 62,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-1.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#42.profile_value (contains)",
+      "pages": 5,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-10.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#49.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-2.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#48.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-3.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#45.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-4.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#44.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-5.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#46.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-6.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#51.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/author/pic-7.jpg",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#47.profile_value (contains)",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "attr:title",
+      "value": "linkedin",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table user_profiles.profile_value (not a contract entity kind)",
+      "evidence": "user_profiles#42.profile_value -> user_social3.social_name",
+      "pages": 12,
+      "firstPage": "/index.php?Itemid=165"
+    },
+    {
+      "kind": "text",
+      "value": "play",
+      "class": "template",
+      "cause": "template: ACM block layout/defaults (templates/ja_boxing/acm/features-intro)",
+      "evidence": "templates/ja_boxing/acm/features-intro/tmpl/style-4.php",
+      "pages": 5,
+      "firstPage": "/index.php?Itemid=197"
+    },
+    {
+      "kind": "text",
+      "value": "deprecated: nl2br(): passing null to parameter #1 ($string) of type string is deprecated in /var/www/html/web/templates/ja_",
+      "class": "template",
+      "cause": "template: PHP message printed into the page by a template file (whole block, around slot text) (Deprecated:)",
+      "evidence": "Deprecated: nl2br(): Passing null to parameter #1 ($string) of type string is deprecated in /var/www/html/web/templates/ja_boxing/html/com_contact/contact/de...",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "image",
+      "value": "images/joomlart/logo/item-2.png",
+      "class": "template",
+      "cause": "template: T4 template settings/layout (etc/) (templates/ja_boxing/etc/site)",
+      "evidence": "templates/ja_boxing/etc/site/default.json",
+      "pages": 62,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "text",
+      "value": "Credit Bundles",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_TITLE_TABS_1=\"Credit Bundles\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=169"
+    },
+    {
+      "kind": "text",
+      "value": "Kids credits",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_TITLE_TABS_3=\"Kids credits\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=169"
+    },
+    {
+      "kind": "text",
+      "value": "LEAVE US A MESSAGE",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_EMAIL_FORM=\"LEAVE US A MESSAGE\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "text",
+      "value": "Submit",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_SEND=\"Submit\"",
+      "pages": 3,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "text",
+      "value": "Visit",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_VISIT=\"Visit\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "attr:placeholder",
+      "value": "Your email",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_EMAIL_PLACEHOLDER=\"Your email\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "attr:placeholder",
+      "value": "Your message",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER=\"Your message\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "attr:placeholder",
+      "value": "Your name",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_NAME_PLACEHOLDER=\"Your name\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "attr:placeholder",
+      "value": "Your subject",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CONTACT_MESSAGE_SUBJECT_PLACEHOLDER=\"Your subject\"",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "Breadcrumbs",
+      "class": "template",
+      "cause": "template: template language file (language/en-GB/en-GB.tpl_ja_boxing.sys.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.sys.ini TPL_T4_BS5_BLANK_POSITION_BREADCRUMBS=\"Breadcrumbs\"",
+      "pages": 30,
+      "firstPage": "/index.php?Itemid=163"
+    },
+    {
+      "kind": "text",
+      "value": "book your trial",
+      "class": "template",
+      "cause": "template: template language file (whole block, around slot text) (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_CLASSES_TRIAL=\"Book your trial class now\"",
+      "pages": 1,
+      "firstPage": "/index.php/classes/group-boxing"
+    },
+    {
+      "kind": "text",
+      "value": "see",
+      "class": "template",
+      "cause": "template: template language file (whole block, around slot text) (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_SEE_SCHEDULE=\"See Schedule\"",
+      "pages": 1,
+      "firstPage": "/index.php/classes/group-boxing"
+    },
+    {
+      "kind": "text",
+      "value": "try a",
+      "class": "template",
+      "cause": "template: template language file (whole block, around slot text) (language/en-GB/en-GB.tpl_ja_boxing.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_boxing.ini TPL_TRY_CLASS=\"Try a class\"",
+      "pages": 6,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "text",
+      "value": "open in google maps",
+      "class": "template",
+      "cause": "template: template layout override (html/) (templates/ja_boxing/html/com_contact)",
+      "evidence": "templates/ja_boxing/html/com_contact/contact/default.php",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "text",
+      "value": "TPL_FOLLOW_US",
+      "class": "template",
+      "cause": "template: untranslated language key printed raw (missing string in the template language file) (TPL_FOLLOW_US)",
+      "evidence": "TPL_FOLLOW_US",
+      "pages": 62,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "com_finder_",
+      "class": "template",
+      "cause": "template: untranslated language key printed raw (missing string in the template language file) (whole block, around slot text) (COM_FINDER_SEARCH_FORM_LIST_LABEL)",
+      "evidence": "COM_FINDER_SEARCH_FORM_LIST_LABEL",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=162"
+    },
+    {
+      "kind": "text",
+      "value": "punches",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 10,
+      "firstPage": "/index.php/about-us/learning-center/every-champ-was-a-beginner-at-some-point"
+    }
+  ],
+  "hygiene": [
+    {
+      "kind": "php-error",
+      "value": "Deprecated: nl2br(): Passing null to parameter #1 ($string) of type string is deprecated (templates/ja_boxing/html/com_contact/contact/default_address.php:94)",
+      "where": "html",
+      "visible": false,
+      "evidence": "Deprecated : nl2br(): Passing null to parameter #1 ($string) of type string is deprecated in /var/www/html/web/templates/ja_boxing/html/com_contact/contact/d...",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=168"
+    },
+    {
+      "kind": "php-error",
+      "value": "Warning: Undefined variable $mod (templates/ja_boxing/html/com_content/article/learning.php:270)",
+      "where": "html",
+      "visible": false,
+      "evidence": "Warning : Undefined variable $mod in /var/www/html/web/templates/ja_boxing/html/com_content/article/learning.php on line 270",
+      "pages": 10,
+      "firstPage": "/index.php/about-us/learning-center/every-champ-was-a-beginner-at-some-point"
+    },
+    {
+      "kind": "php-error",
+      "value": "Warning: Undefined variable $moduleclass_sfx (templates/ja_boxing/html/mod_related_items/default.php:17)",
+      "where": "html",
+      "visible": false,
+      "evidence": "Warning : Undefined variable $moduleclass_sfx in /var/www/html/web/templates/ja_boxing/html/mod_related_items/default.php on line 17",
+      "pages": 22,
+      "firstPage": "/index.php?Itemid=166"
+    },
+    {
+      "kind": "php-error",
+      "value": "Warning: Undefined variable $row (plugins/system/t4/themes/base/html/com_content/featured/default.php:70)",
+      "where": "html",
+      "visible": false,
+      "evidence": "Warning : Undefined variable $row in /var/www/html/web/plugins/system/t4/themes/base/html/com_content/featured/default.php on line 70",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=164"
+    },
+    {
+      "kind": "php-error",
+      "value": "Warning: Undefined variable $rowcount (plugins/system/t4/themes/base/html/com_content/featured/default.php:72)",
+      "where": "html",
+      "visible": false,
+      "evidence": "Warning : Undefined variable $rowcount in /var/www/html/web/plugins/system/t4/themes/base/html/com_content/featured/default.php on line 72",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=164"
+    },
+    {
+      "kind": "language-constant",
+      "value": "COM_FINDER_SEARCH_FORM_LIST_LABEL",
+      "where": "attr:aria-label",
+      "visible": false,
+      "evidence": "#awesomplete_list_1",
+      "pages": 1,
+      "firstPage": "/index.php?Itemid=162"
+    },
+    {
+      "kind": "language-constant",
+      "value": "TPL_FOLLOW_US",
+      "where": "text",
+      "visible": false,
+      "evidence": "div.module-inner > div.module-ct > div.acm-social.style-1 > div.social-follow-wrap > div.social-follow.flex-wrap > h5.my-0.d-none",
+      "pages": 62,
+      "firstPage": "/index.php?Itemid=101"
+    },
+    {
+      "kind": "placeholder",
+      "value": "Here’s everything you need to know to get ready for your first TITLE workout!",
+      "where": "text",
+      "visible": true,
+      "token": "TITLE",
+      "evidence": "#Mod184 > div.section-inner > div.container:nth-of-type(1) > div.section-title-wrap > div.mod-title-wrap > div.section-top-desc.lead",
+      "pages": 5,
+      "firstPage": "/index.php?Itemid=169"
+    }
+  ]
+}

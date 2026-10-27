@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-972-ops-waitlist",
+  "kind": "feat",
+  "title": "/ops › Beta › Waitlist lists one row per address turned away at sign-in or on the tracy.ai whitelist form, with the form answers, its utm source, the mail status and a later sign-in; the relay keeps the answers, utm_* and deliver:false",
+  "pr": 972,
+  "area": "ops/beta",
+  "cms": ["any"],
+  "needs": ["postgres:TEST_DATABASE_URL", "build:harness-web", "browser:chrome", "playwright"],
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-972-ops-waitlist.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 900
+  },
+  "flaky_model": false,
+  "steps": [
+    "S0: From the repo root at the commit under test: pnpm --filter @tracy/harness-web build, then with TEST_DATABASE_URL set: node tasks/evidence/ops-waitlist/verify.mjs. It builds the real buildApp serving the built SPA as /ops on 127.0.0.1 with WHITELIST_CONFIRMATION_SECRET set and mail captured in memory, seeds two turned-away addresses (one signs in later) and one confirmation row from before this PR, signs in an owner and a developer seat by session cookie, and drives the installed Google Chrome headless.",
+    "S1: Call POST /internal/beta/confirmation with the Bearer secret as the tracy.ai plugin does: held@example.net with deliver:false; linh@example.vn with utm_source=pricing and utm_content=plan-card; linh again with the same answers and no utm.",
+    "S2: As owner open /ops/signals, read the rail, click the Waitlist tile.",
+    "S3: On /ops/waitlist read the four tiles and every row; switch to 7 days.",
+    "S4: As developer open /ops/waitlist.",
+    "S5: As an account with no tracy_admin seat, GET /api/ops/beta/waitlist.",
+    "Also: node --test apps/tracy-web/test/ops-beta.test.mjs apps/tracy-web/test/whitelist-confirmation.test.mjs with the same TEST_DATABASE_URL."
+  ],
+  "expect": [
+    "The script prints verdict PASS checks 21 and writes checks.json beside it.",
+    "S1: deliver:false answers 200 {status: stored} and mails nothing; the full form answers status sent; the retry leaves beta_waitlist.updated_at and keeps source {source: pricing, content: plan-card}; the captured mailbox holds linh@example.vn once.",
+    "S2: Waitlist is the rail row right under Attention in Beta; [data-signal-open=\"/ops/waitlist\"] reads 'See who is on the waitlist'; the click lands on /ops/waitlist without a reload.",
+    "S3: 30 days pressed; tiles On the list 4 (1 both), Turned away 2, Sent the form 3, Signed in later 1; rows linh, held, old-form, came-in in that order; linh reads '2 times · by google', Linh Studio, linh.example.vn, WordPress, Joomla, clients' sites · 2-10 sites, source 'from pricing plan-card', mail sent; held mail is not-asked 'not sent yet'; old-form says its answers were not kept and 'waiting to send'; came-in has a signed-in time; 7 days still lists four.",
+    "S4: four rows for the read-only developer seat.",
+    "S5: 403 with an empty body.",
+    "node --test: both files pass, including the five tests the case names."
+  ],
+  "selectors": {
+    "tileLink": "[data-signal-open=\"/ops/waitlist\"]",
+    "tile": "[data-waitlist-tile=\"On the list\"]",
+    "row": "[data-waitlist-row]",
+    "source": "[data-waitlist-source]",
+    "mail": "[data-waitlist-mail]",
+    "signedIn": "[data-waitlist-signed-in]",
+    "window": "[data-waitlist-window]"
+  },
+  "evidence": "06/10/2026 on production: Signals showed 16 turned away in 14 days and tracy.ai held 14 whitelist forms, with no screen naming them; the relay kept only the address and the rendered mail. Branch run: tasks/evidence/ops-waitlist/checks.json and the screenshots beside it.",
+  "fence": "apps/tracy-web/src/ops/beta.js GET /api/ops/beta/waitlist joins beta.waitlist signals, beta_waitlist, whitelist_confirmation and later sign-ins per address and is read only for tracy_admin seats; apps/tracy-web/src/beta/confirmation.js stores the answers and the cleaned utm_* (lib/sign-in-source.js) in beta_waitlist before anything else, an identical retry changes nothing, and deliver:false stores and returns without a whitelist_confirmation row or a mail."
+}

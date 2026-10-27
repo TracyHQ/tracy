@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1714-wo-residue-sweep",
+  "kind": "feat",
+  "title": "A Website Opportunities demo build sweeps template leftovers (text, prices, post dates, links, pictures, logo) after the agent's turn without removing anything, page leads must be written by the agent, and a brief without logo research asks for it once without any request waiting",
+  "pr": 1714,
+  "area": "opportunities-build/residue-sweep",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/wo-residue-sweep.test.mjs apps/tracy-web/test/wo-logo-research.test.mjs packages/tools/tracy-site-tools/test/sweep-resolve.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'nothing is removed: no call deletes, hides or unpublishes' and 'a site already swept plans nothing' pass.",
+    "'lr-now: every template dish takes its neutral item name, its price and its description are left empty', 'a sweep of a dish with no price and a line with no fact writes no filler: every replacement is empty or neutral' and 'lr-now: a template post date becomes the build day on the post itself' pass.",
+    "'an image row on a post's body writes the picture only: the template's prose is still swept, once' passes.",
+    "'a card's line under its title is the card's, never a page lead: a card class, or a grid of same-shaped boxes' and 'with no sourced line in the research, a missed lead is left empty and the plan counts it as thin' pass.",
+    "'a brief with no logo research asks for it once, answers pending at once, and builds from the place read again' and 'a refused logo research never stops the build: it goes on, and the check names the refusal' pass.",
+    "'the sweep's neutral wording is in the site's language: Vietnamese words on a Vietnamese site, English for Danish' and 'a heading or a link the sweep would empty takes the neutral wording of its role; a list item, with no role, is named unresolved' pass.",
+    "'a word inside a heading is the heading's: `h2 > span` and `h3 > strong > em` take the neutral heading on WordPress, Joomla and EmDash', 'a linked title is a title, never a contact label nor the neutral heading: with no sourced title it is unresolved, no call planned' and 'a slot the replace job refuses to empty is never sent empty: a list item, a tag link and a button with no Contact page are unresolved with the reason' pass.",
+    "'the page reader names the tags holding a text past the selector's two, so a deep heading and a card's linked heading read as such' and 'the sweep reads the replace job's own cannot-empty list: the Dockerfile ships site-tools' leaf where the sweep looks, and it imports alone' pass.",
+    "'read by the page reader, filler inside a heading or a list item knows its slot: `<h2><span>Coming soon</span></h2>` takes the neutral heading, `<li><span>Sample</span></li>` is unresolved, on WordPress, Joomla and EmDash', 'every residue kind reaches the sweep with the block its words sit in: filler, a dish, a price and a date carry it as the template text does', 'a contact fact with no sourced value is never given neutral wording: `+1 555 123 4567` in `h2 > span` is unresolved, and in a paragraph it is left empty' and 'the neutral heading stands only for template words: a price filling a whole heading is unresolved, never \"Overview\", on WordPress, Joomla and EmDash' pass."
+  ],
+  "selectors": {
+    "planner": "apps/tracy-web/src/opportunities-build/residue-sweep.js planSweep",
+    "logo": "apps/tracy-web/src/opportunities-build/logo-research.js withLogoResearch",
+    "resolver": "packages/tools/tracy-site-tools/src/host/sweep-resolve.mjs"
+  },
+  "evidence": "The Willow Nook cafe demo on JA Diner WP (24/10/2026): template dishes with $ prices, 'Sample'/'Ask' labels, 2021 post dates, stock photos, buttons to the wrong page and the template logo stayed after the agent's turn; the /blog/ banner lead read 'Coming soon' instead of copy written from research.",
+  "fence": "Mechanism only: the planner, the logo-research state machine and the dsh resolver over fixtures. Not covered: the database path that carries an unresolved-only sweep to the check (website-opportunities-demo-runner, needs TEST_DATABASE_URL), a live build on a real site, Joomla and EmDash live runs, and what the model writes.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-residue-sweep.test.mjs",
+      "apps/tracy-web/test/wo-logo-research.test.mjs",
+      "packages/tools/tracy-site-tools/test/sweep-resolve.test.mjs"
+    ]
+  }
+}

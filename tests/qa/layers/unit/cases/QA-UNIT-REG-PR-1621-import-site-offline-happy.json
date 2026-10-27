@@ -1,0 +1,88 @@
+{
+  "id": "QA-UNIT-REG-PR-1621-import-site-offline-happy",
+  "itemIds": ["regression:REG-PR-1621-import-site-offline"],
+  "requirement": "A live site that stops answering mid-import (Cloudflare's own page for a dead origin — 521/522/523/530 or the edge-drawn 502 a quick tunnel answers — or a connection that fails on every retry) ends the run as site_offline with 'check the site is online and start again', not site_resource_limit and 'raise PHP limits'; the site's own PHP 500 and nginx's own 502 Bad Gateway, bare or relayed through Cloudflare, stay site_resource_limit",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1621-import-site-offline.json",
+    "ref": "PR #1621 (fix); fix evidence: Dev, 22/10/2026 (#1616): a Joomla 4.4 site behind a Cloudflare quick tunnel; its web container was stopped while files part 3 was read. The tunnel log showed connection refused / EOF to the origin; the run ended state error, error site_resource_limit, step reading_files, and the wizard told the customer the site ran out of memory or time and to ask the host to raise PHP limits. Seen in two imports.",
+    "invariant": "S1: ExportFailed reason site_offline, detail 'cloudflare 502'; db.dump asked 4 times at limit 5000 (retried, not halved). S2: ExportFailed reason site_resource_limit. S3: ExportFailed reason site_resource_limit in both. S4: ExportFailed reason site_offline, detail 'cloudflare 502'; part 3 asked 6 times (the part ladder); the upload is not abandoned and the cursor in uploads.json still names upload up-1. S5: ExportFailed reason site_offline, detail UND_ERR_SOCKET; part 3 asked 6 times; the cursor is kept. S6: ExportFailed reason site_resource_limit; the cursor is kept. S7: 'cloudflare' for the S1 page with server: cloudflare and for 521/522/523/530; null for everything else, including the S1 page without server: cloudflare. S8: site_offline → problem p55 and key import_error_site_offline; site_resource_limit → p35 and import_error_site_resource_limit. S9: ExportFailed reason site_offline, detail UND_ERR_SOCKET; db.dump asked 4 times.",
+    "productSources": [
+      "packages/site/tracy-add-site/src/host/diagnostic.mjs:16",
+      "packages/site/tracy-add-site/src/host/firewall.mjs:70"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/export-site-limits.test.mjs:35 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/files-export-slow.test.mjs:320 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/files-export-slow.test.mjs:445 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/files-export-slow.test.mjs:55 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs:54 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-problems.test.mjs:44 require() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-problems.test.mjs:555 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "#1616: a Cloudflare 502 for a dead origin, past every retry, is site_offline, not site_resource_limit",
+    "#1616: a PHP fatal 500 behind Cloudflare is still site_resource_limit",
+    "#1616: nginx's own 502 Bad Gateway (bare), past every retry, stays site_resource_limit",
+    "#1616: nginx's own 502 Bad Gateway (relayed through Cloudflare), past every retry, stays site_resource_limit",
+    "#1616: a site that sends its headers and then closes the socket mid-body is site_offline",
+    "a site that answers 500 to every page, past every retry, is site_resource_limit",
+    "#1616: a Cloudflare tunnel whose origin went down mid-files is site_offline, retried, cursor kept",
+    "#1616: a socket the site closes on every attempt is site_offline once the ladder runs out",
+    "#1616: the site's own PHP 500 mid-files is still site_resource_limit",
+    "sign-in, firewall, and install causes select only what the evidence establishes",
+    "an install stopped by a host limit names the limit, not \"install it yourself\"",
+    "#1616 gatewayOf: only a page Cloudflare drew for a dead origin, never a proxy's own 502"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1621-import-site-offline"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1621-import-site-offline",
+    "pr": 1621,
+    "kind": "fix",
+    "area": "add-site/import",
+    "file": "tests/regression/cases/REG-PR-1621-import-site-offline.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "test/export-site-limits.test.mjs",
+    "test/files-export-slow.test.mjs",
+    "test/firewall.test.mjs",
+    "test/import-problems.test.mjs",
+    "test/import-gates.test.mjs"
+  ],
+  "cwd": "packages/site/tracy-add-site",
+  "needs": [],
+  "tests": [
+    "#1616: a Cloudflare 502 for a dead origin, past every retry, is site_offline, not site_resource_limit",
+    "#1616: a PHP fatal 500 behind Cloudflare is still site_resource_limit",
+    "#1616: nginx's own 502 Bad Gateway (bare), past every retry, stays site_resource_limit",
+    "#1616: nginx's own 502 Bad Gateway (relayed through Cloudflare), past every retry, stays site_resource_limit",
+    "#1616: a site that sends its headers and then closes the socket mid-body is site_offline",
+    "a site that answers 500 to every page, past every retry, is site_resource_limit",
+    "#1616: a Cloudflare tunnel whose origin went down mid-files is site_offline, retried, cursor kept",
+    "#1616: a socket the site closes on every attempt is site_offline once the ladder runs out",
+    "#1616: the site's own PHP 500 mid-files is still site_resource_limit",
+    "sign-in, firewall, and install causes select only what the evidence establishes",
+    "an install stopped by a host limit names the limit, not \"install it yourself\"",
+    "#1616 gatewayOf: only a page Cloudflare drew for a dead origin, never a proxy's own 502"
+  ],
+  "timeoutS": 600
+}

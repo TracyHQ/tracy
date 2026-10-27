@@ -1,0 +1,84 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#528fff",
+      "$type": "color",
+      "$description": "Signal Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "button-blue": {
+      "$value": "#1253ff",
+      "$type": "color",
+      "$description": "Button Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "voltage-yellow": {
+      "$value": "#f1f607",
+      "$type": "color",
+      "$description": "Voltage Yellow — Rare text accent — highlight punctuation, featured labels, emphasis. Used sparingly, only when a word needs to flash against the dark canvas. Never on backgrounds"
+    },
+    "carbon": {
+      "$value": "#121214",
+      "$type": "color",
+      "$description": "Carbon — Primary page canvas, card surfaces, input fields, footer. The dominant working surface at 425 occurrences across every context"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Deepest dark — image containers, nav surface, full-bleed backgrounds. Creates the bottom of the surface stack"
+    },
+    "platinum": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Platinum — Primary text, inverted button text, icon fills. The only true white in the system; appears 1506 times across every text context"
+    },
+    "graphite": {
+      "$value": "#232426",
+      "$type": "color",
+      "$description": "Graphite — Dominant canvas background, secondary button surface. Sits one step lighter than Carbon, used when a surface needs to feel like a different plane without using shadow"
+    },
+    "fog": {
+      "$value": "#a6a8ad",
+      "$type": "color",
+      "$description": "Fog — Muted text, nav items, secondary labels, inactive links. The first step down from white in the type hierarchy"
+    },
+    "ash": {
+      "$value": "#c8c9cc",
+      "$type": "color",
+      "$description": "Ash — Button borders, icon strokes, hairline dividers, ghost control outlines. The border that doesn't feel like a border"
+    },
+    "slate": {
+      "$value": "#63656d",
+      "$type": "color",
+      "$description": "Slate — Borders, dividers, inactive controls. Darker than Ash for when a divider needs to recede further"
+    },
+    "iron": {
+      "$value": "#45464d",
+      "$type": "color",
+      "$description": "Iron — Elevated surfaces, button borders, nav separators. The highest dark in the stack — used for the 1px inset stroke that replaces shadows"
+    }
+  },
+  "font": {
+    "intervariable-custom": {
+      "$value": "InterVariable (custom)",
+      "$type": "fontFamily",
+      "$description": "Workhorse for all UI text — body, nav, buttons, inputs, cards, footer. The variable axis allows weight shifts (400→500→600→700) within a single family. Universal -0.015em tracking creates a compact, efficient reading rhythm across every size."
+    },
+    "soehnebreit-custom": {
+      "$value": "SoehneBreit (custom)",
+      "$type": "fontFamily",
+      "$description": "Editorial display headlines. The wider, geometric cut of SoehneBreit at weight 400 creates a distinctive voice — headlines don't shout, they announce with quiet authority. The 0.071em tracking (applied at 14px) appears on uppercase eyebrow labels, creating the system's only wide-tracked text. Weight 400 only — bold is never used."
+    },
+    "soehne-custom": {
+      "$value": "Soehne (custom)",
+      "$type": "fontFamily",
+      "$description": "Subheadings — bridges the gap between SoehneBreit display and Inter body. Used at 20px for secondary headings that need editorial weight without display scale."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://splice.com",
+      "siteName": "Splice",
+      "extractedAt": "2026-06-03T19:54:10.025Z",
+      "variant": "compact"
+    }
+  }
+}

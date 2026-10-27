@@ -1,0 +1,37 @@
+{
+  "id": "REG-016",
+  "kind": "feat",
+  "title": "A retired Releases or History tab, in an address or in a saved right column, opens Site changes",
+  "pr": 812,
+  "area": "site-tabs/retired-tabs",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A and seat A's cookie COOKIE_A. Case variable: KEY = site key of any site where seat A is owner (e.g. scv2wp.scv2.tracy.test).",
+    "Check the build: docker exec $DSH grep -c '\"tracy:history\":\"tracy:changes\"' /desk-home/profiles/native/node_modules/@tracy/dsh-tab-link/lib/client.js must print a number >= 1, and docker exec $DSH grep -c isTabEnabled /desk-home/profiles/native/node_modules/@tracy/dsh-tab-link/lib/client.js must print a number >= 1 (the swap that waits for the page, #812 follow-up); otherwise stop with BLOCKED note image-older-than-retire-release.",
+    "Unit seam: node --test --test-reporter=tap packages/core/tracy-core/test/tab-link.test.mjs",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); use a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; keep every page 'console' message of type warning or error with the time it came; never close a page, a context or the browser.",
+    "page.goto(O + '/' + KEY); wait (<= 90 s) until page.url() contains '/s/session-' and the first [contenteditable='true'] is visible; SESSION_URL = page.url() without its query string; SID = its 'session-<uuid>' path segment.",
+    "Deep links, once with T = 'tracy:releases' and once with T = 'tracy:history': page.goto(SESSION_URL + '?tab=' + T + '&site=' + KEY); wait (<= 60 s) for a visible [data-site-changes-v2] and until no [data-site-changes-v2] [data-reading] remains; wait 2 s; record U = new URL(page.url()).searchParams (its 'tab' and 'site'), V = whether the page shows the text 'Nothing here can view this kind of content yet.', and W = the console messages kept since this goto whose text contains T.",
+    "Saved layout — four rounds: R = 'tracy:releases' (TITLE 'Releases') and R = 'tracy:history' (TITLE 'History'), each once IN SIGHT and once BEHIND. Each round: page.goto(SESSION_URL + '?tab=tracy:changes&site=' + KEY); wait for a visible [data-site-changes-v2]; wait 3 s; read localStorage['dsh.sidebar-right.v1.' + SID] (absent → BLOCKED note no-saved-layout) and parse it; S = its bySession[SID]; X = the tab record in S.layout.tabs whose kind is 'tracy:changes' (none → BLOCKED note no-changes-tab-saved). Rewrite X the way the build before #812 saved a tab of the retired type: X.kind = R, X.contentId = 'sidebar://' + R, X.title = TITLE (keep X.id). P = the pane in S.layout.nodes whose tabs include X.id; IN SIGHT: P.activeTabId = X.id; BEHIND: P.activeTabId = the other tab id in P.tabs (a pane with no other tab → BLOCKED note no-second-tab). Set S.layout.activePaneId = P.id and S.layout.expanded = true; write the JSON back under the same key.",
+    "Still in that round: page.goto(SESSION_URL) (no query); wait (<= 90 s) for the first [contenteditable='true']. BEHIND only: wait (<= 30 s) for a visible [role='tab'][data-dockkit-tab='<X.id>'], record CHIP = its trimmed text and KINDS0 = the kinds in the saved layout at that moment, then click it. Both: poll the saved layout every 200 ms (<= 30 s) until no tab record in it has kind R; record KINDS = the kind of every tab record then. The page load brings the Browser tab forward (My Sites' preview, the same over a saved Site changes tab — not what this case checks): if [data-site-changes-v2] is not visible, click [role='tab'][data-dockkit-tab='<id of the KINDS tab of kind tracy:changes>']; wait (<= 30 s) for a visible [data-site-changes-v2]; record V2 = whether the page shows the text 'Nothing here can view this kind of content yet.'."
+  ],
+  "expect": [
+    "Both build checks print a count >= 1.",
+    "The unit seam exits 0 and its TAP ends with '# fail 0'.",
+    "Deep links, both T: [data-site-changes-v2] became visible; U.tab === 'tracy:changes' and U.site === KEY; V === false; W is empty (before this change the open was refused with only a console warning naming T, nothing opened, and the address lost its tab).",
+    "Saved layout, all four rounds: KINDS contains 'tracy:changes' and no 'tracy:releases' or 'tracy:history'; [data-site-changes-v2] became visible; V2 === false. BEHIND rounds: CHIP === TITLE and KINDS0 still holds R (a retired tab out of sight keeps its chip until it is clicked). Before this change the IN SIGHT rounds lost the retired tab about 120 ms after the reload with nothing in its place (KINDS ['tracy:browser'], Site changes never shown: 431473d68 on scv2, 03/10)."
+  ],
+  "selectors": {
+    "tabLinkMarker": "'\"tracy:history\":\"tracy:changes\"' in /desk-home/profiles/native/node_modules/@tracy/dsh-tab-link/lib/client.js (dsh container)",
+    "composer": "[contenteditable='true'] (first)",
+    "deepLink": "<session URL>?tab=tracy:releases|tracy:history&site=<KEY>",
+    "siteChanges": "[data-site-changes-v2] (.tv-activity-v2); still reading: [data-site-changes-v2] [data-reading]",
+    "savedLayout": "localStorage 'dsh.sidebar-right.v1.<sessionId>' = {bySession: {<sessionId>: {layout: {nodes, tabs: {tabN: {id, kind, contentId: 'sidebar://<kind>', title}}, rootId, floats, activePaneId, expanded, mode}, minted}}} (vendor/tracy/deepseek-harness packages/client/ui-sidebar-right/src/client/persistence.ts)",
+    "emptyKind": "the text 'Nothing here can view this kind of content yet.' (dsh's body for a tab kind nobody registers)",
+    "chip": "[role='tab'][data-dockkit-tab='<tab id from the saved layout>'] (dsh dockkit strip)"
+  },
+  "evidence": "packages/core/tracy-core/test/tab-link.test.mjs (RETIRED_TABS, parseTabLink, replaceRetiredTab)",
+  "fence": "packages/core/tracy-core/src/tab-link/index.ts RETIRED_TABS maps tracy:releases and tracy:history to tracy:changes: parseTabLink reads a retired ?tab= as tracy:changes for the same site; replaceRetiredTab — called by @tracy/dsh-tab-link on every right-column pulse — waits until tracy:changes is registered and the side card is bound to the session on screen, opens it for the page's site, and closes the retired tab in sight only once Site changes is the tab in sight."
+}

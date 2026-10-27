@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6d4ef8f4-badd-4e3c-a168-0cc89c833b26",
+  "status": "complete",
+  "name": "MA Quilts",
+  "url": "https://styles.refero.design/style/6d4ef8f4-badd-4e3c-a168-0cc89c833b26",
+  "sourceWebsite": "https://maquilts.com",
+  "extractedAt": "2026-06-03T21:19:48.491Z",
+  "capturedAt": "2026-10-08T05:12:59.497714+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Crayon-bright quilt workshop pinned to sunlit wall",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/64f98192-9eb4-403f-8674-d955caaa7f5d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6c893364357735430f703a5f17a0b192b586af16edc904ece5b5b323da0ea162",
+      "bytes": 20830
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "43b7574d22d0dd633786f038d50eee27bff0667977a9a296e079b258540ac597",
+      "bytes": 138448
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8f349770d72ef0ae0320cdbfd8cf287fa71698abb05c2d8322ab9810bfe57238",
+      "bytes": 17513
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7c26c946048337333e1cc93b9f21a18b9515b636702f7c374efc23c85520869e",
+      "bytes": 10471
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3d8dcb63c6d24b03612493dec8fdc343794b9a845f85ec4a88414d6a37ab6a16",
+      "bytes": 13116
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4ad1a3703675cdd76f175ec5cd41ae1f6354b05ed5871e6a177e615254a5b6e6",
+      "bytes": 3383
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d323485942b4a7f2efc16aa0eb88c8293e9a4308302dd9aab924e629d39a6820",
+      "bytes": 548
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8538d10efa971253cfd13326f2835dbb99baeda431a14328ca633a9b73b0577c",
+      "bytes": 565
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5245fffa9805a94902415383fa5edd507bb6534ef815ba28775c2c3546ec6df8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a6f6894886ac3124f9a2ab7f0fc7f5534d1ab364cb24aca8cbc025531b87350b",
+      "bytes": 42769
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "39435e1165349b1f3fc0a4996fbe39be9e1130f8fb246c72789bbc835ef2c594",
+      "bytes": 21826
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "49c0104a08befad71a9b96d06cebc3eaeaff95a47aff081969f7c7f1d94d0666",
+      "bytes": 42039
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c5ff7feba1a4cad9b6172b956b4f38a1ebf65d33d1639ae895ad770a55fa62f7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4e57a03f210ad4ebb4268ca7443ae0bbe4a962850f2c729b25e11826300e977c",
+      "bytes": 1632
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "804fd1e43f947da57f8f9565a58581013315e22e4d55191d707a98e7c7cf3265",
+      "bytes": 2156
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "37f752a0-879e-4451-a4a4-0a82896e3890",
+    "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5dc8ca28-26fe-41f2-979a-cda2669c262a",
+    "6d4ef8f4-badd-4e3c-a168-0cc89c833b26",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

@@ -1,0 +1,466 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-lawfirm",
+  "release": "quickstart/ja-lawfirm/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1.item-title.ja-animation",
+    "body": "p.hidden-xs.item-desc",
+    "button-primary": "div.features-item.col-md-6 a.btn.btn-primary",
+    "section": "#acm-features-92",
+    "input": "#contact_name"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 90px",
+    "displayFace": "Playfair Display 700, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(194, 144, 50)",
+    "section": "first padded full-width section, padding-top 100px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 24px"
+  },
+  "keepScopes": [
+    ".slideshow",
+    ".uber-stats",
+    ".acm-hero",
+    ".t3-footer",
+    "#acm-features-92",
+    ".acm-container-tabs",
+    ".member-bio-back",
+    ".t3-masthead"
+  ],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#757575",
+    "--fg-2": "#000000",
+    "--accent": "#c29032",
+    "--accent-hover": "#856322",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#ebe8e8",
+    "--muted": "#555555",
+    "--font-display": "\"Playfair Display\", sans-serif",
+    "--font-body": "\"Poppins\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#f6f4f4"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#757575",
+      "fg-2": "#000000",
+      "accent": "#c29032",
+      "accent-hover": "#856322",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#ebe8e8",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#757575",
+      "fg-2": "#000000",
+      "accent": "#c29032",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f6f4f4"
+    },
+    {
+      "accent": "#c29032"
+    },
+    {
+      "fg": "#000000"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface-warm": "#ebe8e8",
+      "surface": "#f9f9f9",
+      "border": "#e5e5e5",
+      "danger": "#dd4b39",
+      "accent-hover": "#7d5d20",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface-warm": "#eeeeee",
+      "border": "#dfdada"
+    },
+    {
+      "surface-warm": "#fcf8e3",
+      "border": "#e0e2e3"
+    },
+    {
+      "surface-warm": "#f9f2f4",
+      "border": "#e3e3e3"
+    },
+    {
+      "surface-warm": "#e8e8e8",
+      "border": "#ebebeb"
+    },
+    {
+      "surface-warm": "#fff6df"
+    },
+    {
+      "surface-warm": "#f2f2f2"
+    },
+    {
+      "surface-warm": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (89 line colours, 92 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title.ja-animation",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": ["#t3-mainbody .container, .container:not(.slider-content-inner)"],
+    "section": ["#acm-features-92"],
+    "bodyFace": ["body"],
+    "eyebrow": [".short-title"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": ".t3-wrapper :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 5313); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ebe8e8",
+      "uses": 490,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 20
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 116,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 12
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 113,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 18
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 94,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 78,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e8",
+      "distance": 7
+    },
+    {
+      "hex": "#dfdada",
+      "uses": 42,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e8",
+      "distance": 23
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 32,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e8",
+      "distance": 13
+    },
+    {
+      "hex": "#dd4b39",
+      "uses": 30,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    },
+    {
+      "hex": "#7d5d20",
+      "uses": 26,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#856322",
+      "distance": 10
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 4
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 22
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e8",
+      "distance": 11
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebe8e8",
+      "distance": 4
+    },
+    {
+      "hex": "#fff6df",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 23
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 5
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f6f4f4",
+      "distance": 8
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 14,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-text-color": "#757575",
+    "--body-bg-color": "#ffffff"
+  },
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.1 its minVersion names (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-lawfirm-j6): the probe found the active top-level menu item in the system's dark accent on the near-black header bar (MotherDuck 3.27:1, Apple 3.61:1); fixed in the contract (sideRules: the accent mixed 60% toward white there, no new release); then 12/12 in three runs, controls 0, kept 0, no text worse than the template's own (lowest 5.28:1, the template's own gold); page follows 59-90% on the phone and on Moxie and Apple desktop; on the desktop of Toggl Track it read 43-49% and of MotherDuck 50-68% across the three runs, which reached only 108-177 of the page's ~250 samples (its animated sections not yet revealed), while a run that reached 248 (the same contract before the header rule, one element apart) read 60% and 68%; the non-following samples are the dark bands kept on purpose (stats, years of experience, slideshow, black team-card backs) and stay 47-100 whatever the reach: BORDERLINE on the >=50% rule for Toggl Track desktop, recorded rather than rounded; checked by eye on all four systems, desktop and phone; earlier: measured 11/10/2026 (round 2) on quickstart/ja-lawfirm/j6 1.0.0, stylesheets tokenized as the next release (1.0.1) ships them (tasks/evidence/ds-contracts-r2a-2026-10-11/templates/ja-lawfirm-j6): 12/12, default unchanged, no text made less readable than the template's own under the systems tried (the 1.0–1.14 body samples are the template's own white-on-white hidden menu items, the same in its default look), 60% or more of the page follows; the stats band and the black back of the team cards are now kept, the bands that set no text colour take the page text back (keepText) and the FAQ band the page ground (keepGround); checked by eye on the Moxie, MotherDuck and Toggl Track screenshots",
+  "contrastNote": "every text of the page's wrapper (a home page built of modules has no #t3-mainbody), each judged against itself on the default page (batch 2's flow.mjs)",
+  "keepNote": "kept: the dark years-of-experience band (#acm-features-92, #262626 with white text), the FAQ band whose answers sit on a white photo panel (.acm-container-tabs), the hero slideshow, the dark stats band (.uber-stats, #191919) and the black back face of each team card (.member-bio-back); the slideshow, the hero, the stats band and the FAQ band set no text colour on themselves, so each takes the template page text back (keepText, #757575 as the released page computes it); the FAQ band shows the page through it beside its photo panel, so it takes the template page ground back (keepGround, #ffffff)",
+  "keepText": [".slideshow", ".uber-stats", ".acm-hero", ".acm-container-tabs"],
+  "keepGround": [".acm-container-tabs"],
+  "minVersion": {
+    "quickstart/ja-lawfirm/j6": "1.0.1"
+  },
+  "sideRules": {
+    "light": {
+      "#t3-mainnav li.active:not(.dropdown-menu *), #t3-mainnav li.active:not(.dropdown-menu *) a:not(.dropdown-menu *)": {
+        "color": "color-mix(in srgb, var(--ds-c-accent) 40%, #fff)"
+      },
+      ".uber-stats .stats-list": {
+        "display": "flex",
+        "flex-wrap": "wrap"
+      }
+    },
+    "dark": {
+      ":is(.logo, .t3-logo) img": {
+        "filter": "none"
+      },
+      "#t3-mainnav li.active:not(.dropdown-menu *), #t3-mainnav li.active:not(.dropdown-menu *) a:not(.dropdown-menu *)": {
+        "color": "color-mix(in srgb, var(--ds-c-accent) 40%, #fff)"
+      },
+      ".uber-stats .stats-list": {
+        "display": "flex",
+        "flex-wrap": "wrap"
+      }
+    }
+  },
+  "headerNote": "the header bar (.t3-header with its main menu #t3-mainnav, near-black #171717 whatever the system) is not tokenized while its active top-level menu item takes the accent text: under MotherDuck (3.27:1) and Apple (3.61:1) that dark accent sat on the dark bar (round-3 probe 11/10/2026). On both sides the active item (not its dropdown, drawn on white) takes the accent mixed 60% toward white (sideRules; written without > as sideRules refuse it): the system hue, readable on the bar (a black accent still reads 6.3:1); the bar and the other items stay as released",
+  "maxVersion": {
+    "quickstart/ja-lawfirm/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".slideshow": {
+      "ground": "#171717",
+      "texts": ["#ffffff", "#d1d1d1"],
+      "picture": true,
+      "paint": {
+        ".item-title": {
+          "color": "accent"
+        },
+        ".swiper-slide": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".uber-stats": {
+      "ground": "#191919",
+      "texts": ["#ffffff"],
+      "root": false,
+      "paint": {
+        ".stats-subject": {
+          "color": "accent"
+        },
+        ".stats-list": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".acm-hero": {
+      "ground": "#c29032",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#262626",
+      "texts": ["#d0d0d0", "#ffffff"],
+      "picture": true,
+      "paint": {
+        ".contact-name": {
+          "color": "accent"
+        },
+        ".swiper-pagination-bullet": {
+          "background-color": "accent-fill"
+        },
+        ".item-101 a": {
+          "color": "accent"
+        },
+        ".module small a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    "#acm-features-92": {
+      "ground": "#262626",
+      "texts": ["#ffffff", "#d0d0d0"],
+      "paint": {
+        ".short-title": {
+          "color": "accent"
+        },
+        ".block-title::after": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".acm-container-tabs": {
+      "ground": "#ffffff",
+      "texts": ["#757575", "#262626", "#000000"],
+      "picture": true,
+      "paint": {
+        ".short-title": {
+          "color": "accent"
+        },
+        ".block-title::after": {
+          "background-color": "accent-fill"
+        },
+        ".col a": {
+          "border-color": "accent-fill"
+        },
+        ".panel-title a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".member-bio-back": {
+      "ground": "#000000",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".member-bio-back-inner": {
+          "background-color": "ground"
+        },
+        ".member-position": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t3-masthead": {
+      "ground": "#171717",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true,
+      "paint": {
+        ".ja-masthead-title": {
+          "color": "accent"
+        }
+      }
+    },
+    ".leading": {
+      "ground": "#000000",
+      "texts": ["#d0d0d0", "#ffffff"],
+      "fill": true,
+      "kind": "ink",
+      "paint": {
+        ".article-intro": {
+          "background-color": "ground"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the inner pages’ title band (.t3-masthead: a dark photo under the template’s accent title and white words) was not a band: its title took the system accent as made for the light page, near black on the dark photo under Airbnb, dim violet under Stripe (visual review 14/10/2026). It is a picture band whose title takes the accent made readable on the photo; 15/10/2026 (final measure, /blog): the blog's leading item (.items-leading .leading and its .article-intro) is a literal black box with #d0d0d0 words, kept under every system while its title took the accent made for the page: Stripe's violet on black, 3.39:1. It is a fill band: the system's ink, its words and accent read on it",
+  "rolesNote": "container: the hero slide caption (.slideshow .slider-content-inner, a .container) is left out (.container:not(.slider-content-inner)): the template lets it shrink to its words between the slider arrows (195px on a phone, its fixed T3 width on a desktop), and the system container rule’s width: 100% stretched it to the whole slide, so the title ran on one line under both arrows, cut at the phone’s edges under 12 systems (visual review 14/10/2026)",
+  "containerGutter": 80,
+  "containerGutterNote": "14/10/2026 (visual review): the swiper arrows (div.swiper-button-next/prev) hang 65px off the container's edges; under a system as wide as the screen (Notion, Apple: 1376px at 1440) they stood past the window's edge and were cut. The container keeps 80px from the window's edges instead of 32.",
+  "sideNote": "15/10/2026 (look review v8): under a dark system the white logo stays white — the header sits on the dark slideshow and masthead photos on every page, so the logo was not drawn for the light page and the slot’s flip (one-tone logos on a flipped side) turned it black on the photo. 14/10/2026 (visual review, round 3): the stat cells (.uber-stats .stats-list, Bootstrap 3 floated columns, two to a row on a phone) are made equal by the template’s equal-height script, which measures before a system’s face settles: under a monospace system (MotherDuck) one cell ended a pixel taller and the next float caught on it, leaving a hole. The list is a wrapping flex row on both sides: each row’s cells stand side by side at the row’s height whatever their labels, the look unchanged where they were already even"
+}

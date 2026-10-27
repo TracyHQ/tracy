@@ -1,0 +1,354 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-vital/j6/1.0.7",
+  "baseHash": "f5246d1485fde8953b3f62e475b6a0d34f2c2ba2c811ad995db634c03b05496a",
+  "baseFiles": {
+    "manifest.json": "fbde2810794e599af2e6b6d81eca84bb383f0b85b216f8e92aa809855e7497bf",
+    "content-map.json": "ca4ee2b489dc429e337ee861083982f428a465e855c2590759ee2174620feaab",
+    "presentation-lock.json": "358eeafa647dd5b04ac9c025f199501484e3f52954b94c3704e451440a5a73c7"
+  },
+  "inputs": {},
+  "decisionsHash": "14e95b0b87be7f983cda0200e489d0fde03de883926b7327c00ae0ae2466dd9b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-134",
+      "identity": {
+        "path": "pages/joomla-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-140",
+      "identity": {
+        "path": "pages/joomla-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-141",
+      "identity": {
+        "path": "pages/joomla-content/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blog",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-142",
+      "identity": {
+        "path": "pages/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-143",
+      "identity": {
+        "path": "pages/joomla-content/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-146",
+      "identity": {
+        "path": "pages/other-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-147",
+      "identity": {
+        "path": "pages/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Book Appointment",
+      "where": "head-actions/book-appointment",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Our Services",
+      "where": "mainmenu/our-services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-111",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Blog",
+      "where": "mainmenu/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "About",
+      "where": "userful-links/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "Company",
+      "where": "userful-links/company",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Shipping & Returns",
+      "where": "userful-links/shipping-returns",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Vitamins & Supplement",
+      "where": "userful-links/vitamins-supplement",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Reflex Hammer",
+      "where": "userful-links/reflex-hammer",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "Privacy Policy",
+      "where": "privacy-policy/privacy-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Terms & Conditions",
+      "where": "privacy-policy/terms-conditions",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Shipping & Returns",
+      "where": "privacy-policy/shipping-return",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "User Page",
+      "where": "mainmenu/pages/user-page",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Other Pages",
+      "where": "mainmenu/pages/other-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "Login",
+      "where": "mainmenu/pages/user-page/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Registration",
+      "where": "mainmenu/pages/user-page/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "Profile",
+      "where": "mainmenu/pages/user-page/profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-139",
+      "label": "Privacy",
+      "where": "mainmenu/pages/user-page/privacy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-148",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@position-1",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 12 entries stay (class \"_menu\")"
+    },
+    {
+      "key": "module-91",
+      "label": "User Menu",
+      "where": "mod_menu@position-7",
+      "rule": "keep.default",
+      "reason": "renders usermenu: 5 entries stay (class \"_menu\")"
+    },
+    {
+      "key": "module-95",
+      "label": "Head Actions",
+      "where": "mod_menu@head-actions",
+      "rule": "keep.default",
+      "reason": "renders head-actions: 1 entry stays"
+    },
+    {
+      "key": "module-119",
+      "label": "Userful Links",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders userful-links: 5 entries stay"
+    },
+    {
+      "key": "module-120",
+      "label": "Privacy Policy",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders privacy-policy: 3 entries stay"
+    },
+    {
+      "key": "module-123",
+      "label": "Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 12 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 7,
+    "modules": 0,
+    "kept": 32,
+    "unresolved": 0
+  }
+}

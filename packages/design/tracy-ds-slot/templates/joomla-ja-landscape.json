@@ -1,0 +1,369 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-landscape",
+  "release": "quickstart/ja-landscape/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.item-title",
+    "heading": "div.inner.bg-primary h2",
+    "body": "div.inner.bg-primary p",
+    "button-primary": "div.category-module.mod-owl div.text-center a.btn.btn-primary",
+    "container": "div.t4-section-inner.container",
+    "section": "div.t4-section-inner.container-fluid",
+    "input": "#contact_name"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 48px",
+    "displayFace": "Work Sans 300, tracking 0em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(69, 178, 68)",
+    "container": "first content container, max-width 1200px",
+    "section": "first padded full-width section, padding-top 60px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-topbar", ".t4-slideshow", ".t4-section-6", ".t4-footnav"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fdf9f2",
+    "--fg": "#666666",
+    "--fg-2": "#45b244",
+    "--accent": "#45b244",
+    "--accent-hover": "#084035",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#fdf9f2",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#797b7c",
+    "--font-display": "\"Work Sans\", sans-serif",
+    "--font-body": "\"Open Sans\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fdf9f2",
+      "fg": "#666666",
+      "fg-2": "#343a40",
+      "accent": "#45b244",
+      "accent-hover": "#084035",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#797b7c"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#45b244",
+      "accent": "#45b244",
+      "accent-on": "#ffffff",
+      "surface-warm": "#fdf9f2"
+    },
+    {
+      "accent": "#45b244"
+    },
+    {
+      "fg": "#084035"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "bg": "#fbf9f6",
+      "border": "#ced4da",
+      "surface": "#eaedf1",
+      "warn": "#fdce03",
+      "fg-2": "#45b244",
+      "border-soft": "#f7f7f7"
+    },
+    {
+      "surface": "#f9fafb"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (79 line colours, 111 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["div.t4-section-inner.container-fluid"],
+    "bodyFace": ["body"],
+    "pageText": [
+      ".t4-megamenu .navbar-nav > li > a",
+      ".t4-megamenu .navbar-nav > li > .nav-link",
+      ".t4-megamenu .dropdown-menu li > a",
+      ".t4-megamenu .dropdown-menu li > .nav-link",
+      ".t4-megamenu .dropdown-menu li .dropdown-item"
+    ],
+    "onAccent": [".bg-primary", ".apply-link .teams-item-inner"],
+    "inkImages": [".navbar-brand img.logo-img", ".t4-off-canvas-header img.logo-img", ".client-img img"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "offcanvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 9 tried (byte 5422); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#fbf9f6",
+      "uses": 19,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdf9f2",
+      "distance": 4
+    },
+    {
+      "hex": "#ced4da",
+      "uses": 11,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 18
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 8,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    },
+    {
+      "hex": "#45b244",
+      "uses": 6,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#45b244",
+      "distance": 0
+    },
+    {
+      "hex": "#f9fafb",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 23
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "t4Placeholders": {
+    "__color_white": {
+      "fill": "bg"
+    },
+    "__body_bg_color": "bg",
+    "__body_text_color": "fg",
+    "__link_color": {
+      "text": "fg-2"
+    },
+    "__link_hover_color": {
+      "text": "fg-2"
+    },
+    "__background_color": {
+      "fill": "bg"
+    },
+    "__text_color": {
+      "text": "fg"
+    },
+    "__color_primary": {
+      "fill": "accent",
+      "line": "accent",
+      "text": "fg-2"
+    },
+    "__color_secondary": {
+      "fill": "accent-hover",
+      "line": "accent-hover",
+      "text": "fg"
+    },
+    "__color_success": "success",
+    "__color_warning": "warn",
+    "__color_danger": "danger",
+    "__color_info": {
+      "text": "meta"
+    },
+    "__color_light": {
+      "fill": "surface"
+    },
+    "__color_dark": {
+      "text": "fg-2"
+    },
+    "__user_color_heading_color": {
+      "text": "fg"
+    }
+  },
+  "t4PlaceholdersNote": "each placeholder of css/tpl/theme.tpl.css and pattern.tpl.css reads the slot in the role the t4SiteCss build gave its value in the generated sheet, one per kind of property where the value plays two (__color_primary: the accent fill of buttons, fg-2 as heading text; __color_secondary: accent-hover fill, fg text). pattern.tpl.css is written once per palette: its placeholders take the light palette's roles, the dark palette painting only the kept bands (topbar, slideshow, section 6, footnav), where the slot's colours are reset and T4's values show. T4 rewrites media/t4/css/<style id>.css whenever its content changes, so the tokenized sheets the 1.0.1 build shipped with their hashes held on a fresh site but went back to literals once T4 wrote them again (11/10/2026: sheets emptied and the page asked for twice, 4/12, page ground and call to action the template's under every system, link text 1.1:1 under Moxie)",
+  "t4SiteNote": "T4 writes each template style's colours into media/t4/css/<style id>.css as literals and rewrites the file whenever its content changes: the colours reach the slot through the placeholders of css/tpl/*.tpl.css (t4Placeholders), never through the generated file",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on the 1.0.1 build stood up from its own zip, media/t4/css, media/t4/optimize and the t4asset cache emptied so T4 wrote its sheets anew before measuring (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-landscape-j6): 12/12, controls 0, kept bands unchanged, follows 83-95%, no text under 4.5:1 worse than the template's own; no change needed; eye check on Moxie, MotherDuck, Toggl Track, Apple desktop + phone passed; earlier: measured 11/10/2026 on the 1.0.1 build (tasks/evidence/ds-contracts-r2c-2026-10-11/templates/ja-landscape-j6/final-1.0.1): 12/12 verdicts pass — default unchanged (0 differences, desktop and phone, before and after), no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple, 83% or more of the page follows — and the dark and light screenshots read by eye; regeneration-checked 11/10/2026 (…/ja-landscape-j6/regen-1.0.1): the 1.0.1 build rebuilt with t4Placeholders instead of t4SiteCss (the first build's tokenized sheets held on a fresh site but went back to literals once T4 wrote them again: 4/12), stood up, media/t4/css and media/t4/optimize emptied and the page asked for twice so T4 wrote its sheet anew: 12/12, controls 0, 83–95% follows, no text worse than the template's own, the dark screenshot read by eye",
+  "minVersion": {
+    "quickstart/ja-landscape/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-landscape/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "textNote": "the menu paints its links rgba(0, 0, 0, .7), a literal no palette names: they take the page text (selectors.pageText); the intro band (.bg-primary, T4's primary) and the Join Our Team tile (an accent-hover fill) carry the accent's own text colour (selectors.onAccent) — white on a light system accent read 1.94:1 in round 1; the wordmark and client logos are dark-ink images, inverted with hues kept under a dark system (selectors.inkImages)",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#fdf9f2",
+    "--body-text-color": "#666666",
+    "--body-link-color": "#084035",
+    "--body-link-hover-color": "#084035",
+    "--color-primary": "#45b244",
+    "--color-secondary": "#084035",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#343a40",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "keepColors": {
+    ".t4-topbar": "rgb(255, 255, 255)",
+    ".t4-slideshow": "rgb(255, 255, 255)",
+    ".t4-section-6": "rgb(255, 255, 255)",
+    ".t4-footnav": "rgb(255, 255, 255)"
+  },
+  "bands": {
+    ".t4-topbar": {
+      "ground": "#084035",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".custom a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-slideshow": {
+      "ground": "#084035",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".t4-section-6": {
+      "ground": "#084035",
+      "texts": ["#ffffff", "#9cb3ae"],
+      "picture": true,
+      "paint": {
+        ".inner h2": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#084035",
+      "texts": ["#ffffff", "#84a09a"],
+      "paint": {
+        ".call-us-now h3": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-section.t4-slideshow.t4-palette-dark": {
+      "ground": "#084035",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".item-title", ".ja-animation"]
+    },
+    ".inner.bg-primary": {
+      "ground": "#45b244",
+      "texts": ["#ffffff", "#edf7ed", "#b5e0b4"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".t4-section.t4-section-6.t4-palette-dark": {
+      "ground": "#084035",
+      "texts": ["#45b244", "#ffffff", "#9cb3ae"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".inner h2", ".sub-title", ".inner div"]
+    },
+    ".t4-section.t4-masthead.t4-palette-dark": {
+      "ground": "#084035",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".t4-masthead-title"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent",
+  "sideRules": {
+    "light": {
+      ".blog .items-row .col": {
+        "min-width": "min(100%, 240px)"
+      }
+    },
+    "dark": {
+      ".blog .items-row .col": {
+        "min-width": "min(100%, 240px)"
+      }
+    }
+  },
+  "sideNote": "the services page lists its items in Bootstrap rows of flexible columns (.blog .items-row .col, flex 1 1 0% with wrapping) that stack on a phone only because each column’s narrowest content is wider than half the screen in the template’s faces: a system’s narrower face let two of them share a 390px line, so the list went two-up on a phone (visual review 14/10/2026). Under a system each column is at least 240px wide (or the whole row), so a phone shows one per line and the desktop’s and tablet’s three-up stays; the inner pages’ photo title band (.t4-masthead.t4-palette-dark, drafted 14/10 as a fill) wears an ink of the system under its photo at 50%, so its overlay stays dark under a light system"
+}

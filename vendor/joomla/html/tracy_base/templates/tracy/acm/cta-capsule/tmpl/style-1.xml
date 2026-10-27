@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>CTA Capsule Style 1</title>
+  <fields name="cta-capsule">
+    <fieldset name="content" label="TPL_TRACY_BASE_ACM_CTA_CONTENT_LABEL">
+      <field
+        name="statement"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CTA_STATEMENT_LABEL"
+        description="TPL_TRACY_BASE_ACM_CTA_STATEMENT_DESC"
+      />
+      <field
+        name="support"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CTA_SUPPORT_LABEL"
+        description="TPL_TRACY_BASE_ACM_CTA_SUPPORT_DESC"
+      />
+    </fieldset>
+    <fieldset name="actions" label="TPL_TRACY_BASE_ACM_CTA_ACTIONS_LABEL">
+      <field
+        name="btn-text"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CTA_BTN_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_CTA_BTN_TEXT_DESC"
+      />
+      <field
+        name="btn-link"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CTA_BTN_LINK_LABEL"
+      />
+      <field
+        name="link-text"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CTA_LINK_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_CTA_LINK_TEXT_DESC"
+      />
+      <field
+        name="link-url"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CTA_LINK_URL_LABEL"
+      />
+    </fieldset>
+  </fields>
+</form>

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "aubergine-canvas": {
+      "$value": "#271a47",
+      "$type": "color",
+      "$description": "Aubergine Canvas — Page background, hero canvas, filled button surface, deep surface elevation — the foundational night-sky tone that everything floats on"
+    },
+    "moonlight-lavender": {
+      "$value": "#dbc9ff",
+      "$type": "color",
+      "$description": "Moonlight Lavender — Violet supporting accent for decorative details and low-frequency emphasis."
+    },
+    "gilded-brass": {
+      "$value": "#bc994e",
+      "$type": "color",
+      "$description": "Gilded Brass — Secondary link color, decorative icon accent, highlight strokes — a warm metallic counterpoint to the cool violet, used sparingly as jewelry on the page"
+    },
+    "obsidian-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian Black — Video/showreel container background, inverse button surface, maximum-contrast surface for media blocks"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, nav, buttons, labels, journal entries, metadata — the utilitarian workhorse that handles every reading surface. Compact sizes (9–14px) with tight line-heights (1.00–1.65) create the dense, information-rich layout. Uppercase labels use 0.5em tracking for the editorial tagline rhythm."
+    },
+    "sang-bleu-custom": {
+      "$value": "Sang Bleu (custom)",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines — the serif voice that carries brand authority. Used at 80–120px for hero titles, 42px for section-level headings. The high contrast strokes and Garamond-class proportions give every page a magazine-cover gravitas. Substitute with Cormorant Garamond or Playfair Display Black for free alternatives."
+    },
+    "object-fit-cover": {
+      "$value": "object-fit: cover",
+      "$type": "fontFamily",
+      "$description": "object-fit: cover — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://epic.net",
+      "siteName": "EPIC agency",
+      "extractedAt": "2026-06-03T19:38:10.872Z",
+      "variant": "compact"
+    }
+  }
+}

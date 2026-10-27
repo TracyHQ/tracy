@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-1253-joomla-install-any-language-happy",
+  "itemIds": ["regression:REG-PR-1253-joomla-install-any-language"],
+  "requirement": "Importing a Joomla site with a non-English administrator installs Claude Cowork instead of failing with install_failed",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1253-joomla-install-any-language.json",
+    "ref": "PR #1253 (fix); fix evidence: Production 12/10/2026 12:37 UTC: the first real import (coachingnvc.pl, Joomla 6.1.4, admin pl-pl) raised site.stuck installing/install_failed after 8 seconds because the success sentence was Polish",
+    "invariant": "S1: 2 tests, 2 pass, 0 fail: an install that worked returns ok with the component's token and version; an install the site refused returns install_failed after trying both the URL door and the upload door.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/install-language.test.mjs:38 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1253-joomla-install-any-language.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1253-joomla-install-any-language"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1253-joomla-install-any-language",
+    "pr": 1253,
+    "kind": "fix",
+    "area": "add-site/import/joomla-install",
+    "file": "tests/regression/cases/REG-PR-1253-joomla-install-any-language.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-add-site/test/install-language.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

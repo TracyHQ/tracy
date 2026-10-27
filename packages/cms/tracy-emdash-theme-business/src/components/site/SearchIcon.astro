@@ -1,0 +1,10 @@
+---
+/** Magnifying glass for the search triggers. The source uses the ⌕ glyph, which the self-hosted
+ * Archivo does not carry, so the fallback font drew it as a stray letter. Inline SVG, currentColor. */
+interface Props {
+  class?: string
+}
+const { class: className = 'h-[15px] w-[15px]' } = Astro.props
+---
+
+<svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>

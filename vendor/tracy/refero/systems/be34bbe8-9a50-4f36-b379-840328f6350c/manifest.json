@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "be34bbe8-9a50-4f36-b379-840328f6350c",
+  "status": "complete",
+  "name": "Mapbox",
+  "url": "https://styles.refero.design/style/be34bbe8-9a50-4f36-b379-840328f6350c",
+  "sourceWebsite": "https://mapbox.com",
+  "extractedAt": "2026-04-11T19:10:46.520Z",
+  "capturedAt": "2026-10-08T05:16:55.315925+00:00",
+  "theme": "dark",
+  "industry": null,
+  "description": "Satellite console at midnight — a dark control room where glowing map tiles are the only light source, surrounded by near-black instrument panels.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6f4c44d4-d245-463c-9744-0e25ef94b29f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1b90c82e-d8d9-491f-ae39-412d3347ab4c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/1eae27a0-e9d6-454b-96ee-634c48da20ff.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/41394fb3-38c4-4639-9410-65ef72688ac7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b04fbe5d-2338-47d9-ae82-ef024bf7fcc0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5d838148c529307ffee2cb8bae736aa87d02d16820f96fb5b332eb2de04a0372",
+      "bytes": 20814
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7a342a9aaa742cb53d09c8ff75cf219be7158192b093d13e73369c973524151e",
+      "bytes": 118604
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "018c9aaeb4cee877b2d533fee49d332e0df5abccf599e35610c68ab44c11b17e",
+      "bytes": 25867
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e33706735bd74b3531c8c1aed9c773533314165a6a50be4d106263cc9d1254d3",
+      "bytes": 14859
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6d81bde91d6dd95e9bbbd3d06932ff7d703ebd39e686a771860c486622c3ac40",
+      "bytes": 12747
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d3d73fa58bc05cf725855e6f542b4619eaf09081e60662f74459e06cff8a43ce",
+      "bytes": 3391
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "213f7773acad163e8260d3d509baba2df06046e37aba8426fe8da14d3cd04df7",
+      "bytes": 592
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4fc212985d0511a5a7cb982aefcda6db37345a50bd435bfe66906aa324fcb1ea",
+      "bytes": 609
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d3ea007a1fba59fed53938bbbb854f34d7679532bc5caf1a897bb5f8b116cf99",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "bf5ae5fcf310744135d0c37f64a71c087b25f8b3a7189604ed7796227d32643d",
+      "bytes": 50305
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5abc51c48afc4a30eaf1453d85fc48f43465567fc85d2e3ae476451743aaaae5",
+      "bytes": 25617
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7d4834dcf735611426c7d202a7e1ef8f4aa23af6ffb556125084e8c9464375dd",
+      "bytes": 52920
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0824461eaf5d269ee55b590c252b6f89db83dd4b64fe2bdfed5dda0664903908",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "281ac62356a59cbfa79a420782042a52eac33c193d26d85e9719f21e2064caa7",
+      "bytes": 1738
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "253cb9d11170003a4c362452e58942f4e8860e4068078bab17aa52e1640b5a5b",
+      "bytes": 2305
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "2a3cdb2e-effe-406b-932e-37e4dc88ab1d",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "7671d0fc-b9fc-462e-9c74-38511264aabd",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "be34bbe8-9a50-4f36-b379-840328f6350c",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "dd89ce6c-f0aa-4ca8-bd63-19dcd81920a7",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

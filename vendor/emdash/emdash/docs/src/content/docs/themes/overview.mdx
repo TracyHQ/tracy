@@ -1,0 +1,95 @@
+---
+title: Themes
+description: Install or create an EmDash theme as an Astro template with a seed file.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+An EmDash theme is a complete Astro project distributed as a `create-astro` template. It contains the public routes and components, EmDash runtime configuration, and an optional seed file for the site's initial content model.
+
+There is no runtime theme package or template hierarchy. After scaffolding, the theme files belong to the site and can be edited directly.
+
+## Theme contents
+
+Current EmDash templates use these paths:
+
+```text title="Template structure"
+astro.config.mjs
+package.json
+seed/
+└── seed.json
+src/
+├── components/
+├── layouts/
+├── live.config.ts
+├── pages/
+└── styles/
+```
+
+- `astro.config.mjs` configures server output, the deployment adapter, EmDash, the database, and storage.
+- `src/live.config.ts` registers the `_emdash` live collection.
+- `src/pages/` defines public routes.
+- `seed/seed.json` can declare initial collections, fields, settings, taxonomies, bylines, menus, redirects, widget areas, sections, and sample content.
+- `package.json#emdash.seed` points to the seed file.
+
+The blank template deliberately has no user seed and falls back to EmDash's built-in default seed. The other current templates point to `seed/seed.json`.
+
+## Install a template
+
+The following command scaffolds the Node blog template:
+
+```bash
+npm create astro@latest -- --template @emdash-cms/template-blog
+```
+
+Use the corresponding `-cloudflare` package for a Cloudflare Workers project:
+
+```bash
+npm create astro@latest -- --template @emdash-cms/template-blog-cloudflare
+```
+
+Current template packages include:
+
+| Purpose | Node | Cloudflare |
+| --- | --- | --- |
+| Empty project shell | `@emdash-cms/template-blank` | No current counterpart |
+| Basic pages site | `@emdash-cms/template-starter` | `@emdash-cms/template-starter-cloudflare` |
+| Posts, pages, categories, tags, and widgets | `@emdash-cms/template-blog` | `@emdash-cms/template-blog-cloudflare` |
+| Project portfolio | `@emdash-cms/template-portfolio` | `@emdash-cms/template-portfolio-cloudflare` |
+| Marketing pages composed from versioned blocks | `@emdash-cms/template-marketing` | `@emdash-cms/template-marketing-cloudflare` |
+
+After scaffolding, install dependencies and start the generated site:
+
+```bash
+cd my-site
+npm install
+npm run dev
+```
+
+Open `http://localhost:4321/_emdash/admin`. The first visit redirects to setup, where you enter the site identity and administrator details. When the selected template has sample entries, the wizard also lets you include or omit them. Including them is useful while evaluating the design because the routes have realistic content to render.
+
+## First setup
+
+EmDash reads the seed at build time. It looks in this order:
+
+1. `.emdash/seed.json`.
+2. The path in `package.json#emdash.seed`.
+3. `seed/seed.json`.
+4. The built-in default seed when no user seed is found.
+
+On the first admin visit, the setup wizard shows seed metadata and lets the administrator choose whether to include sample content. It applies the seed to an empty database and records setup completion. Later starts do not reapply the seed to an existing site.
+
+<Aside type="caution">
+  A seed is initial setup data, not a deployment migration system. After setup, change a live site's model through EmDash and export the resulting schema when the repository needs an updated baseline.
+</Aside>
+
+## Customize the installed site
+
+Edit the generated project directly:
+
+- Change route files in `src/pages/`.
+- Change shared markup in `src/layouts/` and `src/components/`.
+- Change the initial model in `seed/seed.json` before first setup.
+- Manage an existing site's model under **Content Types** in the admin.
+
+Use [Creating themes](/themes/creating-themes/) to prepare a reusable template and [Seed files](/themes/seed-files/) for the complete seed contract.

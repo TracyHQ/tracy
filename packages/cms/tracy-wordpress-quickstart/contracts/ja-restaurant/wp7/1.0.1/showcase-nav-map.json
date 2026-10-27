@@ -1,0 +1,282 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-restaurant/wp7/1.0.1",
+  "baseHash": "51b2c3be9e54e048c04295541f0dc2e70486fafe3ec809c10f474d4f129a0f70",
+  "baseFiles": {
+    "manifest.json": "d545bdc5de13d0f634beaacda01aa17f77417748861619ff055a9ff3bef76f67",
+    "content-map.json": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+    "presentation-lock.json": "b08cf515fdb57e491c25899eeeace02877d4ab136630c9b77403d889bf579d14"
+  },
+  "inputs": {
+    "navigation-source.json": "5df8be8ec3a189bac0aaf94b1d3a032fa8e0f1914acfed5668261af3d3178734",
+    "inventory.json": "77c607fc866d41258535ff6120f883ff8fbc6dd6ec7c62b7a9f4838ae481470d"
+  },
+  "decisionsHash": "d11e530a4b937e267a79a41f647d0d2cf4254d21d0b0ae067c3363d8c6913a45",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 133,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Explore",
+        "pageId": null
+      },
+      "label": "Explore",
+      "path": [
+        "Explore"
+      ],
+      "contains": [
+        "Explore › J! Pages",
+        "Explore › J! Pages › Login",
+        "Explore › J! Pages › Registration",
+        "Explore › J! Pages › User Profile",
+        "Explore › J! Pages › Reminder",
+        "Explore › J! Pages › Smart Search",
+        "Explore › J! Pages › All Categories",
+        "Explore › J! Pages › Featured Articles",
+        "Explore › J! Pages › Typography",
+        "Explore › J! Pages › Tagged Items",
+        "Explore › Bonus Pages",
+        "Explore › Bonus Pages › Offline page",
+        "Explore › Bonus Pages › Error Page",
+        "Explore › Bonus Pages › About Us",
+        "Explore › Bonus Pages › Our History",
+        "Explore › Themes",
+        "Explore › Themes › Default Color",
+        "Explore › Themes › Blue Color",
+        "Explore › Themes › Green Color",
+        "Explore › Themes › Pink Color",
+        "Explore › Themes › Purple Color"
+      ],
+      "rule": "hide.decision",
+      "reason": "\"Explore\" is the template's showcase branch of the main menu (and of the drawer, which shows the same menu): J! Pages sample screens, Bonus Pages (error/offline screens and second links to About Us and Our History, which stay under \"About us\") and Themes, the colour variants of the home page",
+      "key": "navigation-133",
+      "before": "209ee256a3f7f1ad0dcc1368146fe36c11832a81f94c6a9bc7419cf4de95f6f5",
+      "after": "b5c1c7746b6d7897a6b13385012da51b64aa067def8cc42731ccfb8fce1aedc1"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-133",
+      "before": "209ee256a3f7f1ad0dcc1368146fe36c11832a81f94c6a9bc7419cf4de95f6f5",
+      "after": "b5c1c7746b6d7897a6b13385012da51b64aa067def8cc42731ccfb8fce1aedc1"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 97,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "About us",
+      "path": [
+        "About us"
+      ],
+      "pageId": 99,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Our History",
+      "path": [
+        "About us",
+        "Our History"
+      ],
+      "pageId": 106,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Menu",
+      "path": [
+        "Menu"
+      ],
+      "pageId": 100,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Simple Menu",
+      "path": [
+        "Menu",
+        "Simple Menu"
+      ],
+      "pageId": 109,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Menu with Image",
+      "path": [
+        "Menu",
+        "Menu with Image"
+      ],
+      "pageId": 110,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "2 Column Menu",
+      "path": [
+        "Menu",
+        "2 Column Menu"
+      ],
+      "pageId": 111,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Offers",
+      "path": [
+        "Offers"
+      ],
+      "pageId": 101,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Blog",
+      "path": [
+        "Blog"
+      ],
+      "pageId": 104,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Gallery",
+      "path": [
+        "Gallery"
+      ],
+      "pageId": 105,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Reservation",
+      "path": [
+        "Reservation"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Phone Reservation",
+      "path": [
+        "Reservation",
+        "Phone Reservation"
+      ],
+      "pageId": 107,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-133",
+      "where": "wp_navigation 133 (mainmenu)",
+      "label": "Contact Us",
+      "path": [
+        "Reservation",
+        "Contact Us"
+      ],
+      "pageId": 108,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-134",
+      "where": "wp_navigation 134 (usermenu)",
+      "label": "Your Profile",
+      "path": [
+        "Your Profile"
+      ],
+      "pageId": 98,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-134",
+      "where": "wp_navigation 134 (usermenu)",
+      "label": "Submit an Article",
+      "path": [
+        "Submit an Article"
+      ],
+      "pageId": 97,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-134",
+      "where": "wp_navigation 134 (usermenu)",
+      "label": "Site Administrator",
+      "path": [
+        "Site Administrator"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-134",
+      "where": "wp_navigation 134 (usermenu)",
+      "label": "Template Settings",
+      "path": [
+        "Template Settings"
+      ],
+      "pageId": 97,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-134",
+      "where": "wp_navigation 134 (usermenu)",
+      "label": "Site Settings",
+      "path": [
+        "Site Settings"
+      ],
+      "pageId": 97,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 1,
+    "templateParts": 0,
+    "kept": 18,
+    "unresolved": 0
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "REG-040",
+  "kind": "fix",
+  "title": "The Tracy badge with no data-origin opens Tracy production, and a signed-in GET of a site's join page answers 200",
+  "pr": 843,
+  "area": "tracy-web/public-doors",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/cache-origin.test.mjs",
+    "S2: Read the exit code, the pass/fail/skipped counts and the tests named below. No database, stand or browser is needed: the seat door runs on a book stub that answers three exact SELECTs and throws on any other statement."
+  ],
+  "expect": [
+    "Exit code 0, 0 failures, 0 skipped.",
+    "'#806 F-S8-003: the served badge with no data-origin opens Tracy production' passes: /tracy-badge.js as served, run on a JoomlArt demo page from a tag with no data-origin (and one with an empty data-origin), draws a.cta with href https://cowork.tracy.ai/design-inspiration?open=ja-kinetic&provider=JoomlArt, and the served bytes do not contain https://cowork.tracy.site.",
+    "'#806 F-S8-003: the link helper and the snippet default to Tracy production' passes: DEFAULT_TRACY_ORIGIN is https://cowork.tracy.ai; badgeHref with no origin, an empty one or one no URL can be built from uses it; badgeSnippet with no origin writes data-origin=\"https://cowork.tracy.ai\".",
+    "'#806 F-S8-003: the two advert scripts agree on the default origin' passes: lib/tracy-badge.js and lib/build-with-tracy-demo.js export the same DEFAULT_TRACY_ORIGIN.",
+    "'#806 F-S8-003: a deployment with no configured origin documents and links production' passes: GET /tracy-badge with no config.origin names https://cowork.tracy.ai in the script src, data-origin and the documented default.",
+    "'#806 F-S1-011: a signed-in GET /<label>/join answers 200 with the page of each state' passes: status 200 and no Allow header for no account, no grant, a pending request, an invitation, an accepted membership, a revoked grant and a declined grant, each with the form that state has always drawn.",
+    "'an explicit development origin still wins over the default' passes: data-origin=\"https://cowork.tracy.site\" yields a https://cowork.tracy.site link.",
+    "'a join GET only reads: three exact queries at most, no write, no mail' passes; 'no session, a forged one or an expired one: the join page still redirects to sign-in' passes with 303 to /login; 'an unknown, malformed or reserved label is still a 404, signed in or not' passes.",
+    "'the three badge scripts leave this app with a five-minute public cache' passes: /badge.js, /tracy-badge.js and /build-with-tracy-demo.js carry cache-control 'public, max-age=300' as this app sends them."
+  ],
+  "selectors": {
+    "default_origin": "DEFAULT_TRACY_ORIGIN in apps/tracy-web/src/lib/tracy-badge.js",
+    "badge_link": "#tracy-badge (shadow root) a.cta[href]",
+    "join_door": "GET /:label/join in apps/tracy-web/src/seats/route.js",
+    "accept_form": "form[action='/api/sites/<siteKey>/accept'][data-redirect]"
+  },
+  "evidence": "Issue #806 (QA audit, re-verified on develop f9c734938): the production bytes of https://cowork.tracy.ai/tracy-badge.js contained d.origin || 'https://cowork.tracy.site'; GET /<label>/join rendered its form with status 405 and no Allow header. On base 811108bd2 the five '#806' tests of this file fail by assertion (5 run, 5 fail).",
+  "fence": "The script's own fallback and the join door's status, on the real route functions with a book stub. Not covered: what an edge in front of the app does to cache headers (F-S8-002), unknown-site transport on production (F-S8-010, F-S1-026), a real browser, PostgreSQL.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/cache-origin.test.mjs"]
+  }
+}

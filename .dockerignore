@@ -1,0 +1,105 @@
+# Build context for packages/fleet/tracy-fleet-operation/dsh/Dockerfile.
+# The image needs vendor/tracy/deepseek-harness (source, no node_modules) and packages/* (committed lib).
+**/node_modules
+.git
+# Secrets never belong in a build context: every file here is readable by every build step and
+# lands in the daemon's cache even when no COPY names it.
+.env*
+!.env*.example
+.npmrc
+*.pem
+*.key
+.dev-logs
+.superpowers
+tch
+infra
+docs
+tasks
+packages/dev
+packages/web
+packages/desktop
+# THIS FILE NOW SERVES MORE THAN ONE DOCKERFILE. It was written for the fleet dsh image above, but
+# `deploy/compose.yml` also builds `apps/tracy-web/Dockerfile` with `context: ..` (the repo root),
+# and Docker has exactly one .dockerignore per context — there is no per-Dockerfile override here.
+# So the blanket `packages/dev`/`packages/web`/`packages/desktop` exclusions above, meant only for
+# the fleet image, silently ate two `dist/` directories `apps/tracy-web/Dockerfile` COPYs in (Plan
+# 4 Tasks 2 and 3) — a `COPY` that names a real, existing path still lands nothing, with no error
+# at build time (`CopyIgnoredFile`), because the file never left the host in the first place.
+# Widening `packages/web`'s exclusion above without reading this comment breaks one of these again.
+!packages/web/tracy-harness/dist
+!packages/web/tracy-harness/dist/**
+!packages/web/tracy-design-page/dist
+!packages/web/tracy-design-page/dist/**
+!packages/web/tracy-wo-find-page/dist
+!packages/web/tracy-wo-find-page/dist/**
+# ── vendor: IN the context since the fleet image, and each one only in part ───────────────────
+#
+# Until 06/09 every line below was an exclusion: the dev image carried five Tracy plugins and got
+# dsh's own bundles from the submodule. The fleet image carries what a lane carries, and most of
+# those packages are somebody else's code that this repo builds from source (LAW #5) instead of
+# pulling from npm.tracy.ai. So the sources come in — and nothing else does.
+#
+# `**/node_modules` above already strips the heavy half (`dsh-better-sidebar` 572 MB,
+# `dsh-passwords` 330 MB on disk here, almost all of it installed dependencies). What is left is
+# per-package: documentation, test corpora and demo assets that no build step reads.
+vendor/*/*/docs
+vendor/*/*/.git
+vendor/tracy/dsh-better-sidebar/tests
+vendor/tracy/dsh-passwords/test
+# Their BUILD OUTPUT, which the image builds itself (`pnpm build` / `npm run build` in the Dockerfile).
+# Both are gitignored, and both exist on any CI runner because the root `pnpm install` runs each
+# fork's `prepare`. Sent into the context they carried each runner's own copy — and broke the layer
+# cache on every build that landed on a different runner than the last one: measured 15/09, a
+# same-commit rebuild on the CI box reinstalled and rebuilt dsh-better-sidebar (47 s) because its
+# `COPY` layer hashed a `lib/` another runner had built.
+vendor/tracy/dsh-better-sidebar/lib
+vendor/tracy/dsh-passwords/dist
+# `skills/` is the whole reason mattpocock-skills is in the context (the deck that used to carry
+# them was dropped 06/09); its own repository furniture is not read by any build step.
+vendor/tracy/mattpocock-skills/.agents
+vendor/tracy/mattpocock-skills/scripts
+vendor/tracy/mattpocock-skills/package-lock.json
+# `systems/` and `catalog.json` are what /opt/tracy serves; `packages/` is the upstream monorepo
+# that BUILDS them (38 MB), and nothing in the image reads it.
+vendor/tracy/od-design-system/packages
+# Refero (447 MB: source pages, exports, translated DESIGN.md) stays out...
+vendor/tracy/refero
+# ...except what the tracy-web image's design system doors read for EVERY system they offer
+# (`apps/tracy-web/src/lib/ds-slot.js` referoLibrary, Refero only since 12/10/2026): the catalogue, and
+# of each system the two files `loadProfile` reads (~30 MB in the context; the Dockerfile's `dslib` stage
+# keeps only the offered systems', ~24 MB). The card pictures are Tracy's own thumbnails, one per offered
+# system (`packages/design/tracy-ds-slot/refero-thumbs/`, 10 MB), not the snapshot's screenshots (151 MB).
+!vendor/tracy/refero/catalog.json
+!vendor/tracy/refero/systems/*/design-system.json
+!vendor/tracy/refero/systems/*/manifest.json
+# Bravada (545 files, 33 MB — 429 of them demo photography), vendored 10/09 as the tree Tracy forks
+# its EmDash template out of. Same reason as the line below: the dsh image runs none of it.
+vendor/emdash/emdash-theme-bravada
+# The two Tracy templates derived from it — one per design system, 548 files each, and the
+# same reason again: the dsh image runs neither. They reach a customer through the EmDash
+# site image, never through this build context.
+vendor/emdash/emdash-theme-tracy-editorial
+vendor/emdash/emdash-theme-tracy-coral
+# EmDash's own monorepo (4152 files, 67 MB), vendored 10/09 so its Dockerfile and templates can be
+# read here instead of on a droplet. It is the CMS a CUSTOMER's site runs, never anything this
+# image runs: no COPY in dsh/Dockerfile names it, so every byte it adds to the context is a slower
+# build on the host for no change in the image. Whole directory, not a part — unlike the vendors
+# above, none of it is read by any build step.
+vendor/emdash/emdash
+# vendor/tracy/deepseek-harness/website stays in the context: tsconfig.host.json includes
+# website/**/*.ts, so `pnpm build:official` cannot type-check without it (80 KB).
+vendor/tracy/deepseek-harness/docs
+vendor/tracy/deepseek-harness/.git
+# dsh's build output from the host tree. None of it is tracked (`git ls-files` finds no lib/,
+# dist/ or .tsbuildinfo under the submodule), and a stale copy is worse than none: `tsc -b`
+# trusts the .tsbuildinfo, skips the work, and tsdown then bundles the previous commit's types.
+vendor/tracy/deepseek-harness/**/lib
+vendor/tracy/deepseek-harness/**/dist
+vendor/tracy/deepseek-harness/**/*.tsbuildinfo
+vendor/tracy/deepseek-harness/.dsh-build
+vendor/tracy/deepseek-harness/.typecheck
+# The open Website Opportunities package goes into the tracy-web image as `node_modules/website-opportunities`;
+# its tests, fixtures and public-repository furniture are read by no build step.
+packages/wo/website-opportunities/test
+packages/wo/website-opportunities/docs
+packages/wo/website-opportunities/.github

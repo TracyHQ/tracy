@@ -1,0 +1,74 @@
+{
+  "id": "QA-UNIT-REG-PR-1442-ci-e2e-chromium-gaps-happy",
+  "itemIds": ["regression:REG-PR-1442-ci-e2e-chromium-gaps"],
+  "requirement": "Tracy CI on a pull request into develop: without ci:e2e no browser starts (the EmDash rows follow the label, the two design-inspiration browser tests live under test/e2e), and release pull requests, the nightly and manual runs are unchanged",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1442-ci-e2e-chromium-gaps.json",
+    "ref": "PR #1442 (feat); fix evidence: none recorded",
+    "invariant": "S1 exits 0 with '# fail 0'. A pull request into develop that touches an EmDash theme and carries no ci:e2e label has no tests emdash-* row; the row is recorded in leftOut with label ci:e2e and wouldRun true, the scope is partial:db+e2e, and the notice names the label. The same pull request with ci:e2e gets only the row of the theme it touched; with unreadable labels it keeps the row and leaves nothing out. Pull requests into main and staging, workflow_dispatch and schedule run every EmDash row and the e2e row, labels or no labels, and leave nothing out. A change that touches no theme records no EmDash row as left out.",
+    "productSources": [
+      "scripts/check-tests.ts:40",
+      "scripts/ci/plan-ci.mjs:438",
+      "scripts/ci/related-tests.mjs:144",
+      "scripts/ci/test-scope.mjs:109",
+      "scripts/ci/turbo-setup.mjs:75"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "scripts/ci/turbo-setup.mjs:932 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:936 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:976 readFileSync() with a computed path",
+      "scripts/test/ci-test-scope.test.mjs:22 readFileSync() with a computed path",
+      "scripts/test/ci-test-scope.test.mjs:391 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "without ci:e2e a pull request into develop that touches a theme gets no EmDash row",
+    "with ci:e2e the EmDash row of the touched theme runs, and only that one",
+    "a theme that is not touched leaves no trace in leftOut: nothing was lost",
+    "an EmDash theme PR with unreadable labels keeps the row: nothing is opted out",
+    "release pull requests, the nightly and manual runs still run every EmDash row without a label",
+    "the opt-in applies when the planner would have run every row, except for the unreadable cases"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1442-ci-e2e-chromium-gaps"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1442-ci-e2e-chromium-gaps",
+    "pr": 1442,
+    "kind": "feat",
+    "area": "ci/opt-in",
+    "file": "tests/regression/cases/REG-PR-1442-ci-e2e-chromium-gaps.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/test/ci-plan.test.mjs",
+    "scripts/test/ci-test-scope.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "without ci:e2e a pull request into develop that touches a theme gets no EmDash row",
+    "with ci:e2e the EmDash row of the touched theme runs, and only that one",
+    "a theme that is not touched leaves no trace in leftOut: nothing was lost",
+    "an EmDash theme PR with unreadable labels keeps the row: nothing is opted out",
+    "release pull requests, the nightly and manual runs still run every EmDash row without a label",
+    "the opt-in applies when the planner would have run every row, except for the unreadable cases"
+  ],
+  "timeoutS": 300
+}

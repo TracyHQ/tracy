@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vega/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_vega",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vega",
+    "id": "quickstart/ja-vega/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_vega",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vega-j6-webroot-1.0.7.tar.gz",
+        "bytes": 62860394,
+        "sha256": "41939d30eed982f461d3ce758395e12af34ef6ebef2a07656ee78a15983ebe54"
+      },
+      "database": {
+        "file": "ja-vega-j6-database-1.0.7.sql.gz",
+        "bytes": 125138,
+        "sha256": "ac70048954d9c435b6f7d8da66c0d69e129e97deb6d856ddb5f5e62f6910a793"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T06:04:25.812Z",
+    "builtFrom": {
+      "from": "quickstart/ja-vega/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 230 files replaced (templates/ja_vega/AGENTS.md, templates/ja_vega/CHANGELOG.md, templates/ja_vega/CLAUDE.md, templates/ja_vega/README.md, templates/ja_vega/component.php, templates/ja_vega/error-t4.php, templates/ja_vega/error.php, templates/ja_vega/favicon.ico, templates/ja_vega/index.php, templates/ja_vega/layout.json, templates/ja_vega/offline.php, templates/ja_vega/prepros-6.config, templates/ja_vega/templateDetails.xml, templates/ja_vega/templateInfo.php, templates/ja_vega/template_preview.png, templates/ja_vega/template_thumbnail.png, templates/ja_vega/css, templates/ja_vega/docs, templates/ja_vega/etc, templates/ja_vega/fonts, templates/ja_vega/html, templates/ja_vega/images, templates/ja_vega/js, templates/ja_vega/scss, templates/ja_vega/acm, templates/ja_vega/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-vega/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

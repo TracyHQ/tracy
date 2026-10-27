@@ -1,0 +1,51 @@
+/**
+ * A real classic Joomla quickstart package, small enough to keep in a test.
+ *
+ * WHY A LITERAL AND NOT A ZIP BUILT HERE. The reader under test parses the ZIP format; a fixture
+ * assembled by the same understanding of that format would agree with it by construction and could
+ * never disagree. These bytes came out of Info-ZIP (`zip -qrX`) over the tree below, so the format
+ * is an independent source of truth:
+ *
+ *   installation/joomla.php                 the CLI installer, what makes a package "classic"
+ *   templates/ja_space/index.php            the template the site is dressed in
+ *   templates/cassiopeia/index.php          Joomla's own, which says nothing about this package
+ *   administrator/templates/atum/index.php  the admin template, never a candidate
+ *   libraries/src/Version.php               MAJOR 6, MINOR 0, PATCH 3 — deflated, not stored
+ *
+ * Regenerate by rebuilding that tree and running `zip -qrX package.zip .` then base64.
+ */
+const BASE64 = [
+  'UEsDBAoAAAAAAMt2MF0AAAAAAAAAAAAAAAAKAAAAbGlicmFyaWVzL1BLAwQKAAAAAADLdjBdAAAAAAAAAAAAAAAADgAAAGxp',
+  'YnJhcmllcy9zcmMvUEsDBBQAAAAIAMt2MF38kusMigAAAPQAAAAZAAAAbGlicmFyaWVzL3NyYy9WZXJzaW9uLnBocLOxL8go',
+  '4MpLzE0tLkhMTlXwys/PzUmMcfYNjglLLSrOzM+z5uJKy8xLzFFIzkksLlaAinJVcykAQUFpUk5mskJyfl5xiUJAkL9LqHOI',
+  'gq2COsQYRXVrTFW+jl7+QfFhrkHBnv5+QLVm2NR4+qGoMcCiJsAxxNkDSY0xFjWuESFBjkhq1IEOquUCAFBLAwQKAAAAAADL',
+  'djBdAAAAAAAAAAAAAAAADQAAAGluc3RhbGxhdGlvbi9QSwMECgAAAAAAy3YwXT3guuYeAAAAHgAAABcAAABpbnN0YWxsYXRp',
+  'b24vam9vbWxhLnBocDw/cGhwIC8vIGpvb21sYSBpbnN0YWxsZXIgY2xpClBLAwQKAAAAAADLdjBdAAAAAAAAAAAAAAAADgAA',
+  'AGFkbWluaXN0cmF0b3IvUEsDBAoAAAAAAMt2MF0AAAAAAAAAAAAAAAAYAAAAYWRtaW5pc3RyYXRvci90ZW1wbGF0ZXMvUEsD',
+  'BAoAAAAAAMt2MF0AAAAAAAAAAAAAAAAdAAAAYWRtaW5pc3RyYXRvci90ZW1wbGF0ZXMvYXR1bS9QSwMECgAAAAAAy3YwXTZm',
+  'yPYOAAAADgAAACYAAABhZG1pbmlzdHJhdG9yL3RlbXBsYXRlcy9hdHVtL2luZGV4LnBocDw/cGhwIC8vIGF0dW0KUEsDBAoA',
+  'AAAAAMt2MF0AAAAAAAAAAAAAAAAKAAAAdGVtcGxhdGVzL1BLAwQKAAAAAADLdjBdAAAAAAAAAAAAAAAAEwAAAHRlbXBsYXRl',
+  'cy9qYV9zcGFjZS9QSwMECgAAAAAAy3YwXXiqqpMSAAAAEgAAABwAAAB0ZW1wbGF0ZXMvamFfc3BhY2UvaW5kZXgucGhwPD9w',
+  'aHAgLy8gamEgc3BhY2UKUEsDBAoAAAAAAMt2MF0AAAAAAAAAAAAAAAAVAAAAdGVtcGxhdGVzL2Nhc3Npb3BlaWEvUEsDBAoA',
+  'AAAAAMt2MF3V6ACZFAAAABQAAAAeAAAAdGVtcGxhdGVzL2Nhc3Npb3BlaWEvaW5kZXgucGhwPD9waHAgLy8gY2Fzc2lvcGVp',
+  'YQpQSwECHgMKAAAAAADLdjBdAAAAAAAAAAAAAAAACgAAAAAAAAAAABAA7UEAAAAAbGlicmFyaWVzL1BLAQIeAwoAAAAAAMt2',
+  'MF0AAAAAAAAAAAAAAAAOAAAAAAAAAAAAEADtQSgAAABsaWJyYXJpZXMvc3JjL1BLAQIeAxQAAAAIAMt2MF38kusMigAAAPQA',
+  'AAAZAAAAAAAAAAEAAACkgVQAAABsaWJyYXJpZXMvc3JjL1ZlcnNpb24ucGhwUEsBAh4DCgAAAAAAy3YwXQAAAAAAAAAAAAAA',
+  'AA0AAAAAAAAAAAAQAO1BFQEAAGluc3RhbGxhdGlvbi9QSwECHgMKAAAAAADLdjBdPeC65h4AAAAeAAAAFwAAAAAAAAABAAAA',
+  'pIFAAQAAaW5zdGFsbGF0aW9uL2pvb21sYS5waHBQSwECHgMKAAAAAADLdjBdAAAAAAAAAAAAAAAADgAAAAAAAAAAABAA7UGT',
+  'AQAAYWRtaW5pc3RyYXRvci9QSwECHgMKAAAAAADLdjBdAAAAAAAAAAAAAAAAGAAAAAAAAAAAABAA7UG/AQAAYWRtaW5pc3Ry',
+  'YXRvci90ZW1wbGF0ZXMvUEsBAh4DCgAAAAAAy3YwXQAAAAAAAAAAAAAAAB0AAAAAAAAAAAAQAO1B9QEAAGFkbWluaXN0cmF0',
+  'b3IvdGVtcGxhdGVzL2F0dW0vUEsBAh4DCgAAAAAAy3YwXTZmyPYOAAAADgAAACYAAAAAAAAAAQAAAKSBMAIAAGFkbWluaXN0',
+  'cmF0b3IvdGVtcGxhdGVzL2F0dW0vaW5kZXgucGhwUEsBAh4DCgAAAAAAy3YwXQAAAAAAAAAAAAAAAAoAAAAAAAAAAAAQAO1B',
+  'ggIAAHRlbXBsYXRlcy9QSwECHgMKAAAAAADLdjBdAAAAAAAAAAAAAAAAEwAAAAAAAAAAABAA7UGqAgAAdGVtcGxhdGVzL2ph',
+  'X3NwYWNlL1BLAQIeAwoAAAAAAMt2MF14qqqTEgAAABIAAAAcAAAAAAAAAAEAAACkgdsCAAB0ZW1wbGF0ZXMvamFfc3BhY2Uv',
+  'aW5kZXgucGhwUEsBAh4DCgAAAAAAy3YwXQAAAAAAAAAAAAAAABUAAAAAAAAAAAAQAO1BJwMAAHRlbXBsYXRlcy9jYXNzaW9w',
+  'ZWlhL1BLAQIeAwoAAAAAAMt2MF3V6ACZFAAAABQAAAAeAAAAAAAAAAEAAACkgVoDAAB0ZW1wbGF0ZXMvY2Fzc2lvcGVpYS9p',
+  'bmRleC5waHBQSwUGAAAAAA4ADgCuAwAAqgMAAAAA'
+].join('')
+
+/** The package as a build would download it. */
+export const QUICKSTART_PACKAGE = Buffer.from(BASE64, 'base64')
+
+/** Its sha256, as `shasum -a 256` reads it — the pin the proposal must compute. */
+export const QUICKSTART_SHA256 = '4ea2af34eada23b82dd3731329589cb2635b95e16585dcbd6001181e930325ff'

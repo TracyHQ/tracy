@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1015-run-refuses-stale-dsh-build",
+  "kind": "fix",
+  "title": "run.sh refuses to boot a dsh whose build belongs to another submodule commit instead of serving a blank page",
+  "pr": 1015,
+  "area": "dev/run-sh",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test the `stale build:`, `build key:` and `stamp:` cases of scripts/test/dsh-build-state.test.mjs (verdict over key and stamp; the key run.sh and build-dsh.mjs share; where the stamp is read).",
+    "S2 (by hand, when a checkout is stale): ./run.sh native in a checkout whose vendor/tracy/deepseek-harness/apps/cli/lib/.tracy-build-stamp differs from `node scripts/build-dsh.mjs --print-key`."
+  ],
+  "expect": [
+    "S1: every listed test passes: a matching stamp is fresh, another stamp or none is stale; the key changes with HEAD and with the build script, is null with tracked edits, and a folder that is not a git checkout throws instead of passing as 'no key'.",
+    "S2: run.sh exits 2 before reading any port, after check-dsh-build printed `the dsh build in this checkout is stale` and `pnpm dsh:build && pnpm install`; with tracked edits in the submodule it prints `not checked` and boots."
+  ],
+  "selectors": {
+    "script": "scripts/check-dsh-build.mjs (exits 3 when stale; run.sh then exits 2), called by run.sh right after the dsh shim check"
+  },
+  "evidence": "07/10/2026: the dsh pin moved to 0.2.0-rc.2-tracy.23 (ctx.chatLocal) while the worktree's gitignored dsh lib/ was built on 04/10; the desktop app and port 51731 rendered a blank page with `web boot: 1 entry did not activate — @tracy/dsh-assistant: pending (waiting for service: chatLocal)`.",
+  "fence": "The boot preflight in run.sh. Not covered: dsh started without run.sh (the fleet image builds dsh from source, so it cannot be stale).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/dsh-build-state.test.mjs"],
+    "tests": ["stale build:", "build key:", "stamp:"]
+  }
+}

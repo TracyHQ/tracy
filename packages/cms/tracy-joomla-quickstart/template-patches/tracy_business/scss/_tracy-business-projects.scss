@@ -1,0 +1,561 @@
+//
+// Tracy Business — Projects listing (category/tb-projects.php) and Project page (article/tb-project.php)
+// ---------------------------------------------------------------------------------------------------------------
+// Numbers measured on Projects.html / Project detail.html at 1440 (inline styles in the render DOM). The source
+// relies on `repeat(auto-fit, minmax(…))`; the same grids are written here with explicit breakpoints so every
+// step (1440 · 1024 · 768 · 390) is deliberate. Colours go through the tokens; the ink bands keep the design's
+// own literals (#F5F3EE text, #2A2E32 rules, #8A8780 labels, #B9B5AC lede) in both themes.
+//
+// Both bands that must run edge to edge (project hero, progress gallery) sit INSIDE the T4 main-body container,
+// so they break out with `.tb-proj-bleed`. `overflow-x: clip` on the root keeps the 100vw arithmetic from
+// adding a horizontal scrollbar on browsers with a classic (non-overlay) vertical scrollbar.
+//
+
+html:has(.tb-proj-bleed) { overflow-x: clip; }
+
+// T4 pads the main body by $spacer*3 (52.5px) from `md` up (_styles.scss); the source's 64px top/bottom
+// rhythm is reached by adding only the difference here, and the ink hero pulls itself up over that pad.
+$tb-main-pad: $spacer * 3;
+
+.tb-proj-bleed {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+// ================================================================ Projects listing
+.tb-projlist {
+  // page intro: 64 / 36 in the source, lede 28 above the chips
+  &__intro {
+    padding: calc(64px - #{$tb-main-pad}) 0 36px;
+
+    @include media-breakpoint-down(md) { padding: 36px 0 28px; }
+
+    .tb-pageintro__title { margin-bottom: 20px; }
+    .tb-pageintro__lede { margin-bottom: 28px; }
+  }
+}
+
+// the listing's chips are a step larger than the Home strip's (13.5px / 9×16)
+.tb-proj-chips {
+  gap: 8px;
+
+  .tb-chip {
+    border-color: var(--tb-line-3);
+    font-size: 13.5px;
+    padding: 9px 16px;
+
+    &.is-active { font-weight: 600; }
+  }
+}
+
+// ---------------------------------------------------------------- flagship box
+.tb-flagship {
+  padding: 0 0 64px;
+
+  @include media-breakpoint-down(md) { padding-bottom: 40px; }
+
+  &__box {
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(md) { grid-template-columns: 1fr; }
+  }
+
+  &__media {
+    display: block;
+    min-height: clamp(260px, 30vw, 380px);
+    overflow: hidden;
+    position: relative;
+
+    img { display: block; height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; }
+
+    @include media-breakpoint-down(md) { aspect-ratio: 16 / 10; min-height: 0; }
+  }
+
+  &__body {
+    background: var(--surface);            // Paper 2
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    padding: 36px;
+
+    @include media-breakpoint-down(md) { padding: 24px 20px 28px; }
+  }
+
+  &__eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .16em; margin: 0; }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.8vw, 32px);
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.16;
+    margin: 0;
+    text-wrap: pretty;
+
+    a { color: var(--fg); text-decoration: none; &:hover { color: var(--accent); } }
+  }
+
+  &__desc {
+    color: var(--fg-2);
+    font-size: 16px;
+    line-height: 1.65;
+
+    p { margin: 0; }
+  }
+
+  &__facts {
+    background: var(--border);
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+
+    @include media-breakpoint-down(xl) { grid-template-columns: repeat(2, minmax(0, 1fr)); }   // the column is too narrow for four below 1200
+  }
+
+  &__fact {
+    background: var(--bg);                 // Paper
+    min-width: 0;
+    padding: 14px 16px;
+
+    // RU labels (МЕТАЛЛОКАРКАС) outgrow a 120px cell — break rather than clip
+    dt { color: var(--tb-muted-2); font-size: 11.5px; font-weight: 400; hyphens: auto; letter-spacing: .1em; line-height: 1.3; margin: 0; overflow-wrap: anywhere; text-transform: uppercase; }
+    dd { color: var(--fg); font-size: 16px; font-weight: 600; line-height: 1.3; margin: 5px 0 0; overflow-wrap: anywhere; }
+  }
+
+  &__link {
+    align-self: flex-start;
+    border-bottom: 1px solid var(--accent);
+    color: var(--fg);
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 4px;
+    padding-bottom: 2px;
+    text-decoration: none;
+
+    &:hover { border-bottom-color: var(--tb-signal); color: var(--tb-signal); }
+  }
+}
+
+// ---------------------------------------------------------------- portfolio grid
+.tb-portfolio {
+  padding: 0 0 72px;
+
+  @include media-breakpoint-down(md) { padding-bottom: 48px; }
+
+  &__head {
+    align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+  }
+
+  &__title { font-size: clamp(24px, 2.8vw, 32px); }
+  &__meta { color: var(--tb-muted-2); font-size: 14px; margin: 0; }
+
+  &__grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    @include media-breakpoint-down(md) { grid-template-columns: 1fr; }
+  }
+
+  &__empty { color: var(--muted); margin: 0; }
+  &__pagination { margin-top: 32px; }
+}
+
+.tb-projcard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  &__media {
+    aspect-ratio: 16 / 9;                  // 372 × 210 as rendered at 1440
+    border: 1px solid var(--border);
+    display: block;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; transition: transform var(--motion-base) var(--ease-standard); width: 100%; }
+  }
+
+  &:hover .tb-projcard__media img { transform: scale(1.02); }
+
+  &__tag {
+    align-items: center;
+    color: var(--tb-signal);
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    gap: 10px;
+    letter-spacing: .1em;
+    line-height: 1.2;
+    margin: 12px 0 0;
+    text-transform: uppercase;
+  }
+
+  &__dot  { color: var(--tb-meta-2); }
+  &__year { color: var(--tb-muted-2); font-weight: 600; }
+
+  &__title {
+    font-family: var(--font-body);
+    font-size: 17.5px;
+    font-weight: 600;
+    letter-spacing: normal;
+    line-height: 1.35;
+    margin: 7px 0 0;
+    text-wrap: pretty;
+
+    a { color: var(--fg); text-decoration: none; &:hover { color: var(--accent); } }
+  }
+
+  &__meta { color: var(--muted); font-size: 14.5px; line-height: 1.5; margin: 6px 0 0; }
+
+  &__link {
+    align-self: flex-start;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 9px;
+    text-decoration: none;
+
+    &:hover { color: var(--tb-signal); }
+  }
+}
+
+// ---------------------------------------------------------------- Sectors + How we run a project (one paper-2 band)
+// The listing renders position `projects-band` inside this band: each module is one column.
+.tb-proj-band {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+
+  &__grid {
+    display: grid;
+    gap: 56px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 64px;
+    padding-top: 64px;
+
+    @include media-breakpoint-down(lg) { gap: 40px; }
+    @include media-breakpoint-down(md) { gap: 40px; grid-template-columns: 1fr; padding-bottom: 44px; padding-top: 44px; }
+  }
+
+  .tb-process__title { font-size: clamp(24px, 2.8vw, 32px); }
+}
+
+.tb-proj-sectors {
+  min-width: 0;
+
+  &__title { font-size: clamp(24px, 2.8vw, 32px); margin-bottom: 20px; }
+
+  &__list { list-style: none; margin: 0; padding: 0; }
+
+  &__row {
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+    padding: 16px 0;
+  }
+
+  &__head {
+    align-items: baseline;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  &__name {
+    color: var(--fg);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-decoration: none;
+  }
+
+  a.tb-proj-sectors__name:hover { color: var(--accent); }
+
+  &__count { color: var(--accent); flex-shrink: 0; font-size: 14.5px; font-weight: 600; white-space: nowrap; }
+
+  &__desc { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 6px 0 0; text-wrap: pretty; }
+}
+
+// position `projects-page` under the band: the CTA box keeps the source's 64 / 80 rhythm
+.tb-projlist__after .tb-ctabox { padding: 64px 0 calc(80px - #{$tb-main-pad}); @include media-breakpoint-down(md) { padding: 40px 0 48px; } }
+
+// ================================================================ Project page
+.tb-proj { display: block; }
+
+// ---------------------------------------------------------------- hero (ink)
+.tb-proj-hero {
+  background: var(--tb-ink-band);
+  color: var(--ds-c-on-ink, #F5F3EE);
+  margin-top: -$tb-main-pad;
+
+  @include media-breakpoint-down(md) { margin-top: 0; }
+
+  &__inner {
+    align-items: center;
+    display: grid;
+    gap: 48px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 64px;
+    padding-top: 64px;
+
+    @include media-breakpoint-down(lg) { gap: 32px; }
+    @include media-breakpoint-down(md) { gap: 28px; grid-template-columns: 1fr; padding-bottom: 36px; padding-top: 36px; }
+  }
+
+  &__copy { min-width: 0; }
+
+  &__eyebrow { color: var(--tb-signal-on-ink); font-size: 12px; letter-spacing: .16em; margin-bottom: 16px; }
+
+  &__title {
+    color: var(--ds-c-on-ink, #F5F3EE);
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.2vw, 50px);
+    font-weight: 400;
+    letter-spacing: -.025em;
+    line-height: 1.08;
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+
+  &__lede {
+    color: var(--tb-ds-on-ink-muted, var(--ds-c-on-ink, #B9B5AC));
+    font-size: 17.5px;
+    line-height: 1.65;
+    max-width: 40em;
+
+    p { margin: 0; }
+  }
+
+  // "Discuss a similar project" when the article has no scope, body or quote to stand beside
+  &__cta { margin: 32px 0 0; }
+
+  &__visual {
+    aspect-ratio: 3 / 2;                   // 564 × 380 as rendered at 1440
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+}
+
+// ---------------------------------------------------------------- fact strip (ink)
+.tb-proj-facts {
+  border-top: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32));
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));   // always six tracks: an article with fewer facts keeps the cell width
+    margin-bottom: 0;
+    margin-top: 0;
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @include media-breakpoint-down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  &__cell {
+    border-right: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32));
+    min-width: 0;
+    padding: 22px 20px;
+
+    &:first-child { padding-left: 0; }
+
+    dt { color: var(--tb-ds-on-ink-meta, var(--ds-c-on-ink, #8A8780)); font-size: 12px; font-weight: 400; hyphens: auto; letter-spacing: .12em; line-height: 1.3; margin: 0; overflow-wrap: anywhere; text-transform: uppercase; }
+    dd { color: var(--ds-c-on-ink, #F5F3EE); font-size: 17px; font-weight: 600; line-height: 1.3; margin: 6px 0 0; overflow-wrap: anywhere; }
+
+    @include media-breakpoint-down(lg) {
+      border-bottom: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32));
+      &:nth-child(3n) { border-right: 0; }
+      &:nth-child(3n + 1) { padding-left: 0; }
+      &:nth-last-child(-n + 3) { border-bottom: 0; }
+    }
+
+    @include media-breakpoint-down(md) {
+      padding: 18px 16px;
+      &:nth-child(3n) { border-right: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32)); }
+      &:nth-child(3n + 1) { padding-left: 16px; }
+      &:nth-last-child(-n + 3) { border-bottom: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32)); }
+      &:nth-child(2n) { border-right: 0; }
+      &:nth-child(2n + 1) { padding-left: 0; }
+      &:nth-last-child(-n + 2) { border-bottom: 0; }
+    }
+  }
+}
+
+// ---------------------------------------------------------------- scope of work + quote
+.tb-proj-scope {
+  &__inner {
+    align-items: start;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 72px;
+    padding-top: 72px;
+
+    @include media-breakpoint-down(lg) { gap: 40px; }
+    @include media-breakpoint-down(md) { gap: 32px; grid-template-columns: 1fr; padding-bottom: 44px; padding-top: 44px; }
+  }
+
+  &--single &__inner { grid-template-columns: minmax(0, 1fr); }
+
+  &__main, &__side { min-width: 0; }
+
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    margin: 0 0 20px;
+  }
+
+  &__list { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; }
+
+  &__row {
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--tb-ink-2);
+    display: grid;
+    font-size: 16.5px;
+    gap: 12px;
+    grid-template-columns: 26px minmax(0, 1fr);
+    line-height: 1.6;
+    margin: 0;
+    padding: 13px 0;
+  }
+
+  &__arrow { color: var(--accent); font-family: var(--font-display); }
+
+  &__cta { margin-top: 0; }
+}
+
+.tb-proj-body {
+  color: var(--fg-2);
+  font-size: 16.5px;
+  line-height: 1.65;
+  margin-top: 28px;
+
+  > :first-child { margin-top: 0; }
+  p { margin: 0 0 1em; }
+  h2, h3 { color: var(--fg); font-family: var(--font-display); font-weight: 400; letter-spacing: -.02em; line-height: 1.15; margin: 1.4em 0 .5em; }
+  h2 { font-size: 28px; }
+  h3 { font-size: 22px; }
+  ul, ol { margin: 0 0 1em; padding-left: 1.4em; }
+}
+
+.tb-proj-quote {
+  background: var(--surface);            // Paper 2
+  border-left: 3px solid var(--tb-signal);
+  margin: 0 0 28px;
+  padding: 26px 28px;
+
+  &__text {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 23px;
+    line-height: 1.45;
+    margin: 0 0 14px;
+    text-wrap: pretty;
+  }
+
+  &__by { color: var(--tb-muted-2); font-size: 13.5px; line-height: 1.4; }
+}
+
+// ---------------------------------------------------------------- progress gallery (paper-2 band)
+.tb-proj-gallery {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  padding: 64px 0;
+
+  @include media-breakpoint-down(md) { padding: 40px 0; }
+
+  &__title { font-size: clamp(24px, 2.8vw, 32px); margin-bottom: 28px; }
+
+  &__grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    @include media-breakpoint-down(md) { grid-template-columns: 1fr; }
+  }
+
+  &__item { margin: 0; min-width: 0; }
+
+  &__media {
+    aspect-ratio: 16 / 9;                  // 376 × 210 as rendered at 1440
+    border: 1px solid var(--border);
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  // the template layer styles every figcaption as a dark overlay bar; this one is a plain line under the photo
+  &__caption { background: none; color: var(--tb-muted-2); display: block; font-family: var(--font-body); font-size: 13px; font-weight: 400; letter-spacing: normal; line-height: 1.5; margin: 8px 0 0; padding: 0; position: static; text-align: left; text-transform: none; }
+}
+
+// ---------------------------------------------------------------- other projects
+.tb-proj-other {
+  padding: 64px 0 calc(64px - #{$tb-main-pad});
+
+  @include media-breakpoint-down(md) { padding: 40px 0 48px; }
+
+  &__title {
+    border-bottom: 1px solid var(--border);
+    font-size: clamp(24px, 2.8vw, 32px);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+
+  &__card {
+    color: var(--fg);
+    display: block;
+    min-width: 0;
+    text-decoration: none;
+
+    &:hover .tb-proj-other__name { color: var(--accent); }
+  }
+
+  &__media {
+    aspect-ratio: 16 / 9;                  // 276 × 150 as rendered at 1440
+    border: 1px solid var(--border);
+    display: block;
+    margin-bottom: 12px;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__name { color: var(--fg); display: block; font-size: 16px; font-weight: 600; line-height: 1.35; }
+  &__meta { color: var(--tb-muted-2); display: block; font-size: 13px; margin-top: 4px; }
+}
+
+// the source dims every photo under the dark theme
+html[data-theme="dark"] {
+  .tb-flagship__media img,
+  .tb-projcard__media img,
+  .tb-proj-hero__visual img,
+  .tb-proj-gallery__media img,
+  .tb-proj-other__media img { filter: brightness(.82) saturate(.88); }
+}

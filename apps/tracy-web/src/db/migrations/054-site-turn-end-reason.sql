@@ -1,0 +1,16 @@
+-- HOW A CHAT TURN ENDED (ADR 0025 § Failed turns, 04/10/2026).
+--
+-- A turn that ended in a model error ("DeepSeek Messages transport failed"), a cancel or a block closed
+-- exactly like one that finished: the host's site-tabs plugin sweeps it on idle and `/moment` sets
+-- `state = 'closed'`. So "Ask Tracy to edit all" counted the comments sent into it as sent, and left
+-- them unticked though Tracy never did them. The host now sends the `turn/end` reason kind with the
+-- close (`endReason`, `tracy-site-tabs` `turn-record.mjs` `endReasonOf`) and the door keeps it here:
+--
+--   end_reason  `completed` · `max-tokens` · `error` · `aborted` · `blocked` · `interrupted` (dsh's
+--               `TurnEndReasonMap` kinds); null = not sent (an older host, or the log did not say yet).
+--               A send into an `error`/`aborted`/`blocked`/`interrupted` turn does not count as sent
+--               (`sites/comments.js` `SEND_FAILED`).
+--
+-- 🔒 Schema only: a nullable column, no backfill (migrations run in one transaction before the server
+-- listens).
+alter table site_turn add column if not exists end_reason text;

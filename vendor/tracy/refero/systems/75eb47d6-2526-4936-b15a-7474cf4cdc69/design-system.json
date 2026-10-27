@@ -1,0 +1,291 @@
+{
+  "dos": [
+    "Use Voltage Violet (#471cff) exclusively for the single most important action per screen — never split attention across multiple violet CTAs",
+    "Set card borders to Lilac Whisper (#dbd3ff) or Periwinkle Mist (#bbc5fa) instead of neutral gray to reinforce brand identity at every edge",
+    "Set all buttons to 400px border-radius — pill shapes are non-negotiable in this system and signal action",
+    "Tighten letter-spacing progressively: -0.030em at 16px, -0.033em at 26–30px, -0.045em at 48px+",
+    "Alternate between white and Deep Iris (#0f0733) sections to create rhythm — never let two dark sections sit adjacent without a white break",
+    "Anchor dark sections with white text at full opacity; use Lilac Whisper (#dbd3ff) for secondary text on dark rather than dimmed white",
+    "Use Signal Red (#eb0130) only for discount badges and urgency — never as a replacement for the primary action color"
+  ],
+  "donts": [
+    "Don't introduce new hues — the system is binary: violet accents on white, or white on Deep Iris",
+    "Don't use drop shadows on components other than the pricing card stack — depth should come from color and border",
+    "Don't use sharp 0px or minimal 4px corner radii on cards — 16px is the minimum card radius and buttons must stay pill-shaped",
+    "Don't place body text below 14px or above 18px — the system avoids both micro-copy and large body type",
+    "Don't use #18181f and #000000 interchangeably — #000000 is reserved for navigation chrome; body text uses #18181f",
+    "Don't add gradients — the system is flat by design; depth comes from violet-to-Deep-Iris section contrast",
+    "Don't use weight 400 for headings or weight 600 for body — the binary weight assignment is part of the typographic signature"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#471cff",
+      "name": "Voltage Violet",
+      "role": "Primary action buttons, active nav items, key links, brand emphasis — the single chromatic pulse of the interface; everything else defers to it",
+      "group": "brand"
+    },
+    {
+      "hex": "#0f0733",
+      "name": "Deep Iris",
+      "role": "Dark section backgrounds, hero canvas, high-contrast text on light surfaces — the midnight counterpart that anchors alternating dark bands",
+      "group": "brand"
+    },
+    {
+      "hex": "#eb0130",
+      "name": "Signal Red",
+      "role": "Promotional accents, sale/urgency indicators, highlight strokes — used sparingly to flag attention without competing with the primary violet",
+      "group": "accent"
+    },
+    {
+      "hex": "#dbd3ff",
+      "name": "Lilac Whisper",
+      "role": "Soft card and container borders — a low-contrast violet edge that brands outlines without adding visual weight",
+      "group": "accent"
+    },
+    {
+      "hex": "#bbc5fa",
+      "name": "Periwinkle Mist",
+      "role": "Cooler card border tone for grouping and container edges — second step in the violet border scale for layered cards",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff5a43",
+      "name": "Coral Burst",
+      "role": "Error and warning badge fills, alert pills — warm contrast against the cool violet system",
+      "group": "semantic"
+    },
+    {
+      "hex": "#7ae7fb",
+      "name": "Aqua Pop",
+      "role": "Decorative badge backgrounds, hero trust-pill fill — cool cyan that brightens dark sections",
+      "group": "accent"
+    },
+    {
+      "hex": "#18181f",
+      "name": "Ink Black",
+      "role": "Primary body and heading text, dominant border color, icon strokes — the near-black that carries all readable content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#494949",
+      "name": "Carbon",
+      "role": "Secondary text, muted nav, supporting borders — the mid-gray step between ink and white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page and card backgrounds, text on dark surfaces, button fills for ghost variants",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f5fa",
+      "name": "Frost Blue",
+      "role": "Subtle surface tint for alternating bands, header backgrounds — barely-there cool wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eaecf7",
+      "name": "Linen Gray",
+      "role": "Table dividers, hairline borders in data-heavy layouts — a cool neutral that doesn't fight the violet palette",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with generous side padding. The hero is full-bleed Deep Iris (#0f0733) with asymmetric text-left/product-right composition at 60/40 split. Below the hero, content alternates: white pricing-card row (3-column grid), white centered comparison section, then 2×2 dark feature-card grid. Section gaps are 80px with consistent 24px card padding. Navigation is a clean white sticky top bar with centered nav links and right-aligned sign-in. Grid systems favor 2-column and 3-column arrangements; the layout never exceeds 3 columns of cards.",
+  "imagery": "Product screenshots take center stage, rendered as iPhone mockups floating at slight rotation angles against the Deep Iris hero background — the device is the hero, not lifestyle photography. Secondary visuals are flat data visualizations (charts, projected cash flow lines, budget breakdowns) rendered in violet, cyan, and white directly on dark card surfaces. Illustrations are absent — the system relies on real product UI, trust badges, and large numeric headlines. Photography is not used; the visual language is pure product-and-data.",
+  "similar": [
+    {
+      "why": "Same fintech authority through tight custom sans-serif type, violet/indigo dark sections alternating with white, and pill-shaped CTAs",
+      "business": "Plaid"
+    },
+    {
+      "why": "Dark-mode hero sections with white display type, single accent color (Mercury's gold vs Quicken's violet), and clean borderless card grids",
+      "business": "Mercury"
+    },
+    {
+      "why": "Single-brand-color accent system on white with geometric sans type, pill buttons, and borderless minimal elevation",
+      "business": "Notion"
+    },
+    {
+      "why": "Tight typographic tracking that intensifies at large sizes, flat surfaces, and single-accent-color action language",
+      "business": "Linear"
+    },
+    {
+      "why": "Dark hero with large display headlines, product mockup floating at angle, and white-card pricing tiers with pill CTAs",
+      "business": "Brex"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "400px",
+      "tags": "100px",
+      "cards": "16px",
+      "badges": "20px",
+      "buttons": "400px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Default light page background and card surfaces"
+    },
+    {
+      "hex": "#f0f5fa",
+      "name": "Frost Band",
+      "level": 2,
+      "purpose": "Subtle alternating section tint, header strip"
+    },
+    {
+      "hex": "#0f0733",
+      "name": "Deep Iris",
+      "level": 3,
+      "purpose": "Dark hero sections and feature card surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.15) 10px 20px 30px 0px",
+      "element": "Pricing Card"
+    }
+  ],
+  "northStar": "electric violet on white marble",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.31,
+      "letterSpacing": -0.03
+    },
+    {
+      "role": "heading-sm",
+      "size": 26,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.033
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.16,
+      "letterSpacing": -0.033
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1,
+      "letterSpacing": -0.045
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -0.045
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "role": "Main CTA for conversion moments",
+      "description": "Pill shape (400px radius), background #471cff, white text at 16px Haffer weight 600, padding 12px 24px, no border. Hover deepens the violet fill. The signature interactive element of the system."
+    },
+    {
+      "name": "Ghost Action Button",
+      "role": "Secondary CTA paired beside a primary",
+      "description": "Pill shape (400px radius), transparent background, 1.5px border in #471cff, text in #471cff at 16px Haffer weight 600, padding 12px 24px. Mirrors the primary's shape but defers visually — violet outline against white card."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Top-of-page value proposition",
+      "description": "White text at 60px Haffer weight 600, line-height 1.0, letter-spacing -0.045em. Sits on Deep Iris (#0f0733) background. Below it, 18px body text in #dbd3ff or white at 80% opacity for subtitle."
+    },
+    {
+      "name": "Trust Badge Pill",
+      "role": "Social proof or category label above hero headline",
+      "description": "Rounded pill (100–400px radius), background #7ae7fb or #f0f5fa, text in #18181f at 13px Haffer weight 600, padding 8px 16px. The cyan variant on the hero creates the only cool color interruption on dark sections."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Product plan comparison on pricing sections",
+      "description": "White background, 16px corner radius, 1.5px border in #bbc5fa or #dbd3ff, padding 24px. Contains tier icon (violet square 32px), plan name at 20px weight 600, description at 14px, strikethrough original price + bold monthly price + red promotional badge. Drop shadow rgba(0,0,0,0.15) 10px 20px 30px for depth on white."
+    },
+    {
+      "name": "Promotional Badge",
+      "role": "Highlight discount or urgency markers",
+      "description": "Rounded pill (20px radius), background #eb0130 or #ff5a43, white text at 12px Haffer weight 600, padding 4px 8px. The red-on-white micro-badge attached to strikethrough prices."
+    },
+    {
+      "name": "Feature Showcase Card",
+      "role": "Dark-section feature highlight with illustration",
+      "description": "Deep Iris (#0f0733) background, 16px corner radius, padding 0 (image bleeds to edges). Upper portion is a full-bleed product visualization; lower portion is white with heading at 26px weight 600, body at 16px, and a violet text link."
+    },
+    {
+      "name": "Feature Comparison Table",
+      "role": "Side-by-side plan feature matrix",
+      "description": "White background, row dividers in #eaecf7 (1px), column headers with violet icon tiles (#471cff background, 16px radius, 40px square) above plan names at 16px weight 600. Checkmarks for included features rendered in a small green or violet circle."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site navigation",
+      "description": "White background, 400px pill radius on nav items and CTA, 16px Haffer weight 400 for links, 600 for active item in #471cff. Quicken logo in #471cff at top-left. Sign-in link right-aligned. Sticky on scroll."
+    },
+    {
+      "name": "Phone Mockup Frame",
+      "role": "Hero product visualization",
+      "description": "iPhone-style frame with thin black bezel, slight 3D rotation (-10° to -15°), floating beside headline. Screen content is white with Haffer type and data visualizations. Sits on Deep Iris hero background."
+    },
+    {
+      "name": "Centered Section Header",
+      "role": "Transitional section introduction",
+      "description": "Centered heading at 48px Haffer weight 600, #18181f, letter-spacing -0.045em, with optional violet pill button (#471cff, white text, 400px radius) directly below. White background section."
+    },
+    {
+      "name": "Inline Feature Icon",
+      "role": "Category indicator on pricing and feature cards",
+      "description": "32×32px square with 8px radius, #471cff background, white line-icon centered. Marks each plan tier or feature category without adding label noise."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single-family system for everything from body to display. Weight 400 carries body, nav, and table text; weight 600 handles headings, buttons, and emphasis. The custom geometric construction gives a contemporary financial-tech voice — rounder apertures than Inter, tighter terminals than Geist.",
+      "sizes": "12, 13, 14, 16, 17, 18, 19, 20, 22, 26, 30, 48, 60",
+      "family": "Haffer",
+      "weight": "400, 600",
+      "lineHeight": "1.0–2.0 (tight 1.0–1.2 on display, comfortable 1.4–1.5 on body)",
+      "substitute": "Inter, DM Sans, or General Sans",
+      "letterSpacing": "-0.045em at 60px, -0.033em at 30px, -0.030em at 20px and below"
+    }
+  ],
+  "description": "Quicken's design system orbits a single electric violet — vivid #471cff — that acts as the power source for every interactive element against a clean white canvas. The visual personality is confident financial-tech: a custom geometric sans (Haffer) sets the voice with tight negative tracking that tightens further as type grows, creating density and authority without weight. Dark violet sections (#0f0733) alternate with white bands to create rhythm, while soft lavender card borders (#dbd3ff, #bbc5fa) replace the usual gray dividers and reinforce brand identity at every edge. Components lean rounded and pill-shaped: cards use 16px corners, buttons stretch to 400px radius, and shadows are nearly absent — depth comes from color contrast and border treatment, not elevation.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #18181f\n- background: #ffffff\n- border: #dbd3ff or #bbc5fa\n- accent: Voltage Violet #471cff\n- primary action: #471cff (filled action)\n- dark surface: #0f0733\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #471cff background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a pricing tier card: white background, 16px corner radius, 1.5px border in #bbc5fa, padding 24px. A violet icon tile (32×32px, #471cff, 8px radius) sits top-left. Plan name at 20px Haffer weight 600 #18181f below. Description at 14px #494949. A price line showing $3.99/month at 22px weight 600, a strikethrough $7.00 at 14px #494949, and a Signal Red badge (#eb0130, white text, 20px radius, 4px 8px padding) reading '50% off'. Feature checklist below with small violet checkmarks. Footer row: filled Voltage Violet button + ghost violet button, both 400px radius.\n\n3. Create a feature showcase card: Deep Iris (#0f0733) background, 16px radius, full-bleed product visualization in the upper 60% (chart or UI mock in violet/cyan/white). Lower 40% is white with 24px padding, heading at 26px Haffer weight 600 #18181f, body at 16px #494949, and a violet text link (#471cff, no underline by default, underline on hover).\n\n4. Create a comparison table: white background, 1px row dividers in #eaecf7, three columns. Each column header has a 40×40px violet icon tile (#471cff, 8px radius) above the plan name at 16px weight 600. Feature rows at 16px weight 400 #18181f on the left, with violet circle checkmarks (8px filled #471cff) in the appropriate cells.\n\n5. Create a centered section header: white background, 48px Haffer weight 600 #18181f heading centered with -0.045em letter-spacing, and a Voltage Violet pill button (#471cff, white text, 400px radius, 12px 24px padding) centered 16px below."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is used as a last resort. The system prefers border-defined surfaces (1px violet or lilac strokes) and color contrast over drop shadows. The single shadow token exists only for the pricing card stack — a deliberate anchor point. This keeps the interface feeling flat, fast, and data-forward rather than skeuomorphic."
+}

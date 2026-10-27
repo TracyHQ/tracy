@@ -1,0 +1,296 @@
+{
+  "dos": [
+    "Use Helvetica at weight 900 for all display headlines at 40-48px, all uppercase, with positive letter-spacing between 0.8px and 0.96px",
+    "Frame cards, links, and category tiles with 1-2px #d25a24 (Tile Grout) borders and 5px radius to reinforce the subway-tile language",
+    "Apply the #6b1229 hard-offset shadow (5px 5px 0px 0px, zero blur) only to sticker-style buttons and emphasized links — never use it as a generic elevation",
+    "Keep page canvas at #ffffff and reserve #113722 for filled CTAs and the footer band",
+    "Set card padding to 20px and element gap to 20px for consistent tile rhythm",
+    "Use the marquee bar pattern (uppercase, weight 700, pipe-separated) for repeating brand-attribute claims",
+    "Reference the green #113722 only as a fill on the primary action and footer; do not use it for text or icons"
+  ],
+  "donts": [
+    "Do not use negative letter-spacing — the brand's voice depends on positive tracking that gives text room to shout",
+    "Do not apply soft drop shadows, blurs, or multi-layer elevation stacks; elevation is one color and one offset",
+    "Do not introduce additional brand hues beyond Tile Grout orange, Cold-Press green, and Sticker crimson",
+    "Do not use 6px+ border radius or pill-shaped buttons — 5px is the maximum softness in this system",
+    "Do not set body text in anything but weight 400-500 Helvetica; weight 700+ is reserved for display, navigation, and marquee",
+    "Do not place light text on white or dark text on the dark-green band without testing AAA contrast",
+    "Do not use the #6b1229 crimson as a fill — it is a shadow layer, not a brand color"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#d25a24",
+      "name": "Tile Grout",
+      "role": "Signature brand border and link accent — orange tile-line strokes that frame cards, links, and section edges with the warmth of fired clay against the clinical white canvas",
+      "group": "brand"
+    },
+    {
+      "hex": "#113722",
+      "name": "Cold-Press Green",
+      "role": "Primary action fill — the dark botanical green of filled CTA buttons, footer band, and category button backgrounds, signaling the product inside without resorting to food-photo greens",
+      "group": "brand"
+    },
+    {
+      "hex": "#6b1229",
+      "name": "Sticker Crimson",
+      "role": "Hard-offset shadow accent — deep burgundy that throws a zero-blur 5px shadow under stickers and emphasized buttons, turning flat elements into screen-print layers peeled onto the page",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Noir",
+      "role": "Navigation, body text, and default border color — the unyielding black that carries every paragraph, icon stroke, and card hairline",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Glacial White",
+      "role": "Page canvas, card surface, and reverse text on dark nav and green CTAs — the clinical white tile of the entire system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Ash",
+      "role": "Soft card border and subtle fill — the gray grout between white surfaces, used for hairline dividers and recessed card frames",
+      "group": "neutral"
+    },
+    {
+      "hex": "#232323",
+      "name": "Char",
+      "role": "Heading color and deep-surface accent — nearly-black tone for the heaviest display text and occasional dark bands",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Concrete",
+      "role": "Mid-gray utility border and muted body text — quieter dividers where full black would be too loud",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d7d7d7",
+      "name": "Fog",
+      "role": "Input field border — neutral resting-state outline for form fields",
+      "group": "neutral"
+    },
+    {
+      "hex": "#646464",
+      "name": "Slate",
+      "role": "Input text and icon fill — secondary legibility gray for form labels and small icon detail",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Pewter",
+      "role": "Decorative low-emphasis border and text — rarely used, appears on tertiary UI marks",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed page with no centered max-width constraint on the hero, marquee, or footer — those sections stretch to the viewport. Content blocks below the hero sit inside a 1200px max-width container. The hero is a full-bleed photo with centered text overlay. Below it, a single horizontal marquee bar spans the page. Then a 3-column equal-width grid of category tile cards with hairline dividers between cells, each tile filling its column. The footer is a full-bleed dark-green band. Navigation is a fixed top bar in black with a 3-zone layout (logo left, links center, cart right). Density is comfortable — generous breathing room between marquee, grid, and footer, with 40-60px section gaps.",
+  "imagery": "Product photography is the sole imagery type. Bottles are shot from directly above, arranged in a strict grid on white subway-tile with visible dark grout lines — the tile surface and grout are part of the composition. Treatment is flat, high-key, no lifestyle context, no people, no props beyond the bottles themselves. Photography is overlaid with a dark scrim in the hero so the white uppercase headline can sit on top at full opacity. Category tiles reuse the same top-down grid aesthetic at full bleed, with a single white uppercase label floating over the image. No illustration, no 3D, no icons beyond simple outlined badges.",
+  "similar": [
+    {
+      "why": "Same bold uppercase Helvetica signage voice over flat product photography, with a dark single-accent CTA approach for an organic juice bar brand",
+      "business": "Joe & The Juice"
+    },
+    {
+      "why": "Clinical white-tile product staging with full-bleed bottle photography and a deep botanical green as the action color",
+      "business": "Pressed Juicery"
+    },
+    {
+      "why": "Brutalist grid structure where hairlines and frame borders organize the page like a tiled wall, with serif-free type shouting at full weight",
+      "business": "Glossier"
+    },
+    {
+      "why": "All-caps tracked navigation and marquee patterns over clean product photography, with a single dark green carrying the brand through CTAs and footer",
+      "business": "Sweetgreen"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "5px",
+      "cards": "5px",
+      "buttons": "5px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "40-60px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background and most card surfaces — the white subway tile"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Recessed",
+      "level": 1,
+      "purpose": "Subtle alt-surface for bordered cards and section dividers"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "level": 2,
+      "purpose": "Top navigation bar and occasional dark bands"
+    },
+    {
+      "hex": "#113722",
+      "name": "Apothecary Green",
+      "level": 3,
+      "purpose": "Primary CTA buttons and footer band"
+    },
+    {
+      "hex": "#6b1229",
+      "name": "Crimson Plate",
+      "level": 4,
+      "purpose": "Hard-offset shadow layer beneath emphasized elements"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgb(107, 18, 41) 5px 5px 0px 0px",
+      "element": "Sticker Button / Emphasis Link"
+    }
+  ],
+  "northStar": "Brutalist cold-press lab — white tile, sticker print, stencil voice.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.7
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.26
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.57,
+      "letterSpacing": 0.29
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.44,
+      "letterSpacing": 0.48
+    },
+    {
+      "role": "heading-sm",
+      "size": 30,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": 0.8
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1,
+      "letterSpacing": 0.96
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site navigation",
+      "description": "Solid #000000 background, full bleed. Left-aligned white wordmark 'KOOX' in 26px weight 700 uppercase. Center cluster of nav items (HOME, JUICE SHOP, CLEANSE, ABOUT US, CONTACT, BECOME A STOCKIST) in 14px weight 600 uppercase, #ffffff, letter-spacing 0.7px. Right-aligned cart icon with white circle count badge. Vertical padding 20px."
+    },
+    {
+      "name": "Hero Image Section",
+      "role": "First-screen brand and product statement",
+      "description": "Full-bleed product photography (juice bottles arranged on white subway tile) with a dark overlay. Centered uppercase headline overlay at 48px weight 900 #ffffff, letter-spacing 0.96px, line-height 1.0, stacked three lines. Star rating '4.8★' in 32px weight 700 below headline. Reviews caption in 16px weight 400. CTA button anchored below."
+    },
+    {
+      "name": "Primary CTA Button (Filled Green)",
+      "role": "Main conversion action",
+      "description": "Filled #113722 background, 5px radius, 11px vertical and 15px horizontal padding. Text in #ffffff, 14px weight 600 uppercase, letter-spacing 0.7px. Sits flat on white surface with no shadow by default."
+    },
+    {
+      "name": "Sticker Button (Burgundy Shadow)",
+      "role": "Emphasized action with screen-print offset",
+      "description": "Filled #113722 background, 5px radius, 11px/15px padding, white uppercase text at 14px weight 600. Distinctive hard-offset shadow: rgb(107, 18, 41) 5px 5px 0px 0px — no blur, creating a printed-sticker look. Used for hero CTAs and high-priority links."
+    },
+    {
+      "name": "Ghost / Outline Button",
+      "role": "Secondary action",
+      "description": "Transparent or #ffffff fill with 1px #000000 or #d25a24 border, 5px radius. White or black uppercase text at 14px weight 600. No shadow."
+    },
+    {
+      "name": "Marquee Quality Bar",
+      "role": "Repetitive brand-attribute ticker",
+      "description": "Full-bleed #ffffff band, 20px vertical padding. Single line of uppercase text in 18px weight 700 #000000, items separated by a pipe '|'. Repeats horizontally. Examples: '100% ORGANIC | 100% COLD-PRESSED | 100% RAW | 0% ADDITIVES | 0% PASTEURISATION | 0% HPP'."
+    },
+    {
+      "name": "Category Tile Card",
+      "role": "Product category entry point",
+      "description": "Square product-photo card filling its grid cell. No padding — image bleeds to edges. Large white uppercase category label overlaid on the lower-center of the image at 32px weight 700, letter-spacing 0.64px. 5px radius. Cards are flanked by 1px #000000 hairline dividers to recreate the tile-grout effect."
+    },
+    {
+      "name": "Star Rating Display",
+      "role": "Social proof inline component",
+      "description": "Large numeric value (e.g. '4.8') in 32px weight 700 #ffffff, paired with a solid star glyph. Supporting caption below in 14px weight 400 #ffffff. Sits over the hero overlay."
+    },
+    {
+      "name": "Bordered Link",
+      "role": "Inline text or nav link with frame",
+      "description": "Text or block wrapped in 1-2px #d25a24 border, 5px radius, 10px-15px padding. Link text in #d25a24 weight 600 uppercase. Optional offset shadow with #6b1229 to elevate to sticker status."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section and grid separator",
+      "description": "1px solid #000000 or #efefef line spanning full width or a column. The grid is built from these lines — they form the visual tiling that holds the whole system together."
+    },
+    {
+      "name": "Footer Band",
+      "role": "Site footer with promotional message",
+      "description": "Full-bleed #113722 dark-green band, ~60px vertical padding. Centered uppercase message in 18-24px weight 700 #ffffff, letter-spacing 0.48-0.6px. Functions as a repeat-CTA close to the page."
+    },
+    {
+      "name": "Form Input",
+      "role": "Text input for forms",
+      "description": "1px #d7d7d7 border, 5px radius, 11px vertical and 15px horizontal padding. Text in #646464 at 14-16px weight 400. No fill by default."
+    },
+    {
+      "name": "Organic Certification Mark",
+      "role": "Trust badge",
+      "description": "Circular outlined badge in #000000, 14px uppercase text wrapping the ring perimeter, central icon. Positioned bottom-right of footer or floating over product imagery."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI and editorial text. The choice of system Helvetica is deliberate — it reads as lab-label stencil rather than fashion-serif sophistication. Weight 900 headlines shout at 40-48px in all-caps with positive tracking, weight 400-500 carries body copy at 14-18px. No custom display face: the system itself is the brand.",
+      "sizes": "14, 16, 18, 20, 24, 26, 30, 32, 40, 46, 48",
+      "family": "Helvetica",
+      "weight": "400, 500, 600, 700, 900",
+      "lineHeight": "0.70-2.50 (tight for display, generous for body)",
+      "substitute": "Helvetica, Arial, Inter (as functional stand-in if Helvetica unavailable)",
+      "letterSpacing": "0.0080em, 0.0120em, 0.0160em, 0.0180em, 0.0200em, 0.0500em"
+    }
+  ],
+  "description": "Koox is a brutalist cold-press lab where white subway tile meets product photography and shouty stencil typography. The brand trades in confident all-caps headlines tracked wide across the page, orange grout-line borders that frame every surface like a tiled wall, and a dark-green apothecary palette anchored by a single hard-offset burgundy shadow that makes every button feel like a screen-printed sticker. Pages stay clinical and bright — white canvas, near-black text, thin hairlines — with color reserved for functional punctuation: the orange frame, the dark-green CTA, the burgundy shadow. The result is loud but disciplined, like a juice bar designed by a printmaker.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #000000\n- background: #ffffff\n- border (default): #000000\n- border (brand frame): #d25a24 (Tile Grout)\n- accent: #6b1229 (Sticker Crimson — shadow only)\n- primary action: #6b1229 (filled action)\n\n## Example Component Prompts\n1. **Top Navigation**: Full-bleed #000000 bar, 20px vertical padding. Left: wordmark 'KOOX' at 26px Helvetica weight 700 #ffffff uppercase, letter-spacing 0.52px. Center: nav items in 14px weight 600 #ffffff uppercase, letter-spacing 0.7px, 15px gap. Right: cart icon with #ffffff count badge.\n2. **Hero Headline Block**: Over full-bleed dark-overlay product photo. Headline in 48px Helvetica weight 900 #ffffff uppercase, letter-spacing 0.96px, line-height 1.0, three centered lines. Star rating '4.8★' at 32px weight 700 #ffffff below, with 14px weight 400 caption.\n3. Create a Primary Action Button: #6b1229 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n4. **Category Tile Card**: Full-bleed product photo, 5px radius, no padding, white uppercase category label overlaid at 32px weight 700 letter-spacing 0.64px. 1px #000000 hairline between grid cells.\n5. **Marquee Quality Bar**: Full-bleed #ffffff band, 20px vertical padding. One line of 18px weight 700 #ffffff uppercase text, items separated by '|', e.g. '100% ORGANIC | 100% COLD-PRESSED | 100% RAW'.\n6. **Footer Band**: Full-bleed #113722, 60px vertical padding. Centered message in 24px weight 700 #ffffff uppercase, letter-spacing 0.48px."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is not about lift or depth — it is about print registration. A single hard-offset zero-blur shadow in #6b1229 throws selected elements 5px down and 5px right, making them feel like screen-printed stickers slapped onto the tile canvas. No soft drop shadows, no ambient occlusion, no stacked layers. The shadow is one color, one offset, no blur."
+}

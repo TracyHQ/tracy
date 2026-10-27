@@ -1,0 +1,84 @@
+{
+  "color": {
+    "midnight-navy": {
+      "$value": "#1a365d",
+      "$type": "color",
+      "$description": "Midnight Navy — Hero gradient base, dark data cards, icon strokes — the cool nocturnal counterpoint to the warm cream canvas, signals science and trust at the deepest end of the palette"
+    },
+    "sunlit-yellow": {
+      "$value": "#fae467",
+      "$type": "color",
+      "$description": "Sunlit Yellow — Primary CTA fill, bestseller badges, data-highlight accents — the only vivid chromatic in the system, warm and optimistic like morning light, used sparingly so every action glows"
+    },
+    "linen-cream": {
+      "$value": "#f2ede8",
+      "$type": "color",
+      "$description": "Linen Cream — Page canvas, default section background — the dominant warm neutral that sets the entire sleep-warmth tone of the site"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, product photography backgrounds, nav backgrounds — pure white creates lift against the cream canvas"
+    },
+    "soft-vellum": {
+      "$value": "#faf8f6",
+      "$type": "color",
+      "$description": "Soft Vellum — Secondary card surfaces, subtle elevation layer — warmer than pure white, used when cards need to nest within cream sections without disappearing"
+    },
+    "graphite": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Graphite — Body text, subtle border accents — softer than pure black for extended reading"
+    },
+    "smoke": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Smoke — Secondary text, list borders, muted link underlines — the mid-gray that carries all supporting copy"
+    },
+    "slate": {
+      "$value": "#726f6d",
+      "$type": "color",
+      "$description": "Slate — Input borders, disabled button text and borders — the warm-leaning gray for form and inactive states"
+    },
+    "charcoal": {
+      "$value": "#191923",
+      "$type": "color",
+      "$description": "Charcoal — Deep surface fill for dark accent cards, alternative button backgrounds — nearly black with a slight cool cast, sits between midnight navy and true black"
+    },
+    "frost": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Frost — Hairline dividers, image borders, section separators — neutral-cool gray for structural lines"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dominant heading color, primary borders — the typographic anchor across all surfaces"
+    }
+  },
+  "font": {
+    "sandland-550": {
+      "$value": "Sandland-550",
+      "$type": "fontFamily",
+      "$description": "Custom sans-serif used across every UI surface — body, headings, buttons, nav, cards. Weight 400 dominates body and most headings, weight 500/600 reserved for emphasis. The tight negative tracking on display sizes (-0.03em at 48-72px) gives headlines a composed, compact feel; positive tracking on small uppercase labels (0.036-0.045em at 10-13px) provides the airy editorial rhythm seen in nav links, badge text, and section eyebrows."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Inter — detected in extracted data but not described by AI"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sandlandsleep.com",
+      "siteName": "Sandland Sleep",
+      "extractedAt": "2026-06-03T21:04:45.493Z",
+      "variant": "compact"
+    }
+  }
+}

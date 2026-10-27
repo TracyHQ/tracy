@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1600-scrapecreators-primary-social",
+  "kind": "feat",
+  "title": "WO configures ScrapeCreators as the primary social stats provider and preserves fallback behavior",
+  "pr": 1600,
+  "area": "wo/social-stats",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/ops-wo.test.mjs",
+    "S2: Run: node --test --test-reporter=tap apps/tracy-web/test/website-opportunities-social-stats.test.mjs",
+    "S3: Run: node --test --test-reporter=tap vendor/tracy/tracy-website-opportunities/test/domain-social-stats-chain.test.mjs",
+    "S4: Read the named test results for ScrapeCreators settings, network-aware budgets, and provider chain behavior."
+  ],
+  "expect": [
+    "The WO ops suite passes its ScrapeCreators settings test: key save encrypts/reads safely and test endpoint reports connected for a valid provider response.",
+    "The WO social stats suite passes its ScrapeCreators request budget test, covering Facebook, Instagram, and TikTok endpoint costs and partial TikTok coverage.",
+    "The source provider-chain suite passes its ScrapeCreators tests for supported networks, mapping provider data into the stable social stats shape and continuing through existing fallbacks on provider failure."
+  ],
+  "selectors": {},
+  "evidence": "ScrapeCreators account and endpoint calls were also verified directly on 22/10/2026; response summaries are recorded in tasks/evidence/wo-scrapecreators-api-probe-2026-10-22.json without credentials.",
+  "fence": "Deterministic tests verify the provider adapter, WO budget routing, and encrypted admin key settings. Not exercised by this regression case: live third-party calls or the full visual WO admin flow.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1600-scrapecreators-primary-social.mjs"],
+    "needs": ["postgres"]
+  }
+}

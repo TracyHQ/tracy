@@ -1,0 +1,51 @@
+---
+/** The Paper-2 boxed CTA (About/Careers/Projects) or the ink band variant. */
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  title: string
+  text?: string
+  button?: string
+  url?: string
+  altLabel?: string
+  altUrl?: string
+  note?: string
+  variant?: 'box' | 'ink' | 'forest'
+  /**
+   * Provenance stamps (`src/lib/stamps.ts`): the entry the copy comes from, and which of its fields
+   * each part shows (`{ title: 'cta_title', … }`).
+   */
+  stamp?: Stamp
+  fields?: Partial<Record<'title' | 'text' | 'button' | 'altLabel' | 'note', string>>
+}
+const { title, text, button, url, altLabel, altUrl, note, variant = 'box', stamp, fields = {} } = Astro.props
+const at = (part: keyof typeof fields) => (stamp && fields[part] ? stamp(fields[part]) : {})
+const dark = variant !== 'box'
+// The heading and the second link take the text role of the band they sit on: ink or forest.
+const onBand =
+  variant === 'forest'
+    ? 'text-[color:var(--ds-c-on-accent-band,#F5F3EE)]'
+    : 'text-[color:var(--ds-c-on-ink,#F5F3EE)]'
+const onBandHover =
+  variant === 'forest'
+    ? 'hover:text-[color:var(--ds-c-on-accent-band,var(--color-white))]'
+    : 'hover:text-[color:var(--ds-c-on-ink,var(--color-white))]'
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [url, altUrl])
+---
+
+<section class:list={["container-site", variant === "box" ? "pb-20" : "pb-20 pt-16"]}>
+	<div class:list={["grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-center gap-8 p-10", variant === "box" && "border border-line bg-paper-2", variant === "ink" && "band-ink", variant === "forest" && "bg-forest text-on-forest-band"]}>
+		<div>
+			<h2 class:list={["h-section-sm mb-2.5", dark && onBand]} {...at("title")}>{title}</h2>
+			{text && <p class:list={["text-[16px] leading-[1.6]", dark ? "text-on-ink-muted" : "text-fg-2"]} {...at("text")}>{text}</p>}
+		</div>
+		<div class="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+			{button && live(url) && <a href={url} class="btn-primary" {...at("button")}>{button}</a>}
+			{altLabel && live(altUrl) && (dark ? <a href={altUrl} class:list={["border-b border-on-forest-line pb-0.5 text-[15px] font-semibold", onBand, onBandHover]} {...at("altLabel")}>{altLabel}</a> : <a href={altUrl} class="link-underline !text-[15px]" {...at("altLabel")}>{altLabel}</a>)}
+			{note && <span class="text-[14.5px] text-fg-muted" {...at("note")}>{note}</span>}
+		</div>
+	</div>
+</section>

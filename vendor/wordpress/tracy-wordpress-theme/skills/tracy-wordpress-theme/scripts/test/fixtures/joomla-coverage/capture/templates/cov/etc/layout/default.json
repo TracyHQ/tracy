@@ -1,0 +1,64 @@
+{
+  "layout": {
+    "sections": [
+      {
+        "name": "Header",
+        "contents": [
+          {
+            "type": "block",
+            "name": "mainnav",
+            "block": "mainnav"
+          }
+        ]
+      },
+      {
+        "name": "Masthead",
+        "contents": [
+          {
+            "type": "positions",
+            "name": "masthead",
+            "positions": "masthead"
+          }
+        ]
+      },
+      {
+        "name": "Main",
+        "contents": [
+          {
+            "type": "component",
+            "name": ""
+          }
+        ]
+      },
+      {
+        "name": "Bottom",
+        "contents": [
+          {
+            "type": "positions",
+            "name": "main-bottom",
+            "positions": "main-bottom"
+          }
+        ]
+      },
+      {
+        "name": "Spacer",
+        "contents": [
+          {
+            "type": "spacer",
+            "name": "gap"
+          }
+        ]
+      },
+      {
+        "name": "Footer",
+        "contents": [
+          {
+            "type": "block",
+            "name": "footer",
+            "block": "footer"
+          }
+        ]
+      }
+    ]
+  }
+}

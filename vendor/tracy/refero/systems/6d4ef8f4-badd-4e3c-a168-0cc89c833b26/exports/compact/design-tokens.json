@@ -1,0 +1,69 @@
+{
+  "color": {
+    "tangerine": {
+      "$value": "#f15a24",
+      "$type": "color",
+      "$description": "Tangerine — Headlines, body text accents, and outlined button borders — the single loud color that carries the whole brand. Used as a 1-2px border on buttons and links, and as fill for all display and heading text. Never appears as a filled button background; the system speaks in outlines"
+    },
+    "sun-yellow": {
+      "$value": "#ffed8c",
+      "$type": "color",
+      "$description": "Sun Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "blush-pink": {
+      "$value": "#ffcccc",
+      "$type": "color",
+      "$description": "Blush Pink — Secondary full-bleed background block, often paired with product photography to make fabric colors pop. Used as a flat color field, never as a tint or gradient"
+    },
+    "midnight-navy": {
+      "$value": "#050133",
+      "$type": "color",
+      "$description": "Midnight Navy — Secondary text and link borders — a near-black with a violet bias that softens the page's high-contrast black on white. Used for body copy and as an alternate outlined-action border"
+    },
+    "coral-wash": {
+      "$value": "#f4a398",
+      "$type": "color",
+      "$description": "Coral Wash — Soft warm surface for transitional sections — a diluted cousin of Tangerine used when a page needs a quieter colored block"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Default page canvas and content section background. The neutral ground between colored blocks"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — SVG fills, occasional body text, and the darkest neutral when Midnight Navy reads too colored. Pure black only where the page demands the most weight"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, image captions, and subtle borders. Sits between Ink Black and Paper White for muted helper copy"
+    },
+    "mist-blue": {
+      "$value": "#cce1e2",
+      "$type": "color",
+      "$description": "Mist Blue — Decorative SVG fill and soft wash — a near-gray with a cool cast used inside illustrations and as a quiet background tint"
+    }
+  },
+  "font": {
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Primary display and heading family across the entire site. Weight 200 (light) carries the massive display headlines — the thin strokes against tangerine fill create the signature 'stenciled poster' feel where the type reads as colored shape rather than inked letter. Weight 700 is used for emphasis and button labels."
+    },
+    "roboto-mono": {
+      "$value": "Roboto Mono",
+      "$type": "fontFamily",
+      "$description": "Captions, dates, product labels, and metadata — all uppercase tracking in Tangerine beneath images. The monospace's mechanical rhythm contrasts with Manrope's humanist curves and signals 'catalog label' rather than 'editorial body'."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://maquilts.com",
+      "siteName": "MA Quilts",
+      "extractedAt": "2026-06-03T21:19:48.491Z",
+      "variant": "compact"
+    }
+  }
+}

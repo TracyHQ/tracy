@@ -1,0 +1,18 @@
+{
+  "release.blurb": "新版本发布前后需要检查的所有事项。标为 {ok}、{fix}、{check} 或 {note} 的行由此服务器在每次加载时测量；其余的请手动勾选。勾选只保存在此浏览器中，且仅适用于此 release。",
+  "release.checkAgain": "重新检查",
+  "release.done": "已完成 {done} / {total}",
+  "release.footer": "于 {when} 在 {origin} 测量。此服务器看不到 tracy-host 和 tracy-dsh 的环境：这些行给出了需要运行的命令。",
+  "release.local": "这是本地环境：这里没有需要修复的内容。检查清单适用于 dev、staging 和 production，在那里缺少变量才是真正的缺失。",
+  "release.onlyOpen": "只看未完成的",
+  "release.readFailed": "无法读取检查清单。",
+  "release.state.fail": "修复",
+  "release.state.info": "备注",
+  "release.state.pass": "正常",
+  "release.state.warn": "检查",
+  "release.title": "Release 检查清单",
+  "release.toCheck_one": "{count} 项待检查",
+  "release.toCheck_other": "{count} 项待检查",
+  "release.toFix_one": "{count} 项待修复",
+  "release.toFix_other": "{count} 项待修复"
+}

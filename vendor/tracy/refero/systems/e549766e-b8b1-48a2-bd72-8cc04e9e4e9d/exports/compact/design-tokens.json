@@ -1,0 +1,79 @@
+{
+  "color": {
+    "charcoal-ink": {
+      "$value": "#131315",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, dark pill button fill, heading borders — warm near-black, the only filled button color in the system"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text, ghost button background"
+    },
+    "bone": {
+      "$value": "#f7f5ff",
+      "$type": "color",
+      "$description": "Bone — Secondary canvas, subtle violet-tinted off-white for alternating sections"
+    },
+    "cutout-gray": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Cutout Gray — Solid offset shadow color under primary buttons and secondary surfaces"
+    },
+    "slate-mid": {
+      "$value": "#717173",
+      "$type": "color",
+      "$description": "Slate Mid — Muted body text, secondary metadata, helper copy"
+    },
+    "hairline": {
+      "$value": "#d0d0d0",
+      "$type": "color",
+      "$description": "Hairline — Subtle borders, dividers, inactive tab indicators"
+    },
+    "deep-charcoal": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Deep Charcoal — Input borders, slightly heavier dividers than Hairline"
+    },
+    "logo-violet": {
+      "$value": "#855cf7",
+      "$type": "color",
+      "$description": "Logo Violet — Brand mark gradient terminus, logo cube fill — the only saturated color in the system"
+    },
+    "lavender-trace": {
+      "$value": "#dacefd",
+      "$type": "color",
+      "$description": "Lavender Trace — Selected tab underline, violet hairline accents, announcement pill border — violet at whisper volume"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "inter-display": {
+      "$value": "Inter Display",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI text, body and headings alike. Single weight 400 carries the entire hierarchy through size and tracking alone — no bold, no light. The custom stylistic sets (ss01, ss07, ss08) reshape the g, a, and l terminals into a more geometric, editorial silhouette that distinguishes it from stock Inter."
+    },
+    "aux-mono": {
+      "$value": "Aux Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced label font for section eyebrows (e.g. 'DAY 1', 'LET'S CHAT', nav items, badge text). Sets at 14px with -0.04em tracking gives timestamps and labels a technical, archival feel against the editorial display type."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary fallback / system-level utility text where the custom display features aren't required"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://shade.inc",
+      "siteName": "Shade",
+      "extractedAt": "2026-06-03T19:20:48.350Z",
+      "variant": "compact"
+    }
+  }
+}

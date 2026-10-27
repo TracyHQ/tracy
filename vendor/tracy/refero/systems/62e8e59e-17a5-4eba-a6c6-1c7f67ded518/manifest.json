@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+  "status": "complete",
+  "name": "Inngest",
+  "url": "https://styles.refero.design/style/62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+  "sourceWebsite": "https://inngest.com",
+  "extractedAt": "2026-06-03T16:18:24.048Z",
+  "capturedAt": "2026-10-08T05:12:27.288869+00:00",
+  "theme": "dark",
+  "industry": "devtools",
+  "description": "Warm-black observatory — quiet, instrument-grade, lit by a single amber pilot light",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d86b0c62-a799-4ba8-a96f-71edf5c1d8f6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0336a6bc-3a5b-48dd-a8b5-227ef4953560.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c1b7136e-b63f-4e92-9d64-b574c788eb54.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b1e621a8-dc31-41c9-adaa-eb2cf141558f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0d28a682-3008-4ed6-8c4e-469ce92e467d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "15404726cf64aa7b6635ea3e83bd607d581313569237f2f2e540d835d2f1a2fb",
+      "bytes": 24151
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f57a7006aab7c30e0a1b286a1727b3b82e28e4ec7444a56451d40c75894877f2",
+      "bytes": 98947
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c10e97ed6bf8a191a523db9018c838c7e7741ca52be74685addcfce824e9d9ac",
+      "bytes": 19849
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "67bf4a31ae0e32b9e44b9a76a4936002563d2e54ecc4ca9df64e4b112e987f4c",
+      "bytes": 18381
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "16e602fc90e67d0a5c40bc13b4f1840b06aa7a39ebae1bcb1d62351e2525cbcc",
+      "bytes": 13567
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4bba4575e21e2909b81104898eebe5f888c7dcbc002b502cfbe24de04c4c54e3",
+      "bytes": 4296
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "abfc7e581111d1d6c10509c678fb2ef64bab0776bcd4e1b8910c79fcc8a5e61a",
+      "bytes": 919
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6a250b295dd65b500a49a47507f7a4300a692d66af8a4fcfbd7a41d73f92ff64",
+      "bytes": 936
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b7f5c8156baae3ca017a5cb49cc61465080cb1d51d490f449101325e4c6d80e2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "381148fa529936be1031a555b0abad0308561f8b0852214a52b8a2db837c2d19",
+      "bytes": 48981
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6d17a87ab2d54e283fa6c802635a71abbcbbf8edfceea1b212c7734630fdf1bf",
+      "bytes": 26062
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a4e4c82b51c98598bbc2ea254a0ecbab78d25753f26231215343499053b2b42f",
+      "bytes": 66431
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c019368abc0855a1bd949f7f0b357c5808e7f2afa52d0a67a54768ce0d6d8da5",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "83319b1f112d9a9ddfe8da027bb06e52c7c432bd2d03af06bb4d08a996189500",
+      "bytes": 2281
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "91a756d9345a02303ee92a4c8ba8db2e475d4ba3cd66cb5f31d5e100bb063f49",
+      "bytes": 2876
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "c45b115b-dcb5-446d-8952-85aef740f8e4",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "note": "Plausible facts per notification kind, written from the row shapes documented in apps/tracy-web/src/mail/letters/team.js and comments.js headers. Not derived from any rendered output.",
+  "siteKey": "kinetic.vn",
+  "origin": "https://tracy.test",
+  "recipient": {
+    "id": "acc-recipient",
+    "email": "ana@tracy.ai",
+    "name": "Ana"
+  },
+  "actor": {
+    "id": "acc-actor",
+    "email": "leo@tracy.ai",
+    "name": "Leo"
+  },
+  "data": {
+    "team.join_request": {},
+    "team.join_answered": {
+      "decision": "approved",
+      "requesterName": "Bruno",
+      "requesterEmail": "bruno@tracy.ai",
+      "role": "editor"
+    },
+    "team.approved": {
+      "role": "editor"
+    },
+    "team.declined": {},
+    "team.invite_accepted": {
+      "role": "editor"
+    },
+    "team.invite_declined": {},
+    "team.joined": {
+      "role": "viewer",
+      "inviterName": "Ana",
+      "inviterEmail": "ana@tracy.ai"
+    },
+    "team.removed": {},
+    "team.role_changed": {
+      "from": "viewer",
+      "to": "editor"
+    },
+    "team.left": {
+      "role": "editor"
+    },
+    "team.invite_cancelled": {
+      "role": "editor"
+    },
+    "team.site_restored": {
+      "backup": "Before the menu change",
+      "version": 3
+    },
+    "team.site_deleted": {
+      "siteName": "kinetic.vn"
+    },
+    "team.site_renamed": {
+      "oldSite": "kinetic-old.vn"
+    },
+    "comment.mention": {
+      "quote": "Is this banner approved?",
+      "page": "/about",
+      "n": 9,
+      "commentId": "c-9"
+    },
+    "comment.reply": {
+      "quote": "Done, I swapped the image.",
+      "page": "/",
+      "n": 9,
+      "commentId": "c-9"
+    },
+    "comment.resolved": {
+      "quote": "Change the phone number",
+      "page": "/",
+      "n": 12,
+      "commentId": "c-12"
+    },
+    "comment.reopened": {
+      "quote": "The menu still overlaps",
+      "page": "/",
+      "n": 13,
+      "commentId": "c-13"
+    },
+    "team.edit_access_request": {},
+    "team.edit_access_answered": {
+      "decision": "approved",
+      "requesterName": "Bruno",
+      "requesterEmail": "bruno@tracy.ai",
+      "role": "editor"
+    },
+    "team.edit_access_approved": {
+      "role": "editor"
+    },
+    "team.edit_access_declined": {}
+  },
+  "direct": {
+    "teamInvite": {
+      "inviterName": "Leo",
+      "inviterEmail": "leo@tracy.ai",
+      "role": "editor",
+      "siteKeys": ["kinetic.vn"],
+      "token": "QAINVITETOKEN123"
+    },
+    "workspace": {
+      "inviterEmail": "leo@tracy.ai",
+      "workspaceName": "Agency",
+      "siteKeys": ["kinetic.vn", "second.vn"]
+    },
+    "removal": {
+      "code": "AB12CD",
+      "targetEmail": "gone@tracy.ai"
+    },
+    "signin": {
+      "email": "person@tracy.ai"
+    },
+    "beta": {
+      "url": "https://tracy.test/join?token=QABETATOKEN"
+    },
+    "confirmation": {
+      "email": "visitor@tracy.ai",
+      "data": {
+        "name": "Visitor",
+        "platforms": ["Joomla"],
+        "site_count": "3",
+        "website": "https://visitor.example.org"
+      },
+      "marketingOrigin": "https://tracy.test"
+    }
+  }
+}

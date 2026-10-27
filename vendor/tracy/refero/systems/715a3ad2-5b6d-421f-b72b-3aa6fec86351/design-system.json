@@ -1,0 +1,284 @@
+{
+  "dos": [
+    "Use Saans VF at weight 380 for any headline 30px or larger — the whisper-weight is the signature",
+    "Set card radius to 12px and button radius to 9999px — these two values define the surface vocabulary",
+    "Keep the page canvas at #f3f3f1 (Parchment), not pure white — the warm off-white is what makes the editorial metaphor hold",
+    "Use Ink (#191a17) as the filled button background with Paper (#ffffff) text for primary actions",
+    "Apply -0.02em letter-spacing at 30px+ sizes and -0.01em at 20px and below",
+    "Use tnum and lnum font features on all numeric content — financial alignment depends on tabular figures",
+    "Communicate elevation through surface color (Sage, Slate, Dusk, Ink panels) rather than shadows"
+  ],
+  "donts": [
+    "Do not use weight 600+ for headlines — the light-weight display is the brand's anti-convention signature",
+    "Do not add drop shadows to cards, buttons, or modals — the system is intentionally flat",
+    "Do not introduce saturated brand colors (red, blue, green) — the palette is near-monochrome by design",
+    "Do not render partner logos in their full brand colors — all must be desaturated to Smoke (#868784)",
+    "Do not use pure white (#ffffff) as the page background — always Parchment (#f3f3f1)",
+    "Do not use radius values other than 9999px (buttons), 12px (cards), 6px (badges) — these three values carry the shape system",
+    "Do not skip letter-spacing on large text — the tight tracking at -0.02em is what makes the 56px headlines feel typeset rather than default"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#191a17",
+      "name": "Ink",
+      "role": "Primary text, filled CTA buttons, nav links, icon strokes, card borders — the near-black that carries the entire typographic and action system. Used as filled pill background for primary actions (white text) and as hairline border on outlined buttons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f3f1",
+      "name": "Parchment",
+      "role": "Page canvas background — a warm off-white that replaces pure white as the base surface, giving the entire site a paper-like editorial warmth rather than a clinical SaaS feel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e6e4",
+      "name": "Ash",
+      "role": "Hairline borders, divider lines, footer borders, subtle surface elevation — the structural gray that separates content without ever competing with it",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Light neutral action fill for buttons on dark surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#868784",
+      "name": "Smoke",
+      "role": "Secondary text, link underlines, icon fills, muted helper copy — the mid-gray that recedes so Ink can lead",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3d3d3d",
+      "name": "Charcoal",
+      "role": "Dark badge backgrounds where full Ink feels too heavy — used sparingly for tag fills that need to read as dark without the starkness of pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#add2d1",
+      "name": "Sage Wash",
+      "role": "Product feature card background (Thesis panel) — a desaturated teal that introduces the only sustained chromatic presence in the UI without ever becoming loud",
+      "group": "accent"
+    },
+    {
+      "hex": "#9dbebe",
+      "name": "Slate Teal",
+      "role": "Secondary product card background — a deeper desaturated teal for the Agency-adjacent surface, harmonizing with Sage Wash as a tonal pair",
+      "group": "accent"
+    },
+    {
+      "hex": "#c9c5e1",
+      "name": "Dusk Gradient",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast.",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, rgb(201, 197, 225) 0%, rgb(234, 211, 221) 100%)"
+    }
+  ],
+  "layout": "Max-width ~1200px centered container, with the hero and major sections contained within it. Hero is a two-column split: left column holds the 56px headline, right column holds the subtext and two stacked pill buttons (Google OAuth + Add to Claude). Below the hero, a centered single-row partner logo strip acts as a trust band. The product section is a 3-column card grid (Context / Agency / Thesis) with equal-width cards, each ~12px radius and 24px internal padding, with product screenshots partially overflowing the card boundaries to create visual depth without shadows. The FAQ section is a full-width single-column list with hairline bottom borders, no background card. Navigation is a minimal top bar: wordmark left ('era'), nav links (Pricing, Company, Articles) + Sign in + filled CTA button right. Section gaps are generous (~80px), card padding is 24px, element gaps are 16px — the rhythm is spacious and editorial, not dense.",
+  "imagery": "Era uses almost no imagery. The visual world is built from typography, surface color, and product mockups. The only images present are: (1) a phone screenshot of a ChatGPT conversation inside the Context card, (2) a chart mockup in the Context card, and (3) grayscale partner logos (Cursor, Gemini, Perplexity, Cline, OpenAI) in the trust strip. The three product cards carry color as their primary visual identity: lavender gradient, near-black, and sage teal. No photography, no illustration, no 3D renders — the interface is pure editorial design language with product artifacts embedded as evidence.",
+  "similar": [
+    {
+      "why": "Same fintech-meets-editorial approach: warm off-white canvas, near-monochrome palette with Ink as the dominant text and action color, and pill-shaped buttons.",
+      "business": "Mercury"
+    },
+    {
+      "why": "Shared monochrome restraint and confidence in typography — both systems use a custom or premium sans-serif at light display weights and let negative letter-spacing do the typographic work.",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar editorial fintech layout: max-width contained hero with split text+CTAs, generous spacing, and a quiet neutral palette that lets product surfaces carry the color.",
+      "business": "Ramp"
+    },
+    {
+      "why": "Both use warm off-white canvases (not pure white) as a deliberate departure from clinical SaaS, paired with near-monochrome interfaces and pill-shaped controls.",
+      "business": "Arc Browser"
+    },
+    {
+      "why": "Shared commitment to editorial-grade typography and gradient accent panels for product showcases — Era's lavender-to-pink gradient card echoes Stripe's soft product hero treatments.",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "badges": "6px",
+      "buttons": "9999px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#f3f3f1",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Page background — warm off-white base"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper Card",
+      "level": 1,
+      "purpose": "Standard card surface on parchment"
+    },
+    {
+      "hex": "#e6e6e4",
+      "name": "Ash Divider",
+      "level": 2,
+      "purpose": "Hairline borders, footer rules, subtle structural lines"
+    },
+    {
+      "hex": "#add2d1",
+      "name": "Sage Product Card",
+      "level": 3,
+      "purpose": "Thesis product feature card background"
+    },
+    {
+      "hex": "#9dbebe",
+      "name": "Slate Product Card",
+      "level": 4,
+      "purpose": "Secondary product card background"
+    },
+    {
+      "hex": "#c9c5e1",
+      "name": "Dusk Product Card",
+      "level": 5,
+      "purpose": "Context product card — lavender gradient surface"
+    },
+    {
+      "hex": "#191a17",
+      "name": "Ink Product Card",
+      "level": 6,
+      "purpose": "Agency product card — near-black full-bleed panel"
+    }
+  ],
+  "northStar": "Quiet ledger on warm paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.38,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 30,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "heading",
+      "size": 35,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.7
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 1.15,
+      "letterSpacing": -1.12
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action (Get started free, primary product CTAs)",
+      "description": "Filled pill button. Background #191a17 (Ink), text #ffffff (Paper), 9999px radius, 16px horizontal padding, 8px vertical padding. Saans VF 500 at 15px, -0.01em tracking. No border, no shadow. Hover state not extracted — assume slight lightness shift."
+    },
+    {
+      "name": "Outlined Action Button",
+      "role": "Secondary actions and OAuth providers (Continue with Google, Add to Claude)",
+      "description": "Ghost pill button. Background #ffffff (Paper), 1px border #191a17 (Ink) at 92+ evidence occurrences, 9999px radius, 16px horizontal padding, 8px vertical padding. Saans VF 500 at 15px. Optional leading icon (Google logo, sparkle icon)."
+    },
+    {
+      "name": "Inline Text Link",
+      "role": "Nav links, inline text links",
+      "description": "Smoke (#868784) or Ink (#191a17) Saans VF 400 at 15px, with 1px underline border at 52+ occurrences in the same color. No box, no padding — sits inline with text flow."
+    },
+    {
+      "name": "Product Feature Card — Context",
+      "role": "Hero product card with gradient background",
+      "description": "12px radius, Dusk Gradient fill (linear-gradient(90deg, #c9c5e1, #ead3dd)), 24px padding. Badge 'Personal MCP' (6px radius, light fill, Ink text) top-right. Saans VF 380 at 30px heading, 15px body in Ink. Product screenshot (phone mockup) anchored bottom-right, partially overflowing the card edge."
+    },
+    {
+      "name": "Product Feature Card — Agency",
+      "role": "Dark inverted product card",
+      "description": "12px radius, #191a17 (Ink) fill, 24px padding. Badge 'Native app' (6px radius, Ash or white fill, Ink text) top-right. Saans VF 380 at 30px heading, 15px body in #ffffff (Paper). Full-bleed dark surface creates the strongest contrast moment in the product grid."
+    },
+    {
+      "name": "Product Feature Card — Thesis",
+      "role": "Sage-colored product card",
+      "description": "12px radius, #add2d1 (Sage Wash) fill, 24px padding. All text in Ink (#191a17). The softest of the three product surfaces — reads as a tonal variation rather than a separate visual world."
+    },
+    {
+      "name": "FAQ Accordion Item",
+      "role": "Expandable question in the FAQ section",
+      "description": "Full-width row, 1px bottom border in #e6e6e4 (Ash). Question text: Saans VF 500 at 15px, Ink. Plus/minus toggle icon (Ink) right-aligned, 16px. Expanded answer: Saans VF 400 at 15px, Smoke (#868784), 16px top padding, 16px bottom padding before the next border."
+    },
+    {
+      "name": "Product Badge / Tag",
+      "role": "Small label on product cards and feature highlights",
+      "description": "6px radius, light Ash (#e6e6e4) or Paper (#ffffff) background, Ink text, ~8px horizontal padding, ~4px vertical padding. Saans VF 500 at 12px. Sometimes prefixed with a decorative diamond icon (✦) in Ink."
+    },
+    {
+      "name": "Partner Logo Strip",
+      "role": "Horizontal row of AI platform logos (Cursor, Gemini, Perplexity, Cline, OpenAI, etc.)",
+      "description": "Single horizontal row, centered, ~48px gap between logos. All logos rendered in Smoke (#868784) — desaturated to harmonize with the monochrome system. No logos in full color."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Section-level titles (e.g., 'Frequently asked questions')",
+      "description": "Saans VF 380 at 35px, Ink (#191a17), -0.02em letter-spacing, 1.20 line-height. Left-aligned. No underline, no decorative element — the size and weight do the work."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary page headline ('Make Claude manage your money.')",
+      "description": "Saans VF 380 at 56px, Ink (#191a17), -0.02em letter-spacing, 1.15 line-height. Light weight at display size is the signature: most fintechs shout at 56px with weight 700; Era whispers at weight 380 and lets the sentence structure do the work."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer with links and border",
+      "description": "1px top border in #e6e6e4 (Ash), 48px vertical padding. Saans VF 400 at 13px, Smoke links. No logo color treatment, no social icons in color — the footer stays in the monochrome register."
+    },
+    {
+      "name": "Decorative Diamond Icon",
+      "role": "Brand symbol and section marker (✦)",
+      "description": "Simple four-point diamond in Ink (#191a17), ~12px, used as a visual bullet before section labels and inside badges. The only custom mark in the system."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Exclusive typeface across all UI. Custom variable font with five weights; the 380 weight carries display and headlines (unusually light for a fintech — confidence through restraint, not volume). 400 for body. 500 for subheadings and button text. 600-670 for emphasized labels and nav. Negative letter-spacing tightens at larger sizes (-0.02em at 30px+), normalizes toward body. lnum + tnum features force lining and tabular numerals, critical for financial data alignment.",
+      "sizes": "12, 13, 15, 16, 20, 30, 35, 56",
+      "family": "Saans VF",
+      "weight": "380, 400, 500, 600, 670",
+      "lineHeight": "1.15, 1.20, 1.25, 1.30, 1.38, 1.40, 1.50",
+      "substitute": "Inter (closest free match in weight range and geometric humanism)",
+      "letterSpacing": "-0.02em at 30px+ sizes, -0.01em at 20px and below",
+      "fontFeatureSettings": "\"lnum\" on, \"tnum\" on"
+    }
+  ],
+  "description": "Era operates in a near-monochrome editorial register: a warm parchment canvas, ink-black typography, and just enough chromatic punctuation — a soft lavender wash, a teal panel, a black card — to make three product surfaces feel like distinct chapters in a printed financial document. The visual system privileges typographic confidence over decoration: a custom variable sans-serif at tight negative tracking carries all the weight, and the interface stays text-first, with components reduced to pill buttons, hairline borders, and flat cards with zero shadow. Every screen should feel like a well-typeset magazine spread — quiet authority, generous whitespace, and color appearing only when a surface needs to announce itself as a distinct product. Density is comfortable, not dense; the rhythm comes from large headlines and 16px padding breathing inside cards, not from packed information rows.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #191a17 (Ink)\n- background: #f3f3f1 (Parchment)\n- card surface: #ffffff (Paper)\n- border / divider: #e6e6e4 (Ash)\n- muted text / secondary: #868784 (Smoke)\n- primary action: #191a17 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. **Hero Headline**: 56px Saans VF weight 380, color #191a17, letter-spacing -1.12px, line-height 1.15. Set on a #f3f3f1 page canvas. No underline, no decoration.\n\n2. **Primary CTA Button**: Pill shape (border-radius 9999px), background #191a17, color #ffffff, padding 8px 16px, font Saans VF weight 500 at 15px, letter-spacing -0.15px. No border, no shadow. Text: 'Get started free'.\n\n3. **Outlined OAuth Button**: Pill shape (border-radius 9999px), background #ffffff, 1px solid border #191a17, padding 8px 16px, font Saans VF weight 500 at 15px, color #191a17. Leading icon slot 16px left, 8px gap to label.\n\n4. **Product Feature Card (Agency variant)**: 12px border-radius, background #191a17, padding 24px. Top-right badge: 6px radius, background #e6e6e4, padding 4px 8px, font Saans VF weight 500 at 12px, color #191a17, text 'Native app'. Heading: Saans VF weight 380 at 30px, color #ffffff, letter-spacing -0.6px. Body: Saans VF weight 400 at 15px, color #ffffff.\n\n5. **FAQ Accordion Row**: Full width, 1px bottom border in #e6e6e4, no other borders. Question: Saans VF weight 500 at 15px, color #191a17. Plus/minus icon right-aligned in #191a17, 16px. Row padding: 16px vertical."
+    }
+  ],
+  "elevationPhilosophy": "Era uses zero shadows. Elevation is communicated through color contrast and surface fills alone — dark cards on parchment, white cards on parchment, and colored product panels. This flatness is deliberate: it keeps the editorial magazine metaphor intact and avoids the soft-shadow vocabulary of conventional SaaS."
+}

@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, headings, nav borders, card borders, button borders"
+    },
+    "ash-gray": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary text, card borders, nav dividers, muted metadata"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, card surfaces, sidebar background"
+    },
+    "system-blue": {
+      "$value": "#007aff",
+      "$type": "color",
+      "$description": "System Blue — Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "sf-pro-display": {
+      "$value": "SF Pro Display",
+      "$type": "fontFamily",
+      "$description": "Display and heading weight — used for article titles, section headers, and the 'PORTO ROCHA' wordmark. The unusual +0.02em positive letter-spacing on display type (most sites use negative tracking on large sizes) creates a slightly more open, editorial cadence rather than a tight display feel."
+    },
+    "sf-pro-text": {
+      "$value": "SF Pro Text",
+      "$type": "fontFamily",
+      "$description": "Body text, nav labels, button text, captions, project descriptions, dates. Single weight (400) across the entire system — no bold variants for emphasis; hierarchy is built through size and color alone, keeping the typographic voice flat and consistent."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://portorocha.com",
+      "siteName": "PORTO ROCHA",
+      "extractedAt": "2026-06-03T20:37:53.861Z",
+      "variant": "compact"
+    }
+  }
+}

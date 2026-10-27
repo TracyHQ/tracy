@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-lipstick-magenta: #db3c8a;
+  --color-forest-ink: #00522d;
+  --color-blush-cream: #fce5df;
+  --color-warm-chalk: #fff8f6;
+  --color-charcoal-black: #000000;
+  --color-lilac-mist: #d1cfe4;
+  --color-bubblegum: #f29ebd;
+  --color-cotton-pink: #e878b2;
+
+  /* Typography — Font Families */
+  --font-beni: 'Beni', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-clash-grotesk: 'Clash Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

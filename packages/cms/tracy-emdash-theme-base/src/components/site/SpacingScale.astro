@@ -1,0 +1,34 @@
+---
+/**
+ * Spacing steps and radius tiles (source: `.tracy-fixture .stack` + `.radii`). The spacing bars are
+ * the Tailwind 4px scale the template lays out with; the radius tiles read `var(--radius-*)` from
+ * tokens.css, so a token edit moves the tile and the label stays honest (DECISIONS D9).
+ */
+const SPACE = [4, 8, 12, 16, 20, 24, 32, 48]
+const RADII: Array<{ token: string; px: number }> = [
+  { token: 'sm', px: 8 },
+  { token: 'md', px: 12 },
+  { token: 'lg', px: 18 },
+  { token: 'xl', px: 32 },
+  { token: 'pill', px: 980 }
+]
+---
+
+<div class="flex flex-col gap-10">
+	<ul class="flex flex-col gap-2" role="list">
+		{SPACE.map((n) => (
+			<li class="flex items-center gap-4">
+				<code class="w-[128px] shrink-0 font-mono text-[13px] text-fg-muted">{n}px</code>
+				<span class="block h-4 rounded-[2px] bg-accent" style={`width: ${n}px`} aria-hidden="true"></span>{/* ds-keep: spacing specimen bar, its length is the value shown */}
+			</li>
+		))}
+	</ul>
+	<ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5" role="list">
+		{RADII.map((r) => (
+			<li class="flex h-[88px] flex-col items-center justify-center border border-line bg-surface text-center" style={`border-radius: var(--radius-${r.token})`}>
+				<code class="font-mono text-[13px] text-fg">--radius-{r.token}</code>
+				<span class="text-[12px] text-fg-muted">{r.px}px</span>
+			</li>
+		))}
+	</ul>
+</div>

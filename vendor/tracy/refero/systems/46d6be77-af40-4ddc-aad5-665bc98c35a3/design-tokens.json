@@ -1,0 +1,384 @@
+{
+  "color": {
+    "porcelain-cream": {
+      "$value": "#fcf6ec",
+      "$type": "color",
+      "$description": "Porcelain Cream — Primary canvas, light cards, light-button fill, and text on espresso surfaces"
+    },
+    "espresso-ink": {
+      "$value": "#2e2521",
+      "$type": "color",
+      "$description": "Espresso Ink — Primary text, dark page bands, dark filled buttons, input rules, and dark card surfaces"
+    },
+    "parchment-border": {
+      "$value": "#d3ccc3",
+      "$type": "color",
+      "$description": "Parchment Border — Hairline borders and restrained separators on light surfaces"
+    },
+    "stone-haze": {
+      "$value": "#cec1b2",
+      "$type": "color",
+      "$description": "Stone Haze — Hero backdrop and muted architectural surface behind warm product imagery"
+    },
+    "ivory-sand": {
+      "$value": "#f4e8d7",
+      "$type": "color",
+      "$description": "Ivory Sand — Warm secondary surface, circular control fill, and contained graphic fields"
+    },
+    "daylight-wash": {
+      "$value": "#fdf0c7",
+      "$type": "color",
+      "$description": "Daylight Wash — Pale yellow feature-section background; it introduces the impression of natural daylight without becoming an interface accent"
+    },
+    "peach-wash": {
+      "$value": "#fdc6b3",
+      "$type": "color",
+      "$description": "Peach Wash — Muted warm section background for alternating editorial moments"
+    },
+    "sunlit-stone-gradient": {
+      "$value": "#c4b3a3",
+      "$type": "color",
+      "$description": "Sunlit Stone Gradient — Soft atmospheric background gradient for warm product and architectural scenes"
+    }
+  },
+  "font": {
+    "systemia": {
+      "$value": "Systemia",
+      "$type": "fontFamily",
+      "$description": "Primary interface and display family: 12-14px handles navigation, labels, forms, and buttons; 36px and 60px hold section headings; 170px and 240px create wall-scale editorial statements. The consistent medium 500 weight avoids heavy headline typography, letting scale rather than boldness carry the product’s presence."
+    },
+    "azeret-mono": {
+      "$value": "Azeret Mono",
+      "$type": "fontFamily",
+      "$description": "Use only for oversized numerical statements beside Systemia punctuation or labels. Its -13.6px tracking makes numbers read as engineered measurements rather than conventional marketing statistics."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "36px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 36px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "60px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 60px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "170px",
+        "fontWeight": 500,
+        "lineHeight": 0.9,
+        "letterSpacing": "-0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 170px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Azeret Mono",
+        "fontSize": "170px",
+        "fontWeight": 500,
+        "lineHeight": 0.9,
+        "letterSpacing": "-0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 170px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "170px",
+        "fontWeight": 500,
+        "lineHeight": 0.9,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 170px"
+    },
+    "5xl-5": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "170px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "-0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-5 at 170px"
+    },
+    "5xl-6": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "170px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-6 at 170px"
+    },
+    "5xl-7": {
+      "$value": {
+        "fontFamily": "Systemia",
+        "fontSize": "240px",
+        "fontWeight": 500,
+        "lineHeight": 0.8,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-7 at 240px"
+    }
+  },
+  "spacing": {
+    "5": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Spacing 5px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "9": {
+      "$value": "9px",
+      "$type": "dimension",
+      "$description": "Spacing 9px"
+    },
+    "10": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Spacing 10px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "14": {
+      "$value": "14px",
+      "$type": "dimension",
+      "$description": "Spacing 14px"
+    },
+    "15": {
+      "$value": "15px",
+      "$type": "dimension",
+      "$description": "Spacing 15px"
+    },
+    "18": {
+      "$value": "18px",
+      "$type": "dimension",
+      "$description": "Spacing 18px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "30": {
+      "$value": "30px",
+      "$type": "dimension",
+      "$description": "Spacing 30px"
+    },
+    "35": {
+      "$value": "35px",
+      "$type": "dimension",
+      "$description": "Spacing 35px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "50": {
+      "$value": "50px",
+      "$type": "dimension",
+      "$description": "Spacing 50px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "100": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Spacing 100px"
+    },
+    "120": {
+      "$value": "120px",
+      "$type": "dimension",
+      "$description": "Spacing 120px"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "full": {
+      "$value": "500px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "surface": {
+    "porcelain-canvas": {
+      "$value": "#fcf6ec",
+      "$type": "color",
+      "$description": "Surface level 0: Default page background and light content surface."
+    },
+    "daylight-field": {
+      "$value": "#fdf0c7",
+      "$type": "color",
+      "$description": "Surface level 1: Pale warm section band."
+    },
+    "ivory-sand-surface": {
+      "$value": "#f4e8d7",
+      "$type": "color",
+      "$description": "Surface level 2: Secondary warm component and graphic surface."
+    },
+    "peach-field": {
+      "$value": "#fdc6b3",
+      "$type": "color",
+      "$description": "Surface level 3: Alternating warm editorial section."
+    },
+    "espresso-surface": {
+      "$value": "#2e2521",
+      "$type": "color",
+      "$description": "Surface level 4: Dark section, card, and inversion surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ayocin.com",
+      "siteName": "AYOCIN",
+      "extractedAt": "2026-09-20T19:24:34.001Z",
+      "variant": "extended"
+    }
+  }
+}

@@ -1,0 +1,255 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-candidate",
+  "release": "quickstart/ja-candidate/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title",
+    "heading": "h2.text-white",
+    "body": "div.content-article div.desc p",
+    "button-primary": "div.acm-action a.btn.btn-primary",
+    "container": ".t4-section:not(.t4-hero) div.container",
+    "section": "div.acm-features.style-2"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 64px",
+    "displayFace": "Libre Caslon Display 400, tracking 0em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(210, 58, 38)",
+    "container": "first content container, max-width 1344px",
+    "section": "first padded full-width section, padding-top 160px"
+  },
+  "keepScopes": [".bg-secondary", ".bg-primary", ".hero-title", "#t4-section-2"],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#616161",
+    "--fg-2": "#212529",
+    "--accent": "#d23a26",
+    "--accent-hover": "#c91e08",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#f7f8f9",
+    "--meta": "#616161",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#eeeeee",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Libre Caslon Display\", sans-serif",
+    "--font-body": "\"IBM Plex Sans\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#616161",
+      "fg-2": "#212529",
+      "accent": "#d23a26",
+      "accent-hover": "#c91e08",
+      "surface": "#f8f9fa",
+      "surface-warm": "#f7f8f9",
+      "meta": "#616161",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#eeeeee",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f7f8f9",
+      "fg": "#616161",
+      "fg-2": "#0431b8",
+      "accent": "#d23a26",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f8f9fa"
+    },
+    {
+      "accent": "#1a61ab"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "border-soft": "#dddddd",
+      "surface-warm": "#eaedf1",
+      "warn": "#fdce03"
+    },
+    {
+      "surface-warm": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (82 line colours, 109 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section:not(.t4-hero) .container"],
+    "section": ["div.acm-features.style-2"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 14 tried (byte 5386); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f7f8f9",
+      "distance": 19
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f7f8f9",
+      "distance": 10
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-30", "fg-40", "fg-50", "fg-70", "fg-80", "fg-90"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-candidate/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip so T4 regenerated media/t4/css on the first request: tasks/evidence/ds-contracts-r3d-2026-10-11/ja-candidate-j6): 12/12, controls 0 differences, no text read worse than the template own (every visible heading and text judged element by element, text on pictures included), 94% or more of the page follows, every contrast kind sampled; checked by eye on Moxie, Toggl Track (dark) and MotherDuck, Apple (light): the quote section stays its own white panel, the hero title is clear of the portrait, the logo and the campaign tab icons read on a dark page. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 94% or more of the page follows, every contrast kind sampled at 1440 and 390; the hero button is judged on its own fill (flow.mjs), no contract change; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-candidate-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-candidate 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 94-98% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-candidate-j6",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg-2)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepNote": "kept after measuring 11/10/2026: .bg-secondary, .bg-primary, .hero-title (text in them read worse than the template own under a system) and #t4-section-2, the quote section whose heading and paragraph lie half over a white flag photo: kept whole with its own white ground (keepGround) and text (keepText), so under a dark system it stays the template own white panel instead of light text on the photo white",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#616161",
+    "--body-link-color": "#d23a26",
+    "--body-link-hover-color": "#c91e08",
+    "--color-primary": "#d23a26",
+    "--color-secondary": "#0431b8",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#212121",
+    "--mainnav-link-color": "#212121",
+    "--mainnav-link-hover-color": "#d23a26",
+    "--mainnav-link-active-color": "#d82811",
+    "--footer-bg-color": "#f7f8f9",
+    "--footer-text-color": "#616161",
+    "--footer-link-color": "#616161",
+    "--footer-link-hover-color": "#d23a26"
+  },
+  "keepGround": ["#t4-section-2"],
+  "keepText": ["#t4-section-2"],
+  "followRules": {
+    ".acm-container-tabs .nav-link:not(.active) .icon-bg": {
+      "background-color": "fg"
+    }
+  },
+  "followRulesNote": "the campaign tabs draw their icons as a mask filled with a literal #212121 (acm.css, not one of its palette colours, so not tokenized): the idle icons take the text colour (dark on Toggl Track's page before); the active one already reads --color-primary",
+  "sideRules": {
+    "dark": {
+      ".navbar-brand .logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "sideRulesNote": "its logo is a picture in dark ink for its light header: on a dark worn page it is shown inverted, hues kept",
+  "containerNote": "the container rule skips the hero (.t4-hero): its portrait is laid inside the hero container, so a narrower system container (Apple 1024 px) pushed the photo over the title",
+  "minVersion": {
+    "quickstart/ja-candidate/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-candidate/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template's own look (flow.mjs samples)",
+  "bands": {
+    ".bg-secondary": {
+      "ground": "#0431b8",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".link-overlay": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".bg-primary": {
+      "ground": "#d23a26",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".link-overlay": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".hero-title": {
+      "ground": "#0431b8",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    "#t4-section-2": {
+      "ground": "#ffffff",
+      "texts": ["#212121", "#616161"],
+      "picture": true,
+      "paint": {
+        ".section-title span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

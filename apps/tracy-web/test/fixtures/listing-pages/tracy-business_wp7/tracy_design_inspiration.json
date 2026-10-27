@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "tracy-design-inspiration/v1",
+  "template": "tracy-business",
+  "provider": "JoomlArt",
+  "category": "Professional & Corporate",
+  "blurb": "Industrial infrastructure company website",
+  "image": "tracy-business-home-390.png",
+  "nav": "top-left",
+  "hero": "split",
+  "dark": true,
+  "layouts": [
+    {
+      "key": "home",
+      "label": "Home",
+      "path": "/",
+      "shots": {
+        "desktop": "tracy-business-home-1440.png",
+        "mobile": "tracy-business-home-390.png"
+      }
+    },
+    {
+      "key": "careers",
+      "label": "Careers",
+      "path": "/careers",
+      "shots": {
+        "desktop": "tracy-business-careers-1440.png",
+        "mobile": "tracy-business-careers-390.png"
+      }
+    },
+    {
+      "key": "investor-relations",
+      "label": "Investors",
+      "path": "/investor-relations",
+      "shots": {
+        "desktop": "tracy-business-investor-relations-1440.png",
+        "mobile": "tracy-business-investor-relations-390.png"
+      }
+    },
+    {
+      "key": "about",
+      "label": "About us",
+      "path": "/about",
+      "shots": {
+        "desktop": "tracy-business-about-1440.png",
+        "mobile": "tracy-business-about-390.png"
+      }
+    },
+    {
+      "key": "projects",
+      "label": "Projects",
+      "path": "/projects",
+      "shots": {
+        "desktop": "tracy-business-projects-1440.png",
+        "mobile": "tracy-business-projects-390.png"
+      }
+    },
+    {
+      "key": "news",
+      "label": "News",
+      "path": "/news",
+      "shots": {
+        "desktop": "tracy-business-news-1440.png",
+        "mobile": "tracy-business-news-390.png"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-midnight-plum: #0b051d;
+  --color-deep-plum: #2c2242;
+  --color-lavender-mist: #aa89f2;
+  --color-lime-sherbet: #e6ffa9;
+  --color-bubblegum-pink: #ffa8cd;
+  --color-warm-bone: #f9f8f5;
+  --color-pure-white: #ffffff;
+  --color-silver-mist: #e2e2e7;
+  --color-storm-gray: #615f6d;
+  --color-slate-gray: #75727f;
+  --color-charcoal-plum: #373544;
+  --color-ash-gray: #999999;
+
+  /* Typography — Font Families */
+  --font-klarna-title: 'Klarna Title', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-klarna-text: 'Klarna Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

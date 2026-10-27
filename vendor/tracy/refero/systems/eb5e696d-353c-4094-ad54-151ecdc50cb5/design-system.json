@@ -1,0 +1,341 @@
+{
+  "dos": [
+    "Use Paper #f9f7f5 as the page canvas and White Sheet #ffffff for floating panels.",
+    "Set major display headlines in Really Sans Large at 83px/900/1.10 and section headlines at 48px/850/1.10.",
+    "Use Moniker with negative tracking between -0.012em and -0.019em for navigation, body copy, buttons, and links.",
+    "Use Mint Note #b3f4e0 with Blurple #5522fa text for repeated filled conversion controls at a 43.68px radius.",
+    "Use the 135deg #5522fa-to-#ec8580 gradient only for high-visibility promotional pills, expressive display type, and product-media washes.",
+    "Give main white cards a 25.6px radius and the layered Ink shadow rather than a thin neutral border.",
+    "Use 10–12px gaps for tight navigation and control groups, 19px for local component spacing, and 45px between major content blocks."
+  ],
+  "donts": [
+    "Do not use pure black for interface text; use Ink #231c33.",
+    "Do not replace the warm Paper #f9f7f5 canvas with cool gray or bright white.",
+    "Do not use sharp corners for navigation, hero media, testimonial cards, or public buttons; use their 38.4px, 25.6px, and 43.68px radii.",
+    "Do not use Blurple #5522fa as a universal filled button color; the repeated filled action treatment is Mint Note #b3f4e0.",
+    "Do not apply Shantell Sans to paragraphs, navigation, or button labels; restrict it to short handwritten interruptions.",
+    "Do not flatten major panels with 1px gray outlines; use the multi-layer Ink shadow on White Sheet surfaces.",
+    "Do not make long-form editorial cards rounded like product panels; use the 2.4px letter-card radius and 90px by 96px padding."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#231c33",
+      "name": "Ink",
+      "role": "Headlines, navigation, body copy, input text, play-control text, and dark button labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f7f5",
+      "name": "Paper",
+      "role": "Warm page canvas and large paper-like content sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White Sheet",
+      "role": "Floating navigation, hero panels, cards, video controls, and reversed text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#736c83",
+      "name": "Quiet Gray",
+      "role": "Fine-print helper copy and low-emphasis supporting text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5522fa",
+      "name": "Blurple",
+      "role": "Links, emphasized headings, illustrated interface details, and the violet edge of expressive promotional gradients",
+      "group": "brand",
+      "gradient": "linear-gradient(135deg, #5522fa 0%, #ec8580 100%)"
+    },
+    {
+      "hex": "#b3f4e0",
+      "name": "Mint Note",
+      "role": "Filled primary action backgrounds — mint against Ink labels keeps repeated conversion controls playful rather than forceful",
+      "group": "brand"
+    },
+    {
+      "hex": "#ec8580",
+      "name": "Salmon Glow",
+      "role": "Warm gradient endpoint for promotional surfaces and colorful product demonstrations",
+      "group": "accent",
+      "gradient": "linear-gradient(135deg, #f95c5c 0%, #ec8580 100%)"
+    },
+    {
+      "hex": "#b6dbff",
+      "name": "Sky Wash",
+      "role": "Testimonial-card and soft interface background washes",
+      "group": "accent",
+      "gradient": "linear-gradient(135deg, #b6dbff 0%, #eef8ff 100%)"
+    },
+    {
+      "hex": "#fff5ca",
+      "name": "Canary Note",
+      "role": "Occasional warm highlighted surface behind short content moments",
+      "group": "accent"
+    },
+    {
+      "hex": "#edeae6",
+      "name": "Stone",
+      "role": "Subdued neutral fills and secondary quiet surfaces",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page uses a warm Paper canvas with a floating capsule navigation bar near the top and large White Sheet panels suspended beneath it. The opening sequence is centered: review snippets, an oversized display headline, a two-line bold supporting statement, a conversion control, and a wide rounded product-video frame. Subsequent sections alternate centered editorial headings with clustered Sky Wash testimonial cards, then transition into a tall, narrow paper-letter composition with generous internal margins. The rhythm is spacious between major blocks but dense inside navigation and message cards; a persistent gradient promotional pill can sit over the lower-right edge of content.",
+  "imagery": "The visual language is product- and artifact-led rather than photographic. Wide contained product screenshots are softened beneath violet-to-salmon overlays and topped with a centered white play pill; testimonial content appears as overlapping pastel message cards with small circular portraits. Long editorial content becomes a stark white letter sheet with a faint offset page behind it. Icons are mostly compact mono Ink marks, while the HEY hand symbol and occasional Shantell handwriting provide the only deliberately hand-drawn note. Visuals occupy large horizontal bands, but every image remains subordinate to oversized text and paper surfaces.",
+  "similar": [
+    {
+      "why": "Shares 37signals-style conversational editorial copy, warm paper surfaces, and blunt Ink typography.",
+      "business": "Basecamp"
+    },
+    {
+      "why": "Uses oversized friendly display type and occasional handwritten or playful visual interruptions around product messaging.",
+      "business": "Mailchimp"
+    },
+    {
+      "why": "Pairs large expressive headlines with colorful gradient product imagery and rounded content containers.",
+      "business": "Dropbox"
+    },
+    {
+      "why": "Also frames email as a premium product experience through concentrated product demonstrations and prominent conversion controls.",
+      "business": "Superhuman"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "25.6px",
+      "pills": "74.8px",
+      "images": "9999px",
+      "inputs": "0px",
+      "buttons": "43.68px",
+      "navigation": "38.4px",
+      "letter-card": "2.4px"
+    },
+    "elementGap": "19px",
+    "sectionGap": "45px",
+    "cardPadding": "19px",
+    "pageMaxWidth": null
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#f9f7f5",
+      "name": "Paper Canvas",
+      "level": 0,
+      "purpose": "Warm full-page background and editorial section field."
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White Sheet",
+      "level": 1,
+      "purpose": "Navigation, hero panels, cards, letter pages, and media controls."
+    },
+    {
+      "hex": "#fff5ca",
+      "name": "Canary Highlight",
+      "level": 2,
+      "purpose": "Occasional highlighted content surface."
+    },
+    {
+      "hex": "#b3f4e0",
+      "name": "Mint Action Surface",
+      "level": 3,
+      "purpose": "Filled public conversion controls."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 1px rgba(35,28,51,0.02), 0 3.2px 19.2px -6.4px rgba(35,28,51,0.2), 0 6.4px 32px -12.8px rgba(35,28,51,0.3), 0 6.4px 6.4px -12.8px rgba(35,28,51,0.4), 0 12.8px 12.8px -19.2px rgba(35,28,51,0.5), 0 19.2px 19.2px -25.6px rgba(35,28,51,0.6)",
+      "element": "Floating Capsule Navigation"
+    },
+    {
+      "style": "0 0 0 1px rgba(35,28,51,0.02), 0 6.4px 51.2px -25.6px rgba(35,28,51,0.2), 0 12.8px 76.8px -32px rgba(35,28,51,0.3), 0 12.8px 25.6px -38.4px rgba(35,28,51,0.4), 0 25.6px 38.4px -51.2px rgba(35,28,51,0.5), 0 38.4px 51.2px -64px rgba(35,28,51,0.6)",
+      "element": "Hero Paper Panel"
+    },
+    {
+      "style": "0 3.2px 38.4px -6.4px rgba(35,28,51,0.2), 0 6.4px 51.2px -12.8px rgba(35,28,51,0.3), 0 6.4px 25.6px -12.8px rgba(35,28,51,0.4), 0 12.8px 32px -19.2px rgba(35,28,51,0.5), 0 19.2px 38.4px -25.6px rgba(35,28,51,0.6)",
+      "element": "Product Video Frame"
+    }
+  ],
+  "northStar": "sunlit letters on a desk. White rounded panels, paper-like backgrounds, and handwritten marks sit above soft violet-and-salmon color washes.",
+  "typeScale": [
+    {
+      "role": "fine-print",
+      "size": 18,
+      "family": "Moniker",
+      "weight": 400,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.216
+    },
+    {
+      "role": "body",
+      "size": 21,
+      "family": "Moniker",
+      "weight": 400,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.399
+    },
+    {
+      "role": "letter-body",
+      "size": 24,
+      "family": "Moniker",
+      "weight": 400,
+      "lineHeight": 1.45,
+      "letterSpacing": -0.288
+    },
+    {
+      "role": "handwritten-note",
+      "size": 27,
+      "family": "Shantell Sans",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -0.324
+    },
+    {
+      "role": "link-large",
+      "size": 32,
+      "family": "Moniker",
+      "weight": 400,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.384
+    },
+    {
+      "role": "heading-support",
+      "size": 40,
+      "family": "Really Sans Large",
+      "weight": 850,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-accent",
+      "size": 40,
+      "family": "Really Sans Large",
+      "weight": 900,
+      "lineHeight": 1.1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "section-heading",
+      "size": 48,
+      "family": "Really Sans Large",
+      "weight": 850,
+      "lineHeight": 1.1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display",
+      "size": 83,
+      "family": "Really Sans Large",
+      "weight": 900,
+      "lineHeight": 1.1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display-handwritten",
+      "size": 83,
+      "family": "Shantell Sans",
+      "weight": 900,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Floating Capsule Navigation",
+      "role": "Public top navigation",
+      "description": "Use a White Sheet horizontal capsule with a 38.4px radius, Ink Moniker links at 20.8px/500, and the ink-tinted navigation shadow. Keep internal item gaps in the 10–11px range; place the compact sign-in control and prominent conversion control at the right edge."
+    },
+    {
+      "name": "Mint Primary Action",
+      "role": "Repeated filled conversion button",
+      "description": "Fill with Mint Note #b3f4e0, set Blurple #5522fa text and border, use a 43.68px radius, and apply 12.48px 18.72px 10.4px padding. Use Moniker 500 text; do not convert this treatment to a violet fill."
+    },
+    {
+      "name": "White Play Control",
+      "role": "Video-overlay control",
+      "description": "Use a White Sheet #ffffff pill with Ink #231c33 text, 20.88px radius, and 4.32px top/bottom with 15.84px right and 4.32px left padding for the icon-leading compact version. Give it the play shadow: 0 3.2px 6.4px -3.2px rgba(35,28,51,0.2), 0 6.4px 12.8px -6.4px rgba(35,28,51,0.4), 0 9.6px 19.2px -9.6px rgba(35,28,51,0.6)."
+    },
+    {
+      "name": "Gradient Promotional Pill",
+      "role": "High-visibility public conversion control",
+      "description": "Use the 135deg Blurple-to-Salmon Glow gradient with white Moniker 500 text. Set a 57.2px radius with 16.64px vertical and 21.32px horizontal padding; the larger floating version uses a 74.8px radius with 23.8px 29.92px padding."
+    },
+    {
+      "name": "New Navigation Marker",
+      "role": "Small announcement label",
+      "description": "Use a coral-to-salmon 135deg gradient chip with White Sheet text in Moniker 16px/500, tight 1–4px padding, and a fully pill-shaped silhouette."
+    },
+    {
+      "name": "Hero Paper Panel",
+      "role": "Opening content container",
+      "description": "Place the display stack on White Sheet #ffffff inside a 25.6px rounded panel with the deep card shadow. Set the display headline in Really Sans Large 83.2px/900/91.52px in Ink, allowing Blurple-to-Salmon treatment on selected words and Shantell Sans 83.2px/900 for the handwritten plus sign."
+    },
+    {
+      "name": "Product Video Frame",
+      "role": "Product demonstration media",
+      "description": "Use a 25.6px top-rounded White Sheet media frame with no internal padding and the card shadow. Cover the product capture with a 135deg Blurple #5522fa to Salmon Glow #ec8580 translucent wash, then center the White Play Control."
+    },
+    {
+      "name": "Sky Testimonial Card",
+      "role": "Social-proof message tile",
+      "description": "Use a soft 135deg Sky Wash background, 25.6px rounded corners, Ink body text, and a small circular 9999px author avatar that overlaps the top edge. Set quote copy in Moniker with 21px/400/1.60 for reading text; reserve 10px gaps for compact metadata."
+    },
+    {
+      "name": "Paper Letter Card",
+      "role": "Long-form editorial message",
+      "description": "Use a White Sheet page with a nearly square 2.4px radius, 90px vertical and 96px horizontal padding, and the layered card shadow. Set letter copy in Ink Moniker 24px/400/1.45 with generous paragraph separation rather than decorative rules."
+    },
+    {
+      "name": "Understated Text Input",
+      "role": "Inline form field",
+      "description": "Use transparent fill, Ink #231c33 text and border, a 0px radius, and 21.6px left padding. Keep the field visually linear; do not place it in a rounded gray box."
+    },
+    {
+      "name": "Fine Print",
+      "role": "Supporting conversion note",
+      "description": "Set in Quiet Gray #736c83 Moniker 17.6px/400/21.12px with -0.22px tracking. Position immediately beneath a public conversion control with a small vertical gap."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and section headlines. The 850–900 weight is intentionally oversized and soft-edged; authority comes from chunky letterforms rather than tight, technical type.",
+      "sizes": "40px, 48px, 83px",
+      "family": "Really Sans Large",
+      "weight": "850, 900",
+      "lineHeight": "1.10, 1.20",
+      "substitute": "Nunito Sans Black",
+      "letterSpacing": "normal",
+      "fontFeatureSettings": "\"case\", \"liga\", \"ss04\""
+    },
+    {
+      "role": "Navigation, buttons, long-form letter copy, labels, links, testimonials, and UI controls. Its slightly condensed negative tracking lets conversational copy remain compact beside oversized display type.",
+      "sizes": "14px, 16px, 18px, 20px, 21px, 24px, 27px, 32px",
+      "family": "Moniker",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.00, 1.20, 1.40, 1.45, 1.60, 1.80",
+      "substitute": "DM Sans",
+      "letterSpacing": "-0.40px at 21px, -0.32px at 27px, -0.38px at 32px; generally -0.012em to -0.019em",
+      "fontFeatureSettings": "\"case\", \"liga\"; \"c2sc\", \"smcp\""
+    },
+    {
+      "role": "Handwritten interjections, especially a single symbolic character inside a display headline. Use sparingly as an imperfect human interruption within the otherwise heavy sans system.",
+      "sizes": "27px, 83px",
+      "family": "Shantell Sans",
+      "weight": "400, 900",
+      "lineHeight": "1.00",
+      "substitute": "Caveat",
+      "letterSpacing": "-0.32px at 27px; -1.00px at 83px",
+      "fontFeatureSettings": "\"case\", \"liga\", \"ss04\""
+    }
+  ],
+  "description": "HEY treats the page as a stack of tactile paper objects floating over a warm off-white field. Giant, almost cartoon-heavy Really Sans headlines use violet-to-salmon color as an occasional burst, while dense Moniker text keeps navigation, messages, and interface copy compact and human. The recurring 25.6px rounded white panel, soft ink-tinted shadow, handwritten Shantell interruption, and pastel gradient product imagery make email feel personal rather than corporate.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Ink: #231c33 — Headlines, navigation, body copy, input text, play-control text, and dark button labels\n- Paper: #f9f7f5 — Warm page canvas and large paper-like content sections\n- White Sheet: #ffffff — Floating navigation, hero panels, cards, video controls, and reversed text\n- Quiet Gray: #736c83 — Fine-print helper copy and low-emphasis supporting text\n- Blurple: linear-gradient(135deg, #5522fa 0%, #ec8580 100%) — Links, emphasized headings, illustrated interface details, and the violet edge of expressive promotional gradients\n- Mint Note: #b3f4e0 — Filled primary action backgrounds — mint against Ink labels keeps repeated conversion controls playful rather than forceful\n- Salmon Glow: linear-gradient(135deg, #f95c5c 0%, #ec8580 100%) — Warm gradient endpoint for promotional surfaces and colorful product demonstrations\n- Sky Wash: linear-gradient(135deg, #b6dbff 0%, #eef8ff 100%) — Testimonial-card and soft interface background washes\n- Canary Note: #fff5ca — Occasional warm highlighted surface behind short content moments\n- Stone: #edeae6 — Subdued neutral fills and secondary quiet surfaces\n\nCreate a centered hero on Paper #f9f7f5 inside a White Sheet #ffffff panel with a 25.6px radius and layered Ink shadow; set the headline in Really Sans Large 83.2px, weight 900, 91.52px line-height, using Ink #231c33 with a single Shantell Sans 83.2px handwritten symbol.\nCreate a Mint Primary Action using Mint Note #b3f4e0, Blurple #5522fa Moniker 27.2px weight 500 text, 43.68px radius, and 12.48px 18.72px 10.4px padding; place Quiet Gray #736c83 Moniker 17.6px helper text beneath it.\nCreate a product video frame on White Sheet #ffffff with 25.6px top corners, a 135deg Blurple #5522fa to Salmon Glow #ec8580 media wash, and a centered white play pill with Ink Moniker 20.8px weight 500 text.\nCreate a Sky Testimonial Card with the Sky Wash gradient, 25.6px corners, an overlapping circular avatar, and Ink #231c33 Moniker 21px/400/1.60 quote text.\nCreate a Paper Letter Card with White Sheet #ffffff, 2.4px radius, 90px vertical and 96px horizontal padding, layered Ink shadow, and Ink Moniker 24px/400/1.45 body copy."
+    }
+  ]
+}

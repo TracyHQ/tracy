@@ -1,0 +1,407 @@
+/* =============================================================================
+ * ja_kinetic — Single Article VIEW (all com_content single articles)
+ * Scoped to `.hx-article` (the single-article wrapper in
+ * html/com_content/article/default.php). Loaded by that override for every
+ * NON-canvas article, so EVERY blog post renders the .pen "Page/Article" design
+ * — not just the demo article that owns Itemid=230. Canvas marketing articles
+ * carry `.hx-canvas-article` and are excluded where it matters.
+ * Source of truth: pencil/kinetic.pen frames SVVhC (dark) / LUZNP (light) /
+ * N0UJEW (mob-d) / p1J94K (mob-l). Terminal style; tokens carry light+dark+3 styles.
+ * ============================================================================= */
+
+/* ── 1. T4 main-body gap (P58): blank strip above the masthead → 0 ─────────── */
+.t4-section.t4-main-body:has(.hx-article:not(.hx-canvas-article)) {
+  padding-top: 0 !important;
+}
+
+/* ── 2. Masthead: padding + radial gradient + grid (light + all themes) ────── */
+.hx-article .hx-article__head {
+  padding-top:    60px;
+  padding-bottom: 52px;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 160% 110% at 50% 0%,
+      rgba(163,230,53,0.059) 0%, var(--elevated) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+  background-color: var(--bg);
+}
+/* Dark Terminal endpoint: design uses #161B18 (not --elevated:#0F1311) */
+html.t4-dark .hx-article .hx-article__head {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 160% 110% at 50% 0%,
+      rgba(163,230,53,0.059) 0%, #161B18 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+
+/* ── 3. Masthead inner (design GXGB6) ─────────────────────────────────────── */
+.hx-article .hx-article__head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.hx-article .hx-article__breadcrumb,
+.hx-article .hx-article__cat,
+.hx-article .hx-article__title,
+.hx-article .hx-article__sub {
+  margin: 0;
+}
+
+/* ── 4. Breadcrumb (AR14) ─────────────────────────────────────────────────── */
+.hx-article .hx-article__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1;
+}
+.hx-article .hx-article__breadcrumb .hx-bc-home {
+  color: var(--text);
+  text-decoration: none;
+}
+.hx-article .hx-article__breadcrumb .hx-bc-cat,
+.hx-article .hx-article__breadcrumb .hx-bc-sep,
+.hx-article .hx-article__breadcrumb .hx-bc-current {
+  color: var(--muted);
+  text-decoration: none;
+}
+.hx-article .hx-article__breadcrumb a:hover {
+  color: var(--primary);
+}
+
+/* ── 5. Eyebrow pill (AR13: no `//` prefix; rendered category name) ────────── */
+.hx-article .hx-article__cat {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background-color: rgba(163,230,53,0.082) !important;
+  border: 1px solid rgba(163,230,53,0.25) !important;
+  border-radius: 100px;
+  font-size: 11.5px !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+}
+.hx-article .hx-article__cat::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  flex-shrink: 0;
+}
+
+/* ── 6. Article title ─────────────────────────────────────────────────────── */
+.hx-article .hx-article__title {
+  font-size:      44px !important;
+  text-align:     center !important;
+  letter-spacing: -1.3px !important;
+  line-height:    1.1 !important;
+  max-width: 760px;
+}
+
+/* ── 7. Sub-title (AR21) ──────────────────────────────────────────────────── */
+.hx-article .hx-article__sub {
+  max-width: 600px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text);
+}
+
+/* ── 8. Author bio box (AR25) ─────────────────────────────────────────────── */
+.hx-article .hx-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+.hx-article .hx-author__av {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(163, 230, 53, 0.145); /* same value in both themes */
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+}
+.hx-article .hx-author__c {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hx-article .hx-author__name {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--heading);
+}
+.hx-article .hx-author__meta {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* ── 9. Hero image (AR26) ─────────────────────────────────────────────────── */
+.hx-article .hx-prose .item-image {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 22px;
+}
+.hx-article .hx-prose .item-image img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.hx-article .hx-prose .item-image figcaption {
+  margin-top: 8px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* ── 10. Body prose line-height + section headings ────────────────────────── */
+.hx-article .hx-prose .article-body p,
+.hx-article .hx-prose .com-content-article__body p {
+  line-height: 1.75;
+}
+.hx-article .hx-prose h2,
+.hx-article .hx-prose .h2,
+.hx-article .hx-prose h3,
+.hx-article .hx-prose .h3 {
+  font-size:      24px   !important;
+  letter-spacing: -0.5px !important;
+}
+
+/* ── 10b. Blockquote (.pen "Quote"): 3px left primary rule, Space Grotesk 20/600 ─
+ * Override the shared scss prose blockquote (21px/400) to the .pen spec
+ * (SVVhC/LUZNP "Quote": 20px, 600, -0.3px ls, lh 1.45, pad 4/0/4/22,
+ * 3px left border --primary, heading colour). Tokens flip light↔dark. */
+.hx-article .hx-prose blockquote {
+  margin:         28px 0   !important;
+  padding:        4px 0 4px 22px !important;
+  border-left:    3px solid var(--primary) !important;
+  background:     transparent !important;
+  font-family:    "Space Grotesk", sans-serif !important;
+  font-size:      20px     !important;
+  font-weight:    600       !important;
+  line-height:    1.45      !important;
+  letter-spacing: -0.3px    !important;
+  color:          var(--heading) !important;
+}
+.hx-article .hx-prose blockquote p {
+  margin:      0          !important;
+  font:        inherit    !important;
+  line-height: inherit    !important;
+  color:       inherit    !important;
+}
+
+/* ── 10c. Body check-list (.pen "List"): lucide-style check + 16/24 text, no disc ─
+ * The .pen renders an article <ul> as a green-check checklist (16px/24 text,
+ * 18px check glyph, 10px gap). Replace the default disc bullets. */
+.hx-article .hx-prose .article-body ul,
+.hx-article .hx-prose .com-content-article__body ul {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hx-article .hx-prose .article-body ul > li,
+.hx-article .hx-prose .com-content-article__body ul > li {
+  position: relative;
+  margin: 0;
+  padding-left: 28px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.hx-article .hx-prose .article-body ul > li::before,
+.hx-article .hx-prose .com-content-article__body ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--primary);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 18px no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 18px no-repeat;
+}
+
+/* ── 11. Tags ─────────────────────────────────────────────────────────────── */
+.hx-article .hx-prose .tags {
+  border-top:  1px solid var(--border);
+  padding-top: 24px !important;
+  margin-top:  0;
+}
+.hx-article .hx-prose .tags a {
+  background:   transparent !important;
+  padding:      6px 12px    !important;
+  /* .pen tag label = JetBrains Mono 12 NORMAL; BS .badge ships font-weight:700 */
+  font-weight:  400         !important;
+}
+
+/* ── 12. Suppress non-design elements (foot meta + prev/next nav) ──────────── */
+.hx-article .hx-article__foot {
+  display: none !important;
+}
+.hx-article .hx-prose .pagenavigation,
+.hx-article .hx-prose .pager,
+.hx-article .hx-prose .pagination-list,
+.hx-article .hx-prose nav[aria-label*="Article"],
+.hx-article .hx-prose .com-content-article__pagination {
+  display: none !important;
+}
+
+/* ── 13. Related posts (AR38) ─────────────────────────────────────────────── */
+.hx-article .hx-related {
+  background: var(--elevated);                 /* light #F2F5EE ✓ */
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 64px 0;
+}
+html.t4-dark .hx-article .hx-related {
+  background: #161B18;                          /* design dark endpoint (≠ --elevated #0F1311) */
+}
+.hx-article .hx-related__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 28px;
+  max-width: 1240px;
+}
+.hx-article .hx-related__title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+}
+.hx-article .hx-related__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.hx-article .hx-related__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+  border-radius: 14px;
+  background: var(--surface);                  /* #121614 dark / #fff light ✓ */
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+.hx-article .hx-related__card:hover {
+  border-color: var(--primary);
+}
+.hx-article .hx-related__tag {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--primary);
+}
+.hx-article .hx-related__ti {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading);
+}
+.hx-article .hx-related__m {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* =============================================================================
+ * RESPONSIVE
+ * ============================================================================= */
+
+/* Tablet (621–860 px): match the template's ramp */
+@media (max-width: 860px) {
+  .hx-article .hx-article__title {
+    font-size:      38px !important;
+    line-height:    1.08 !important;
+    letter-spacing: -1px !important;
+  }
+}
+
+/* Mobile (≤620 px): design N0UJEW / p1J94K */
+@media (max-width: 620px) {
+  .hx-article .hx-article__head {
+    padding-top:    40px;
+    padding-bottom: 34px;
+  }
+  .hx-article .hx-article__head-inner {
+    gap: 14px;
+  }
+  .hx-article .hx-article__title {
+    font-size:      30px !important;
+    line-height:    1.12 !important;
+    letter-spacing: -1px !important;
+  }
+  .hx-article .hx-article__cat {
+    font-size: 11px !important;
+  }
+  .hx-article .hx-article__sub {
+    font-size: 15px;
+  }
+  .hx-article .hx-prose .item-image img {
+    height: 200px;
+  }
+  .hx-article .hx-author,
+  .hx-article .hx-prose .item-image {
+    margin-bottom: 20px;
+  }
+  .hx-article .hx-prose h2,
+  .hx-article .hx-prose .h2,
+  .hx-article .hx-prose h3,
+  .hx-article .hx-prose .h3 {
+    font-size: 22px !important;
+  }
+  .hx-article .hx-prose blockquote {
+    font-size: 18px !important;
+  }
+  .hx-article .hx-prose .tags {
+    padding-top: 20px !important;
+  }
+  .hx-article .hx-related {
+    padding: 40px 0;
+  }
+  .hx-article .hx-related__inner {
+    gap: 20px;
+  }
+  .hx-article .hx-related__title {
+    font-size: 22px;
+  }
+  .hx-article .hx-related__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

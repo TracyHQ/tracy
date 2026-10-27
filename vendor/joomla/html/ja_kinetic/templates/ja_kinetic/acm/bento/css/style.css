@@ -1,0 +1,324 @@
+/* =========================================================================
+ * Kinetic - Bento (ACM block) - self-contained, block-scoped.
+ * Colour/type/spacing routed through inherited design-spec CSS vars
+ * (--surface --border --heading --text --muted --primary). Local *-bento
+ * fallback vars ship light + dark via the html.t4-dark hook.
+ * Compiled from less/style.less.
+ * ========================================================================= */
+.acm-bento {
+  --bento-surface: var(--surface, #FFFFFF);
+  --bento-elevated: var(--elevated, #F2F5EE);
+  --bento-border: var(--border, #E4E8E0);
+  --bento-heading: var(--heading, #10140F);
+  --bento-text: var(--text, #46514B);
+  --bento-muted: var(--muted, #7C877F);
+  --bento-primary: var(--primary, #4D7C0F);
+}
+.acm-bento .hx-section {
+  padding: 88px 0;
+}
+.acm-bento .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-inline: 32px;
+}
+.acm-bento .acm-bento-rule {
+  height: 1px;
+  background: var(--bento-border);
+  margin-bottom: 36px;        /* .pen Inner gap Rule->Head = 36 */
+}
+.acm-bento .acm-bento-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.acm-bento .acm-bento-head-main {
+  max-width: 560px;
+}
+.acm-bento .acm-bento-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bento-primary);
+  margin-bottom: 14px;
+}
+.acm-bento .acm-bento-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--bento-heading);
+  margin: 0;
+}
+.acm-bento .acm-bento-sub {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--bento-text);
+  margin: 0;
+  max-width: 360px;
+}
+/* .pen Bento: a 50/50 split. The featured tile (span-2) is the TALL left card
+   spanning BOTH top rows; the next two tiles auto-flow into the right column,
+   STACKED (top row / bottom row); the final two tiles form the 50/50 bottom row.
+   2 columns + featured `grid-row: span 2` + default row auto-flow reproduces this. */
+.acm-bento .hx-bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(178px, auto);
+  gap: 16px;
+}
+.acm-bento .hx-card {
+  border: 1px solid var(--bento-border);
+  background: var(--bento-surface);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color .15s ease, transform .2s ease, box-shadow .2s ease;
+}
+/* CARD gesture (micro-interactions.md §3a): neutral border at rest → primary
+   border + 2px lift + soft shadow on hover. No card is ever pre-highlighted. */
+.acm-bento .hx-card:hover {
+  border-color: var(--bento-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--bento-primary) 40%, transparent);
+}
+.acm-bento .acm-bento-ico {
+  transition: transform .2s ease;
+}
+.acm-bento .hx-card:hover .acm-bento-ico {
+  transform: scale(1.06);
+}
+.acm-bento .acm-bento-tile.span-2 {
+  grid-row: span 2;            /* featured = tall left card (NOT wide) */
+  padding: 30px 28px;         /* .pen Big padding [30,28] */
+}
+.acm-bento .acm-bento-ico {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--bento-primary) 12%, transparent);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.acm-bento .acm-bento-ico svg {
+  width: 21px;
+  height: 21px;
+  color: var(--bento-primary);
+}
+.acm-bento .acm-bento-stat {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: var(--bento-heading);
+  margin-bottom: 10px;
+}
+.acm-bento .acm-bento-tile-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--bento-heading);
+  margin: 0 0 8px;
+}
+.acm-bento .acm-bento-tile.span-2 .acm-bento-tile-title {
+  font-size: 23px;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.acm-bento .acm-bento-tile-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--bento-text);
+  margin: 0;
+  max-width: 420px;
+}
+.acm-bento .acm-bento-media {
+  margin-top: 26px;
+}
+.acm-bento .acm-bento-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--bento-border);
+}
+@media (max-width: 620px) {
+  .acm-bento .hx-section {
+    padding: 56px 0;
+  }
+  .acm-bento .hx-container {
+    padding-inline: 20px;
+  }
+  .acm-bento .acm-bento-title {
+    font-size: 27px;
+  }
+}
+@media (max-width: 768px) {
+  /* stack every tile in one column; the featured card stops spanning two rows */
+  .acm-bento .hx-bento {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+  .acm-bento .acm-bento-tile.span-2 {
+    grid-row: auto;
+  }
+}
+html.t4-dark .acm-bento,
+[data-bs-theme="dark"] .acm-bento,
+[data-theme="dark"] .acm-bento {
+  --bento-surface: var(--surface, #121614);
+  --bento-elevated: var(--elevated, #0F1311);
+  --bento-border: var(--border, #232A27);
+  --bento-heading: var(--heading, #F2F5F3);
+  --bento-text: var(--text, #9AA6A1);
+  --bento-muted: var(--muted, #5F6B66);
+  --bento-primary: var(--primary, #A3E635);
+}
+
+/* =========================================================================
+ * style-2 — Home "incident" editorial bento (.pen FeaturesWrap rMKEv).
+ * 4-col grid: tall featured (chart img) + wide stat (eyebrow/stat/spark) +
+ * two small cards + two wide half-row cards. Scoped to .style-2 so the
+ * style-1 (Landing/simple) bento is untouched.
+ * ========================================================================= */
+.acm-bento.style-2 .hx-bento {
+  grid-template-columns: repeat(4, 1fr);
+  /* rows 1-2 form the 375px top area (featured spans both); row 3 = short
+     half-cards sized to content. .pen FeaturesWrap. */
+  grid-template-rows: minmax(178px, auto) minmax(178px, auto) auto;
+  grid-auto-rows: auto;
+  gap: 16px;
+}
+.acm-bento.style-2 .acm-bento-tile.span-feat { grid-column: 1 / 3; grid-row: 1 / 3; }
+.acm-bento.style-2 .acm-bento-tile.span-wide { grid-column: span 2; }
+.acm-bento.style-2 .acm-bento-tile.span-1    { grid-column: span 1; }
+
+/* spacing driven by flex gap, not margins */
+.acm-bento.style-2 .acm-bento-ico { margin-bottom: 0; }
+.acm-bento.style-2 .acm-bento-tile-title { margin: 0; }
+.acm-bento.style-2 .acm-bento-tile-text { margin: 0; max-width: none; }
+.acm-bento.style-2 .acm-bento-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+/* Featured (Big) */
+.acm-bento.style-2 .acm-bento-tile.is-feat { padding: 30px 28px; gap: 18px; }
+.acm-bento.style-2 .is-feat .acm-bento-tile-title { font-size: 23px; letter-spacing: -0.5px; }
+.acm-bento.style-2 .is-feat .acm-bento-tile-text { font-size: 15px; line-height: 1.6; }
+.acm-bento.style-2 .is-feat .acm-bento-media { margin-top: 0; }
+.acm-bento.style-2 .is-feat .acm-bento-media img {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+  height: auto;
+}
+
+/* Stat tile */
+.acm-bento.style-2 .acm-bento-tile.is-stat {
+  padding: 26px 28px;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+.acm-bento.style-2 .acm-bento-stat-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.acm-bento.style-2 .acm-bento-stat-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+.acm-bento.style-2 .acm-bento-stat-row { display: flex; align-items: flex-end; gap: 6px; }
+.acm-bento.style-2 .acm-bento-stat-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 46px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -2px;
+  color: var(--bento-heading);
+}
+.acm-bento.style-2 .acm-bento-stat-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--bento-muted);
+}
+.acm-bento.style-2 .is-stat .acm-bento-tile-text { font-size: 13.5px; line-height: 1.55; }
+.acm-bento.style-2 .acm-bento-spark {
+  width: 120px;
+  height: 70px;
+  flex: 0 0 auto;
+  color: var(--bento-primary);
+  overflow: visible;
+}
+
+/* Small (Smart / Distributed) */
+.acm-bento.style-2 .acm-bento-tile.is-small { padding: 24px 22px; gap: 12px; }
+.acm-bento.style-2 .is-small .acm-bento-ico { width: 40px; height: 40px; border-radius: 10px; }
+.acm-bento.style-2 .is-small .acm-bento-ico svg { width: 19px; height: 19px; }
+.acm-bento.style-2 .is-small .acm-bento-tile-title { font-size: 16px; letter-spacing: -0.2px; }
+.acm-bento.style-2 .is-small .acm-bento-tile-text { font-size: 13px; line-height: 1.54; }
+
+/* Half-row (Tiered retention / SOC 2 & SSO) */
+.acm-bento.style-2 .acm-bento-tile.is-half {
+  padding: 24px 26px;
+  flex-direction: row;
+  gap: 18px;
+  align-items: center;
+}
+.acm-bento.style-2 .is-half .acm-bento-body { gap: 5px; }
+.acm-bento.style-2 .is-half .acm-bento-tile-title { font-size: 17px; letter-spacing: -0.2px; }
+.acm-bento.style-2 .is-half .acm-bento-tile-text { font-size: 13.5px; line-height: 1.55; }
+
+/* =========================================================================
+ * Telemetry visual recolor per home style. The featured-tile chart is a baked
+ * lime raster (bento-telemetry-chart.webp). All CSS-driven accents (icons,
+ * spark, eyebrow, stat) already flip to the active style token, but the raster
+ * stays lime — shift its hue to the style accent: lime→indigo under blueprint,
+ * lime→cyan under signal. Terminal (default) keeps the lime raster untouched.
+ * Verified live: output line hue ≈ #6366F1 / #22D3EE. No new assets.
+ * ========================================================================= */
+html[data-style="blueprint"] .acm-bento .acm-bento-media img {
+  filter: hue-rotate(155deg) saturate(1.3);
+}
+html[data-style="signal"] .acm-bento .acm-bento-media img {
+  filter: hue-rotate(90deg) saturate(1.1);
+}
+
+/* Responsive — stack to a single column (override the 4-col scope) */
+@media (max-width: 768px) {
+  .acm-bento.style-2 .hx-bento {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+  .acm-bento.style-2 .acm-bento-tile.span-feat { grid-column: auto; grid-row: auto; }
+  .acm-bento.style-2 .acm-bento-tile.span-wide { grid-column: auto; }
+  .acm-bento.style-2 .acm-bento-tile.is-stat {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .acm-bento.style-2 .acm-bento-spark { width: 100%; height: 56px; }
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+  .acm-bento .hx-card:hover { transform: none; }
+}

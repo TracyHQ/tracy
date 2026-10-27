@@ -1,0 +1,21 @@
+{
+  "name": "tracy-emdash-template",
+  "version": "1.5.2",
+  "description": "Turn a folder of design HTML into a running EmDash 0.37 site — Astro SSR, Tailwind 4, shadcn/ui — with CMS-editable content, a repeatable importer, a machine-checked acceptance gate and a package that rebuilds on a clean site.",
+  "author": {
+    "name": "Tracy"
+  },
+  "homepage": "https://tracy.ai/",
+  "keywords": [
+    "emdash",
+    "astro",
+    "tailwind",
+    "shadcn",
+    "cms",
+    "template",
+    "i18n",
+    "visual-qa",
+    "acceptance"
+  ],
+  "license": "Proprietary — Tracy internal, see NOTICE.md"
+}

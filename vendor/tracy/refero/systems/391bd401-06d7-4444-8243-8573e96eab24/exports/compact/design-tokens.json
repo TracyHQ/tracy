@@ -1,0 +1,34 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "bone-white": {
+      "$value": "#f2e9de",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, announcement bar, card surfaces, product label backgrounds, button fills — warm cream that makes the entire site feel like aged paper"
+    },
+    "dusty-rose": {
+      "$value": "#ddc9c0",
+      "$type": "color",
+      "$description": "Dusty Rose — Secondary surface band, subtle tonal shift between cream sections — barely-distinguishable warm blush that creates the only depth in an otherwise flat system"
+    }
+  },
+  "font": {
+    "sofia-pro": {
+      "$value": "Sofia Pro",
+      "$type": "fontFamily",
+      "$description": "Only typeface in the system. Weight 800 at 120px with 0.83 line-height and -0.05em tracking for editorial display headlines — the face is pushed to extreme sizes to feel like magazine cover type. Weight 400 at 12-16px for body and utility labels, all-caps with 0.05em tracking for nav items. Weight 600 used sparingly for emphasis in product copy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.dsanddurga.com",
+      "siteName": "D.S. & DURGA",
+      "extractedAt": "2026-06-03T18:30:59.294Z",
+      "variant": "compact"
+    }
+  }
+}

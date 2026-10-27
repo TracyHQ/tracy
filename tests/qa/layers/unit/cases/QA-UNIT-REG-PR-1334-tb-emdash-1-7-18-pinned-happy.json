@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-1334-tb-emdash-1-7-18-pinned-happy",
+  "itemIds": ["regression:REG-PR-1334-tb-emdash-1-7-18-pinned"],
+  "requirement": "Tracy Business EmDash 1.7.18 (the two-mode design-system slot) is pinned on its published parts, and every place that names a Tracy Business version agrees",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1334-tb-emdash-1-7-18-pinned.json",
+    "ref": "PR #1334 (fix); fix evidence: none recorded",
+    "invariant": "S1: both copies pin 1.7.18 on tracy-business-emdash-quickstart-1.7.18.zip (6472598 bytes, sha256 7804bad2...e291, asset 638263593) and tracy-business-emdash-state-1.7.18.tar.gz (8471674 bytes, sha256 974084e6...fc02, asset 638263592). S2: all three say 1.7.18. S3: a 1.7.18 profile row, the where map names 1.7.18, slot maxVersion 1.7.18 with modes true. S4: ds-slot.ts reads the /* mode: light|dark */ line and Base.astro sets data-theme dark from it.",
+    "productSources": ["packages/cms/tracy-emdash-theme-business/src/lib/ds-slot.ts:4"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1334-tb-emdash-1-7-18-pinned.mjs:18 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1334-tb-emdash-1-7-18-pinned.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1334-tb-emdash-1-7-18-pinned"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1334-tb-emdash-1-7-18-pinned",
+    "pr": 1334,
+    "kind": "fix",
+    "area": "design/slot",
+    "file": "tests/regression/cases/REG-PR-1334-tb-emdash-1-7-18-pinned.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1334-tb-emdash-1-7-18-pinned.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 120
+}

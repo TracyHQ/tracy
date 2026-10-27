@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1742-wo-profile-revision",
+  "kind": "feat",
+  "title": "Demo requests and internal research freeze a canonical place profile with host-owned fact assessments",
+  "pr": 1742,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/public-demos",
+  "steps": [
+    "S1: Run the fact-assessment and profile-revision unit suites.",
+    "S2: On the test Postgres, run the public-demos and place-profile-freeze suites: submit v2, build its revision, replay, mutate live research, and create another revision."
+  ],
+  "expect": [
+    "S1: Sender-sensitive assertions and reviews are withheld, stale facts are marked, profile hashes use the original canonical JSON, and changed facts do not inherit assessment.",
+    "S2: Both revision paths freeze profile and assessment, v2 builds a valid brief and replays the same revision; oversized or assessment-smuggled requests are refused before import."
+  ],
+  "selectors": {
+    "door": "POST /v1/demos; revisionForAction; createRevision",
+    "tool": "tests/regression/scripts/REG-PR-1742-wo-profile-revision.mjs"
+  },
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1742-wo-profile-revision.mjs"],
+    "needs": ["postgres"]
+  }
+}

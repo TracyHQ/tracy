@@ -1,0 +1,69 @@
+{
+  "id": "QA-UNIT-REG-PR-1335-ops-ds-done-lists-measured-happy",
+  "itemIds": ["regression:REG-PR-1335-ops-ds-done-lists-measured"],
+  "requirement": "A done Design system step (Tracy Business EmDash 1.7.18, A 13/13) still lists its Passed rules, each with its Measured on line",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1335-ops-ds-done-lists-measured.json",
+    "ref": "PR #1335 (fix); fix evidence: none recorded",
+    "invariant": "S1: the done design-system row has a Passed group with ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1, IDENT-1, MODE-1, MODE-2, each with 'Measured on 1.7.18, 2026-10-13, imac'. S2: the eight built-site rules of 1.7.18 are measured from contracts/1.7.18/design-system-measurement.json, all pass with that stamp, none is Not measured yet.",
+    "productSources": [
+      "apps/tracy-web/src/lib/preview-demo.js:11",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/release-content.js:44",
+      "apps/tracy-web/src/lib/template-design-system-readiness/assets.js:26",
+      "apps/tracy-web/src/lib/template-design-system-readiness/index.js:157",
+      "apps/tracy-web/src/lib/template-design-system-readiness/newest-theme.js:10",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/slot.js:15",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/tokenized.js:110",
+      "apps/tracy-web/src/lib/template-design-system-readiness/rules/band-1-bands-follow.js:14",
+      "apps/tracy-web/src/lib/template-design-system-readiness/rules/built-site.js:54",
+      "apps/tracy-web/src/lib/template-design-system-readiness/severity.js:87",
+      "packages/design/tracy-ds-slot/src/measurement.mjs:16",
+      "packages/design/tracy-ds-slot/src/preview-probe-version.mjs:143"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/ds-slot.js:101 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:79 import() with a computed specifier",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs:32 readFileSync() with a computed path",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1335-ops-ds-done-lists-measured.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1335-ops-ds-done-lists-measured"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/web/tracy-harness", "tracy-harness"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1335-ops-ds-done-lists-measured",
+    "pr": 1335,
+    "kind": "fix",
+    "area": "ops/road-to-live",
+    "file": "tests/regression/cases/REG-PR-1335-ops-ds-done-lists-measured.json"
+  },
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=EmDash 1.7.18",
+    "packages/web/tracy-harness/test/template-presses.test.mjs",
+    "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 180
+}

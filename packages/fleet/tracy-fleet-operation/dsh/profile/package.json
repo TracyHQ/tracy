@@ -1,0 +1,18 @@
+{
+  "name": "dsh-profile-native",
+  "private": true,
+  "description": "The image's only profile, and the SAME bundles a lane loads today: dsh-base, dsh-web-app, dsh-better-sidebar, @goodandready/dsh-subscriptions, @tracy/dsh-native-bundle. Every package they name is copied into node_modules/ by the Dockerfile; nothing is installed at run time, and no registry is involved.",
+  "dependencies": {},
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "dsh-better-sidebar",
+        "@goodandready/dsh-subscriptions",
+        "@tracy/dsh-native-bundle"
+      ],
+      "patchReload": "startup"
+    }
+  }
+}

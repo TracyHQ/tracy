@@ -1,0 +1,69 @@
+{
+  "id": "REG-PR-966-help-command-barrier",
+  "kind": "feat",
+  "title": "/help <question> is consumed by the composer and answered by tracy-web without the agent; Help conversations are per agent session; Help reads only chosen facts and cannot change a site",
+  "pr": 966,
+  "area": "assistant",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:51730/postgres node --test --test-reporter=tap apps/tracy-web/test/assistant.test.mjs apps/tracy-web/test/assistant-readers.test.mjs packages/ui/tracy-assistant/test/help.test.mjs packages/ui/tracy-assistant/test/report.test.mjs packages/ui/tracy-assistant/test/chat.test.mjs (any Postgres whose user may create schemas will do).",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail', '# skipped' lines and the result of each case whose name starts with: \"Help: one conversation per agent session\"; \"Help: a malformed session id falls back\"; \"Help: the one-time tip\"; \"Help prompt: Discord is the one outside link\"; \"Help prompt: the agent session is two facts\"; \"a question posts the text, the session and the anchor seq\"; \"a second question waits for the first\"; \"only 3 questions may wait\"; \"Stop keeps what arrived\"; \"a 429 on the day window\"; \"no call ever leaves for anything but /api/assistant\"; \"Help: an answer can be rated by its own account only\"; \"the readers import nothing of sites/ or seats/ and call no door\"; \"a failing database reads as unavailable\"; \"recentActivity gives times and the end reason, never the turn title or reply\"; \"the prompt carries the site on screen\"; \"an editor’s prompt lists teammates without emails\"; \"without a site on screen no per-site reader runs\"; \"a reader that cannot read leaves a \"cannot see\" line\"; \"Help prompt: no invented policies\"; \"asking to report a problem puts a report on the row\"; \"the report holds the chosen fields and the person’s words\"; \"rating: the answer id comes from done\"; \"after a 429 the queue is held, and the next question the person types lifts the hold and is sent\".",
+    "S3: From vendor/tracy/deepseek-harness (submodule initialised, CI=true pnpm install --ignore-scripts --frozen-lockfile done) run: npx vitest run packages/client/ui-commands packages/client/ui-conversation/tests/input-scenarios.client.spec.tsx packages/client/ui-chat. Record the 'Test Files' and 'Tests' lines.",
+    "S4 (stand, by hand or with tasks/bang-chung/stand/stand-scenario.mjs): dsh profile native from this checkout (node scripts/materialize-profile.mjs native; build vendor/tracy/dsh-better-sidebar with npx tsdown; DSH_HOME=tch ./node_modules/.bin/dsh --profile native --no-open --port 51730). In the browser: type '/' (menu), '/help what is Site changes?' + Enter, '/HELP Xin Chào', bare '/help', press a chip, press thumbs up, send '/help first' and '/help second' quickly, then the order a person works in: send 'make the footer phone 0909', then '/help how do I undo?', then 'also make it shorter'. Record every POST the page makes (assistant doors and the agent's POST /api/session/prompt) and the order of the three texts in the transcript."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0', and '# pass' equal to '# tests': the database cases ran, none skipped.",
+    "Every named case in S2 is 'ok': a turn sent with session.id 'sess-1' and 'sess-2' lands in two different conversations, each turn keeps its anchorSeq (a fractional 12.5 survives) and a restore with ?session= reads that session only; a session id that is not a plain token falls back to the account-level conversation and a non-numeric anchorSeq is stored as null; the tip is recorded once per account and read back as tipSeen; the prompt carries the Discord link and no Talk-to-a-person handoff and tells the model to pass nothing on to the agent; the controller sends exactly one POST /api/assistant/turns at a time, refuses a fourth waiting question on screen, keeps a stopped answer, pauses on a 429 with the 'day' window, and every request it makes goes to /api/assistant/*. Ratings: an answer is rated by its own account only (another account's answer, a question, a cleared conversation read as 404; a value other than 1, -1 or null is 400) and the thumb is put back when the server refuses. Readers: only chosen columns reach the prompt (no turn title or reply, notification or comment text), an editor never sees teammates' emails, per-site readers do not run without a site on screen, and a failed read becomes a 'not available right now' line. A request to report a problem adds a report built from site, time, session id, browser and the person's own words, with no email or conversation. After a 429 (minute or day) the next question the person types is SENT, not left on Waiting; the start screen's Help dock follows the newest row.",
+    "S3 passes with no failed file: an argued line '/x hello' for a takesText action is consumed whole and run receives 'hello' (no command.execute, no submit); the line guard clears the draft only while it equals the line; attachments refuse the line and keep the draft; caseInsensitive folds '/X Hello' to the lowercase command and keeps the text; a client-local row sits after every log row at or below its anchorSeq and above later agent rows, and with no local rows the transcript is identical to before.",
+    "S4: no floating AI Assistant button or Need help? pill; the '/' menu lists 'Ask about Tracy and your sites'; '/help <q>' empties the composer, sends exactly one POST /api/assistant/turns with message '<q>' and the session id and anchorSeq, and the answer and the question are drawn (in the dock on a blank session, in the transcript afterwards); '/HELP' folds to '/help'; a bare '/help' draws one greeting with four chips and sends nothing; two quick questions are sent one after the other with 'Waiting' shown; a thumbs up posts rating 1 to the answer id; an ordinary message sends nothing to /api/assistant and reaches the agent; in 'modify, /help, modify' the agent receives exactly the two modify messages and nothing of /help, and the transcript order is modify, Help, modify; no horizontal overflow at 375px. Captured in tasks/bang-chung/stand/ (26 checks)."
+  ],
+  "selectors": {
+    "door": "POST /api/assistant/turns, GET /api/assistant/conversation?session=, POST /api/assistant/tip/seen (apps/tracy-web/src/assistant/route.js)",
+    "controller": "createHelp in packages/ui/tracy-assistant/src/client/help.ts",
+    "command": "CommandUiRuntime.matchEnter in vendor/tracy/deepseek-harness/packages/client/ui-commands/src/client/service.ts",
+    "rows": "assistant_conversation.session_id, assistant_turn.anchor_seq, assistant_tip_seen"
+  },
+  "evidence": "PR #966 (tasks/todo-lenh-help.md): the floating AI Assistant button is replaced by /help in the agent's chat; the barrier is that the agent never receives the line, and that Help has no tools and no door that writes a site. Stand run 07/10/2026: tasks/bang-chung/stand/README.md.",
+  "fence": "Mechanism only: the composer claims the line, the controller talks to /api/assistant only, the server keys conversations by (account, session) and the model gets no tools. Not covered here: the live dsh page on a stand (menu row, stream while the agent runs, reload placement, 375px, Electron) and the content of any answer; those are the stand levels of tasks/todo-lenh-help.md §9.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/assistant.test.mjs",
+      "apps/tracy-web/test/assistant-readers.test.mjs",
+      "packages/ui/tracy-assistant/test/help.test.mjs",
+      "packages/ui/tracy-assistant/test/report.test.mjs",
+      "packages/ui/tracy-assistant/test/chat.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "Help: one conversation per agent session",
+      "Help: a malformed session id falls back",
+      "Help: the one-time tip",
+      "Help prompt: Discord is the one outside link",
+      "Help prompt: the agent session is two facts",
+      "a question posts the text, the session and the anchor seq",
+      "a second question waits for the first",
+      "only 3 questions may wait",
+      "Stop keeps what arrived",
+      "a 429 on the day window",
+      "no call ever leaves for anything but /api/assistant",
+      "Help: an answer can be rated by its own account only",
+      "the readers import nothing of sites/ or seats/ and call no door",
+      "a failing database reads as unavailable",
+      "recentActivity gives times and the end reason, never the turn title or reply",
+      "the prompt carries the site on screen",
+      "an editor’s prompt lists teammates without emails",
+      "without a site on screen no per-site reader runs",
+      "a reader that cannot read leaves a \"cannot see\" line",
+      "Help prompt: no invented policies",
+      "asking to report a problem puts a report on the row",
+      "the report holds the chosen fields and the person’s words",
+      "rating: the answer id comes from done",
+      "after a 429 the queue is held, and the next question the person types lifts the hold"
+    ]
+  }
+}

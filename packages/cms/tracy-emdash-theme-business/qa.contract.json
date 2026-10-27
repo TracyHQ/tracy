@@ -1,0 +1,4467 @@
+{
+  "schemaVersion": 1,
+  "id": "tracy-business",
+  "revision": 16,
+  "pending": [],
+  "locales": ["en", "ru"],
+  "defaultLocale": "en",
+  "source": {
+    "reference": "vendor/joomla/html/tracy_business (Claude Design canvas export, EN + RU/)",
+    "files": [
+      {
+        "path": ".gitignore",
+        "sha256": "sha256:f60b7e517ab651ba4c2420e6164d09a4069abb6ee169cb1e54062f3ff58aa93b",
+        "disposition": "asset"
+      },
+      {
+        "path": "404.html",
+        "sha256": "sha256:cfb90dc99754b7a36146e714a0b10b3580d2eb74592156e4d1ab88431f9dbaf3",
+        "disposition": "converted"
+      },
+      {
+        "path": "About.html",
+        "sha256": "sha256:3190793a079301fcc3fb7f87d63302e654cb984ee818a501791117a5a2522d73",
+        "disposition": "converted"
+      },
+      {
+        "path": "Article.html",
+        "sha256": "sha256:3a03399a6a22c8df164b3b310807cbefc689b1516495c38fb1b8cc9943f98315",
+        "disposition": "converted"
+      },
+      {
+        "path": "Careers.html",
+        "sha256": "sha256:2080b5624765baf86dc380ca185d642aedb6063ed607eb6b8437c2a9f3ff90a9",
+        "disposition": "converted"
+      },
+      {
+        "path": "Contact.html",
+        "sha256": "sha256:6f8e55064b5194bb13ef19e888879b43dc0d8ffd6defadea28614b63df0d3ff4",
+        "disposition": "converted"
+      },
+      {
+        "path": "Email.html",
+        "sha256": "sha256:e8ffebde7449700fa2b65ca59eccb2b22a880b817308bbdba6995e3d367ca211",
+        "disposition": "converted"
+      },
+      {
+        "path": "Form.html",
+        "sha256": "sha256:0dd17e090cd2372857aba5f7863010e0ef43c0cdccba930072ea72076b77203d",
+        "disposition": "converted"
+      },
+      {
+        "path": "Home.html",
+        "sha256": "sha256:84867de51035c9c7bcfd09f986c03d0f9bc504614085edb62178c6f46d5eb85b",
+        "disposition": "converted"
+      },
+      {
+        "path": "Investor relations.html",
+        "sha256": "sha256:8a9df07c85be35de953a00a36030cca4977ae54d0a78e014a7cfeaf414945bba",
+        "disposition": "converted"
+      },
+      {
+        "path": "News.html",
+        "sha256": "sha256:d4882d8e8222a4816f078d4240caca32aa9de32d67a6ab93a5aa900279366925",
+        "disposition": "converted"
+      },
+      {
+        "path": "Newsletter.html",
+        "sha256": "sha256:f307f5fba69d4b19a3229417dc5e18095b5c51dcc110798d2ec5c5825d18302c",
+        "disposition": "converted"
+      },
+      {
+        "path": "Project detail.html",
+        "sha256": "sha256:c54f8257cf2e452c637ac08eeaae67553e3ccfd7666b278e0153f81ec74885eb",
+        "disposition": "converted"
+      },
+      {
+        "path": "Projects.html",
+        "sha256": "sha256:29df63e2b32b012fa1600ca6c6146daf4be5a8559d065f7b8c0629228a4db875",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/404_ru.html",
+        "sha256": "sha256:d4e92187456c86cff51274a8950986709fc7205ae498c7894fbffdf9f3dcc3b5",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/About_ru.html",
+        "sha256": "sha256:72583b0815ae5188af79b01fd5b4e6a01f9cf16fc54d81a2ff1d636347c0126a",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Article_ru.html",
+        "sha256": "sha256:bd51aac89ac78b29ac921cede987b1facaf3d35afe9f6c01bd80bddf155094db",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Careers_ru.html",
+        "sha256": "sha256:c2b836c3293f44aeaceb7508012605df876a4d4105a7fe0bc123276002e5a5a2",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Contact_ru.html",
+        "sha256": "sha256:c0c34958e20706f0b6655a076346e3fe63bd5937962e77433d483e8125bbfc68",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Email_ru.html",
+        "sha256": "sha256:6f48eb3414fbd66f391100d1bb229b0197bb4bbd9308640ccfcf46ce384fd3ef",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Form_ru.html",
+        "sha256": "sha256:aa360a128606fe9ef641c7ce57c581370601c8ffd9a907c018f76e1da305098d",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Home_ru.html",
+        "sha256": "sha256:dc787c5f3de64f82eea51bf001651c9f0e375a7ddf0cb29f6fa4fba1d2770928",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Investor relations_ru.html",
+        "sha256": "sha256:21955ae4301ddbaa17d693c875c13e1782970bd117b3c1253ca5e03c6fd4a300",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/News_ru.html",
+        "sha256": "sha256:4e8cd76d4553c98d1bde1bf0012a8b464b8c34e24245fab5baf6e5a8e68c3b9c",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Newsletter_ru.html",
+        "sha256": "sha256:849e6d138ac5816b5b9d96788855858195d4a3c008c173c9c1e2127c809898d6",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Project detail_ru.html",
+        "sha256": "sha256:e6e58aaf13b60e01bcfe138eac2b95a8570f6369b44c0eda30e501f56eb6d877",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Projects_ru.html",
+        "sha256": "sha256:6ede987027a4ecdd7949cffa751cfd9d47bb23ecd321e319c8ca23ef1f36533d",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Search_ru.html",
+        "sha256": "sha256:de530d38574ffc8af235ea7f2f8db58778f78f32c1d78b90d7081b1368d51908",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Services_ru.html",
+        "sha256": "sha256:8300247d0668b75d9c632a885160f23e53c7ff1e0d29838653639c75d0c280e4",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Slide_ru.html",
+        "sha256": "sha256:14146d35f73a6f6eb23c1fd570bb14ca14f9fdf72b51419e73a6de352695a90e",
+        "disposition": "converted"
+      },
+      {
+        "path": "RU/Style guide_ru.html",
+        "sha256": "sha256:ed12c26ea4eafb6c351cac070d667b2e7631101e1b5c7aee3d1472051d32aff8",
+        "disposition": "converted"
+      },
+      {
+        "path": "Search.html",
+        "sha256": "sha256:d452ec533b5a93fc12a1180df915c4f645741d121e48fb9936c343ad16751fa4",
+        "disposition": "converted"
+      },
+      {
+        "path": "Services.html",
+        "sha256": "sha256:a63ad72b268b61e85f6936cb587a5349e51c561ad76158573fe5f79adf847049",
+        "disposition": "converted"
+      },
+      {
+        "path": "Slide.html",
+        "sha256": "sha256:a4e9e880bc51f7188be9d24e86576b0b038e95a0baef86b3e86125e9bed49d09",
+        "disposition": "converted"
+      },
+      {
+        "path": "Style guide.html",
+        "sha256": "sha256:d87e2065103b73bb8e18322d933b320420ad1edfac11e2cec267360acc48cc96",
+        "disposition": "converted"
+      },
+      {
+        "path": "decks/Corporate Deck 2028.pdf",
+        "sha256": "sha256:95b14392ff7d83a361e53e10f0914be7d9406151938956e3013003d13d7e8608",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/en/corporate-2026.pdf",
+        "sha256": "sha256:fe69eae935bef01f26b52c752b33ac583f0b86f6c0978657d02e729910fea9ae",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/en/progress-report.pdf",
+        "sha256": "sha256:505a29dbecfa7ec90f2b900d4a1f409e9c4d833c588ffd12a10b9a422952352f",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/en/proposal-production-building.pdf",
+        "sha256": "sha256:293b7fbdaf896129ad8b8e4e91e095b19477d96d91ff411853fb4d9b9fa2f9e4",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/en/tradeshow-stand.pdf",
+        "sha256": "sha256:c7623d65b7c159d20b5fd9765c27badfed54a865bd2aa1b3f529eb632be63e1d",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/ru/corporate-2026.pdf",
+        "sha256": "sha256:0e0d2d4cce4faa45c6299455c6d6957359025114fd6e2fb14f5c17f4984fd1e0",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/ru/progress-report.pdf",
+        "sha256": "sha256:0b95a50d16bcc35ef040ca0688a45cde598e5e6ac6d302469a8b2af0a6882e1f",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/ru/proposal-production-building.pdf",
+        "sha256": "sha256:5ebe6753dbb87ce8aded47088910a95d949e2fb12a8119cbfd8eb28464171fe0",
+        "disposition": "asset"
+      },
+      {
+        "path": "decks/ru/tradeshow-stand.pdf",
+        "sha256": "sha256:6cbd6656cb9f7cafbfb8f2de1eab8d5a1075f34112c12be1beb01ea17e7d2d9c",
+        "disposition": "asset"
+      },
+      {
+        "path": "image-slot.js",
+        "sha256": "sha256:fff26d081c8d9d60870f86c7539a5d179b9cdab15e67f2b205508a068e7c7ff6",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/art-fig1.png",
+        "sha256": "sha256:fe4832f482da653c61c00336af8533dfae03805a7f45bea8306f997162ef3354",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/art-fig2.png",
+        "sha256": "sha256:54ad3b96395c309dd12061bed9b001ee533fef1fa9bb3a6cb22047be0982f326",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/art-hero-2.png",
+        "sha256": "sha256:94c2ee43b8a86646c322c2cb54c318421d6b2a84088ff717d4345909286ff291",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/art-hero.png",
+        "sha256": "sha256:e77cd976328e4c04888d9fe3ae9bc4255cfbb4cbef17484ac7de0670a91cfedc",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/blog-1.png",
+        "sha256": "sha256:26eb247ed1c10f73266890029c631d70861418d0cd5f91f8123b97f4303d4813",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/blog-2.png",
+        "sha256": "sha256:41325fe3f8a2f659ee237a864ba28301ae404ba3ea5c479f2ffe37a368abc0c8",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/blog-3.png",
+        "sha256": "sha256:fd59e6a3f032b1e4ed0c917f799ef69a3bc0bc72857027ac4e79ef7da049358c",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/blog-4.png",
+        "sha256": "sha256:fedd7ec29a0d3d2c3ef9890a2df955e8b92ea649920cb3663920073a2cc765b0",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/blog-feat-2.png",
+        "sha256": "sha256:7a9ea07d7322a8d5a58fe8741f0f8a62694fb418b299da89450a5bd6247f7391",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/blog-feat.png",
+        "sha256": "sha256:4b6b2ef7778d4fd232a8bfe2b71acfb2eaf3b9bdb75a33cab97d3cad4a9de207",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/factory-1.png",
+        "sha256": "sha256:bc2b8840bba96f6041b8c2c89faf27944f70dea4f373138f407a988015b52568",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/factory-2.png",
+        "sha256": "sha256:2d01c592cc262315b464ee466bf00265fbe9762ad1e2d0a5bbd17554c747f3d0",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/factory-ru-1.png",
+        "sha256": "sha256:4706f66a3030c0a90195898a2f927aa8c0f083c357dbee4d19c5f64a017d7430",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/factory-ru-2.png",
+        "sha256": "sha256:82ad052e1f6cbe5ba82ce01614b15bc03b0f1d64d2713b0d416e7230b906b5b4",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/gd-1.png",
+        "sha256": "sha256:af880d2a97cedc56b9170662819cefd419649d724ab311067b127cd79ba635a7",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/gd-2.png",
+        "sha256": "sha256:8a74cfbaf499df61f5efe9094b1b93c210767725af9fb2219c44d8f7cb7de798",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/gd-3.png",
+        "sha256": "sha256:c88ed92981d036e35908c78c65ef4690cbae62fcaa26ea0837ed73805c228fac",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/hero-ru.png",
+        "sha256": "sha256:bddd9b7f59a47343a7e53a2ef91a54f002051df5cafd63dc275677cd971ca7f2",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/hero.png",
+        "sha256": "sha256:38184aa2791799d994c1e961cf45341ba04858a7a6bc14a3edebc22731e1bca9",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-1.png",
+        "sha256": "sha256:f4f0efb5d3401967d1f546d1c96c06845417437d0a351b7a4f26e5d35bbef432",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-2.png",
+        "sha256": "sha256:76053e22c1f15dd27d5a8f24710c63e4be9b1573d2f93b03b187c3ae8cefc9f8",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-3.png",
+        "sha256": "sha256:23c6d551eb62f617f9fbdea3c34778ada8667ac16aa8bfb0b27781268ce74ba9",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-4.png",
+        "sha256": "sha256:efba54a593a9a039b133b534bfb7b7b1e417cee4208e066741d62c711533309a",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-5.png",
+        "sha256": "sha256:23382eba8ef5f90bafcdbb3a5e770952d8c96a21b8a57d6daebae289f004022c",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-ru-1.png",
+        "sha256": "sha256:c90dc83a6558ab9063a65cd1f9c93c6d406ca9fcb602a34c8734e45b4fd82e0b",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-ru-2.png",
+        "sha256": "sha256:d3d16584a5e84cab9b52ca6ed507070699f645c1f192e1dad479f6f274131b94",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-ru-3.png",
+        "sha256": "sha256:dddc962a10a3a3304499679e973b8a90700a5429ce5acc44092739f74b1a3c93",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-ru-4.png",
+        "sha256": "sha256:4ec85f8d5fcf84a55f850ffe787d9adbd3e8f7deaa87f96941d942cba6c163ea",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/logo-ru-5.png",
+        "sha256": "sha256:a8aed30716b02dbf0165fc7906f7406faa713ed71fb0b3d8db479c1509e5b471",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/map-ru.png",
+        "sha256": "sha256:0063236d96d1ccb6e2f37785dbe2532863a1a52a7c85e53717f44a151fd8e75f",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/map.png",
+        "sha256": "sha256:8099fd5ddeacfad7949e8148e1f459daea14a3d0a5fc1f6e3bfdded81e644a39",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/news-1.png",
+        "sha256": "sha256:2cbc48bc3a33c6ae69b0c8a1c0dcb9c77bb36e19eaccca3ad9c1829dfaddd399",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/news-2.png",
+        "sha256": "sha256:47cbd44bddeda4e67fd0927d2b36942a9307f1df543c215bcc5602c6f7f9f8a4",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/news-3.png",
+        "sha256": "sha256:292f3c24f21d08b2e140d28ada716b667e44f09d10f2f159203f653631f5044a",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/proj-2.png",
+        "sha256": "sha256:7c0804724e13e86627fb9d07f29affba8788e217351f1073ddc71d13f4cfb499",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/proj-3.png",
+        "sha256": "sha256:37cbe464a3aa7320e45c4cdfa43a2e49b822958e0f9b1ff7d8104edbdf5a12aa",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/proj-big.png",
+        "sha256": "sha256:b67f870b6de70bca2a583023c78addbfd6daebf184935029b0297bbcc98b546d",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/proj-ru-2.png",
+        "sha256": "sha256:eca183b1311afeed5645e89973c118c6fb1257a1ea8a84fff736200ddea79587",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/proj-ru-3.png",
+        "sha256": "sha256:1f7c135e139a8e757adfd1b92393e58253d28970f5b65bdbed6cc52a4ff64550",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/rel-1.png",
+        "sha256": "sha256:602f933e6f3269b9048655d19e24a1cf7435f5c271b7c8783af7131fd928e4a6",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/rel-2.png",
+        "sha256": "sha256:724317078545b86f9ffe4e8a8c8ebec2c41b0bd3b2f33387f4d0af961b8347b6",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/rel-3.png",
+        "sha256": "sha256:f78e2dfe5081fa216e597d18130c5f41f45aa6c216d0c394408524ab579cf2ad",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/safety-1.png",
+        "sha256": "sha256:ff9871918803b642e91043d89b166e7fc23dbc76a34902de79f661ad393f0f24",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/safety-2.png",
+        "sha256": "sha256:90a3de27ff5c2a0a015ea48a56f94fb1fe194ae2cb9e9a072183a5a26d6c68ee",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/side-1.png",
+        "sha256": "sha256:a1055122751673256b0f9fa840c185ec08c3b2ce8733bd13007771719de8f772",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/side-2.png",
+        "sha256": "sha256:1bc21415178f74445f72cdc0b18991e321c98d673f60ef05f4fb1c2482368387",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/side-3.png",
+        "sha256": "sha256:e0825b48bb445aa695733f4fef46a441664a88b9aa1069d720417c3f9088ddab",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/team-crew.png",
+        "sha256": "sha256:db92b0f24679100d8341583c6ca6c59fee33817a0fc6dbb611d7c8dbad0b65f8",
+        "disposition": "asset"
+      },
+      {
+        "path": "img/team.png",
+        "sha256": "sha256:bbcb810051a85092ad4adcb72a1020fdde09874b40799acff7fc0cb2f3dc747b",
+        "disposition": "asset"
+      },
+      {
+        "path": "support.js",
+        "sha256": "sha256:8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+        "disposition": "asset"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "id": "1440-light",
+      "width": 1440,
+      "height": 1000,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "768-light",
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "768-dark",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "390-light",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "390-dark",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    }
+  ],
+  "design": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "ngi-theme"
+    },
+    "rules": [
+      {
+        "id": "body-font",
+        "selector": "body",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo",
+            "font-size": "16px"
+          },
+          "1440-dark": {
+            "font-family": "Archivo",
+            "font-size": "16px"
+          },
+          "768-light": {
+            "font-family": "Archivo",
+            "font-size": "16px"
+          },
+          "768-dark": {
+            "font-family": "Archivo",
+            "font-size": "16px"
+          },
+          "390-light": {
+            "font-family": "Archivo",
+            "font-size": "16px"
+          },
+          "390-dark": {
+            "font-family": "Archivo",
+            "font-size": "16px"
+          }
+        }
+      },
+      {
+        "id": "theme-surface",
+        "selector": "body",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(245, 243, 238)",
+            "color": "rgb(20, 23, 26)"
+          },
+          "1440-dark": {
+            "background-color": "rgb(16, 18, 20)",
+            "color": "rgb(236, 234, 228)"
+          },
+          "768-light": {
+            "background-color": "rgb(245, 243, 238)",
+            "color": "rgb(20, 23, 26)"
+          },
+          "768-dark": {
+            "background-color": "rgb(16, 18, 20)",
+            "color": "rgb(236, 234, 228)"
+          },
+          "390-light": {
+            "background-color": "rgb(245, 243, 238)",
+            "color": "rgb(20, 23, 26)"
+          },
+          "390-dark": {
+            "background-color": "rgb(16, 18, 20)",
+            "color": "rgb(236, 234, 228)"
+          }
+        }
+      },
+      {
+        "id": "container",
+        "selector": "header .container-site",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "max-width": "1240px",
+            "min-height": "84px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "1440-dark": {
+            "max-width": "1240px",
+            "min-height": "84px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "768-light": {
+            "max-width": "1240px",
+            "min-height": "84px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "768-dark": {
+            "max-width": "1240px",
+            "min-height": "84px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "390-light": {
+            "max-width": "1240px",
+            "min-height": "84px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "390-dark": {
+            "max-width": "1240px",
+            "min-height": "84px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          }
+        }
+      },
+      {
+        "id": "nav-link",
+        "selector": "header nav a",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-size": "14.5px"
+          },
+          "1440-dark": {
+            "font-size": "14.5px"
+          },
+          "768-light": {
+            "font-size": "14.5px"
+          },
+          "768-dark": {
+            "font-size": "14.5px"
+          },
+          "390-light": {
+            "font-size": "14.5px"
+          },
+          "390-dark": {
+            "font-size": "14.5px"
+          }
+        }
+      },
+      {
+        "id": "eyebrow",
+        "selector": "main .eyebrow",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-size": "12px",
+            "letter-spacing": "2.16px",
+            "text-transform": "uppercase",
+            "color": "rgb(218, 90, 42)"
+          },
+          "1440-dark": {
+            "font-size": "12px",
+            "letter-spacing": "2.16px",
+            "text-transform": "uppercase",
+            "color": "rgb(218, 90, 42)"
+          },
+          "768-light": {
+            "font-size": "12px",
+            "letter-spacing": "2.16px",
+            "text-transform": "uppercase",
+            "color": "rgb(218, 90, 42)"
+          },
+          "768-dark": {
+            "font-size": "12px",
+            "letter-spacing": "2.16px",
+            "text-transform": "uppercase",
+            "color": "rgb(218, 90, 42)"
+          },
+          "390-light": {
+            "font-size": "12px",
+            "letter-spacing": "2.16px",
+            "text-transform": "uppercase",
+            "color": "rgb(218, 90, 42)"
+          },
+          "390-dark": {
+            "font-size": "12px",
+            "letter-spacing": "2.16px",
+            "text-transform": "uppercase",
+            "color": "rgb(218, 90, 42)"
+          }
+        }
+      },
+      {
+        "id": "btn-primary",
+        "selector": "main a.btn-primary >> nth=0",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(218, 90, 42)",
+            "border-radius": "0px",
+            "padding-top": "15px",
+            "padding-left": "28px"
+          },
+          "1440-dark": {
+            "background-color": "rgb(218, 90, 42)",
+            "border-radius": "0px",
+            "padding-top": "15px",
+            "padding-left": "28px"
+          },
+          "768-light": {
+            "background-color": "rgb(218, 90, 42)",
+            "border-radius": "0px",
+            "padding-top": "15px",
+            "padding-left": "28px"
+          },
+          "768-dark": {
+            "background-color": "rgb(218, 90, 42)",
+            "border-radius": "0px",
+            "padding-top": "15px",
+            "padding-left": "28px"
+          },
+          "390-light": {
+            "background-color": "rgb(218, 90, 42)",
+            "border-radius": "0px",
+            "padding-top": "15px",
+            "padding-left": "28px"
+          },
+          "390-dark": {
+            "background-color": "rgb(218, 90, 42)",
+            "border-radius": "0px",
+            "padding-top": "15px",
+            "padding-left": "28px"
+          }
+        }
+      },
+      {
+        "id": "h1-hero",
+        "selector": "main h1",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "64px",
+            "letter-spacing": "-1.6px"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "64px",
+            "letter-spacing": "-1.6px"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "41.472px",
+            "letter-spacing": "-1.037px"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "41.472px",
+            "letter-spacing": "-1.037px"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "38px",
+            "letter-spacing": "-0.95px"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "38px",
+            "letter-spacing": "-0.95px"
+          }
+        }
+      },
+      {
+        "id": "h1-page",
+        "selector": "main h1",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "50px",
+            "letter-spacing": "-1.25px"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "50px",
+            "letter-spacing": "-1.25px"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32.256px",
+            "letter-spacing": "-0.806px"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32.256px",
+            "letter-spacing": "-0.806px"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32px",
+            "letter-spacing": "-0.8px"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32px",
+            "letter-spacing": "-0.8px"
+          }
+        }
+      },
+      {
+        "id": "h1-list",
+        "selector": "main h1",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "48px",
+            "letter-spacing": "-1.2px"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "48px",
+            "letter-spacing": "-1.2px"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32px",
+            "letter-spacing": "-0.8px"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32px",
+            "letter-spacing": "-0.8px"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32px",
+            "letter-spacing": "-0.8px"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "32px",
+            "letter-spacing": "-0.8px"
+          }
+        }
+      },
+      {
+        "id": "h1-kit",
+        "selector": "main h1",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "44px",
+            "letter-spacing": "-1.1px"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "44px",
+            "letter-spacing": "-1.1px"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "30px",
+            "letter-spacing": "-0.75px"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "30px",
+            "letter-spacing": "-0.75px"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "30px",
+            "letter-spacing": "-0.75px"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "30px",
+            "letter-spacing": "-0.75px"
+          }
+        }
+      },
+      {
+        "id": "h1-article",
+        "selector": "main h1",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "52px",
+            "letter-spacing": "-1.456px"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "52px",
+            "letter-spacing": "-1.456px"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "34px",
+            "letter-spacing": "-0.952px"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "34px",
+            "letter-spacing": "-0.952px"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "34px",
+            "letter-spacing": "-0.952px"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "34px",
+            "letter-spacing": "-0.952px"
+          }
+        }
+      },
+      {
+        "id": "h1-section",
+        "selector": "main h1",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "40px",
+            "letter-spacing": "-0.8px"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "40px",
+            "letter-spacing": "-0.8px"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "28px",
+            "letter-spacing": "-0.56px"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "28px",
+            "letter-spacing": "-0.56px"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "28px",
+            "letter-spacing": "-0.56px"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400",
+            "font-size": "28px",
+            "letter-spacing": "-0.56px"
+          }
+        }
+      },
+      {
+        "id": "h2-font",
+        "selector": "main h2:not(.prose-article h2)",
+        "source": "Home.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400"
+          },
+          "768-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400"
+          },
+          "768-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400"
+          },
+          "390-light": {
+            "font-family": "Newsreader",
+            "font-weight": "400"
+          },
+          "390-dark": {
+            "font-family": "Newsreader",
+            "font-weight": "400"
+          }
+        }
+      },
+      {
+        "id": "h2-prose",
+        "selector": "main .prose-article h2",
+        "source": "Article.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "1440-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "768-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "768-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "390-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "390-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          }
+        }
+      },
+      {
+        "id": "h2-guide",
+        "selector": "main h2",
+        "source": "Style guide.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo",
+            "font-weight": "700"
+          },
+          "1440-dark": {
+            "font-family": "Archivo",
+            "font-weight": "700"
+          },
+          "768-light": {
+            "font-family": "Archivo",
+            "font-weight": "700"
+          },
+          "768-dark": {
+            "font-family": "Archivo",
+            "font-weight": "700"
+          },
+          "390-light": {
+            "font-family": "Archivo",
+            "font-weight": "700"
+          },
+          "390-dark": {
+            "font-family": "Archivo",
+            "font-weight": "700"
+          }
+        }
+      },
+      {
+        "id": "p-card",
+        "selector": "main article > p",
+        "source": "Home.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo"
+          },
+          "1440-dark": {
+            "font-family": "Archivo"
+          },
+          "768-light": {
+            "font-family": "Archivo"
+          },
+          "768-dark": {
+            "font-family": "Archivo"
+          },
+          "390-light": {
+            "font-family": "Archivo"
+          },
+          "390-dark": {
+            "font-family": "Archivo"
+          }
+        }
+      },
+      {
+        "id": "p-lede",
+        "selector": "main article > p",
+        "source": "Article.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Newsreader"
+          },
+          "1440-dark": {
+            "font-family": "Newsreader"
+          },
+          "768-light": {
+            "font-family": "Newsreader"
+          },
+          "768-dark": {
+            "font-family": "Newsreader"
+          },
+          "390-light": {
+            "font-family": "Newsreader"
+          },
+          "390-dark": {
+            "font-family": "Newsreader"
+          }
+        }
+      },
+      {
+        "id": "p-article",
+        "selector": "main .prose-article p",
+        "source": "Article.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo"
+          },
+          "1440-dark": {
+            "font-family": "Archivo"
+          },
+          "768-light": {
+            "font-family": "Archivo"
+          },
+          "768-dark": {
+            "font-family": "Archivo"
+          },
+          "390-light": {
+            "font-family": "Archivo"
+          },
+          "390-dark": {
+            "font-family": "Archivo"
+          }
+        }
+      },
+      {
+        "id": "h3-font",
+        "selector": "main h3",
+        "source": "Home.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "1440-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "768-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "768-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "390-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "390-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          }
+        }
+      },
+      {
+        "id": "p-font",
+        "selector": "main p:not(blockquote p):not(.prose-article p):not(article > p)",
+        "source": "Home.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo"
+          },
+          "1440-dark": {
+            "font-family": "Archivo"
+          },
+          "768-light": {
+            "font-family": "Archivo"
+          },
+          "768-dark": {
+            "font-family": "Archivo"
+          },
+          "390-light": {
+            "font-family": "Archivo"
+          },
+          "390-dark": {
+            "font-family": "Archivo"
+          }
+        }
+      },
+      {
+        "id": "footer-link",
+        "selector": "footer a",
+        "source": "Home.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo"
+          },
+          "1440-dark": {
+            "font-family": "Archivo"
+          },
+          "768-light": {
+            "font-family": "Archivo"
+          },
+          "768-dark": {
+            "font-family": "Archivo"
+          },
+          "390-light": {
+            "font-family": "Archivo"
+          },
+          "390-dark": {
+            "font-family": "Archivo"
+          }
+        }
+      },
+      {
+        "id": "btn-forest",
+        "selector": "header a.btn-forest",
+        "source": "Home.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(20, 72, 58)",
+            "color": "rgb(255, 255, 255)",
+            "font-family": "Archivo",
+            "font-size": "14px",
+            "font-weight": "600"
+          },
+          "1440-dark": {
+            "background-color": "rgb(20, 72, 58)",
+            "color": "rgb(255, 255, 255)",
+            "font-family": "Archivo",
+            "font-size": "14px",
+            "font-weight": "600"
+          },
+          "768-light": {
+            "background-color": "rgb(20, 72, 58)",
+            "color": "rgb(255, 255, 255)",
+            "font-family": "Archivo",
+            "font-size": "14px",
+            "font-weight": "600"
+          },
+          "768-dark": {
+            "background-color": "rgb(20, 72, 58)",
+            "color": "rgb(255, 255, 255)",
+            "font-family": "Archivo",
+            "font-size": "14px",
+            "font-weight": "600"
+          },
+          "390-light": {
+            "background-color": "rgb(20, 72, 58)",
+            "color": "rgb(255, 255, 255)",
+            "font-family": "Archivo",
+            "font-size": "14px",
+            "font-weight": "600"
+          },
+          "390-dark": {
+            "background-color": "rgb(20, 72, 58)",
+            "color": "rgb(255, 255, 255)",
+            "font-family": "Archivo",
+            "font-size": "14px",
+            "font-weight": "600"
+          }
+        }
+      },
+      {
+        "id": "btn-any",
+        "selector": "main [class*=btn-]",
+        "source": "Home.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "1440-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "768-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "768-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "390-light": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          },
+          "390-dark": {
+            "font-family": "Archivo",
+            "font-weight": "600"
+          }
+        }
+      },
+      {
+        "id": "chip",
+        "selector": "main [class*=chip]",
+        "source": "Projects.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Archivo"
+          },
+          "1440-dark": {
+            "font-family": "Archivo"
+          },
+          "768-light": {
+            "font-family": "Archivo"
+          },
+          "768-dark": {
+            "font-family": "Archivo"
+          },
+          "390-light": {
+            "font-family": "Archivo"
+          },
+          "390-dark": {
+            "font-family": "Archivo"
+          }
+        }
+      }
+    ],
+    "coverage": [
+      {
+        "selector": "main h1, main h2, main h3",
+        "properties": ["font-family", "font-weight"]
+      },
+      {
+        "selector": "main p:not(blockquote p), footer a",
+        "properties": ["font-family"]
+      },
+      {
+        "selector": "header nav a",
+        "properties": ["font-size"]
+      },
+      {
+        "selector": "header a.btn-forest, main [class*=btn-]",
+        "properties": ["font-family", "font-weight"]
+      },
+      {
+        "selector": "main [class*=chip]",
+        "properties": ["font-family"]
+      }
+    ],
+    "parity": {
+      "properties": [
+        "color",
+        "background-color",
+        "font-family",
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "padding-top",
+        "padding-left",
+        "border-bottom-color",
+        "border-bottom-width"
+      ],
+      "hexTolerance": 8,
+      "pxTolerance": 0.5,
+      "sourceTheme": {
+        "selector": "html",
+        "attribute": "data-theme",
+        "values": {
+          "light": null,
+          "dark": "dark"
+        }
+      },
+      "selectors": {
+        "h1": {
+          "content": "h1"
+        },
+        "lede": {
+          "content": "lede"
+        },
+        "navSecond": {
+          "site": "header nav a >> nth=1",
+          "source": "header nav a:nth-of-type(2)"
+        },
+        "navActive": {
+          "site": "header nav a[aria-current=page], header nav .nav-link.is-active",
+          "source": "header nav a[style*=\"rgb(218, 90, 42)\"]"
+        },
+        "navHover": {
+          "site": "header nav a >> nth=1",
+          "source": "header nav a:nth-of-type(2)",
+          "hover": true
+        },
+        "headerCtaHover": {
+          "site": "header a.btn-forest",
+          "source": "header > div > div > a:last-of-type",
+          "hover": true
+        },
+        "footerLinkHover": {
+          "site": "footer a >> nth=0",
+          "source": "footer a",
+          "hover": true
+        },
+        "headerCta": {
+          "site": "header a.btn-forest",
+          "source": "header > div > div > a:last-of-type"
+        },
+        "heroCta": {
+          "site": "main .btn-primary, main .ec-form-submit >> nth=0",
+          "source": "main a[style*=\"218, 90, 42\"], main button[style*=\"218, 90, 42\"]"
+        },
+        "h2First": {
+          "site": "main h2 >> nth=0",
+          "source": "main h2"
+        },
+        "h3First": {
+          "site": "main h3 >> nth=0",
+          "source": "main h3"
+        },
+        "footerLink": {
+          "site": "footer a >> nth=0",
+          "source": "footer a"
+        }
+      }
+    },
+    "accentBorders": [
+      "rgb(218, 90, 42)",
+      "rgb(127, 191, 166)",
+      "rgb(94, 138, 121)",
+      "rgb(20, 72, 58)",
+      "rgb(192, 57, 43)",
+      "rgb(46, 125, 50)",
+      "rgb(200, 137, 27)"
+    ],
+    "images": {
+      "scope": "main",
+      "sourceSlot": "image-slot[src]",
+      "placeholder": ".photo-placeholder"
+    },
+    "exceptions": [
+      {
+        "kind": "scan:white-surface",
+        "match": "h-\\[(30|88)px\\].*border-line",
+        "reason": "colour swatch showing the paper token (kit slides, style guide)",
+        "decision": "tasks/emdash-northgate/DECISIONS.md D31 (2026-09-14)"
+      },
+      {
+        "kind": "scan:off-system",
+        "match": "h-\\[(30|88)px\\].*(border-line|shrink-0)",
+        "reason": "colour swatch showing the ink token (kit slides, style guide) — in colors.light, absent from colors.dark; two shapes: the bordered tile on style guide, the borderless chip on slides",
+        "decision": "tasks/emdash-northgate/DECISIONS.md D31 (2026-09-14, extended)"
+      }
+    ]
+  },
+  "interactions": {
+    "resources": {
+      "trigger": "header button[aria-expanded]",
+      "panel": "[data-slot=popover-content]",
+      "link": "[data-slot=popover-content] a",
+      "open": "click",
+      "fullWidth": true,
+      "inner": "[data-slot=popover-content] > div",
+      "maxInnerWidth": 1240
+    }
+  },
+  "fonts": {
+    "selectors": ["h1", "h2", "h3", "p", "a", "button", "input", "label"],
+    "platform": "macOS (Chrome); the design ships Archivo + Newsreader, Latin only",
+    "allowed": {
+      "en": ["Archivo SemiBold", "Newsreader 16pt 16pt", ".SF NS", "Menlo", "Apple Symbols"],
+      "ru": ["Archivo SemiBold", "Newsreader 16pt 16pt", "Georgia", ".SF NS", "Menlo", "Apple Symbols"]
+    }
+  },
+  "pages": [
+    {
+      "id": "en-home",
+      "path": "/",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Home.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Home.astro",
+        "collections": ["home", "posts", "projects", "site"]
+      },
+      "states": ["default", "resources"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-hero",
+        "eyebrow",
+        "btn-primary",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Home.html",
+          "owner": "field",
+          "binding": "home.title",
+          "attribute": "text",
+          "expected": "Building the groundwork for next-generation plants"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Home.html",
+          "owner": "field",
+          "binding": "home.lede",
+          "attribute": "text",
+          "expected": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+        },
+        {
+          "source": "Home.html",
+          "id": "cta",
+          "selector": "main a.btn-primary >> nth=0",
+          "owner": "derived",
+          "binding": "home.cta1 → services page route",
+          "attribute": "href",
+          "expected": "/services"
+        }
+      ],
+      "layout": "Home"
+    },
+    {
+      "id": "en-about",
+      "path": "/about",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["About.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/About.astro",
+        "collections": ["about", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "About.html",
+          "owner": "field",
+          "binding": "about.title",
+          "attribute": "text",
+          "expected": "Building Russian industrial infrastructure since 2004"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "About.html",
+          "owner": "field",
+          "binding": "about.lede",
+          "attribute": "text",
+          "expected": "Northgate Industrial JSC is a full-cycle general contractor: design, steel frame, envelope, building services and turnkey handover. Our own steel fabrication plant in Vorsino, four regional divisions, 1,240 people on staff."
+        }
+      ],
+      "layout": "About"
+    },
+    {
+      "id": "en-services",
+      "path": "/services",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Services.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Services.astro",
+        "collections": ["posts", "projects", "services", "services_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Services.html",
+          "owner": "field",
+          "binding": "services.title",
+          "attribute": "text",
+          "expected": "Full-cycle general contracting, or single stages"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Services.html",
+          "owner": "field",
+          "binding": "services.lede",
+          "attribute": "text",
+          "expected": "We take the whole facility or join at any stage — from concept to commissioning. Below is the scope, the timeline and exactly what the contract covers for each service."
+        }
+      ],
+      "layout": "Services"
+    },
+    {
+      "id": "en-service",
+      "path": "/services/general-contracting",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Services.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": ["posts", "projects", "services", "services_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Services.html",
+          "owner": "field",
+          "binding": "services.<slug>.title / .description (D12: composed from the service card)",
+          "attribute": "text",
+          "expected": "General contracting"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Services.html",
+          "owner": "field",
+          "binding": "services.<slug>.title / .description (D12: composed from the service card)",
+          "attribute": "text",
+          "expected": "One contract for the whole facility: design, structure, envelope, services, external works and handover. We hold the schedule and carry responsibility for the result end to end."
+        }
+      ],
+      "layout": "Service"
+    },
+    {
+      "id": "en-projects",
+      "path": "/projects",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Projects.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Projects.astro",
+        "collections": ["posts", "projects", "projects_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Projects.html",
+          "owner": "field",
+          "binding": "projects.title",
+          "attribute": "text",
+          "expected": "Facilities delivered turnkey"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Projects.html",
+          "owner": "field",
+          "binding": "projects.lede",
+          "attribute": "text",
+          "expected": "380 projects since 2004: production buildings, class A warehouses, logistics complexes and energy facilities. Below is a selection from the last three years."
+        }
+      ],
+      "layout": "Projects"
+    },
+    {
+      "id": "en-projects-sector",
+      "path": "/projects/sector/production",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Projects.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Projects.astro",
+        "collections": ["posts", "projects", "projects_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Projects.html",
+          "owner": "derived",
+          "binding": "taxonomy sector term label (source filter chip)",
+          "attribute": "text",
+          "expected": "Production"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Projects.html",
+          "owner": "derived",
+          "binding": "taxonomy sector term label (source filter chip)",
+          "attribute": "text",
+          "expected": "380 projects since 2004: production buildings, class A warehouses, logistics complexes and energy facilities. Below is a selection from the last three years."
+        }
+      ],
+      "layout": "Projects"
+    },
+    {
+      "id": "en-project",
+      "path": "/projects/elektra-lipetsk",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Project detail.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Project.astro",
+        "collections": ["posts", "projects", "projects_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Project detail.html",
+          "owner": "field",
+          "binding": "project.title",
+          "attribute": "text",
+          "expected": "Elektra appliance plant, Lipetsk SEZ"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Project detail.html",
+          "owner": "field",
+          "binding": "project.lede",
+          "attribute": "text",
+          "expected": "Full-cycle main contract: from site earthworks to handover of ISO 8 cleanroom space — 24 days ahead of schedule."
+        }
+      ],
+      "layout": "Project"
+    },
+    {
+      "id": "en-news",
+      "path": "/news",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["News.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/News.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "News.html",
+          "owner": "field",
+          "binding": "news.title",
+          "attribute": "text",
+          "expected": "News & engineering notes"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "News.html",
+          "owner": "field",
+          "binding": "news.lede",
+          "attribute": "text",
+          "expected": "Project updates, corporate disclosures and field notes from the Northgate engineering team."
+        }
+      ],
+      "layout": "News"
+    },
+    {
+      "id": "en-news-category",
+      "path": "/news/category/engineering",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["News.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/News.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "News.html",
+          "owner": "derived",
+          "binding": "taxonomy category term label (source filter chip)",
+          "attribute": "text",
+          "expected": "Engineering"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "News.html",
+          "owner": "derived",
+          "binding": "taxonomy category term label (source filter chip)",
+          "attribute": "text",
+          "expected": "Project updates, corporate disclosures and field notes from the Northgate engineering team."
+        }
+      ],
+      "layout": "News"
+    },
+    {
+      "id": "en-news-tag",
+      "path": "/news/tag/vibration",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Article.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/News.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Article.html",
+          "owner": "derived",
+          "binding": "taxonomy tag term label (source article tag)",
+          "attribute": "text",
+          "expected": "vibration"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Article.html",
+          "owner": "derived",
+          "binding": "taxonomy tag term label (source article tag)",
+          "attribute": "text",
+          "expected": "Project updates, corporate disclosures and field notes from the Northgate engineering team."
+        }
+      ],
+      "layout": "News"
+    },
+    {
+      "id": "en-article",
+      "path": "/news/four-common-mistakes-in-heavy-machine-foundation-design",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Article.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Article.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-article",
+        "h2-prose",
+        "h2-font",
+        "p-article",
+        "p-lede",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Article.html",
+          "owner": "field",
+          "binding": "article.title",
+          "attribute": "text",
+          "expected": "Four common mistakes in heavy machine foundation design"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Article.html",
+          "owner": "field",
+          "binding": "article.lede",
+          "attribute": "text",
+          "expected": "Get one dynamic load parameter wrong and the whole line can vibrate past its allowable limit within six months of operation."
+        }
+      ],
+      "layout": "Article"
+    },
+    {
+      "id": "en-careers",
+      "path": "/careers",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Careers.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Careers.astro",
+        "collections": ["careers", "posts", "projects", "site", "vacancies"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Careers.html",
+          "owner": "field",
+          "binding": "careers.title",
+          "attribute": "text",
+          "expected": "Working at Northgate"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Careers.html",
+          "owner": "field",
+          "binding": "careers.lede",
+          "attribute": "text",
+          "expected": "We build plants across 14 regions. We look for engineers who want to see their work in steel and concrete rather than in slide decks."
+        }
+      ],
+      "layout": "Careers"
+    },
+    {
+      "id": "en-investors",
+      "path": "/investors",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Investor relations.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Investors.astro",
+        "collections": ["investors", "news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Investor relations.html",
+          "owner": "field",
+          "binding": "investors.title",
+          "attribute": "text",
+          "expected": "Investor and shareholder information"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Investor relations.html",
+          "owner": "field",
+          "binding": "investors.lede",
+          "attribute": "text",
+          "expected": "Northgate Industrial JSC discloses financial and corporate information in line with Russian statutory requirements and exchange listing rules."
+        }
+      ],
+      "layout": "Investors"
+    },
+    {
+      "id": "en-contact",
+      "path": "/contact",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Contact.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Contact.astro",
+        "collections": ["contact", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Contact.html",
+          "owner": "field",
+          "binding": "contact.title",
+          "attribute": "text",
+          "expected": "Contact"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Contact.html",
+          "owner": "field",
+          "binding": "contact.lede",
+          "attribute": "text",
+          "expected": "Request a quote or book a site survey. Our sales team replies within 24 working hours."
+        }
+      ],
+      "layout": "Contact"
+    },
+    {
+      "id": "en-search",
+      "path": "/search?q=building",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Search.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Search.astro",
+        "collections": ["news_page", "posts", "projects", "projects_page", "services_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Search.html",
+          "owner": "field",
+          "binding": "search.title",
+          "attribute": "text",
+          "expected": "Search results"
+        }
+      ],
+      "layout": "Search"
+    },
+    {
+      "id": "en-not-found",
+      "path": "/404",
+      "locale": "en",
+      "status": 404,
+      "identity": "main h1",
+      "source": ["404.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": ["posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-section",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "404.html",
+          "owner": "field",
+          "binding": "not-found.title",
+          "attribute": "text",
+          "expected": "We could not find that page"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "404.html",
+          "owner": "field",
+          "binding": "not-found.lede",
+          "attribute": "text",
+          "expected": "The link may have changed or the content has been archived. Try a search, or pick one of the sections on the right."
+        }
+      ],
+      "layout": "NotFound"
+    },
+    {
+      "id": "en-kit-newsletter",
+      "path": "/kit/newsletter",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Newsletter.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Newsletter.html",
+          "owner": "field",
+          "binding": "kit-newsletter.title",
+          "attribute": "text",
+          "expected": "Newsletter template"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Newsletter.html",
+          "owner": "field",
+          "binding": "kit-newsletter.lede",
+          "attribute": "text",
+          "expected": "A 600 px digest email assembled from Joomla modules and exported to your sending platform."
+        }
+      ],
+      "layout": "kit-newsletter"
+    },
+    {
+      "id": "en-kit-email",
+      "path": "/kit/email",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Email.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Email.html",
+          "owner": "field",
+          "binding": "kit-email.title",
+          "attribute": "text",
+          "expected": "Transactional emails"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Email.html",
+          "owner": "field",
+          "binding": "kit-email.lede",
+          "attribute": "text",
+          "expected": "Joomla system mail in brand dress: confirmations, reminders and notifications."
+        }
+      ],
+      "layout": "kit-email"
+    },
+    {
+      "id": "en-kit-form",
+      "path": "/kit/form",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Form.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Form.html",
+          "owner": "field",
+          "binding": "kit-form.title",
+          "attribute": "text",
+          "expected": "Form library"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Form.html",
+          "owner": "field",
+          "binding": "kit-form.lede",
+          "attribute": "text",
+          "expected": "Fields, states and common flows: quote request, subscription, call-back."
+        }
+      ],
+      "layout": "kit-form"
+    },
+    {
+      "id": "en-kit-slides",
+      "path": "/kit/slides",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Slide.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Slide.html",
+          "owner": "field",
+          "binding": "kit-slides.title",
+          "attribute": "text",
+          "expected": "Presentations and slides"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Slide.html",
+          "owner": "field",
+          "binding": "kit-slides.lede",
+          "attribute": "text",
+          "expected": "Slide templates for the marketing team: sales decks, client progress reports and trade-show material. 16:9 format on a 12-column grid."
+        }
+      ],
+      "layout": "kit-slides"
+    },
+    {
+      "id": "en-kit-style-guide",
+      "path": "/kit/style-guide",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Style guide.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-guide",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Style guide.html",
+          "owner": "field",
+          "binding": "kit-style-guide.title",
+          "attribute": "text",
+          "expected": "Style guide & module positions"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "Style guide.html",
+          "owner": "field",
+          "binding": "kit-style-guide.lede",
+          "attribute": "text",
+          "expected": "Reference for whoever installs the template: position names, type scale, colours, form elements and Joomla system messages."
+        }
+      ],
+      "layout": "kit-style-guide"
+    },
+    {
+      "id": "en-terms",
+      "path": "/terms",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Home.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": ["pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h2-prose",
+        "p-article",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Home.html",
+          "owner": "field",
+          "binding": "pages.terms.title (footer legal link; body is gap G1)",
+          "attribute": "text",
+          "expected": "Terms"
+        }
+      ],
+      "layout": "Page"
+    },
+    {
+      "id": "en-privacy",
+      "path": "/privacy",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Home.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": ["pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h2-prose",
+        "p-article",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Home.html",
+          "owner": "field",
+          "binding": "pages.privacy.title (footer legal link; body is gap G1)",
+          "attribute": "text",
+          "expected": "Privacy"
+        }
+      ],
+      "layout": "Page"
+    },
+    {
+      "id": "en-sitemap",
+      "path": "/sitemap",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["Home.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sitemap.astro",
+        "collections": ["posts", "projects", "services", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "Home.html",
+          "owner": "derived",
+          "binding": "footer legal link label; body composed from menus + collections",
+          "attribute": "text",
+          "expected": "Sitemap"
+        }
+      ],
+      "layout": "Sitemap"
+    },
+    {
+      "id": "ru-home",
+      "path": "/ru",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Home_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Home.astro",
+        "collections": ["home", "posts", "projects", "site"]
+      },
+      "states": ["default", "resources"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-hero",
+        "eyebrow",
+        "btn-primary",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Home_ru.html",
+          "owner": "field",
+          "binding": "home.title",
+          "attribute": "text",
+          "expected": "Строим основание для заводов нового поколения"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Home_ru.html",
+          "owner": "field",
+          "binding": "home.lede",
+          "attribute": "text",
+          "expected": "Генподряд «проектирование — строительство»: инфраструктура индустриальных парков, производственные корпуса и инженерные системы в 14 регионах Центрального и Приволжского округов."
+        },
+        {
+          "source": "RU/Home_ru.html",
+          "id": "cta",
+          "selector": "main a.btn-primary >> nth=0",
+          "owner": "derived",
+          "binding": "home.cta1 → services page route",
+          "attribute": "href",
+          "expected": "/ru/services"
+        }
+      ],
+      "layout": "Home"
+    },
+    {
+      "id": "ru-about",
+      "path": "/ru/about",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/About_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/About.astro",
+        "collections": ["about", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/About_ru.html",
+          "owner": "field",
+          "binding": "about.title",
+          "attribute": "text",
+          "expected": "Строим промышленную инфраструктуру России с 2004 года"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/About_ru.html",
+          "owner": "field",
+          "binding": "about.lede",
+          "attribute": "text",
+          "expected": "АО «Норткейт Индастриал» — генеральный подрядчик полного цикла: проектирование, металлокаркас, ограждающие конструкции, инженерные системы и сдача объекта под ключ. Собственный завод металлоконструкций в Ворсино, четыре региональных управления, 1 240 сотрудников в штате."
+        }
+      ],
+      "layout": "About"
+    },
+    {
+      "id": "ru-services",
+      "path": "/ru/services",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Services_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Services.astro",
+        "collections": ["posts", "projects", "services", "services_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Services_ru.html",
+          "owner": "field",
+          "binding": "services.title",
+          "attribute": "text",
+          "expected": "Генподряд полного цикла и отдельные этапы работ"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Services_ru.html",
+          "owner": "field",
+          "binding": "services.lede",
+          "attribute": "text",
+          "expected": "Берём объект целиком или подключаемся на любом этапе — от концепции до пусконаладки. Ниже состав работ, сроки и то, что входит в договор по каждому направлению."
+        }
+      ],
+      "layout": "Services"
+    },
+    {
+      "id": "ru-service",
+      "path": "/ru/services/general-contracting",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Services_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": ["posts", "projects", "services", "services_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Services_ru.html",
+          "owner": "field",
+          "binding": "services.<slug>.title / .description (D12: composed from the service card)",
+          "attribute": "text",
+          "expected": "Генеральный подряд"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Services_ru.html",
+          "owner": "field",
+          "binding": "services.<slug>.title / .description (D12: composed from the service card)",
+          "attribute": "text",
+          "expected": "Один договор на весь объект: проект, конструктив, ограждение, инженерия, благоустройство и сдача. Мы держим график и несём ответственность за результат целиком."
+        }
+      ],
+      "layout": "Service"
+    },
+    {
+      "id": "ru-projects",
+      "path": "/ru/projects",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Projects_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Projects.astro",
+        "collections": ["posts", "projects", "projects_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Projects_ru.html",
+          "owner": "field",
+          "binding": "projects.title",
+          "attribute": "text",
+          "expected": "Объекты, сданные под ключ"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Projects_ru.html",
+          "owner": "field",
+          "binding": "projects.lede",
+          "attribute": "text",
+          "expected": "380 объектов с 2004 года: производственные корпуса, склады класса A, логистические комплексы и объекты энергетики. Ниже — выборка из портфеля за последние три года."
+        }
+      ],
+      "layout": "Projects"
+    },
+    {
+      "id": "ru-projects-sector",
+      "path": "/ru/projects/sector/production",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Projects_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Projects.astro",
+        "collections": ["posts", "projects", "projects_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Projects_ru.html",
+          "owner": "derived",
+          "binding": "taxonomy sector term label (source filter chip)",
+          "attribute": "text",
+          "expected": "Производство"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Projects_ru.html",
+          "owner": "derived",
+          "binding": "taxonomy sector term label (source filter chip)",
+          "attribute": "text",
+          "expected": "380 объектов с 2004 года: производственные корпуса, склады класса A, логистические комплексы и объекты энергетики. Ниже — выборка из портфеля за последние три года."
+        }
+      ],
+      "layout": "Projects"
+    },
+    {
+      "id": "ru-project",
+      "path": "/ru/projects/elektra-lipetsk",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Project detail_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Project.astro",
+        "collections": ["posts", "projects", "projects_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Project detail_ru.html",
+          "owner": "field",
+          "binding": "project.title",
+          "attribute": "text",
+          "expected": "Завод бытовой техники «Электра», ОЭЗ «Липецк»"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Project detail_ru.html",
+          "owner": "field",
+          "binding": "project.lede",
+          "attribute": "text",
+          "expected": "Генподряд полного цикла: от планировки площадки до передачи корпусов с чистыми помещениями класса ИСО 8 — на 24 дня раньше графика."
+        }
+      ],
+      "layout": "Project"
+    },
+    {
+      "id": "ru-news",
+      "path": "/ru/news",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/News_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/News.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/News_ru.html",
+          "owner": "field",
+          "binding": "news.title",
+          "attribute": "text",
+          "expected": "Новости и инженерные заметки"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/News_ru.html",
+          "owner": "field",
+          "binding": "news.lede",
+          "attribute": "text",
+          "expected": "Ход строительства, раскрытие информации и заметки инженеров «Норткейт»."
+        }
+      ],
+      "layout": "News"
+    },
+    {
+      "id": "ru-news-category",
+      "path": "/ru/news/category/engineering",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/News_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/News.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/News_ru.html",
+          "owner": "derived",
+          "binding": "taxonomy category term label (source filter chip)",
+          "attribute": "text",
+          "expected": "Инженерия"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/News_ru.html",
+          "owner": "derived",
+          "binding": "taxonomy category term label (source filter chip)",
+          "attribute": "text",
+          "expected": "Ход строительства, раскрытие информации и заметки инженеров «Норткейт»."
+        }
+      ],
+      "layout": "News"
+    },
+    {
+      "id": "ru-news-tag",
+      "path": "/ru/news/tag/vibration",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Article_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/News.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Article_ru.html",
+          "owner": "derived",
+          "binding": "taxonomy tag term label (source article tag)",
+          "attribute": "text",
+          "expected": "вибрация"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Article_ru.html",
+          "owner": "derived",
+          "binding": "taxonomy tag term label (source article tag)",
+          "attribute": "text",
+          "expected": "Ход строительства, раскрытие информации и заметки инженеров «Норткейт»."
+        }
+      ],
+      "layout": "News"
+    },
+    {
+      "id": "ru-article",
+      "path": "/ru/news/four-common-mistakes-in-heavy-machine-foundation-design",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Article_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Article.astro",
+        "collections": ["news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-article",
+        "h2-prose",
+        "h2-font",
+        "p-article",
+        "p-lede",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Article_ru.html",
+          "owner": "field",
+          "binding": "article.title",
+          "attribute": "text",
+          "expected": "Четыре типичные ошибки в расчёте фундаментов под тяжёлые станки"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Article_ru.html",
+          "owner": "field",
+          "binding": "article.lede",
+          "attribute": "text",
+          "expected": "Ошибка в одном параметре динамической нагрузки — и через полгода работы вся линия вибрирует выше допустимого по СП 26.13330."
+        }
+      ],
+      "layout": "Article"
+    },
+    {
+      "id": "ru-careers",
+      "path": "/ru/careers",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Careers_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Careers.astro",
+        "collections": ["careers", "posts", "projects", "site", "vacancies"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Careers_ru.html",
+          "owner": "field",
+          "binding": "careers.title",
+          "attribute": "text",
+          "expected": "Работа в «Норткейт»"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Careers_ru.html",
+          "owner": "field",
+          "binding": "careers.lede",
+          "attribute": "text",
+          "expected": "Мы строим заводы в 14 регионах. Ищем инженеров, которым интересно видеть результат своей работы в металле и бетоне, а не в презентациях."
+        }
+      ],
+      "layout": "Careers"
+    },
+    {
+      "id": "ru-investors",
+      "path": "/ru/investors",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Investor relations_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Investors.astro",
+        "collections": ["investors", "news_page", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Investor relations_ru.html",
+          "owner": "field",
+          "binding": "investors.title",
+          "attribute": "text",
+          "expected": "Информация для акционеров и инвесторов"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Investor relations_ru.html",
+          "owner": "field",
+          "binding": "investors.lede",
+          "attribute": "text",
+          "expected": "АО «Норткейт Индастриал» раскрывает финансовую и корпоративную информацию в соответствии с требованиями законодательства РФ и правилами листинга."
+        }
+      ],
+      "layout": "Investors"
+    },
+    {
+      "id": "ru-contact",
+      "path": "/ru/contact",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Contact_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Contact.astro",
+        "collections": ["contact", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-list",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Contact_ru.html",
+          "owner": "field",
+          "binding": "contact.title",
+          "attribute": "text",
+          "expected": "Контакты"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Contact_ru.html",
+          "owner": "field",
+          "binding": "contact.lede",
+          "attribute": "text",
+          "expected": "Запросите смету или запишитесь на выезд на площадку. Отдел продаж отвечает в течение 24 рабочих часов."
+        }
+      ],
+      "layout": "Contact"
+    },
+    {
+      "id": "ru-search",
+      "path": "/ru/search?q=%D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Search_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Search.astro",
+        "collections": ["news_page", "posts", "projects", "projects_page", "services_page", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Search_ru.html",
+          "owner": "field",
+          "binding": "search.title",
+          "attribute": "text",
+          "expected": "Результаты поиска"
+        }
+      ],
+      "layout": "Search"
+    },
+    {
+      "id": "ru-not-found",
+      "path": "/ru/404",
+      "locale": "ru",
+      "status": 404,
+      "identity": "main h1",
+      "source": ["RU/404_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": ["posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-section",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/404_ru.html",
+          "owner": "field",
+          "binding": "not-found.title",
+          "attribute": "text",
+          "expected": "Такая страница не найдена"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/404_ru.html",
+          "owner": "field",
+          "binding": "not-found.lede",
+          "attribute": "text",
+          "expected": "Возможно, ссылка изменилась или материал перенесён в архив. Попробуйте поиск или выберите раздел справа."
+        }
+      ],
+      "layout": "NotFound"
+    },
+    {
+      "id": "ru-kit-newsletter",
+      "path": "/ru/kit/newsletter",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Newsletter_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Newsletter_ru.html",
+          "owner": "field",
+          "binding": "kit-newsletter.title",
+          "attribute": "text",
+          "expected": "Шаблон рассылки"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Newsletter_ru.html",
+          "owner": "field",
+          "binding": "kit-newsletter.lede",
+          "attribute": "text",
+          "expected": "Письмо-дайджест шириной 600 px: собирается из модулей Joomla и выгружается в рассылочный сервис."
+        }
+      ],
+      "layout": "kit-newsletter"
+    },
+    {
+      "id": "ru-kit-email",
+      "path": "/ru/kit/email",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Email_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Email_ru.html",
+          "owner": "field",
+          "binding": "kit-email.title",
+          "attribute": "text",
+          "expected": "Транзакционные письма"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Email_ru.html",
+          "owner": "field",
+          "binding": "kit-email.lede",
+          "attribute": "text",
+          "expected": "Системные письма Joomla в фирменном оформлении: подтверждения, напоминания, уведомления."
+        }
+      ],
+      "layout": "kit-email"
+    },
+    {
+      "id": "ru-kit-form",
+      "path": "/ru/kit/form",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Form_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Form_ru.html",
+          "owner": "field",
+          "binding": "kit-form.title",
+          "attribute": "text",
+          "expected": "Библиотека форм"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Form_ru.html",
+          "owner": "field",
+          "binding": "kit-form.lede",
+          "attribute": "text",
+          "expected": "Поля, состояния и типовые сценарии: заявка на смету, подписка, обратный звонок."
+        }
+      ],
+      "layout": "kit-form"
+    },
+    {
+      "id": "ru-kit-slides",
+      "path": "/ru/kit/slides",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Slide_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Slide_ru.html",
+          "owner": "field",
+          "binding": "kit-slides.title",
+          "attribute": "text",
+          "expected": "Презентации и слайды"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Slide_ru.html",
+          "owner": "field",
+          "binding": "kit-slides.lede",
+          "attribute": "text",
+          "expected": "Шаблоны слайдов для отдела маркетинга: коммерческие презентации, отчёты для заказчика и материалы для отраслевых выставок. Формат 16:9, сетка 12 колонок."
+        }
+      ],
+      "layout": "kit-slides"
+    },
+    {
+      "id": "ru-kit-style-guide",
+      "path": "/ru/kit/style-guide",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Style guide_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Kit.astro",
+        "collections": ["news_page", "pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-kit",
+        "h2-guide",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Style guide_ru.html",
+          "owner": "field",
+          "binding": "kit-style-guide.title",
+          "attribute": "text",
+          "expected": "Стайлгайд и позиции модулей"
+        },
+        {
+          "id": "lede",
+          "selector": "main h1 ~ p >> nth=0",
+          "source": "RU/Style guide_ru.html",
+          "owner": "field",
+          "binding": "kit-style-guide.lede",
+          "attribute": "text",
+          "expected": "Справка для того, кто ставит шаблон: названия позиций, типографика, цвета, элементы форм и системные сообщения Joomla."
+        }
+      ],
+      "layout": "kit-style-guide"
+    },
+    {
+      "id": "ru-terms",
+      "path": "/ru/terms",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Home_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": ["pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h2-prose",
+        "p-article",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Home_ru.html",
+          "owner": "field",
+          "binding": "pages.terms.title (footer legal link; body is gap G1)",
+          "attribute": "text",
+          "expected": "Условия"
+        }
+      ],
+      "layout": "Page"
+    },
+    {
+      "id": "ru-privacy",
+      "path": "/ru/privacy",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Home_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": ["pages", "posts", "projects", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h2-prose",
+        "p-article",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Home_ru.html",
+          "owner": "field",
+          "binding": "pages.privacy.title (footer legal link; body is gap G1)",
+          "attribute": "text",
+          "expected": "Политика конфиденциальности"
+        }
+      ],
+      "layout": "Page"
+    },
+    {
+      "id": "ru-sitemap",
+      "path": "/ru/sitemap",
+      "locale": "ru",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["RU/Home_ru.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sitemap.astro",
+        "collections": ["posts", "projects", "services", "site"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "theme-surface",
+        "container",
+        "nav-link",
+        "h1-page",
+        "h2-font",
+        "p-card",
+        "h3-font",
+        "p-font",
+        "footer-link",
+        "btn-forest",
+        "btn-any",
+        "chip"
+      ],
+      "parity": ["navSecond", "navHover", "headerCta", "headerCtaHover", "footerLink", "footerLinkHover"],
+      "images": "placeholders",
+      "content": [
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "RU/Home_ru.html",
+          "owner": "derived",
+          "binding": "footer legal link label; body composed from menus + collections",
+          "attribute": "text",
+          "expected": "Карта сайта"
+        }
+      ],
+      "layout": "Sitemap"
+    }
+  ],
+  "reviews": {
+    "build": {
+      "mode": "required"
+    },
+    "security": {
+      "mode": "required"
+    },
+    "visual-review": {
+      "mode": "required"
+    },
+    "font-review": {
+      "mode": "required"
+    },
+    "viewing-contexts": {
+      "mode": "required"
+    },
+    "editability": {
+      "mode": "required"
+    },
+    "forms": {
+      "mode": "required"
+    },
+    "recovery": {
+      "mode": "required"
+    },
+    "clean-install": {
+      "mode": "required"
+    },
+    "independent": {
+      "mode": "required"
+    }
+  },
+  "capabilities": ["i18n", "forms", "smtp", "audit-log", "search", "seo", "media"],
+  "distribution": {
+    "include": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "template.config.json",
+      "astro.config.mjs",
+      "tsconfig.json",
+      "components.json",
+      "emdash-env.d.ts",
+      "Dockerfile",
+      "public",
+      "seed",
+      "src",
+      "tools",
+      "tests",
+      "docs",
+      "README.md",
+      "AGENTS.md",
+      "PROVENANCE.md",
+      "LICENSE",
+      "artifact.json",
+      ".env.example"
+    ],
+    "required": [
+      "tools/qa.mjs",
+      "tools/qa-contract.mjs",
+      "tools/distribution.mjs",
+      "tools/qa-receipt.mjs",
+      "tools/admin-session.mjs",
+      "tools/admin-roundtrip.mjs",
+      "tools/recovery-check.mjs",
+      "tools/forms-check.mjs",
+      "tools/clean-install.sh",
+      "public/favicon.svg",
+      "seed/seed.json",
+      "seed/media-map.json",
+      "seed/field-map.json",
+      "seed/media/decks/Corporate Deck 2028.pdf",
+      "seed/media/decks/en/corporate-2026.pdf",
+      "seed/media/decks/en/progress-report.pdf",
+      "seed/media/decks/en/proposal-production-building.pdf",
+      "seed/media/decks/en/tradeshow-stand.pdf",
+      "seed/media/decks/ru/corporate-2026.pdf",
+      "seed/media/decks/ru/progress-report.pdf",
+      "seed/media/decks/ru/proposal-production-building.pdf",
+      "seed/media/decks/ru/tradeshow-stand.pdf",
+      "seed/media/img/art-fig1.png",
+      "seed/media/img/art-fig2.png",
+      "seed/media/img/art-hero-2.png",
+      "seed/media/img/blog-3.png",
+      "seed/media/img/blog-feat-2.png",
+      "seed/media/img/factory-1.png",
+      "seed/media/img/factory-ru-1.png",
+      "seed/media/img/factory-ru-2.png",
+      "seed/media/img/gd-1.png",
+      "seed/media/img/gd-2.png",
+      "seed/media/img/gd-3.png",
+      "seed/media/img/hero-ru.png",
+      "seed/media/img/logo-ru-1.png",
+      "seed/media/img/logo-ru-2.png",
+      "seed/media/img/logo-ru-3.png",
+      "seed/media/img/logo-ru-4.png",
+      "seed/media/img/logo-ru-5.png",
+      "seed/media/img/map-ru.png",
+      "seed/media/img/proj-2.png",
+      "seed/media/img/proj-3.png",
+      "seed/media/img/proj-big.png",
+      "seed/media/img/proj-ru-2.png",
+      "seed/media/img/proj-ru-3.png",
+      "seed/media/img/rel-3.png",
+      "seed/media/img/safety-1.png",
+      "seed/media/img/safety-2.png",
+      "seed/media/img/side-1.png",
+      "seed/media/img/side-2.png",
+      "seed/media/img/side-3.png",
+      "seed/media/img/team-crew.png"
+    ]
+  },
+  "visual": {
+    "stages": [
+      {
+        "id": "light-desktop",
+        "variants": ["1440-light"]
+      },
+      {
+        "id": "light-responsive",
+        "variants": ["768-light", "390-light"]
+      },
+      {
+        "id": "dark-desktop",
+        "variants": ["1440-dark"]
+      },
+      {
+        "id": "dark-responsive",
+        "variants": ["768-dark", "390-dark"]
+      }
+    ],
+    "shots": [
+      {
+        "stages": ["light-desktop"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "color", "images", "interaction"]
+      },
+      {
+        "stages": ["light-responsive"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "images"]
+      },
+      {
+        "stages": ["dark-desktop"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["color", "layout"]
+      },
+      {
+        "stages": ["dark-responsive"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["layout", "color"]
+      },
+      {
+        "stages": ["light-desktop", "light-responsive"],
+        "side": "source",
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "images"],
+        "ownSourceOnly": true
+      },
+      {
+        "stages": ["light-responsive", "dark-responsive"],
+        "side": "site",
+        "locales": ["ru"],
+        "variants": ["390-light", "390-dark"],
+        "consumers": ["typography"]
+      },
+      {
+        "stages": ["light-responsive"],
+        "side": "source",
+        "locales": ["ru"],
+        "variants": ["390-light"],
+        "consumers": ["typography"],
+        "ownSourceOnly": true
+      }
+    ],
+    "renderInputs": [
+      "src/styles/**",
+      "src/layouts/**",
+      "src/components/**",
+      "src/lib/**",
+      "astro.config.mjs",
+      "template.config.json",
+      "package.json",
+      "public/**"
+    ]
+  },
+  "layouts": [
+    {
+      "id": "Home",
+      "view": "src/views/Home.astro",
+      "representative": "en-home",
+      "pages": ["en-home", "ru-home"],
+      "states": ["default", "resources"],
+      "hasSource": true
+    },
+    {
+      "id": "About",
+      "view": "src/views/About.astro",
+      "representative": "en-about",
+      "pages": ["en-about", "ru-about"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Services",
+      "view": "src/views/Services.astro",
+      "representative": "en-services",
+      "pages": ["en-services", "ru-services"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Service",
+      "view": "src/views/Service.astro",
+      "representative": "en-service",
+      "pages": ["en-service", "ru-service"],
+      "states": ["default"],
+      "hasSource": false
+    },
+    {
+      "id": "Projects",
+      "view": "src/views/Projects.astro",
+      "representative": "en-projects",
+      "pages": ["en-projects", "en-projects-sector", "ru-projects", "ru-projects-sector"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Project",
+      "view": "src/views/Project.astro",
+      "representative": "en-project",
+      "pages": ["en-project", "ru-project"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "News",
+      "view": "src/views/News.astro",
+      "representative": "en-news",
+      "pages": ["en-news", "en-news-category", "en-news-tag", "ru-news", "ru-news-category", "ru-news-tag"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Article",
+      "view": "src/views/Article.astro",
+      "representative": "en-article",
+      "pages": ["en-article", "ru-article"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Careers",
+      "view": "src/views/Careers.astro",
+      "representative": "en-careers",
+      "pages": ["en-careers", "ru-careers"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Investors",
+      "view": "src/views/Investors.astro",
+      "representative": "en-investors",
+      "pages": ["en-investors", "ru-investors"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Contact",
+      "view": "src/views/Contact.astro",
+      "representative": "en-contact",
+      "pages": ["en-contact", "ru-contact"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Search",
+      "view": "src/views/Search.astro",
+      "representative": "en-search",
+      "pages": ["en-search", "ru-search"],
+      "states": ["default"],
+      "hasSource": false
+    },
+    {
+      "id": "NotFound",
+      "view": "src/views/NotFound.astro",
+      "representative": "en-not-found",
+      "pages": ["en-not-found", "ru-not-found"],
+      "states": ["default"],
+      "hasSource": false
+    },
+    {
+      "id": "kit-newsletter",
+      "view": "src/views/Kit.astro",
+      "representative": "en-kit-newsletter",
+      "pages": ["en-kit-newsletter", "ru-kit-newsletter"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "kit-email",
+      "view": "src/views/Kit.astro",
+      "representative": "en-kit-email",
+      "pages": ["en-kit-email", "ru-kit-email"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "kit-form",
+      "view": "src/views/Kit.astro",
+      "representative": "en-kit-form",
+      "pages": ["en-kit-form", "ru-kit-form"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "kit-slides",
+      "view": "src/views/Kit.astro",
+      "representative": "en-kit-slides",
+      "pages": ["en-kit-slides", "ru-kit-slides"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "kit-style-guide",
+      "view": "src/views/Kit.astro",
+      "representative": "en-kit-style-guide",
+      "pages": ["en-kit-style-guide", "ru-kit-style-guide"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "Page",
+      "view": "src/views/Page.astro",
+      "representative": "en-terms",
+      "pages": ["en-terms", "en-privacy", "ru-terms", "ru-privacy"],
+      "states": ["default"],
+      "hasSource": false
+    },
+    {
+      "id": "Sitemap",
+      "view": "src/views/Sitemap.astro",
+      "representative": "en-sitemap",
+      "pages": ["en-sitemap", "ru-sitemap"],
+      "states": ["default"],
+      "hasSource": false
+    }
+  ],
+  "designSystem": {
+    "source": "src/styles/tokens.css (@theme + html[data-theme=dark]); font sizes: every inline font-size of the canvas + design.rules",
+    "colors": {
+      "light": [
+        "rgb(107, 106, 100)",
+        "rgb(107, 74, 14)",
+        "rgb(122, 32, 22)",
+        "rgb(127, 123, 116)",
+        "rgb(134, 130, 122)",
+        "rgb(138, 135, 128)",
+        "rgb(14, 59, 47)",
+        "rgb(159, 195, 180)",
+        "rgb(180, 175, 164)",
+        "rgb(185, 181, 172)",
+        "rgb(191, 212, 203)",
+        "rgb(192, 57, 43)",
+        "rgb(20, 23, 26)",
+        "rgb(20, 72, 58)",
+        "rgb(200, 137, 27)",
+        "rgb(201, 195, 182)",
+        "rgb(207, 224, 216)",
+        "rgb(218, 90, 42)",
+        "rgb(220, 215, 204)",
+        "rgb(224, 219, 209)",
+        "rgb(228, 223, 214)",
+        "rgb(232, 240, 235)",
+        "rgb(233, 242, 233)",
+        "rgb(237, 234, 226)",
+        "rgb(245, 243, 238)",
+        "rgb(251, 242, 226)",
+        "rgb(252, 243, 242)",
+        "rgb(255, 255, 255)",
+        "rgb(31, 74, 34)",
+        "rgb(34, 69, 58)",
+        "rgb(36, 40, 48)",
+        "rgb(42, 46, 50)",
+        "rgb(46, 125, 50)",
+        "rgb(53, 56, 59)",
+        "rgb(61, 107, 92)",
+        "rgb(61, 64, 69)",
+        "rgb(74, 77, 80)",
+        "rgb(90, 89, 82)",
+        "rgb(94, 138, 121)",
+        "rgba(218, 90, 42, 0.1)"
+      ],
+      "dark": [
+        "rgb(10, 12, 13)",
+        "rgb(110, 107, 102)",
+        "rgb(12, 43, 35)",
+        "rgb(127, 191, 166)",
+        "rgb(128, 125, 119)",
+        "rgb(138, 135, 128)",
+        "rgb(143, 204, 178)",
+        "rgb(150, 147, 140)",
+        "rgb(158, 211, 188)",
+        "rgb(159, 195, 180)",
+        "rgb(16, 18, 20)",
+        "rgb(166, 214, 169)",
+        "rgb(169, 166, 160)",
+        "rgb(185, 181, 172)",
+        "rgb(191, 212, 203)",
+        "rgb(192, 57, 43)",
+        "rgb(199, 196, 189)",
+        "rgb(20, 36, 30)",
+        "rgb(20, 72, 58)",
+        "rgb(200, 137, 27)",
+        "rgb(207, 224, 216)",
+        "rgb(21, 24, 26)",
+        "rgb(218, 90, 42)",
+        "rgb(22, 38, 28)",
+        "rgb(221, 183, 105)",
+        "rgb(221, 218, 211)",
+        "rgb(228, 223, 214)",
+        "rgb(236, 234, 228)",
+        "rgb(240, 134, 90)",
+        "rgb(240, 162, 150)",
+        "rgb(245, 243, 238)",
+        "rgb(25, 28, 31)",
+        "rgb(255, 255, 255)",
+        "rgb(28, 32, 35)",
+        "rgb(36, 40, 43)",
+        "rgb(42, 46, 49)",
+        "rgb(42, 46, 50)",
+        "rgb(43, 26, 25)",
+        "rgb(44, 37, 23)",
+        "rgb(44, 48, 51)",
+        "rgb(46, 125, 50)",
+        "rgb(51, 56, 60)",
+        "rgb(53, 56, 59)",
+        "rgb(58, 63, 67)",
+        "rgb(74, 77, 80)",
+        "rgb(94, 138, 121)",
+        "rgba(218, 90, 42, 0.1)"
+      ]
+    },
+    "colorsAlways": ["rgba(0, 0, 0, 0)", "rgb(255, 255, 255)", "rgb(0, 0, 0)"],
+    "fonts": {
+      "en": ["Archivo SemiBold", "Newsreader 16pt 16pt", ".SF NS", "Menlo", "Apple Symbols"],
+      "ru": ["Archivo SemiBold", "Newsreader 16pt 16pt", "Georgia", ".SF NS", "Menlo", "Apple Symbols"]
+    },
+    "type": {
+      "sizes": [
+        "9px",
+        "9.5px",
+        "10px",
+        "10.5px",
+        "11px",
+        "11.5px",
+        "12px",
+        "12.5px",
+        "13px",
+        "13.5px",
+        "14px",
+        "14.5px",
+        "15px",
+        "15.5px",
+        "16px",
+        "16.5px",
+        "17px",
+        "17.5px",
+        "18px",
+        "19px",
+        "20px",
+        "21px",
+        "22px",
+        "23px",
+        "24px",
+        "25px",
+        "26px",
+        "27px",
+        "28px",
+        "30px",
+        "32px",
+        "32.256px",
+        "34px",
+        "38px",
+        "40px",
+        "41.472px",
+        "44px",
+        "48px",
+        "50px",
+        "52px",
+        "64px"
+      ],
+      "ranges": [
+        [21, 27],
+        [22, 27],
+        [22, 28],
+        [24, 30],
+        [24, 32],
+        [24, 34],
+        [26, 36],
+        [26, 34],
+        [28, 38],
+        [28, 40],
+        [30, 44],
+        [32, 48],
+        [32, 50],
+        [34, 52],
+        [38, 64],
+        [80, 130]
+      ],
+      "tolerance": 0.5
+    },
+    "radius": ["0px", "full"],
+    "check": {
+      "colors": [
+        "color",
+        "background-color",
+        "border-top-color",
+        "border-bottom-color",
+        "border-left-color",
+        "border-right-color"
+      ],
+      "type": ["font-size"],
+      "radius": ["border-top-left-radius"],
+      "scope": "header, main, footer"
+    }
+  }
+}

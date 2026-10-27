@@ -1,0 +1,59 @@
+name: Bug report
+description: Something does not work as described.
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do **not** report security problems here; see SECURITY.md.
+        Never paste API keys, tokens, or private business data into an issue.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you saw instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Search "..." in ...
+        2. Open the place ...
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Area
+      options:
+        - Find (search, sources)
+        - Assess (site checks, score)
+        - Reach (outreach drafts, contacts)
+        - Pipeline (my opportunities, cost ledger)
+        - Builder adapter
+        - Shared research hub
+        - Install / docker compose
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: e.g. 0.1.0 or a commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: e.g. docker compose on Linux, Node 24 on macOS
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant log lines, with keys and tokens removed.
+      render: text

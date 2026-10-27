@@ -1,0 +1,64 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#161637",
+      "$type": "color",
+      "$description": "Midnight Ink — Headings, navigation wordmark, key emphasis — a desaturated indigo-black that reads as navy without screaming blue, anchoring the typographic system"
+    },
+    "sky-accent": {
+      "$value": "#0085e4",
+      "$type": "color",
+      "$description": "Sky Accent — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#fafafc",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark — a barely-warm white that prevents the harsh clinical feel of pure #ffffff"
+    },
+    "mist-gray": {
+      "$value": "#f0f0f2",
+      "$type": "color",
+      "$description": "Mist Gray — Alternate section background, input fields, subtle inset surfaces — the secondary canvas that separates bands without hard dividers"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, supporting copy, subdued metadata — readable but never competing with headings"
+    },
+    "hairline": {
+      "$value": "#dadce0",
+      "$type": "color",
+      "$description": "Hairline — Borders, dividers, card outlines — the thinnest structural line, only visible where it defines an edge"
+    },
+    "indigo-wash": {
+      "$value": "#7272fb",
+      "$type": "color",
+      "$description": "Indigo Wash — Hero gradient start — a soft periwinkle that sets the dawn-wash atmosphere of the first viewport"
+    },
+    "signal-blue": {
+      "$value": "#007bff",
+      "$type": "color",
+      "$description": "Signal Blue — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Single-family system. Headlines pull Inter's tightest tracking (-0.025em at display sizes) to feel dense and considered; body sits at standard tracking with 1.5–1.6 line height for comfortable reading. Weight 700 is the hero headline voice, weight 500–600 for section headings, weight 400 for body."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://overflow.io",
+      "siteName": "Overflow",
+      "extractedAt": "2026-06-03T18:57:09.132Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1181-brief-restart-partial-words",
+  "kind": "fix",
+  "title": "A site_brief row whose worker died with tracy-web while placing the words says what reached the site, and a second press does not write over it",
+  "pr": 1181,
+  "area": "sites/brief",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL pointing at a Postgres the tests may write to, run: node --test --test-reporter=tap apps/tracy-web/test/brief-build.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures, 0 skipped.",
+    "'a worker that died while placing words that reached the site says they are partly in, not that none are' passes: a stale `applying` row with timings.applyIds settles as state `applied` with error LOST_PART ('…only part of them reached the site…'), keeps its applyIds, and a second start() of the same site answers {started: false} and calls neither prepare nor apply.",
+    "'a worker that died as placing began, before any write was kept, does not claim the site is untouched' passes: a stale `applying` row with no apply id settles `failed` with LOST_PLACING ('…may still have the template’s own words').",
+    "'an open row whose worker died with the process is not held for ever' still passes: a stale `preparing` row settles `failed` with LOST_WORK.",
+    "'a worker that died after a write that reused an apply id says the words are partly in' passes: a stale `applying` row whose timings carry only reusedApplyIds ['dtrim-seed'] settles `applied` with LOST_PART (before review fix L1: `failed` with LOST_PLACING, which a second press would write over).",
+    "Before the fix (brief-build.js gate at 77545996c7): every stale open row, `applying` included, settled `failed` with LOST_WORK ('the site has the template’s own words') — 2 failures in this file."
+  ],
+  "selectors": {
+    "gate": "createBriefBuilds().gate (apps/tracy-web/src/sites/brief-build.js), called by GET /api/sites/jobs/:id once the host says done",
+    "ending": "lostEnding(row) in apps/tracy-web/src/sites/brief-build.js",
+    "row": "site_brief.state, site_brief.error, site_brief.timings.applyIds, site_brief.timings.reusedApplyIds"
+  },
+  "evidence": "TCH #887: dev cowork.tracy.site 04/10/2026, e2e-jo.tracy.site — deploy #877 replaced tracy-web at 17:26:28Z during 'placing your text and pictures'; the row went failed with LOST_WORK at 17:30:30Z while /en/ already carried the customer's name, hero and services (qa/e2e-dev-2026-10-04, tasks/evidence/e2e-dev/2026-10-04/ F1).",
+  "fence": "The row is the evidence: the case simulates the dead worker by writing the row a killed process leaves (stale updated_at), not by restarting a container. It does not read the site back, and the run is not resumed — a write that landed in the instant before its apply id was saved is covered only by the 'may' wording.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-build.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "a worker that died while placing words that reached the site",
+      "a worker that died as placing began",
+      "a worker that died after a write that reused an apply id",
+      "an open row whose worker died with the process"
+    ]
+  }
+}

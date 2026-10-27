@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-smallbiz/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_smallbiz",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-smallbiz",
+    "id": "quickstart/ja-smallbiz/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_smallbiz",
+    "parts": {
+      "installer": {
+        "file": "ja-smallbiz-j6-quickstart.zip",
+        "bytes": 42439592,
+        "sha256": "c5e702ba8bb8d1014b06e0ec0ee896234f38246f9d43f7eed0aa73af6f84b1d3"
+      }
+    },
+    "release": "quickstart/ja-smallbiz/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

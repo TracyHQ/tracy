@@ -1,0 +1,423 @@
+{
+  "color": {
+    "bee-ink": {
+      "$value": "#21200b",
+      "$type": "color",
+      "$description": "Bee Ink — Headlines, body text, hairline borders, dark surface panels, and outlined action borders"
+    },
+    "pioneer-yellow": {
+      "$value": "#ffd900",
+      "$type": "color",
+      "$description": "Pioneer Yellow — Navigation links, icon marks, colored content fields, and dark-surface button text — vivid yellow makes the near-black/yellow pairing unmistakably Bee"
+    },
+    "lavender-memory": {
+      "$value": "#d2c4ff",
+      "$type": "color",
+      "$description": "Lavender Memory — Feature-card surfaces and occasional supporting text treatment; this cool interruption prevents the yellow-and-ink system from becoming monochrome"
+    },
+    "putty": {
+      "$value": "#e5e0dd",
+      "$type": "color",
+      "$description": "Putty — Large card surfaces and the dominant warm-gray page canvas"
+    },
+    "paper": {
+      "$value": "#f7f3f1",
+      "$type": "color",
+      "$description": "Paper — Light card surfaces and filled light outlined-action backgrounds"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Occasional deepest media or card surface"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Hero text over photography and the lightest canvas surface"
+    },
+    "recruiter-indigo": {
+      "$value": "#150a45",
+      "$type": "color",
+      "$description": "Recruiter Indigo — Full-width recruitment and announcement strip behind white text"
+    }
+  },
+  "font": {
+    "fff-acidgrotesk": {
+      "$value": "Fff Acidgrotesk",
+      "$type": "fontFamily",
+      "$description": "The signature display and interface face: use 700 for 48-96px headlines, 700 at 19px for compact section statements, and 500 for navigation, controls, and feature labels. The 96px display tracking is aggressively tight, making large words read as one dense graphic form rather than separate letters."
+    },
+    "inter-variable": {
+      "$value": "Inter Variable",
+      "$type": "fontFamily",
+      "$description": "Use for explanatory paragraphs, introductory copy, and small supporting information. At 16px/1.8 it creates a calm, spacious counterweight to Acidgrotesk’s compressed, emphatic headings."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "11px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 11px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "13px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.8,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "19px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 19px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "19px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 19px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "19px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 19px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "xl-3": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "22px",
+        "fontWeight": 400,
+        "lineHeight": 1.8,
+        "letterSpacing": "-0.017em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-3 at 22px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.016em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "32px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "3xl-2": {
+      "$value": {
+        "fontFamily": "Inter Variable",
+        "fontSize": "32px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-2 at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "48px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "59px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 59px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "96px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "-0.033em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 96px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "Fff Acidgrotesk",
+        "fontSize": "734px",
+        "fontWeight": 700,
+        "lineHeight": 0.8,
+        "letterSpacing": "-0.023em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 734px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "31.9375px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "3xl-3": {
+      "$value": "38.325px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-3"
+    },
+    "full": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "1440px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    },
+    "full-3": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-3"
+    }
+  },
+  "surface": {
+    "paper-canvas": {
+      "$value": "#f7f3f1",
+      "$type": "color",
+      "$description": "Surface level 0: Light page fields and outlined-control fill."
+    },
+    "putty-panel": {
+      "$value": "#e5e0dd",
+      "$type": "color",
+      "$description": "Surface level 1: Primary warm-gray card and product-stage surface."
+    },
+    "lavender-memory-panel": {
+      "$value": "#d2c4ff",
+      "$type": "color",
+      "$description": "Surface level 2: Accent feature-card surface."
+    },
+    "bee-ink-panel": {
+      "$value": "#21200b",
+      "$type": "color",
+      "$description": "Surface level 3: Dark media, footer, and filled-control surface."
+    },
+    "true-black-panel": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 4: Deepest occasional media-card surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bee.computer",
+      "siteName": "Bee",
+      "extractedAt": "2026-09-20T19:29:54.519Z",
+      "variant": "extended"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+    <name>plg_system_tracyaccess</name>
+    <author>Tracy</author>
+    <creationDate>2026-08</creationDate>
+    <copyright>(C) 2026 Tracy</copyright>
+    <license>GPL-2.0-or-later</license>
+    <version>0.2.0</version>
+    <description><![CDATA[
+        Signs a coworker in to a Tracy fleet clone as themselves, from the Cloudflare Access token
+        that already proved they hold a seat. Installed only on a clone, never on a live site.
+    ]]></description>
+    <namespace path="src">Tracy\Plugin\System\TracyAccess</namespace>
+    <scriptfile>script.php</scriptfile>
+    <files>
+        <folder plugin="tracyaccess">services</folder>
+        <folder>src</folder>
+        <folder>lib</folder>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="team_domain" type="text" default=""
+                    label="Cloudflare Access team domain"
+                    description="e.g. tracy-ai.cloudflareaccess.com" />
+                <field name="aud" type="text" default=""
+                    label="Access application AUD"
+                    description="This clone's own Access application tag. Written at provision time." />
+                <field name="work_group" type="text" default="Manager"
+                    label="Work group"
+                    description="Joomla group everyone through the door joins. Manager by default: it can edit content and cannot install extensions or manage users." />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

@@ -1,0 +1,124 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Primary page background, card surfaces, input fills"
+    },
+    "cloud-mist": {
+      "$value": "#f6f8fa",
+      "$type": "color",
+      "$description": "Cloud Mist — Alternate section background, subtle surface tier below white"
+    },
+    "frost-tint": {
+      "$value": "#eceff3",
+      "$type": "color",
+      "$description": "Frost Tint — Tertiary surface, muted background blocks"
+    },
+    "ash-border": {
+      "$value": "#cdd2d9",
+      "$type": "color",
+      "$description": "Ash Border — Hairline dividers, card borders, table separators"
+    },
+    "mist-border": {
+      "$value": "#c1c7d0",
+      "$type": "color",
+      "$description": "Mist Border — Secondary borders, disabled state outlines"
+    },
+    "fog-text": {
+      "$value": "#a4abb8",
+      "$type": "color",
+      "$description": "Fog Text — Helper text, link underlines in body copy, placeholder text"
+    },
+    "steel-text": {
+      "$value": "#818898",
+      "$type": "color",
+      "$description": "Steel Text — Muted metadata, timestamps, caption text"
+    },
+    "slate-body": {
+      "$value": "#666d80",
+      "$type": "color",
+      "$description": "Slate Body — Secondary body text, descriptions, supporting paragraphs"
+    },
+    "graphite-heading": {
+      "$value": "#36394a",
+      "$type": "color",
+      "$description": "Graphite Heading — Primary headings, strong body text, high-emphasis content"
+    },
+    "midnight-ink": {
+      "$value": "#272835",
+      "$type": "color",
+      "$description": "Midnight Ink — Dark surface fills, announcement bar, code terminal background, primary button background"
+    },
+    "onyx": {
+      "$value": "#1a1b25",
+      "$type": "color",
+      "$description": "Onyx — Deepest text, high-contrast dark surfaces"
+    },
+    "volt-violet": {
+      "$value": "#5e4cff",
+      "$type": "color",
+      "$description": "Volt Violet — Primary CTA fill, active link, brand accent — vivid violet against slate neutrals is the single chromatic punctuation of the entire system"
+    },
+    "lavender-wash": {
+      "$value": "#c8ccf3",
+      "$type": "color",
+      "$description": "Lavender Wash — Muted accent background, hero pixel-art mid-tones, tag chips"
+    },
+    "lilac-whisper": {
+      "$value": "#dfdbff",
+      "$type": "color",
+      "$description": "Lilac Whisper — Tertiary accent surface, selected row tint, soft callout"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "britti-sans-trial-semibold": {
+      "$value": "Britti Sans Trial Semibold",
+      "$type": "fontFamily",
+      "$description": "Display headlines and hero copy. The aggressive -0.025em tracking at 76px and condensed 0.95 line-height make text feel architectural and code-like. Substitute: Space Grotesk Bold or General Sans Semibold."
+    },
+    "britti-sans-medium": {
+      "$value": "Britti Sans Medium",
+      "$type": "fontFamily",
+      "$description": "Section headings (H2/H3), nav items, emphasized UI labels. Carries brand personality into subhead levels. Substitute: Space Grotesk Medium."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body copy, paragraphs, descriptions. The slight negative tracking (-0.01 to -0.02em) keeps even long-form text dense but readable. Substitute: Inter is already Google-hosted."
+    },
+    "inter-variable": {
+      "$value": "Inter Variable",
+      "$type": "fontFamily",
+      "$description": "UI controls, buttons, badges, form labels, nav links — the workhorse for interactive elements."
+    },
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "Code snippets, terminal output, inline `<code>` elements. Signals the developer-first audience."
+    },
+    "britti-sans-trial-regular": {
+      "$value": "Britti Sans Trial Regular",
+      "$type": "fontFamily",
+      "$description": "Britti Sans Trial Regular — detected in extracted data but not described by AI"
+    },
+    "micro-5": {
+      "$value": "Micro 5",
+      "$type": "fontFamily",
+      "$description": "Micro 5 — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.lightdash.com",
+      "siteName": "Lightdash",
+      "extractedAt": "2026-06-03T15:42:56.888Z",
+      "variant": "compact"
+    }
+  }
+}

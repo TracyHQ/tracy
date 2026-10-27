@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+  "status": "complete",
+  "name": "Todoist",
+  "url": "https://styles.refero.design/style/729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+  "sourceWebsite": "https://todoist.com",
+  "extractedAt": "2026-06-03T16:45:48.410Z",
+  "capturedAt": "2026-10-08T05:13:20.884438+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Sunlit workspace with a paper planner — warm off-white desk, ink notes, one red pen",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/afc3137c-60f4-4bb5-9391-857246244fa7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/96d531a9-5385-4889-b6fd-c4ec7c47369e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0d0cf1a1-66d7-4438-b478-887cf212e9e2.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2f30775f-dfdb-4214-8fda-f677141984b8.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3880ec1e-a6fa-4184-a083-4ca74ca1c8cd.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "438b2312d45e89ed756cfc8d5713f9c85e18f84778ec5df36a543b8335199ad2",
+      "bytes": 23920
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "78763ee08b85da7b29c159a2cd7645320b8a02ff5ee4ca246d54d70e586a5d5b",
+      "bytes": 92418
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d3fad4c0f730cca5fc9b00b2ac5b3064d30db2462a0e1e6adc8fc6c2438baddc",
+      "bytes": 19773
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "02234516f7ae34bfe25980e41d818248a1cbe87166493685877286df7a2ce1f7",
+      "bytes": 14023
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "d227de5290e1c3d5f7d618adab18f84591a6f5302aaa2fd8338190cf0db76e47",
+      "bytes": 13754
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1e43ddbd2abeb7895dfc0bf397911401acb3a4537d278461ccc7192eb8f56d08",
+      "bytes": 4151
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "53afcda2d10ba8d76af8602e0ee28c4a9d4303008633d5ed2701f0e45ccb32a8",
+      "bytes": 1057
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "451fc875c7b8c072e08b9a8ea30dbee165df7950cd9a4c58831609273bb85cb3",
+      "bytes": 1074
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "607790abc6fdffc3a13f305cdb9e094c29b0fa3d68d9299a5f08231e3054f444",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cd0e404b54e0248a451d2ab0a33c8c8ebc0823133463b97982e424297cfe852e",
+      "bytes": 47217
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "14d7b63bf15349b5ca4da1d44096aad634176e897f07a3ab93680a6b7804f437",
+      "bytes": 24380
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c00a7d79a0f28143d547618bc1533548eeb3dfcb0b9de85d3d4b57aca53f48fd",
+      "bytes": 50725
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f7dabc209b92a69112b0373844c38cf85ace4336c128dac91c3cd3242ddc3bd5",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "64883383c2f98efe1da57a9757f7c1626c7703ebccfad1407a336111e4c2b48d",
+      "bytes": 2260
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e770c554e2740df3cd208210ca9e0d83cbbc0041aabf0ebc0717fe6703fd465d",
+      "bytes": 2941
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0c0b6140-2b6c-44f8-8bba-4ecfcadba420",
+    "0f0d4cb7-5109-4e81-8c8d-f6bd0441b27c",
+    "29567671-da1e-4f85-ae52-8b611fecc384",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "337ade6a-4bae-49ba-b4aa-8994ac805a81",
+    "34788d94-1147-4d38-8df7-6f47ef7efb12",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4caadb3c-3865-4a4d-9e1a-46478ac71078",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "6b2a0513-df80-4140-87a8-38b1fef34313",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "aa87c258-0eb8-4c14-9f2f-96f16fb926b8",
+    "aaca1e02-7b5a-4c03-ac40-454f0d477356",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

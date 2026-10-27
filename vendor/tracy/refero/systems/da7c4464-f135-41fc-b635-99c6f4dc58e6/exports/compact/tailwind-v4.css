@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #040404;
+  --color-paper-white: #ffffff;
+  --color-ash-gray: #d9d9d9;
+  --color-smoke-gray: #cbcece;
+  --color-slate: #162020;
+  --color-pewter: #6e797a;
+  --color-sprout-green: #98e58e;
+
+  /* Typography */
+  --font-proxima-nova: 'Proxima Nova', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "tracy-design-inspiration/v1",
+  "template": "ja-phio",
+  "provider": "JoomlArt",
+  "category": "Design & Creative",
+  "blurb": "A portfolio site template for a design studio, with demo pages for project work, services, team bios, a blog, and client testimonials.",
+  "image": "ja-phio-home-390.png",
+  "nav": "top-left",
+  "hero": "split",
+  "dark": true,
+  "layouts": [
+    {
+      "key": "home",
+      "label": "Home",
+      "path": "/",
+      "address": "/index.php",
+      "count": 3,
+      "shots": {
+        "desktop": "ja-phio-home-1440.png",
+        "mobile": "ja-phio-home-390.png"
+      }
+    },
+    {
+      "key": "our-work",
+      "label": "Our Work",
+      "path": "/our-work",
+      "address": "/index.php/our-work",
+      "count": 6,
+      "shots": {
+        "desktop": "ja-phio-our-work-1440.png",
+        "mobile": "ja-phio-our-work-390.png"
+      }
+    },
+    {
+      "key": "services",
+      "label": "Services",
+      "path": "/services",
+      "address": "/index.php/services",
+      "count": 4,
+      "shots": {
+        "desktop": "ja-phio-services-1440.png",
+        "mobile": "ja-phio-services-390.png"
+      }
+    },
+    {
+      "key": "team",
+      "label": "Team",
+      "path": "/team",
+      "address": "/index.php/team",
+      "shots": {
+        "desktop": "ja-phio-team-1440.png",
+        "mobile": "ja-phio-team-390.png"
+      }
+    },
+    {
+      "key": "blog",
+      "label": "Blog",
+      "path": "/blog",
+      "address": "/index.php/blog",
+      "count": 4,
+      "shots": {
+        "desktop": "ja-phio-blog-1440.png",
+        "mobile": "ja-phio-blog-390.png"
+      }
+    },
+    {
+      "key": "contact",
+      "label": "Contact",
+      "path": "/contact",
+      "address": "/index.php/contact",
+      "shots": {
+        "desktop": "ja-phio-contact-1440.png",
+        "mobile": "ja-phio-contact-390.png"
+      }
+    }
+  ]
+}

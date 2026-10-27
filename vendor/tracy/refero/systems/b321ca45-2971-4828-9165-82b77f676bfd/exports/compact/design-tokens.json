@@ -1,0 +1,29 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, all borders, structural rules, button text and outlines — the only chromatic signal in the system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, surface backgrounds, button interiors, inverse text on dark photography"
+    }
+  },
+  "font": {
+    "neuehaas-web": {
+      "$value": "NeueHaas-web",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across every role: 19px body, 29px subheading, 38px secondary heading, 95px hero display, 160px editorial display. Weight stays at 400 (regular) even at maximum scale — the system derives hierarchy from size and line-height compression, never from boldness. Tracking tightens to -0.03em universally. At display scale (160px), line-height drops to 0.90 so lines physically overlap, creating layered typographic compositions rather than stacked headlines."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://thebeamslondon.com",
+      "siteName": "The Beams",
+      "extractedAt": "2026-06-03T21:58:53.103Z",
+      "variant": "compact"
+    }
+  }
+}

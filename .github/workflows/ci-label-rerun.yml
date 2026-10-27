@@ -1,0 +1,88 @@
+# Re-run Tracy CI when a pull request into `develop` gets one of its two opt-in labels.
+#
+# 🔒 DECIDED 16/10/2026 BY anh David (SRE). On a pull request into `develop`, Tracy CI runs the
+# `tests e2e` row only with the label `ci:e2e`, and keeps the workers test files that need a database
+# only with `ci:integration` (rule and reasons: the header of `tracy-ci.yml`, `scripts/ci/test-scope.mjs`).
+# Adding one of those labels therefore has to start the run again — this file does that, and ONLY that.
+#
+# 🔒 WHY NOT `labeled` IN `tracy-ci.yml`. Its `concurrency` group is keyed by the pull request's ref and
+# cancels the run in flight, so any label at all (triage, area, a reviewer's) would kill a run that was
+# half way; and a `labeled` run that the plan skips ends `skipped`, which can overwrite a required check
+# of the head commit. A workflow of its own, filtered to the two labels, has neither problem.
+#
+# WHAT IT DOES: `scripts/ci/label-rerun.mjs` finds the newest Tracy CI run of this pull request for its
+# CURRENT head commit, cancels it if it is still going, waits until it is completed, and re-runs the whole
+# run. The `plan` job of the new attempt reads the labels from the API when it runs (a re-run replays the
+# old event payload, which does not carry the label), so it runs what the labels ask for. Removing a
+# label does nothing: the next push runs with the labels it carries. A draft is left alone: the run that
+# starts when it is marked ready reads the labels itself.
+#
+# PERMISSIONS: `actions: write` to cancel and re-run, `pull-requests: read` for the labels and the head
+# commit, `contents: read` for the checkout. Nothing else.
+#
+# 🔒 WHY `pull_request_target`, AND WHY THAT IS SAFE HERE. This job holds `actions: write` on a
+# self-hosted runner, so it must not run code the pull request brings. A `pull_request` run checks out
+# the merge commit (the author's `scripts/ci/label-rerun.mjs` and this very file would run with that
+# token). `pull_request_target` runs the workflow file of the BASE branch and, below, checks out the
+# base commit only, with no credential left in the checkout: nothing of the pull request is executed.
+# What the job takes from the event is data — the label name (one of two, by the job's `if`) and the
+# pull request number — passed through the environment, never into a command. The script then reads the
+# pull request and its head commit from the API itself, at that moment, and only calls REST on this
+# repository. The same convention as `auto-merge-develop.yml` (trusted default-branch code, no head).
+# A fork's pull request is refused by the `if`, and so is a draft. ⚠ Until this file is on `develop`
+# there is no base copy of the script: the first label after the merge is the first run.
+#
+# ⚠ NOT SHOWN BY ANY TEST: whether `GITHUB_TOKEN` may call `POST /actions/runs/{id}/rerun` on this
+# repository. The first label added on a real pull request shows it; a refusal turns THIS job red with
+# the API's answer, never quiet.
+name: Tracy CI label re-run
+
+permissions:
+  contents: read
+  actions: write
+  pull-requests: read
+
+on:
+  pull_request_target:
+    branches: [develop]
+    types: [labeled]
+
+# 🔒 THE GROUP IS COMPUTED BEFORE THE JOB'S `if`, so every `labeled` event of the pull request — a
+# triage label, an area label — gets a run, and a run skipped by its `if` still counts as a member of
+# its group. With one group per pull request, an unrelated label added a second after `ci:e2e` would
+# cancel the job that is cancelling and re-running Tracy CI, and nobody would re-run it. So the two
+# watched labels share one group per pull request (a second of them cancels the first job and does the
+# whole thing itself; safe, because the job only acts on the newest run of the head commit as it finds
+# it), and every other label gets a group of its own, `github.run_id`, that nothing else joins.
+concurrency:
+  group: ci-label-rerun-${{ github.event.pull_request.number }}-${{ (github.event.label.name == 'ci:e2e' || github.event.label.name == 'ci:integration') && 'tracked' || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  rerun:
+    name: re-run Tracy CI for ${{ github.event.label.name }}
+    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    timeout-minutes: 15
+    # Only the two labels, never a draft, never a fork (a fork's token is read-only and cannot re-run).
+    if: >-
+      ${{
+        github.event.pull_request.draft == false
+        && (github.event.label.name == 'ci:e2e' || github.event.label.name == 'ci:integration')
+        && github.event.pull_request.head.repo.full_name == github.repository
+      }}
+    steps:
+      # The BASE commit, never the head: see the header. No credential is left in the checkout.
+      - name: Check out the trusted base commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          submodules: false
+          persist-credentials: false
+
+      # The label and the pull request number go in as data from the environment, never into the command.
+      - name: Re-run the latest Tracy CI run of this pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          LABEL: ${{ github.event.label.name }}
+        run: node scripts/ci/label-rerun.mjs

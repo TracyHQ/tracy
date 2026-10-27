@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1416-export-site-zip",
+  "kind": "feat",
+  "title": "Owner exports a fresh full-site ZIP after email verification",
+  "pr": 1416,
+  "area": "site-changes/export-site-zip",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Request a fresh site backup, pack the export, verify the emailed code, and download the ZIP."
+  ],
+  "expect": [
+    "S1: only an Owner can start the export; fresh backup includes the large-file snapshot; EmDash and Joomla packages include platform instructions; an email code is required before a link is issued; BACKUP_EXPORT=off closes the doors."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/route.js, apps/tracy-web/src/sites/backup-export.js, packages/fleet/tracy-fleet-operation/scripts/lib/export-package.py"
+  },
+  "evidence": "Postgres-backed route tests plus host package tests cover the complete export boundary and package contents.",
+  "fence": "One-click fresh backup, Owner-only export, code-gated link issue, platform package contents, and export kill switch.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/backup-export.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/backup-export.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "export: an Owner gets 202 at once, the host packs and uploads, and the status door hands a fresh download link",
+      "export: an editor and a viewer are refused, on both doors; the host is never asked",
+      "export: a code older than ten minutes cannot issue a download link",
+      "export: a fresh backup can be packed with the same-lock large-file snapshot enabled",
+      "BACKUP_EXPORT off: both doors answer 404 EXPORT_OFF before anything is filed, /backups says may.export false, the sweep still runs",
+      "export-package: EmDash includes app, database, uploads and its Node-host README",
+      "export-package: Joomla package has move instructions and the four database placeholders",
+      "export with include-large: files over 50 MiB captured with the fresh backup are included and scope says so"
+    ]
+  }
+}

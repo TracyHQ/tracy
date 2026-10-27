@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1624-decorative-hero-chart-role",
+  "kind": "fix",
+  "title": "The EmDash Base release scanner accepts explicitly classified decorative chart caps while still refusing an unresolved real hardcoded role",
+  "pr": 1624,
+  "area": "cms/emdash-base",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the release role scan on the committed EmDash Base source containing its decorative HeroOd chart.",
+    "S2: Run the existing hardcoded-role fixture through the same release CLI."
+  ],
+  "expect": [
+    "S1: The report matches the template version and has zero unresolved roles.",
+    "S2: The release fails and identifies the hardcoded role by file and line."
+  ],
+  "selectors": {
+    "component": "packages/cms/tracy-emdash-theme-base/src/components/sections/HeroOd.astro",
+    "scanner": "packages/cms/tracy-emdash-theme-base/tests/release-role-scan.test.mjs"
+  },
+  "evidence": "Release #1622 CI run 39893172612 failed VARS-1 at HeroOd.astro:63 on 3c0dc0f5d0. The local suite also failed before the annotation and passed all three tests afterwards.",
+  "fence": "Static repository release scanner, not browser or published-quickstart acceptance. The annotation compiles to byte-identical minified Astro output. The shared scanner and real-role rejection remain unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-base/tests/release-role-scan.test.mjs"
+    ],
+    "tests": [
+      "the theme as committed scans clean: the report carries this version, 0 unresolved",
+      "a hardcoded role in the shipped source stops the release and names file:line"
+    ],
+    "needs": [],
+    "timeout_s": 30
+  }
+}

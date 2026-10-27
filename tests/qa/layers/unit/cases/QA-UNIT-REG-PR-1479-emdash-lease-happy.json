@@ -1,0 +1,58 @@
+{
+  "id": "QA-UNIT-REG-PR-1479-emdash-lease-happy",
+  "itemIds": ["regression:REG-PR-1479-emdash-lease"],
+  "requirement": "Two conversations on one EmDash site take turns writing, and Stop sends nothing while waiting",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1479-emdash-lease.json",
+    "ref": "PR #1479 (fix); fix evidence: Review 19/10/2026: EmDash writes went straight to the site's MCP with no write lease",
+    "invariant": "S1: B waits, A writes on, B writes after A's turn ends. S2: nothing sent, even when the lease frees then. S3: every road acquires first; none writes meanwhile.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:133",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "🔒 Q1: two conversations on one EmDash site — B waits for A, A writes on meanwhile, B writes once A’s turn ends",
+    "🔒 Q1: Stop while an EmDash write waits for the lease — nothing is sent, also when the lease comes free just then",
+    "🔒 Q1: every EmDash write road takes the lease first — tracy_emdash, media.upload, content.replace — and none writes while another holds it"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1479-emdash-lease"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1479-emdash-lease",
+    "pr": 1479,
+    "kind": "fix",
+    "area": "site-changes/lease",
+    "file": "tests/regression/cases/REG-PR-1479-emdash-lease.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/handler.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "🔒 Q1: two conversations on one EmDash site — B waits for A, A writes on meanwhile, B writes once A’s turn ends",
+    "🔒 Q1: Stop while an EmDash write waits for the lease — nothing is sent, also when the lease comes free just then",
+    "🔒 Q1: every EmDash write road takes the lease first — tracy_emdash, media.upload, content.replace — and none writes while another holds it"
+  ],
+  "timeoutS": 600
+}

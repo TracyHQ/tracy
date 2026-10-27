@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-essence/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_essence",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-essence",
+    "id": "quickstart/ja-essence/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_essence",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-essence-j6-webroot-1.0.1.tar.gz",
+        "bytes": 57412439,
+        "sha256": "27a90befba2c7c354bab9996bc426ce0fd20ca767d0784ba8b0161dedc6593dd"
+      },
+      "database": {
+        "file": "ja-essence-j6-database-1.0.1.sql.gz",
+        "bytes": 102836,
+        "sha256": "5f4ec948fb03a5c01914625005094fac50809be8e2659dbcdb689786a694859e"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-07T20:32:00.907Z",
+    "builtFrom": {
+      "site": "ess",
+      "tag": "quickstart/ja-essence/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-essence/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

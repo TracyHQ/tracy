@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1362-right-panel-followups",
+  "kind": "fix",
+  "title": "Right panel follow-ups: Site changes holds its place while loading, model menu keeps focus, start screen centred, Template default opens the preview, tool tables ignore prototype names",
+  "pr": 1362,
+  "area": "right-panel/site-changes",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Open Site changes in a 1100x900 wide panel with a slow activity read: first open of a long and a short list, then reopen; record the header top and the loading bar height on every frame.",
+    "S2: Open the model menu (real dsh ModelSelect) and press a group heading, the card padding, and the empty 'No models available.' pane.",
+    "S3: Render the start screen and measure the hero, cards and composer against the conversation column centre.",
+    "S4: Compute the Template default popup action for owner/viewer, worn/bare and undone states.",
+    "S5: Ask the subprocess-docker fence tables for a tool or mode named toString, constructor or __proto__."
+  ],
+  "expect": [
+    "S1: first open shows only the spinner, then the header at one place on every frame; reopen header at one place; loading bar 2px.",
+    "S2: the menu stays open and focus stays inside it.",
+    "S3: content centred on the column within 1px.",
+    "S4: the way back is labelled from last.previous, off with a reason for a Viewer or once undone, a quiet line when nothing is worn.",
+    "S5: no table match; unknown tool or mode; path-like strings still fenced."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-site-tabs/test/e2e/changes-loading-place.test.mjs, packages/ui/tracy-chat-input/test/e2e/model-menu-heading.test.mjs, packages/ui/tracy-chat-input/test/e2e/start-cards-flat.test.mjs, packages/design/tracy-design-inspiration/test/template-default-action.test.mjs, packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs"
+  },
+  "evidence": "14/10/2026 on the local Docker stand (tam-wordpress, /activity delayed 2.5 s): Site changes header went 487 -> 334 px while loading; model menu heading click dropped focus to body; Template default card stood taller than its row",
+  "fence": "Browser e2e and node unit tests; the cowork.tracy.site check happens after deploy, not in this case",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "packages/site/tracy-site-tabs/test/e2e/changes-loading-place.test.mjs",
+      "packages/ui/tracy-chat-input/test/e2e/model-menu-heading.test.mjs",
+      "packages/ui/tracy-chat-input/test/e2e/start-cards-flat.test.mjs",
+      "packages/design/tracy-design-inspiration/test/template-default-action.test.mjs",
+      "packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs"
+    ]
+  }
+}

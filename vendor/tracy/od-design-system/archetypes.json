@@ -1,0 +1,948 @@
+{
+  "_meta": {
+    "schemaVersion": "tracy-od-archetypes/v1",
+    "classifiedAt": "2026-09-05",
+    "how": "Four agents read each system's DESIGN.md once (38 systems each) and assigned nav/hero from the closed sets below; `why` is a verbatim quote (<=160 chars) from that DESIGN.md. confidence=low means DESIGN.md said nothing and the default (top-left/split) was used; where a hand review of 05/09 had a value for such a system, that value replaced the default (source=hand-review-2026-09-05). Tracy reviews; build-catalog.mjs merges nav/hero into catalog.json. Spec: tasks/spec-huong-thiet-ke.md §4d.",
+    "nav": [
+      "top-left",
+      "top-centered",
+      "brand-centered",
+      "sidebar",
+      "overlay"
+    ],
+    "hero": [
+      "split",
+      "centered",
+      "cover",
+      "stack"
+    ]
+  },
+  "agentic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "airbnb": {
+    "nav": "top-centered",
+    "hero": "stack",
+    "confidence": "medium",
+    "why": "Center: tri-tab category picker (Homes / Experiences / Services) with 36–48px 3D icons stacked above 16px 500 labels",
+    "source": "hand-review-2026-09-05"
+  },
+  "airtable": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "ant": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "apple": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "**Global Marketing Nav:** compact dark translucent bar with small-type links and restrained iconography."
+  },
+  "application": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": "App dashboard with purple-themed aesthetic, top-bar navigation, card-based layouts, and developer-first workflows."
+  },
+  "arc": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Sidebar-first layout: tabs, spaces, and bookmarks live on the left, not the top"
+  },
+  "artistic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "atelier-zero": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "Hero is `0.78fr 1.22fr`."
+  },
+  "bento": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "binance": {
+    "nav": "top-centered",
+    "hero": "split",
+    "confidence": "high",
+    "why": "Binance logo left, 14px/600 #32313A nav links center, and a yellow (#F0B90B) pill button (50px radius, 6px padding 32px) labeled 'Get Started' right"
+  },
+  "bmw": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "medium",
+    "why": "Use full-bleed automotive photography for hero sections"
+  },
+  "bmw-m": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Carries the BMW M logo at left (M tricolor + BMW roundel + \"M\" wordmark), primary horizontal menu (Models, Topics, Magazine, Configurator, Fastlane)"
+  },
+  "bold": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "brutalism": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "bugatti": {
+    "nav": "brand-centered",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "wordmark centered, a hamburger \"MENU\" link left, and a \"STORE\" link right"
+  },
+  "cafe": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "cal": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "**Top nav**: White/transparent background, Cal Sans links at near-black"
+  },
+  "canva": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "**Sidebar (editor)**: 320px wide; collapses to 56px icons."
+  },
+  "cisco": {
+    "nav": "overlay",
+    "hero": "split",
+    "confidence": "high",
+    "why": "Dark glass-like masthead or shell over a dark hero"
+  },
+  "claude": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Hero: centered with editorial layout"
+  },
+  "clay": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Clay logo left-aligned"
+  },
+  "claymorphism": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "clean": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "clickhouse": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Hero: full-width dark with massive typography"
+  },
+  "cloudflare-kumo": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Use this package for developer tools, infrastructure consoles, administration surfaces, data-heavy dashboards"
+  },
+  "cohere": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Hero: centered with dramatic typography"
+  },
+  "coinbase": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "colorful": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "composio": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Logo (white SVG): Composio wordmark on the left"
+  },
+  "contemporary": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "corporate": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "cosmic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "creative": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "cursor": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Cursor logotype left-aligned (~96x24px)"
+  },
+  "dashboard": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Dark-themed cloud-platform aesthetic with modular grids, glass-like panels, and strong data hierarchy for productivity dashboards."
+  },
+  "default": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "discord": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "**Channel sidebar**: 240px wide."
+  },
+  "dithered": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "doodle": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "dramatic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "duolingo": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "medium",
+    "why": "",
+    "source": "hand-review-2026-09-05"
+  },
+  "editorial": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "elegant": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "elevenlabs": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Pill CTAs right-aligned (black primary, white secondary)"
+  },
+  "energetic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "enterprise": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "expo": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Build a navigation bar with Expo logo on the left, text links in Near Black (#1c2024) at 14px Inter weight 500, and a black pill CTA button on the right."
+  },
+  "expressive": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "fantasy": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "ferrari": {
+    "nav": "brand-centered",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Prancing Horse logo centered at top of page, primary navigation below — not a traditional horizontal nav bar but a full-width header block on black background"
+  },
+  "figma": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Clean horizontal nav on white"
+  },
+  "flat": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "framer": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "medium",
+    "why": "Pill-shaped, white or frosted, positioned at right end of nav"
+  },
+  "friendly": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "futuristic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "github": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "296px on desktop, collapses below 1012px."
+  },
+  "glassmorphism": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "gradient": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "hashicorp": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "HashiCorp logo left-aligned"
+  },
+  "hud": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "huggingface": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Sidebar (model browser)"
+  },
+  "ibm": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "high",
+    "why": "Logo: IBM 8-bar logo, white on dark, left-aligned"
+  },
+  "intercom": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "ja-voyara": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "**Primary Site Nav:** a white 76px bar carrying a left wordmark, a horizontal menu with mega panels, and a terracotta pill CTA at the right end."
+  },
+  "ja-kinetic": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "high",
+    "why": "`hero` | eyebrow, h1, sub, two buttons, a trust line, and a per-direction panel image on a 1 : 1.12 split"
+  },
+  "kami": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "kraken": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "lamborghini": {
+    "nav": "brand-centered",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Centered bull logo, \"MENU\" hamburger with icon on left, search icon + bookmarks icon on right"
+  },
+  "levels": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "linear-app": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Linear logomark left-aligned (SVG icon)"
+  },
+  "lingo": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "loom": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": "At ≥768px, a side-by-side layout (video left, actions right) activates."
+  },
+  "lovable": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Logo/wordmark left-aligned (128.75 x 22px)"
+  },
+  "luxury": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "mastercard": {
+    "nav": "top-centered",
+    "hero": "stack",
+    "confidence": "high",
+    "why": "Content: Mastercard logo left, primary link group center (\"For you\", \"For business\", \"For the world\", \"For innovators\", \"News and trends\"), search icon right"
+  },
+  "material": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "meta": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Logo: Meta wordmark SVG, left-aligned"
+  },
+  "minimal": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "minimax": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "MiniMax logo left-aligned (red accent in logo)"
+  },
+  "mintlify": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Brand logotype left-aligned"
+  },
+  "miro": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "mission-control": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "12-column grid, 4px gutters. Dense information layout — no wasted whitespace, but clear visual grouping."
+  },
+  "mistral-ai": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Transparent nav overlaying the warm hero"
+  },
+  "modern": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "mongodb": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "MongoDB logo (leaf icon + wordmark) left-aligned"
+  },
+  "mono": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "neobrutalism": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "neon": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "neumorphism": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "nike": {
+    "nav": "top-centered",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Center: Category links (New & Featured, Men, Women, Kids, Sale) in 16px/500 Helvetica Now Text Medium"
+  },
+  "notion": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Brand logo left-aligned (33x34px icon + wordmark)"
+  },
+  "nvidia": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Logo left-aligned, prominent NVIDIA wordmark"
+  },
+  "ollama": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Right side: \"Sign in\" link + \"Download\" black pill CTA"
+  },
+  "openai": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "opencode-ai": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "medium",
+    "why": "Brand logotype left-aligned in monospace"
+  },
+  "pacman": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "paper": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "perplexity": {
+    "nav": "sidebar",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "**Sidebar:** 280px fixed; collapses under 900px viewport."
+  },
+  "perspective": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "pinterest": {
+    "nav": "top-centered",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "Pinterest logo + search bar centered"
+  },
+  "playstation": {
+    "nav": "top-centered",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "the PlayStation logo (white) left-aligned, category links centered in SST 14–16px / 500"
+  },
+  "posthog": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "**Top nav**: Warm background, IBM Plex Sans at 15px weight 600"
+  },
+  "premium": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "professional": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "publication": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "raycast": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "medium",
+    "why": "**CTA button**: Semi-transparent white pill at nav end"
+  },
+  "refined": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "renault": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "medium",
+    "why": "**Desktop**: Renault diamond logo centered/left, horizontal nav links, sticky positioning"
+  },
+  "replicate": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Clean horizontal nav on white"
+  },
+  "resend": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "\"Resend\" wordmark left-aligned"
+  },
+  "retro": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "revolut": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "Pill CTAs right-aligned"
+  },
+  "runwayml": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Minimal horizontal nav — transparent over hero content"
+  },
+  "sanity": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "Logo: left-aligned, Sanity wordmark"
+  },
+  "sentry": {
+    "nav": "overlay",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "Dark transparent header over hero content"
+  },
+  "shadcn": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "shopify": {
+    "nav": "overlay",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Background: transparent (overlaid on dark hero), becomes Forest (`#102620`) on scroll"
+  },
+  "simple": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "skeumorphism": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "slack": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "Deep aubergine `#4A154B` sidebar — the brand's most recognizable UI element",
+    "source": "hand-review-2026-09-05 (hero only)"
+  },
+  "sleek": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "spacex": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Transparent overlay nav on photography"
+  },
+  "spacious": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "spotify": {
+    "nav": "sidebar",
+    "hero": "stack",
+    "confidence": "medium",
+    "why": "Dark sidebar with SpotifyMixUI 14px weight 700 for active, 400 for inactive",
+    "source": "hand-review-2026-09-05"
+  },
+  "starbucks": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "high",
+    "why": "Left: Starbucks wordmark logo, offsetting by `99px` (md) / `131px` (lg) from left edge"
+  },
+  "storytelling": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "stripe": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Clean horizontal nav on white, sticky with blur backdrop"
+  },
+  "supabase": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "medium",
+    "why": "Supabase logo with green icon left-aligned. Green pill CTA 'Start your project' right-aligned."
+  },
+  "superhuman": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Clean white background on content sections, transparent on hero gradient"
+  },
+  "tesla": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "transitions from transparent over dark hero to opaque white on scroll"
+  },
+  "tetris": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "theverge": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "thin `#131313` bar with the Verge wordmark (Manuka) left-aligned"
+  },
+  "together-ai": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Clean horizontal nav on white/transparent"
+  },
+  "tom-modern": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "2-column split (0.92fr / 1.08fr) with 42px gap"
+  },
+  "totality-festival": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "trading-terminal": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Grid-based dense layout. Multiple data columns visible simultaneously."
+  },
+  "uber": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "high",
+    "why": "Sticky top navigation with white background"
+  },
+  "urdu": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "vercel": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Vercel logotype left-aligned, 262x52px"
+  },
+  "vibrant": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "vintage": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "vodafone": {
+    "nav": "overlay",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Background: transparent over hero imagery; solid white (`#ffffff`) on scroll or interior pages"
+  },
+  "voltagent": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Sticky top nav bar on Abyss Black canvas"
+  },
+  "warm-editorial": {
+    "nav": "top-left",
+    "hero": "stack",
+    "confidence": "low",
+    "why": "Hero sections: 72vh minimum, 120vh maximum. Content top-biased, never centered vertically."
+  },
+  "warp": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "medium",
+    "why": "Dark background, warm parchment brand text, Matter Regular at 16px for links"
+  },
+  "webex": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Anatomy: workspace switcher, search, primary nav groups, badge counts, pinned spaces, footer utilities"
+  },
+  "webflow": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "wechat": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": ""
+  },
+  "wired": {
+    "nav": "brand-centered",
+    "hero": "split",
+    "confidence": "medium",
+    "why": "WIRED bug, ~209×42px, centered or left-aligned, never recolored, always pure black on white."
+  },
+  "wise": {
+    "nav": "top-left",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Clean header with Wise wordmark"
+  },
+  "x-ai": {
+    "nav": "top-left",
+    "hero": "cover",
+    "confidence": "high",
+    "why": "Brand logotype: white text, left-aligned"
+  },
+  "xiaohongshu": {
+    "nav": "sidebar",
+    "hero": "split",
+    "confidence": "low",
+    "why": "Standard left-nav console: 200–240px sidebar + ~1000–1100px content area."
+  },
+  "zapier": {
+    "nav": "top-left",
+    "hero": "centered",
+    "confidence": "high",
+    "why": "Zapier logotype left-aligned, 104x28px"
+  }
+}

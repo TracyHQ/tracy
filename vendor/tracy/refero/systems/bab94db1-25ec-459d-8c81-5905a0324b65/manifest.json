@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bab94db1-25ec-459d-8c81-5905a0324b65",
+  "status": "complete",
+  "name": "ARTWORLD",
+  "url": "https://styles.refero.design/style/bab94db1-25ec-459d-8c81-5905a0324b65",
+  "sourceWebsite": "https://artworld.agency",
+  "extractedAt": "2026-06-03T20:41:49.027Z",
+  "capturedAt": "2026-10-08T05:16:43.169869+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "fashion masthead on white linen",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/dd45dca9-5e31-473f-a487-c6999024fc21.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/dc4482bd-bd33-4fad-8f5e-d6d570818d54.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/13c27504-9306-4e59-bff3-1f146d219ccc.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ba302f3c-b02c-4952-96a0-2455f69d3104.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/97806353-46b4-492b-9441-607f7ed395ce.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2a52c677a9e409f00c0dc8014e888bd5dbb45b4d59acf6b0059444b4966a05f3",
+      "bytes": 18061
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6ef7f1572beccb0dab37bb4cef02d6ddbcfc9894be460684ff259fd594aa0f8e",
+      "bytes": 163415
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "90a7091d8e02966bc215e083e1b7db331cb0c9a4b5a289feab3e67e919075f03",
+      "bytes": 13924
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6facf3f5da1c53bb9c57ac5dfd79f5fcb7555aa374b8c45ac33dcd4886090d86",
+      "bytes": 7447
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0aa39f661c0c745670ebbeeb7ba477a13eea0f8d027993c9f6f1162b2451ae65",
+      "bytes": 10397
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fe5b2ef49077cd08522ce1bb7578501c03d76bd9c36b1b7cd12dfaebe47616cd",
+      "bytes": 2392
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "522ba364bb62d99a6e5c2c1dff59f72049718fce3a0cbc0b0a988bb936699082",
+      "bytes": 755
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5e2a517679b44560303fbc80bc6602c67dab70b5422c45bc11709721e66c1344",
+      "bytes": 772
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c9a21a558d5875f73ad89bb7c0bc394b825552adbcfb1676e7f2686cb0343266",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "69b5b54537a66000f42ee10999da83da756b7d27c682143d1c778395014ace71",
+      "bytes": 39105
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "abb6a7dfe51ad0ce7230910df90fd1964c3aa22490c72cfb6d5485ca0c64ae6e",
+      "bytes": 20011
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0ea2bcfb7792825dbbb13c2840f2c6637bf1194d869d71c7aa4ee8654fe5f3af",
+      "bytes": 26144
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "70a60b14f7eac2ba9e258b422572ecb45c53cc6f563ba83f1ce6f2173daec8ae",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b5840ff52ef216d949e319cc0e65f1b1c05a33995a501c1adae754afef407dc1",
+      "bytes": 1427
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d78151f41c046e91daeb9b64317d92f91cef3d97002bc1e36ca47c0225cc52db",
+      "bytes": 1687
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "2b9e90ad-51d9-4f29-8f7e-a343dc741eab",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5af60925-9c29-48fe-a19b-0f8cf12505ab",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6778ff21-44eb-40f3-ba85-2ee7de935f8f",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "bab94db1-25ec-459d-8c81-5905a0324b65",
+    "cf49b88a-fb38-4520-8fbb-ab3efa983517",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

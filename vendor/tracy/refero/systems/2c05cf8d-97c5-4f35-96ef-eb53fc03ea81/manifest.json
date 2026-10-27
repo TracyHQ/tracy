@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+  "status": "complete",
+  "name": "Varo Bank",
+  "url": "https://styles.refero.design/style/2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+  "sourceWebsite": "https://www.varomoney.com",
+  "extractedAt": "2026-06-03T20:22:56.658Z",
+  "capturedAt": "2026-10-08T05:09:42.775161+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "neon bank statement on a sticky note — bold compressed type punched onto bright colored cardstock, held together by hairline black outlines",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cd4f43fb-ac0b-48d5-a847-858ad0129e63.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/84e52a34-5fd4-4f6c-9364-dfa4523fd1e8.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4dd4a5e1-9c1e-4151-be06-8230588dffa4.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/def31a56-9f36-4c3f-86c6-3204c6db5fc1.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c87b2a01-4079-4c35-b9aa-4a8805e9f108.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b49799b0bb0ea730ba4066ab4b1a73b2b40e507834e5efb68b4d120ab21bbad9",
+      "bytes": 23266
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6817ecdfdbee6079ebec9328b15f1f20bf51d25421364164f2fc22d04381850a",
+      "bytes": 123429
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b1d6fc0f6d1a9b4b42a748d36f09091c4c2906704bad803dfd7d32b7098fcc28",
+      "bytes": 19549
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "efcb0e0fd789c5a42f697c77fdff7661478d1a428221445297c5369374006fb0",
+      "bytes": 16634
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9caa8fe2fcb10495da77c8bfc8faf9f1fcf20f4536e07fddfc74979909f309c0",
+      "bytes": 14544
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "42ab08691173a9c076ecf05de9278dd846d665ffd071e88a3d67b9707b5e6565",
+      "bytes": 4890
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "985458b460a9f4ddcca45a617348de936b2d150fbd71b90296175efec7202220",
+      "bytes": 1176
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8af953a9030b6fc3e9b1a8a0179f4e67015f3b667f991b3e369c3a320e57e5c6",
+      "bytes": 1193
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9593ded5bc0e33a4bd4823fb9aa144cab66cdf1c7da1ba9270ca49b187adc7b9",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8ddce958eb0ddf116e72181b4cc7ad767d1c957149f516c3a8d0313b27846034",
+      "bytes": 48230
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d3754cc31120a0ea3f34d10e98bbe99031c3855002b30b7c6bdc11ca515d827c",
+      "bytes": 25099
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "deb727572944931985b42e1439c6e3f563ae29f7442eb8bf7590567f3f2f9fbf",
+      "bytes": 59373
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7bbe73148131e27147460d47a55c5fd217b18f9d4fe4292a0045ea624021efb1",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "28725afe4e13c1deb1b79b06331140f655005b5d5104789fc53ab378f43adc5d",
+      "bytes": 2098
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a39dd0e4b1c92e8f0955288775ff71d38a07bb1178d7b98992db984c1a075ebb",
+      "bytes": 2726
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "680cf16b-0093-473b-854f-f1de9af5e698",
+    "75eb47d6-2526-4936-b15a-7474cf4cdc69",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "e8a1d114-6924-4f03-acd2-996dd30f15a6",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f1a2100a-7cda-4787-b8af-5c5edcfcdff0"
+  ]
+}

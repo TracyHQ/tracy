@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+  "status": "complete",
+  "name": "Garden Eight",
+  "url": "https://styles.refero.design/style/e4593570-e43f-4eda-8618-0bb704d5ebb7",
+  "sourceWebsite": "https://garden-eight.com",
+  "extractedAt": "2026-06-03T20:19:17.796Z",
+  "capturedAt": "2026-10-08T05:18:37.458678+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Monumental cream-paper editorial. A 215px serif headline sits alone on warm parchment, surrounded by floating sculptural forms and ocean-air negative space — the page behaves like the cover plate of an art monograph, not a dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f9f7fc13-4a80-4530-8334-cfa0c290daf2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "28de045170dff856b0464fe943b9ae33831823e31b5a00550fe566bad5d9b3d1",
+      "bytes": 17043
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "16699af800158552426342ad9b441d5a7a3f46763790744421ba353348e3da1c",
+      "bytes": 116784
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1bb86cbaf317c74c2e0f9f627ee75db4bbec368dcebb6094270a80afac3234c7",
+      "bytes": 15119
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1865315660e6e029d00d217a90be7173163010201bfc74d7e1034c71ede0786d",
+      "bytes": 9885
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "61514748ff52628a271894b1454e2dc4316b8c739013628da8ef54a679eee60e",
+      "bytes": 10743
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6ce145cfc90b53431b9efead4819f30717b9552c50d810f690ac8f8c3df832b4",
+      "bytes": 1956
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8e4ff7428c14acf1b0d8828948823b8e2b186c1bc8d606cca57ee1c9a24e9a30",
+      "bytes": 382
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "95fa7c1b36014750630fe01ddd0e7be8d32d12c8e25777a1543e5ceaa79a663b",
+      "bytes": 399
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a25cc85826ec70be5381b63d6635254e6dfcf596de2cc5490491082780184182",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e2a81b5fae6843beea20245ce3e90e42a4db1c78fdd88bb2a1750c605d05dfa4",
+      "bytes": 39849
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "bbbd232daa17c0d23e18c39391c64f1c7fb4b7d193c2781426d56a8ee03aadc4",
+      "bytes": 20334
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "acef6328b50baece741b04ad31d10f0aa490e950adb2e131a9b682bac862306b",
+      "bytes": 31197
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e5ca015173c28666fbd7ee571f0770ba8218d06dfcdacbc5eee31b5c8c460a7e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e1539d8e2e9d272cc818b1dc19ae49d4c1b35644557e524a07af51d28aade4d7",
+      "bytes": 873
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1a6b168273535775213d24e5c5648c46c99defa5dd7857f5c1acf636bbaf7a49",
+      "bytes": 1318
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "9aad4722-413d-4b32-bda7-6f94bbd9938c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

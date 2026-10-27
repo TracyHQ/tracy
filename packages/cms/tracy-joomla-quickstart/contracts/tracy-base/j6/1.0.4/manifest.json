@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-base/j6/1.0.4",
+  "platform": "joomla",
+  "template": "tracy",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "tracy-base",
+    "id": "tracy-base/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "tracy",
+    "framework": "t4",
+    "prefix": "tr_",
+    "parts": {
+      "webroot": {
+        "file": "tracy-base-j6-webroot-1.0.4.tar.gz",
+        "bytes": 90111071,
+        "sha256": "0374dc0c77d182132d5bcd483a2e2817fd6e6d515df5880a099a6a7d61fff8c1"
+      },
+      "database": {
+        "file": "tracy-base-j6-database-1.0.4.sql.gz",
+        "bytes": 206912,
+        "sha256": "1dff29c3aa8b905c1035e817082517ab233e228e0c20b6a38f111a3082ff8f5d"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T22:14:47.177Z",
+    "builtFrom": {
+      "from": "tracy-base/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 25 files replaced (templates/tracy/css, templates/tracy/scss); demo content: 4 edits (module-229, module-236, module-236, module-236); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "tracy-base/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

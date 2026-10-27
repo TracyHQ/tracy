@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, iconography, hairline rules, table borders — the only high-contrast element on the page"
+    },
+    "paper-warm-gray": {
+      "$value": "#dbdad9",
+      "$type": "color",
+      "$description": "Paper Warm Gray — Card surfaces, soft fills, the single chromatic departure from pure white, gentle gradient origin"
+    },
+    "graphite-border": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Graphite Border — Subtle table dividers and secondary rule lines — used when #000000 would feel too heavy"
+    },
+    "bleach-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bleach White — Supporting palette color for small decorative accents when the core palette needs contrast."
+    }
+  },
+  "font": {
+    "haasr": {
+      "$value": "HaasR",
+      "$type": "fontFamily",
+      "$description": "Workhorse grotesque for body, subheadings, and mid-size headings. Weight 100 is used for restraint in body contexts; 700 sparingly for emphasis. The single most-used face carries the page."
+    },
+    "haast": {
+      "$value": "HaasT",
+      "$type": "fontFamily",
+      "$description": "Display-only face at 141px with tightened leading (0.90). Used for hero statements and singular set-pieces — the only moment typography shouts, and it shouts at full volume against pure white."
+    },
+    "pt-mono": {
+      "$value": "PT Mono",
+      "$type": "fontFamily",
+      "$description": "Metadata, spec labels, catalog tags — the typographic equivalent of a printed museum label. Appears at 11px only; functions as a quiet signature rather than informational copy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://silencio.es",
+      "siteName": "Silencio",
+      "extractedAt": "2026-06-03T17:34:46.576Z",
+      "variant": "compact"
+    }
+  }
+}

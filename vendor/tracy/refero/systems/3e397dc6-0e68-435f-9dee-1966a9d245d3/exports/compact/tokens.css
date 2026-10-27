@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-workshop-black: #121212;
+  --color-platen-gray: #292929;
+  --color-bone: #d0d0d0;
+  --color-ash: #a0a0a0;
+  --color-paper-white: #ffffff;
+  --color-acid-flash: #d9ff00;
+
+  /* Typography — Font Families */
+  --font-office: 'Office', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

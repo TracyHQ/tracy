@@ -1,0 +1,48 @@
+---
+title: Connect Cursor
+description: Configure Tracy in Cursor with a public OAuth client and verify access to your website.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import McpSetup from '../../../../components/McpSetup.astro';
+
+Connect a Tracy website to Cursor's agent using remote MCP. You need Cursor, a Tracy account, and an accepted website invitation with content-editing access.
+
+## Add the server
+
+Merge the following entry into your project's `.cursor/mcp.json`. Preserve any other servers already in that file.
+
+<McpSetup client="cursor" />
+
+`CLIENT_ID` is a public identifier. Do not add a client secret, Tracy password, browser cookie, or an access token copied from another app.
+
+## Connect your website
+
+<Steps>
+
+1. Open Cursor's MCP settings and find **tracy**.
+2. Use the server's connection or authentication control to open Tracy in your browser.
+3. Sign in, check the app identity, and choose the intended website on the consent screen.
+4. Return to Cursor and enable Tracy's tools for your agent conversation.
+
+</Steps>
+
+The desktop callback is `http://localhost:8787/callback`; keep that port available during sign-in. Tracy also accepts Cursor's hosted callback at `https://www.cursor.com/agents/mcp/oauth/callback`. The server does not accept arbitrary callback addresses.
+
+<Aside type="note" title="Compatibility coverage">
+This configuration follows Cursor's documented static OAuth client support. Tracy's callback and request-origin handling have automated coverage; an end-to-end run in the Cursor app has not yet been verified. If your Cursor version does not complete the flow, share its version and a redacted error with support.
+</Aside>
+
+## Try a read
+
+```text wrap title="First prompt"
+Use Tracy to identify the connected website and list its pages. Do not change anything.
+```
+
+Verify the returned website before using [editing examples](/mcp/examples/). For a multi-step request, make each edit explicit and inspect its result before continuing.
+
+## Disconnect
+
+Disable or remove the Tracy server in Cursor. To invalidate its access at Tracy, also [revoke the connection](/mcp/permissions/).
+
+See the [official Cursor MCP documentation](https://cursor.com/docs/mcp) for user-wide configuration and available MCP settings. For an error during sign-in, use [Troubleshooting](/mcp/troubleshooting/).

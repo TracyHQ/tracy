@@ -1,0 +1,273 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-comics",
+  "release": "quickstart/ja-comics/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "heading": "h2.item-title",
+    "body": "p",
+    "container": ".t4-section .container",
+    "input": "#email_field_579"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 24px",
+    "body": "first body paragraph",
+    "container": "first content container, max-width 960px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#212529",
+    "--fg-2": "#212529",
+    "--accent": "#000000",
+    "--accent-hover": "#d25b08",
+    "--surface": "#f5f3ff",
+    "--surface-warm": "#000000",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#ececec",
+    "--muted": "#737373",
+    "--font-display": "\"Barlow\", sans-serif",
+    "--font-body": "\"Barlow\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#000000",
+      "accent-hover": "#d25b08",
+      "surface": "#f8f9fa",
+      "surface-warm": "#000000",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#ececec",
+      "muted": "#737373"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f5f3ff",
+      "fg": "#212529",
+      "fg-2": "#000000",
+      "surface-warm": "#fef2f2"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "bg": "#ffffff",
+      "surface-warm": "#000000",
+      "fg": "#212529",
+      "surface": "#ececec",
+      "muted": "#6c757d",
+      "border-soft": "#dee2e6"
+    },
+    {
+      "surface": "#f8f9fa"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (55 line colours, 55 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": [".t4-section .container", "div.swiper-pagination-wrap"],
+    "bodyFace": ["body"],
+    "inkImages": [".navbar-brand img"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .item-content p, .t4-section p.articles-readmore",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 23 tried (byte 7193); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 74,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#000000",
+      "uses": 50,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#000000",
+      "distance": 0
+    },
+    {
+      "hex": "#212529",
+      "uses": 26,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#ececec",
+      "uses": 23,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f5f3ff",
+      "distance": 22
+    },
+    {
+      "hex": "#6c757d",
+      "uses": 13,
+      "kind": "custom",
+      "role": "muted",
+      "near": "#737373",
+      "distance": 12
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 9,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f5f3ff",
+      "distance": 8
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-comics/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3e-2026-10-11/templates/ja-comics-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 74% or more of the page follows; outline buttons (text in the accent) take the accent made readable (followRules); the body probe reads the article intros (main p matched nothing); the white category labels on photo cards are the template's own pair on a picture — measured with the two random-order article modules set to a fixed order on the measuring stand only, so default and system compare the same card; checked by eye on the four systems' screenshots, light and dark. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 75% or more of the page follows, every contrast kind sampled at 1440 and 390; the dark wordmark (.navbar-brand img) and the closed header search (its only paint a black magnifier) are inverted under a dark system (selectors.inkImages, sideRules.dark); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-comics-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-comics 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts with the two random-ordered article modules (Trendings, Comic-Con) given a fixed order; the first run's one Moxie desktop fail (a white category label at 4.4:1 on the gradient card, 4.99:1 on the default page) came from the module putting a different article on that card, not from the slot; controls 0 differences, no text below 4.5:1 worse than the template's own, 77-79% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-comics-j6",
+  "templateVars": {
+    "--bg-light-red-color": "var(--ds-c-surface)",
+    "--bg-light-green-color": "var(--ds-c-surface)",
+    "--bg-light-blue-color": "var(--ds-c-surface)",
+    "--bg-light-purple-color": "var(--ds-c-surface)",
+    "--bg-light-orange-color": "var(--ds-c-surface)",
+    "--headings-color": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "JA Comics paints its tinted bands and cards with theme.tpl.css variables (--bg-light-<hue>-color) whose hex is in no palette: the slot points them at the surface, so a band follows with the text on it (11/10/2026: text turned light on #fff7ed); its headings and title links read --headings-color (#000, a theme.tpl.css variable tokenize.mjs cannot place): the text colour",
+  "metaNote": "white is not a meta text colour here: its category labels are white on fixed red/green/blue fills (.link-cat-*), and keep it",
+  "paletteNote": "#f97316 is its orange category colour (white labels on it), not an accent: dropped from the drafted palettes so the labels keep their pair",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#212529",
+    "--body-link-color": "#f97316",
+    "--body-link-hover-color": "#d25b08",
+    "--color-primary": "#000000",
+    "--color-secondary": "#f97316",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#000000",
+    "--mainnav-link-color": "#000000",
+    "--mainnav-link-hover-color": "#f97316",
+    "--mainnav-link-active-color": "#f97316",
+    "--footer-bg-color": "#000000",
+    "--footer-text-color": "#ffffff",
+    "--footer-link-color": "#ffffff",
+    "--footer-link-hover-color": "#f97316",
+    "--bg-light-red-color": "#FEF2F2",
+    "--bg-light-green-color": "#ECFDF5",
+    "--bg-light-blue-color": "#EFF6FF",
+    "--bg-light-purple-color": "#F5F3FF",
+    "--bg-light-orange-color": "#FFF7ED",
+    "--headings-color": "#000"
+  },
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples)",
+  "followRules": {
+    ".btn.btn-outline-primary:not(:hover):not(:active)": {
+      "color": "accent-text"
+    },
+    ".text-muted": {
+      "color": "muted!"
+    }
+  },
+  "followRulesNote": "its outline buttons write their text in --color-primary, the accent (#000 on its white page): under a light accent (MotherDuck sky blue on cream, 1.7:1) that text takes the accent made readable on the page; hovered, the template fills it with the accent and white text as before. 15/10/2026: every article's info line (html/layouts/joomla/content/info_block.php: <dl class=\"article-info text-muted\">, the author's 'By' and the date) is painted by Bootstrap's .text-muted, color: var(--t4-secondary-color) !important, rgba(33, 37, 41, 0.75), which no token reaches: under a dark system it stayed dark on the black page, 1.36:1 under Moxie on the category blog (/index.php/comics, desktop and phone, v10), the words invisible in the shot. It takes the system's muted text (important, as the template's is), which reads 4.5:1 or more on the page and on the surface under all 1334 systems",
+  "sideRules": {
+    "dark": {
+      ".t4-header :is(.search, .form-search) :is(.form-control, .inputbox, .search-query):not(:focus)": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ":is(.blog-articles .item-view-vertical[itemcount=\"6\"], .item-view-vertical-2) .content-inner :is(.article-info, .article-info dd, .article-info a, .article-info span)": {
+        "color": "#ffffff !important"
+      }
+    },
+    "light": {
+      ":is(.blog-articles .item-view-vertical[itemcount=\"6\"], .item-view-vertical-2) .content-inner :is(.article-info, .article-info dd, .article-info a, .article-info span)": {
+        "color": "#ffffff !important"
+      }
+    }
+  },
+  "sideRulesNote": "its header search is a closed input whose only paint is a black magnifier (background-image search.png): under a dark system the closed input is inverted so the magnifier stays visible; a focused input is left alone",
+  "minVersion": {
+    "quickstart/ja-comics/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-comics/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t4-footer": {
+      "ground": "#000000",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".footer-wrap": {
+          "background-color": "ground"
+        },
+        ".footer-bottom": {
+          "background-color": "ground"
+        },
+        ".footer-inner": {
+          "background-color": "ground"
+        },
+        ".footnav-wrap": {
+          "background-color": "ground"
+        },
+        ".copyright-wrap": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "rolesNote": "container: the first .t4-section .container (13/10/2026) — the slider's pagination wrapper measured before sits in a 1295px parent and never shows the page width",
+  "sideNote": "15/10/2026 (final measure, the category page): the overlay cards lay their words on the photo's black gradient (intro-image:before, to rgba(0,0,0,.8)); the template gives the title white but the byline the body colour (#212529 on the gradient, 2.42:1), and the system's muted made it 1.01; the byline takes the title's white"
+}

@@ -1,0 +1,59 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, button text on cobalt, nav background, image backgrounds"
+    },
+    "bone": {
+      "$value": "#f1efe9",
+      "$type": "color",
+      "$description": "Bone — Warm off-white surface for section bands, feature card panels, and soft contrast zones against pure white"
+    },
+    "ash": {
+      "$value": "#ececec",
+      "$type": "color",
+      "$description": "Ash — Subtle elevated surface and neutral button fill for low-emphasis controls"
+    },
+    "stone": {
+      "$value": "#6a6a6a",
+      "$type": "color",
+      "$description": "Stone — Secondary body text, helper copy, nav muted labels, and dividers — the warm mid-gray that gives body text hierarchy without competing with the brand accent"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Hairline borders and structural dividers"
+    },
+    "ink": {
+      "$value": "#1f1d1e",
+      "$type": "color",
+      "$description": "Ink — Slightly warm near-black for body and heading text — a softer alternative to pure black that matches the warm bone surface"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, nav text, strong borders, and the ghost button outline — the typographic workhorse"
+    },
+    "cobalt-ink": {
+      "$value": "#1e37a0",
+      "$type": "color",
+      "$description": "Cobalt Ink — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "lunar": {
+      "$value": "Lunar",
+      "$type": "fontFamily",
+      "$description": "Single-family geometric sans used for everything from 14px nav labels to 112px hero display. The tight universal tracking of -0.03em is the signature — it tightens every size equally, so body text feels editorial and display text feels architectural rather than decorative. Weight 500 carries body emphasis, weight 700 is reserved for numbered list items and UI labels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://nornorm.com",
+      "siteName": "Nornorm",
+      "extractedAt": "2026-06-03T22:06:32.352Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "dos": [
+    "Use Lavender (#918df6) exclusively for the primary action button — never for body text, borders, or decorative elements.",
+    "Set display headlines at 60px/600 with -3px letter-spacing; the tight tracking is what makes the type feel engineered.",
+    "Use 9999px radius on every button, chip, and tag — the pill shape is a signature.",
+    "Apply 1px solid Fog (#e8e8e8) borders on cards and tables; avoid heavy box-shadows for surface definition.",
+    "Pair Mint (#33c758) with Mint Wash (#def6e4) backgrounds for positive metric callouts; never use green text on white without the pastel fill.",
+    "Use OpenRunde weight 500 for all headings and buttons; reserve weight 400 for body and captions.",
+    "Center the hero headline and CTA stack; let the whitespace below the 60px display do the work."
+  ],
+  "donts": [
+    "Don't use Iris (#9580ff) for body CTAs — it's reserved for the Register nav button to differentiate from the main Lavender CTA.",
+    "Don't apply elevation shadows larger than the three-layer stack — dramatic drop shadows break the flat aesthetic.",
+    "Don't mix multiple accent colors in one component — each feature category gets exactly one color (Sky for realtime, Amber for performance, Magenta for profiles).",
+    "Don't set heading text in pure black (#000000) — use Carbon (#181925) for the slight cool tint.",
+    "Don't use Ember (#ff3e00) for UI chrome — it's decorative-only, for chart fills and illustration.",
+    "Don't break the pill-radius convention with rectangular buttons or sharp-cornered tags.",
+    "Don't add background colors to feature card containers — they should sit on pure white with only icon + text."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#181925",
+      "name": "Carbon",
+      "role": "Primary text, headings, nav links — near-black with the faintest cool tint gives type a deliberate, engineered weight without pure-black harshness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button fills — the base layer everything sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Linen",
+      "role": "Subtle background sections, table rows, secondary surfaces — separates content bands from pure white without introducing a visible gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Mist",
+      "role": "Primary page canvas and white card surfaces. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e8e8e8",
+      "name": "Fog",
+      "role": "Table gridlines, hairline borders, divider lines — the structural 1px that defines table cells and card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Ash",
+      "role": "Muted body text, placeholder text, inactive nav items — secondary information that recedes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Graphite",
+      "role": "Secondary text, button text on light fills, captions — readable but clearly subordinate to Carbon",
+      "group": "neutral"
+    },
+    {
+      "hex": "#918df6",
+      "name": "Lavender",
+      "role": "Violet action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#9580ff",
+      "name": "Iris",
+      "role": "Register button and gradient endpoint — a slightly deeper lavender for secondary action emphasis",
+      "group": "brand"
+    },
+    {
+      "hex": "#33c758",
+      "name": "Mint",
+      "role": "Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#def6e4",
+      "name": "Mint Wash",
+      "role": "Soft section background, alternate surface, and quiet card fill. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffa600",
+      "name": "Amber",
+      "role": "Yellow text accent for links, tags, and emphasized short phrases",
+      "group": "accent"
+    },
+    {
+      "hex": "#2c78fc",
+      "name": "Sky",
+      "role": "Violet text accent for links, tags, and emphasized short phrases.",
+      "group": "accent"
+    },
+    {
+      "hex": "#d6409f",
+      "name": "Magenta",
+      "role": "Visitor profiles category, icon accents — vivid pink that earns its place by mapping to one specific feature domain",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff3e00",
+      "name": "Ember",
+      "role": "Chart fill accents, decorative illustration — warm orange that breaks the cool palette inside data visualizations",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-width sections stacked vertically with max-width ~1200px content centered. Hero is a centered text stack (announcement chip → 60px headline → subtext → dual CTA → partner logos) on white, followed immediately by a full-bleed atmospheric gradient band (blue-to-lavender) containing a floating dashboard mockup in a white card with rounded corners. Feature sections alternate between centered 3-column icon grids and alternating 2-column text+product layouts. All sections use generous 64px+ vertical breathing room. Navigation is a single centered pill-bar floating at the top with no sticky behavior visible. Footer is minimal, multi-column link grid.",
+  "imagery": "Minimal product photography — no lifestyle imagery, no people. Visual content is dominated by dashboard screenshots rendered as hero artwork (the analytics UI mockup in the gradient band) and small grayscale partner logos (Temple, inbound, Buildkite, etc.) used as social proof. Decorative gradients in the blue-to-lavender spectrum appear as atmospheric bands behind product imagery. Iconography is flat, single-color, circular containers — no outlined or illustrated icons, just solid filled glyphs in a 40px Lavender circle.",
+  "similar": [
+    {
+      "why": "Same white-canvas analytics aesthetic with a single vivid accent color for CTAs, generous spacing, and pill-shaped controls",
+      "business": "Plausible Analytics"
+    },
+    {
+      "why": "Same hairline-border-on-white surface treatment, tight geometric type with negative tracking, and minimal elevation philosophy",
+      "business": "Linear"
+    },
+    {
+      "why": "Same privacy-first SaaS pattern: monochrome spine with one brand color doing CTA duty, flat cards, and tight typographic scale",
+      "business": "Fathom Analytics"
+    },
+    {
+      "why": "Same engineering-blueprint visual language: white canvas, subtle gray borders, single accent gradient for hero bands, geometric sans-serif type",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same pill-button convention, pastel accent surfaces for positive states, and flat minimal-elevation card aesthetic",
+      "business": "Cal.com"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "16px",
+      "images": "8px",
+      "inputs": "8px",
+      "tables": "24px",
+      "buttons": "9999px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Base page background, hero area, dashboard cards"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Linen Band",
+      "level": 1,
+      "purpose": "Subtle alternating sections, feature rows, secondary content bands"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Mist Fill",
+      "level": 2,
+      "purpose": "Ghost button backgrounds, input fields, disabled states"
+    },
+    {
+      "hex": "#def6e4",
+      "name": "Mint Wash",
+      "level": 3,
+      "purpose": "Positive metric callout backgrounds, growth indicator surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.08) 0px 1px 1px 1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 0.5px",
+      "element": "Primary Action Button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.08) 0px 1px 1px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px",
+      "element": "Secondary Button / Ghost"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 8px 16px 0px, rgba(0, 0, 0, 0.02) 0px 0px 0px 1px",
+      "element": "Elevated Card / Dashboard Panel"
+    }
+  ],
+  "northStar": "white engineering blueprint",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.17,
+      "letterSpacing": -0.31
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.22,
+      "letterSpacing": -0.61
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1,
+      "letterSpacing": -0.34
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1.13,
+      "letterSpacing": -3
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Action Button (Filled)",
+      "role": "Main conversion CTA — Start trial, Register",
+      "description": "Pill shape (9999px radius), Lavender (#918df6) fill, white text, OpenRunde 14px weight 500, letter-spacing -0.32px, padding 10px 20px, no border. Subtle shadow: rgba(0,0,0,0.08) 0px 1px 1px 1px + rgba(0,0,0,0.06) 0px 0px 0px 0.5px."
+    },
+    {
+      "name": "Register Button (Deeper Lavender)",
+      "role": "Secondary emphasis CTA in nav",
+      "description": "Pill shape, Iris (#9580ff) fill, white text, OpenRunde 14px weight 500, padding 6px 10px. Slightly deeper saturation differentiates from the main CTA."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "See demo, secondary nav actions",
+      "description": "Transparent fill, Graphite (#666666) text, no border, pill shape (9999px radius), OpenRunde 14px weight 500, padding 10px 20px. Relies on whitespace and contrast alone."
+    },
+    {
+      "name": "Text Link Button",
+      "role": "Inline nav links, Login",
+      "description": "Transparent fill, Carbon (#181925) text, 12px horizontal padding, no border, no radius. Hairline underline on hover. Weight 500, 14px."
+    },
+    {
+      "name": "Announcement Chip",
+      "role": "Top banner — 'NEW We hit $1K MRR'",
+      "description": "White fill, Sky (#2c78fc) 'NEW' tag text + Carbon (#181925) body text, thin border, pill shape (9999px radius), inline icon. 14px weight 500."
+    },
+    {
+      "name": "Navigation Pill",
+      "role": "Top nav bar with Features dropdown",
+      "description": "White fill, Carbon text, full pill container (9999px radius) wrapping nav items. Active state shows Lavender underline or fill. Padding 8px internal."
+    },
+    {
+      "name": "Tab Bar (Dashboard Tabs)",
+      "role": "Dashboard sub-navigation — Dashboard, Profiles, Funnels, Performance, Realtime",
+      "description": "Horizontal tab row, white fill, Ash (#999999) inactive text, Carbon active text with Lavender underline indicator. 14px weight 500, no background fill change."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Three-column feature grid — Lightweight, 5-minute, Independent",
+      "description": "Transparent fill (or very light wash), no border, no shadow, Lavender icon circle (40px) above Carbon bold heading + Graphite body. Center-aligned, 32px vertical padding."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Subscription plan container",
+      "description": "White fill, 1px Fog (#e8e8e8) border, 24px radius, 64px vertical / 32px horizontal padding, no shadow. Carbon heading, Graphite feature list."
+    },
+    {
+      "name": "Metric Callout Card",
+      "role": "Dashboard stat tiles — People, Revenue, Views, etc.",
+      "description": "White fill, 1px Fog border, 16px radius, tight padding (12px). Mint (#33c758) for positive delta text, Ember (#ff3e00) for negative. Label in Ash, value in Carbon bold."
+    },
+    {
+      "name": "Dashboard Panel Card",
+      "role": "Chart container — 28 people, Experience Score, Revenue",
+      "description": "White fill, 1px Fog border, 16px radius, 20px padding. Carbon heading, small Ash caption. Soft inner shadow for depth: rgba(0,0,0,0.06) 0px 1px 3px + rgba(0,0,0,0.06) 0px 8px 16px."
+    },
+    {
+      "name": "Data Table",
+      "role": "Analytics data grid",
+      "description": "White fill, 1px Fog (#e8e8e8) gridlines, 24px container radius, no row striping. OpenRunde 12-14px weight 400-500. Header row in Carbon bold, body in Graphite."
+    },
+    {
+      "name": "Avatar Circle",
+      "role": "User identification in dashboard",
+      "description": "40px circle, photographic fill, no border or 1px white ring. Used sparingly in nav and dashboard header."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single typeface across all UI — geometric humanist sans with tight apertures and slightly compressed proportions. Display headlines at 60px/600 with -3px tracking feel engineered; body at 16px/400 with -0.32px tracking reads crisp without feeling clinical.",
+      "sizes": "12px, 13px, 14px, 16px, 18px, 20px, 24px, 36px, 48px, 60px",
+      "family": "OpenRunde",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00–1.56",
+      "substitute": "Inter, DM Sans, or Geist Sans",
+      "letterSpacing": "-0.007em at 48px, -0.017em at 36px, -0.013em at 24px, -0.016em at 20px, -0.018em at 18px, -0.020em at 16px, -0.023em at 14px, -0.025em at 13px, -0.027em at 12px, -0.050em at 60px"
+    }
+  ],
+  "description": "Visitors is a bright white-canvas analytics product with a restrained grayscale spine and a single lavender accent (#918df6) that does the heavy lifting as a CTA color. Typography is confident and geometric — OpenRunde at heavy display weights with tight negative tracking, creating headlines that feel engineered rather than editorial. The interface lives flat: hairline borders, subtle surface tinting, minimal elevation, and pill-shaped controls that read as light and fast. Color appears as functional punctuation — green for positive deltas, amber for neutral data, pink and blue for feature categories — never as decoration on chrome.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text (primary): #181925 Carbon\n- text (secondary): #666666 Graphite\n- text (muted): #999999 Ash\n- background: #ffffff Paper White\n- border: #e8e8e8 Fog\n- accent / primary action: #918df6 (filled action)\n- primary action: #918df6 (filled action)\n\n## 3-5 Example Component Prompts\n\n1. Create a Primary Action Button: #918df6 background, #181925 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Dashboard Metric Card**: White (#ffffff) fill, 1px solid #e8e8e8 border, 16px radius, padding 12px. Label 'Revenue' at 12px weight 400, color #999999. Value 'A$750' at 24px weight 500, color #181925. Delta '+20%' at 12px weight 500, color #33c758.\n\n3. **Feature Card (3-column grid)**: White background, no border, no shadow. Lavender (#918df6) icon in 40px circle, fill #918df6, white glyph centered. Heading at 18px weight 500, color #181925, letter-spacing -0.32px. Body at 16px weight 400, color #666666. Center-aligned text, 32px vertical padding.\n\n4. **Announcement Chip**: White (#ffffff) fill, 1px border #e8e8e8, 9999px radius, padding 6px 12px. 'NEW' tag in #2c78fc weight 500 12px, body text in #181925 weight 500 14px, arrow icon in #181925.\n\n5. **Tab Bar**: Horizontal row, white background, no border between tabs. Inactive tab text at 14px weight 500, color #999999. Active tab text at 14px weight 500, color #181925, with 2px solid #918df6 underline indicator."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Four gradients detected, used as atmospheric bands rather than UI fills:\n1. Sky→Lavender: linear-gradient(to right in oklab, #2c78fc 0%, #918df6 100%) — primary hero band behind dashboard mockup\n2. Shimmer gray: linear-gradient(90deg, #b3b3b3 25%, #666666 50%, #b3b3b3 75%) — skeleton loading state\n3. Pale sky progression: linear-gradient(to right in oklab, #bed5fe 0%, #bed5fe 50%, #00c4ff 100%) — chart fill\n4. Pale sky→lavender: linear-gradient(to right in oklab, #bed5fe 0%, #ebf2ff 50%, #918df6 100%) — decorative accent\n\nUse gradients only as full-bleed section backgrounds or chart fills — never on buttons, cards, or text."
+    }
+  ],
+  "northStarGrounding": "Clean white surfaces, hairline borders, tight geometric type, and a single lavender accent — the visual language of a precise schematic drawn on paper.",
+  "elevationPhilosophy": "Elevation is used sparingly and always as a soft border-shadow combo rather than dramatic drop shadows. Buttons get a near-imperceptible 1px shadow + 0.5px ring to lift them off the page without announcing themselves; elevated cards use a three-layer shadow stack but at very low opacity. The system prefers flat surfaces with hairline borders (1px #e8e8e8) over heavy elevation — depth is suggested, not declared."
+}

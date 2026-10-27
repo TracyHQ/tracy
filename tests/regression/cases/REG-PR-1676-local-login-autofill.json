@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1676-local-login-autofill",
+  "kind": "fix",
+  "title": "On the local stand an email address is enough to sign in: the page fills the code it shows and sends it once",
+  "pr": 1676,
+  "area": "identity/login",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: render the login page with the local preview, type an address and submit; the door answers a local code.",
+    "S2: render the code step the server drew with a local code.",
+    "S3: render the plain login page, type an address and submit."
+  ],
+  "expect": [
+    "S1: one /login, then exactly one /verify with the shown code, then the page goes to next.",
+    "S2: one /verify with that code on load, then next.",
+    "S3: only /login; nothing is verified without a person."
+  ],
+  "selectors": { "files": "apps/tracy-web/src/identity/pages.js", "dom": "#local-code, #code-form" },
+  "fence": "pages.js fillLocalCode through spread(), only when #local-code carries a code (LOCAL_LOGIN_PREVIEW)",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/local-login-autofill.test.mjs"],
+    "tests": [
+      "on the local stand an address is enough: the shown code is filled and sent, and the page goes on",
+      "a code page the server drew with the local code signs in on load",
+      "without the local preview the code step waits for a person"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "menu.userOnly": "chỉ người dùng",
+  "row.failed": "Tải skill thất bại",
+  "row.inspect": "Xem",
+  "row.instructions": "Hướng dẫn",
+  "row.preparing": "Đang chuẩn bị nạp skill",
+  "row.running": "Đang tải skill",
+  "row.stopped": "Đã dừng tải skill",
+  "row.title": "Skill"
+}

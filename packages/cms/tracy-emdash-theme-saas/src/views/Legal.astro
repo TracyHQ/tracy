@@ -1,0 +1,16 @@
+---
+// Legal documents (privacy, terms): a pages entry rendered as a document from its own `body`.
+import StaticPage from '@/components/blog/StaticPage.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import type { ComposedPage } from '@/lib/sections'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  page: ComposedPage
+}
+---
+
+<StaticPage {...Astro.props} />

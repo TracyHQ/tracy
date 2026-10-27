@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "77c31465-7b28-4ab7-b7ff-c9811cda0df0",
+  "status": "complete",
+  "name": "Eraser",
+  "url": "https://styles.refero.design/style/77c31465-7b28-4ab7-b7ff-c9811cda0df0",
+  "sourceWebsite": "https://www.tryeraser.com",
+  "extractedAt": "2026-06-03T21:53:13.600Z",
+  "capturedAt": "2026-10-08T05:13:38.778400+00:00",
+  "theme": "dark",
+  "industry": "devtools",
+  "description": "Neon blueprint on black velvet. A black canvas where luminous pastel words and sticker-shadowed cards float like a wireframe schematic projected onto darkroom paper.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/65906da7-ab82-4b01-8275-b8ae91bda731.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/b352fb12-ec54-49ce-8e33-63b54c138b7a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f1c427c5-5dbb-4444-a4fe-46abe0ffb4a0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/06be9c34-4e73-4706-91fc-ab2848f84101.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9f5bc62b-28b3-4fbe-80c9-496cb20669dd.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "cdac2b76cc9c5335962ab487206d3a37702ae98ea64ce1b1b0654e4202774533",
+      "bytes": 24172
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d96f5c8e4064f157ba7552e86ab12c538662454aeffccf5fc64d9b01ea5aa495",
+      "bytes": 103942
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "565adf1acbc0990184b32384b01e97fdac54138cc0654534ea76e4950ad1dee6",
+      "bytes": 20238
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "fdd15f810ad9d14ac9e547e0ddfab79265bcd98089a0ca56c93e757697b54ea9",
+      "bytes": 14433
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "acf2fad15ddf8ee82873210dcfbe4f89a27143e98ee269768f1c1655b7920c8d",
+      "bytes": 14385
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e6cfda5728f4732d863f1975a60754ef5d1f2efbf2cf4a1a45c854e50fcc4ddf",
+      "bytes": 4521
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "dd6a6eed83d096bd62ead3b9d565ca33a0f29884db4a51452bf4dac0a3daa36c",
+      "bytes": 863
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "dfeee368a6e6d48c00bf5a2b58fb5a937aadc22f142b4a736953a33150549176",
+      "bytes": 880
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "699a5685570011c289510c376cf31c5009025b12021cfadd537ec058b5494f1d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fdd55ddc912aa442b5316f36c423647588ae8bc6792124849eb2d033e6e37bdb",
+      "bytes": 49536
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e30f229e2bb7e55f68ae95e92b18e6645683d9537dac77dd7073abd2bb0cb369",
+      "bytes": 26567
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2d573c81c552c17c84ab3d87c865a5bbbfb9da11dee66cf12e515450db271354",
+      "bytes": 70989
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "647518fe3175c35f9e973105b1383373cd8747a5a406d1a76fb2fedeb37dccdf",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c94019162876875a221807c208055ed9770ace227d30f02d4ab43c208c6e63fc",
+      "bytes": 2189
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "012551a86656976c531a0d980f44df8ebca029f07ce5321732f79c525b744617",
+      "bytes": 2779
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "108e2695-6970-47d5-b5b0-eea8fc34e048",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "2cfb738d-6c44-4628-a2f5-e9c9fc92a0ca",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "715a3ad2-5b6d-421f-b72b-3aa6fec86351",
+    "77c31465-7b28-4ab7-b7ff-c9811cda0df0",
+    "78fec83e-4b27-44ab-9f64-31e9dee53e46",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c45b115b-dcb5-446d-8952-85aef740f8e4",
+    "d417b42f-824d-45ba-a02e-cbef3b8ea0d8",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

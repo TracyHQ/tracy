@@ -1,0 +1,328 @@
+/* =========================================================================
+ * Kinetic - Clients / Logos (ACM block) - self-contained, block-scoped.
+ * Colour/type/spacing routed through inherited design-spec CSS vars
+ * (--surface --elevated --border --heading --text --muted --primary). Local
+ * *-clients fallback vars ship light + dark via the html.t4-dark hook.
+ * Compiled from less/style.less.
+ * ========================================================================= */
+.acm-clients {
+  --clients-surface: var(--surface, #FFFFFF);
+  --clients-elevated: var(--elevated, #F2F5EE);
+  --clients-border: var(--border, #E4E8E0);
+  --clients-heading: var(--heading, #10140F);
+  --clients-text: var(--text, #46514B);
+  --clients-muted: var(--muted, #7C877F);
+  --clients-primary: var(--primary, #4D7C0F);
+}
+.acm-clients .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-inline: 32px;
+}
+.acm-clients .acm-clients-head {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 36px;
+}
+.acm-clients .acm-clients-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--clients-primary);
+  margin-bottom: 14px;
+}
+.acm-clients .acm-clients-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--clients-heading);
+  margin: 0;
+}
+.acm-clients .acm-clients-sub {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--clients-text);
+  margin: 14px 0 0;
+}
+.acm-clients.style-1 .hx-section {
+  border-top: 1px solid var(--clients-border);
+  border-bottom: 1px solid var(--clients-border);
+  background: var(--clients-elevated);
+  /* The band's vertical rhythm comes from .hx-container (30px == .pen TrustWrap
+     padding [30,32]). Zero the base .hx-section 80px block padding, or it stacks
+     (80+30 top AND bottom) → a ~250px band instead of the design's ~88px. */
+  padding-block: 0;
+}
+.acm-clients.style-1 .hx-container {
+  padding-block: 30px;
+}
+.acm-clients .acm-clients-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.acm-clients .acm-clients-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--clients-muted);
+}
+/* LOGO gesture (micro-interactions.md §3e): grayscale/opacity muted → full on
+   hover, .2s, no lift/translate — a logo strip is not a card. */
+.acm-clients .acm-clients-logo {
+  display: inline-flex;
+  align-items: center;
+  transition: opacity .2s ease;
+}
+.acm-clients .acm-clients-logo.is-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--clients-muted);
+  opacity: .65;
+}
+.acm-clients .acm-clients-logo.has-media img {
+  display: block;
+  height: 26px;
+  width: auto;
+  opacity: .65;
+  filter: grayscale(1);
+  transition: filter .2s ease, opacity .2s ease;
+}
+.acm-clients .acm-clients-logo:hover {
+  opacity: 1;
+}
+.acm-clients .acm-clients-logo.has-media:hover img {
+  opacity: 1;
+  filter: grayscale(0);
+}
+.acm-clients.style-2 .hx-section {
+  padding: 64px 0 40px;
+}
+.acm-clients .acm-clients-group {
+  margin-bottom: 44px;
+}
+.acm-clients .acm-clients-group:last-child {
+  margin-bottom: 0;
+}
+.acm-clients .acm-clients-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--clients-muted);
+  margin-bottom: 16px;
+}
+.acm-clients .hx-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.acm-clients .acm-clients-card {
+  border: 1px solid var(--clients-border);
+  background: var(--clients-surface);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s ease, transform .2s ease, box-shadow .2s ease;
+}
+.acm-clients .acm-clients-card:hover {
+  border-color: var(--clients-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--clients-primary) 40%, transparent);
+}
+.acm-clients .acm-clients-mark {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  /* .pen icon-chip tint #A3E63518 (~9.4% alpha). color-mix keeps the primary token
+     so blueprint/signal recolor; only the strength drops from 12% -> 9.4%. */
+  background: color-mix(in srgb, var(--clients-primary) 9.4%, transparent);
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+}
+.acm-clients .acm-clients-mark img {
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+.acm-clients .acm-clients-mark-letter {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--clients-primary);
+}
+.acm-clients .acm-clients-card-body {
+  min-width: 0;
+}
+.acm-clients .acm-clients-card-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--clients-heading);
+}
+.acm-clients .acm-clients-card-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--clients-muted);
+  margin-top: 2px;
+}
+.acm-clients .acm-clients-card-arrow {
+  margin-left: auto;
+  display: inline-flex;
+  color: var(--clients-muted);
+}
+.acm-clients .acm-clients-card-arrow svg {
+  width: 16px;
+  height: 16px;
+}
+/* Tablet: the 3-up card grid drops to 2-up before collapsing to 1-up at 620,
+   so the ~620–768 band isn't a single stretched column. */
+@media (max-width: 768px) {
+  .acm-clients .hx-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 620px) {
+  .acm-clients .hx-container {
+    padding-inline: 20px;
+  }
+  .acm-clients .acm-clients-title {
+    font-size: 30px;
+  }
+  .acm-clients .acm-clients-strip {
+    gap: 28px;
+  }
+  .acm-clients .hx-cols {
+    grid-template-columns: 1fr;
+  }
+}
+html.t4-dark .acm-clients,
+[data-bs-theme="dark"] .acm-clients,
+[data-theme="dark"] .acm-clients {
+  --clients-surface: var(--surface, #121614);
+  --clients-elevated: var(--elevated, #0F1311);
+  --clients-border: var(--border, #232A27);
+  --clients-heading: var(--heading, #F2F5F3);
+  --clients-text: var(--text, #9AA6A1);
+  --clients-muted: var(--muted, #5F6B66);
+  --clients-primary: var(--primary, #A3E635);
+}
+
+/* =========================================================================
+ * LIVE TICKER (.pen TickerStrip Ej5Ve) — dark scrolling stat bar that sits
+ * directly under the logo strip. Always dark (#0D1110) in BOTH themes, like a
+ * terminal feed. A "● LIVE" indicator (pulsing) + a seamless marquee of mono
+ * stat items. The track holds the item list TWICE; translateX(-50%) loops one
+ * copy out exactly as the other comes in → no seam, no jump.
+ * ========================================================================= */
+.acm-clients-ticker {
+  background: #0D1110;
+  border-top: 1px solid #1B211E;
+  border-bottom: 1px solid #1B211E;
+  overflow: hidden;
+}
+/* `.hx-container` (shared) carries padding-block:30 on style-1 (0,3,0) — beat it so
+   the ticker keeps the .pen [13,32] rhythm and stays a slim ~46px bar, not ~80px. */
+.acm-clients.style-1 .acm-clients-ticker .acm-tick-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-block: 13px;            /* .pen TickerStrip padding [13,32]; 32 inline via .hx-container */
+}
+.acm-clients-ticker .acm-tick-live {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tick-accent, #A3E635);
+}
+.acm-clients-ticker .acm-tick-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tick-accent, #A3E635);
+  flex: none;
+  animation: acmTickPulse 2s ease-in-out infinite;
+}
+.acm-clients-ticker .acm-tick-viewport {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  /* fade the leading/trailing edge so items appear/exit softly */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+}
+.acm-clients-ticker .acm-tick-track {
+  display: flex;
+  width: max-content;
+  animation: acmTickScroll 42s linear infinite;
+  will-change: transform;
+}
+.acm-clients-ticker .acm-tick-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;                      /* .pen Items gap 16 */
+  padding-right: 16px;           /* trailing gap so the seam between the two copies == the inner gap */
+  flex: none;
+}
+.acm-clients-ticker .acm-tick-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.acm-clients-ticker .acm-tick-item.is-bright { color: #C9D1CE; }
+.acm-clients-ticker .acm-tick-item.is-dim    { color: #7E8A85; }
+.acm-clients-ticker .acm-tick-sep {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--tick-accent, #A3E635);
+  flex: none;
+}
+/* Always-dark ticker bar: accent uses each style's BRIGHT (dark-mode) primary,
+   fixed regardless of page light/dark so it never dims to olive/light on the dark bar. */
+.acm-clients-ticker { --tick-accent: #A3E635; }
+html[data-style="blueprint"] .acm-clients-ticker { --tick-accent: #6366F1; }
+html[data-style="signal"]    .acm-clients-ticker { --tick-accent: #22D3EE; }
+.acm-clients-ticker:hover .acm-tick-track { animation-play-state: paused; }
+@keyframes acmTickScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes acmTickPulse {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.45); }
+  50%      { opacity: .55; box-shadow: 0 0 0 4px rgba(163, 230, 53, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .acm-clients-ticker .acm-tick-track { animation: none; }
+  .acm-clients-ticker .acm-tick-dot   { animation: none; }
+}
+@media (max-width: 620px) {
+  .acm-clients-ticker .acm-tick-inner { gap: 16px; }
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+  .acm-clients .acm-clients-card:hover { transform: none; }
+}

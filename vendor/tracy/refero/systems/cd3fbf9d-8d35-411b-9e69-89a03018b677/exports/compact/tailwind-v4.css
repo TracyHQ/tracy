@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-lilac-veil: #b8aad0;
+  --color-ink-black: #000000;
+  --color-warm-parchment: #f4f1e4;
+  --color-ivory-mist: #fcfaf1;
+
+  /* Typography */
+  --font-good-sans: 'Good Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-redaction: 'Redaction', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

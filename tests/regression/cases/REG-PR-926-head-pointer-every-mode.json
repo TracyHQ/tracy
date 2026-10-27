@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-926-head-pointer-every-mode",
+  "kind": "fix",
+  "title": "Every Tracy mode, not only SEO/GEO, is pointed at content.read {describe:true} › where.seo for a page's title or meta description",
+  "pr": 926,
+  "area": "site-tools/site-context",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised.",
+    "S2: From the checkout root run: node --test --test-name-pattern='head pointer' packages/tools/tracy-site-tools/test/site-context.test.mjs — keep its last 12 lines and its exit code.",
+    "S3: Run: node --test --test-name-pattern='size: the rules|modes: the SEO/GEO mode' packages/tools/tracy-site-tools/test/site-context.test.mjs — keep its last 12 lines and its exit code.",
+    "S4: Run: grep -c \"A page's head (its title in search results and the browser tab, its meta description)\" packages/tools/tracy-site-tools/lib/index.js — keep the number.",
+    "S5: Read the 'ℹ pass' and 'ℹ fail' lines of S2 and S3. A command that cannot start (missing module) is BLOCKED, not FAIL."
+  ],
+  "expect": [
+    "S2: pass 3, fail 0 (joomla, wordpress, emdash): on a quickstart site the Writer, Designer and Developer contexts each carry exactly one line naming `content.read {describe:true}`, its `where.seo` (the same line for all three, at most 160 characters, naming the title and the meta description); SEO/GEO carries exactly one (its own Search row); a session with no Tracy mode and a site with no webroot carry none. Before the fix: 0 lines in the Writer context.",
+    "S3: fail 0: the mode-free size budgets still hold and the SEO/GEO Search row is still only in the SEO/GEO mode.",
+    "S4: 1: the committed lib/index.js carries the every-mode line (RULE #3: the image copies lib/ as it is, so a source fix without a rebuilt bundle never reaches a site).",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "line": "packages/tools/tracy-site-tools/src/host/site-context.mjs siteContext — the `role !== null && installed && SEO_EXTRA` push",
+    "test": "packages/tools/tracy-site-tools/test/site-context.test.mjs 'head pointer'",
+    "whereSeo": "apps/tracy-web/src/sites/where/joomla-tracy-business-j6.json topic seo (menu item params page_title)"
+  },
+  "evidence": "Flow D of the Apply audit, 05/10/2026 on benchjoomlaapply01 (tracy-business/j6 1.2.0): asked to change the Google title of the Contact page, the Writer read Joomla source for 22 steps, 374 s, 1.1M prompt tokens, before finding the menu item's page_title.",
+  "fence": "Mechanism only: the context block the agent reads every step names where.seo in every mode. Not covered: whether a model then takes the pointer (that is a bench measure, flaky by nature).",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-926-head-pointer-every-mode.mjs"] }
+}

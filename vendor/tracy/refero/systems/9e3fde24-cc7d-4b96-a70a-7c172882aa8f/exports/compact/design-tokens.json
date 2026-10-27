@@ -1,0 +1,54 @@
+{
+  "color": {
+    "bright-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bright White — Primary text, hairline borders, nav dividers, icon strokes — white doubles as the divider system in this monochrome dark UI"
+    },
+    "carbon": {
+      "$value": "#2e2e30",
+      "$type": "color",
+      "$description": "Carbon — Page canvas, card surfaces, neutral filled button background — the dominant surface for the entire dark experience"
+    },
+    "obsidian": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Obsidian — Nav bar surface, deeper layered cards, footer base — sits one step below Carbon to create a subtle depth read"
+    },
+    "ash": {
+      "$value": "#969696",
+      "$type": "color",
+      "$description": "Ash — Muted body text, caption copy, low-emphasis dividers — never used for headings, always for secondary information"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Deep border accent on certain buttons and nav edges, used sparingly for a near-invisible structural line"
+    },
+    "lime-cream": {
+      "$value": "#eef0b1",
+      "$type": "color",
+      "$description": "Lime Cream — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    }
+  },
+  "font": {
+    "greedstandard": {
+      "$value": "GreedStandard",
+      "$type": "fontFamily",
+      "$description": "Sole display and UI typeface. At 80px / weight 700 / line-height 1.00 it becomes the manifesto headline — the entire brand reads off this single oversized moment. At 15-16px / weight 400 it carries navigation, card metadata, and body. The 10px size handles micro labels and index marks."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for tiny UI labels and icon-adjacent text — appears in only a handful of minor contexts"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.studiogruhl.com",
+      "siteName": "Studio Gruhl",
+      "extractedAt": "2026-06-03T20:11:01.058Z",
+      "variant": "compact"
+    }
+  }
+}

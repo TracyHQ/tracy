@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1420-shard-road",
+  "kind": "feat",
+  "title": "A fleet host can carry any label and its own tracy-web origin, the tracy-host image carries the deploy files a shard syncs, and a shard's own App reads releases with the token",
+  "pr": 1420,
+  "area": "fleet/shard-road",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the three test files named in run.cmd.",
+    "S2: Read the pass/fail counts and the named tests."
+  ],
+  "expect": [
+    "0 failures.",
+    "host-dsh-init.sh --dry-run accepts s1 and a 16-character label and refuses labels outside ^[a-z][a-z0-9]{0,15}$ with exit 2 before anything runs.",
+    "--tracy-origin is printed as MCP_TRACY_ORIGIN; without it the default stays https://cowork.tracy.ai with a warning; a path, trailing slash, plain http or upper case is exit 2; a kept file with another origin is named.",
+    "--seat-secret-out keeps the secret off the terminal, writes it at 0600 without following a symlink and leaves no temporary file on failure.",
+    "A run that would write dsh-passwords.env without an actor secret source, or with an empty one, stops with exit 2 before any output.",
+    "HOST_DSH_GATEWAY and HOST_DSH_CONTAINER point the init at a second, prefixed dsh; the defaults are today's single dsh.",
+    "apps/tracy-host/Dockerfile copies every file the two deploy actions install plus the listed extras, each a tracked git path, with the commit label after the last COPY; check-fleet-files-in-image.sh compares exactly those files and fails with a diff on drift.",
+    "releasesToken uses TRACY_RELEASES_GITHUB_TOKEN only when the App is not installed on the releases repo; an installed App still mints; a refused mint or a GitHub outage surfaces the error, never the token."
+  ],
+  "selectors": {
+    "script": "packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh",
+    "dockerfile": "apps/tracy-host/Dockerfile",
+    "function": "apps/tracy-web/src/lib/quickstart-releases.js releasesToken"
+  },
+  "fence": "The host label (shard name rule), origin, actor-secret and seat-secret-out checks of host-dsh-init.sh; the COPY list of the tracy-host image kept in step with the deploy actions and the check script; the not-installed branch of releasesToken",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs",
+      "scripts/test/tracy-host-fleet-files-image.test.mjs",
+      "apps/tracy-web/test/releases-token-shard-app.test.mjs"
+    ],
+    "tests": [
+      "a shard label the old list never named is accepted, and names its agent hostname",
+      "labels outside the shard name rule are refused before anything runs",
+      "--tracy-origin is what the dry run says it will write as MCP_TRACY_ORIGIN",
+      "an origin with a path, a trailing slash, plain http or upper case is refused",
+      "a kept dsh-passwords.env with another origin is named, not silently kept",
+      "--seat-secret-out keeps the seat secret off the terminal and says where it goes",
+      "step 3a never writes the secret through a symlink",
+      "step 3a leaves no temporary file, and no secret, when chmod fails",
+      "a run that will write dsh-passwords.env without any actor secret source stops first, with exit 2",
+      "HOST_DSH_GATEWAY and HOST_DSH_CONTAINER point the init at a second, prefixed dsh",
+      "every file the stack deploy installs is in the image, at the same name",
+      "every file the host-dsh deploy installs is in the image, at the same name",
+      "every COPY source is a tracked git path, never a glob, so image-context.mjs can fingerprint it",
+      "check-fleet-files-in-image.sh compares exactly the fleet files the Dockerfile copies",
+      "check-fleet-files-in-image.sh fails, with a diff, when the image drifts from the checkout",
+      "an App that is not installed on the releases repo reads it with TRACY_RELEASES_GITHUB_TOKEN",
+      "an App installed on the releases repo still mints, token or not (production)",
+      "an App installed on the releases repo whose mint is refused surfaces the error, never the token"
+    ]
+  }
+}

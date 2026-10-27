@@ -1,0 +1,293 @@
+{
+  "dos": [
+    "Use #121212 as the default card/sidebar surface and #000000 as the page canvas",
+    "Use 6px border-radius for all content cards and image containers",
+    "Use 9999px border-radius for all interactive buttons and tags",
+    "Use 500px border-radius for input fields to create a soft pill shape",
+    "Use #1ed760 exclusively for play buttons, active states, and brand accents",
+    "Use SpotifyMixUI 14px weight 700 for all section headings and button labels",
+    "Use #b3b3b3 for all secondary text (artist names, metadata, timestamps)"
+  ],
+  "donts": [
+    "Do not use heavy drop shadows — Spotify's elevation comes from surface color shifts, not shadow blur",
+    "Do not use accent colors outside of #1ed760 and the promo gradient — the interface is intentionally monochrome",
+    "Do not mix border-radius families — choose 6px for content, 9999px for actions, and stay consistent",
+    "Do not use light backgrounds or white surfaces in the core interface — the dark canvas is signature",
+    "Do not use typography larger than 24px for headings — Spotify's hierarchy is compact",
+    "Do not place colored buttons on the dark surface — the primary action is always a white pill",
+    "Do not add decorative borders or outlines to cards — surface color alone defines boundaries"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#1ed760",
+      "name": "Spotify Green",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#b85850",
+      "name": "Signal Red",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Page canvas, top nav background, deepest surface layer",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Carbon",
+      "role": "Card surfaces, sidebar panels, secondary surface layer above canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Graphite",
+      "role": "Elevated surface — hover states, input fields, selected nav items",
+      "group": "neutral"
+    },
+    {
+      "hex": "#292929",
+      "name": "Smoke",
+      "role": "Active navigation background, subtle highlight wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Iron",
+      "role": "Input borders, subtle dividers between surface layers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#535353",
+      "name": "Steel",
+      "role": "Muted UI elements, secondary borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#73777c",
+      "name": "Fog",
+      "role": "Muted text, secondary icon fills, inactive nav icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Mist",
+      "role": "Secondary text, metadata, artist names, timestamps",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c5c5c5",
+      "name": "Bone",
+      "role": "Input placeholder text, subtle captions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#509bf5",
+      "name": "Promo Gradient",
+      "role": "Sign-up banner gradient endpoint — energetic blue anchor",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, rgb(175, 40, 150), rgb(80, 155, 245))"
+    },
+    {
+      "hex": "#af2896",
+      "name": "Magenta Glow",
+      "role": "Promotional banner gradient start — vivid pink-to-blue sweep for marketing CTAs",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, rgb(175, 40, 150), rgb(80, 155, 245))"
+    }
+  ],
+  "layout": "Fixed two-column shell: a 340px left sidebar ('Your Library') and a fluid main content area. The top bar is a full-width 64px black strip with left-anchored search and right-anchored account actions. Main content scrolls vertically with horizontal card carousels — trending songs in 5-column square grid, popular artists in 5-column circular grid, popular albums/singles continuing the pattern. Section spacing is compact (32-48px between sections). The bottom promotional banner is sticky/fixed at viewport floor. Navigation is purely top-bar + sidebar — no mega-menu, no breadcrumbs. The rhythm alternates: square cards → circular cards → square cards, creating geometric contrast between sections.",
+  "imagery": "Album artwork and artist photography are the primary visual content. Covers are presented as tight square crops (1:1 aspect ratio) at 6px radius — sharp enough to feel editorial, soft enough to feel modern. Artist photos are circular crops, emphasizing the face as identifier. No decorative photography, no lifestyle imagery, no abstract graphics in the core interface. The only non-photographic visual is the magenta-to-blue promotional gradient banner at the bottom, which functions as the sole brand-colored energy injection. Icons are minimal, monoline, white on dark — small and functional, never decorative.",
+  "similar": [
+    {
+      "why": "Same dark-mode media browser with sidebar + horizontal card carousels, square album art tiles, and dense compact typography",
+      "business": "Apple Music"
+    },
+    {
+      "why": "Dark canvas with image-heavy card grids, similar compact sans-serif UI type, and pill-shaped playback controls",
+      "business": "YouTube Music"
+    },
+    {
+      "why": "Near-identical layout structure: fixed sidebar library, horizontal content rails, square covers, dark monochrome interface",
+      "business": "Tidal"
+    },
+    {
+      "why": "Dark-mode streaming interface with dense card grids, small utilitarian typography, and one brand accent color punctuating a monochrome shell",
+      "business": "SoundCloud"
+    },
+    {
+      "why": "Content-first dark interface with horizontal card carousels, image-dominant tiles, and minimal chrome around the content grid",
+      "business": "Netflix"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "6px",
+      "small": "2px",
+      "images": "6px",
+      "inputs": "500px",
+      "avatars": "500px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "32-48px",
+    "cardPadding": "12px",
+    "pageMaxWidth": null
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Page background, top navigation bar"
+    },
+    {
+      "hex": "#121212",
+      "name": "Sidebar",
+      "level": 2,
+      "purpose": "Left library panel, main content wrapper"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Card",
+      "level": 3,
+      "purpose": "Individual content cards, input fields, elevated tiles"
+    },
+    {
+      "hex": "#292929",
+      "name": "Card Hover",
+      "level": 4,
+      "purpose": "Interactive card hover state"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.5) 0px 8px 24px 0px",
+      "element": "Promotional Banner / Overlay Cards"
+    },
+    {
+      "style": "rgb(18, 18, 18) 0px 1px 0px 0px, rgb(124, 124, 124) 0px 0px 0px 1px inset",
+      "element": "Input Fields"
+    }
+  ],
+  "northStar": "Nocturnal jukebox control room",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body-lg",
+      "size": 14,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "link",
+      "size": 16,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Button (Filled White)",
+      "role": "Primary conversion button — used for 'Create playlist', 'Browse podcasts', 'Sign up free'",
+      "description": "Fully rounded (9999px radius) pill shape, white background (#ffffff), black text in SpotifyMixUI 14px weight 700, 8px vertical / 12px horizontal padding. The only filled button style — stands out as the unambiguous action on a dark surface."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary action — 'Log in', 'Sign up' in the top nav",
+      "description": "No background, no border. White (#ffffff) or mist (#b3b3b3) text in SpotifyMixUI 14px weight 700, horizontal padding of 12-16px. Hover state shifts text to pure white."
+    },
+    {
+      "name": "Square Album Card",
+      "role": "Song/trending content tile in horizontal scrollable grids",
+      "description": "6px border-radius on the cover image. Below the image: song title in white SpotifyMixUI 14px weight 600, artist name in #b3b3b3 weight 400. Card padding 12px. Entire card sits on #121212 canvas; hover lifts to #1f1f1f background."
+    },
+    {
+      "name": "Circular Artist Card",
+      "role": "Artist profile tile in 'Popular artists' section",
+      "description": "Artist photo clipped to full circle (500px radius). Artist name below in white 14px weight 600, 'Artist' label in #b3b3b3 12px. No background fill on the card itself — the circle IS the visual."
+    },
+    {
+      "name": "Sidebar Panel",
+      "role": "Left-column 'Your Library' container",
+      "description": "#121212 background, 6px top-left and top-right radius. Internal cards (playlist/podcast prompts) at #1f1f1f with 6px radius, 12px padding. Full-height fixed left column."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Global header with search, nav arrows, and account actions",
+      "description": "#000000 background, 8px vertical padding. Search input is 36px tall, #1f1f1f fill, 500px radius, white placeholder text. Nav arrows are circular icon buttons. Right side: text links + filled white pill for primary action."
+    },
+    {
+      "name": "Section Header",
+      "role": "Horizontal title row above content grids ('Trending songs', 'Popular artists')",
+      "description": "SpotifyMixUITitle 24px weight 700 white text on left, 'Show all' link in #b3b3b3 12px on right. 24px row gap to content below."
+    },
+    {
+      "name": "Promotional Banner",
+      "role": "Sticky bottom CTA for free tier sign-up",
+      "description": "Full-width, linear-gradient(90deg, #af2896, #509bf5) background. White headline and body text on the left, white pill button on the right. Sits at the viewport floor, always visible."
+    },
+    {
+      "name": "Search Input",
+      "role": "Top-bar search field",
+      "description": "#1f1f1f background, 500px border-radius (nearly circular pill). White search icon on the left, white placeholder text. 12px horizontal padding, 8px vertical."
+    },
+    {
+      "name": "Navigation Arrow Button",
+      "role": "Browser-style back/forward controls in top bar",
+      "description": "#000000 or transparent background, 9999px radius circular hit area, white chevron icon. 32px diameter."
+    },
+    {
+      "name": "Language Selector",
+      "role": "Footer-level globe icon + language dropdown in sidebar",
+      "description": "White globe icon, white 'English' text, 9999px pill border on hover. SpotifyMixUI 14px weight 400."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body, navigation, buttons, metadata, small labels — compact and information-dense, designed to disappear so artwork dominates",
+      "sizes": "11, 12, 13, 14, 16",
+      "family": "SpotifyMixUI",
+      "weight": "400, 600, 700",
+      "lineHeight": "1.20, 1.33, 1.50",
+      "substitute": "Inter, system-ui, -apple-system, sans-serif"
+    },
+    {
+      "role": "Section headings ('Trending songs', 'Popular artists') — heavy bold weight at modest size keeps headlines assertive without overwhelming card grids",
+      "sizes": "24",
+      "family": "SpotifyMixUITitle",
+      "weight": "700",
+      "lineHeight": "1.20",
+      "substitute": "Inter weight 700, system-ui bold"
+    }
+  ],
+  "description": "Spotify's web interface is a dense, dark-mode media command center: a near-black canvas punctuated by vibrant album artwork, one signature green accent, and pill-shaped controls. Typography is compact and utilitarian — a custom geometric sans-serif at small sizes that lets album art and artist photography do the visual heavy lifting. The layout is a fixed two-column shell (sidebar + main feed) with card grids of square covers and circular avatars, creating a rhythmic alternation between geometry types. The interface avoids heavy elevation, relying on subtle surface differentiation (#121212 cards on #000000 canvas) and the one large gradient banner to inject energy. The result feels like a DJ's control room: information-dense, acoustically dark, and ready to play at a glance.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- background: #000000 (canvas), #121212 (sidebar/cards), #1f1f1f (elevated)\n- text: #ffffff (primary), #b3b3b3 (secondary/metadata)\n- border: #333333 (subtle), #73777c (muted)\n- accent: #1ed760 (Spotify green — play/active states)\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n1. *Top Navigation Bar*: Full-width #000000 bar, 64px height, 8px vertical padding. Left: circular back/forward arrow buttons (32px, white chevron). Center-left: search input — #1f1f1f fill, 500px radius, white search icon, white placeholder 'What do you want to play?'. Right: ghost text links 'Premium' 'Support' 'Download' in #ffffff SpotifyMixUI 14px weight 700, divider, 'Install App' with icon, pipe divider, 'Sign up' ghost link, 'Log in' white pill button (9999px radius, #ffffff bg, #000000 text, 8px 12px padding).\n\n2. *Square Album Card*: 6px border-radius cover image filling card width. Below: song title in #ffffff SpotifyMixUI 14px weight 600, artist name in #b3b3b3 SpotifyMixUI 14px weight 400. Card background #121212, 12px padding. Hover: card background shifts to #1f1f1f.\n\n3. *Circular Artist Card*: Artist photo clipped to full circle (500px radius), no card background. Below circle: artist name #ffffff 14px weight 600, 'Artist' label in #b3b3b3 12px weight 400. 12px gap between circle and text.\n\n4. *Promotional Banner*: Full-width sticky bottom bar, linear-gradient(90deg, #af2896, #509bf5) background, 16px padding. Left: white headline SpotifyMixUI 14px weight 700 'Preview of Spotify', white body text 'Sign up to get unlimited songs and podcasts with occasional ads. No credit card needed.' Right: white pill button 'Sign up free' (9999px radius, #ffffff, #000000 text, 8px 12px padding).\n\n5. *Sidebar Library Panel*: Fixed left column, 340px wide, #121212 background, full viewport height. Top: 'Your Library' heading #ffffff 16px weight 700, '+' add button on right. Two internal cards stacked vertically: #1f1f1f background, 6px radius, 12px padding. Each card has a white bold heading, #b3b3b3 description text, and a white pill button at the bottom."
+    },
+    {
+      "title": "Geometry Rhythm",
+      "content": "Spotify's visual identity relies on a deliberate alternation of geometric shapes across horizontal sections: square album covers (1:1, 6px radius) give way to circular artist avatars (1:1, 500px radius) give way to square album/single tiles again. This rhythm prevents visual fatigue in long-scroll feeds and signals content-type changes without needing dividers or section backgrounds. Maintain this alternation — never place two circular sections or two square sections adjacent."
+    }
+  ]
+}

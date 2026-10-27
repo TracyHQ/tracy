@@ -1,0 +1,26 @@
+---
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  stats: Array<{ value: string; label: string }>
+  size?: number
+  /** The entry and repeater the rows come from, for provenance stamps (`src/lib/stamps.ts`). */
+  stamp?: Stamp
+  field?: string
+}
+const { stats, size = 34, stamp, field = 'stats' } = Astro.props
+const none = {}
+---
+
+{(stats ?? []).length > 0 && (
+<div class="container-site pb-16">
+	<div class="grid-lines grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
+		{(stats ?? []).map((s) => (
+			<div class="p-6" {...(stamp?.block(field) ?? none)}>
+				<div class="font-serif leading-none" style={`font-size:${size}px`} {...(stamp?.(`${field}.value`) ?? none)}>{s.value}</div>
+				<div class="mt-1.5 text-[13px] text-fg-meta" {...(stamp?.(`${field}.label`) ?? none)}>{s.label}</div>
+			</div>
+		))}
+	</div>
+</div>
+)}

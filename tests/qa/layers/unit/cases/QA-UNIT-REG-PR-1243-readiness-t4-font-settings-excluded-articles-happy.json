@@ -1,0 +1,69 @@
+{
+  "id": "QA-UNIT-REG-PR-1243-readiness-t4-font-settings-excluded-articles-happy",
+  "itemIds": ["regression:REG-PR-1243-readiness-t4-font-settings-excluded-articles"],
+  "requirement": "LANG-2 fonts follow a T4 font setting to where css/tpl/theme.tpl.css writes it; PAGE-2 module ties skip excluded_articles",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1243-readiness-t4-font-settings-excluded-articles.json",
+    "ref": "PR #1243 (fix); fix evidence: 12/10/2026: green packs of ja-spa, ja-symphony, ja-trip, ja-tour failed LANG-2 and ja-essence j6 1.0.7 failed PAGE-2 on develop; all pass with this change",
+    "invariant": "S1: Frank Ruhl Libre (selectors) and Cookie (--font-special-family) are replaced on vi pages and LANG-2 has no font failure; without the replacement each still fails, named with its setting. S2: module 133 passes with excluded_articles 37 (also as a list of lines) and fails on articles 25, 37 without it.",
+    "productSources": [
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/english-date-formats.js:19",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/plugin-block-words.js:12",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/release-content.js:44",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/rule-findings.js:24",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/visitor-words-in-css.js:37",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/hidden-1-system-pages.js:159",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/lang-2-one-language-everywhere.js:82",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/lang-6-dates-in-language.js:72",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/page-2-tied-article-order.js:46",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/page-4-no-dead-links.js:196",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/page-5-buttons-lead-somewhere.js:225",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/page-5-social-and-targets.js:176",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/rules/page-7-children-of-unticked-page.js:111"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/contract-profile-of-release.js:39 readFileSync() with a computed path",
+      "apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs:135 readFileSync() with a computed path",
+      "apps/tracy-web/test/template-customization-question-readiness-t4-font-settings.test.mjs:51 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1243-readiness-t4-font-settings-excluded-articles.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1243-readiness-t4-font-settings-excluded-articles"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1243-readiness-t4-font-settings-excluded-articles",
+    "pr": 1243,
+    "kind": "fix",
+    "area": "template-customization-question-readiness/rules",
+    "file": "tests/regression/cases/REG-PR-1243-readiness-t4-font-settings-excluded-articles.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-force-exit",
+    "apps/tracy-web/test/template-customization-question-readiness-t4-font-settings.test.mjs",
+    "apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

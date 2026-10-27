@@ -1,0 +1,119 @@
+{
+  "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Demo content is Northgate Industrial; the template product is Tracy Business.",
+  "id": "tracy-business",
+  "label": "Tracy Business",
+  "version": "1.7.23",
+  "locales": [
+    "en",
+    "af",
+    "be",
+    "bg",
+    "ca",
+    "cs",
+    "cy",
+    "da",
+    "de",
+    "el",
+    "es",
+    "et",
+    "fi",
+    "fr",
+    "ga",
+    "hr",
+    "hu",
+    "it",
+    "ja",
+    "ka",
+    "lo",
+    "lt",
+    "lv",
+    "ms",
+    "nb",
+    "nl",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sr",
+    "sv",
+    "ta",
+    "th",
+    "tr",
+    "uk",
+    "vi",
+    "zh"
+  ],
+  "defaultLocale": "en",
+  "site": {
+    "title": "Northgate Industrial",
+    "tagline": "Industrial infrastructure"
+  },
+  "contentOrder": [
+    "site",
+    "services",
+    "projects",
+    "posts",
+    "vacancies",
+    "pages",
+    "home",
+    "about",
+    "services_page",
+    "projects_page",
+    "news_page",
+    "careers",
+    "investors",
+    "contact"
+  ],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": [
+      {
+        "form": "quote-request-{locale}",
+        "collection": "contact",
+        "slug": "contact",
+        "field": "form_id"
+      },
+      {
+        "form": "newsletter-{locale}",
+        "collection": "news_page",
+        "slug": "news",
+        "field": "newsletter_form_id"
+      },
+      {
+        "form": "newsletter-{locale}",
+        "collection": "investors",
+        "slug": "investors",
+        "field": "newsletter_form_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "no-reply@northgate-ind.ru",
+    "fromName": "Northgate",
+    "notifyTest": "sales@northgate-ind.ru"
+  },
+  "audit": {
+    "indexable": ["^/(?!search)(?!404$).*"],
+    "noindex": ["^/search"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": ["/projects/nope", "/news/category/nope", "/kit/nope"],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "ngi-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  }
+}

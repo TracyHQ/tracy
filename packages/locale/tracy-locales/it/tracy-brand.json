@@ -1,0 +1,20 @@
+{
+  "appearance.dark": "Scuro",
+  "appearance.light": "Chiaro",
+  "appearance.system": "Sistema",
+  "appearance.title": "Aspetto",
+  "font.code.description": "Blocchi di codice e terminal",
+  "font.code.title": "Font del codice",
+  "font.default": "Predefinito",
+  "font.global.description": "Testo in tutta l’interfaccia",
+  "font.global.title": "Font globale",
+  "fontSize.decrease": "Riduci dimensione del font",
+  "fontSize.description": "Si applica solo al contenuto della conversazione",
+  "fontSize.increase": "Aumenta dimensione del font",
+  "fontSize.title": "Dimensione del font",
+  "hero.title": "Cosa desidera modificare oggi?",
+  "primary.description": "Colore di accento per pulsanti, link e selezione",
+  "primary.hex": "Colore esadecimale",
+  "primary.swatch": "Usa {color}",
+  "primary.title": "Colore primario"
+}

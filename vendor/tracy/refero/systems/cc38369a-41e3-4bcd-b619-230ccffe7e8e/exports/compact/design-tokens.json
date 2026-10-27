@@ -1,0 +1,89 @@
+{
+  "color": {
+    "neon-glow": {
+      "$value": "#34d59a",
+      "$type": "color",
+      "$description": "Neon Glow — Key brand accent, active state indicators, data visualizations — injects a vibrant, code-like energy."
+    },
+    "neon-muted": {
+      "$value": "#285d49",
+      "$type": "color",
+      "$description": "Neon Muted — Subtle background tones in visualizations, less prominent brand elements."
+    },
+    "scanline-fade": {
+      "$value": "#39a57d",
+      "$type": "color",
+      "$description": "Scanline Fade — Special effect for highlighting code or UI elements, mimicking a terminal scanline."
+    },
+    "system-warning": {
+      "$value": "#ff3621",
+      "$type": "color",
+      "$description": "System Warning — Used sparingly for icons or highlights requiring urgent attention."
+    },
+    "whiteout": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Whiteout — Primary text, primary CTA button backgrounds, icons."
+    },
+    "ash": {
+      "$value": "#797d86",
+      "$type": "color",
+      "$description": "Ash — Secondary text, descriptive copy, inactive navigation links."
+    },
+    "pewter": {
+      "$value": "#94979",
+      "$type": "color",
+      "$description": "Pewter — Tertiary text, metadata, placeholder text."
+    },
+    "cloud": {
+      "$value": "#c9cbcf",
+      "$type": "color",
+      "$description": "Cloud — Hover states on dark elements, subtle highlights."
+    },
+    "graphite-light": {
+      "$value": "#303236",
+      "$type": "color",
+      "$description": "Graphite Light — Borders, dividers, subtle UI structure."
+    },
+    "graphite": {
+      "$value": "#242628",
+      "$type": "color",
+      "$description": "Graphite — Secondary surfaces floating on the background."
+    },
+    "graphite-deep": {
+      "$value": "#151617",
+      "$type": "color",
+      "$description": "Graphite Deep — Card backgrounds, code block surfaces."
+    },
+    "depth": {
+      "$value": "#0a0a0b",
+      "$type": "color",
+      "$description": "Depth — The darkest surface color before pure black, for subtle elevation."
+    },
+    "blackout": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Blackout — The absolute page background."
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Headlines and primary marketing copy. Its clean, neutral geometry provides high readability, contrasting with the more stylized monospaced font."
+    },
+    "geistmono": {
+      "$value": "GeistMono",
+      "$type": "fontFamily",
+      "$description": "Code snippets, UI labels, and data displays. Its monospaced form adds a technical, typewriter-like precision, reinforcing the developer-centric identity."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://neon.tech",
+      "siteName": "Neon",
+      "extractedAt": "2026-04-11T17:38:19.074Z",
+      "variant": "compact"
+    }
+  }
+}

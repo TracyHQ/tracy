@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1686-wo-snapshot-fresh-not-cooldown",
+  "kind": "fix",
+  "title": "A place snapshot whose source is past 30 days but whose last retry just failed is no longer reported fresh; the retry cooldown still keeps it from being run again",
+  "pr": 1686,
+  "area": "website-opportunities/places",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: snapshotFresh / snapshotDue on a published snapshot whose google-places row was collected 35 days ago and tried one hour ago with a timeout.",
+    "S2: the same pair for a recent collection, a settled not_found answer, a never-collected setup failure and an unpublished or prefetch-only snapshot.",
+    "S3: the TripAdvisor test: a newly required source tried without data is not fresh but not due again inside its TTL."
+  ],
+  "expect": [
+    "S1: snapshotFresh = false; snapshotDue = false now and true after SOURCE_RETRY_MS.",
+    "S2: fresh only for the recent collection and the settled answer within 30 days.",
+    "S3: the TripAdvisor freshness test passes."
+  ],
+  "selectors": {
+    "module": "packages/wo/website-opportunities/src/places.js snapshotFresh, snapshotDue, sourceFresh"
+  },
+  "evidence": "Before the fix snapshotFresh returned !sourceDue for every source, so a 35-day-old source in its retry cooldown read fresh",
+  "fence": "Data freshness (snapshotFresh) is separate from scheduling (snapshotDue / sourceDue) in places.js and joinPlace",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/place-freshness.test.mjs",
+      "apps/tracy-web/test/website-opportunities-tripadvisor.test.mjs"
+    ],
+    "tests": [
+      "a source collected long ago whose retry just failed is stale data",
+      "a recent collection is fresh and not due",
+      "a settled \"the place has nothing there\" answer is fresh within the max age",
+      "a source that failed on our setup and never collected is not fresh",
+      "an unpublished or background-only snapshot is neither fresh nor spared a run",
+      "fresh snapshot is enriched for a newly enabled source"
+    ]
+  }
+}

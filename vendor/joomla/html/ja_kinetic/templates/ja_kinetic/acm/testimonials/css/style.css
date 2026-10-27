@@ -1,0 +1,272 @@
+/* =========================================================================
+ * Kinetic - Testimonials (ACM block) - self-contained, block-scoped.
+ * Mirrors .pen TestiWrap (bkIGc): a dark band (#161B18 dark / --elevated light)
+ * with top+bottom hairline borders, a top Rule divider, a left-aligned head,
+ * then a featured pull-quote HERO card (left, lime/primary border, large quote)
+ * beside a narrower column of STACKED small cards (right).
+ * Colour/type/spacing route through inherited design tokens + local
+ * --testi-* fallbacks that ship light + dark via the html.t4-dark hook.
+ * ========================================================================= */
+.acm-testimonials {
+  --testi-band: var(--elevated, #F2F5EE);
+  --testi-surface: var(--surface, #FFFFFF);
+  --testi-border: var(--border, #E4E8E0);
+  --testi-heading: var(--heading, #10140F);
+  --testi-muted: var(--muted, #7C877F);
+  --testi-primary: var(--primary, #4D7C0F);
+  --testi-chip-bg: color-mix(in srgb, var(--primary, #4D7C0F) 15%, transparent);
+
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--testi-heading);
+}
+
+.acm-testimonials .hx-section {
+  padding: 80px 0;
+  background: var(--testi-band);
+  border-top: 1px solid var(--testi-border);
+  border-bottom: 1px solid var(--testi-border);
+}
+.acm-testimonials .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.acm-testimonials .hx-testi-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+/* ---- top rule ---- */
+.acm-testimonials .hx-testi-rule {
+  height: 1px;
+  width: 100%;
+  background: var(--testi-border);
+}
+
+/* ---- head ---- */
+.acm-testimonials .hx-testi-head {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.acm-testimonials .hx-eyebrow {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--testi-primary);
+}
+.acm-testimonials .hx-h2 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  color: var(--testi-heading);
+}
+.acm-testimonials .hx-testi-sub {
+  margin: 4px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- row: hero + stack ---- */
+.acm-testimonials .hx-testi-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 18px;
+}
+.acm-testimonials .hx-testi-stack {
+  flex: 0 0 440px;
+  width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---- cards (shared) ---- */
+.acm-testimonials .hx-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--testi-surface);
+  border-radius: 16px;
+}
+.acm-testimonials .hx-card figcaption {
+  margin: 0;
+  margin-top: auto;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  border-radius: 0;
+}
+.acm-testimonials .hx-testi-q {
+  margin: 0;
+  color: var(--testi-heading);
+}
+
+/* ---- hero (featured) card ---- */
+.acm-testimonials .hx-testi-hero {
+  flex: 1 1 0;
+  gap: 26px;
+  padding: 36px 34px;
+  border: 1px solid var(--border);          /* neutral by default */
+  transition: border-color .15s ease;
+}
+.acm-testimonials .hx-testi-hero:hover {    /* lime accent on hover only */
+  border-color: var(--testi-primary);
+}
+.acm-testimonials .hx-testi-hero .hx-testi-q {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.4167;
+  letter-spacing: -0.4px;
+}
+
+/* ---- small (stacked) cards ---- */
+.acm-testimonials .hx-testi-small {
+  flex: 1 1 0;
+  gap: 18px;
+  padding: 24px;
+  border: 1px solid var(--testi-border);
+}
+.acm-testimonials .hx-testi-small .hx-testi-q {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5333;
+}
+
+/* ---- author row ---- */
+.acm-testimonials .hx-testi-author {
+  display: flex;
+  align-items: center;
+}
+.acm-testimonials .hx-testi-author--lg { gap: 13px; }
+.acm-testimonials .hx-testi-author--sm { gap: 11px; }
+
+.acm-testimonials .hx-testi-chip,
+.acm-testimonials .hx-testi-avatar {
+  flex: none;
+  border-radius: 50%;
+  background: var(--testi-chip-bg);
+}
+.acm-testimonials .hx-testi-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  color: var(--testi-primary);
+  text-transform: uppercase;
+}
+.acm-testimonials .hx-testi-avatar {
+  object-fit: cover;
+}
+.acm-testimonials .hx-testi-author--lg .hx-testi-chip,
+.acm-testimonials .hx-testi-author--lg .hx-testi-avatar {
+  width: 46px;
+  height: 46px;
+  font-size: 16px;
+}
+.acm-testimonials .hx-testi-author--sm .hx-testi-chip,
+.acm-testimonials .hx-testi-author--sm .hx-testi-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+}
+
+.acm-testimonials .hx-testi-id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  min-width: 0;
+}
+.acm-testimonials .hx-testi-name,
+.acm-testimonials .hx-testi-meta {
+  text-align: left;
+}
+.acm-testimonials .hx-testi-author--lg .hx-testi-id { gap: 2px; }
+.acm-testimonials .hx-testi-author--sm .hx-testi-id { gap: 1px; }
+
+.acm-testimonials .hx-testi-name {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  color: var(--testi-heading);
+}
+.acm-testimonials .hx-testi-author--lg .hx-testi-name { font-size: 15px; }
+.acm-testimonials .hx-testi-author--sm .hx-testi-name { font-size: 13.5px; }
+
+.acm-testimonials .hx-testi-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-style: normal;
+  color: var(--testi-muted);
+}
+.acm-testimonials .hx-testi-author--lg .hx-testi-meta { font-size: 11.5px; }
+.acm-testimonials .hx-testi-author--sm .hx-testi-meta { font-size: 11px; }
+
+/* ---- responsive: stack to one column ---- */
+@media (max-width: 860px) {
+  .acm-testimonials .hx-testi-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .acm-testimonials .hx-testi-stack {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .acm-testimonials .hx-testi-hero,
+  .acm-testimonials .hx-testi-small {
+    flex: 0 0 auto;
+  }
+}
+@media (max-width: 620px) {
+  .acm-testimonials .hx-section {
+    padding: 56px 0;
+  }
+  .acm-testimonials .hx-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-testimonials .hx-testi-inner {
+    gap: 32px;
+  }
+  .acm-testimonials .hx-h2 {
+    font-size: 28px;
+  }
+  .acm-testimonials .hx-testi-hero {
+    padding: 28px 24px;
+  }
+}
+
+/* =========================================================================
+ * DARK — exact .pen TestiWrap values: band #161B18, card surface #121614,
+ * hero border = lime primary, small border #232A27. Routed through tokens so
+ * the per-direction primary (lime / indigo / cyan) re-skins automatically.
+ * ========================================================================= */
+html.t4-dark .acm-testimonials,
+[data-bs-theme="dark"] .acm-testimonials,
+[data-theme="dark"] .acm-testimonials {
+  --testi-band: #161B18;
+  --testi-surface: var(--surface, #121614);
+  --testi-border: var(--border, #232A27);
+  --testi-heading: var(--heading, #F2F5F3);
+  --testi-muted: var(--muted, #5F6B66);
+  --testi-primary: var(--primary, #A3E635);
+  --testi-chip-bg: color-mix(in srgb, var(--primary, #A3E635) 15%, transparent);
+}
+/* Blueprint/Signal directions keep #161B18 only on the Terminal palette; other
+   directions use their own elevated band so the dark band matches the page. */
+html.t4-dark[data-style="blueprint"] .acm-testimonials { --testi-band: #12141E; }
+html.t4-dark[data-style="signal"] .acm-testimonials { --testi-band: #0F1626; }

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "caf8d2ef-4173-4431-9d26-05be0272e9f8",
+  "status": "complete",
+  "name": "Uber",
+  "url": "https://styles.refero.design/style/caf8d2ef-4173-4431-9d26-05be0272e9f8",
+  "sourceWebsite": "https://uber.com",
+  "extractedAt": "2026-06-03T16:14:29.443Z",
+  "capturedAt": "2026-10-08T05:17:31.329372+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Black-and-white transit kiosk. Picture a monochrome wayfinding panel where the only color comes from editorial illustrations mounted beside the input form.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4174e4af-4a09-4a54-a2d7-5065aa3f59da.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d7272897-dacf-4325-9047-137e0ce413f0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f5a3d9c9-b0a7-4aeb-9e40-c5cec058727a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c9303ec3-6de0-4d55-8701-8d4705a55005.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/6ded3ba2-832c-4233-9695-3461b6c98949.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "18b37ced03e0242d366a0b3084b4708d431fdbeddd24d6261d36abeac9f81f7d",
+      "bytes": 21320
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1685e9301415d88b902776f93c4e26945a1ff421a005c29ba24804e07a75b624",
+      "bytes": 100961
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3899df327f57bb91d661ee8f2ab4e2898292242eee6d0c8de394b522fcf6cdb5",
+      "bytes": 18290
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "baad66b30a1dcbb7aaaa1628780b579fa449f02b24815d925d144739f6963dee",
+      "bytes": 10061
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "58e0cf987338a8ff2b2f59e14fadc1378bdc3138a7ee1864e184469b8c85e67d",
+      "bytes": 13684
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "47aae2f283a8ab595fc06f7242e30a7b2c2d94288a69f97ff747437c53b5c89b",
+      "bytes": 3176
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "58e1b355212b00bc9287ae6e1d6769395da2140b2c8debec40bfd32b42b26a43",
+      "bytes": 695
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d10bb922e18d9f4ed6c00acc870a768ea12295b25ec7667e8b83fe4d1757bfc0",
+      "bytes": 712
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cf58ba0ade996261b155fa3743f89d50c00ca0a9e90b4a0cd96651b3fc6358e5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ccbd7b4140326abdcd0ad97ab5f7e1b3b7680f92ccca85d569a348ba9f99b390",
+      "bytes": 44054
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a57187515d80499277c6202ed7ab768b3a4da0592fdc81e430e85197334259e2",
+      "bytes": 22509
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3e5703449f39bdda573a727167c5e5c8929fbc7efe6dc16cd9ba5df4d87fabad",
+      "bytes": 39795
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b41024ad377999cb9539b40f843a5e7bb2709600a15252ebabc9d879205ee483",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f93a519462ddea1b89e2683946d170a1a8da752876be24e45f36154e174de694",
+      "bytes": 1452
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "52e8e64b0b46039606ff811feba5bee703ba7f54186cd15a1b79cf5b00d84c8e",
+      "bytes": 1981
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "055f12af-b7b9-46af-81b7-93e0ed6d5ce2",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "635b7769-7517-48ac-bb95-2ad7fa337e54",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7510b18e-63c3-4c2a-97c3-39fa7dfa6ae3",
+    "7b0f403f-5428-49dc-9ae3-addbe64261ae",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "a80cb179-2d90-4896-b52d-4e674b421498",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "caf8d2ef-4173-4431-9d26-05be0272e9f8",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

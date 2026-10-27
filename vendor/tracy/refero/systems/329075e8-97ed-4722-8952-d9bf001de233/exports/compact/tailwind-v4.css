@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-bone-linen: #f7f5f2;
+  --color-oat-milk: #eae6df;
+  --color-driftwood: #d7d2cc;
+  --color-ash-mauve: #645757;
+  --color-mahogany-hush: #504344;
+  --color-obsidian-plum: #2a1a1d;
+  --color-forest-depths: #1d3023;
+  --color-lime-pulse: #26d862;
+  --color-peacock-teal: #0e634f;
+
+  /* Typography */
+  --font-abc-arizona-flare-condensed-variable: 'ABC Arizona Flare Condensed Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-arizona-flare-variable: 'ABC Arizona Flare Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

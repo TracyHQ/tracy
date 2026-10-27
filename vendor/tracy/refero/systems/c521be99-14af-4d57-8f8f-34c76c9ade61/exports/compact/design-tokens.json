@@ -1,0 +1,79 @@
+{
+  "color": {
+    "lemon-highlight": {
+      "$value": "#f7e731",
+      "$type": "color",
+      "$description": "Lemon Highlight — Yellow supporting accent for decorative details and low-frequency emphasis"
+    },
+    "ink-black": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, icons, button labels, nav links, form borders — the workhorse dark for all readable content"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page background, card surfaces, button text on dark fills — the dominant canvas"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Hairline borders, footer background, maximum-emphasis text — used where Ink Black is not dark enough"
+    },
+    "stone-gray": {
+      "$value": "#6f6f6f",
+      "$type": "color",
+      "$description": "Stone Gray — Secondary body text, muted descriptions, inactive form labels — the softest readable gray"
+    },
+    "bone": {
+      "$value": "#f3f3f0",
+      "$type": "color",
+      "$description": "Bone — Alternate section background, subtle card surface — a warm off-white for band variation without breaking the monochrome"
+    },
+    "ash": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Ash — Button hover surfaces, disabled states, hairline dividers, input backgrounds"
+    },
+    "mist": {
+      "$value": "#d9ecee",
+      "$type": "color",
+      "$description": "Mist — Very subtle teal-tinted surface for rare color-washed sections — barely chromatic, almost a gray"
+    },
+    "sage-wash": {
+      "$value": "#aec2b8",
+      "$type": "color",
+      "$description": "Sage Wash — Gradient stop in decorative card backgrounds — a muted sage fading into off-white, used only in gradient form"
+    },
+    "linen": {
+      "$value": "#eadcce",
+      "$type": "color",
+      "$description": "Linen — Warm card background — a near-gray beige for section bands, the only warm neutral in the system"
+    }
+  },
+  "font": {
+    "sans": {
+      "$value": "sans",
+      "$type": "fontFamily",
+      "$description": "The sole display and body typeface. A single weight (400) handles everything from 142px display headlines down to 16px body. The flat single-weight approach is a deliberate anti-SaaS choice — no bold, no semibold. Emphasis comes from size and the yellow accent, not weight. The slight negative tracking (-0.025em) tightens large display text into cohesive word-shapes."
+    },
+    "mono": {
+      "$value": "mono",
+      "$type": "fontFamily",
+      "$description": "Captions, status labels, and small metadata. The positive letter-spacing (0.025em) gives these texts a typographic whisper — used for 'Beta launching late 2026' and similar timestamps that sit above display headlines. Creates a clear register separation from the sans display voice."
+    },
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Button text only — the one place bold weight appears, and it belongs to a different family (system Helvetica Neue Bold 700) to make CTAs visually distinct from headlines. The 14px size with 1.71 line-height and normal tracking creates a compact, button-typical cadence."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.sunday.ai",
+      "siteName": "Sunday",
+      "extractedAt": "2026-06-03T18:41:22.353Z",
+      "variant": "compact"
+    }
+  }
+}

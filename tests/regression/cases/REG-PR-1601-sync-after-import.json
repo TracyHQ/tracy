@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1601-sync-after-import",
+  "kind": "fix",
+  "title": "A first Sync from live after an import compares with the import's fingerprint, never reads Tracy's own files, skips file steps that change nothing, and a visit to the copy during a sync is not the copy changing",
+  "pr": 1601,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/site/tracy-add-site/test/import-fingerprint.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs"
+  ],
+  "expect": [
+    "S1: every test passes; the engine's own files under administrator/components/com_claudecowork are neither read nor hashed nor deleted; changed files are read a few at a time; the import's fingerprint is taken with live-pull's own skip list and none from an older engine; a live read whose files are the base's answers with the copy's own tree"
+  ],
+  "selectors": {
+    "host": "live-pull.mjs isTracyPath READ_CONCURRENCY, export.ts takeFingerprint, webroot-sync.sh base-fingerprint.json db_checksums theirs_of_last_merge, live_sync.py merge_files tree_of IdMap.catalogue numbers_of, webroot-git.sh restore_reset count"
+  },
+  "evidence": "tasks/evidence/sync-fast-read/",
+  "fence": "A sync never reads files the merge always keeps from the copy, and a person viewing the copy never fails a sync",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+      "packages/site/tracy-add-site/test/import-fingerprint.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs"
+    ]
+  }
+}

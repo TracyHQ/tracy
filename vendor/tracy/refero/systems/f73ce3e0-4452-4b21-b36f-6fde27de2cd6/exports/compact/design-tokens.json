@@ -1,0 +1,109 @@
+{
+  "color": {
+    "deep-navy": {
+      "$value": "#021422",
+      "$type": "color",
+      "$description": "Deep Navy — Primary text, primary filled buttons, nav backgrounds, heading ink, footer surface — near-black that reads as ink rather than pure black, grounding the page while staying soft enough to pair with white"
+    },
+    "vibrant-green": {
+      "$value": "#00852e",
+      "$type": "color",
+      "$description": "Vibrant Green — Sale badges, discount pills, success indicators, single-use accents — the only vivid hue that touches the chrome; every other chromatic surface belongs to a product"
+    },
+    "midnight-navy": {
+      "$value": "#001f38",
+      "$type": "color",
+      "$description": "Midnight Navy — Secondary text emphasis, card border accent on hero product, heading hierarchy step below Deep Navy — slightly bluer for tonal variation without leaving the family"
+    },
+    "sky-wash": {
+      "$value": "#91c3ff",
+      "$type": "color",
+      "$description": "Sky Wash — Outlined button borders, icon accents, link highlights — light blue that whispers rather than shouts, used for ghost controls that still need chromatic definition"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Page canvas, card surface, button text on dark fills, badge text — the dominant background"
+    },
+    "cloud": {
+      "$value": "#f2f6ff",
+      "$type": "color",
+      "$description": "Cloud — Cool-tinted surface for elevated cards, subtle wash behind testimonials, very-light-blue backdrop panels — the cool side of the surface stack"
+    },
+    "warm-sand": {
+      "$value": "#fff6ea",
+      "$type": "color",
+      "$description": "Warm Sand — Warm-tinted surface for promotional or seasonal highlight cards, sale callout backgrounds — the warm counterpoint to Cloud"
+    },
+    "silver-mist": {
+      "$value": "#ccd2d7",
+      "$type": "color",
+      "$description": "Silver Mist — Card borders, badge backgrounds, hairline dividers — the structural gray that separates white-on-white layers"
+    },
+    "e6e8e9": {
+      "$value": "#e6e8e9",
+      "$type": "color",
+      "$description": "E6e8e9 — Navigation dividers, secondary hairline borders — slightly lighter than Silver Mist for less prominent edges"
+    },
+    "iron-gray": {
+      "$value": "#808f9c",
+      "$type": "color",
+      "$description": "Iron Gray — Muted card borders, secondary borders, de-emphasized card outlines — cool gray with a blue undertone"
+    },
+    "slate": {
+      "$value": "#6a7c89",
+      "$type": "color",
+      "$description": "Slate — Muted body text, helper text, de-emphasized metadata — readable but clearly secondary to Deep Navy"
+    },
+    "graphite": {
+      "$value": "#67727a",
+      "$type": "color",
+      "$description": "Graphite — Heading sub-labels, nav secondary text, card meta text — middle gray for informational hierarchy"
+    },
+    "charcoal": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Charcoal — Icon fills, micro-typography, fine SVG strokes — soft black that never hits pure #000"
+    },
+    "spectrum-gradient": {
+      "$value": "#724d99",
+      "$type": "color",
+      "$description": "Spectrum Gradient — Decorative product-spectrum gradient flowing violet → indigo → cyan → green → yellow → orange → red — used only in hero wash and product card colorways, never on UI chrome"
+    }
+  },
+  "font": {
+    "montserrat": {
+      "$value": "Montserrat",
+      "$type": "fontFamily",
+      "$description": "Label, badge-support, and footer-typography family. Used for uppercase labels at 10–12px with wide tracking (0.10–0.13em), and for body copy that needs a geometric neutral tone. The wide letter-spacing on small sizes is the defining move for category labels and section eyebrows."
+    },
+    "new-kansas": {
+      "$value": "New Kansas",
+      "$type": "fontFamily",
+      "$description": "Primary display and heading family — a custom serif with warmth and editorial credibility. Carries the 36–48px headlines, 20–28px subheads, and 16–20px emphasized body. The serif choice over a geometric sans is the brand's signature typographic decision: it reads apothecary and trustworthy rather than tech-SaaS. Weight 600 is the default for headlines; 500 for italic-feeling emphasis."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "UI and body family for cards, navigation, links, and small functional text. Negative letter-spacing tightens at body sizes (-0.022em at 16px, -0.01em at 14px) for a clean, screen-optimized read. Stepping in where New Kansas would feel too editorial — tabs, micro-copy, card metadata."
+    },
+    "rift-soft": {
+      "$value": "Rift Soft",
+      "$type": "fontFamily",
+      "$description": "Exclusive to sale-badge and discount-pill text. A condensed display face with 0.063em tracking that gives promotional copy a stamp-like, authoritative weight. Never used outside discount contexts — this is the badge voice, not the heading voice."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vibrants.com",
+      "siteName": "Vibrants",
+      "extractedAt": "2026-06-03T18:02:04.339Z",
+      "variant": "compact"
+    }
+  }
+}

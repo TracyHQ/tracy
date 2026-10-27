@@ -1,0 +1,269 @@
+{
+  "dos": [
+    "Use Playfair Display weight 400 exclusively for display text — never go above weight 400; the lightness is the luxury.",
+    "Set the wordmark in Montserrat 700 with 0.154em letter-spacing — this tracking is the brand's signature and must not be reduced.",
+    "Keep the canvas at #161616 for all dark surfaces and reserve #ffffff for light sections below the fold.",
+    "Use 4px radius on every rounded element — buttons, inputs, cards. The system has no soft corners.",
+    "Anchor headlines at 56px+ on Playfair Display and pair with Source Sans Pro 14–16px for all supporting text.",
+    "Use 24px column gaps and 24px element padding as the default rhythm; 56px vertical section padding for hero-style blocks.",
+    "Let the teal #00a4a6 appear only as a single link border — never as a fill, button background, or large surface."
+  ],
+  "donts": [
+    "Do not add shadows, gradients, or glows to any component — the system is flat and photographic.",
+    "Do not introduce pills, circles, or any radius above 4px.",
+    "Do not use color fills on buttons — all actions are ghost/outlined with border-only treatment.",
+    "Do not use Playfair Display below 44px — it is a display face, not a body face.",
+    "Do not place body text directly over the hero photograph without a #161616 backing layer — contrast must remain AAA.",
+    "Do not add more than one chromatic accent — the teal is singular; adding another color breaks the cinematic restraint.",
+    "Do not use bold (600+) on the wordmark — weight 700 is the ceiling, and it only applies to Montserrat."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Primary text on dark hero, input fills, light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Deep Ink",
+      "role": "Dominant text and border color across body, nav, and dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#161616",
+      "name": "Obsidian",
+      "role": "Dark canvas and hero surface — the page's atmospheric base",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bfbfbf",
+      "name": "Ash Gray",
+      "role": "Subtle input borders, ghost box-shadows, disabled hairlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a9a9a9",
+      "name": "Fog",
+      "role": "Secondary body text, muted borders, low-emphasis dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7f8080",
+      "name": "Steel",
+      "role": "Navigation and link borders, tertiary text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8995a9",
+      "name": "Slate Blue",
+      "role": "Outlined ghost-button border — the only chromatic interactive treatment",
+      "group": "brand"
+    },
+    {
+      "hex": "#00a4a6",
+      "name": "Lagoon Teal",
+      "role": "Sole accent — link border, indicating the single interactive edge in the system",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page model is a full-bleed vertical stack with no max-width container. The hero is a single full-viewport-height section: photographic background, centered wordmark at top, centered headline in the vertical middle. Below the hero, the layout collapses to centered single-column content — a subscribe form, a divider, and footer text — all stacked with 56px vertical breathing room. Navigation is minimal: the top bar is a single notification strip, and the wordmark serves as the only persistent brand element. No sidebar, no grid, no card layouts. The chat widget floats absolutely in the bottom-right corner. The overall rhythm is: one overwhelming image, then silence.",
+  "imagery": "Imagery is singular and cinematic: one full-bleed photographic hero dominates the page. The photograph — a night-sky alpine landscape with mountain silhouettes and a glass-still lake reflection — is high-contrast, dark/moody, and occupies 100% of the viewport. There is no other photography, no illustrations, no product shots, no decorative graphics. The image is the entire visual identity. Icon style is minimal and line-based (single chat bubble). The site is overwhelmingly text-dominant everywhere except the hero, where text is reduced to a single sentence beneath a constellation of stars.",
+  "similar": [
+    {
+      "why": "Same full-bleed photographic hero with a single headline floating over a dark image, wordmark as the only persistent UI element, and near-zero color saturation",
+      "business": "Apple (product launch teasers)"
+    },
+    {
+      "why": "Serif display headlines paired with restrained sans body, deep neutral palette, and a sense of editorial calm",
+      "business": "Aesop"
+    },
+    {
+      "why": "Cinema-grade dark hero with white serif typography, monospace-feel restraint, and an almost entirely achromatic interface",
+      "business": "Mubi"
+    },
+    {
+      "why": "Launching-soon pattern with centered serif headline over atmospheric photography, minimal UI, and a single subscribe form",
+      "business": "Squarespace (pre-launch states)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "4px",
+      "inputs": "4px",
+      "buttons": "4px"
+    },
+    "elementGap": "24px",
+    "sectionGap": "56px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#161616",
+      "name": "Hero Canvas",
+      "level": 0,
+      "purpose": "Full-bleed dark surface hosting the photographic hero and headline"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Light surface below the fold for form sections and footer"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Input Surface",
+      "level": 2,
+      "purpose": "Form field fills against the dark background"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 1px rgba(191,191,191,0.3)",
+      "element": "Chat Widget"
+    }
+  ],
+  "northStar": "midnight observatory over still water — a single sentence floats beneath a field of stars",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 1
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.07
+    },
+    {
+      "role": "heading-sm",
+      "size": 26,
+      "lineHeight": 1.2,
+      "letterSpacing": 4
+    },
+    {
+      "role": "heading",
+      "size": 44,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display",
+      "size": 62,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Full-Bleed Hero",
+      "role": "Atmospheric landing surface",
+      "description": "#161616 base with a photographic image filling 100vw/100vh. Headline centered vertically in Playfair Display 62px #ffffff, weight 400, normal tracking. Wordmark 'DREPUTE' pinned to top in Montserrat 700 26px #ffffff with 0.154em tracking — floats above the image as a typographic anchor."
+    },
+    {
+      "name": "Wordmark Lockup",
+      "role": "Brand identity element",
+      "description": "Montserrat 700, 26px, uppercase, #ffffff on dark or #000000 on light, letter-spacing 0.154em (4px). Centered horizontally. No accompanying logo mark — type is the mark."
+    },
+    {
+      "name": "Ghost Outlined Button",
+      "role": "Outlined call-to-action",
+      "description": "Transparent fill, 1px border in #8995a9 (slate blue) or #000000, Source Sans Pro 14px weight 700, text color matching border, 4px radius, 8px vertical / 24px horizontal padding. 2px inner border offset on focus. This is the system's only filled-like interactive treatment."
+    },
+    {
+      "name": "Minimal Link",
+      "role": "Inline navigation link",
+      "description": "Source Sans Pro 14px, no underline by default, border-bottom 1px in #7f8080 (steel) or #00a4a6 (lagoon teal) on hover. Teal border is the single chromatic moment in the entire system."
+    },
+    {
+      "name": "Top Notification Bar",
+      "role": "Slim promotional strip",
+      "description": "Full-width bar with 56px vertical padding. White background, Source Sans Pro 14px #000000 text, centered layout. Inline link and ghost button sit on the same horizontal axis."
+    },
+    {
+      "name": "Text Input Field",
+      "role": "Form input for email/name capture",
+      "description": "#ffffff fill, 1px #bfbfbf border, 4px radius, Source Sans Pro 16px #000000 text. No label — placeholder text in #a9a9a9. Focus state darkens border to #000000."
+    },
+    {
+      "name": "Subscribe Form Block",
+      "role": "Email capture below the hero",
+      "description": "Centered stack on #161616 surface. 'Subscribe' heading in Playfair Display 44px #ffffff, then a single-row input + ghost button composition. 32px gap between heading and form row."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Visual break between dark hero and light content",
+      "description": "Pure 1px #a9a9a9 horizontal line, full-width or 133px margins, no shadow or ornament. Divides the cinematic dark surface from functional light sections."
+    },
+    {
+      "name": "Chat Widget Bubble",
+      "role": "Floating support affordance",
+      "description": "Circular 48px dark surface pinned to bottom-right corner. Single light icon, no label. Floats above all content."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Workhorse sans for body, buttons, nav, inputs, and all UI microcopy; weight 700 reserved for emphasis",
+      "sizes": "14px, 16px",
+      "family": "Source Sans Pro",
+      "weight": "400, 700",
+      "lineHeight": "1.20–1.50",
+      "substitute": "Inter, IBM Plex Sans, system-ui",
+      "letterSpacing": "0.071em"
+    },
+    {
+      "role": "Display serif for hero headlines ('Launching Soon') — the single expressive type voice; weight 400 italic-leaning elegance rather than bold",
+      "sizes": "16px, 44px, 62px",
+      "family": "Playfair Display",
+      "weight": "400",
+      "lineHeight": "1.20–1.25",
+      "substitute": "Cormorant Garamond, Libre Baskerville, DM Serif Display",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Wordmark only — 'DREPUTE' set wide at 0.154em to function as a typographic constellation above the hero",
+      "sizes": "26px",
+      "family": "Montserrat",
+      "weight": "700",
+      "lineHeight": "1.20",
+      "substitute": "Oswald, Bebas Neue, Archivo Black",
+      "letterSpacing": "0.154em"
+    },
+    {
+      "role": "Custom brand secondary; deployed alongside Source Sans Pro for select links and image overlays",
+      "sizes": "14px, 16px",
+      "family": "GD Sherpa",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "Source Sans Pro (fallback for system use)"
+    },
+    {
+      "role": "Times — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "Times",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Drepute is a cinematic black-canvas teaser built around a single full-bleed photograph: a still alpine lake mirroring a starfield at midnight. The UI is deliberately invisible — no cards, no shadows, no panels. A single Playfair Display headline floats over the image while everything else is Source Sans Pro at 14–16px. The wordmark uses Montserrat 700 with extreme letter-spacing (0.154em), turning the brand name into a constellation of letters across the top. Color is almost entirely absent: pure black, white, and three grays form a five-step achromatic scale, with one deep teal (#00a4a6) appearing only as a link border. Radii are locked at 4px everywhere — no pills, no soft corners, just sharp rectangular edges. The whole site feels like a movie title card: a single image, a single sentence, and a brand name hovering above it all.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- background: #161616 (dark) / #ffffff (light)\n- text: #ffffff (on dark) / #000000 (on light)\n- border: #a9a9a9 (body) / #8995a9 (button)\n- accent: #00a4a6 (teal link border only)\n- muted text: #7f8080\n- primary action: #00a4a6 (outlined action border)\n\n**Example Component Prompts**\n1. Build the hero: full-viewport #161616 background with a full-bleed landscape photograph. Center 'Launching Soon' in Playfair Display 62px weight 400, #ffffff, normal tracking, vertically centered. Top-center wordmark 'DREPUTE' in Montserrat 700, 26px, #ffffff, letter-spacing 0.154em (4px), uppercase, 56px from top edge.\n2. Build the ghost outlined button: transparent fill, 1px #8995a9 border, 4px radius, 8px vertical and 24px horizontal padding. Text: Source Sans Pro 14px weight 700, color #8995a9, uppercase. On hover, border darkens to #000000.\n3. Build the subscribe form section: #161616 background, 56px vertical padding. Heading 'Subscribe' in Playfair Display 44px weight 400, #ffffff, centered. 32px gap below. Single horizontal row: email input (#ffffff fill, 1px #bfbfbf border, 4px radius, Source Sans Pro 16px) + ghost button (1px #8995a9 border, Source Sans Pro 14px 700, 4px radius), 24px gap between them.\n4. Build the top notification bar: full-width #ffffff strip, 56px vertical padding, centered single-line content in Source Sans Pro 14px #000000. Include an inline link with 1px #00a4a6 border-bottom on hover, and a ghost button (1px #000000 border, 4px radius, Source Sans Pro 14px 700) to the right.\n5. Build the chat widget: 48px circle, #161616 fill, 1px rgba(191,191,191,0.3) ring, fixed bottom-right with 24px margins, single white line-icon centered inside."
+    },
+    {
+      "title": "Type Pairing Logic",
+      "content": "The system uses a three-font hierarchy that must not be crossed: Playfair Display owns the emotional/editorial layer (display only, 44px+, weight 400). Source Sans Pro owns the functional layer (14–16px, weights 400/700, letter-spacing 0.071em). Montserrat owns the identity layer (wordmark only, 26px, weight 700, letter-spacing 0.154em). GD Sherpa is a custom brand face that may substitute into body contexts where Source Sans Pro is specified. Never use Montserrat for body text and never use Source Sans Pro for display."
+    },
+    {
+      "title": "Radius Discipline",
+      "content": "All corners are 4px. This is non-negotiable. No 8px, no 12px, no 9999px pills, no 0px hard edges. The 4px is the system's only concession to softness and it appears uniformly across buttons, inputs, and any future card surfaces. A new component that breaks this radius will read as foreign to the system."
+    }
+  ],
+  "elevationPhilosophy": "The system is intentionally shadowless. All hierarchy is achieved through surface color shifts (black → dark → white), typographic weight, and whitespace. The only box-shadow detected is a hairline ring on the chat widget. Elevation is communicated by darkness, not depth."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "REG-091",
+  "kind": "fix",
+  "title": "WordPress shared contact form: a message is mailed only to a configured recipient, never to the site's admin address",
+  "pr": 879,
+  "area": "wordpress-theme/contact",
+  "cms": ["wp"],
+  "needs": ["php"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-wordpress-theme/test/tracy-contact.test.mjs (needs a local php, or a docker daemon for the php container).",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail', '# skipped' lines.",
+    "S3: Run: grep -c \"get_option( 'admin_email' )\" packages/cms/tracy-wordpress-theme/src/tracy/functions.php and record the number."
+  ],
+  "expect": [
+    "S1 exits 0.",
+    "'# fail 0' and '# skipped 0'; '# pass' equals '# tests' and is at least 73 (one discovery case plus eight cases for each of the nine themes under src/).",
+    "S3 prints 0: the shared handler no longer reads admin_email."
+  ],
+  "selectors": {
+    "handler": "tracy_contact_submit in packages/cms/tracy-wordpress-theme/src/*/functions.php (action admin_post[_nopriv]_tracy_contact)",
+    "recipient": "option tracy_contact_to, filter tracy_contact_to",
+    "states": "redirect ?contact=sent|failed|invalid#contact-form"
+  },
+  "evidence": "TCH #811 F-S6-010: with tracy_contact_to unset a valid submit called wp_mail to admin_email (tracy-agent@tracy.ai on a site Tracy built) and answered contact=sent; on base 81e0a5473 the test file fails 45 of 73 cases.",
+  "fence": "tracy_contact_submit refuses with contact=failed and sends nothing unless the stored or filtered recipient is a string that is_email() accepts; wp_mail returning false or throwing is failed too. Run in real PHP against a stub of WordPress: no SMTP, database or browser.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-091.mjs"]
+  }
+}

@@ -1,0 +1,30 @@
+@theme {
+  /* Colors */
+  --color-midnight-ink: #000000;
+  --color-pure-canvas: #ffffff;
+  --color-graphite: #333333;
+  --color-slate: #666666;
+  --color-ash: #999999;
+  --color-fog: #b3b3b3;
+  --color-silver: #cccccc;
+  --color-warm-sand: #d9c58b;
+  --color-party-pink: #f8c4ff;
+  --color-sky-periwinkle: #96c4ff;
+  --color-spearmint: #85dadc;
+  --color-midnight-blue: #001666;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-partiful-display-medium: 'Partiful Display Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan: 'TWK Lausanne Pan', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sfnsdisplay-sfnstext: '.SFNSDisplay / .SFNSText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-550: 'TWK Lausanne Pan 550', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-400: 'TWK Lausanne Pan 400', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-700: 'TWK Lausanne Pan 700', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sfnstext: '.SFNSText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sfnsdisplay-semibold: '.SFNSDisplay-Semibold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-600: 'TWK Lausanne Pan 600', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-650: 'TWK Lausanne Pan 650', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-500: 'TWK Lausanne Pan 500', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne-pan-850: 'TWK Lausanne Pan 850', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

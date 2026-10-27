@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-void-black: #0e1012;
+  --color-deep-charcoal: #15171b;
+  --color-gunmetal: #1c1f24;
+  --color-graphite: #23262d;
+  --color-steel: #333943;
+  --color-pewter: #444d5a;
+  --color-slate: #566171;
+  --color-ash: #8b96aa;
+  --color-fog: #a0aaba;
+  --color-silver: #bbc2ce;
+  --color-cloud: #d5dae2;
+  --color-white: #ffffff;
+  --color-signal-blue: #007afc;
+  --color-deep-signal: #0062ca;
+  --color-map-green: #228a56;
+
+  /* Typography — Font Families */
+  --font-cera-pro: 'Cera Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

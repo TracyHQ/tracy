@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-lime-voltage: #c9fe6e;
+  --color-concrete: #f1f1f1;
+  --color-ink: #121212;
+  --color-charcoal-edge: #252525;
+  --color-fog: #777777;
+  --color-graphite: #1a1a1a;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-laygrotesk: 'LayGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

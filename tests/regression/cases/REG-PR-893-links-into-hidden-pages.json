@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-893-links-into-hidden-pages",
+  "kind": "fix",
+  "title": "Apply leaves no link or menu entry leading to a page it hid (Joomla aliases and slot links, WordPress hrefs)",
+  "pr": 893,
+  "area": "sites/apply",
+  "cms": ["jo", "wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/brief-wp-residue.test.mjs packages/cms/tracy-seeder/test/plan-dead-links.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the results of the cases named \"a menu entry that only leads to a page the trim took off or the customer unticked goes with it\", \"a link the site will not take off is set aside by name and the others still go\", \"a page hidden after the trim is named to the same rule\" and the WordPress case starting \"a link in a page or a part that leads to a page the sweep drafts\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests'.",
+    "All named cases are 'ok': alias/link menu entries leading only to an item the trim took off or the customer unticked are unpublished in the tidy batch (a parent with live children is kept); contract link slots into items the tidy-up took off (the judge hides none since PR #1040) are taken off through empty_links where the site marks them emptyLink (others are left and said, never moved to the contact page; rule changed 08/10/2026, TCH #1013), with a set-aside retry; on WordPress (rule changed 08/10/2026, TCH #1013), a button or a block url into a drafted page is taken off (a slot's block hidden), a link in a sentence keeps its words without the anchor, and nothing is sent to the contact page."
+  ],
+  "selectors": {
+    "joomla": "strandedMenuItems in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js; takeLinksOff, writeContract in joomla.js; deadLinks(state, dataDir, {also, back, trim}) in packages/cms/tracy-seeder/src/plan-joomla-contract.mjs",
+    "wordpress": "sweepWordPress in apps/tracy-web/src/sites/brief-engines/wp-residue.js; linksOff in wp-unlink.js"
+  },
+  "evidence": "05/10/2026 local stand, Tracy Business j6, en-gb + vi-vn, Apply: the footer's 'Our bakes' and 'News' entries (aliases of items 602/603 the demo trim unpublished) and their vi copies led to 404: 4 dead in-site links on a 20-page crawl. After the fix: 0 (menuStranded 2, linksMoved 2 on each run).",
+  "fence": "Only links and alias entries whose target Apply itself hid are touched; a slot a person changed since the write is left; refusals are noted, never retried without end.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/brief-wp-residue.test.mjs",
+      "packages/cms/tracy-seeder/test/plan-dead-links.test.mjs"
+    ],
+    "tests": [
+      "a menu entry that only leads to a page the trim took off or the customer unticked goes with it",
+      "a link the site will not take off is set aside by name and the others still go",
+      "a page hidden after the trim is named to the same rule",
+      "a link in a page or a part that leads to a page the sweep drafts"
+    ]
+  }
+}

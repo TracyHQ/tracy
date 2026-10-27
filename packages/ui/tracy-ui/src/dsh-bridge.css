@@ -1,0 +1,67 @@
+/* Mapping table dsh token ← Tracy token. NO LONGER A STYLESHEET TO LOAD.
+
+   Until 02/09/2026 this file was a stylesheet: it declared `--dsw-alias-*` as `var(--<Tracy
+   token>)`, and `@tracy/dsh-tokens` attached it together with `tokens.css` to the dsh page. Measured on lane
+   `tchwp2august` on 03/09: that created a CSS VARIABLE CYCLE — `tokens.css` reads the aliases, this file
+   declares the aliases from the tokens — and CSS computes every variable in the cycle as EMPTY. Light mode
+   looked fine because the canvas is white anyway; dark mode had a white page body, black text, a black sidebar.
+
+   Since 03/09 it is DATA: `@tracy/dsh-brand/scripts/gen-palette.mjs` reads this table, takes the
+   fallbacks in `tokens.css` as the light/dark values, and hands them to dsh's `ctx.theme.overrideTokens`
+   as constants. No `var()` reaches the browser, so there is no cycle to compute.
+
+   The syntax is still CSS on purpose: `scripts/check-dsh-tokens.ts` scans the `--dsw-*` names here and
+   catches typos; a wrong name in this table is a non-existent alias that silently does nothing.
+
+   RULES OF THE TABLE
+   - Left side: a REAL dsh token (alias or specific). The full list of 78 aliases + 11 specifics is in
+     `vendor/tracy/deepseek-harness/packages/client/ui-theme/src/styles/design-platform.css`.
+   - Right side: exactly `var(--<Tracy token>)`, and that token must exist in `tokens.css` — the script
+     stops otherwise.
+   - Every line added is one more place that can be wrong without anyone noticing: add one only after
+     SEEING it on a lane. What is not mapped (mask, scrollbar, markdown, button variants) keeps dsh's values.
+   - The accent colour (`brand-*`, `button-primary-*`) is NOT here: the user picks it in Settings and
+     `src/shared/theme.mjs` computes it at runtime. */
+html body,
+html body[data-ds-dark-theme] {
+  /* Backgrounds, following dsh's elevation scale. */
+  --dsw-alias-bg-base: var(--background);
+  --dsw-alias-bg-layer-1: var(--card);
+  --dsw-alias-bg-layer-2: var(--muted);
+  --dsw-alias-bg-layer-3: var(--accent);
+  --dsw-alias-bg-overlay: var(--popover);
+
+  /* Text. dsh has three levels, Tracy two — secondary and tertiary both take `--muted-foreground`. */
+  --dsw-alias-label-primary: var(--foreground);
+  --dsw-alias-label-secondary: var(--muted-foreground);
+  --dsw-alias-label-tertiary: var(--muted-foreground);
+  --dsw-alias-label-caption: var(--muted-foreground);
+  --dsw-alias-label-dimmed: var(--muted-foreground);
+
+  /* Borders: dsh has four levels, Tracy has `--border` and `--input`. */
+  --dsw-alias-border-l1: var(--border);
+  --dsw-alias-border-l2: var(--input);
+  --dsw-alias-border-l3: var(--border);
+
+  /* Interaction: hover and active for rows, tabs, ghost buttons. */
+  --dsw-alias-interactive-bg-hover: var(--accent);
+  --dsw-alias-interactive-bg-active: var(--muted);
+
+  /* States. */
+  --dsw-alias-state-error-primary: var(--destructive);
+  /* dsh's "business" accent (active folder, links in the tree) rides the accent, not a fixed blue. */
+  --dsw-alias-state-business-primary: var(--primary);
+  --dsw-alias-state-success-primary: var(--success);
+
+  /* Raised surfaces. */
+  /* No `--dsw-alias-toast-bg` line, for the same reason as the tooltip: dsh prints a toast's label
+     in static white (`--dsw-alias-toast-label`) on its own dark surface in both themes. Bridged to
+     `--popover` it was white on white, so every dsh notice was blank (measured 07/10/2026 on
+     "/help does not accept attachments"; the line dated from 30/08). */
+  /* No `--dsw-alias-tooltip-bg` line: dsh prints tooltip labels in static white, so its own dark
+     bubble must stay. Bridged to `--popover` it was white on white (29/09/2026). */
+
+  /* Sidebar: dsh fills the left column with its own token, not through the bg scale — without this line
+     the left column keeps dsh's colour while the rest follows Tracy (measured 03/09). */
+  --dsw-specific-sidebar-fill: var(--sidebar);
+}

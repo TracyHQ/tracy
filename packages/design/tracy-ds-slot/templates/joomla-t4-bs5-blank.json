@@ -1,0 +1,366 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/t4-bs5-blank",
+  "minVersion": {
+    "quickstart/t4-framework/j6": "1.0.1",
+    "quickstart/ijoomla-com-guru-pro/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/t4-framework/j6": "1.0.2",
+    "quickstart/ijoomla-com-guru-pro/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/t4-framework/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.fs-1.mt-0",
+    "heading": "h2.fs-1.mt-0",
+    "body": "div.card.bg-light div.card-body p",
+    "button-primary": "a.btn.btn-primary",
+    "card": "div.card.bg-light",
+    "container": "div.t4-section.t4-sideshow div.t4-section-inner.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 40px",
+    "heading": "first section heading: 40px",
+    "body": "the running text of the repeated cards (discover.mjs took the hero p.lead, a lead text Bootstrap sets at 300 itself)",
+    "button-primary": "first filled, coloured call to action: rgb(10, 88, 202)",
+    "card": "repeated rounded box ×6",
+    "container": "first content container, max-width 1320px",
+    "displayPhone": "the same heading at 390 on the published release: 27.85px"
+  },
+  "keepScopes": [
+    ".t4-section-5",
+    ".t4-footnav",
+    ".t4-footer",
+    ".sub-intro",
+    ".bg-white",
+    ".bg-light",
+    ".features-content",
+    ".uk-panel-box"
+  ],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#212529",
+    "--fg-2": "#212529",
+    "--accent": "#0a58ca",
+    "--accent-hover": "#084298",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212529",
+    "--meta": "#6c757d",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#666666",
+    "--font-display": "\"Inter\", sans-serif",
+    "--font-body": "\"Inter\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#0a58ca",
+      "accent-hover": "#084298",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f8f9fa",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#0a58ca",
+      "accent-on": "#ffffff",
+      "surface-warm": "#212529"
+    },
+    {
+      "accent": "#0a58ca"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "meta": "#6c757d",
+      "border": "#ced4da",
+      "surface-warm": "#212529",
+      "surface": "#f8f9fa",
+      "border-soft": "#e9ecef",
+      "accent": "#0a58ca"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (53 line colours, 52 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.fs-1.mt-0",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.card.bg-light", ".card"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "bodyFace": ["body"],
+    "eyebrow": [".sec-sub-title", ".badge"],
+    "cardLike": [".guru-course-item-inner"],
+    "pill": [".sec-sub-title"],
+    "inkImages": [".brand-list img"]
+  },
+  "followRules": {
+    ".item-readmore a": {
+      "color": "accent-text"
+    },
+    "h3.fs-sm.text-uppercase": {
+      "color": "accent-text!"
+    },
+    ".badge.badge-primary": {
+      "color": "accent-on"
+    }
+  },
+  "followNote": "Re-measured 12/10/2026 with every heading and text judged: the small uppercase section eyebrows (h3.fs-sm.text-uppercase) paint Bootstrap's literal orange through an !important utility (#fd7e14, 2.57:1 on the template's white, 2.25:1 on MotherDuck's cream): they take the readable accent; iJoomla Guru's primary badge keeps white words on the accent fill (1.94-2.56:1 on Moxie's, MotherDuck's and Toggl Track's light accents): its words take the system's text on its accent (accent-on). the article modules' Read More links paint --t4-blue, which the 1.0.1 stylesheet reads as the accent (a fill): MotherDuck's light blue read 1.70:1 on its cream page (re-measured 11/10/2026); they take the readable accent. The kept .bg-white/.bg-light bands' .border lines read --t4-border-color, resolved at :root with the system's border-soft: keepDefaults gives #e9ecef back",
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 20 tried (byte 5636); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#6c757d",
+      "uses": 29,
+      "kind": "custom",
+      "role": "meta",
+      "near": "#6c757d",
+      "distance": 0
+    },
+    {
+      "hex": "#ced4da",
+      "uses": 29,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 18
+    },
+    {
+      "hex": "#212529",
+      "uses": 25,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#0a58ca",
+      "uses": 4,
+      "kind": "custom",
+      "role": "accent",
+      "near": "#0a58ca",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "utilitiesImportant": true,
+  "utilitiesNote": "the demo content sizes its display and section headings with .fs-1 and shapes its buttons and cards with .rounded-pill / .rounded-4 — Bootstrap 5 utilities, each !important: the slot's sizes and shapes are written !important here (src/joomla.mjs), at :root×6 specificity",
+  "runtime": {
+    "--body-bg-color": "var(--ds-c-bg)",
+    "--body-text-color": "var(--ds-c-fg)",
+    "--body-link-color": "var(--ds-c-accent-text)",
+    "--body-link-hover-color": "var(--ds-c-accent-text-hover)",
+    "--color-primary": "var(--ds-c-accent)",
+    "--color-secondary": "var(--ds-c-muted)",
+    "--color-success": "var(--ds-c-success)",
+    "--color-info": "var(--ds-c-accent)",
+    "--color-warning": "var(--ds-c-warn)",
+    "--color-danger": "var(--ds-c-danger)",
+    "--color-light": "var(--ds-c-surface)",
+    "--color-dark": "var(--ds-c-fg)",
+    "--mainnav-text-color": "var(--ds-c-fg)",
+    "--mainnav-link-color": "var(--ds-c-fg)",
+    "--mainnav-link-hover-color": "var(--ds-c-accent-text)",
+    "--mainnav-link-active-color": "var(--ds-c-accent-text)",
+    "--footer-bg-color": "var(--ds-c-surface)",
+    "--footer-text-color": "var(--ds-c-meta)",
+    "--footer-link-color": "var(--ds-c-muted)",
+    "--footer-link-hover-color": "var(--ds-c-fg)"
+  },
+  "runtimeNote": "the family runtime with one change: T4 Blank's theme.tpl.css paints TEXT with --color-secondary (.text-secondary, !important; the guru-pro home page's feature lines), so secondary takes the readable muted grey, not the surface fill (measured 11/10/2026: under MotherDuck .text-secondary went #ffffff on #ffffff)",
+  "keepNote": ".t4-section-5, .t4-footnav, .t4-footer: inverse bands of the t4-framework home page (discover.mjs). .bg-white and .bg-light: Bootstrap 5 paints them !important through literal RGB triplets (--t4-white-rgb, --t4-light-rgb) the tokenizer cannot reach, so under a dark system they stay light and must keep their own text (guru-pro: its courses band and the hero's .sub-intro box). .features-content: guru-pro's custom.css paints it rgba(255,255,255,0.95) from 992px, which no hex palette names. Measured 11/10/2026: without these, under Moxie and Toggl Track the courses heading and the feature lines were light on light. 15/10/2026 (v10 inner measure, guru-pro /index.php/course/category-list/gurupcategs): iJoomla Guru's cards (.uk-panel-box: white from its own guru.css, var(--gru-panel-box-bg) #fff, words #444 from its uikit sheet, both on #guru-component, which no release of the template tokenizes) stayed white under Moxie while their title links took the page's accent made for black, #84acfb on #ffffff 2.26:1 where the template reads 6.44:1, desktop and phone. They are kept like the light Bootstrap boxes, the template's link colour given back inside (keepDefaults)",
+  "keepText": [".sub-intro", ".bg-white", ".bg-light", ".features-content"],
+  "keepTextNote": "these kept bands paint no text colour of their own: each takes the template's page text back (keepRules), else under a dark system their headings inherit the worn light text on their light fill",
+  "alsoRelease": "quickstart/ijoomla-com-guru-pro/j6@1.0.1",
+  "applies": "the T4 Blank template (t4_bs5_blank, JoomlArt, GNU/GPLv3) that two quickstarts install: t4-framework and ijoomla-com-guru-pro. One contract for both (tracy-web keys a contract by the template element); every role selector finds its element on both home pages",
+  "sideRules": {
+    "dark": {
+      ".navbar-brand img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".t4-masthead-inner": {
+        "background-color": "color-mix(in srgb, var(--ds-c-surface) 95%, var(--ds-c-fg)) !important"
+      }
+    },
+    "light": {
+      ".t4-masthead-inner": {
+        "background-color": "color-mix(in srgb, var(--ds-c-surface) 95%, var(--ds-c-fg)) !important"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page the header logo picture (T4 Blank's blue cube and dark name, iJoomla Guru's grey iJoomla.com, both drawn for the template's white header) is inverted with its hue kept: it sank into a dark system's header (seen by eye 12/10/2026 under Moxie and Toggl Track); 14/10/2026 (visual review, round 3): the inner pages’ title band (.t4-masthead-inner, the template’s #f8f9fa a step off its white page) took the system’s surface, which under a system whose surface is its page (Mailchimp: both white) is the page itself: a band that is not there. On both sides it is the surface moved 5% toward the system’s text, a step off the page as the template draws it; its words (the fill’s, painted text) read on it as on the surface",
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-t4-bs5-blank, tasks/evidence/ds-remeasure-6-2026-10-11/joomla-t4-bs5-blank-guru): 12/12 on every release measured, controls 0 differences, lowest text 3.29:1 (the template's own text, unchanged), 56% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on both 1.0.1 releases (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-t4-bs5-blank, …-guru): t4-framework 12/12 (follows 66%-100%), ijoomla-com-guru-pro 12/12 (follows 54%-94%), controls 0 differences, the lowest text is the template's own footer link (#6c757d on #212529, 3.29:1, the same on its default page), screenshots read by a person. The new probe first found the article modules' Read More links in MotherDuck's light blue on its cream page (1.70:1): they take the readable accent (followRules). First measured 11/10/2026 in tasks/evidence/ds-contracts-batch4-2026-10-11; untokenized (1.0.0) it FAILS: the Bootstrap .bg-light bands stay light under a dark system",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-muted)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#212529",
+    "--body-link-color": "#0a58ca",
+    "--body-link-hover-color": "#2563eb",
+    "--color-primary": "#2563eb",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#495057",
+    "--mainnav-link-color": "#495057",
+    "--mainnav-link-hover-color": "#0a58ca",
+    "--mainnav-link-active-color": "#0a58ca",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#ffffff"
+  },
+  "keepColors": {
+    ".t4-footnav": "rgb(108, 117, 125)",
+    ".t4-footer": "rgb(108, 117, 125)",
+    ".sub-intro": "rgb(33, 37, 41)",
+    ".bg-white": "rgb(33, 37, 41)",
+    ".bg-light": "rgb(33, 37, 41)",
+    ".features-content": "rgb(33, 37, 41)"
+  },
+  "bands": {
+    ".t4-footnav": {
+      "ground": "#212529",
+      "texts": ["#6c757d"],
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#212529",
+      "texts": ["#6c757d"],
+      "important": true
+    },
+    ".sub-intro": {
+      "ground": "#ffffff",
+      "texts": ["#212529", "#6c757d"],
+      "important": true
+    },
+    ".bg-white": {
+      "ground": "#ffffff",
+      "texts": ["#212529", "#6c757d"],
+      "important": true
+    },
+    ".bg-light": {
+      "ground": "#f8f9fa",
+      "texts": ["#212529"],
+      "paint": {
+        ".sec-sub-title": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".features-content": {
+      "ground": "#ffffff",
+      "texts": ["#212529"],
+      "paint": {
+        ".sec-sub-title": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".t4-section.t4-home-section-3.bg-success": {
+      "ground": "#198754",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".t4-section-5": {
+      "ground": "#0a58ca",
+      "texts": ["#f8f9fa"],
+      "important": true
+    },
+    ".t4-masthead-inner": {
+      "ground": "#f8f9fa",
+      "texts": ["#212529"],
+      "important": true,
+      "fill": true,
+      "kind": "panel",
+      "words": [".t4-masthead-title", ".t4-masthead-description"]
+    },
+    ".uk-panel-box": {
+      "ground": "#ffffff",
+      "texts": ["#444444", "#0a58ca"],
+      "important": true,
+      "paint": {
+        ".uk-panel-title a": {
+          "color": "accent"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 14/10/2026 (visual review): the inner pages’ page-title band (.t4-masthead-inner, /index.php/all-layouts/new-layouts/blog-grid-layout) is a light grey #f8f9fa that T4 paints as a literal; its title and description followed a dark system to its light text and sat on the grey band (Moxie cream on #f8f9fa). It is a light panel fill now: it wears the system’s surface (dark on a dark page, light on a light one) and its words are the fill’s; the drafter found no new block on these pages; 15/10/2026: Guru's cards (.uk-panel-box) are a light panel band: they wear the system's surface on a light page and its light text colour on a dark one (Moxie's #f4efd4), Guru's own words and links kept (#444444 8.42:1, #0a58ca 5.56:1 there), and their title links (.uk-panel-title a) take the system's accent made readable on that ground (Moxie #526b9c, 4.60:1); important, since guru.css paints the card from #guru-component",
+  "reviewV8Note": "15/10/2026 (look review v8): the \"Trust by\" logos are one-ink pictures on white at 40% opacity: under a dark system they are inverted (inkImages)"
+}

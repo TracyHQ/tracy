@@ -1,0 +1,300 @@
+---
+title: Port WordPress Plugins
+description: Choose an EmDash plugin format and map WordPress hooks, storage, routes, and admin UI.
+---
+
+import { Aside, Steps, TabItem, Tabs } from "@astrojs/starlight/components";
+
+Port a WordPress plugin by separating its content behavior, stored data, HTTP routes, and user interface. Then choose the EmDash plugin format that supports those requirements.
+
+## Check whether the plugin belongs in EmDash
+
+Good candidates own behavior that is independent of WordPress core, such as content validation, external API calls, background processing, custom stored records, settings, or an admin tool.
+
+Do not port a plugin whose only purpose is to implement a WordPress concern that Astro or EmDash already replaces. Examples include PHP page caching, WordPress rewrite rules, theme template selection, or modifications to WordPress core globals.
+
+For a plugin that defines a custom post type or fields but has little runtime behavior, create an EmDash collection and seed file instead of a plugin.
+
+## Choose sandboxed or native
+
+Start with [Choosing a plugin format](/plugins/creating-plugins/choosing-a-format/). The two formats share hook names and the `PluginContext` APIs, but their source packages are different.
+
+| Requirement | Sandboxed | Native |
+| --- | --- | --- |
+| Registry installation | Yes | No |
+| Isolated runtime | Yes, with a configured runner | No |
+| Hooks, routes, KV, structured storage | Yes | Yes |
+| Block Kit admin pages | Yes | Yes |
+| Custom React admin components | No | Yes |
+| Astro components for public rendering | No | Yes |
+| Raw page fragments | No | Yes |
+
+Choose native only when the port needs a native-only build-time or user-interface surface.
+
+## Sandboxed package format
+
+`emdash-plugin init` creates the current sandboxed format:
+
+```text title="Sandboxed plugin"
+my-plugin/
+├── emdash-plugin.jsonc
+├── src/
+│   └── plugin.ts
+├── tests/
+│   └── plugin.test.ts
+├── package.json
+└── tsconfig.json
+```
+
+The manifest contains identity, publisher, capabilities, allowed hosts, and storage declarations. Version normally comes from `package.json`.
+
+The following manifest declares one indexed storage collection and the capability required by `content:afterSave`:
+
+```jsonc title="emdash-plugin.jsonc"
+{
+  "$schema": "./node_modules/@emdash-cms/plugin-cli/schemas/emdash-plugin.schema.json",
+  "slug": "read-time",
+  "publisher": "did:plc:abc123def456",
+  "license": "MIT",
+  "author": { "name": "Example Author" },
+  "security": { "email": "security@example.com" },
+  "capabilities": ["content:read"],
+  "allowedHosts": [],
+  "storage": {
+    "calculations": { "indexes": ["contentId", "updatedAt"] }
+  }
+}
+```
+
+`src/plugin.ts` default-exports a plain object typed with `SandboxedPlugin`. Sandboxed hook handlers use `{ handler }`; sandboxed route handlers receive `(routeCtx, ctx)`:
+
+```ts title="src/plugin.ts"
+import type { SandboxedPlugin } from "emdash/plugin";
+
+export default {
+  hooks: {
+    "content:afterSave": {
+      handler: async (event, ctx) => {
+        await ctx.storage.calculations.put(event.content.id, {
+          contentId: event.content.id,
+          updatedAt: new Date().toISOString(),
+        });
+      },
+    },
+  },
+  routes: {
+    recent: {
+      handler: async (_routeCtx, ctx) => {
+        const result = await ctx.storage.calculations.query({
+          orderBy: { updatedAt: "desc" },
+          limit: 10,
+        });
+        return { items: result.items };
+      },
+    },
+  },
+} satisfies SandboxedPlugin;
+```
+
+The route is available at `/_emdash/api/plugins/read-time/recent`. A storage field must be declared as an index before a query can filter or sort by it.
+
+Build the package with `emdash-plugin build`; do not add a hand-written `src/index.ts` descriptor to this format. Read [Your first sandboxed plugin](/plugins/creating-plugins/your-first-plugin/) for the generated `package.json`, build output, and site registration.
+
+## Native package format
+
+A native package exports both a descriptor factory for `astro.config.mjs` and a runtime factory built with `definePlugin()`. Optional admin and Astro entrypoints are separate package exports.
+
+```text title="Native plugin"
+my-native-plugin/
+├── src/
+│   ├── index.ts
+│   ├── admin.tsx
+│   └── astro/
+│       └── index.ts
+├── package.json
+└── tsconfig.json
+```
+
+The following reduced native entrypoint shows the two required pieces:
+
+```ts title="src/index.ts"
+import { definePlugin } from "emdash";
+import type { PluginDescriptor } from "emdash";
+
+export interface ReadTimeOptions {
+  wordsPerMinute?: number;
+}
+
+export function readTimePlugin(options: ReadTimeOptions = {}): PluginDescriptor {
+  return {
+    id: "read-time",
+    version: "0.1.0",
+    format: "native",
+    entrypoint: "@example/plugin-read-time",
+    capabilities: ["content:read"],
+    options,
+  };
+}
+
+export function createPlugin(options: ReadTimeOptions = {}) {
+  return definePlugin({
+    id: "read-time",
+    version: "0.1.0",
+    capabilities: ["content:read"],
+    admin: {
+      settingsSchema: {
+        wordsPerMinute: {
+          type: "number",
+          label: "Words per minute",
+          default: options.wordsPerMinute ?? 200,
+          min: 1,
+        },
+      },
+    },
+    hooks: {
+      "content:afterSave": async (event, ctx) => {
+        ctx.log.info("Content saved", { id: event.content.id });
+      },
+    },
+  });
+}
+
+export default createPlugin;
+```
+
+Native hook handlers can be functions directly. Native route handlers receive one combined context argument. Keep the descriptor and runtime copies of `id`, `version`, capabilities, and entrypoints aligned.
+
+Read [Your first native plugin](/plugins/creating-native-plugins/your-first-native-plugin/) before adding React admin pages, Portable Text renderers, or page fragments.
+
+## Map WordPress behavior
+
+### Hooks
+
+Map the intent of a WordPress action or filter, not only its name:
+
+| WordPress | EmDash |
+| --- | --- |
+| `register_activation_hook()` | `plugin:install` for first installation, or `plugin:activate` for enablement |
+| `register_uninstall_hook()` | `plugin:uninstall` |
+| `wp_insert_post_data` | `content:beforeSave` |
+| `save_post` | `content:afterSave` |
+| `before_delete_post` | `content:beforeDelete` |
+| `deleted_post` | `content:afterDelete` |
+| `wp_handle_upload_prefilter` | `media:beforeUpload` |
+| `add_attachment` | `media:afterUpload` |
+
+Hook events have their own typed shapes. Check the [hook reference](/plugins/creating-plugins/hooks/) before translating WordPress callback arguments.
+
+Content hooks that receive entry data require `content:read`. Add capabilities according to the APIs the port calls:
+
+| Capability | API made available |
+| --- | --- |
+| `content:read` | Read content and register content hooks that expose entry data |
+| `content:write` | Create, update, publish, or delete content; also implies content read access |
+| `media:read` | Read media records |
+| `media:write` | Create or update media; also implies media read access |
+| `network:request` | Use `ctx.http` for the hosts listed in `allowedHosts` |
+
+### Options and custom tables
+
+Use `ctx.settings` for user configuration and `ctx.kv` for small internal values. Both stores are isolated by plugin. Declare credentials as `secret` fields in `admin.settingsSchema` so EmDash encrypts them.
+
+Use declared `ctx.storage.<collection>` collections for queryable plugin records. The storage declaration belongs in `emdash-plugin.jsonc` for a sandboxed plugin and in `definePlugin()` for a native plugin. Do not open the EmDash database or interpolate SQL from plugin code.
+
+The following comparison ports one option value without exposing WordPress globals to the new plugin:
+
+<Tabs>
+  <TabItem label="WordPress">
+
+```php
+$api_key = get_option('read_time_api_key', '');
+update_option('read_time_api_key', $new_api_key);
+```
+
+  </TabItem>
+  <TabItem label="EmDash">
+
+```ts
+import type { PluginContext } from "emdash/plugin";
+
+export async function saveApiKey(ctx: PluginContext, newApiKey: string) {
+  await ctx.settings.set("apiKey", newApiKey);
+}
+
+export async function readApiKey(ctx: PluginContext) {
+  return await ctx.settings.get<string>("apiKey") ?? "";
+}
+```
+
+  </TabItem>
+</Tabs>
+
+For a WordPress custom table, identify the fields used for filtering and ordering before declaring storage. The following sandboxed manifest fragment indexes both fields used by the query:
+
+```jsonc
+"storage": {
+  "jobs": { "indexes": ["status", "createdAt"] }
+}
+```
+
+The runtime can then store and query job records:
+
+```ts
+await ctx.storage.jobs.put("job-123", {
+  status: "pending",
+  createdAt: new Date().toISOString(),
+});
+
+const pending = await ctx.storage.jobs.query({
+  where: { status: "pending" },
+  orderBy: { createdAt: "asc" },
+  limit: 50,
+});
+```
+
+Declare both `status` and `createdAt` as indexes in the manifest or native storage definition before running that query.
+
+### REST endpoints
+
+Map a WordPress REST route to a plugin route. EmDash mounts it at `/_emdash/api/plugins/<plugin-id>/<route-name>`. Define an `inputSchema` when the route accepts input, and return JSON-serializable data.
+
+### Settings and admin pages
+
+Sandboxed plugins describe admin pages with [Block Kit](/plugins/creating-plugins/block-kit/) and read or write values through routes and KV. They do not ship React into the admin application.
+
+Native plugins can use `admin.settingsSchema` for a generated form. Use an `adminEntry` package export for custom React pages, widgets, field widgets, or list columns.
+
+### Files and media
+
+Use the media APIs for uploaded or generated files. Sandboxed plugins do not have filesystem access. Native plugins share the host process, but writing deployment-local files is not a portable storage strategy.
+
+## Port the plugin
+
+<Steps>
+
+1. Inventory WordPress hooks, options, custom tables, cron jobs, REST routes, admin pages, blocks, shortcodes, and external hosts.
+
+2. Remove behavior that belongs to Astro routing, the EmDash content model, or the deployment platform.
+
+3. Choose the sandboxed or native package format. Record every capability and allowed host the remaining behavior needs.
+
+4. Define KV keys and structured storage collections. Add indexes for every field used by `where` or `orderBy`.
+
+5. Port one observable behavior at a time. Test the hook or route with representative content and failure cases.
+
+6. Add Block Kit or native admin UI only after the underlying routes and storage behavior work.
+
+7. Test installation, upgrade, activation, deactivation, uninstall with and without data deletion, and capability changes.
+
+</Steps>
+
+<Aside type="caution">
+  A native port runs with the host site's process privileges. Capability declarations still gate the provided `PluginContext`, but they do not isolate native JavaScript from environment variables, direct network calls, or the event loop.
+</Aside>
+
+## Next steps
+
+- [Sandboxed plugin manifest](/plugins/creating-plugins/manifest/) for the trust contract and package metadata.
+- [Capabilities](/plugins/creating-plugins/capabilities/) for access to content, media, network hosts, and hooks.
+- [Storage](/plugins/creating-plugins/storage/) for KV and indexed collections.
+- [React admin pages](/plugins/creating-native-plugins/react-admin/) for native-only UI.

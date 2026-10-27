@@ -1,0 +1,317 @@
+{
+  "dos": [
+    "Use IBM Plex Serif exclusively for display-level headlines to create a sophisticated, literary feel.",
+    "Rely on surface color shifts (`Deep Space` page, `Surface` cards) and 1px `Crater` borders for elevation.",
+    "Reserve the `Cosmic Lilac` color for primary, high-value calls to action.",
+    "Incorporate the atmospheric, painterly illustration style for hero sections to set the mood.",
+    "Maintain generous vertical spacing (96px+) between content sections for a calm, spacious rhythm.",
+    "Use a subtle grid pattern on the background of key container cards like testimonials.",
+    "Ensure all interactive elements have a clear focus state, typically using `Supernova` (#a05fcf) as a highlight border or ring."
+  ],
+  "tags": [
+    "dark-mode",
+    "serif-headings",
+    "illustrative",
+    "single-accent-color",
+    "minimalist-ui",
+    "developer-focused",
+    "atmospheric",
+    "high-contrast"
+  ],
+  "donts": [
+    "Don't use traditional box-shadows. The system's depth comes from color and borders.",
+    "Don't use serif fonts for body copy, buttons, or any UI controls.",
+    "Don't use the brand purples for large blocks of text.",
+    "Don't make layouts feel dense or rushed. Prioritize breathing room.",
+    "Don't use bright, saturated colors outside the defined purple accent and semantic palette.",
+    "Don't use photography, especially lifestyle photos. The visual language is illustrative and product-focused.",
+    "Don't create buttons or cards with sharp corners; use the established `8px` and `12px` radii."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#13111c",
+      "name": "Deep Space",
+      "role": "Primary page background.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1a191f",
+      "name": "Surface",
+      "role": "Card backgrounds, secondary surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#33323",
+      "name": "Crater",
+      "role": "Borders, UI dividers, subtle background elements.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0d0c14",
+      "name": "Black Hole",
+      "role": "Darkest UI components, code blocks.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f7f8",
+      "name": "Starlight",
+      "role": "Primary text, active navigation, icons.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d0cfd2",
+      "name": "Starlight Dim",
+      "role": "Subheadings, less prominent text.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a0ab",
+      "name": "Comet",
+      "role": "Body copy, placeholder text, inactive-state UI.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#868593",
+      "name": "Asteroid",
+      "role": "Helper text, metadata, disabled states.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#553f83",
+      "name": "Cosmic Lilac",
+      "role": "Primary CTA buttons — a calm but distinct call to action against the dark backdrop.",
+      "group": "brand"
+    },
+    {
+      "hex": "#a05fcf",
+      "name": "Supernova",
+      "role": "Focus rings, active state borders, UI highlights — a brighter violet for interactive feedback.",
+      "group": "accent"
+    },
+    {
+      "hex": "#bf92ec",
+      "name": "Nebula Haze",
+      "role": "Decorative highlights, accent text.",
+      "group": "accent"
+    },
+    {
+      "hex": "#a05fcf",
+      "name": "Warp Drive Glow",
+      "role": "Decorative background effect — adds a powerful, futuristic energy.",
+      "group": "brand",
+      "gradient": "radial-gradient(73.46% 138.39% at 50.21% 0%, rgb(170, 10, 170) 50%, rgb(109, 29, 189) 75.47%, rgb(56, 29, 189) 100%)"
+    },
+    {
+      "hex": "#42946",
+      "name": "Success",
+      "role": "Success indicators, confirmation messages.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#d82c20",
+      "name": "Error",
+      "role": "Error messages and destructive action states.",
+      "group": "semantic"
+    }
+  ],
+  "layout": "The layout is governed by a centered, max-width container of 1280px. It opens with an immersive, full-bleed hero featuring a large atmospheric illustration that sets a calm, imaginative tone. Subsequent content sections are contained within the max-width, separated by generous vertical spacing (96px+), creating a spacious, unhurried rhythm. The structure is largely composed of centered headline stacks, followed by multi-column grids for testimonials (3-column) and partner logos. This creates a clear, hierarchical flow from broad statements to specific proof points.",
+  "imagery": "The visual language is defined by a dichotomy. Atmospheric, painterly illustrations with a lofi, dreamy quality dominate the hero and background elements, establishing a unique, non-corporate mood. These are juxtaposed with clean, unadorned product UI screenshots which anchor the site in its technical reality. Customer logos are presented simply on contained cards. There is no lifestyle photography; the focus is on the abstract mood and the concrete product. Icons are minimal, likely line-based, and used for functional UI rather than decoration.",
+  "similar": [
+    {
+      "why": "Shares the high-contrast dark mode, minimalist UI, and use of a single accent color for a developer audience.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Similar layered dark surfaces, subtle gradients, and precise, border-defined UI components.",
+      "business": "Linear"
+    },
+    {
+      "why": "Also combines a dark, refined aesthetic with an elegant serif font for headlines.",
+      "business": "PlanetScale"
+    },
+    {
+      "why": "Another dev-tool with a strong dark-mode identity and a clean, grid-based layout structure.",
+      "business": "Supabase"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "12px",
+      "inputs": "6px",
+      "buttons": "8px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "96-160px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1280px"
+  },
+  "category": "dev-tools",
+  "northStar": "Cosmic Midnight Express. A calm, powerful journey through a dark, starlit environment, guided by clear signals.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.1
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.09
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.72
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 54,
+      "lineHeight": 1.12,
+      "letterSpacing": -1.94
+    }
+  ],
+  "components": [
+    {
+      "html": "<style>\n  :root {\n    --color-deep-space: #13111c;\n    --color-surface: #1a191f;\n    --color-crater: #33323e;\n    --color-black-hole: #0d0c14;\n    --color-starlight: #f7f7f8;\n    --color-starlight-dim: #d0cfd2;\n    --color-comet: #a1a0ab;\n    --color-asteroid: #868593;\n    --color-cosmic-lilac: #553f83;\n    --color-supernova: #a05fcf;\n    --color-nebula-haze: #bf92ec;\n    --font-ibm-plex-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;\n    --font-inter: 'Inter', system-ui, -apple-system, sans-serif;\n  }\n\n  .rw-cta-wrapper {\n    background: var(--color-deep-space);\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    padding: 64px 32px;\n    font-family: var(--font-inter);\n    min-height: 260px;\n  }\n\n  .rw-headline {\n    font-family: var(--font-ibm-plex-serif);\n    font-size: 54px;\n    font-weight: 400;\n    line-height: 1.12;\n    letter-spacing: -1.94px;\n    color: var(--color-starlight);\n    text-align: center;\n    margin: 0 0 16px 0;\n  }\n\n  .rw-subline {\n    font-family: var(--font-inter);\n    font-size: 18px;\n    font-weight: 400;\n    line-height: 1.5;\n    letter-spacing: -0.09px;\n    color: var(--color-comet);\n    text-align: center;\n    margin: 0 0 40px 0;\n  }\n\n  .rw-subline u {\n    color: var(--color-starlight-dim);\n    text-underline-offset: 3px;\n  }\n\n  .rw-btn-group {\n    display: flex;\n    gap: 12px;\n    align-items: center;\n    flex-wrap: wrap;\n    justify-content: center;\n  }\n\n  .rw-btn-primary {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    background: var(--color-cosmic-lilac);\n    color: var(--color-starlight);\n    font-family: var(--font-inter);\n    font-size: 16px;\n    font-weight: 500;\n    line-height: 1.5;\n    letter-spacing: -0.1px;\n    padding: 12px 24px;\n    border-radius: 8px;\n    border: 1px solid rgba(255, 255, 255, 0.15);\n    text-decoration: none;\n    cursor: pointer;\n    transition: background 0.15s ease;\n  }\n\n  .rw-btn-primary:hover {\n    background: #6b52a0;\n  }\n\n  .rw-btn-secondary {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    background: transparent;\n    color: var(--color-starlight);\n    font-family: var(--font-inter);\n    font-size: 16px;\n    font-weight: 500;\n    line-height: 1.5;\n    letter-spacing: -0.1px;\n    padding: 12px 24px;\n    border-radius: 8px;\n    border: 1px solid var(--color-crater);\n    text-decoration: none;\n    cursor: pointer;\n    transition: border-color 0.15s ease;\n  }\n\n  .rw-btn-secondary:hover {\n    border-color: var(--color-asteroid);\n  }\n</style>\n\n<div class=\"rw-cta-wrapper\">\n  <h1 class=\"rw-headline\">Ship software peacefully</h1>\n  <p class=\"rw-subline\">With the all-in-one <u>intelligent</u> cloud provider</p>\n  <div class=\"rw-btn-group\">\n    <a href=\"#\" class=\"rw-btn-primary\">\n      Deploy\n      <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M3 8h10M9 4l4 4-4 4\" stroke=\"#f7f7f8\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n      </svg>\n    </a>\n    <a href=\"#\" class=\"rw-btn-secondary\">Demo</a>\n  </div>\n</div>",
+      "name": "CTA Button Group",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>\n  :root {\n    --color-deep-space: #13111c;\n    --color-surface: #1a191f;\n    --color-crater: #33323e;\n    --color-black-hole: #0d0c14;\n    --color-starlight: #f7f7f8;\n    --color-starlight-dim: #d0cfd2;\n    --color-comet: #a1a0ab;\n    --color-asteroid: #868593;\n    --color-cosmic-lilac: #553f83;\n    --color-supernova: #a05fcf;\n    --color-success: #42946e;\n    --font-inter: 'Inter', system-ui, -apple-system, sans-serif;\n    --font-ui-monospace: ui-monospace, Menlo, Monaco, Consolas, monospace;\n  }\n\n  .rw-demo-wrapper {\n    background: var(--color-deep-space);\n    padding: 40px 32px;\n    font-family: var(--font-inter);\n    display: flex;\n    flex-direction: column;\n    gap: 32px;\n    align-items: center;\n  }\n\n  /* Toast */\n  .rw-toast {\n    display: flex;\n    align-items: flex-start;\n    gap: 12px;\n    background: #15231d;\n    border: 1px solid #26543f;\n    border-radius: 8px;\n    padding: 14px 16px;\n    width: 100%;\n    max-width: 360px;\n    box-sizing: border-box;\n    position: relative;\n  }\n\n  .rw-toast-icon {\n    flex-shrink: 0;\n    width: 20px;\n    height: 20px;\n    background: var(--color-success);\n    border-radius: 50%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    margin-top: 1px;\n  }\n\n  .rw-toast-body {\n    flex: 1;\n    min-width: 0;\n  }\n\n  .rw-toast-title {\n    font-size: 14px;\n    font-weight: 600;\n    color: var(--color-starlight);\n    line-height: 1.4;\n    letter-spacing: -0.14px;\n    margin: 0 0 2px 0;\n  }\n\n  .rw-toast-desc {\n    font-size: 12px;\n    font-weight: 400;\n    color: var(--color-comet);\n    line-height: 1.5;\n    letter-spacing: -0.12px;\n    margin: 0;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n\n  .rw-toast-close {\n    background: none;\n    border: none;\n    color: var(--color-asteroid);\n    cursor: pointer;\n    padding: 0;\n    font-size: 16px;\n    line-height: 1;\n    flex-shrink: 0;\n    margin-top: -1px;\n  }\n\n  /* Tab Bar */\n  .rw-tab-bar {\n    background: rgba(13, 12, 20, 0.7);\n    border: 1px solid var(--color-crater);\n    border-radius: 9999px;\n    padding: 6px 8px;\n    display: flex;\n    align-items: center;\n    gap: 2px;\n    width: 100%;\n    max-width: 520px;\n    box-sizing: border-box;\n    backdrop-filter: blur(12px);\n  }\n\n  .rw-tab-item {\n    display: inline-flex;\n    align-items: center;\n    gap: 7px;\n    padding: 8px 16px;\n    border-radius: 9999px;\n    font-size: 14px;\n    font-weight: 500;\n    letter-spacing: -0.14px;\n    line-height: 1.4;\n    color: var(--color-asteroid);\n    cursor: pointer;\n    border: none;\n    background: transparent;\n    text-decoration: none;\n    transition: color 0.15s ease;\n    white-space: nowrap;\n  }\n\n  .rw-tab-item.active {\n    background: var(--color-cosmic-lilac);\n    color: var(--color-starlight);\n  }\n\n  .rw-tab-item:not(.active):hover {\n    color: var(--color-starlight-dim);\n  }\n\n  .rw-tab-sep {\n    width: 1px;\n    height: 16px;\n    background: var(--color-crater);\n    flex-shrink: 0;\n  }\n</style>\n\n<div class=\"rw-demo-wrapper\">\n  <!-- Toast Notification -->\n  <div class=\"rw-toast\">\n    <div class=\"rw-toast-icon\">\n      <svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M2 6l3 3 5-5\" stroke=\"#fff\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n      </svg>\n    </div>\n    <div class=\"rw-toast-body\">\n      <p class=\"rw-toast-title\">Deployment Successful!</p>\n      <p class=\"rw-toast-desc\">backend was deployed successfully...</p>\n    </div>\n    <button class=\"rw-toast-close\" aria-label=\"Close\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M2 2l10 10M12 2L2 12\" stroke=\"#868593\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      </svg>\n    </button>\n  </div>\n\n  <!-- Tab Bar -->\n  <div class=\"rw-tab-bar\">\n    <a href=\"#\" class=\"rw-tab-item active\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1\" y=\"4\" width=\"12\" height=\"8\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"1.3\"/>\n        <path d=\"M4 4V3a3 3 0 016 0v1\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n      </svg>\n      Deploy\n    </a>\n    <div class=\"rw-tab-sep\"></div>\n    <a href=\"#\" class=\"rw-tab-item\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"4\" cy=\"7\" r=\"2\" stroke=\"currentColor\" stroke-width=\"1.3\"/>\n        <circle cx=\"10\" cy=\"7\" r=\"2\" stroke=\"currentColor\" stroke-width=\"1.3\"/>\n        <path d=\"M6 7h2\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n      </svg>\n      Network\n    </a>\n    <div class=\"rw-tab-sep\"></div>\n    <a href=\"#\" class=\"rw-tab-item\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M2 10V7m3 3V5m3 5V3m3 7V6\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>\n      </svg>\n      Scale\n    </a>\n    <div class=\"rw-tab-sep\"></div>\n    <a href=\"#\" class=\"rw-tab-item\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"7\" cy=\"7\" r=\"5.5\" stroke=\"currentColor\" stroke-width=\"1.3\"/>\n        <circle cx=\"7\" cy=\"7\" r=\"2\" stroke=\"currentColor\" stroke-width=\"1.3\"/>\n      </svg>\n      Monitor\n    </a>\n    <div class=\"rw-tab-sep\"></div>\n    <a href=\"#\" class=\"rw-tab-item\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M7 1l1.5 4H13l-3.5 2.5 1.5 4L7 9l-4 2.5 1.5-4L1 5h4.5L7 1z\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/>\n      </svg>\n      Evolve\n    </a>\n  </div>\n</div>",
+      "name": "Deployment Success Toast + Tab Bar",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>\n  :root {\n    --color-deep-space: #13111c;\n    --color-surface: #1a191f;\n    --color-crater: #33323e;\n    --color-starlight: #f7f7f8;\n    --color-starlight-dim: #d0cfd2;\n    --color-comet: #a1a0ab;\n    --color-asteroid: #868593;\n    --color-cosmic-lilac: #553f83;\n    --font-ibm-plex-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;\n    --font-inter: 'Inter', system-ui, -apple-system, sans-serif;\n  }\n\n  .rw-testimonials-section {\n    background: var(--color-deep-space);\n    padding: 64px 32px;\n    font-family: var(--font-inter);\n    box-sizing: border-box;\n    width: 100%;\n  }\n\n  .rw-testimonials-header {\n    text-align: center;\n    margin-bottom: 48px;\n  }\n\n  .rw-testimonials-title {\n    font-family: var(--font-ibm-plex-serif);\n    font-size: 36px;\n    font-weight: 400;\n    line-height: 1.2;\n    letter-spacing: -0.72px;\n    color: var(--color-starlight);\n    margin: 0 0 12px 0;\n  }\n\n  .rw-testimonials-sub {\n    font-size: 16px;\n    font-weight: 400;\n    line-height: 1.6;\n    letter-spacing: -0.1px;\n    color: var(--color-comet);\n    margin: 0 0 24px 0;\n    max-width: 480px;\n    margin-left: auto;\n    margin-right: auto;\n  }\n\n  .rw-btn-ghost {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    background: transparent;\n    color: var(--color-starlight);\n    font-family: var(--font-inter);\n    font-size: 15px;\n    font-weight: 500;\n    padding: 10px 20px;\n    border-radius: 8px;\n    border: 1px solid var(--color-crater);\n    text-decoration: none;\n    cursor: pointer;\n  }\n\n  .rw-cards-grid {\n    display: flex;\n    flex-direction: column;\n    gap: 16px;\n  }\n\n  .rw-testimonial-card {\n    background: var(--color-surface);\n    border: 1px solid var(--color-crater);\n    border-radius: 12px;\n    padding: 32px;\n    box-sizing: border-box;\n    position: relative;\n    overflow: hidden;\n    display: flex;\n    flex-direction: column;\n    gap: 0;\n  }\n\n  .rw-testimonial-card::before {\n    content: '';\n    position: absolute;\n    inset: 0;\n    background-image:\n      linear-gradient(var(--color-crater) 1px, transparent 1px),\n      linear-gradient(90deg, var(--color-crater) 1px, transparent 1px);\n    background-size: 32px 32px;\n    opacity: 0.25;\n    pointer-events: none;\n  }\n\n  .rw-card-logo {\n    margin-bottom: 24px;\n    position: relative;\n    z-index: 1;\n  }\n\n  .rw-logo-text {\n    font-size: 22px;\n    font-weight: 700;\n    color: var(--color-starlight);\n    letter-spacing: -0.5px;\n    font-family: var(--font-inter);\n  }\n\n  .rw-card-quote {\n    font-size: 15px;\n    font-weight: 400;\n    line-height: 1.65;\n    letter-spacing: -0.1px;\n    color: var(--color-starlight-dim);\n    margin: 0 0 32px 0;\n    flex: 1;\n    position: relative;\n    z-index: 1;\n  }\n\n  .rw-card-author {\n    display: flex;\n    align-items: center;\n    gap: 12px;\n    padding-top: 24px;\n    border-top: 1px solid var(--color-crater);\n    position: relative;\n    z-index: 1;\n  }\n\n  .rw-author-avatar {\n    width: 40px;\n    height: 40px;\n    border-radius: 50%;\n    flex-shrink: 0;\n    overflow: hidden;\n  }\n\n  .rw-author-avatar-placeholder {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 16px;\n    font-weight: 600;\n    color: var(--color-starlight);\n  }\n\n  .rw-author-name {\n    font-size: 14px;\n    font-weight: 600;\n    color: var(--color-starlight);\n    line-height: 1.4;\n    letter-spacing: -0.14px;\n    margin: 0 0 2px 0;\n  }\n\n  .rw-author-role {\n    font-size: 13px;\n    font-weight: 400;\n    color: var(--color-asteroid);\n    line-height: 1.4;\n    letter-spacing: -0.13px;\n    margin: 0;\n  }\n</style>\n\n<div class=\"rw-testimonials-section\">\n  <div class=\"rw-testimonials-header\">\n    <h2 class=\"rw-testimonials-title\">Trusted by the best in business</h2>\n    <p class=\"rw-testimonials-sub\">Railway supports great software teams wherever they are. Hear from some of the teams building their products on Railway.</p>\n    <a href=\"#\" class=\"rw-btn-ghost\">\n      Read customer stories\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M2 7h10M8 3l4 4-4 4\" stroke=\"#f7f7f8\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n      </svg>\n    </a>\n  </div>\n\n  <div class=\"rw-cards-grid\">\n    <!-- Card 1 -->\n    <div class=\"rw-testimonial-card\">\n      <div class=\"rw-card-logo\">\n        <span class=\"rw-logo-text\">BILT ⊞</span>\n      </div>\n      <p class=\"rw-card-quote\">\"On our previous rent day, we saw traffic of 1,500+ requests per second that were all being fulfilled in under 50 milliseconds, which is really great. Our technical team is really impressed with scale like that.\"</p>\n      <div class=\"rw-card-author\">\n        <div class=\"rw-author-avatar\">\n          <div class=\"rw-author-avatar-placeholder\" style=\"background: linear-gradient(135deg, #3a5a8a, #2a4a7a);\">K</div>\n        </div>\n        <div>\n          <p class=\"rw-author-name\">Kartik Aggarwal</p>\n          <p class=\"rw-author-role\">Tech Lead at Bilt</p>\n        </div>\n      </div>\n    </div>\n\n    <!-- Card 2 -->\n    <div class=\"rw-testimonial-card\">\n      <div class=\"rw-card-logo\">\n        <span class=\"rw-logo-text\" style=\"font-size:26px; letter-spacing: -1px;\">G2X</span>\n      </div>\n      <p class=\"rw-card-quote\">\"Services that took 1 week to configure elsewhere take 1 day to spin up in Railway. Messy networking like on other cloud platforms doesn't exist on Railway. If you understand basic TCP, you're all set.\"</p>\n      <div class=\"rw-card-author\">\n        <div class=\"rw-author-avatar\">\n          <div class=\"rw-author-avatar-placeholder\" style=\"background: linear-gradient(135deg, #4a6a5a, #3a5a4a);\">D</div>\n        </div>\n        <div>\n          <p class=\"rw-author-name\">Daniel Lobaton</p>\n          <p class=\"rw-author-role\">CTO at G2X</p>\n        </div>\n      </div>\n    </div>\n\n    <!-- Card 3 -->\n    <div class=\"rw-testimonial-card\">\n      <div class=\"rw-card-logo\">\n        <span class=\"rw-logo-text\">◆ Mappa</span>\n      </div>\n      <p class=\"rw-card-quote\">\"Railway streamlines and accelerates our entire operation. It gives us instant observability into our services and makes spinning up self-hosted third-party tools almost effortless. This reduces friction in experimentation and shortens our deployment cycles significantly.\"</p>\n      <div class=\"rw-card-author\">\n        <div class=\"rw-author-avatar\">\n          <div class=\"rw-author-avatar-placeholder\" style=\"background: linear-gradient(135deg, #8a6a2a, #7a5a1a);\">D</div>\n        </div>\n        <div>\n          <p class=\"rw-author-name\">Daniel Moretti</p>\n          <p class=\"rw-author-role\">Co-Founder &amp; CTO at Mappa</p>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>",
+      "name": "Testimonial Cards",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "The main call-to-action, like 'Deploy →'.",
+      "description": "Solid `Cosmic Lilac` (#553f83) background with `Starlight` (#f7f7f8) text. Padding is `12px 24px` with an `8px` border radius. Border is a subtle `rgba(255, 255, 255, 0.15)`. Font is Inter 500."
+    },
+    {
+      "name": "Secondary Button",
+      "role": "Secondary actions, like 'Demo'.",
+      "description": "Transparent background with `Starlight` (#f7f7f8) text and a `1px` solid border of `Crater` (#33323e). Padding is `12px 24px` with an `8px` border radius. Font is Inter 500."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Header and footer navigation items.",
+      "description": "Transparent background with `Comet` (#a1a0ab) text. On hover, text changes to `Starlight` (#f7f7f8). Padding is minimal, typically around `6px 12px`."
+    },
+    {
+      "name": "Logo Grid Card",
+      "role": "Container for customer logos in the 'Trusted by' section.",
+      "description": "`Surface` (#1a191f) background with a `12px` border radius and `24px` padding. A `1px` `Crater` (#33323e) border defines the card. Displays a grayscale partner logo at its center."
+    },
+    {
+      "name": "Product UI Tab",
+      "role": "Navigation within the product UI demo.",
+      "description": "Text label in `Asteroid` (#868593). The active tab has `Starlight` (#f7f7f8) text and a `2px` bottom border of `Supernova` (#a05fcf), providing a clear visual indicator."
+    },
+    {
+      "name": "Success Toast",
+      "role": "A small notification for successful operations.",
+      "description": "Dark green background (`#15231d`) with `Success` (#42946e) text and a `4px` border radius. A `1px` border of muted green (`#26543f`) provides subtle definition."
+    },
+    {
+      "name": "Log Line Item",
+      "role": "A single line in the product's log viewer.",
+      "description": "Uses `ui-monospace` font at 16px. Background is `Black Hole` (#0d0c14). Text color varies by log level, but defaults to `Comet` (#a1a0ab)."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines (54px) and large section titles (36-40px). The serif choice is a signature move, lending a classic, literary authority to a technical product. The tight negative letter-spacing is essential.",
+      "sizes": "36px, 40px, 54px",
+      "family": "IBM Plex Serif",
+      "weight": "400, 500",
+      "weights": [
+        "400",
+        "500"
+      ],
+      "lineHeight": "1.12, 1.20, 1.33",
+      "substitute": "Georgia, Times New Roman",
+      "letterSpacing": "-1.94px at 54px, -0.72px at 36px."
+    },
+    {
+      "role": "The workhorse font for all UI text, body copy, and subtitles. Its neutrality and readability provide a clean canvas that allows the serif headlines to stand out.",
+      "sizes": "12px, 14px, 16px, 18px, 20px, 24px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "weights": [
+        "400",
+        "500",
+        "600",
+        "700"
+      ],
+      "lineHeight": "1.25, 1.33, 1.40, 1.43, 1.50, 1.56, 1.60, 1.63, 1.75",
+      "substitute": "system-ui, -apple-system",
+      "letterSpacing": "Slightly tightened at all sizes (e.g., -0.1px at 16px)."
+    },
+    {
+      "role": "Used for some medium-to-large headings, offering a slightly more condensed feel than Inter for specific layouts.",
+      "sizes": "32px, 40px",
+      "family": "Inter Tight",
+      "weight": "400, 600",
+      "weights": [
+        "400",
+        "600"
+      ],
+      "lineHeight": "1.20, 1.38",
+      "substitute": "Inter",
+      "letterSpacing": "-0.6px at 40px, -0.48px at 32px."
+    },
+    {
+      "role": "Code snippets and log outputs in product demonstrations, providing a familiar terminal aesthetic.",
+      "sizes": "16px, 40px",
+      "family": "ui-monospace",
+      "weight": "400",
+      "weights": [
+        "400"
+      ],
+      "lineHeight": "1.40, 1.63",
+      "substitute": "Menlo, Monaco, Consolas"
+    }
+  ],
+  "description": "The design system feels like a tranquil night journey on a futuristic train. It operates in a deep, near-black space (#13111c), punctuated by a single, focused accent of cosmic lilac (#553f83) for primary actions, creating a calm yet confident mood. Large, elegant serif headlines (IBM Plex Serif) provide a literary, almost classic authority that contrasts with the clean, utilitarian sans-serif (Inter) used for the UI. Elevation is achieved through subtle surface shifts and fine borders (#33323e) rather than shadows, reinforcing a flat, technical aesthetic. The signature element is the painterly, atmospheric hero illustration, which establishes a peaceful, imaginative tone that subverts typical dev-tool intensity.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "### Quick Color Reference\n- **Page Background**: `Deep Space` (#13111c)\n- **Card Background**: `Surface` (#1a191f)\n- **Primary Text**: `Starlight` (#f7f7f8)\n- **Body Text**: `Comet` (#a1a0ab)\n- **Border**: `Crater` (#33323e)\n- **CTA / Accent**: `Cosmic Lilac` (#553f83)\n- **Focus Accent**: `Supernova` (#a05fcf)\n\n### Example Component Prompts\n1.  **Hero Section:** Create a full-bleed hero section with the painterly night sky illustration as the background. Add a centered headline 'Ship software peacefully' in 54px `IBM Plex Serif` font, `Starlight` (#f7f7f8) color, with -1.94px letter-spacing. Below it, create a Primary CTA Button with text 'Deploy →' and a Secondary Button with text 'Demo'.\n\n2.  **Primary CTA Button:** Create a button with text 'Deploy →'. Use a `Cosmic Lilac` (#553f83) background, `Starlight` (#f7f7f8) text, 8px border radius, and `12px 24px` padding. The font should be 16px Inter at weight 500.\n\n3.  **Testimonial Card:** Create a card with a `Surface` (#1a191f) background, a 1px solid `Crater` (#33323e) border, and a 12px border radius. Padding should be 32px. Add a subtle 1px grid background pattern inside the card. Place a quote inside using `Starlight` (#f7f7f8) text at 18px and an attribution below it in `Comet` (#a1a0ab) text at 14px."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is achieved primarily through layered surfaces using distinct background colors and fine 1px borders, not traditional drop shadows. The system uses a progression like Deep Space (#13111c) for the page, Surface (#1a191f) for cards, and an inset white highlight (`rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset`) on interactive elements. This creates a flat, technical, yet deep interface where layers are defined by light and color, not shadow."
+}

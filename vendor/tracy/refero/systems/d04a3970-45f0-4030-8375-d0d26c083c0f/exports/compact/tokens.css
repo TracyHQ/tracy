@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #fcf7fa;
+  --color-pure-card: #ffffff;
+  --color-ash-mist: #f1f1f1;
+  --color-carbon-black: #000000;
+  --color-graphite-input: #212121;
+  --color-obsidian-pill: #1a1a1a;
+  --color-electric-violet: #ac74fc;
+  --color-lilac-pill: #c181ff;
+  --color-deep-plum: #381b5e;
+  --color-shadow-plum: #48316a;
+  --color-acid-lime: #b1ff8f;
+  --color-signal-blue: #1276a9;
+
+  /* Typography — Font Families */
+  --font-abccameraplainvariable: 'ABCCameraPlainVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serialc-heavy: 'SerialC-Heavy', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serialc: 'SerialC', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

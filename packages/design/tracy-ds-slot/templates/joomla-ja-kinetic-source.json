@@ -1,0 +1,147 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-ja-kinetic",
+  "template": "joomla/ja-kinetic",
+  "minVersion": {
+    "quickstart/ja-kinetic/j6": "1.0.9"
+  },
+  "maxVersion": {
+    "quickstart/ja-kinetic/j6": "1.0.10"
+  },
+  "maxVersionNote": "1.0.10 21/10/2026 (TEXT-1 batch 1): built from 1.0.9 (release-batch.mjs --overlay); only css/template.css and css/frontend-edit.css (.vm-login-option a reads info-text) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json).",
+  "splitNote": "19/10/2026 (design system dot 3): from 1.0.9 the Integrations call bar (.acm-cta.cta-bar .hx-section, page-219.css) reads the page ground role at its source (JoomlArt-Products/ja-products feat/ds-dot3-a2), so the followRules patch the base contract carries for 1.0.8 and older (sites do not update their template) is dropped here. Everything else is the base contract's; followRules is repeated because a child replaces a top-level key whole. sideRules is repeated for the same reason, with the blog topic chips' and rows' state cues (21/10/2026).",
+  "followRules": {
+    ":is(.hx-eyebrow, .kinetic-eyebrow, .acm-kineticql-split .acm-split-eyebrow, .acm-testimonials .hx-eyebrow, .acm-bento .acm-bento-eyebrow, .acm-clients .acm-clients-eyebrow, .acm-features-ledger .hx-metrics-badge, .kinetic-auth__eyebrow, .hx-spec-cardhead-r, .acm-features-ledger .hx-spec-num, .hx-blogtopics__lbl, .hx-featcard__cat, .hx-team-chip, .hx-method__email, .hx-related__tag, .hx-monthrow__m, .hxcat-tag, .hx-aupost__tag)": {
+      "color": "accent-text"
+    },
+    ".acm-cta .hx-cta-eyebrow": {
+      "color": "accent-text"
+    },
+    ".acm-incident-timeline .hx-inc-time": {
+      "color": "accent-text"
+    },
+    ".acm-kineticql-split .acm-split-cta": {
+      "color": "accent-on"
+    },
+    ".hx-prose a:not([class*=btn])": {
+      "color": "accent-text"
+    },
+    ".hx-blogtopics__chip": {
+      "color": "fg-2!"
+    },
+    ".hx-blogtopics__chip:hover, .hx-blogtopics__chip:focus": {
+      "color": "fg!"
+    },
+    ".hx-blogtopics__chip.is-active": {
+      "color": "accent-text!"
+    },
+    ".hx-blogtopics__chip.is-active:hover, .hx-blogtopics__chip.is-active:focus": {
+      "color": "accent-text-hover!"
+    },
+    ".kinetic-tags-pill": {
+      "background-color": "surface"
+    },
+    ".kinetic-tags-pill:hover": {
+      "background-color": "surface-warm"
+    },
+    ".kinetic-tags-pill:focus-visible": {
+      "background-color": "surface-warm"
+    },
+    ".hx-aucard:hover .hx-aucard__n": {
+      "color": "accent-text"
+    },
+    ".hx-aucard:focus-visible .hx-aucard__n": {
+      "color": "accent-text"
+    },
+    ":is(.hx-blogmast .hx-eyebrow, .kinetic-finder__masthead .kinetic-eyebrow, .hx-cats-pill, .hx-au-pill__t, .hxcat-pill)": {
+      "color": "accent-text!"
+    },
+    ":is(.hx-prose h2, .hx-prose h3, .hx-prose h4, .com-content-article__body h2, .com-content-article__body h3, .com-content-article__body h4, .acm-cta.cta-bar .hx-cta-title)": {
+      "color": "fg"
+    },
+    ":is(body.site-signal, body.site-signal .t4-content)": {
+      "background-color": "bg"
+    },
+    ".hx-sup-section": {
+      "background-color": "surface-warm!"
+    }
+  },
+  "followNote": "its eyebrows (each block's own: hx, bento, clients, split, testimonials, call to action, sign-in), timeline times, metrics badge and article links are text in var(--primary), the system accent: MotherDuck's sky blue on its cream, 1.62:1: they take the readable accent; the KineticQL call to action writes its own dark ink (--split-primary-ink, declared on the block) on the accent: it takes the accent's own text colour The Signal home (body.site-signal) paints its page and content column in a hair-lifted tint the auto palette reads as the card surface: under a dark system the whole page stood 1.21:1 off its header and bands; it takes the page ground. The FAQ support band takes the quiet raised surface, as the other bands do (GROUND-2 loud-band, 15/10/2026). 21/10/2026 (HOVER-2, TEXT-1 batch 1): the blog page's topic chips (page-221.css: var(--text), var(--heading) on hover, var(--primary-text) when active) read the accent words at rest and on hover under a system, so the pointer changed nothing: they take the second text at rest, the page text on hover and focus, and the accent words when active, as the template draws them; a blog row's hover ground (var(--elevated), a white veil on the dark side) takes the neutral hover ground, a role apart from the section it sits on. 21/10/2026 (review): a role pair can be one colour under some system (fg-2 and fg under 21 sides, accent-text and its hover black on black under 253), so the topic chips' hover and focus also underline (sideRules), and an active chip has its own hover (accent-text-hover), which the active rule no longer outweighs; a blog row's hover ground is 8% of the page text laid over whatever it sits on (the page, the surface or the warm surface: apart under every system), not the neutral hover ground, which sat on the page under 78.",
+  "sideRules": {
+    "light": {
+      ".acm-cta .hx-cta-eyebrow": {
+        "color": "color-mix(in srgb, var(--ds-c-accent-text) 80%, #000)"
+      },
+      ".acm-incident-timeline .hx-inc-time": {
+        "background-color": "var(--elevated)",
+        "box-shadow": "0 0 0 6px var(--elevated)"
+      },
+      ".com-tags__masthead": {
+        "background-image": "radial-gradient(ellipse 150% 120% at 50% 0%, color-mix(in srgb, var(--ds-c-accent) 6%, transparent) 0%, var(--ds-c-surface) 55%)"
+      },
+      ".pagination .page-link": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 8px) !important"
+      },
+      ":is(.kinetic-auth button[type=submit].btn-primary, .kinetic-finder .kinetic-finder__submit, .kinetic-contactform__actions button, .acm-cta .hx-cta-btn, .hx-sup-btn, .hx-pi-btn, .acm-kineticql-split .acm-split-cta, a.hx-btn.hx-plan-cta)": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 9px) !important"
+      },
+      "a.hx-btn.hx-btn--primary.hx-plan-cta": {
+        "background-color": "var(--ds-c-accent)",
+        "background-image": "none",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      "pre code": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ":is(.kinetic-contact .control-label, .kinetic-contactform label, .kinetic-finder .kinetic-finder__sub)": {
+        "font-family": "var(--ds-font-body) !important"
+      },
+      ":is(.kinetic-finder .kinetic-finder__title, .hx-article .hx-prose blockquote)": {
+        "font-family": "var(--ds-font-display-face) !important"
+      },
+      ".hx-blogtopics__chip:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".hx-blogrow:is(:hover, :focus)": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 8%, transparent) !important"
+      }
+    },
+    "dark": {
+      ".acm-incident-timeline .hx-inc-time": {
+        "background-color": "var(--elevated)",
+        "box-shadow": "0 0 0 6px var(--elevated)"
+      },
+      ".com-tags__masthead": {
+        "background-image": "radial-gradient(ellipse 150% 120% at 50% 0%, color-mix(in srgb, var(--ds-c-accent) 6%, transparent) 0%, var(--ds-c-surface) 55%)"
+      },
+      ".pagination .page-link": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 8px) !important"
+      },
+      ":is(.kinetic-auth button[type=submit].btn-primary, .kinetic-finder .kinetic-finder__submit, .kinetic-contactform__actions button, .acm-cta .hx-cta-btn, .hx-sup-btn, .hx-pi-btn, .acm-kineticql-split .acm-split-cta, a.hx-btn.hx-plan-cta)": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 9px) !important"
+      },
+      "a.hx-btn.hx-btn--primary.hx-plan-cta": {
+        "background-color": "var(--ds-c-accent)",
+        "background-image": "none",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      "pre code": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ":is(.kinetic-contact .control-label, .kinetic-contactform label, .kinetic-finder .kinetic-finder__sub)": {
+        "font-family": "var(--ds-font-body) !important"
+      },
+      ":is(.kinetic-finder .kinetic-finder__title, .hx-article .hx-prose blockquote)": {
+        "font-family": "var(--ds-font-display-face) !important"
+      },
+      ".hx-blogtopics__chip:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".hx-blogrow:is(:hover, :focus)": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 8%, transparent) !important"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-bone: #f8f8f8;
+  --color-carbon: #000000;
+  --color-ash: #080808;
+  --color-stone: #d8d8d8;
+
+  /* Typography — Font Families */
+  --font-degular: 'Degular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

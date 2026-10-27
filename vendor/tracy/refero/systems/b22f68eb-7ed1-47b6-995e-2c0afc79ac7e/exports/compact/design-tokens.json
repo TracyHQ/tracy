@@ -1,0 +1,59 @@
+{
+  "color": {
+    "wine-maroon": {
+      "$value": "#2d070b",
+      "$type": "color",
+      "$description": "Wine Maroon — Dark section background, heading text on cream, card borders, footer surface — near-black with a blood-red undertone, sets the dramatic contrast against the cream canvas"
+    },
+    "hot-pink": {
+      "$value": "#ff0389",
+      "$type": "color",
+      "$description": "Hot Pink — Outlined action borders, link underlines, tag labels, decorative brand accent — the visual signature; appears as border-color and text, never as filled background"
+    },
+    "cream-paper": {
+      "$value": "#fef0e6",
+      "$type": "color",
+      "$description": "Cream Paper — Primary page canvas, section background, card surface for hero product mockups — warm off-white that reads as paper rather than screen"
+    },
+    "blush-card": {
+      "$value": "#ffdce2",
+      "$type": "color",
+      "$description": "Blush Card — Secondary card surface, subtle highlight wash, tag pill backgrounds — one step warmer and pinker than the cream, creates gentle figure-ground separation"
+    },
+    "soft-pink": {
+      "$value": "#ffc7de",
+      "$type": "color",
+      "$description": "Soft Pink — Muted pink accent for secondary links and tag borders — desaturated cousin of Hot Pink used where less visual weight is needed"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Card borders on cream, dark text fallback, high-contrast borders — used sparingly, Wine Maroon usually takes the dark role"
+    }
+  },
+  "font": {
+    "instrument-serif": {
+      "$value": "Instrument Serif",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — the editorial voice. Used for hero wordmarks, section headlines, and large statements. At 128px it becomes a background watermark. Classic transitional serif with high contrast strokes creates magazine gravitas"
+    },
+    "dm-mono": {
+      "$value": "DM Mono",
+      "$type": "fontFamily",
+      "$description": "UI labels, tag text, button text, eyebrows, metadata — monospace gives the interface a technical/editorial datestamp quality. The 0.04em tracking on labels creates typewriter-style uppercase headers"
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Body text and secondary copy — geometric sans that stays neutral so the serif can carry the brand voice. Used for paragraphs, descriptions, and long-form reading"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://evermade.fi",
+      "siteName": "Evermade",
+      "extractedAt": "2026-06-03T20:52:02.286Z",
+      "variant": "compact"
+    }
+  }
+}

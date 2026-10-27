@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+  "status": "complete",
+  "name": "Arc",
+  "url": "https://styles.refero.design/style/acfb6fa1-3aed-4e64-8522-7f332a796de8",
+  "sourceWebsite": "https://arcboats.com",
+  "extractedAt": "2026-06-03T18:21:23.122Z",
+  "capturedAt": "2026-10-08T05:16:10.049155+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "industrial white gallery above midnight water",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b2ba8acd-8b20-47e1-be8d-b14af2ac99f7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c59a887b-858b-4b52-a34c-8e0441171ec8.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/00aa9cb6-a2d8-4da2-9ecd-f26994d661df.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d3bdf9a2-8bc5-4692-a08d-dc62686739e6.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/da4631c8-4a01-4b34-8694-189a30ba048b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7b44030a54e5e062889e8e6132893b2a0e3a74604617b8f3e62c8ca5f445788e",
+      "bytes": 19664
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "48d561389eb155b06ebc3a67da9819f90fa55631d11957b5941a85e8c60416df",
+      "bytes": 111158
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7f86c4df2c80d4ff0ec89b98cdbc6b731a24081b7158d510fe8ad5994694d3ef",
+      "bytes": 16328
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "07624505e3493eb8bc6271bd1e1d23bc54e1e6c1c193f1079ccbaa185153c4ad",
+      "bytes": 9887
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f0a3303baeb00b5c373fea8b03019122d178a101e813efca56d09f0239708b13",
+      "bytes": 12308
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "74715e3a64863d641ffc506f2700b8471be233708058b9b5f08bf242b1b4295f",
+      "bytes": 2314
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "031709472b5b51c6bb88eea653ad43354fd25324b1f5a23fce74748cd4ab7e10",
+      "bytes": 339
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e5f4dbc84cd0606d6dbb3ddf0b27f0f19a0722ca39c630c408cfcac6755773d6",
+      "bytes": 356
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c62f1d5b42930232fff7eb67c4d3614e4ec061440550122474bb9a292d99e049",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0ad384fabf608bb6a7026fcc089033584176e412820f67a6350616edc01ca657",
+      "bytes": 42983
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e7fbaea4b8bfe8338a38c3d95d30fd140b6a11f077be44cd995c48310131451a",
+      "bytes": 22390
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "034c97fb2d2a8c30d7f40434a41609f9aef69d83732dbfe4e2ab64abaff3e5b4",
+      "bytes": 40197
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8d50ae97b760eb34f3061cb2da7209dd688ff0586e8faedd189c0d6957b06489",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8c2f27d10bba00efefaec70c6729c649eda5a27995d4858560f4883ddfdfb449",
+      "bytes": 1545
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "08d9da8928ec5e5ecb05a39b0c5347416e7d1bb83bfd066e98b663f766b9df7d",
+      "bytes": 2117
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "ca93daf1-daf3-41b7-8248-8f63082761e8",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6",
+    "fe7b8533-f56b-46bd-8713-f18886a1e986"
+  ]
+}

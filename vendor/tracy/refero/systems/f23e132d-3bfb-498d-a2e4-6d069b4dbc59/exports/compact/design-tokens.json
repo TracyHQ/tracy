@@ -1,0 +1,64 @@
+{
+  "color": {
+    "inkstone": {
+      "$value": "#0a0b0c",
+      "$type": "color",
+      "$description": "Inkstone — Primary text, body copy, headings, hairline borders, dark UI surfaces — the near-black backbone of the entire interface, used at massive scale for borders and typography"
+    },
+    "bone": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Bone — Page canvas, section backgrounds, subtle surface tier beneath cards — a warm off-white that softens the contrast of the interface"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, elevated panels, chat widget container, inputs — the brightest tier of the surface stack"
+    },
+    "ash": {
+      "$value": "#d8d8d8",
+      "$type": "color",
+      "$description": "Ash — Decorative SVG fills, disabled input borders, neutral dividers"
+    },
+    "plum-ash": {
+      "$value": "#392c38",
+      "$type": "color",
+      "$description": "Plum Ash — Muted card borders and dark surface tints — a desaturated plum that appears on secondary containers"
+    },
+    "forest-depth": {
+      "$value": "#00543d",
+      "$type": "color",
+      "$description": "Forest Depth — Primary brand identity, filled dark buttons, dark accent bar on stat cards, announcement bar background — deep green that signals authority and trust without corporate blandness"
+    },
+    "periwinkle": {
+      "$value": "#abcbf9",
+      "$type": "color",
+      "$description": "Periwinkle — Blue action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "candy-pink": {
+      "$value": "#ffbbfc",
+      "$type": "color",
+      "$description": "Candy Pink — Accent bar on stat cards, decorative soft surface washes — the most playful of the four accents, used sparingly to add warmth"
+    },
+    "butter": {
+      "$value": "#fce88b",
+      "$type": "color",
+      "$description": "Butter — Accent bar on stat cards, warmth punctuation — the warmest accent, appearing only on the 4th stat card as a visual rhythm closer"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire interface — body, headings, buttons, nav, footer, cards, inputs. Weight stays at 400 throughout; hierarchy is built purely through size, not bold/light contrast. The geometric humanist proportions give headlines a literary quality while the single weight forces restraint."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ada.cx",
+      "siteName": "Ada",
+      "extractedAt": "2026-06-03T18:20:26.162Z",
+      "variant": "compact"
+    }
+  }
+}

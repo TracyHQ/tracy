@@ -1,0 +1,448 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": false,
+    "layout": {
+      "contentSize": "1176px",
+      "wideSize": "1176px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "defaultDuotone": false,
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "var(--ds-c-bg, #f5f3ee)"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "var(--ds-c-surface, #ffffff)"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--ds-c-surface-warm, #eceae4)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "var(--ds-c-fg, #14171a)"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "var(--ds-c-fg-2, #3a3f43)"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "var(--ds-c-muted, #5a5952)"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "var(--ds-c-meta, #6b6a64)"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "var(--ds-c-border, #dcd7cc)"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "var(--ds-c-border-soft, #eceae4)"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "var(--ds-c-accent-text, #14483a)"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "var(--ds-c-accent-on, #ffffff)"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "var(--ds-c-accent-hover, #0f3a2e)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "var(--ds-c-accent-active, #0b2c23)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "var(--ds-c-success, #14483a)"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "var(--ds-c-warn, #da5a2a)"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "var(--ds-c-danger, #b23a1c)"
+        }
+      ]
+    },
+    "typography": {
+      "fluid": false,
+      "defaultFontSizes": false,
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "var(--ds-font-display, Newsreader, serif)"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "var(--ds-font-body, Archivo, system-ui, sans-serif)"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"SF Mono\", Menlo, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "18px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "22px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "28px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "40px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "64px"
+        }
+      ]
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "rem",
+        "em",
+        "%",
+        "vw",
+        "vh"
+      ],
+      "defaultSpacingSizes": false,
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "custom": {
+      "leading": {
+        "body": "1.6",
+        "tight": "1.02"
+      },
+      "tracking": {
+        "display": "-0.025em"
+      },
+      "sectionY": {
+        "desktop": "88px",
+        "tablet": "64px",
+        "phone": "48px"
+      },
+      "radius": {
+        "sm": "var(--ds-input-radius, 0px)",
+        "md": "var(--ds-btn-radius, 0px)",
+        "lg": "var(--ds-card-radius, 0px)",
+        "pill": "var(--ds-pill-radius, 0px)"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 12px 32px rgba(20, 23, 26, 0.10) /* ds-keep: shadow depth, not a colour role */"
+      },
+      "focusRing": "0 0 0 4px color-mix(in oklab, var(--wp--preset--color--accent), transparent 65%)",
+      "motion": {
+        "fast": "150ms",
+        "base": "220ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.28, 0, 0.22, 1)"
+      },
+      "container": {
+        "max": "1176px",
+        "gutterDesktop": "32px",
+        "gutterTablet": "32px",
+        "gutterPhone": "32px"
+      },
+      "tracy": {
+        "inspiration": "wp-tracy-business",
+        "brand": {
+          "orange": "var(--ds-c-accent-text, #da5a2a)",
+          "mint": "var(--ds-c-accent-text-hover, #8fccb2)",
+          "ink": "var(--ds-c-ink, #14171a)",
+          "green": "var(--ds-c-accent, #14483a)",
+          "paper": "var(--ds-c-on-ink, #f5f3ee)",
+          "header": "var(--ds-c-bg, #f5f3ee)",
+          "inkText": "var(--ds-c-on-ink, #b9b5ac)",
+          "inkCaption": "var(--ds-c-on-ink, #8a8780)",
+          "captionLight": "var(--ds-c-meta, #a8a49b)",
+          "greenText": "var(--ds-c-accent-on, #bfd4cb)",
+          "prose": "var(--ds-c-fg, #242830)",
+          "greenDeep": "var(--ds-c-accent-active, #0e3b2f)",
+          "greenRule": "var(--ds-c-accent-hover, #3d6b5c)",
+          "successRule": "var(--ds-c-success, #6ecf7a)",
+          "warningRule": "var(--ds-c-warn, #d9a83f)"
+        }
+      }
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|bg",
+      "text": "var:preset|color|fg"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|body",
+      "fontSize": "var:preset|font-size|base",
+      "lineHeight": "var(--wp--custom--leading--body)"
+    },
+    "spacing": {
+      "padding": {
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0"
+      },
+      "blockGap": "var:preset|spacing|4"
+    },
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var:preset|font-family|display",
+          "lineHeight": "var(--wp--custom--leading--tight)",
+          "letterSpacing": "var(--wp--custom--tracking--display)"
+        },
+        "color": {
+          "text": "var(--ds-c-heading, var(--wp--preset--color--fg))"
+        }
+      },
+      "h1": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xxxl"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xxl"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xl"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "var:preset|color|accent"
+        },
+        ":hover": {
+          "color": {
+            "text": "var(--wp--custom--tracy--brand--orange)"
+          },
+          "typography": {
+            "textDecoration": "none"
+          }
+        },
+        "typography": {
+          "textDecoration": "none"
+        }
+      },
+      "button": {
+        "color": {
+          "background": "var:preset|color|accent",
+          "text": "var:preset|color|accent-on"
+        },
+        "border": {
+          "radius": "var(--wp--custom--radius--md)"
+        },
+        "typography": {
+          "fontWeight": "600",
+          "textDecoration": "none"
+        },
+        ":hover": {
+          "color": {
+            "background": "var:preset|color|accent-hover",
+            "text": "var:preset|color|accent-on"
+          }
+        }
+      }
+    },
+    "css": "/* wp-tracy-business: dark mode. The palette values WordPress prints on :root are fixed hex, so `color-scheme` alone flips nothing; the dark set restates every colour preset. Values are the Northgate source's own dark hook (html[data-theme=dark] in its inline stylesheet: body #101214/#ECEAE4, links #7FBFA6, and its rgb→hex map for surfaces, borders and text greys), read on the rendered page 14/09 and mapped token for token. The same set applies under prefers-color-scheme when the root element carries no data-theme, which is the 'auto' state. Two things the source keeps fixed in dark: the filled chrome button stays the brand green with white text (the chrome paints it from --wp--custom--tracy--brand--green), and the paper — the design's fixed white (#F5F3EE) that every ink and green surface carries its text in — stays paper: the source's hero title, figures, the closing call's title and the outline button's label all measure rgb(245,243,238) under dark (fast-5, 15/09), so brand paper is NOT restated here (14/09 moved it to #ECEAE4 and put the body's off-white on the bands). Brand ink IS restated, and not to the source's value: the source moves its bands to #0A0C0D, one step darker than the page, and at 390 the stats band and the footer were a 1px seam (fast-5 N-01ad58); a raised neutral (#1C2023) is the warm surface's own tone, so the hero met the services band edge to edge. The bands take the source's dark forest instead — #0C2B23, its own dark map for the deep green rgb(14,59,47) — a hue the page's neutrals never use, so a band is a block at any size (captions #8A8780 on it 4.1:1, copy #B9B5AC 7.3:1). The accent preset is mint here — a text and link colour — so nothing may fill a surface with it: filled buttons and active chips paint from --wp--custom--tracy--brand--green (white on #7FBFA6 is 2.1:1, measured 14/09). */\nhtml { color-scheme: light dark; }\nhtml[data-theme=\"light\"] { color-scheme: light; }\nhtml[data-theme=\"dark\"] { color-scheme: dark; }\nhtml[data-theme=\"dark\"] {\n  --wp--preset--color--bg: var(--ds-c-bg, #101214);\n  --wp--preset--color--surface: var(--ds-c-surface, #191c1f);\n  --wp--preset--color--surface-warm: var(--ds-c-surface-warm, #1c2023);\n  --wp--preset--color--fg: var(--ds-c-fg, #eceae4);\n  --wp--preset--color--fg-2: var(--ds-c-fg-2, #c7c4bd);\n  --wp--preset--color--muted: var(--ds-c-muted, #a9a6a0);\n  --wp--preset--color--meta: var(--ds-c-meta, #96938c);\n  --wp--preset--color--border: var(--ds-c-border, #2c3033);\n  --wp--preset--color--border-soft: var(--ds-c-border-soft, #24282b);\n  --wp--preset--color--accent: var(--ds-c-accent-text, #7fbfa6);\n  --wp--preset--color--accent-on: var(--ds-c-accent-on, #ffffff);\n  --wp--preset--color--accent-hover: var(--ds-c-accent-hover, #8fccb2);\n  --wp--preset--color--accent-active: var(--ds-c-accent-active, #9ed3bc);\n  --wp--preset--color--success: var(--ds-c-success, #7fbfa6);\n  --wp--preset--color--warn: var(--ds-c-warn, #da5a2a);\n  --wp--preset--color--danger: var(--ds-c-danger, #f0a296);\n  --wp--custom--tracy--brand--ink: var(--ds-c-ink, #0c2b23);\n  --wp--custom--tracy--brand--caption-light: var(--ds-c-meta, #807d77);\n  --wp--custom--tracy--brand--prose: var(--ds-c-fg, #dddad3);\n  --wp--custom--tracy--brand--header: var(--ds-c-bg, #15181a);\n  --wp--custom--elev--raised: 0 12px 32px rgba(0, 0, 0, 0.45) /* ds-keep: shadow depth, not a colour role */;\n}\n@media (prefers-color-scheme: dark) {\n  html:not([data-theme]) {\n    --wp--preset--color--bg: var(--ds-c-bg, #101214);\n    --wp--preset--color--surface: var(--ds-c-surface, #191c1f);\n    --wp--preset--color--surface-warm: var(--ds-c-surface-warm, #1c2023);\n    --wp--preset--color--fg: var(--ds-c-fg, #eceae4);\n    --wp--preset--color--fg-2: var(--ds-c-fg-2, #c7c4bd);\n    --wp--preset--color--muted: var(--ds-c-muted, #a9a6a0);\n    --wp--preset--color--meta: var(--ds-c-meta, #96938c);\n    --wp--preset--color--border: var(--ds-c-border, #2c3033);\n    --wp--preset--color--border-soft: var(--ds-c-border-soft, #24282b);\n    --wp--preset--color--accent: var(--ds-c-accent-text, #7fbfa6);\n    --wp--preset--color--accent-on: var(--ds-c-accent-on, #ffffff);\n    --wp--preset--color--accent-hover: var(--ds-c-accent-hover, #8fccb2);\n    --wp--preset--color--accent-active: var(--ds-c-accent-active, #9ed3bc);\n    --wp--preset--color--success: var(--ds-c-success, #7fbfa6);\n    --wp--preset--color--warn: var(--ds-c-warn, #da5a2a);\n    --wp--preset--color--danger: var(--ds-c-danger, #f0a296);\n    --wp--custom--tracy--brand--ink: var(--ds-c-ink, #0c2b23);\n    --wp--custom--tracy--brand--caption-light: var(--ds-c-meta, #807d77);\n    --wp--custom--tracy--brand--prose: var(--ds-c-fg, #dddad3);\n    --wp--custom--tracy--brand--header: var(--ds-c-bg, #15181a);\n    --wp--custom--elev--raised: 0 12px 32px rgba(0, 0, 0, 0.45) /* ds-keep: shadow depth, not a colour role */;\n  }\n}\n/* The outline button's ring: ink in light, the source's dark grey (#3A3F43, its map for a 1px ink rule) in dark — fg would be near-white there. */\nhtml[data-theme=\"dark\"] .tracy .wp-block-button.is-style-outline .wp-block-button__link { border-color: var(--ds-c-border, #3a3f43); }\n/* The active chip and the 404 search button: the source fills them ink, which in its dark map is #0A0C0D — one step darker than the page, so the active chip read as a hole and the search button as a slab (fast-5 N-3f47f8, N-38e704). 15/09 inverted them to paper on ink; that made them the brightest surfaces on the dark page (fast-6, scan white-surface ×5). They take the brand green with white text instead — the fill the chrome's own button keeps in dark, the second option the lens named — a block the page's neutrals never use. */\nhtml[data-theme=\"dark\"] .tracy-page-home .tracy-chips__all a, html[data-theme=\"dark\"] .tracy.blog .tracy-chips__all a, html[data-theme=\"dark\"] .tracy-chips .current-cat > a, html[data-theme=\"dark\"] .tracy .wtb-hero--404 .wp-block-search__button { background: var(--wp--custom--tracy--brand--green); border-color: var(--wp--custom--tracy--brand--green); color: var(--ds-c-accent-on, #ffffff); }\n/* The source's own dark rule for its pictures (html[data-theme=dark] image-slot): content pictures dimmed, so a light photograph is not the brightest thing on a dark page (fast-5 N-196e7e). */\nhtml[data-theme=\"dark\"] .tracy .tracy-main img { filter: brightness(0.82) saturate(0.88); }\n@media (prefers-color-scheme: dark) {\n  html:not([data-theme]) .tracy .wp-block-button.is-style-outline .wp-block-button__link { border-color: var(--ds-c-border, #3a3f43); }\n  html:not([data-theme]) .tracy-page-home .tracy-chips__all a, html:not([data-theme]) .tracy.blog .tracy-chips__all a, html:not([data-theme]) .tracy-chips .current-cat > a, html:not([data-theme]) .tracy .wtb-hero--404 .wp-block-search__button { background: var(--wp--custom--tracy--brand--green); border-color: var(--wp--custom--tracy--brand--green); color: var(--ds-c-accent-on, #ffffff); }\n  html:not([data-theme]) .tracy .tracy-main img { filter: brightness(0.82) saturate(0.88); }\n}\n\n/* The source's own markup keeps the colours its converter had no token for as literal rgb() in\n   inline styles — the state tints and rules of its form and system messages, a chip outline, a\n   lighter caption grey — and the source's dark hook maps exactly those by substring\n   (`[style*=...]`). The same map here, to the presets where one exists (a declared preset is what\n   the border scan accepts), otherwise to the source's own dark value (full-1, 15/09: the error\n   input kept its pink fill and red rule in dark, the info note its light green, the chip its\n   light outline — 60 rows). The style guide's colour swatches are NOT mapped: a swatch shows its\n   colour. */\nhtml[data-theme=\"dark\"] [style*=\"background: rgb(232, 240, 235)\"] { background-color: var(--ds-c-info-bg, #14241e) !important; }\nhtml[data-theme=\"dark\"] [style*=\"background: rgb(233, 242, 233)\"] { background-color: var(--ds-c-success-bg, #16261c) !important; }\nhtml[data-theme=\"dark\"] [style*=\"background: rgb(251, 242, 226)\"] { background-color: var(--ds-c-warn-bg, #2c2517) !important; }\nhtml[data-theme=\"dark\"] [style*=\"background: rgb(252, 243, 242)\"] { background-color: var(--ds-c-danger-bg, #2b1a19) !important; }\nhtml[data-theme=\"dark\"] [style*=\"rgb(46, 125, 50)\"] { border-color: var(--wp--preset--color--success) !important; }\nhtml[data-theme=\"dark\"] [style*=\"rgb(200, 137, 27)\"] { border-color: var(--wp--preset--color--warn) !important; }\nhtml[data-theme=\"dark\"] [style*=\"rgb(192, 57, 43)\"] { border-color: var(--wp--preset--color--danger) !important; }\nhtml[data-theme=\"dark\"] [style*=\"color: rgb(192, 57, 43)\"] { color: var(--ds-c-danger-text, var(--wp--preset--color--danger)) !important; }\nhtml[data-theme=\"dark\"] [style*=\"color: rgb(31, 74, 34)\"] { color: var(--ds-c-success-text, #a6d6a9) !important; }\nhtml[data-theme=\"dark\"] [style*=\"color: rgb(107, 74, 14)\"] { color: var(--ds-c-warn-text, #ddb769) !important; }\nhtml[data-theme=\"dark\"] [style*=\"color: rgb(122, 32, 22)\"] { color: var(--ds-c-danger-text, var(--wp--preset--color--danger)) !important; }\nhtml[data-theme=\"dark\"] [style*=\"rgb(180, 175, 164)\"] { border-color: var(--wp--preset--color--border) !important; }\nhtml[data-theme=\"dark\"] [style*=\"color: rgb(180, 175, 164)\"] { color: var(--ds-c-meta, #6e6b66) !important; }\nhtml[data-theme=\"dark\"] [style*=\"color: rgb(168, 164, 155)\"] { color: var(--ds-c-meta, #807d77) !important; }\n/* The same lighter caption grey as a brand constant (brand.captionLight, #A8A49B) for the pattern CSS — a page link list dates its rows in it — takes the same dark value above, beside brand ink. */\n@media (prefers-color-scheme: dark) {\n  html:not([data-theme]) [style*=\"background: rgb(232, 240, 235)\"] { background-color: var(--ds-c-info-bg, #14241e) !important; }\n  html:not([data-theme]) [style*=\"background: rgb(233, 242, 233)\"] { background-color: var(--ds-c-success-bg, #16261c) !important; }\n  html:not([data-theme]) [style*=\"background: rgb(251, 242, 226)\"] { background-color: var(--ds-c-warn-bg, #2c2517) !important; }\n  html:not([data-theme]) [style*=\"background: rgb(252, 243, 242)\"] { background-color: var(--ds-c-danger-bg, #2b1a19) !important; }\n  html:not([data-theme]) [style*=\"rgb(46, 125, 50)\"] { border-color: var(--wp--preset--color--success) !important; }\n  html:not([data-theme]) [style*=\"rgb(200, 137, 27)\"] { border-color: var(--wp--preset--color--warn) !important; }\n  html:not([data-theme]) [style*=\"rgb(192, 57, 43)\"] { border-color: var(--wp--preset--color--danger) !important; }\n  html:not([data-theme]) [style*=\"color: rgb(192, 57, 43)\"] { color: var(--ds-c-danger-text, var(--wp--preset--color--danger)) !important; }\n  html:not([data-theme]) [style*=\"color: rgb(31, 74, 34)\"] { color: var(--ds-c-success-text, #a6d6a9) !important; }\n  html:not([data-theme]) [style*=\"color: rgb(107, 74, 14)\"] { color: var(--ds-c-warn-text, #ddb769) !important; }\n  html:not([data-theme]) [style*=\"color: rgb(122, 32, 22)\"] { color: var(--ds-c-danger-text, var(--wp--preset--color--danger)) !important; }\n  html:not([data-theme]) [style*=\"rgb(180, 175, 164)\"] { border-color: var(--wp--preset--color--border) !important; }\n  html:not([data-theme]) [style*=\"color: rgb(180, 175, 164)\"] { color: var(--ds-c-meta, #6e6b66) !important; }\n  html:not([data-theme]) [style*=\"color: rgb(168, 164, 155)\"] { color: var(--ds-c-meta, #807d77) !important; }\n}\n/* Three colours the dark map had to take back, all on the style guide (full-5). The Success rule\n   and the Info rule both resolved to the accent mint, so two kinds of message differed only in\n   their words (N-60c233). The Warning rule resolved to the warn preset, which in dark is still the\n   brand Signal — a warning painted in the colour of the \"Request a quote\" button (N-4328c0). Both\n   take the dark lift their own TEXT already took above (#A6D6A9 for the green, #DDB769 for the\n   amber), one step more saturated because a 3px rule carries less colour than a line of type. And\n   the newsletter card's input: the card is brand green in both schemes, so the field inside it\n   keeps the source's own #0F3A2E instead of flipping to accent-hover's mint (N-d46e11). */\nhtml[data-theme=\"dark\"] [style*=\"border-left: 3px solid rgb(46, 125, 50)\"] { border-left-color: var(--wp--custom--tracy--brand--success-rule) !important; }\nhtml[data-theme=\"dark\"] [style*=\"border-left: 3px solid rgb(200, 137, 27)\"] { border-left-color: var(--wp--custom--tracy--brand--warning-rule) !important; }\nhtml[data-theme=\"dark\"] input[style*=\"background: var(--wp--preset--color--accent-hover)\"] { background-color: var(--ds-c-accent-hover, #0f3a2e) !important; }\n/* The module position map and the colour swatches are the one drawing on the site that TEACHES the\n   palette, so on that page ink stays ink — the same \"literal\" principle D24.28 kept for the Paper\n   swatch. Everywhere else brand ink is #0C2B23 in dark (D24.18) so a band separates from the page;\n   inside the map that mapping turned TOPBAR, the three footer cells and COPYRIGHT into a second\n   green beside COMPONENT, and erased exactly the distinction the picture is drawn to make\n   (N-7fcf8c). A hairline keeps the block visible on the card it sits on. */\nhtml[data-theme=\"dark\"] .tracy-page-stack--style-guide [style*=\"background: var(--wp--custom--tracy--brand--ink)\"]:not([style*=\"grid-template-columns\"]) { /* ds-keep: the style guide's module map teaches the palette, so ink stays ink */ background-color: #14171a !important; box-shadow: inset 0 0 0 1px var(--wp--preset--color--border); }\n@media (prefers-color-scheme: dark) {\n  html:not([data-theme]) [style*=\"border-left: 3px solid rgb(46, 125, 50)\"] { border-left-color: var(--wp--custom--tracy--brand--success-rule) !important; }\n  html:not([data-theme]) [style*=\"border-left: 3px solid rgb(200, 137, 27)\"] { border-left-color: var(--wp--custom--tracy--brand--warning-rule) !important; }\n  html:not([data-theme]) input[style*=\"background: var(--wp--preset--color--accent-hover)\"] { background-color: var(--ds-c-accent-hover, #0f3a2e) !important; }\n  html:not([data-theme]) .tracy-page-stack--style-guide [style*=\"background: var(--wp--custom--tracy--brand--ink)\"]:not([style*=\"grid-template-columns\"]) { /* ds-keep: the style guide's module map teaches the palette, so ink stays ink */ background-color: #14171a !important; box-shadow: inset 0 0 0 1px var(--wp--preset--color--border); }\n}\n"
+  },
+  "customTemplates": [
+    {
+      "name": "landing",
+      "title": "Landing",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "fixture",
+      "title": "Design system page",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "artifact",
+      "title": "Design page (engine)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "pricing",
+      "title": "Pricing",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-email",
+      "title": "Email",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-form",
+      "title": "Form",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-newsletter",
+      "title": "Newsletter",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-slide",
+      "title": "Slide",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-sitemap",
+      "title": "Sitemap",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-style-guide",
+      "title": "Style guide",
+      "postTypes": [
+        "page"
+      ]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    }
+  ]
+}

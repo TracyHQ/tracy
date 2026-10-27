@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-void: #000000;
+  --color-salt: #f8f8f8;
+  --color-ash: #707070;
+  --color-ghost-line: #f8f8f8;
+  --color-veil: #f8f8f8;
+
+  /* Typography */
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-clashdisplay: 'ClashDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

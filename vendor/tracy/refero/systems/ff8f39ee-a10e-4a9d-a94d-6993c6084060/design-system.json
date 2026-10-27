@@ -1,0 +1,288 @@
+{
+  "dos": [
+    "Set headlines at weight 300 — never bold a Switzer heading, no matter the size.",
+    "Use Bone White (#fffef7) as the only page background. Pure #ffffff breaks the warm paper language.",
+    "Apply the 1440px pill radius to every button, tag, and Menu element — sharp corners are reserved for cards and images only.",
+    "Push display headlines to 64–84px with -0.04em letter-spacing; the negative tracking is what makes the type feel carved, not printed.",
+    "Let full-bleed photographs carry the visual weight. UI chrome should recede — the Menu button and logo are the only non-image elements above the fold.",
+    "Use chromatic accents (#8a0467, #03624c, #a5c8eb) as borders, small fills, and single-card highlights — never flood a section with color.",
+    "Keep section gaps at 48–64px. The cream canvas is the layout's primary structural tool; rules and dividers are secondary."
+  ],
+  "donts": [
+    "Don't bold headlines. The 300 weight is the brand — weight 500+ destroys the airbrushed feel.",
+    "Don't use pure #ffffff anywhere. The warm off-white is a signature, not a fallback.",
+    "Don't add shadows. The system's 0px box-shadow signature means elevation comes from color and scale, not depth.",
+    "Don't round card or image corners. 1440px belongs only to interactive elements; editorial surfaces stay sharp.",
+    "Don't fill a CTA with a chromatic color. No action background evidence supports a colored button — all interactive surfaces are black or transparent.",
+    "Don't exceed two lines on a display headline. The 84px treatment is for poster statements, not paragraphs.",
+    "Don't use #0000ee or default link blue. Inherit Ink Black for all text links; never let browser defaults leak in."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fffef7",
+      "name": "Bone White",
+      "role": "Page canvas, card surfaces, text on dark accents — a warm off-white that replaces pure #ffffff and gives the whole system a paper-like, printed feel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Graphite",
+      "role": "Secondary body text, captions, metadata, helper copy — recedes so display type can dominate",
+      "group": "neutral"
+    },
+    {
+      "hex": "#aaaaaa",
+      "name": "Ash",
+      "role": "Input borders, inactive link color, tertiary dividers — soft structural gray that disappears when not needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4c4a",
+      "name": "Charcoal Scale",
+      "role": "Mid-neutral for list borders, subtle elevation on the dark gradient track — warm gray, not blue-gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8a0467",
+      "name": "Magenta Bloom",
+      "role": "Pink supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#03624c",
+      "name": "Forest Teal",
+      "role": "Saturated brand accent for card frames and decorative strokes; pairs with Magenta Bloom for duotone treatments",
+      "group": "brand"
+    },
+    {
+      "hex": "#a5c8eb",
+      "name": "Powder Blue",
+      "role": "Soft chromatic accent — card backgrounds, wash backgrounds, muted illustration fill; cools the warm canvas without competing",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffacea",
+      "name": "Candy Pink",
+      "role": "Pastel card surface — high-key, used as one-of-many tints in news/article cards; a softer sibling of Magenta Bloom",
+      "group": "accent"
+    },
+    {
+      "hex": "#a5ebd6",
+      "name": "Mint Wash",
+      "role": "Pastel card surface — replaces the structural canvas on selected cards; reads as calm, cool, breathable",
+      "group": "accent"
+    },
+    {
+      "hex": "#101731",
+      "name": "Navy Ink",
+      "role": "Deep accent card surface and inverted text ground; the only dark field the system uses, applied sparingly as a featured block",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffd001",
+      "name": "Signal Yellow",
+      "role": "Sporadic high-chroma highlight (badges, tag pills, hover state on cards) — used in trace amounts, never as a primary fill",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed page model: no max-width container, content runs edge-to-edge with consistent left/right padding (16–32px on mobile, 32px+ on desktop). The hero is a single oversized display headline ('CREATIVE GIANTS' at 84px) taking roughly 40% of the viewport, immediately followed by a full-bleed photograph with bottom-left meta + headline overlay. Section rhythm is monolithic: each new section is introduced by a small all-caps eyebrow + 34–54px weight 300 statement, separated by 48–64px of negative space — no alternating dark/light bands except the single inverted Navy Ink accent card. Content is consistently left-aligned; no centered stacks except the hero display headline. The news/case-study area uses a 3-column card grid with a right-floated arrow control cluster. Navigation is a single top header — no sidebar, no sticky elements beyond the header itself. Overall density is spacious and editorial: every section breathes, and whitespace is the primary structural tool.",
+  "imagery": "Editorial photography dominates: full-bleed, sharp-cornered, no overlays or rounded masks. Treatment leans toward documentary and atmospheric — wrinkled hands, public installations, candid human subjects — never staged product shots. Imagery is always presented at large scale (full viewport width or card-filling) so the photograph, not the UI, is the design unit. No illustration, no 3D, no product mockups. Iconography is minimal: a single small circular logo mark, outline-only chevrons on carousel controls, and featherweight 1px-stroke UI icons. Density is image-led, with text serving as a quiet annotation layer below or over the photograph.",
+  "similar": [
+    {
+      "why": "Same oversized editorial display headlines, weight-light typography, full-bleed project photography, and minimal navigation chrome on a neutral canvas.",
+      "business": "Pentagram"
+    },
+    {
+      "why": "Same 'studio portfolio as art book' treatment — cream canvas, large weight-300 sans-serif statements, sharp-cornered full-bleed imagery, and pill-shaped controls.",
+      "business": "Locomotive (locomotive.ca)"
+    },
+    {
+      "why": "Same full-bleed experimental photography and whisper-weight display type; both agencies treat the homepage as a single oversized canvas rather than a dashboard.",
+      "business": "Resn"
+    },
+    {
+      "why": "Same single-line display headline, edge-to-edge video/photo hero, and a cream/near-white canvas with rationed chromatic accents.",
+      "business": "B-Reel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "1440px",
+      "cards": "0px",
+      "pills": "1440px",
+      "images": "0px",
+      "buttons": "1440px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": null
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#fffef7",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — warm off-white paper tone"
+    },
+    {
+      "hex": "#a5ebd6",
+      "name": "Card Tint",
+      "level": 1,
+      "purpose": "Pastel card variant — replaces canvas on accent cards"
+    },
+    {
+      "hex": "#ffacea",
+      "name": "Card Tint Pink",
+      "level": 1,
+      "purpose": "Pastel card variant — high-key highlight"
+    },
+    {
+      "hex": "#a5c8eb",
+      "name": "Card Tint Blue",
+      "level": 1,
+      "purpose": "Pastel card variant — cool wash"
+    },
+    {
+      "hex": "#ffd001",
+      "name": "Signal Pop",
+      "level": 2,
+      "purpose": "Sporadic yellow accent — badges, hover, single-card highlight"
+    },
+    {
+      "hex": "#101731",
+      "name": "Inverted Field",
+      "level": 3,
+      "purpose": "Dark accent surface for featured blocks; text inverts to Bone White"
+    }
+  ],
+  "northStar": "oversized editorial poster on cream paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.018
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.018
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.018
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.018
+    },
+    {
+      "role": "heading-sm",
+      "size": 34,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "heading",
+      "size": 54,
+      "lineHeight": 1,
+      "letterSpacing": -0.023
+    },
+    {
+      "role": "display",
+      "size": 84,
+      "lineHeight": 1,
+      "letterSpacing": -0.04
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Menu Button",
+      "role": "Primary navigation trigger in the header",
+      "description": "Black (#000000) fill, Bone White (#fffef7) text at 16px weight 400, fully rounded at 1440px radius, padding 12px 24px, no border. Sits in the top-right corner with generous whitespace around it — its darkness is the only heavy element on the cream canvas."
+    },
+    {
+      "name": "Header Lockup",
+      "role": "Persistent top chrome",
+      "description": "Two-line eyebrow text (12px, weight 400, all caps, Ink Black) reading 'UNIQUE PUBLIC INTERVENTIONS // IMMERSIVE ACTIVATIONS' to the left of a 32px circular logo mark, Menu button floated right. Zero background — the cream page is the header background. ~16px vertical padding, full-bleed."
+    },
+    {
+      "name": "Display Poster Headline",
+      "role": "Hero / section title",
+      "description": "84px Switzer weight 300, letter-spacing -0.04em, line-height 1.0, color Ink Black. Occupies the full viewport width minus the page margin. Optionally rendered with a vertical Charcoal-to-Black gradient on warm-cream lettering for a sculptural poster effect. Never wraps above 2 lines."
+    },
+    {
+      "name": "Hero Image Band",
+      "role": "Full-bleed editorial photography",
+      "description": "Full-viewport-width image, no border-radius, no shadow. Meta text (location: 12px all-caps) and headline (34px weight 300) sit bottom-left with 32px left padding. Imagery is the hero; UI chrome yields entirely to the photograph."
+    },
+    {
+      "name": "Section Title Block",
+      "role": "In-page section openers",
+      "description": "All-caps eyebrow label (12px, weight 400, Graphite) on a single line, followed by a 34–54px weight 300 statement headline. No background, no rules, no decorations — separation is by whitespace alone (48–64px below the eyebrow, 32px below the headline)."
+    },
+    {
+      "name": "Project / News Card",
+      "role": "Card grid items for articles and case studies",
+      "description": "3-column grid, no card border, no shadow, no radius. Image sits top of card (square or 4:3, sharp corners). Title 18–20px weight 300 in Ink Black sits 16px below the image. Body copy 14px weight 400 in Graphite, 3-line clamp. Optional 1px chromatic accent border (#8a0467 or #03624c) on the image edge for editorial tagging."
+    },
+    {
+      "name": "Chromatic Accent Card",
+      "role": "Variant card surface using the brand accent palette",
+      "description": "Uses one of the pastel or saturated tints (#ffacea, #a5ebd6, #a5c8eb, or #101731) as the card surface. Text inverts: Bone White on Navy Ink, Ink Black on pastels. 0px radius, 24–32px padding. Used as the occasional pop in a card grid; never more than one in a row."
+    },
+    {
+      "name": "Carousel Arrow Control",
+      "role": "Next/prev navigation for card carousels",
+      "description": "32px circular outline button, 1px Ash (#aaaaaa) border, transparent fill, 16px Ink Black chevron icon centered. No background change on hover — only the border darkens to Ink Black. Floats above the card row at the right edge of the section title."
+    },
+    {
+      "name": "Meta Eyebrow",
+      "role": "Context labels above headlines",
+      "description": "12px Switzer weight 400, all caps, letter-spacing 0 (default), color Graphite (#666666). Single line. Used for location, section names, project categories."
+    },
+    {
+      "name": "Full-Bleed Footer",
+      "role": "Page footer",
+      "description": "No background fill — same Bone White canvas. Top edge defined by a 1px hairline divider. Multi-column link lists with 14px weight 400 Ink Black text, 8px row-gap. The extreme Charcoal-to-Black linear gradient (rgb(77,76,74) → rgb(0,0,0)) is reserved for any dark footer band variant; never used elsewhere."
+    },
+    {
+      "name": "Tag / Category Pill",
+      "role": "Small editorial labels and filters",
+      "description": "8px vertical, 12px horizontal padding, 1440px radius, 12px weight 400 all-caps. Default: Ink Black text, transparent fill, 1px Ash border. Accent variant: Signal Yellow (#ffd001) fill, Ink Black text, no border."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single-family system: weight 300 for all display and headline work (12–84px), weight 400 for body, metadata, and UI controls. The signature choice is using weight 300 at 64–84px — most systems would bold to 700–800 here; Switzer at light preserves the hairline strokes, making the type feel airbrushed onto the cream canvas. Tighter letter-spacing as size grows (-0.04em at 84px, -0.018em at 14px) keeps the counters open without looking spaced-out.",
+      "sizes": "12, 14, 16, 18, 20, 34, 54, 64, 84",
+      "family": "Switzer",
+      "weight": "300, 400",
+      "lineHeight": "1.00–1.43",
+      "substitute": "Inter (300, 400), Söhne (300, 400), or any geometric humanist sans with a true 300 weight",
+      "letterSpacing": "-0.04em at 84px, -0.027em at 64px, -0.023em at 54px, -0.02em at 34px, -0.018em at 20px and below"
+    }
+  ],
+  "description": "Creative Giants reads like an oversized art-book spread rendered in code: a warm off-white canvas, hairline margins, and display type so large it functions as a poster rather than a heading. The whole system runs on negative space and one weight of light (300) — headlines whisper at 64–84px instead of bolding into shouting, and letter-spacing tightens aggressively (-0.04em) as type grows so the words feel chiseled, not spaced. Chromatic color is rationed into small, saturated hits: vivid magenta, deep teal, powder blue, hot pink, mint, and navy appear as card surfaces or accents, never as background floods. Interactive elements are black-on-cream pills with fully rounded (1440px) radii, and the chrome is almost invisible — a single circular logo mark and a 'Menu' button floating in white space. The visual identity is a production studio's contact sheet: one enormous headline, one full-bleed photograph, one quiet line of meta text. Every other page should follow the same economy.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000\n- background: #fffef7\n- border / divider: #aaaaaa\n- secondary text: #666666\n- accent: #8a0467 (magenta) and #03624c (teal) — borders and small hits only\n- pastel card surface: #a5ebd6, #ffacea, or #a5c8eb\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n\n1. *Hero display headline*: Full-bleed cream (#fffef7) canvas. 'CREATIVE GIANTS' at 84px Switzer weight 300, color #000000, letter-spacing -0.04em, line-height 1.0, left-aligned with 32px left padding. No background, no border. The headline should occupy ~40% of the viewport height.\n\n2. *Pill Menu button*: 16px Switzer weight 400, color #fffef7 on #000000 fill, 1440px border-radius, padding 12px 24px, no border. Float top-right with 32px margin from edges. Sits alone in the header — no other UI chrome competes.\n\n3. *Full-bleed image band with overlay*: Edge-to-edge photograph (no border-radius). Bottom-left overlay: 12px Switzer weight 400 all-caps meta in #fffef7 ('BRIGHTON, UNITED KINGDOM'), 32px below it a 34px weight 300 statement headline in #fffef7. 32px padding from the left and bottom edges.\n\n4. *News / project card*: 3-column grid, no card border, 0px radius. Square image (no radius) sits at top. 16px below: 20px Switzer weight 300 title in #000000. 8px below: 14px weight 400 description in #666666, 3-line clamp. 48px column gap, no row gap (single row).\n\n5. *Pastel accent card*: One card in the grid swaps to surface #a5ebd6 with 24px padding around its content, text in #000000 at 20px weight 300. The remaining two cards stay on the cream canvas. This is the system's only color-rupture moment."
+    }
+  ],
+  "elevationPhilosophy": "The system has no meaningful elevation. The single detected shadow (rgba(255,255,255,0.2) 0px 0px 0px 1px) is a white 1px inner ring, not a drop shadow — it functions as a hairline highlight on dark elements, not as depth. Separation is built entirely from the warm canvas, whitespace, and the rare dark inverted field. Do not add box-shadows to cards, buttons, or modals."
+}

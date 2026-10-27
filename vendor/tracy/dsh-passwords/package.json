@@ -1,0 +1,121 @@
+{
+  "name": "dsh-passwords",
+  "version": "2.7.7-tracy.19",
+  "description": "dsh-passwords: a server-grade gateway that turns DeepSeek Harness into a multi-tenant platform — remote access + automatic HTTPS, per-subuser permissions & quotas, sandbox enforcement, first-run setup, SQLite auth with at-rest encryption, rate-limit and audit log (bilingual zh/en UI)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "dsh-passwords": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": "./dist/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "license": "GPL-3.0-only",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "gateway",
+    "auth",
+    "login",
+    "password",
+    "extension",
+    "plugin"
+  ],
+  "files": [
+    "dist/",
+    "scripts/",
+    "npm-shrinkwrap.json",
+    "docker/",
+    "src/",
+    "tsconfig.json",
+    "install.sh",
+    "install.bat",
+    "cordis.yml",
+    "README.md",
+    "README_en.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    ".env.example"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slywalker2006/dsh-passwords.git"
+  },
+  "homepage": "https://github.com/slywalker2006/dsh-passwords",
+  "bugs": {
+    "url": "https://github.com/slywalker2006/dsh-passwords/issues"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/build-client.mjs",
+    "build:client": "node scripts/build-client.mjs",
+    "prepare": "node -e \"require('node:fs').mkdirSync('dist', { recursive: true })\" && node scripts/build-client.mjs",
+    "pretest": "npm run build",
+    "test": "npm run test:tracy && npm run test:upstream",
+    "test:upstream": "node --import tsx --import ./test/tracy/upstream-policy-preload.ts --test \"test/*.test.ts\"",
+    "test:tracy": "node --import tsx --test \"test/tracy/**/*.test.ts\"",
+    "prepack": "node scripts/clean-dist.mjs && npm run build",
+    "start": "node dist/cli.js serve-gateway",
+    "start:gateway": "node dist/cli.js serve-gateway"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.22.3",
+    "jsonwebtoken": "^9.0.2",
+    "ws": "^8.21.0",
+    "yaml": "^2.9.0"
+  },
+  "overrides": {
+    "@modelcontextprotocol/client": "2.3.0",
+    "body-parser": "^1.20.9",
+    "fast-uri": "^3.1.9",
+    "fflate": "^0.8.3",
+    "http-cache-semantics": "^4.3.0",
+    "qs": "^6.16.0",
+    "undici": "^8.12.2",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5-alpha.1",
+    "@deepseek-ai/dsh": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-api-session-controller": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-api-workspace-controller": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-client-ui-conversation": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-client-ui-layout": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-client-ui-renderer": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-client-ui-settings": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-client-ui-settings-general": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-client-ui-slots": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@deepseek-ai/dsh-host-webserver": ">=0.2.1-alpha.1 <0.2.2-0",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.0.0",
+    "@types/react": "~18.3.1",
+    "@types/react-dom": "~18.3.0",
+    "@types/react-test-renderer": "18.3.1",
+    "esbuild": "^0.25.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-test-renderer": "18.3.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  }
+}

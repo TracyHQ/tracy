@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-ivory-white: #ffffff;
+  --color-charcoal-edge: #181818;
+  --color-graphite: #333333;
+  --color-stone-gray: #666666;
+
+  /* Typography */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-raad-display-custom-geometric-sans-serif: 'Raad Display (custom geometric sans-serif)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wfont8b8bfecd7287b5071a4785a78bba57128a74e2: 'wfont_8b8bfe_cd7287b5071a4785a78bba57128a74e2', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

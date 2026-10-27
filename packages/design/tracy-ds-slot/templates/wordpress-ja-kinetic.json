@@ -1,0 +1,257 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-kinetic",
+  "minVersion": {
+    "wp-ja-kinetic": "1.1.11"
+  },
+  "maxVersion": {
+    "wp-ja-kinetic": "1.1.19"
+  },
+  "maxVersionNote": "1.1.19 20/10/2026 (after dot 3): the Integrations marks (uploaded SVG pictures stroked in lime) are drawn inline on every page view, not only on a site whose global styles carry the slot, so the client-side preview and a worn site recolour them with the readable accent role (--ds-c-accent-text); unworn they keep the lime, and the light Integrations page keeps the same olive filter (invalid at computed-value time once a system is worn), so the default look is unchanged pixel for pixel. 1.1.18 19/10/2026 (dot 3): the probe v10 fixes of 18/10 that the contract carried as patches are the theme's own (wp-ja-kinetic-sections.css): the Integrations call bar's section reads the page ground on the dark side too (--ds-c-bg, it read --ds-c-ink), the FAQ support band and the About values band read the warm surface on the dark side (--ds-c-surface-warm, they read --ds-c-ink and --ds-c-surface), and the About journey timeline's labels carry no ground or ring (transparent !important over the incident timeline's label mask); every fallback is the template's own value, so with no system worn nothing changes. A site still on 1.1.17 or older updates its theme from the claude-cowork announcement. 1.1.15 13/10/2026: the dark half of every light-dark() whose light half reads the slot reads it too (darkArms, feat/ds-every-template-3), so a dark system no longer shows the template's own dark colours; unworn, both halves compute what they did. 1.1.12 checked 11/10/2026 (ds-minversion-audit): only style.css's header and readme.txt differ from 1.1.11; 1.1.13 checked 12/10/2026 (published-templates-green): the same var(--ds-*) reads as 1.1.12 and tracy_apply_inspiration kept; every role class is still drawn by the theme or the demo; the theme change is words, dates, fonts and links, no colour 13/10/2026: 1.1.14 = 1.1.13 with the theme's other stylesheets tokenized (TDSR CSS-2, fix/tdsr-css2); measured with flow.mjs before release. 1.1.16 16/10/2026 (#1375): a status colour set as text (the shared sections' plan ticks and form notes, the theme's own .text-danger, .text-success and required marks) reads the readable shade the slot makes for the worn page (--ds-c-<status>-text); unworn, every value is the theme's own.; 1.1.17 checked 16/10/2026 (feat/ds-role-variables, quickstart quickstart/ja-kinetic/wp7 1.0.10): 1.1.16 plus the role-variable reads (220 to 930 var(--ds- reads against the published 1.1.15, no file reads fewer), tracy_apply_inspiration kept, role-scan --check 0 unresolved",
+  "modeHook": "[data-theme=\"dark\"].t4-dark",
+  "modesAuto": false,
+  "modeHookNote": "wp-ja-kinetic-dark.js marks the dark side with two marks on the root, set and cleared together: data-theme=\"dark\" (the theme.json presets and wp-ja-kinetic.css read it) and the class t4-dark (the rules the sections, article and finder sheets carry from the Joomla source key on it, html:not(.t4-dark) for the light side). The slot's sides and the Design system popup's Light | Dark read and set both (src/sides.mjs, design-system-live-page.js): with the default data-theme hook a press on Light cleared data-theme and left t4-dark, so the page stood half dark (the Integrations hero and call-to-action bar black under Moxie's light side, the bar's title 1.90:1, CON-2 and HIER-2, probe v10, 18/10/2026). There is no auto state: the script always sets a side before the first paint, from the cookie, ?theme= or the page's default.",
+  "release": "quickstart/ja-kinetic/wp7",
+  "baseTokens": {
+    "--bg": "#FBFCFA",
+    "--surface": "#FFFFFF",
+    "--surface-warm": "#F2F5EE",
+    "--fg": "#46514B",
+    "--fg-2": "#10140F",
+    "--muted": "#7C877F",
+    "--meta": "#7C877F",
+    "--border": "#E4E8E0",
+    "--border-soft": "#E4E8E0",
+    "--accent": "#4D7C0F",
+    "--accent-on": "#FFFFFF",
+    "--accent-hover": "#3F6A0A",
+    "--accent-active": "#3F6A0A",
+    "--success": "#30A46C",
+    "--warn": "#F5A623",
+    "--danger": "#E5484D",
+    "--container-max": "1240px"
+  },
+  "roles": {
+    "page": "body.home.wp-singular",
+    "display": "h1.wp-block-heading.hx-h1",
+    "heading": "h2.wp-block-heading.acm-bento-title",
+    "body": "p.hx-sub.wp-block-paragraph",
+    "button-primary": "a.hx-btn.hx-btn--primary",
+    "card": "div.wp-block-group.hx-card",
+    "container": "div.wp-block-group.hx-container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 52px",
+    "displayFace": "Space Grotesk 700, tracking -0.029em",
+    "heading": "first section heading: 38px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(163, 230, 53)",
+    "card": "repeated rounded box ×6",
+    "container": "first content container, max-width 1240px"
+  },
+  "keepScopes": [],
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "selectors": {
+    "display": "h1.wp-block-heading.hx-h1, .tracy-display",
+    "heading": ["main h2.wp-block-heading:where(:not(.acm-cta.cta-bar *))"],
+    "buttonPrimary": [".tracy a.hx-btn.hx-btn--primary"],
+    "bodyFace": [
+      "body.tracy",
+      ".tracy p:not(:where([class*=\"brand\"], [class*=\"logo\"], .wp-block-site-title))",
+      ".tracy li"
+    ],
+    "container": [".tracy div.wp-block-group.hx-container"],
+    "button": [
+      ".tracy .wp-block-button__link",
+      ".tracy .hx-btn",
+      ".tracy .btn",
+      ".tracy .hx-cta-btn",
+      ".tracy .acm-split-cta",
+      ".tracy .hx-plan-cta",
+      ".tracy .hx-pi-btn",
+      ".tracy .hx-sup-btn",
+      ".tracy .tracy-btn"
+    ],
+    "card": [".tracy-card", ".tracy div.wp-block-group.hx-card"],
+    "eyebrow": [".hx-eyebrow", ".acm-bento-eyebrow", ".acm-split-eyebrow", ".hx-cta-eyebrow"],
+    "featuredCard": {
+      ".tracy .acm-pricing .tracy-plan.is-hot": "ring",
+      ".tracy.home .tracy-plans .tracy-plan:nth-child(2)": "border",
+      ".acm-pricing .hx-plan.is-popular": "border"
+    }
+  },
+  "featuredCardNote": "15/10/2026: the popular plan (.hx-plan.is-popular) is marked by a border in the accent preset (--primary): under Mailchimp it became the system's yellow, 1.2:1 on the light page. Under a system it takes the system's accent read 3:1 on the page, else its readable accent text (tokens56.mjs featuredCardRules); Tracy Base's own plan entries are kept for the shared patterns",
+  "selectorsNote": "heading: the section headings, not the title of a call-to-action BAR (.acm-cta.cta-bar, /integrations/): the bar is one strip, its title (20px) and line on the left of its button; with the system's section size (Moxie 43px) the title rose to 56px and the bar's line dropped under its button (layout-drift, LAYOUT-3, 15/10/2026). The bar's title keeps the template's size and takes the system's face and weight (headingsAll). button: also the theme's button elements, not only its links (15/10/2026, button-role): under Moxie the header's Start free took the system pill while the footer's Subscribe (button.btn.btn-primary, on 25 of 30 pages) and the contact and account forms' Send Email (button.hx-btn--primary) kept 9px, as did the calls to action's own buttons (a.hx-cta-btn: Request an integration, the closing Start free; a.acm-split-cta: Read the KineticQL docs; the pricing plans' .hx-plan-cta and .hx-pi-btn, the support band's .hx-sup-btn, the base theme's .tracy-btn) beside the system's pill in the header; the box metrics still stop at a form (OUTSIDE_FORMS), so the footer row keeps its sizes. The theme's buttons are a.hx-btn and its cards div.hx-card, not WordPress's .wp-block-button__link and .tracy-card: re-measured 11/10/2026 every system missed the button radius and weight (9px, 600) and the card radius (16px)",
+  "templateVars": {
+    "--heading": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "the theme's body text reads the fg preset (#46514B) and its headings --heading, the darker fg-2 preset (#10140F): with the system's roles in those presets every heading took the system's secondary text, quieter than its body (Moxie #3d3c35 against #000000, heading-quiet on every page, 15/10/2026). --heading takes the system's text colour, as the Joomla twin does",
+  "followRules": {
+    ":is(.tracy-footer__title, .tracy-footer__news-desc, .tracy-footer__copy)": {
+      "color": "muted"
+    },
+    ".tracy-footer :is(li, li a)": {
+      "color": "muted!"
+    },
+    ".hx-prompt": {
+      "color": "accent-text"
+    },
+    ".acm-tick-live": {
+      "color": "accent-on-ink"
+    },
+    ".hx-cta-eyebrow": {
+      "color": "accent-text"
+    },
+    ".acm-testimonials .hx-eyebrow": {
+      "color": "accent-text"
+    },
+    ":is(.hx-inc-time, .hx-metrics-badge, .hx-eyebrow, [class*=\"-eyebrow\"])": {
+      "color": "accent-text"
+    },
+    ".hx-cta-title:where(:not(.acm-cta.cta-bar *))": {
+      "color": "fg"
+    },
+    ".tracy-footer": {
+      "background-color": "bg"
+    },
+    "#acm-features-intro-193 .hx-section": {
+      "background-color": "surface-warm"
+    },
+    ".hx-article .hx-article__cat, :is(body.item-218, body.item-219, body.item-220, body.item-222, body.item-223, body.item-226) .acm-page-masthead .hx-eyebrow": {
+      "background-color": "surface!",
+      "border-color": "border!"
+    },
+    ".hx-article .hx-author__av": {
+      "background-color": "surface"
+    },
+    ".item-218 .acm-features-ledger :is(.hx-fl-ruled-idx, .hx-spec-num)": {
+      "color": "accent-text"
+    }
+  },
+  "followNote": "the prompt sign in the hero's ghost button (span.hx-prompt) and the eyebrows paint the accent (a fill colour) as text: MotherDuck's light blue read 1.70:1 on its cream hero, Apple's blue 2.15-3.71:1 on the bands below; they take the readable accent. Re-measured 12/10/2026 with every heading and text judged: the incident times, the metrics badge and the section eyebrows (div.hx-eyebrow, div.acm-bento-eyebrow, div.acm-split-eyebrow…: divs, which no contrast kind read before the block-text kind) paint the accent as text too (MotherDuck 1.62:1, Apple 4.46:1): readable accent; the call-to-action title (the heading colour, Toggl Track's pink, 4.27:1 on the card's purple glow) takes the system's text; the footer sat on the surface, where a system's muted grey reads under 4.5:1 (MotherDuck 4.38:1, the template's own 4.93): the footer takes the page ground 14/10/2026 (look review of the final measure, /product/features \"(02) / THE THREE SIGNALS\"): the band’s ground is the Joomla source’s literal (html.t4-dark … #acm-features-intro-193 .hx-section { background: #161B18 }), which stood under a light system’s page while its heading took the page’s ink (1:1 under Stripe); it takes the system’s warm surface on either side, as the template’s own light half (--elevated) does. The Integrations page's closing call-to-action bar (.acm-cta.cta-bar .hx-section, body.item-219) paints its section in var(--ds-c-ink) on the dark side and var(--ds-c-bg) on the light, a band the template draws level with its page (1.00:1); under Moxie's dark side ink is a lifted grey (#1a1a1a on #000000, 1.21:1, GROUND-2 loud-band, probe v10, 18/10/2026): it takes the page ground on both sides, as the Joomla twin does (58ef3a9a92). From theme 1.1.18 (19/10/2026) the theme reads it itself (--ds-c-bg on both sides) and the rule left this contract; the title rule above leaves the bar (:where(:not(.acm-cta.cta-bar *))), whose title the theme writes in the ink's words on the dark side and the heading on the light.",
+  "sideRules": {
+    "dark": {
+      ".hx-spec-num": {
+        "color": "color-mix(in oklab, var(--ds-c-accent-text) 20%, var(--ds-c-fg))"
+      },
+      ".tracy-footer__news-row .acym_module input[type='text']": {
+        "border-color": "color-mix(in srgb, var(--ds-c-fg) 22%, var(--ds-c-bg))"
+      },
+      ".hx-article .hx-related": {
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ":is(.kinetic-contactform__actions :is(.hx-btn, button), .hx-cta-btn, .hx-pi-btn)": {
+        "border-radius": "var(--ds-btn-radius, 9px)!important"
+      },
+      ".acm-testimonials": {
+        "--testi-band": "var(--ds-c-surface-warm)"
+      },
+      ".acm-cta.cta-card .hx-cta-inner": {
+        "--hx-cta-elevated": "var(--ds-c-surface-warm)"
+      },
+      ".acm-incident-timeline .hx-inc-time": {
+        "background-color": "var(--elevated)",
+        "box-shadow": "0 0 0 6px var(--elevated)"
+      },
+      ".acm-hero": {
+        "background-image": "linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px), radial-gradient(120% 100% at 80% 0%, color-mix(in srgb, var(--ds-c-accent) 12%, transparent), transparent 60%)"
+      },
+      ":has(> svg.hx-twin)": {
+        "position": "relative"
+      },
+      "svg.hx-twin": {
+        "display": "block",
+        "position": "absolute",
+        "inset": "0",
+        "width": "100%",
+        "height": "100%",
+        "box-sizing": "border-box"
+      }
+    },
+    "light": {
+      ".hx-spec-num": {
+        "color": "color-mix(in oklab, var(--ds-c-accent-text) 20%, var(--ds-c-fg))"
+      },
+      ".tracy-footer__news-row .acym_module input[type='text']": {
+        "border-color": "color-mix(in srgb, var(--ds-c-fg) 22%, var(--ds-c-bg))"
+      },
+      ":is(.kinetic-contactform__actions :is(.hx-btn, button), .hx-cta-btn, .hx-pi-btn)": {
+        "border-radius": "var(--ds-btn-radius, 9px)!important"
+      },
+      ".acm-testimonials": {
+        "--testi-band": "var(--ds-c-surface-warm)"
+      },
+      ".acm-cta.cta-card .hx-cta-inner": {
+        "--hx-cta-elevated": "var(--ds-c-surface-warm)"
+      },
+      ".acm-cta.cta-card .hx-cta-eyebrow": {
+        "color": "color-mix(in srgb, var(--ds-c-accent-text) 40%, var(--ds-c-fg))"
+      },
+      ".acm-incident-timeline .hx-inc-time": {
+        "background-color": "var(--elevated)",
+        "box-shadow": "0 0 0 6px var(--elevated)"
+      },
+      ".acm-hero": {
+        "background-image": "linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px), none"
+      },
+      ":has(> svg.hx-twin)": {
+        "position": "relative"
+      },
+      "svg.hx-twin": {
+        "display": "block",
+        "position": "absolute",
+        "inset": "0",
+        "width": "100%",
+        "height": "100%",
+        "box-sizing": "border-box"
+      }
+    }
+  },
+  "sideNote": "JA Kinetic is dark by default: wp-ja-kinetic-dark.js sets data-theme=\"dark\" on every page, and the sections sheet keeps literal dark grounds under it (the testimonials band --testi-band #161B18, the call-to-action card's --hx-cta-elevated #161B18). Under a light system they stayed dark under the system's dark text (Apple: the band at #161b18, the card a grey gradient, 2.15-4.03:1); they take the system's warm surface, as the light theme's own --elevated does. The card's eyebrow sits on the card's own accent glow (a 12% accent radial tint): the readable accent read 4.27:1 there under Apple, so on the light side it is the accent darkened a fifth toward the system's strongest text. Under a dark system the same two take the system's warm surface too (Toggl Track's band was the theme's green-black on a purple page). The clients ticker stays #0D1110: the theme draws it dark in both of its themes. The hero's glow is a literal lime at 12% (rgba(163, 230, 53, .12), the .pen's #A3E6351F) under its grid: under a light system it washed the top of the page pale green beside Toggl Track's pink or Apple's blue (eye check 13/10/2026). A dark system's page gets the glow in its accent at the same 12%; a light one's has none, its grid kept: the readable accent of the hero eyebrow is made for the page and any tint under it costs it (Pitch's violet at 12%: 4.48:1, measured 13/10/2026) the features page's big spec numerals (.hx-spec-num, 01 to 06) are the template's accent: the system's accent read 2.87:1 on its card under Moxie (lowText), and its readable accent still read half the body text's contrast on the dark side (heading-quiet, 15/10/2026): they take the system's text with a fifth of its accent, a tinted numeral as strong as the words beside it. The footer newsletter field draws its border in the template's chrome hairline (#e4e8e0 on #f2f5ee in its own page, 1.1:1): wearing a system it could not be seen as a field on the Blueprint and Signal homes (unstyled-input, 15/10/2026); on both sides its border is the system's text mixed 22% into its page. The related-posts band of an article is #161b18 literal on the dark side (its light side reads --elevated): under Moxie's black it stood out 1.20:1 where the template lifts it 1.12:1 (loud-band): it takes the system's quiet raised surface, surface-warm, as the testimonials band does. The contact form's Send Email sets its corner 9px !important on the contact page (body.item-227 .kinetic-contactform__actions), the team page's closing call to action through an id (body.item-226 #acm-cta-204 .hx-cta-btn), and the pricing page's Talk to sales kept 9px on the dark side: on either side it takes the system's button corner, !important to pass it, the template's 9px where the system states none (button-role, BTN-1, 15/10/2026). The timeline's time labels (t+0s, t+30s…) sit on its connector line, drawn in --border, a hairline 1.1:1 off its band; under a system with a hard border (Figma's black, Moxie dark's cream) the line struck through every label (struck-text, 14/10/2026): each label masks the line with the band's own ground (var(--elevated)) and a 6px ring of it. JA Kinetic is dark by default: wp-ja-kinetic-dark.js sets data-theme=\"dark\" on every page, and the sections sheet keeps literal dark grounds under it (the testimonials band --testi-band #161B18, the call-to-action card's --hx-cta-elevated #161B18). Under a light system they stayed dark under the system's dark text (Apple: the band at #161b18, the card a grey gradient, 2.15-4.03:1); they take the system's warm surface, as the light theme's own --elevated does. The card's eyebrow sits on the card's own accent glow (a 12% accent radial tint): the readable accent read 4.27:1 there under Apple, so on the light side it is the accent darkened a fifth toward the system's strongest text. Under a dark system the same two take the system's warm surface too (Toggl Track's band was the theme's green-black on a purple page). The clients ticker stays #0D1110: the theme draws it dark in both of its themes Probe v10, 18/10/2026, Moxie dark: the FAQ support band (body.item-222 .acm-faq-support .hx-sup-section, var(--ds-c-ink) !important) and the About page's values band (body.item-225 .acm-features-intro .hx-section, var(--ds-c-surface) !important under html.t4-dark) stood 1.21:1 off the black page where the template lifts them 1.12:1 (GROUND-2 loud-band): on the dark side they take the quiet raised surface, surface-warm, as the Joomla twin's support band does, at a weight above the template's own !important (one more class). The Integrations bar's title wrote the system's text (followRules .hx-cta-title: fg, Moxie's dark body grey #b7b39f) beside its line in the ink's words (#f4efd4), a title quieter than its own line (HIER-2 heading-quiet): on the dark side, where the bar's box is the system's ink, it takes the ink's words, as the template writes both in --ds-c-on-ink. The About page draws the same timeline upright (body.item-225, the journey 2022 to 2026): its line runs down the left beside the year labels, never through them, and each label is a block as wide as its column on the band ground var(--bg), not --elevated. The label mask drew a bar of the raised surface across every year there (Moxie dark: #11110f on the black page, eye check 18/10/2026, no detector named it): on that page the labels keep no ground and no ring, as the template draws them. From theme 1.1.18 (19/10/2026) the FAQ support band, the About values band, the bar title and the About labels are the theme's own reads (wp-ja-kinetic-sections.css: --ds-c-surface-warm, the ink's words, transparent !important over the label mask), not rules of this contract. Three demo pictures are rasters drawn in the template lime (the hero terminal, the KineticQL code panel, the bento telemetry chart): under Moxie the LIVE badge, the highlighted bar, the query keywords and the chart lines stayed lime (eye check 20/10/2026; no detector named it). From theme 1.1.19 each one is printed with a hidden inline SVG twin (inc/extra.php wp_ja_kinetic_picture_twin) whose lime reads --ds-c-accent-on-ink and whose status colours (INFO, WARN, ERROR, the timings) stay the picture's own; on both sides the twin is shown laid over the picture (the same box: the picture stays, with its alt text, under it), so without a system the page is the picture alone.",
+  "contrast": {
+    "accent-text": "main .tracy-eyebrow, main a:not([class*=button]):not(:has(img))",
+    "muted": "main .has-muted-color, main .tracy-section__head p",
+    "body": "main p",
+    "card-text": "main .tracy-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-kinetic): 12/12 on every release measured, controls 0 differences, lowest text 4.55:1, 93% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on theme 1.1.11 (its minVersion) over the ja-kinetic/wp7 1.0.7 content (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-kinetic): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, no text under 4.5:1 made worse than the template's own, 93-100% of the page follows, screenshots read by a person. The new probe first FAILED it 4/12: the buttons and cards missed the system's radius and weight (selectors), the hero's prompt sign and the eyebrows painted the accent as text (1.70-3.71:1), and the dark theme's literal #161B18 grounds stayed dark under a light system (sideRules). First measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-kinetic-wp7)",
+  "contractNotes1315": "14/10/2026 (#1315, two modes): the footer's titles, news line, list items and copyright (the theme's literal #7f8b86) read 4.28:1 on BMW's derived dark page: they take the system's muted text, as the footer takes its page colour; the call card's eyebrow on a light side is 40% of the readable accent mixed into the system's text (was 80% into the heading text: 4.42:1 on Spotify's derived light card, still 4.48:1 at 45%); the footer's list items and their links are painted by a theme rule the plain rule does not outrank, so they take the muted text !important",
+  "paletteKeep": [
+    {
+      "selector": ".tracy-header",
+      "reason": "the header: the palette read its ground as a band (the system’s ink under a light system) while its words (--chrome-text, outside the palette) stayed the system’s text: the menu read 1:1 under every light system (final measure on the develop merge, 15/10/2026); the contract’s own header rules keep ground and words one pair, as before the palette"
+    },
+    {
+      "selector": ".hx-cta-chip",
+      "reason": "the call-to-action chip is the theme’s permanent-dark terminal motif (its own comment in wp-ja-kinetic-sections.css): the palette took its ground to the system’s surface and left its lime marks on white (1.4:1)"
+    },
+    {
+      "selector": ".acm-clients-ticker",
+      "reason": "the clients ticker is the theme’s dark strip with a lime LIVE mark: the palette took its ground to the page and left the lime on white"
+    }
+  ],
+  "innerNote": "15/10/2026 (v10 inner measure, /pages/kineticql 10/12, /product/features 6/12): (1) the theme's lime chips are literal translucent tints the auto palette skips (rgba(163, 230, 53, .078 to .145)): the article's category pill (.hx-article .hx-article__cat, !important), the author's initials disc (.hx-author__av) and the inner-page masthead pill (.acm-page-masthead .hx-eyebrow); the readable accent on them read 4.28, 3.91 and 3.84:1 on Stripe's derived navy (green-tinted #1e3126, #1d3832, #2a391c). Each takes the system's surface and line, where the readable accent reads 4.50:1 or more under all 1334 systems on both sides (4.67:1 there). (2) on the features page the ledger's index and spec numbers (.item-218 .acm-features-ledger .hx-fl-ruled-idx, .hx-spec-num: var(--primary), the accent FILL as words) read 2.87 to 3.14:1 on Moxie's derived cream and 2.65 to 3.07:1 on Stripe's derived navy: they take the readable accent (4.53 to 5.41:1). (3) the call, metrics and inner-masthead containers are fixed at 1240px !important (sections.css: .acm-cta, .acm-features-ledger.layout-metrics, .acm-page-masthead .hx-container), so they kept 1240 under every system while the rest of the page took its width (Moxie 1200, Stripe 1320; the features masthead is the page's first container: container 4/5, match 0.80 and 0.83); on both sides they take the system's container (--wp--custom--container--max), kept 64px off the window's edges past 640px as layoutRules does. The base stated no --container-max, so Apple's 1024px was worn wherever a system states no width (208 of 1334): the variation set --wp--custom--container--max, which the theme's header, footer and mega panel read, to 1024px under the template's 1240px sections; the base now has the theme's own 1240px."
+}

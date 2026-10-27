@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1082-account-menu",
+  "kind": "feat",
+  "title": "The person's face at the foot of the left column opens an account menu (header = Account, AI accounts with the connected vendors' marks, Settings with its shortcut, Appearance Light/Dark/System, Community), keyboard-operable, the same face as everywhere else",
+  "pr": 1082,
+  "area": "ui/settings/account-menu",
+  "cms": ["any"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup. Give seat A a display name: in PG `update account set display_name = 'Reg Menu A' where email = '<A>'`. Browser: a NEW context with A's cookie; open O and wait for `.tsb-root`.",
+    "S2: GET O/auth/me with A's cookie; record ME = its JSON. GET O/api/ui; record HIDDEN = its `hidden` array. GET O/api/seat-plan/status; record PLAN = its JSON (status code too).",
+    "S3: In the rail read: `[data-tracy-account-trigger]` exists and contains one `[data-tracy-face]`; that face's text and computed background-color; `aria-label` of the trigger; whether `.tsb-community` exists anywhere in the rail; whether the trigger contains an `svg` that is not inside `[data-tracy-face]`.",
+    "S4: Focus the trigger and press Enter. Read the `[role=menu]` panel: the `data-menu-item` values of its rows in document order (direct rows, not the submenu), and which element has focus. Press End; read the focused row's `data-menu-item`. Press Home. Press Escape; read whether `[role=menu]` is gone and whether document.activeElement is the trigger.",
+    "S5: Open the menu again with a click. Hover `[data-menu-item=appearance]` for 400 ms; read the second `[role=menu]` (submenu): its rows' `data-menu-item`, `role` and `aria-checked`. Press `[data-menu-item=theme-dark]`; read `document.documentElement` attributes/classes that dsh uses for the colour scheme and getComputedStyle(document.body).backgroundColor. Reopen the menu, open Appearance, press `[data-menu-item=theme-system]` (restore).",
+    "S6: Open the menu; read the `data-vendor-stack` attribute and the `data-vendor-mark` values inside `[data-menu-item=ai-accounts]` (absent stack is a valid answer). Then press `[data-menu-item=ai-accounts]`; read whether the Settings dialog is open and which section is active (its nav item with aria-current or the active section id). Close Settings with Escape; read whether document.activeElement is the trigger.",
+    "S7: Open the menu; read the text of `.ts-kbd` in `[data-menu-item=settings]`. Close the menu. Press that key combination on the page body (Meta for ⌘, Control for Ctrl, Alt for ⌥); read whether the Settings dialog opens on the General section. Close it.",
+    "S8: Open the menu; press `[data-menu-item=account]`; read the active Settings section and that the Account section shows ME.email. Close Settings.",
+    "S9: Open the Team tab of a site where A holds a seat (or O/api/team): read A's face (letter, colour) as drawn there (`[data-tracy-face]` of A's row) and compare with S3.",
+    "S10: Clean up: `update account set display_name = null where email = '<A>'`; theme back to system; close only the context this case opened."
+  ],
+  "expect": [
+    "S2: ME has keys email, defaultSite, face, name; ME.name = 'Reg Menu A'; ME.face has initial and color.",
+    "S3: the trigger exists with exactly one face whose text = ME.face.initial and whose background colour is ME.face.color; aria-label contains 'Reg Menu A'; no `.tsb-community` in the rail; no gear svg in the trigger.",
+    "S4: rows in order: account, ai-accounts, settings, appearance, community — minus any whose switch is in HIDDEN (tracy-account makes `account` a non-row header, tracy-model-plan removes ai-accounts, community-link removes community); focus starts on the first row; End focuses `community` (or the last present row); after Escape there is no `[role=menu]` and focus is on the trigger.",
+    "S5: submenu rows theme-light, theme-dark, theme-system, each role menuitemradio, exactly one aria-checked='true'; after theme-dark the page is in dark scheme (body background is dark); after theme-system it follows the OS again.",
+    "S6: if PLAN lists connected vendors, data-vendor-stack = 'connected' and the marks are exactly those vendor ids in PLAN order; if none connected, data-vendor-stack = 'none' and the marks are the allowed vendors; if PLAN failed, no stack and the row still opens Settings. Pressing the row opens Settings on the AI accounts section; Escape closes it and focus returns to the trigger.",
+    "S7: the `.ts-kbd` text is non-empty and pressing it opens Settings on General.",
+    "S8: Settings opens on Account and shows ME.email.",
+    "S9: the Team tab face for A has the same letter and colour as the trigger's face."
+  ],
+  "selectors": {
+    "trigger": "[data-tracy-account-trigger] (slot sidebar.settings, @tracy/dsh-settings)",
+    "face": "[data-tracy-face] (@tracy/core/team/face Face)",
+    "menu": "[role=menu]; rows [data-menu-item=account|ai-accounts|settings|appearance|community]; submenu rows [data-menu-item=theme-light|theme-dark|theme-system]",
+    "ai accounts": "[data-vendor-stack=connected|none], [data-vendor-mark=<vendor id>]",
+    "shortcut": ".ts-kbd inside [data-menu-item=settings]",
+    "doors": "GET /auth/me, GET /api/ui, GET /api/seat-plan/status, GET /api/team"
+  },
+  "evidence": "09/10/2026: the gear at the foot of the rail becomes the person's face opening a Claude/Lovable-style menu, same on web and desktop; Discord moves into it as Community; Model Subscription is renamed AI accounts; one face on every surface. Plan: tasks/todo-account-menu.md.",
+  "fence": "Mechanism only: the trigger and its face, the menu's rows and order from the slot, the WAI-ARIA keyboard model, the theme submenu, the AI accounts marks against the seat-plan door, the shortcut, and face identity across surfaces. Not covered: connecting a vendor (needs a real vendor sign-in), the desktop app's own window (checked by hand in the PR), Discord itself.",
+  "run": {
+    "cmd": [
+      "../../node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.config.mjs",
+      "specs/REG-PR-1082-account-menu.spec.mjs"
+    ],
+    "cwd": "tests/regression",
+    "needs": ["stand", "chrome"]
+  }
+}

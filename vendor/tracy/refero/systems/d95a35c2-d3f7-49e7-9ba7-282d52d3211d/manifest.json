@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d95a35c2-d3f7-49e7-9ba7-282d52d3211d",
+  "status": "complete",
+  "name": "Orderful",
+  "url": "https://styles.refero.design/style/d95a35c2-d3f7-49e7-9ba7-282d52d3211d",
+  "sourceWebsite": "https://www.orderful.com",
+  "extractedAt": "2026-06-03T16:41:38.493Z",
+  "capturedAt": "2026-10-08T05:18:08.911529+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "industrial command deck — a logistics dispatcher's printed control sheet in black ink and surgical vermillion, every page restrained enough to let a single CTA shout.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/697fbb6a-b586-4dfc-b189-7570806efae4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c98b1b62-bdf7-4bf3-88d7-1228e45c158f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8f39c560-ecb0-42ee-a690-9c88cf7c9422.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c2a48140-71d1-477b-94af-0b19a824450e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/84a69342-05a3-48fc-8080-fc9be614bf01.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "855920ec92ee0d912939aeb8de7c5d1ef92fc934016b198205d7c05d33293cbc",
+      "bytes": 22248
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "951762784309c8f654f6352963405118ae080fe1680ede960b7234291d0e4e31",
+      "bytes": 120875
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "28897d245f7700a304126706a5359d008a966d5a5a19419801f3ba861fc29f03",
+      "bytes": 18912
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "569b98507547813d3add5831739692f9ff9a3ff55aed16647c51000de8fa5f08",
+      "bytes": 13680
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "367ab33658e062aadbfdc89bc9fb002c0c034c83816ccb3facb8fab52bb5beb3",
+      "bytes": 14238
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "12e5d8877f9197e0732a89e47f3b4b58d188a186d8d0f26bfe8ea2b6d7f0c9e9",
+      "bytes": 3236
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9f0f694faac8f18d67bb81273309a43a6ffc9a11f5cb6f24518c0dc21a929985",
+      "bytes": 667
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f47a13bb03abd38da3009260d144a561624353564b52f4ba492e72d543a4a434",
+      "bytes": 812
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "969d141c6165f2067be985856337dd1976b5fdb596236fe2a78f90ba7a308f87",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cc809f9b5777e160d86d6526d22528bc0765ee703ea1c0f67c76f1f1ff6e6b8c",
+      "bytes": 46757
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9cb5853905dd4e781763befc61ef58b686bb7f06c5a1e15c5b6ff90da41b9aa3",
+      "bytes": 24635
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "78ebdb47423c97564a029fd2d13a4ca27ee4808978e82e71b76f3f55e2629421",
+      "bytes": 55617
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7c97e8a749a23c9cef521905aa2a081f9e73374e6d3495723721f15a213bfcd5",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6fbc0f3d7e7fbff0bd7304d56a2bcd7757e81a13cdde7225378c70c76548160e",
+      "bytes": 1691
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0b83e5f54c9c6b72e6ea6b96ab7d3e073cdc38b250b2db69aad216eb6c0b1f21",
+      "bytes": 2462
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "1ded7f89-3df0-4e7c-9cac-28218d038575",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a6950b49-8ce4-4330-9499-26ca08061599",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "d95a35c2-d3f7-49e7-9ba7-282d52d3211d",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

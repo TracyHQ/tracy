@@ -1,0 +1,294 @@
+{
+  "dos": [
+    "Use #fff050 exclusively for the single primary CTA on any page — never for decorative fills, secondary buttons, or status indicators",
+    "Set all display headings in Nekst at 40px or larger; never use Nekst for body, nav, or button text",
+    "Apply 30px border-radius to all cards, modals, and major content containers — this radius IS the brand",
+    "Keep the page canvas #000000 across all sections; use white or Smoke (#f5f5f5) cards as the only way to create surface separation",
+    "Use Manrope weight 200 for light/secondary text and weight 700 for emphasized UI labels; weight 500 is the default for body and nav",
+    "Let headlines sit at line-height 1.0 with no extra tracking adjustments — the geometric Nekst at scale carries its own density",
+    "Place icons only as small functional elements or as yellow accent glyphs — never as large decorative illustrations"
+  ],
+  "donts": [
+    "Don't introduce additional accent colors — blue, green, red, or purple as UI tokens. The system is one-color-on-black",
+    "Don't use Nekst below 40px or for button labels, nav items, or form fields — it loses its editorial power at small sizes",
+    "Don't apply box-shadows to cards or buttons — the flat paper-on-table aesthetic is intentional",
+    "Don't use borders thicker than 1px on dark surfaces — use Fog (#dddddd) for hairlines, never a chromatic border",
+    "Don't alternate section backgrounds between black and light gray — keep the canvas black throughout, with white card inserts for content blocks",
+    "Don't use fully rounded (9999px) pill buttons — the system's button radius is 10–20px, never circular",
+    "Don't place body text below 14px or above 20px — the type scale jumps from body to display via Nekst at 40px+"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Jet Black",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Primary text on dark canvas, inverted button surface, logo, nav foreground",
+      "group": "neutral"
+    },
+    {
+      "hex": "#595959",
+      "name": "Ash",
+      "role": "Muted helper text, secondary captions, subdued metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dddddd",
+      "name": "Fog",
+      "role": "Hairline borders, low-emphasis dividers, card outlines on dark backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Smoke",
+      "role": "Light surface variant for inverted sections, light card fills against the dark page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fff050",
+      "name": "Highlighter Yellow",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#dfe3ff",
+      "name": "Periwinkle Wash",
+      "role": "Soft accent surface, tinted card backgrounds, decorative wash behind phone mockups",
+      "group": "accent"
+    },
+    {
+      "hex": "#bec8ff",
+      "name": "Iris Veil",
+      "role": "Decorative illustration tint, secondary surface accent, cool shadow for hero imagery",
+      "group": "accent"
+    }
+  ],
+  "layout": "Promova uses a max-width 1200px centered column with generous side padding. The hero is an asymmetric split: oversized Nekst headline left, product visual right. Below the hero, content flows in a 2-column card grid for method/feature blocks, then a full-width FAQ accordion list, then a 3-column article grid. Section gaps are large (80px+) to let the black canvas breathe. The header is a simple horizontal bar, not a mega-menu. Sticky behavior is not visually indicated — the nav stays quiet. All sections share the same black background; visual separation comes from white card inserts, not from alternating background colors.",
+  "imagery": "Imagery is minimal and product-led: phone mockups showing the app interface sit against soft purple-blue tints (Periwinkle #dfe3ff, Iris Veil #bec8ff), never against photographic backgrounds. Portrait photography of people (Oleksandr Usyk in the campaign modal) is presented in circular crops, small, and subordinate to type — the typography leads, imagery supports. No full-bleed hero photography. Icons are flat, yellow-filled or white-outlined, geometric. The overall effect is a printed page with sparse illustration, not a screen-first product.",
+  "similar": [
+    {
+      "why": "Same language-learning category and similar use of a single bold accent color (green for Duolingo, yellow for Promova) against a brand-dominant canvas",
+      "business": "Duolingo"
+    },
+    {
+      "why": "Dark-mode UI with oversized display type, generous corner radii, and a single accent color for interactive elements",
+      "business": "Linear"
+    },
+    {
+      "why": "Monochrome-on-black interface with flat cards, minimal shadows, and typography-led hierarchy",
+      "business": "Notion"
+    },
+    {
+      "why": "Language-learning competitor with a similar dark-canvas editorial layout and oversized display headlines",
+      "business": "Babbel"
+    },
+    {
+      "why": "Near-black canvas with one chromatic accent, geometric sans-serif display type, and the same flat-paper card aesthetic",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4px",
+      "cards": "30px",
+      "buttons": "20px",
+      "buttons-sm": "10px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "80px",
+    "cardPadding": "30px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "level": 0,
+      "purpose": "Page canvas — the dominant background across all sections"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Ash Layer",
+      "level": 1,
+      "purpose": "Elevated light surface for inverted cards, feature blocks, FAQ items"
+    },
+    {
+      "hex": "#dfe3ff",
+      "name": "Periwinkle Mist",
+      "level": 2,
+      "purpose": "Tinted accent surface for decorative and product showcase areas"
+    },
+    {
+      "hex": "#bec8ff",
+      "name": "Iris Glow",
+      "level": 3,
+      "purpose": "Highest-elevation accent wash for hero visual containers and phone mockup backgrounds"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 100vmax rgba(0,0,0,0.7)",
+      "element": "Modal/Overlay"
+    },
+    {
+      "style": "none — flat surfaces, no shadow",
+      "element": "Cards on dark canvas"
+    }
+  ],
+  "northStar": "midnight magazine with one yellow highlighter — a black page, white type, and a vivid lemon swatch that says 'press here'.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.67
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading-lg",
+      "size": 20,
+      "lineHeight": 1.44
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.42
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 100,
+      "lineHeight": 1
+    },
+    {
+      "role": "display-xl",
+      "size": 140,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Promova Logo Lockup",
+      "role": "Brand identity",
+      "description": "Lowercase wordmark 'promova' set in Manrope weight 700, white on the black header. The wordmark sits flush-left in the nav bar with no icon glyph or padding buffer — the word IS the mark."
+    },
+    {
+      "name": "Header Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Full-width black bar with Manrope 15px / 500 weight nav items (Languages, Courses, For business, Why Promova, Resources), each with a chevron-down caret. White text, no background fill on items, 30px corner radius on the overall container. Pairs with two right-aligned CTAs."
+    },
+    {
+      "name": "Ghost Button (Sign Up)",
+      "role": "Secondary action in nav",
+      "description": "Transparent background, 1px white border (or Fog #dddddd), white Manrope 14px / 700 uppercase text, 10px corner radius, 10px 15px padding. Inverts to filled-white on hover."
+    },
+    {
+      "name": "Filled Dark Button (Get Started)",
+      "role": "Primary action in nav",
+      "description": "Black background (#000000), white Manrope 14px / 700 uppercase text, 10px corner radius, 10px 15px padding. On the dark canvas this button reads as a subtle outlined ghost rather than a filled block — the brand relies on the yellow for real action emphasis."
+    },
+    {
+      "name": "Yellow CTA Button (Try Promova)",
+      "role": "Primary conversion action",
+      "description": "Highlighter Yellow (#fff050) background, black Manrope 14–16px / 700 uppercase text, 20px corner radius, 20px 30px padding. The single chromatic element on the page — this is where Promova spends its only color budget. Feels like a highlighter mark over a printed page."
+    },
+    {
+      "name": "Hero Headline Block",
+      "role": "Above-the-fold editorial statement",
+      "description": "Nekst weight 400 at 100–140px, white text, line-height 1.0. Sits left-aligned on the black canvas, occupying the full left half of the hero. The size and the custom face's geometric sharpness make it read as a magazine cover, not a SaaS headline."
+    },
+    {
+      "name": "Content Card",
+      "role": "Feature, method, and article containers",
+      "description": "White or Smoke (#f5f5f5) background, 30px corner radius (the signature radius of the entire system), 30px padding on all sides, no shadow or border. On the dark page, white cards read as paper inserts laid on a black table."
+    },
+    {
+      "name": "Method/Feature Card",
+      "role": "Two-column explanation blocks",
+      "description": "White card with 30px radius, contains a Nekst 40–60px heading (black), Manrope 16px body text in Ash #595959, and optional small icon. Arranged in a 2-column grid with 40px gap between cards."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question/answer item",
+      "description": "Transparent or dark surface, no background, 1px Fog (#dddddd) bottom border. Question text in Manrope 18–20px / 500, white. Chevron icon right-aligned. No card container — the list feels like editorial copy, not a widget."
+    },
+    {
+      "name": "Promo Modal (Usyk Campaign)",
+      "role": "Overlay marketing card",
+      "description": "Periwinkle (#dfe3ff) background, 30px corner radius, centered on the page with a dark backdrop. Contains Nekst 50–60px heading, Manrope 16px body, a yellow CTA button, and a phone mockup illustration to the right. Functions as a single-color editorial insert."
+    },
+    {
+      "name": "Phone Mockup Frame",
+      "role": "Product screenshot container",
+      "description": "Iris Veil (#bec8ff) or Periwinkle (#dfe3ff) rounded background, phone device frame rendered at slight angle, app UI visible inside. The cool purple-blue tints differentiate product visuals from the achromatic UI without breaking the monochrome rule."
+    },
+    {
+      "name": "Language Pill",
+      "role": "Language selector tags",
+      "description": "White or Smoke background, 4–10px corner radius, Manrope 14px / 500 text, minimal padding (5–10px). Small, functional, no decoration."
+    },
+    {
+      "name": "Icon Set",
+      "role": "Interface iconography",
+      "description": "Yellow (#fff050) filled icons for highlighted or interactive glyphs, white outlined icons for secondary UI. Consistent stroke weight, geometric and flat — no skeuomorphism. The yellow icons are the most visible brand mark after the wordmark."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and headline face — used exclusively at 40px and above for hero text, section headers, and oversized editorial statements. Single weight (400) with no bold variant, forcing the size itself to carry emphasis. Custom geometric grotesque with tight apertures that give headlines a sharp, print-poster quality on the black canvas.",
+      "sizes": "14px, 15px, 16px, 18px, 19px, 24px, 40px, 50px, 60px, 70px, 100px, 120px",
+      "family": "Nekst",
+      "weight": "400",
+      "lineHeight": "1.00–1.20",
+      "substitute": "Bricolage Grotesque, Space Grotesk, or General Sans at the same weights"
+    },
+    {
+      "role": "Interface and body workhorse — navigation, body copy, buttons, captions, form labels, and footers. Weight 200 handles light/secondary text, 400–500 for body, 700 for emphasized UI labels. Carries every functional element that isn't editorial display.",
+      "sizes": "10px, 14px, 15px, 16px, 18px, 20px, 24px, 25px, 140px",
+      "family": "Manrope",
+      "weight": "200, 400, 500, 700",
+      "lineHeight": "1.40–1.67",
+      "substitute": "Inter, Plus Jakarta Sans, or DM Sans"
+    }
+  ],
+  "description": "Promova is a midnight-magazine language learning surface: near-black canvas, white type, a single electric yellow (#fff050) used as functional punctuation for the primary action and icon highlights. Headlines are set in Nekst, a custom display face used exclusively at oversized scales (40–140px) — never as UI text — giving every screen a confident editorial weight. Body and interface type run on Manrope from 200 to 700, with weight 200 doing the work most sites assign to 300. The system is ruthlessly monochromatic (1% colorfulness) and the visual rhythm comes from oversized type, generous 30px corner radii, and the yellow accent appearing only where action or attention is required. Components feel like magazine spreads rather than dashboard widgets: flat, rounded, low-elevation, with cards that read as paper inserts against the black page.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- background: #000000\n- text: #ffffff\n- muted text: #595959\n- border: #dddddd\n- accent / icon highlight: #fff050\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. **Method/Feature card**: White #ffffff background, 30px border-radius, 30px padding. Nekst 50px weight 400 black heading, Manrope 16px weight 400 #595959 body text below, optional yellow #fff050 icon (24px) top-left of the card.\n\n3. **FAQ accordion row**: Transparent background (sits on #000000), 1px bottom border in #dddddd. Question text in Manrope 20px weight 500, #ffffff. Right-aligned chevron icon, white outline. No card container, no background fill.\n\n\n5. **Navigation bar**: Black #000000 background, 30px border-radius on the bar container. 'promova' wordmark in Manrope 700 white, 15px, flush-left. Nav items (Languages, Courses, For business, Why Promova, Resources) in Manrope 15px weight 500, white, with 20px horizontal spacing. Right side: outlined ghost button (Sign Up, 1px white border, 10px radius) and filled dark button (Get Started, #000000 background, 10px radius, white text)."
+    },
+    {
+      "title": "Color Discipline",
+      "content": "Promova is a 1% colorfulness system. The yellow #fff050 is rationed like a scarce resource — it appears only where the user must act, and nowhere else. No blue links, no green success states, no red error states in the visual language; the system relies on text labels and icon shapes to communicate state. The periwinkle and iris tints (#dfe3ff, #bec8ff) exist only as backgrounds for product mockups, never as UI accents. If a new screen needs a third color, it is a design failure — restructure the component to use the existing palette."
+    }
+  ],
+  "elevationPhilosophy": "Promova rejects shadow-based elevation entirely. Cards on the black canvas are distinguished only by their white fill and 30px radius — the contrast of paper-on-table is the elevation system. The single shadow-like effect is the modal backdrop, which uses a dark overlay rather than a box-shadow on the modal itself. This flat, print-inspired approach keeps the visual language editorial and prevents the dark mode from feeling like a typical product UI."
+}

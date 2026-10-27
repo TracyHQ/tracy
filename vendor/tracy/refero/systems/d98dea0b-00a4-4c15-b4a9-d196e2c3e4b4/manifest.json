@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+  "status": "complete",
+  "name": "Letterboxd",
+  "url": "https://styles.refero.design/style/d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+  "sourceWebsite": "https://letterboxd.com",
+  "extractedAt": "2026-06-03T18:53:40.862Z",
+  "capturedAt": "2026-10-08T05:18:10.398030+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "Darkened cinema lobby with neon rating glow",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/65fb0485-7778-4bff-8706-961d411e3e90.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1a4ffa8a1e7a7ccd6358fc5654cd10d2ed9b76b914d8dd54ae2895845c4203d8",
+      "bytes": 23452
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8f03b9c4623272451af4106071fda606e5a5a046ff72471ce2743915d1b8bd0e",
+      "bytes": 125253
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4b512b9a283cfd16fa0d58034d8d5160ad97ae8faca26f9230ed5dc11714df00",
+      "bytes": 19103
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "733e50c28b7714cc7e71af5308098cb2a2170c7c25f86af8ae921945bd4cebd7",
+      "bytes": 19039
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e385a10652a9ea114a1f4c0db25ef8601320b4a226b2023baf403bf6ad89be0e",
+      "bytes": 13673
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "406978f0fdff8223c447e20ade546f26dec5512aaf17af8e7eed5561bc18b47c",
+      "bytes": 4595
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0623515c24fbac077eb920fc19c4e36eba495beb32f4a3d0eaa0ad267c409ad1",
+      "bytes": 1179
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b8480eb856fdccf504c56af025d6b9c1d79b7e787fb43986b36ec84139d2b59a",
+      "bytes": 1196
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e2371fca84e45d3e8fa844326cf51c59c8b246f9808aef7be4e79df2414d54bb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2575f915aa9d3ed6d92d6619393c557ab1855cdf6878f4d2d9d0fa24a4687693",
+      "bytes": 45960
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cf350dda21d1aef5caa4c18ccc520637a7a1c1d1df45a0a2ea7d43bafe80132c",
+      "bytes": 23899
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "70b21ffa4ce99631db177127caa65a8d537a358a7f0ef61badd2e2a66986042b",
+      "bytes": 57452
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "dce8229c7a81cc4ede46abc9d4a31ad3caba25e34e1977154325cba18781c089",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0904dd8775573685a93fc9f576d86e1648a719f7aaf18130bfb2c78fd8d3837f",
+      "bytes": 2311
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "565f1fbbd7230e7aa4a6226e35c40ccb0380ff76d1d8457d4951cab097a24cc7",
+      "bytes": 2831
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+    "1775bf6a-afdd-48b1-8435-b92ec585c674",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "1cb31aee-608e-4dec-a44d-5745e4fd6bab",
+    "2d4fc4ba-2ea4-465f-8644-f3ff5c6713a2",
+    "2f0a053b-0596-4212-a4f4-8a7b580acb90",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "35f89ccd-614d-4f8f-9cce-bb94309df237",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "565bfc50-3a19-4224-9a4c-125edaeb7bef",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "9e885c21-63ee-42c2-9b85-fd420948e9f4",
+    "a6284fcd-fa69-4469-ac40-4239e5b84a39",
+    "d7d9c36d-fec9-4218-9e17-3d129dfb2dee",
+    "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e586b296-bfac-4e93-add2-daa384712b39",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a"
+  ]
+}

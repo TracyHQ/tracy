@@ -1,0 +1,69 @@
+{
+  "color": {
+    "electric-violet": {
+      "$value": "#5800fd",
+      "$type": "color",
+      "$description": "Electric Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-indigo": {
+      "$value": "#2415c6",
+      "$type": "color",
+      "$description": "Deep Indigo — Saturated brand depth — testimonial card backgrounds, gradient mid-stops, and decorative fills that reinforce violet identity without competing with Electric Violet for attention"
+    },
+    "periwinkle-glow": {
+      "$value": "#7066ed",
+      "$type": "color",
+      "$description": "Periwinkle Glow — Soft brand highlight — icon tints, secondary accents, and gradient highlights that lighten the violet palette for hover states and decorative ornament"
+    },
+    "halo-violet": {
+      "$value": "#4b39ef",
+      "$type": "color",
+      "$description": "Halo Violet — Radial gradient seed — the orb color that radiates from the hero top-left corner and bleeds into card backgrounds, creating atmosphere without flat fill"
+    },
+    "obsidian": {
+      "$value": "#060311",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas — the deep near-black backdrop for the entire site. Carries a subtle violet undertone that keeps the darkness warm and on-brand rather than cold"
+    },
+    "onyx": {
+      "$value": "#161320",
+      "$type": "color",
+      "$description": "Onyx — Card surfaces and hairline borders — one step lighter than the canvas, creates soft layering without shadows. Used for widget tree panels, input fields, and elevated containers"
+    },
+    "slate-mist": {
+      "$value": "#9ba1ae",
+      "$type": "color",
+      "$description": "Slate Mist — Muted body and helper text — descriptions, metadata, secondary nav items. Sits clearly below white in hierarchy while maintaining AAA contrast on the dark canvas"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Icon detail in light/banner contexts and SVG illustration fills where maximum contrast is required against white backgrounds"
+    }
+  },
+  "font": {
+    "urbanist": {
+      "$value": "Urbanist",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface — headlines at 72–120px with wide tracking (0.038em–0.045em) create an architectural, restrained authority. Body and UI at 14–24px in weight 400. The geometric humanist forms are distinctive against the typical Inter/sans default of devtools."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary UI typeface — eyebrows, labels, nav items, and micro-copy where Inter's tighter rhythm supports dense interface text. Weight 300 brings an anti-convention lightness to small caps tracking."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://flutterflow.io",
+      "siteName": "FlutterFlow",
+      "extractedAt": "2026-06-03T18:18:05.828Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-signal-flare: #ff1a00;
+  --color-sun-baked-canvas: #e7a196;
+  --color-midnight-frame: #0a0a0a;
+
+  /* Typography */
+  --font-gt-pressura: 'GT Pressura', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-monument-grotesk: 'Monument Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

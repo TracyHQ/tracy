@@ -1,0 +1,105 @@
+name: CI
+
+on:
+    push:
+        branches: [ master, '[1-9]+.x' ]
+    pull_request:
+
+jobs:
+    tests:
+        name: "Tests on PHP ${{ matrix.php }}${{ matrix.name_suffix }}"
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3' ]
+                extensions: [ '' ]
+                os: [ubuntu-latest]
+                include:
+                    - php: '8.1'
+                      os: ubuntu-latest
+                      extensions: ':mbstring'
+                      name_suffix: ' without mbstring'
+                    - php: '8.1'
+                      os: windows-latest
+                      name_suffix: ' on Windows'
+                    - php: '8.1'
+                      os: macos-latest
+                      name_suffix: ' on macOS'
+
+        steps:
+            -   if: ${{ runner.os == 'Windows' }}
+                run: git config --global core.autocrlf false
+
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    coverage: "none"
+                    php-version: "${{ matrix.php }}"
+                    extensions: "${{ matrix.extensions }}"
+                    ini-file: development
+
+            # PHPUnit 8.5.18+ and 9.5.7+ contains a runtime check for ext-mbstring, so we need to use an older version
+            # for running tests without ext-mbstring.
+            -   name: Force the PHPUnit version
+                if: ${{ matrix.extensions == ':mbstring' }}
+                run: composer require --dev --no-update phpunit/phpunit 9.5.6
+
+            -   name: Install dependencies
+                # PHPUnit requires ext-mbstring. But it is only necessary for features that we don't currently use:
+                # - the testdox, JUnit and XML result printers
+                # - the StringContains assertion when ignoring case
+                # Ignoring the requirement is necessary for the job running the testsuite without mbstring
+                run: composer update --ansi --no-progress --ignore-platform-req=ext-mbstring --ignore-platform-req=php+
+
+            -   name: Run tests
+                run: vendor/bin/phpunit --colors=always
+
+    static_analysis:
+        name: Static analysis
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    coverage: "none"
+                    php-version: "8.2"
+                    ini-file: development
+
+            -   name: Install dependencies
+                run: composer update --ansi --no-progress
+
+            -   name: Install phpstan
+                run: composer bin phpstan update --ansi --no-progress
+
+            -   name: Run phpstan
+                run: vendor-bin/phpstan/vendor/bin/phpstan analyse --ansi --no-progress
+
+    coding_styles:
+      name: Coding styles
+      runs-on: ubuntu-latest
+
+      steps:
+        -   name: Checkout
+            uses: actions/checkout@v4
+
+        -   name: Setup PHP
+            uses: shivammathur/setup-php@v2
+            with:
+              coverage: "none"
+              php-version: "8.2"
+              ini-file: development
+
+        -   name: Install dependencies
+            run: composer update --ansi --no-progress
+
+        -   name: Run phpcs
+            run: vendor/bin/phpcs --extensions=php bin src tests *.php

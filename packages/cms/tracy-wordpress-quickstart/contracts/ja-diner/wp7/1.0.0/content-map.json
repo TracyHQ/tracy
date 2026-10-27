@@ -1,0 +1,4387 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from quickstart/ja-diner/wp7 1.0.0's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "ja-diner"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": ""
+    },
+    {
+      "key": "page-front-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "front-page"
+      }
+    },
+    {
+      "key": "page-your-profile",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "your-profile"
+      }
+    },
+    {
+      "key": "page-contact-us",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "contact-us"
+      }
+    },
+    {
+      "key": "page-offers",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "offers"
+      }
+    },
+    {
+      "key": "page-about-us",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about-us"
+      }
+    },
+    {
+      "key": "page-reservation",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "reservation"
+      }
+    },
+    {
+      "key": "page-password-reset",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "password-reset"
+      }
+    },
+    {
+      "key": "page-username-reminder-request",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "username-reminder-request"
+      }
+    },
+    {
+      "key": "page-our-blog",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "our-blog"
+      }
+    },
+    {
+      "key": "page-login",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "login"
+      }
+    },
+    {
+      "key": "page-registration",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "registration"
+      }
+    },
+    {
+      "key": "page-user-profile",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "user-profile"
+      }
+    },
+    {
+      "key": "page-edit-user-profile",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "edit-user-profile"
+      }
+    },
+    {
+      "key": "page-error-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "error-page"
+      }
+    },
+    {
+      "key": "page-offline-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "offline-page"
+      }
+    },
+    {
+      "key": "page-home-red",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-red"
+      }
+    },
+    {
+      "key": "page-home-pink",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-pink"
+      }
+    },
+    {
+      "key": "page-home-green",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-green"
+      }
+    },
+    {
+      "key": "page-home-blue",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-blue"
+      }
+    },
+    {
+      "key": "page-fetured-articles",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "fetured-articles"
+      }
+    },
+    {
+      "key": "page-typography",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "typography"
+      }
+    },
+    {
+      "key": "page-tagged-items",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "tagged-items"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "ja-diner",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "front-page.slideshow.title.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "front-page — slideshow.title.1"
+    },
+    {
+      "key": "front-page.slideshow.desc.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "front-page — slideshow.desc.1"
+    },
+    {
+      "key": "front-page.slideshow.title.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "front-page — slideshow.title.2"
+    },
+    {
+      "key": "front-page.slideshow.desc.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "front-page — slideshow.desc.2"
+    },
+    {
+      "key": "front-page.features-intro.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Three Broomsticks.",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.module-title"
+    },
+    {
+      "key": "front-page.features-intro.basic-description",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.basic-description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nulla dictum felis in libero dignissim, vel semper augue sagittis nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac turpis dolor.",
+      "maxCharacters": 372,
+      "label": "front-page — features-intro.basic-description"
+    },
+    {
+      "key": "front-page.features-intro.title.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Location.",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.title.1"
+    },
+    {
+      "key": "front-page.features-intro.title.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hours.",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.title.2"
+    },
+    {
+      "key": "front-page.features-intro.description.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ potatoes, rosemary & butter",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.description.1"
+    },
+    {
+      "key": "front-page.features-intro.description.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
+      "maxCharacters": 146,
+      "label": "front-page — features-intro.description.2"
+    },
+    {
+      "key": "front-page.container-tabs.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "container-tabs.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover Our Menu.",
+      "maxCharacters": 80,
+      "label": "front-page — container-tabs.module-title"
+    },
+    {
+      "key": "front-page.menu.tab-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.tab-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main Dishes",
+      "maxCharacters": 80,
+      "label": "front-page — menu.tab-title"
+    },
+    {
+      "key": "front-page.menu.dish-description.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ shaved beans, wild flowers",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-description.1"
+    },
+    {
+      "key": "front-page.menu.dish-description.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pork, oysters, veggie, ginger",
+      "maxCharacters": 84,
+      "label": "front-page — menu.dish-description.2"
+    },
+    {
+      "key": "front-page.menu.dish-description.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pickled ginger, chili",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-description.3"
+    },
+    {
+      "key": "front-page.menu.dish-description.4",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ sesame, bamboo, nuts",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-description.4"
+    },
+    {
+      "key": "front-page.menu.dish-description.5",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ horseradish, soured cream",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-description.5"
+    },
+    {
+      "key": "front-page.menu.dish-description.6",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ prawn, sausage, totatos",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-description.6"
+    },
+    {
+      "key": "front-page.menu.dish-description.7",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ oysters, veggie, ginger",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-description.7"
+    },
+    {
+      "key": "front-page.menu.dish-description.8",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ english peas, carrots & port sauce",
+      "maxCharacters": 94,
+      "label": "front-page — menu.dish-description.8"
+    },
+    {
+      "key": "front-page.menu.dish-description.9",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ apple cider vinegar, salt, sugar & spices",
+      "maxCharacters": 108,
+      "label": "front-page — menu.dish-description.9"
+    },
+    {
+      "key": "front-page.menu.dish-description.10",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "front-page — menu.dish-description.10"
+    },
+    {
+      "key": "front-page.latest-news.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "latest-news.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "News & Events.",
+      "maxCharacters": 80,
+      "label": "front-page — latest-news.module-title"
+    },
+    {
+      "key": "front-page.features-intro.sub-heading",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
+      "maxCharacters": 252,
+      "label": "front-page — features-intro.sub-heading"
+    },
+    {
+      "key": "front-page.features-intro.name",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.name",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pokey McKing",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.name"
+    },
+    {
+      "key": "front-page.features-intro.role",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.role",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Executive Chef of Three Broomsticks.",
+      "maxCharacters": 92,
+      "label": "front-page — features-intro.role"
+    },
+    {
+      "key": "front-page.subscribe.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "front-page — subscribe.module-title"
+    },
+    {
+      "key": "front-page.subscribe.sub-heading",
+      "entity": "page-front-page",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "front-page — subscribe.sub-heading"
+    },
+    {
+      "key": "front-page.subscribe.posttext",
+      "entity": "page-front-page",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "front-page — subscribe.posttext"
+    },
+    {
+      "key": "your-profile.masthead.title",
+      "entity": "page-your-profile",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "your-profile — masthead.title"
+    },
+    {
+      "key": "your-profile.masthead.description",
+      "entity": "page-your-profile",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "your-profile — masthead.description"
+    },
+    {
+      "key": "your-profile.subscribe.module-title",
+      "entity": "page-your-profile",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "your-profile — subscribe.module-title"
+    },
+    {
+      "key": "your-profile.subscribe.sub-heading",
+      "entity": "page-your-profile",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "your-profile — subscribe.sub-heading"
+    },
+    {
+      "key": "your-profile.subscribe.posttext",
+      "entity": "page-your-profile",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "your-profile — subscribe.posttext"
+    },
+    {
+      "key": "contact-us.masthead.title",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "contact-us — masthead.title"
+    },
+    {
+      "key": "contact-us.masthead.description",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "contact-us — masthead.description"
+    },
+    {
+      "key": "contact-us.subscribe.module-title",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "contact-us — subscribe.module-title"
+    },
+    {
+      "key": "contact-us.subscribe.sub-heading",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "contact-us — subscribe.sub-heading"
+    },
+    {
+      "key": "contact-us.subscribe.posttext",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "contact-us — subscribe.posttext"
+    },
+    {
+      "key": "offers.masthead.title",
+      "entity": "page-offers",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Offers",
+      "maxCharacters": 80,
+      "label": "offers — masthead.title"
+    },
+    {
+      "key": "offers.masthead.description",
+      "entity": "page-offers",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "offers — masthead.description"
+    },
+    {
+      "key": "offers.happyhours.module-title",
+      "entity": "page-offers",
+      "target": {
+        "block": "happyhours.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Happy Hours Style 1",
+      "maxCharacters": 80,
+      "label": "offers — happyhours.module-title"
+    },
+    {
+      "key": "offers.happyhours.hp-title",
+      "entity": "page-offers",
+      "target": {
+        "block": "happyhours.hp-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Happy Hours",
+      "maxCharacters": 80,
+      "label": "offers — happyhours.hp-title"
+    },
+    {
+      "key": "offers.happyhours.hp-desc",
+      "entity": "page-offers",
+      "target": {
+        "block": "happyhours.hp-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donec convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris. Qui quaeque quaerendum interpretaris eu. Laoreet sententiae cu mel, his at modo tempor. Hinc dicam repudiandae eu pri, aliquam vivendum deseruisse et sit.",
+      "maxCharacters": 616,
+      "label": "offers — happyhours.hp-desc"
+    },
+    {
+      "key": "offers.subscribe.module-title",
+      "entity": "page-offers",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "offers — subscribe.module-title"
+    },
+    {
+      "key": "offers.subscribe.sub-heading",
+      "entity": "page-offers",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "offers — subscribe.sub-heading"
+    },
+    {
+      "key": "offers.subscribe.posttext",
+      "entity": "page-offers",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "offers — subscribe.posttext"
+    },
+    {
+      "key": "about-us.masthead.title",
+      "entity": "page-about-us",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "About Us",
+      "maxCharacters": 80,
+      "label": "about-us — masthead.title"
+    },
+    {
+      "key": "about-us.masthead.description",
+      "entity": "page-about-us",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "about-us — masthead.description"
+    },
+    {
+      "key": "about-us.features-intro.title_small",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.title_small",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover Our Menu.",
+      "maxCharacters": 80,
+      "label": "about-us — features-intro.title_small"
+    },
+    {
+      "key": "about-us.features-intro.description",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.",
+      "maxCharacters": 486,
+      "label": "about-us — features-intro.description"
+    },
+    {
+      "key": "about-us.teams.module-title",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Team",
+      "maxCharacters": 80,
+      "label": "about-us — teams.module-title"
+    },
+    {
+      "key": "about-us.teams.module-intro",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.module-intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What makes a good chef the best in the world? Here are a few best chefs recommended by their peers in the field.",
+      "maxCharacters": 244,
+      "label": "about-us — teams.module-intro"
+    },
+    {
+      "key": "about-us.teams.member-name.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Darren Klein",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.1"
+    },
+    {
+      "key": "about-us.teams.member-position.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Head Sommelier",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.1"
+    },
+    {
+      "key": "about-us.teams.member-desc.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.1"
+    },
+    {
+      "key": "about-us.teams.member-name.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dewey Hall",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.2"
+    },
+    {
+      "key": "about-us.teams.member-position.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chef Patron",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.2"
+    },
+    {
+      "key": "about-us.teams.member-desc.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.2"
+    },
+    {
+      "key": "about-us.teams.member-name.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lorenzo Pope",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.3"
+    },
+    {
+      "key": "about-us.teams.member-position.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Restaurant Manager",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.3"
+    },
+    {
+      "key": "about-us.teams.member-desc.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.3"
+    },
+    {
+      "key": "about-us.teams.member-name.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Perry Larson",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.4"
+    },
+    {
+      "key": "about-us.teams.member-position.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "General Manager",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.4"
+    },
+    {
+      "key": "about-us.teams.member-desc.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.4"
+    },
+    {
+      "key": "about-us.teams.member-name.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "William Beaudet",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.5"
+    },
+    {
+      "key": "about-us.teams.member-position.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Head Sommelier",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.5"
+    },
+    {
+      "key": "about-us.teams.member-desc.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.5"
+    },
+    {
+      "key": "about-us.teams.member-name.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rodney Quintana",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.6"
+    },
+    {
+      "key": "about-us.teams.member-position.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Manager Restaurant",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.6"
+    },
+    {
+      "key": "about-us.teams.member-desc.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.6"
+    },
+    {
+      "key": "about-us.teams.member-name.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Amy M. Snow",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.7"
+    },
+    {
+      "key": "about-us.teams.member-position.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chef Restaurant",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.7"
+    },
+    {
+      "key": "about-us.teams.member-desc.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.7"
+    },
+    {
+      "key": "about-us.teams.member-name.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-name.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Beulah W. Grieco",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-name.8"
+    },
+    {
+      "key": "about-us.teams.member-position.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-position.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chef Restaurant",
+      "maxCharacters": 80,
+      "label": "about-us — teams.member-position.8"
+    },
+    {
+      "key": "about-us.teams.member-desc.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-desc.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Et vero omnesque eloquentiam vis. Option consequuntur at mei, te qui regione epicuri.",
+      "maxCharacters": 190,
+      "label": "about-us — teams.member-desc.8"
+    },
+    {
+      "key": "about-us.subscribe.module-title",
+      "entity": "page-about-us",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "about-us — subscribe.module-title"
+    },
+    {
+      "key": "about-us.subscribe.sub-heading",
+      "entity": "page-about-us",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "about-us — subscribe.sub-heading"
+    },
+    {
+      "key": "about-us.subscribe.posttext",
+      "entity": "page-about-us",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "about-us — subscribe.posttext"
+    },
+    {
+      "key": "reservation.masthead.title",
+      "entity": "page-reservation",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Reservation",
+      "maxCharacters": 80,
+      "label": "reservation — masthead.title"
+    },
+    {
+      "key": "reservation.masthead.description",
+      "entity": "page-reservation",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "reservation — masthead.description"
+    },
+    {
+      "key": "reservation.features-intro.module-title",
+      "entity": "page-reservation",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Our Chef.",
+      "maxCharacters": 80,
+      "label": "reservation — features-intro.module-title"
+    },
+    {
+      "key": "reservation.features-intro.sub-heading",
+      "entity": "page-reservation",
+      "target": {
+        "block": "features-intro.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
+      "maxCharacters": 252,
+      "label": "reservation — features-intro.sub-heading"
+    },
+    {
+      "key": "reservation.features-intro.name",
+      "entity": "page-reservation",
+      "target": {
+        "block": "features-intro.name",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pokey McKing",
+      "maxCharacters": 80,
+      "label": "reservation — features-intro.name"
+    },
+    {
+      "key": "reservation.features-intro.role",
+      "entity": "page-reservation",
+      "target": {
+        "block": "features-intro.role",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Executive Chef of Three Broomsticks.",
+      "maxCharacters": 92,
+      "label": "reservation — features-intro.role"
+    },
+    {
+      "key": "reservation.subscribe.module-title",
+      "entity": "page-reservation",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "reservation — subscribe.module-title"
+    },
+    {
+      "key": "reservation.subscribe.sub-heading",
+      "entity": "page-reservation",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "reservation — subscribe.sub-heading"
+    },
+    {
+      "key": "reservation.subscribe.posttext",
+      "entity": "page-reservation",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "reservation — subscribe.posttext"
+    },
+    {
+      "key": "password-reset.subscribe.module-title",
+      "entity": "page-password-reset",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "password-reset — subscribe.module-title"
+    },
+    {
+      "key": "password-reset.subscribe.sub-heading",
+      "entity": "page-password-reset",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "password-reset — subscribe.sub-heading"
+    },
+    {
+      "key": "password-reset.subscribe.posttext",
+      "entity": "page-password-reset",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "password-reset — subscribe.posttext"
+    },
+    {
+      "key": "username-reminder-request.subscribe.module-title",
+      "entity": "page-username-reminder-request",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "username-reminder-request — subscribe.module-title"
+    },
+    {
+      "key": "username-reminder-request.subscribe.sub-heading",
+      "entity": "page-username-reminder-request",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "username-reminder-request — subscribe.sub-heading"
+    },
+    {
+      "key": "username-reminder-request.subscribe.posttext",
+      "entity": "page-username-reminder-request",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "username-reminder-request — subscribe.posttext"
+    },
+    {
+      "key": "our-blog.masthead.title",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Blog",
+      "maxCharacters": 80,
+      "label": "our-blog — masthead.title"
+    },
+    {
+      "key": "our-blog.masthead.description",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "our-blog — masthead.description"
+    },
+    {
+      "key": "our-blog.subscribe.module-title",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "our-blog — subscribe.module-title"
+    },
+    {
+      "key": "our-blog.subscribe.sub-heading",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "our-blog — subscribe.sub-heading"
+    },
+    {
+      "key": "our-blog.subscribe.posttext",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "our-blog — subscribe.posttext"
+    },
+    {
+      "key": "login.masthead.title",
+      "entity": "page-login",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "login — masthead.title"
+    },
+    {
+      "key": "login.masthead.description",
+      "entity": "page-login",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "login — masthead.description"
+    },
+    {
+      "key": "login.subscribe.module-title",
+      "entity": "page-login",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "login — subscribe.module-title"
+    },
+    {
+      "key": "login.subscribe.sub-heading",
+      "entity": "page-login",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "login — subscribe.sub-heading"
+    },
+    {
+      "key": "login.subscribe.posttext",
+      "entity": "page-login",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "login — subscribe.posttext"
+    },
+    {
+      "key": "registration.masthead.title",
+      "entity": "page-registration",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "registration — masthead.title"
+    },
+    {
+      "key": "registration.masthead.description",
+      "entity": "page-registration",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "registration — masthead.description"
+    },
+    {
+      "key": "registration.subscribe.module-title",
+      "entity": "page-registration",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "registration — subscribe.module-title"
+    },
+    {
+      "key": "registration.subscribe.sub-heading",
+      "entity": "page-registration",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "registration — subscribe.sub-heading"
+    },
+    {
+      "key": "registration.subscribe.posttext",
+      "entity": "page-registration",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "registration — subscribe.posttext"
+    },
+    {
+      "key": "user-profile.masthead.title",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "user-profile — masthead.title"
+    },
+    {
+      "key": "user-profile.masthead.description",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "user-profile — masthead.description"
+    },
+    {
+      "key": "user-profile.subscribe.module-title",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "user-profile — subscribe.module-title"
+    },
+    {
+      "key": "user-profile.subscribe.sub-heading",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "user-profile — subscribe.sub-heading"
+    },
+    {
+      "key": "user-profile.subscribe.posttext",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "user-profile — subscribe.posttext"
+    },
+    {
+      "key": "edit-user-profile.masthead.title",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "edit-user-profile — masthead.title"
+    },
+    {
+      "key": "edit-user-profile.masthead.description",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "edit-user-profile — masthead.description"
+    },
+    {
+      "key": "edit-user-profile.subscribe.module-title",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "edit-user-profile — subscribe.module-title"
+    },
+    {
+      "key": "edit-user-profile.subscribe.sub-heading",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "edit-user-profile — subscribe.sub-heading"
+    },
+    {
+      "key": "edit-user-profile.subscribe.posttext",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "edit-user-profile — subscribe.posttext"
+    },
+    {
+      "key": "error-page.subscribe.module-title",
+      "entity": "page-error-page",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "error-page — subscribe.module-title"
+    },
+    {
+      "key": "error-page.subscribe.sub-heading",
+      "entity": "page-error-page",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "error-page — subscribe.sub-heading"
+    },
+    {
+      "key": "error-page.subscribe.posttext",
+      "entity": "page-error-page",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "error-page — subscribe.posttext"
+    },
+    {
+      "key": "offline-page.subscribe.module-title",
+      "entity": "page-offline-page",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "offline-page — subscribe.module-title"
+    },
+    {
+      "key": "offline-page.subscribe.sub-heading",
+      "entity": "page-offline-page",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "offline-page — subscribe.sub-heading"
+    },
+    {
+      "key": "offline-page.subscribe.posttext",
+      "entity": "page-offline-page",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "offline-page — subscribe.posttext"
+    },
+    {
+      "key": "home-red.slideshow.title.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "slideshow.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-red — slideshow.title.1"
+    },
+    {
+      "key": "home-red.slideshow.desc.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "slideshow.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-red — slideshow.desc.1"
+    },
+    {
+      "key": "home-red.slideshow.title.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "slideshow.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-red — slideshow.title.2"
+    },
+    {
+      "key": "home-red.slideshow.desc.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "slideshow.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-red — slideshow.desc.2"
+    },
+    {
+      "key": "home-red.features-intro.module-title",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Three Broomsticks.",
+      "maxCharacters": 80,
+      "label": "home-red — features-intro.module-title"
+    },
+    {
+      "key": "home-red.features-intro.basic-description",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.basic-description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nulla dictum felis in libero dignissim, vel semper augue sagittis nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac turpis dolor.",
+      "maxCharacters": 372,
+      "label": "home-red — features-intro.basic-description"
+    },
+    {
+      "key": "home-red.features-intro.title.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Location.",
+      "maxCharacters": 80,
+      "label": "home-red — features-intro.title.1"
+    },
+    {
+      "key": "home-red.features-intro.title.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hours.",
+      "maxCharacters": 80,
+      "label": "home-red — features-intro.title.2"
+    },
+    {
+      "key": "home-red.features-intro.description.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ potatoes, rosemary & butter",
+      "maxCharacters": 80,
+      "label": "home-red — features-intro.description.1"
+    },
+    {
+      "key": "home-red.features-intro.description.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
+      "maxCharacters": 146,
+      "label": "home-red — features-intro.description.2"
+    },
+    {
+      "key": "home-red.container-tabs.module-title",
+      "entity": "page-home-red",
+      "target": {
+        "block": "container-tabs.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover Our Menu.",
+      "maxCharacters": 80,
+      "label": "home-red — container-tabs.module-title"
+    },
+    {
+      "key": "home-red.menu.tab-title",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.tab-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main Dishes",
+      "maxCharacters": 80,
+      "label": "home-red — menu.tab-title"
+    },
+    {
+      "key": "home-red.menu.dish-description.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ shaved beans, wild flowers",
+      "maxCharacters": 80,
+      "label": "home-red — menu.dish-description.1"
+    },
+    {
+      "key": "home-red.menu.dish-description.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pork, oysters, veggie, ginger",
+      "maxCharacters": 84,
+      "label": "home-red — menu.dish-description.2"
+    },
+    {
+      "key": "home-red.menu.dish-description.3",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pickled ginger, chili",
+      "maxCharacters": 80,
+      "label": "home-red — menu.dish-description.3"
+    },
+    {
+      "key": "home-red.menu.dish-description.4",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ sesame, bamboo, nuts",
+      "maxCharacters": 80,
+      "label": "home-red — menu.dish-description.4"
+    },
+    {
+      "key": "home-red.menu.dish-description.5",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ horseradish, soured cream",
+      "maxCharacters": 80,
+      "label": "home-red — menu.dish-description.5"
+    },
+    {
+      "key": "home-red.menu.dish-description.6",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ prawn, sausage, totatos",
+      "maxCharacters": 80,
+      "label": "home-red — menu.dish-description.6"
+    },
+    {
+      "key": "home-red.menu.dish-description.7",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ oysters, veggie, ginger",
+      "maxCharacters": 80,
+      "label": "home-red — menu.dish-description.7"
+    },
+    {
+      "key": "home-red.menu.dish-description.8",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ english peas, carrots & port sauce",
+      "maxCharacters": 94,
+      "label": "home-red — menu.dish-description.8"
+    },
+    {
+      "key": "home-red.menu.dish-description.9",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ apple cider vinegar, salt, sugar & spices",
+      "maxCharacters": 108,
+      "label": "home-red — menu.dish-description.9"
+    },
+    {
+      "key": "home-red.menu.dish-description.10",
+      "entity": "page-home-red",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "home-red — menu.dish-description.10"
+    },
+    {
+      "key": "home-red.latest-news.module-title",
+      "entity": "page-home-red",
+      "target": {
+        "block": "latest-news.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "News & Events.",
+      "maxCharacters": 80,
+      "label": "home-red — latest-news.module-title"
+    },
+    {
+      "key": "home-red.features-intro.sub-heading",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
+      "maxCharacters": 252,
+      "label": "home-red — features-intro.sub-heading"
+    },
+    {
+      "key": "home-red.features-intro.name",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.name",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pokey McKing",
+      "maxCharacters": 80,
+      "label": "home-red — features-intro.name"
+    },
+    {
+      "key": "home-red.features-intro.role",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.role",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Executive Chef of Three Broomsticks.",
+      "maxCharacters": 92,
+      "label": "home-red — features-intro.role"
+    },
+    {
+      "key": "home-red.subscribe.module-title",
+      "entity": "page-home-red",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "home-red — subscribe.module-title"
+    },
+    {
+      "key": "home-red.subscribe.sub-heading",
+      "entity": "page-home-red",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "home-red — subscribe.sub-heading"
+    },
+    {
+      "key": "home-red.subscribe.posttext",
+      "entity": "page-home-red",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "home-red — subscribe.posttext"
+    },
+    {
+      "key": "home-pink.slideshow.title.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "slideshow.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-pink — slideshow.title.1"
+    },
+    {
+      "key": "home-pink.slideshow.desc.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "slideshow.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-pink — slideshow.desc.1"
+    },
+    {
+      "key": "home-pink.slideshow.title.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "slideshow.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-pink — slideshow.title.2"
+    },
+    {
+      "key": "home-pink.slideshow.desc.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "slideshow.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-pink — slideshow.desc.2"
+    },
+    {
+      "key": "home-pink.features-intro.module-title",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Three Broomsticks.",
+      "maxCharacters": 80,
+      "label": "home-pink — features-intro.module-title"
+    },
+    {
+      "key": "home-pink.features-intro.basic-description",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.basic-description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nulla dictum felis in libero dignissim, vel semper augue sagittis nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac turpis dolor.",
+      "maxCharacters": 372,
+      "label": "home-pink — features-intro.basic-description"
+    },
+    {
+      "key": "home-pink.features-intro.title.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Location.",
+      "maxCharacters": 80,
+      "label": "home-pink — features-intro.title.1"
+    },
+    {
+      "key": "home-pink.features-intro.title.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hours.",
+      "maxCharacters": 80,
+      "label": "home-pink — features-intro.title.2"
+    },
+    {
+      "key": "home-pink.features-intro.description.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ potatoes, rosemary & butter",
+      "maxCharacters": 80,
+      "label": "home-pink — features-intro.description.1"
+    },
+    {
+      "key": "home-pink.features-intro.description.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
+      "maxCharacters": 146,
+      "label": "home-pink — features-intro.description.2"
+    },
+    {
+      "key": "home-pink.container-tabs.module-title",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "container-tabs.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover Our Menu.",
+      "maxCharacters": 80,
+      "label": "home-pink — container-tabs.module-title"
+    },
+    {
+      "key": "home-pink.menu.tab-title",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.tab-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main Dishes",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.tab-title"
+    },
+    {
+      "key": "home-pink.menu.dish-description.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ shaved beans, wild flowers",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.dish-description.1"
+    },
+    {
+      "key": "home-pink.menu.dish-description.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pork, oysters, veggie, ginger",
+      "maxCharacters": 84,
+      "label": "home-pink — menu.dish-description.2"
+    },
+    {
+      "key": "home-pink.menu.dish-description.3",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pickled ginger, chili",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.dish-description.3"
+    },
+    {
+      "key": "home-pink.menu.dish-description.4",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ sesame, bamboo, nuts",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.dish-description.4"
+    },
+    {
+      "key": "home-pink.menu.dish-description.5",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ horseradish, soured cream",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.dish-description.5"
+    },
+    {
+      "key": "home-pink.menu.dish-description.6",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ prawn, sausage, totatos",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.dish-description.6"
+    },
+    {
+      "key": "home-pink.menu.dish-description.7",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ oysters, veggie, ginger",
+      "maxCharacters": 80,
+      "label": "home-pink — menu.dish-description.7"
+    },
+    {
+      "key": "home-pink.menu.dish-description.8",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ english peas, carrots & port sauce",
+      "maxCharacters": 94,
+      "label": "home-pink — menu.dish-description.8"
+    },
+    {
+      "key": "home-pink.menu.dish-description.9",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ apple cider vinegar, salt, sugar & spices",
+      "maxCharacters": 108,
+      "label": "home-pink — menu.dish-description.9"
+    },
+    {
+      "key": "home-pink.menu.dish-description.10",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "home-pink — menu.dish-description.10"
+    },
+    {
+      "key": "home-pink.latest-news.module-title",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "latest-news.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "News & Events.",
+      "maxCharacters": 80,
+      "label": "home-pink — latest-news.module-title"
+    },
+    {
+      "key": "home-pink.features-intro.sub-heading",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
+      "maxCharacters": 252,
+      "label": "home-pink — features-intro.sub-heading"
+    },
+    {
+      "key": "home-pink.features-intro.name",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.name",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pokey McKing",
+      "maxCharacters": 80,
+      "label": "home-pink — features-intro.name"
+    },
+    {
+      "key": "home-pink.features-intro.role",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.role",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Executive Chef of Three Broomsticks.",
+      "maxCharacters": 92,
+      "label": "home-pink — features-intro.role"
+    },
+    {
+      "key": "home-pink.subscribe.module-title",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "home-pink — subscribe.module-title"
+    },
+    {
+      "key": "home-pink.subscribe.sub-heading",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "home-pink — subscribe.sub-heading"
+    },
+    {
+      "key": "home-pink.subscribe.posttext",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "home-pink — subscribe.posttext"
+    },
+    {
+      "key": "home-green.slideshow.title.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "slideshow.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-green — slideshow.title.1"
+    },
+    {
+      "key": "home-green.slideshow.desc.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "slideshow.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-green — slideshow.desc.1"
+    },
+    {
+      "key": "home-green.slideshow.title.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "slideshow.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-green — slideshow.title.2"
+    },
+    {
+      "key": "home-green.slideshow.desc.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "slideshow.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-green — slideshow.desc.2"
+    },
+    {
+      "key": "home-green.features-intro.module-title",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Three Broomsticks.",
+      "maxCharacters": 80,
+      "label": "home-green — features-intro.module-title"
+    },
+    {
+      "key": "home-green.features-intro.basic-description",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.basic-description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nulla dictum felis in libero dignissim, vel semper augue sagittis nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac turpis dolor.",
+      "maxCharacters": 372,
+      "label": "home-green — features-intro.basic-description"
+    },
+    {
+      "key": "home-green.features-intro.title.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Location.",
+      "maxCharacters": 80,
+      "label": "home-green — features-intro.title.1"
+    },
+    {
+      "key": "home-green.features-intro.title.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hours.",
+      "maxCharacters": 80,
+      "label": "home-green — features-intro.title.2"
+    },
+    {
+      "key": "home-green.features-intro.description.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ potatoes, rosemary & butter",
+      "maxCharacters": 80,
+      "label": "home-green — features-intro.description.1"
+    },
+    {
+      "key": "home-green.features-intro.description.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
+      "maxCharacters": 146,
+      "label": "home-green — features-intro.description.2"
+    },
+    {
+      "key": "home-green.container-tabs.module-title",
+      "entity": "page-home-green",
+      "target": {
+        "block": "container-tabs.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover Our Menu.",
+      "maxCharacters": 80,
+      "label": "home-green — container-tabs.module-title"
+    },
+    {
+      "key": "home-green.menu.tab-title",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.tab-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main Dishes",
+      "maxCharacters": 80,
+      "label": "home-green — menu.tab-title"
+    },
+    {
+      "key": "home-green.menu.dish-description.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ shaved beans, wild flowers",
+      "maxCharacters": 80,
+      "label": "home-green — menu.dish-description.1"
+    },
+    {
+      "key": "home-green.menu.dish-description.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pork, oysters, veggie, ginger",
+      "maxCharacters": 84,
+      "label": "home-green — menu.dish-description.2"
+    },
+    {
+      "key": "home-green.menu.dish-description.3",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pickled ginger, chili",
+      "maxCharacters": 80,
+      "label": "home-green — menu.dish-description.3"
+    },
+    {
+      "key": "home-green.menu.dish-description.4",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ sesame, bamboo, nuts",
+      "maxCharacters": 80,
+      "label": "home-green — menu.dish-description.4"
+    },
+    {
+      "key": "home-green.menu.dish-description.5",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ horseradish, soured cream",
+      "maxCharacters": 80,
+      "label": "home-green — menu.dish-description.5"
+    },
+    {
+      "key": "home-green.menu.dish-description.6",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ prawn, sausage, totatos",
+      "maxCharacters": 80,
+      "label": "home-green — menu.dish-description.6"
+    },
+    {
+      "key": "home-green.menu.dish-description.7",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ oysters, veggie, ginger",
+      "maxCharacters": 80,
+      "label": "home-green — menu.dish-description.7"
+    },
+    {
+      "key": "home-green.menu.dish-description.8",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ english peas, carrots & port sauce",
+      "maxCharacters": 94,
+      "label": "home-green — menu.dish-description.8"
+    },
+    {
+      "key": "home-green.menu.dish-description.9",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ apple cider vinegar, salt, sugar & spices",
+      "maxCharacters": 108,
+      "label": "home-green — menu.dish-description.9"
+    },
+    {
+      "key": "home-green.menu.dish-description.10",
+      "entity": "page-home-green",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "home-green — menu.dish-description.10"
+    },
+    {
+      "key": "home-green.latest-news.module-title",
+      "entity": "page-home-green",
+      "target": {
+        "block": "latest-news.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "News & Events.",
+      "maxCharacters": 80,
+      "label": "home-green — latest-news.module-title"
+    },
+    {
+      "key": "home-green.features-intro.sub-heading",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
+      "maxCharacters": 252,
+      "label": "home-green — features-intro.sub-heading"
+    },
+    {
+      "key": "home-green.features-intro.name",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.name",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pokey McKing",
+      "maxCharacters": 80,
+      "label": "home-green — features-intro.name"
+    },
+    {
+      "key": "home-green.features-intro.role",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.role",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Executive Chef of Three Broomsticks.",
+      "maxCharacters": 92,
+      "label": "home-green — features-intro.role"
+    },
+    {
+      "key": "home-green.subscribe.module-title",
+      "entity": "page-home-green",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "home-green — subscribe.module-title"
+    },
+    {
+      "key": "home-green.subscribe.sub-heading",
+      "entity": "page-home-green",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "home-green — subscribe.sub-heading"
+    },
+    {
+      "key": "home-green.subscribe.posttext",
+      "entity": "page-home-green",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "home-green — subscribe.posttext"
+    },
+    {
+      "key": "home-blue.slideshow.title.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "slideshow.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-blue — slideshow.title.1"
+    },
+    {
+      "key": "home-blue.slideshow.desc.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "slideshow.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-blue — slideshow.desc.1"
+    },
+    {
+      "key": "home-blue.slideshow.title.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "slideshow.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hey Harry!!!\nAre you ready for restaurant week?",
+      "maxCharacters": 114,
+      "label": "home-blue — slideshow.title.2"
+    },
+    {
+      "key": "home-blue.slideshow.desc.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "slideshow.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac  ligula acumin turpis dolor.",
+      "maxCharacters": 270,
+      "label": "home-blue — slideshow.desc.2"
+    },
+    {
+      "key": "home-blue.features-intro.module-title",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet Three Broomsticks.",
+      "maxCharacters": 80,
+      "label": "home-blue — features-intro.module-title"
+    },
+    {
+      "key": "home-blue.features-intro.basic-description",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.basic-description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nulla dictum felis in libero dignissim, vel semper augue sagittis nonimperdiet pellentesque habitant morbi ristique senectus et netus et malesuada acumes fames ac turpis dolor.",
+      "maxCharacters": 372,
+      "label": "home-blue — features-intro.basic-description"
+    },
+    {
+      "key": "home-blue.features-intro.title.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Location.",
+      "maxCharacters": 80,
+      "label": "home-blue — features-intro.title.1"
+    },
+    {
+      "key": "home-blue.features-intro.title.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hours.",
+      "maxCharacters": 80,
+      "label": "home-blue — features-intro.title.2"
+    },
+    {
+      "key": "home-blue.features-intro.description.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ potatoes, rosemary & butter",
+      "maxCharacters": 80,
+      "label": "home-blue — features-intro.description.1"
+    },
+    {
+      "key": "home-blue.features-intro.description.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
+      "maxCharacters": 146,
+      "label": "home-blue — features-intro.description.2"
+    },
+    {
+      "key": "home-blue.container-tabs.module-title",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "container-tabs.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover Our Menu.",
+      "maxCharacters": 80,
+      "label": "home-blue — container-tabs.module-title"
+    },
+    {
+      "key": "home-blue.menu.tab-title",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.tab-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main Dishes",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.tab-title"
+    },
+    {
+      "key": "home-blue.menu.dish-description.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ shaved beans, wild flowers",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.dish-description.1"
+    },
+    {
+      "key": "home-blue.menu.dish-description.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pork, oysters, veggie, ginger",
+      "maxCharacters": 84,
+      "label": "home-blue — menu.dish-description.2"
+    },
+    {
+      "key": "home-blue.menu.dish-description.3",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ pickled ginger, chili",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.dish-description.3"
+    },
+    {
+      "key": "home-blue.menu.dish-description.4",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ sesame, bamboo, nuts",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.dish-description.4"
+    },
+    {
+      "key": "home-blue.menu.dish-description.5",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ horseradish, soured cream",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.dish-description.5"
+    },
+    {
+      "key": "home-blue.menu.dish-description.6",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ prawn, sausage, totatos",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.dish-description.6"
+    },
+    {
+      "key": "home-blue.menu.dish-description.7",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ oysters, veggie, ginger",
+      "maxCharacters": 80,
+      "label": "home-blue — menu.dish-description.7"
+    },
+    {
+      "key": "home-blue.menu.dish-description.8",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ english peas, carrots & port sauce",
+      "maxCharacters": 94,
+      "label": "home-blue — menu.dish-description.8"
+    },
+    {
+      "key": "home-blue.menu.dish-description.9",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "w/ apple cider vinegar, salt, sugar & spices",
+      "maxCharacters": 108,
+      "label": "home-blue — menu.dish-description.9"
+    },
+    {
+      "key": "home-blue.menu.dish-description.10",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "home-blue — menu.dish-description.10"
+    },
+    {
+      "key": "home-blue.latest-news.module-title",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "latest-news.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "News & Events.",
+      "maxCharacters": 80,
+      "label": "home-blue — latest-news.module-title"
+    },
+    {
+      "key": "home-blue.features-intro.sub-heading",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
+      "maxCharacters": 252,
+      "label": "home-blue — features-intro.sub-heading"
+    },
+    {
+      "key": "home-blue.features-intro.name",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.name",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pokey McKing",
+      "maxCharacters": 80,
+      "label": "home-blue — features-intro.name"
+    },
+    {
+      "key": "home-blue.features-intro.role",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.role",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Executive Chef of Three Broomsticks.",
+      "maxCharacters": 92,
+      "label": "home-blue — features-intro.role"
+    },
+    {
+      "key": "home-blue.subscribe.module-title",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "home-blue — subscribe.module-title"
+    },
+    {
+      "key": "home-blue.subscribe.sub-heading",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "home-blue — subscribe.sub-heading"
+    },
+    {
+      "key": "home-blue.subscribe.posttext",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "home-blue — subscribe.posttext"
+    },
+    {
+      "key": "fetured-articles.masthead.title",
+      "entity": "page-fetured-articles",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "fetured-articles — masthead.title"
+    },
+    {
+      "key": "fetured-articles.masthead.description",
+      "entity": "page-fetured-articles",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "fetured-articles — masthead.description"
+    },
+    {
+      "key": "fetured-articles.subscribe.module-title",
+      "entity": "page-fetured-articles",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "fetured-articles — subscribe.module-title"
+    },
+    {
+      "key": "fetured-articles.subscribe.sub-heading",
+      "entity": "page-fetured-articles",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "fetured-articles — subscribe.sub-heading"
+    },
+    {
+      "key": "fetured-articles.subscribe.posttext",
+      "entity": "page-fetured-articles",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "fetured-articles — subscribe.posttext"
+    },
+    {
+      "key": "typography.masthead.title",
+      "entity": "page-typography",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "typography — masthead.title"
+    },
+    {
+      "key": "typography.masthead.description",
+      "entity": "page-typography",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "typography — masthead.description"
+    },
+    {
+      "key": "typography.subscribe.module-title",
+      "entity": "page-typography",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "typography — subscribe.module-title"
+    },
+    {
+      "key": "typography.subscribe.sub-heading",
+      "entity": "page-typography",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "typography — subscribe.sub-heading"
+    },
+    {
+      "key": "typography.subscribe.posttext",
+      "entity": "page-typography",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "typography — subscribe.posttext"
+    },
+    {
+      "key": "tagged-items.masthead.title",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "masthead.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ja Diner",
+      "maxCharacters": 80,
+      "label": "tagged-items — masthead.title"
+    },
+    {
+      "key": "tagged-items.masthead.description",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "masthead.description",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Responsive WordPress theme for restaurant",
+      "maxCharacters": 102,
+      "label": "tagged-items — masthead.description"
+    },
+    {
+      "key": "tagged-items.subscribe.module-title",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "subscribe.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Subscribe",
+      "maxCharacters": 80,
+      "label": "tagged-items — subscribe.module-title"
+    },
+    {
+      "key": "tagged-items.subscribe.sub-heading",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "subscribe.sub-heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our Newsletter list to get all the latest offers, discounts and other.",
+      "maxCharacters": 170,
+      "label": "tagged-items — subscribe.sub-heading"
+    },
+    {
+      "key": "tagged-items.subscribe.posttext",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "subscribe.posttext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We don't do spam. Because we are Wizard :).",
+      "maxCharacters": 106,
+      "label": "tagged-items — subscribe.posttext"
+    },
+    {
+      "key": "front-page.slideshow.image.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "front-page — slideshow.image.1"
+    },
+    {
+      "key": "front-page.slideshow.image.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "slideshow.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2.jpg",
+      "sampleId": 26,
+      "maxCharacters": 255,
+      "label": "front-page — slideshow.image.2"
+    },
+    {
+      "key": "front-page.features-intro.ft-img.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.ft-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.ft-img.1"
+    },
+    {
+      "key": "front-page.features-intro.ft-img.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.ft-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.jpg",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.ft-img.2"
+    },
+    {
+      "key": "front-page.features-intro.img.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3.jpg",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img.1"
+    },
+    {
+      "key": "front-page.features-intro.img.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4.jpg",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img.2"
+    },
+    {
+      "key": "front-page.container-tabs.image-intro",
+      "entity": "page-front-page",
+      "target": {
+        "block": "container-tabs.image-intro",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/tab-intro.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "front-page — container-tabs.image-intro"
+    },
+    {
+      "key": "front-page.features-intro.img-features",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img-features",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5.png",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img-features"
+    },
+    {
+      "key": "front-page.subscribe.section-bg",
+      "entity": "page-front-page",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "front-page — subscribe.section-bg"
+    },
+    {
+      "key": "your-profile.subscribe.section-bg",
+      "entity": "page-your-profile",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "your-profile — subscribe.section-bg"
+    },
+    {
+      "key": "contact-us.masthead.background",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-contact-02.jpg",
+      "sampleId": 29,
+      "maxCharacters": 255,
+      "label": "contact-us — masthead.background"
+    },
+    {
+      "key": "contact-us.subscribe.section-bg",
+      "entity": "page-contact-us",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "contact-us — subscribe.section-bg"
+    },
+    {
+      "key": "offers.masthead.background",
+      "entity": "page-offers",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/banner-offer.jpg",
+      "sampleId": 34,
+      "maxCharacters": 255,
+      "label": "offers — masthead.background"
+    },
+    {
+      "key": "offers.happyhours.hp-bg",
+      "entity": "page-offers",
+      "target": {
+        "block": "happyhours.hp-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-offer-2.jpg",
+      "sampleId": 287,
+      "maxCharacters": 255,
+      "label": "offers — happyhours.hp-bg"
+    },
+    {
+      "key": "offers.subscribe.section-bg",
+      "entity": "page-offers",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "offers — subscribe.section-bg"
+    },
+    {
+      "key": "about-us.masthead.background",
+      "entity": "page-about-us",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/banner-about.jpg",
+      "sampleId": 35,
+      "maxCharacters": 255,
+      "label": "about-us — masthead.background"
+    },
+    {
+      "key": "about-us.features-intro.img.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/picture-about-1.jpg",
+      "sampleId": 105,
+      "maxCharacters": 255,
+      "label": "about-us — features-intro.img.1"
+    },
+    {
+      "key": "about-us.features-intro.img.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/picture-about-2.jpg",
+      "sampleId": 106,
+      "maxCharacters": 255,
+      "label": "about-us — features-intro.img.2"
+    },
+    {
+      "key": "about-us.features-intro.img.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/picture-about-3.jpg",
+      "sampleId": 107,
+      "maxCharacters": 255,
+      "label": "about-us — features-intro.img.3"
+    },
+    {
+      "key": "about-us.features-intro.img.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.img.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/picture-about-4.jpg",
+      "sampleId": 108,
+      "maxCharacters": 255,
+      "label": "about-us — features-intro.img.4"
+    },
+    {
+      "key": "about-us.teams.member-image.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/Chef-8.jpg",
+      "sampleId": 289,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.1"
+    },
+    {
+      "key": "about-us.teams.member-image.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/chef-1.jpg",
+      "sampleId": 290,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.2"
+    },
+    {
+      "key": "about-us.teams.member-image.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/chef-2.jpg",
+      "sampleId": 291,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.3"
+    },
+    {
+      "key": "about-us.teams.member-image.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/chef-3.jpg",
+      "sampleId": 292,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.4"
+    },
+    {
+      "key": "about-us.teams.member-image.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/chef-4.jpg",
+      "sampleId": 293,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.5"
+    },
+    {
+      "key": "about-us.teams.member-image.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/chef-5.jpg",
+      "sampleId": 294,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.6"
+    },
+    {
+      "key": "about-us.teams.member-image.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.7",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/chef-6.jpg",
+      "sampleId": 295,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.7"
+    },
+    {
+      "key": "about-us.teams.member-image.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.member-image.8",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/Chef-7.jpg",
+      "sampleId": 296,
+      "maxCharacters": 255,
+      "label": "about-us — teams.member-image.8"
+    },
+    {
+      "key": "about-us.subscribe.section-bg",
+      "entity": "page-about-us",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "about-us — subscribe.section-bg"
+    },
+    {
+      "key": "reservation.masthead.background",
+      "entity": "page-reservation",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/banner-reservation.jpg",
+      "sampleId": 36,
+      "maxCharacters": 255,
+      "label": "reservation — masthead.background"
+    },
+    {
+      "key": "reservation.features-intro.img-features",
+      "entity": "page-reservation",
+      "target": {
+        "block": "features-intro.img-features",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5.png",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "reservation — features-intro.img-features"
+    },
+    {
+      "key": "reservation.subscribe.section-bg",
+      "entity": "page-reservation",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "reservation — subscribe.section-bg"
+    },
+    {
+      "key": "password-reset.subscribe.section-bg",
+      "entity": "page-password-reset",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "password-reset — subscribe.section-bg"
+    },
+    {
+      "key": "username-reminder-request.subscribe.section-bg",
+      "entity": "page-username-reminder-request",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "username-reminder-request — subscribe.section-bg"
+    },
+    {
+      "key": "our-blog.masthead.background",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/banner-blog.jpg",
+      "sampleId": 28,
+      "maxCharacters": 255,
+      "label": "our-blog — masthead.background"
+    },
+    {
+      "key": "our-blog.subscribe.section-bg",
+      "entity": "page-our-blog",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "our-blog — subscribe.section-bg"
+    },
+    {
+      "key": "login.masthead.background",
+      "entity": "page-login",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-login.jpg",
+      "sampleId": 30,
+      "maxCharacters": 255,
+      "label": "login — masthead.background"
+    },
+    {
+      "key": "login.subscribe.section-bg",
+      "entity": "page-login",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "login — subscribe.section-bg"
+    },
+    {
+      "key": "registration.masthead.background",
+      "entity": "page-registration",
+      "target": {
+        "block": "masthead.background",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/banner-registration.jpg",
+      "sampleId": 31,
+      "maxCharacters": 255,
+      "label": "registration — masthead.background"
+    },
+    {
+      "key": "registration.subscribe.section-bg",
+      "entity": "page-registration",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "registration — subscribe.section-bg"
+    },
+    {
+      "key": "user-profile.subscribe.section-bg",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "user-profile — subscribe.section-bg"
+    },
+    {
+      "key": "edit-user-profile.subscribe.section-bg",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — subscribe.section-bg"
+    },
+    {
+      "key": "error-page.subscribe.section-bg",
+      "entity": "page-error-page",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "error-page — subscribe.section-bg"
+    },
+    {
+      "key": "offline-page.subscribe.section-bg",
+      "entity": "page-offline-page",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "offline-page — subscribe.section-bg"
+    },
+    {
+      "key": "home-red.slideshow.image.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "slideshow.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "home-red — slideshow.image.1"
+    },
+    {
+      "key": "home-red.slideshow.image.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "slideshow.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2.jpg",
+      "sampleId": 26,
+      "maxCharacters": 255,
+      "label": "home-red — slideshow.image.2"
+    },
+    {
+      "key": "home-red.features-intro.ft-img.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.ft-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "home-red — features-intro.ft-img.1"
+    },
+    {
+      "key": "home-red.features-intro.ft-img.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.ft-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.jpg",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "home-red — features-intro.ft-img.2"
+    },
+    {
+      "key": "home-red.features-intro.img.1",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3.jpg",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "home-red — features-intro.img.1"
+    },
+    {
+      "key": "home-red.features-intro.img.2",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4.jpg",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "home-red — features-intro.img.2"
+    },
+    {
+      "key": "home-red.container-tabs.image-intro",
+      "entity": "page-home-red",
+      "target": {
+        "block": "container-tabs.image-intro",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/tab-intro.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "home-red — container-tabs.image-intro"
+    },
+    {
+      "key": "home-red.features-intro.img-features",
+      "entity": "page-home-red",
+      "target": {
+        "block": "features-intro.img-features",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5.png",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "home-red — features-intro.img-features"
+    },
+    {
+      "key": "home-red.subscribe.section-bg",
+      "entity": "page-home-red",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "home-red — subscribe.section-bg"
+    },
+    {
+      "key": "home-pink.slideshow.image.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "slideshow.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "home-pink — slideshow.image.1"
+    },
+    {
+      "key": "home-pink.slideshow.image.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "slideshow.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2.jpg",
+      "sampleId": 26,
+      "maxCharacters": 255,
+      "label": "home-pink — slideshow.image.2"
+    },
+    {
+      "key": "home-pink.features-intro.ft-img.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.ft-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "home-pink — features-intro.ft-img.1"
+    },
+    {
+      "key": "home-pink.features-intro.ft-img.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.ft-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.jpg",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "home-pink — features-intro.ft-img.2"
+    },
+    {
+      "key": "home-pink.features-intro.img.1",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3.jpg",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "home-pink — features-intro.img.1"
+    },
+    {
+      "key": "home-pink.features-intro.img.2",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4.jpg",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "home-pink — features-intro.img.2"
+    },
+    {
+      "key": "home-pink.container-tabs.image-intro",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "container-tabs.image-intro",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/tab-intro.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "home-pink — container-tabs.image-intro"
+    },
+    {
+      "key": "home-pink.features-intro.img-features",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "features-intro.img-features",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5.png",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "home-pink — features-intro.img-features"
+    },
+    {
+      "key": "home-pink.subscribe.section-bg",
+      "entity": "page-home-pink",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "home-pink — subscribe.section-bg"
+    },
+    {
+      "key": "home-green.slideshow.image.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "slideshow.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "home-green — slideshow.image.1"
+    },
+    {
+      "key": "home-green.slideshow.image.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "slideshow.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2.jpg",
+      "sampleId": 26,
+      "maxCharacters": 255,
+      "label": "home-green — slideshow.image.2"
+    },
+    {
+      "key": "home-green.features-intro.ft-img.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.ft-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "home-green — features-intro.ft-img.1"
+    },
+    {
+      "key": "home-green.features-intro.ft-img.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.ft-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.jpg",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "home-green — features-intro.ft-img.2"
+    },
+    {
+      "key": "home-green.features-intro.img.1",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3.jpg",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "home-green — features-intro.img.1"
+    },
+    {
+      "key": "home-green.features-intro.img.2",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4.jpg",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "home-green — features-intro.img.2"
+    },
+    {
+      "key": "home-green.container-tabs.image-intro",
+      "entity": "page-home-green",
+      "target": {
+        "block": "container-tabs.image-intro",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/tab-intro.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "home-green — container-tabs.image-intro"
+    },
+    {
+      "key": "home-green.features-intro.img-features",
+      "entity": "page-home-green",
+      "target": {
+        "block": "features-intro.img-features",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5.png",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "home-green — features-intro.img-features"
+    },
+    {
+      "key": "home-green.subscribe.section-bg",
+      "entity": "page-home-green",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "home-green — subscribe.section-bg"
+    },
+    {
+      "key": "home-blue.slideshow.image.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "slideshow.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "home-blue — slideshow.image.1"
+    },
+    {
+      "key": "home-blue.slideshow.image.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "slideshow.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2.jpg",
+      "sampleId": 26,
+      "maxCharacters": 255,
+      "label": "home-blue — slideshow.image.2"
+    },
+    {
+      "key": "home-blue.features-intro.ft-img.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.ft-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "home-blue — features-intro.ft-img.1"
+    },
+    {
+      "key": "home-blue.features-intro.ft-img.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.ft-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.jpg",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "home-blue — features-intro.ft-img.2"
+    },
+    {
+      "key": "home-blue.features-intro.img.1",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3.jpg",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "home-blue — features-intro.img.1"
+    },
+    {
+      "key": "home-blue.features-intro.img.2",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4.jpg",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "home-blue — features-intro.img.2"
+    },
+    {
+      "key": "home-blue.container-tabs.image-intro",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "container-tabs.image-intro",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/tab-intro.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "home-blue — container-tabs.image-intro"
+    },
+    {
+      "key": "home-blue.features-intro.img-features",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "features-intro.img-features",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5.png",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "home-blue — features-intro.img-features"
+    },
+    {
+      "key": "home-blue.subscribe.section-bg",
+      "entity": "page-home-blue",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "home-blue — subscribe.section-bg"
+    },
+    {
+      "key": "fetured-articles.subscribe.section-bg",
+      "entity": "page-fetured-articles",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "fetured-articles — subscribe.section-bg"
+    },
+    {
+      "key": "typography.subscribe.section-bg",
+      "entity": "page-typography",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "typography — subscribe.section-bg"
+    },
+    {
+      "key": "tagged-items.subscribe.section-bg",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "subscribe.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-icon.png",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "tagged-items — subscribe.section-bg"
+    }
+  ]
+}

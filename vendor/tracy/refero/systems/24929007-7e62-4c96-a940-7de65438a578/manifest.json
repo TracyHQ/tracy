@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "24929007-7e62-4c96-a940-7de65438a578",
+  "status": "complete",
+  "name": "Mailchimp",
+  "url": "https://styles.refero.design/style/24929007-7e62-4c96-a940-7de65438a578",
+  "sourceWebsite": "https://mailchimp.com",
+  "extractedAt": "2026-04-11T19:20:50.339Z",
+  "capturedAt": "2026-10-08T05:09:25.276875+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Vintage press meets electric yellow — an editorial print house with one neon switch.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1f5e6f07-650b-44d2-b488-699030148c4b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/59f2dc63-4590-4fac-905f-6a3009b32089.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a0997060-16b2-4812-bdc2-ea2ab7860558.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f05764ff-35ef-47cb-ac2b-c260f95be0cc.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f312e028-c436-429e-bf3c-c3fa86047dd9.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "809768db787efff179b838a59978351df75e0abf30734f299d7b748de37e4ef2",
+      "bytes": 22151
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "84c59e2c25ba51fec5ce30b75651685175d1e26b1c2f4ab83239b6c2af05704d",
+      "bytes": 116014
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "195a8cabe486518cdccdc105b363f0baebfa48a809f48c96bb4d2cb86896b386",
+      "bytes": 40026
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "726336abf074a40a1e5432062437b537707bfe530b19d98dd79f9975dd4c6aaf",
+      "bytes": 16230
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "00df6db43f616e006b669e66a5e9b680a19fa4b042d729795f90a8ba86eef87d",
+      "bytes": 13657
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "056dfe5fbdea6da6d2f1f5cfb9956f1ea3c02254e8a852a52240fc518c2c19b7",
+      "bytes": 3339
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2fb859707d3403949b5ef5665e4901742a6e3ba1c588c5eae91df791271f0535",
+      "bytes": 651
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b6a13397b08c706a02f08c2c86896b5475f8d348ceff602b6e0798227c7aa061",
+      "bytes": 668
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f930cd55a2447a93abf0372e0c9171e076555e6f77acfbf65f9da540e3140913",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e7dad2c236de4405803c69cdc74fd29901a314a326d30068d5cd747ea9d60805",
+      "bytes": 54192
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8890449a19b8e8b4897fa76f6c973ef3edcd79382ec194ba762cb129abc81900",
+      "bytes": 27406
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3a3a80e79d399ec73542e564d1e50ef20e5a67e196b862ec6a4379f0c08fddd9",
+      "bytes": 67219
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "27beba8d7a790ff49f61a7c0dbdd4ccfdb977be92ac88cc85ad13977669c2ab3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a351d8431a971f8064ed77fc158b75121ba493b210afb9d6c2137698d6a7d11f",
+      "bytes": 1619
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ab05698cef93be5732fd4e3470ec62fd1719673f4ef6f64a4744777b413f01cd",
+      "bytes": 2280
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "24929007-7e62-4c96-a940-7de65438a578",
+    "26dac924-d1c8-4097-af0f-0417ccb12128",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e100552-a8ad-4179-b89a-6aa5113b92e1",
+    "45c4f990-e6b4-472d-89a4-06870ac17b9f",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7f7d24b9-6878-4548-82ca-a26bbf7a6f2c",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

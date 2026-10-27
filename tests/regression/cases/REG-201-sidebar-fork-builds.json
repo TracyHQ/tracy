@@ -1,0 +1,26 @@
+{
+  "id": "REG-201",
+  "kind": "fix",
+  "title": "dsh-better-sidebar compiles under its build tsconfig, so the dsh image builds again after #916",
+  "pr": 917,
+  "area": "sidebar/comments",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From vendor/tracy/dsh-better-sidebar run: npx tsc -p tsconfig.build.json --noEmit and keep only the lines naming src/client/comment-mentions.ts.",
+    "S2: From the same folder run: npx vitest run tests/thread-mention-parts.spec.ts tests/comment-people-layer.spec.tsx -t \"mention\" and read the exit code."
+  ],
+  "expect": [
+    "S1 prints no error line for src/client/comment-mentions.ts (no TS2532 or TS2322 at mentionParts).",
+    "S2 exits 0 with 4 passed: the thread card still draws the same mentions."
+  ],
+  "selectors": {
+    "function": "`mentionParts` in vendor/tracy/dsh-better-sidebar/src/client/comment-mentions.ts"
+  },
+  "evidence": "build-dsh-image run 37264278381 for merge 85131adc1 failed in `pnpm build` of dsh-better-sidebar with TS2532 at comment-mentions.ts(144,36), TS2322 at (146,18) and TS2532 at (147,18).",
+  "fence": "Mechanism only: the fork's own tsc and vitest at the checkout. Not covered: the Docker image build itself (the other tsc errors there come from the primitives types the Dockerfile copies in), and the deploy.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-201.mjs"]
+  }
+}

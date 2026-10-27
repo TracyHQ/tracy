@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-raspberry-pulse: #fd1774;
+  --color-ink-black: #030712;
+  --color-lavender-mist: #e5d6ff;
+  --gradient-lavender-mist: linear-gradient(to top, rgb(231, 214, 255) 0%, oklab(0.902604 0.0325668 -0.0481643 / 0.85) 50%, rgba(0, 0, 0, 0) 100%);
+  --color-mint-cream: #e3f7d6;
+  --color-butter-cream: #fff1cd;
+  --color-sky-wash: #ddf5fb;
+  --color-sand-wash: #f4efe9;
+  --color-carbon: #171717;
+  --color-steel: #6b7280;
+  --color-silver: #e5e7eb;
+  --color-pure-white: #ffffff;
+  --color-lime-zest: #64d71e;
+  --color-teal-current: #4bb7cf;
+
+  /* Typography — Font Families */
+  --font-montreal-neue: 'Montreal Neue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-georgia: 'Georgia', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

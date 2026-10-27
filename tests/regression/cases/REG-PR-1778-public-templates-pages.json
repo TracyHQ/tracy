@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1778-public-templates-pages",
+  "kind": "feat",
+  "title": "Public Templates pages: gallery, one page per published template, sitemap and robots, old Design inspiration addresses redirect",
+  "pr": 1778,
+  "area": "web/public-templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/public-templates-page.test.mjs",
+    "S2: Read the lines for the tests named in run.tests."
+  ],
+  "expect": [
+    "S2: every named test reports ok: a template page carries its name, CMS, demo and canonical link; an unknown id answers 404; the gallery lists every published template; /design-inspiration and the old platform addresses move permanently to /templates/; the sitemap lists the gallery and every template page; off production every page says noindex; cookie tracy_lang=vi gives Vietnamese words."
+  ],
+  "selectors": {
+    "doors": "GET /templates/, GET /templates/<id>/, GET /design-inspiration, GET /sitemap.xml, GET /robots.txt, GET /llms.txt"
+  },
+  "fence": "apps/tracy-web/src/public/templates-page.js and design-inspiration-redirects.js: pages read the published list on each request, redirects keep utm keys, indexing only on production.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/public-templates-page.test.mjs"],
+    "tests": [
+      "a template page carries its name, blurb, CMS, every layout, the demo and a canonical link",
+      "an unknown or unpublished id answers 404 with a way back to all templates",
+      "the gallery lists every published template, with a filter button and count per existing platform",
+      "a platform name is never read as a template id, and its old address moves to the gallery",
+      "/design-inspiration, with or without the slash, moves permanently to /templates/",
+      "the sitemap lists the gallery and every template page, and no platform address",
+      "off production every Templates page and the sitemap say noindex in header and meta",
+      "cookie tracy_lang=vi gives Vietnamese words on the gallery and the detail page, no cookie gives English"
+    ]
+  }
+}

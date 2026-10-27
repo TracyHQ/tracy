@@ -1,0 +1,3670 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "What a Build may write into a restored Tracy Business site, and where each value lands. Entities are located by identity (an option name, or a page's postType+slug), never by post id. A block inside a page is located by its metadata.name -- the convention every wp-tracy-business section markup follows -- never by position. `input` names the customer input the seeder fills the slot from; a slot with NO `input` is written by the model from the customer's brief (packages/cms/tracy-seeder/src/plan-wordpress-contract.mjs), the same way a Joomla contract is filled, and keeps the quickstart's own words when the model has no fact for it. LANGUAGE: this quickstart ships 41 Polylang editions of the same site; only the entities of the language the customer chose are planned, so the other 40 keep their own words untouched. 1.2.0: the site identity (name, legal name, slogan, monogram, contact, social) is one option, tracy_site_identity, rendered by the theme from {site.*}/{contact.*}/{social.*} tokens in the header and footer template parts; each field is a slot of the entity option-tracy_site_identity (siteIdentity: true — an empty field may be filled and a filled one emptied). 1.3.0: the Contact card of every edition is drawn by the theme from tracy_site_identity (rows contact.address, contact.phone, contact.email, contact.hours), so it is written through the identity slots and has no slots of its own; the home news band is a Query Loop of the page language's three latest posts, so its cards are the posts themselves (written as posts) and only home.news.heading and home.news.cta.1 remain.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "Tracy Business"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": "A professional company site"
+    },
+    {
+      "key": "page-home",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-about",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-services",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "services",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-projects",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "projects",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-contact",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "contact",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-careers",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "careers",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-investor-relations",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "investor-relations",
+        "language": "en"
+      }
+    },
+    {
+      "key": "page-project-detail",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "project-detail",
+        "language": "en"
+      }
+    },
+    {
+      "key": "option-tracy_site_identity",
+      "kind": "option",
+      "identity": {
+        "name": "tracy_site_identity"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "Tracy Business",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "A professional company site",
+      "maxCharacters": 70,
+      "label": "Tagline (one short slogan)"
+    },
+    {
+      "key": "home.hero.eyebrow",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Established 2004",
+      "maxCharacters": 80,
+      "label": "home — hero.eyebrow"
+    },
+    {
+      "key": "home.hero.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Building the groundwork for next-generation plants",
+      "maxCharacters": 100,
+      "label": "home — hero.heading"
+    },
+    {
+      "key": "home.hero.intro",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+      "maxCharacters": 306,
+      "label": "home — hero.intro"
+    },
+    {
+      "key": "home.hero.cta.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "See our capabilities",
+      "maxCharacters": 80,
+      "label": "home — hero.cta.1"
+    },
+    {
+      "key": "home.hero.cta.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.cta.2",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Download company profile (PDF)",
+      "maxCharacters": 80,
+      "label": "home — hero.cta.2"
+    },
+    {
+      "key": "home.hero.item.1.title",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "380+",
+      "maxCharacters": 80,
+      "label": "home — hero.item.1.title"
+    },
+    {
+      "key": "home.hero.item.1.text",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Projects delivered",
+      "maxCharacters": 80,
+      "label": "home — hero.item.1.text"
+    },
+    {
+      "key": "home.hero.item.2.title",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1.2M m²",
+      "maxCharacters": 80,
+      "label": "home — hero.item.2.title"
+    },
+    {
+      "key": "home.hero.item.2.text",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Built area",
+      "maxCharacters": 80,
+      "label": "home — hero.item.2.text"
+    },
+    {
+      "key": "home.hero.item.3.title",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "22 years",
+      "maxCharacters": 80,
+      "label": "home — hero.item.3.title"
+    },
+    {
+      "key": "home.hero.item.3.text",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Industry experience",
+      "maxCharacters": 80,
+      "label": "home — hero.item.3.text"
+    },
+    {
+      "key": "home.hero.item.4.title",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "0",
+      "maxCharacters": 80,
+      "label": "home — hero.item.4.title"
+    },
+    {
+      "key": "home.hero.item.4.text",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Serious incidents in 2025",
+      "maxCharacters": 80,
+      "label": "home — hero.item.4.text"
+    },
+    {
+      "key": "home.services.eyebrow",
+      "entity": "page-home",
+      "target": {
+        "block": "services.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What we do",
+      "maxCharacters": 80,
+      "label": "home — services.eyebrow"
+    },
+    {
+      "key": "home.services.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "services.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Four core service lines",
+      "maxCharacters": 80,
+      "label": "home — services.heading"
+    },
+    {
+      "key": "home.services.cta.1",
+      "entity": "page-home",
+      "target": {
+        "block": "services.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "All services →",
+      "maxCharacters": 80,
+      "label": "home — services.cta.1"
+    },
+    {
+      "key": "home.services.item.1.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "home — services.item.1.meta"
+    },
+    {
+      "key": "home.services.item.1.title",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Industrial park infrastructure",
+      "maxCharacters": 80,
+      "label": "home — services.item.1.title"
+    },
+    {
+      "key": "home.services.item.1.text",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Earthworks, internal roads, water supply and wastewater treatment, turnkey.",
+      "maxCharacters": 150,
+      "label": "home — services.item.1.text"
+    },
+    {
+      "key": "home.services.item.2.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "home — services.item.2.meta"
+    },
+    {
+      "key": "home.services.item.2.title",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pre-engineered buildings",
+      "maxCharacters": 80,
+      "label": "home — services.item.2.title"
+    },
+    {
+      "key": "home.services.item.2.text",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+      "maxCharacters": 160,
+      "label": "home — services.item.2.text"
+    },
+    {
+      "key": "home.services.item.3.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "home — services.item.3.meta"
+    },
+    {
+      "key": "home.services.item.3.title",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "M&amp;E engineering",
+      "maxCharacters": 80,
+      "label": "home — services.item.3.title"
+    },
+    {
+      "key": "home.services.item.3.text",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Substations, compressed air, HVAC and fire protection to NFPA standards.",
+      "maxCharacters": 144,
+      "label": "home — services.item.3.text"
+    },
+    {
+      "key": "home.services.item.4.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "home — services.item.4.meta"
+    },
+    {
+      "key": "home.services.item.4.title",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Maintenance &amp; retrofit",
+      "maxCharacters": 80,
+      "label": "home — services.item.4.title"
+    },
+    {
+      "key": "home.services.item.4.text",
+      "entity": "page-home",
+      "target": {
+        "block": "services.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Long-term maintenance contracts and capacity upgrades on live production lines.",
+      "maxCharacters": 158,
+      "label": "home — services.item.4.text"
+    },
+    {
+      "key": "home.projects.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Selected projects",
+      "maxCharacters": 80,
+      "label": "home — projects.heading"
+    },
+    {
+      "key": "home.projects.cta.1",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "All projects →",
+      "maxCharacters": 80,
+      "label": "home — projects.cta.1"
+    },
+    {
+      "key": "home.projects.item.1.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Factory · 2025",
+      "maxCharacters": 80,
+      "label": "home — projects.item.1.meta"
+    },
+    {
+      "key": "home.projects.item.1.title",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Elektra appliance plant, Lipetsk SEZ",
+      "maxCharacters": 80,
+      "label": "home — projects.item.1.title"
+    },
+    {
+      "key": "home.projects.item.1.text",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main contractor for 62,000 m² of ISO 8 cleanroom factory space, handed over 24 days ahead of schedule.",
+      "maxCharacters": 204,
+      "label": "home — projects.item.1.text"
+    },
+    {
+      "key": "home.projects.item.1.href",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.1.href",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Read the case study →",
+      "maxCharacters": 80,
+      "label": "home — projects.item.1.href"
+    },
+    {
+      "key": "home.projects.item.2.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Infrastructure · 2024",
+      "maxCharacters": 80,
+      "label": "home — projects.item.2.meta"
+    },
+    {
+      "key": "home.projects.item.2.title",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Vorsino Industrial Park, phase 3",
+      "maxCharacters": 80,
+      "label": "home — projects.item.2.title"
+    },
+    {
+      "key": "home.projects.item.2.text",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "48 ha of earthworks, 6.2 km of internal roads and a 4,000 m³/day treatment plant.",
+      "maxCharacters": 162,
+      "label": "home — projects.item.2.text"
+    },
+    {
+      "key": "home.projects.item.2.href",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.2.href",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Read the case study →",
+      "maxCharacters": 80,
+      "label": "home — projects.item.2.href"
+    },
+    {
+      "key": "home.projects.item.3.meta",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "M&amp;E · 2024",
+      "maxCharacters": 80,
+      "label": "home — projects.item.3.meta"
+    },
+    {
+      "key": "home.projects.item.3.title",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "110 kV Obninsk-2 substation",
+      "maxCharacters": 80,
+      "label": "home — projects.item.3.title"
+    },
+    {
+      "key": "home.projects.item.3.text",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Installation, testing and energisation completed in nine months.",
+      "maxCharacters": 128,
+      "label": "home — projects.item.3.text"
+    },
+    {
+      "key": "home.projects.item.3.href",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.3.href",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Read the case study →",
+      "maxCharacters": 80,
+      "label": "home — projects.item.3.href"
+    },
+    {
+      "key": "home.text.eyebrow",
+      "entity": "page-home",
+      "target": {
+        "block": "text.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why Northgate",
+      "maxCharacters": 80,
+      "label": "home — text.eyebrow"
+    },
+    {
+      "key": "home.text.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "One accountable partner from drawing to handover",
+      "maxCharacters": 96,
+      "label": "home — text.heading"
+    },
+    {
+      "key": "home.text.item.1.title",
+      "entity": "page-home",
+      "target": {
+        "block": "text.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "In-house design team of 34 engineers",
+      "maxCharacters": 80,
+      "label": "home — text.item.1.title"
+    },
+    {
+      "key": "home.text.item.1.text",
+      "entity": "page-home",
+      "target": {
+        "block": "text.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Drawing revision cycles cut to under 48 hours.",
+      "maxCharacters": 92,
+      "label": "home — text.item.1.text"
+    },
+    {
+      "key": "home.text.item.2.title",
+      "entity": "page-home",
+      "target": {
+        "block": "text.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "ISO 9001 &amp; ISO 45001 certified",
+      "maxCharacters": 80,
+      "label": "home — text.item.2.title"
+    },
+    {
+      "key": "home.text.item.2.text",
+      "entity": "page-home",
+      "target": {
+        "block": "text.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Safety procedures independently audited every six months.",
+      "maxCharacters": 114,
+      "label": "home — text.item.2.text"
+    },
+    {
+      "key": "home.text.item.3.title",
+      "entity": "page-home",
+      "target": {
+        "block": "text.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Schedule backed by a bank guarantee",
+      "maxCharacters": 80,
+      "label": "home — text.item.3.title"
+    },
+    {
+      "key": "home.text.item.3.text",
+      "entity": "page-home",
+      "target": {
+        "block": "text.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Performance guarantees issued on every contract above RUB 150M.",
+      "maxCharacters": 126,
+      "label": "home — text.item.3.text"
+    },
+    {
+      "key": "home.cta.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Need a budget estimate for an upcoming build?",
+      "maxCharacters": 90,
+      "label": "home — cta.heading"
+    },
+    {
+      "key": "home.cta.intro",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Send us concept drawings and we return a preliminary quantity take-off within five working days.",
+      "maxCharacters": 192,
+      "label": "home — cta.intro"
+    },
+    {
+      "key": "home.cta.cta.1",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Talk to our sales team",
+      "maxCharacters": 80,
+      "label": "home — cta.cta.1"
+    },
+    {
+      "key": "home.news.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "news.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "News &amp; disclosures",
+      "maxCharacters": 80,
+      "label": "home — news.heading"
+    },
+    {
+      "key": "home.news.cta.1",
+      "entity": "page-home",
+      "target": {
+        "block": "news.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "View all →",
+      "maxCharacters": 80,
+      "label": "home — news.cta.1"
+    },
+    {
+      "key": "home.gallery.eyebrow",
+      "entity": "page-home",
+      "target": {
+        "block": "gallery.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Clients we have built for",
+      "maxCharacters": 80,
+      "label": "home — gallery.eyebrow"
+    },
+    {
+      "key": "about.text.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Building Russian industrial infrastructure since 2004",
+      "maxCharacters": 106,
+      "label": "about — text.heading"
+    },
+    {
+      "key": "about.text.intro",
+      "entity": "page-about",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Northgate Industrial JSC is a full-cycle general contractor: design, steel frame, envelope, building services and turnkey handover. Our own steel fabrication plant in Vorsino, four regional divisions, 1,240 people on staff.",
+      "maxCharacters": 446,
+      "label": "about — text.intro"
+    },
+    {
+      "key": "about.stats.item.1.title",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "380+",
+      "maxCharacters": 80,
+      "label": "about — stats.item.1.title"
+    },
+    {
+      "key": "about.stats.item.1.text",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "projects delivered",
+      "maxCharacters": 80,
+      "label": "about — stats.item.1.text"
+    },
+    {
+      "key": "about.stats.item.2.title",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1.2m m²",
+      "maxCharacters": 80,
+      "label": "about — stats.item.2.title"
+    },
+    {
+      "key": "about.stats.item.2.meta",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "built since 2004",
+      "maxCharacters": 80,
+      "label": "about — stats.item.2.meta"
+    },
+    {
+      "key": "about.stats.item.3.title",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1,240",
+      "maxCharacters": 80,
+      "label": "about — stats.item.3.title"
+    },
+    {
+      "key": "about.stats.item.3.text",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "people on staff",
+      "maxCharacters": 80,
+      "label": "about — stats.item.3.text"
+    },
+    {
+      "key": "about.stats.item.4.title",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "22 years",
+      "maxCharacters": 80,
+      "label": "about — stats.item.4.title"
+    },
+    {
+      "key": "about.stats.item.4.text",
+      "entity": "page-about",
+      "target": {
+        "block": "stats.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "in the market",
+      "maxCharacters": 80,
+      "label": "about — stats.item.4.text"
+    },
+    {
+      "key": "about.services.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "services.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What we do",
+      "maxCharacters": 80,
+      "label": "about — services.heading"
+    },
+    {
+      "key": "about.services.intro",
+      "entity": "page-about",
+      "target": {
+        "block": "services.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We take the whole facility — from site investigation to final acceptance. The client gets one contract, one schedule and one accountable party. Owning our steel fabrication means we do not depend on third-party supply and can hold the date even when the design changes mid-build.",
+      "maxCharacters": 558,
+      "label": "about — services.intro"
+    },
+    {
+      "key": "about.services.item.1.title",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "BIM design in-house",
+      "maxCharacters": 80,
+      "label": "about — services.item.1.title"
+    },
+    {
+      "key": "about.services.item.1.text",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Structural and MEP departments on staff. LOD 350 model, shop drawings issued from the same model.",
+      "maxCharacters": 194,
+      "label": "about — services.item.1.text"
+    },
+    {
+      "key": "about.services.item.2.title",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our own plant",
+      "maxCharacters": 80,
+      "label": "about — services.item.2.title"
+    },
+    {
+      "key": "about.services.item.2.text",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Vorsino, Kaluga Region. 18,000 t of steel structures a year, shot blasting and coating on the line.",
+      "maxCharacters": 198,
+      "label": "about — services.item.2.text"
+    },
+    {
+      "key": "about.services.item.3.title",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Self-performed erection",
+      "maxCharacters": 80,
+      "label": "about — services.item.3.title"
+    },
+    {
+      "key": "about.services.item.3.text",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nine erection crews, 46 owned machines. Subcontractors only for specialist works.",
+      "maxCharacters": 162,
+      "label": "about — services.item.3.text"
+    },
+    {
+      "key": "about.services.item.4.title",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Handover and support",
+      "maxCharacters": 80,
+      "label": "about — services.item.4.title"
+    },
+    {
+      "key": "about.services.item.4.text",
+      "entity": "page-about",
+      "target": {
+        "block": "services.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "As-built documentation, commissioning, 5-year structural and 3-year services warranty.",
+      "maxCharacters": 172,
+      "label": "about — services.item.4.text"
+    },
+    {
+      "key": "about.text.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Where we work",
+      "maxCharacters": 80,
+      "label": "about — text.heading"
+    },
+    {
+      "key": "about.text.intro",
+      "entity": "page-about",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Head office and plant sit in the Vorsino industrial park. Regional divisions: Yekaterinburg, Kazan, Novosibirsk, Rostov-on-Don. We work across European Russia, the Urals and Western Siberia.",
+      "maxCharacters": 380,
+      "label": "about — text.intro"
+    },
+    {
+      "key": "about.text.item.1.title",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Vorsino, Kaluga Region",
+      "maxCharacters": 80,
+      "label": "about — text.item.1.title"
+    },
+    {
+      "key": "about.text.item.1.text",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Head office, steel plant",
+      "maxCharacters": 80,
+      "label": "about — text.item.1.text"
+    },
+    {
+      "key": "about.text.item.2.title",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Yekaterinburg",
+      "maxCharacters": 80,
+      "label": "about — text.item.2.title"
+    },
+    {
+      "key": "about.text.item.2.text",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Urals division",
+      "maxCharacters": 80,
+      "label": "about — text.item.2.text"
+    },
+    {
+      "key": "about.text.item.3.title",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Kazan",
+      "maxCharacters": 80,
+      "label": "about — text.item.3.title"
+    },
+    {
+      "key": "about.text.item.3.text",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Volga division",
+      "maxCharacters": 80,
+      "label": "about — text.item.3.text"
+    },
+    {
+      "key": "about.text.item.4.title",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Novosibirsk",
+      "maxCharacters": 80,
+      "label": "about — text.item.4.title"
+    },
+    {
+      "key": "about.text.item.4.text",
+      "entity": "page-about",
+      "target": {
+        "block": "text.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Siberia division",
+      "maxCharacters": 80,
+      "label": "about — text.item.4.text"
+    },
+    {
+      "key": "about.team.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "team.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Leadership",
+      "maxCharacters": 80,
+      "label": "about — team.heading"
+    },
+    {
+      "key": "about.team.item.1.title",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Andrey Kulagin",
+      "maxCharacters": 80,
+      "label": "about — team.item.1.title"
+    },
+    {
+      "key": "about.team.item.1.meta",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chief Executive Officer",
+      "maxCharacters": 80,
+      "label": "about — team.item.1.meta"
+    },
+    {
+      "key": "about.team.item.1.text",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With the company since 2007, started as a site manager.",
+      "maxCharacters": 110,
+      "label": "about — team.item.1.text"
+    },
+    {
+      "key": "about.team.item.2.title",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sergey Trofimov",
+      "maxCharacters": 80,
+      "label": "about — team.item.2.title"
+    },
+    {
+      "key": "about.team.item.2.meta",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lead Project Engineer",
+      "maxCharacters": 80,
+      "label": "about — team.item.2.meta"
+    },
+    {
+      "key": "about.team.item.2.text",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Owns structural design and the technical solution on every project.",
+      "maxCharacters": 134,
+      "label": "about — team.item.2.text"
+    },
+    {
+      "key": "about.team.item.3.title",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Olga Barsukova",
+      "maxCharacters": 80,
+      "label": "about — team.item.3.title"
+    },
+    {
+      "key": "about.team.item.3.meta",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Production Director",
+      "maxCharacters": 80,
+      "label": "about — team.item.3.meta"
+    },
+    {
+      "key": "about.team.item.3.text",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The Vorsino plant and delivery logistics to site.",
+      "maxCharacters": 98,
+      "label": "about — team.item.3.text"
+    },
+    {
+      "key": "about.team.item.4.title",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Igor Meshcheryakov",
+      "maxCharacters": 80,
+      "label": "about — team.item.4.title"
+    },
+    {
+      "key": "about.team.item.4.meta",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Construction Director",
+      "maxCharacters": 80,
+      "label": "about — team.item.4.meta"
+    },
+    {
+      "key": "about.team.item.4.text",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Erection crews, schedule and site safety.",
+      "maxCharacters": 82,
+      "label": "about — team.item.4.text"
+    },
+    {
+      "key": "about.text.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Safety",
+      "maxCharacters": 80,
+      "label": "about — text.heading"
+    },
+    {
+      "key": "about.text.intro",
+      "entity": "page-about",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Zero lost-time incidents over the last 36 months. Daily pre-shift briefings, internal site audits every two weeks, independent audit twice a year.",
+      "maxCharacters": 292,
+      "label": "about — text.intro"
+    },
+    {
+      "key": "about.cta.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "cta.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Need a general contractor for an industrial facility?",
+      "maxCharacters": 106,
+      "label": "about — cta.heading"
+    },
+    {
+      "key": "about.cta.intro",
+      "entity": "page-about",
+      "target": {
+        "block": "cta.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Send us a brief or a sketch — we come back with a budget estimate and a schedule within three working days.",
+      "maxCharacters": 214,
+      "label": "about — cta.intro"
+    },
+    {
+      "key": "about.cta.cta.1",
+      "entity": "page-about",
+      "target": {
+        "block": "cta.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Request a quote",
+      "maxCharacters": 80,
+      "label": "about — cta.cta.1"
+    },
+    {
+      "key": "about.cta.cta.2",
+      "entity": "page-about",
+      "target": {
+        "block": "cta.cta.2",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "See projects",
+      "maxCharacters": 80,
+      "label": "about — cta.cta.2"
+    },
+    {
+      "key": "services.text.heading",
+      "entity": "page-services",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-cycle general contracting, or single stages",
+      "maxCharacters": 96,
+      "label": "services — text.heading"
+    },
+    {
+      "key": "services.text.intro",
+      "entity": "page-services",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We take the whole facility or join at any stage — from concept to commissioning. Below is the scope, the timeline and exactly what the contract covers for each service.",
+      "maxCharacters": 336,
+      "label": "services — text.intro"
+    },
+    {
+      "key": "services.stats.item.1.title",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "18,000 t",
+      "maxCharacters": 80,
+      "label": "services — stats.item.1.title"
+    },
+    {
+      "key": "services.stats.item.1.text",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "steel structures a year",
+      "maxCharacters": 80,
+      "label": "services — stats.item.1.text"
+    },
+    {
+      "key": "services.stats.item.2.title",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "46",
+      "maxCharacters": 80,
+      "label": "services — stats.item.2.title"
+    },
+    {
+      "key": "services.stats.item.2.text",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "owned machines",
+      "maxCharacters": 80,
+      "label": "services — stats.item.2.text"
+    },
+    {
+      "key": "services.stats.item.3.title",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "9",
+      "maxCharacters": 80,
+      "label": "services — stats.item.3.title"
+    },
+    {
+      "key": "services.stats.item.3.text",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "erection crews",
+      "maxCharacters": 80,
+      "label": "services — stats.item.3.text"
+    },
+    {
+      "key": "services.stats.item.4.title",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "5 years",
+      "maxCharacters": 80,
+      "label": "services — stats.item.4.title"
+    },
+    {
+      "key": "services.stats.item.4.text",
+      "entity": "page-services",
+      "target": {
+        "block": "stats.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "structural warranty",
+      "maxCharacters": 80,
+      "label": "services — stats.item.4.text"
+    },
+    {
+      "key": "services.services.heading",
+      "entity": "page-services",
+      "target": {
+        "block": "services.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How the work runs",
+      "maxCharacters": 80,
+      "label": "services — services.heading"
+    },
+    {
+      "key": "services.services.item.1.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "services — services.item.1.meta"
+    },
+    {
+      "key": "services.services.item.1.title",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Enquiry and pre-design",
+      "maxCharacters": 80,
+      "label": "services — services.item.1.title"
+    },
+    {
+      "key": "services.services.item.1.text",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dimensions, loads, region. Budget estimate and outline schedule in 3 working days.",
+      "maxCharacters": 164,
+      "label": "services — services.item.1.text"
+    },
+    {
+      "key": "services.services.item.2.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "services — services.item.2.meta"
+    },
+    {
+      "key": "services.services.item.2.title",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contract and mobilisation",
+      "maxCharacters": 80,
+      "label": "services — services.item.2.title"
+    },
+    {
+      "key": "services.services.item.2.text",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Price and dates fixed, fabrication advance, move to site.",
+      "maxCharacters": 114,
+      "label": "services — services.item.2.text"
+    },
+    {
+      "key": "services.services.item.3.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "services — services.item.3.meta"
+    },
+    {
+      "key": "services.services.item.3.title",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Construction",
+      "maxCharacters": 80,
+      "label": "services — services.item.3.title"
+    },
+    {
+      "key": "services.services.item.3.text",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Weekly photo-documented report, monthly valuation, site progress meetings.",
+      "maxCharacters": 148,
+      "label": "services — services.item.3.text"
+    },
+    {
+      "key": "services.services.item.4.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "services — services.item.4.meta"
+    },
+    {
+      "key": "services.services.item.4.title",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Handover and warranty",
+      "maxCharacters": 80,
+      "label": "services — services.item.4.title"
+    },
+    {
+      "key": "services.services.item.4.text",
+      "entity": "page-services",
+      "target": {
+        "block": "services.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Commissioning, documentation, 5-year warranty service.",
+      "maxCharacters": 108,
+      "label": "services — services.item.4.text"
+    },
+    {
+      "key": "services.text.heading",
+      "entity": "page-services",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Indicative pricing",
+      "maxCharacters": 80,
+      "label": "services — text.heading"
+    },
+    {
+      "key": "services.text.intro",
+      "entity": "page-services",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ranges are for early budgeting, excluding VAT, as at Q3 2026. Firm pricing is calculated against your brief.",
+      "maxCharacters": 216,
+      "label": "services — text.intro"
+    },
+    {
+      "key": "services.text.item.1.title",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Class A warehouse, turnkey",
+      "maxCharacters": 80,
+      "label": "services — text.item.1.title"
+    },
+    {
+      "key": "services.text.item.1.text",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frame, envelope, floors, services, docks",
+      "maxCharacters": 80,
+      "label": "services — text.item.1.text"
+    },
+    {
+      "key": "services.text.item.1.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "from ₽48,000/m²",
+      "maxCharacters": 80,
+      "label": "services — text.item.1.meta"
+    },
+    {
+      "key": "services.text.item.2.title",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Production building",
+      "maxCharacters": 80,
+      "label": "services — text.item.2.title"
+    },
+    {
+      "key": "services.text.item.2.text",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With crane beams and heavy-duty floors",
+      "maxCharacters": 80,
+      "label": "services — text.item.2.text"
+    },
+    {
+      "key": "services.text.item.2.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "from ₽62,000/m²",
+      "maxCharacters": 80,
+      "label": "services — text.item.2.meta"
+    },
+    {
+      "key": "services.text.item.3.title",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Steel frame only",
+      "maxCharacters": 80,
+      "label": "services — text.item.3.title"
+    },
+    {
+      "key": "services.text.item.3.text",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Fabrication, coating, erection",
+      "maxCharacters": 80,
+      "label": "services — text.item.3.text"
+    },
+    {
+      "key": "services.text.item.3.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "from ₽145,000/t",
+      "maxCharacters": 80,
+      "label": "services — text.item.3.meta"
+    },
+    {
+      "key": "services.text.item.4.title",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design",
+      "maxCharacters": 80,
+      "label": "services — text.item.4.title"
+    },
+    {
+      "key": "services.text.item.4.text",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design and detailed stages, BIM model",
+      "maxCharacters": 80,
+      "label": "services — text.item.4.text"
+    },
+    {
+      "key": "services.text.item.4.meta",
+      "entity": "page-services",
+      "target": {
+        "block": "text.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "from ₽890/m²",
+      "maxCharacters": 80,
+      "label": "services — text.item.4.meta"
+    },
+    {
+      "key": "services.cta.heading",
+      "entity": "page-services",
+      "target": {
+        "block": "cta.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Price your facility",
+      "maxCharacters": 80,
+      "label": "services — cta.heading"
+    },
+    {
+      "key": "services.cta.intro",
+      "entity": "page-services",
+      "target": {
+        "block": "cta.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Send a brief, a sketch or just the dimensions — we come back with a budget and a schedule within three working days.",
+      "maxCharacters": 232,
+      "label": "services — cta.intro"
+    },
+    {
+      "key": "services.cta.cta.1",
+      "entity": "page-services",
+      "target": {
+        "block": "cta.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Request a quote",
+      "maxCharacters": 80,
+      "label": "services — cta.cta.1"
+    },
+    {
+      "key": "services.cta.cta.2",
+      "entity": "page-services",
+      "target": {
+        "block": "cta.cta.2",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Projects",
+      "maxCharacters": 80,
+      "label": "services — cta.cta.2"
+    },
+    {
+      "key": "projects.text.eyebrow",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Flagship project",
+      "maxCharacters": 80,
+      "label": "projects — text.eyebrow"
+    },
+    {
+      "key": "projects.text.heading",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Elektra plant: 62,000 m² production building",
+      "maxCharacters": 88,
+      "label": "projects — text.heading"
+    },
+    {
+      "key": "projects.text.intro",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full cycle: design, 4,800 t steel frame, sandwich panels, 20 t crane beams, building services. Handed over 19 days ahead of contract despite two design changes mid-build.",
+      "maxCharacters": 340,
+      "label": "projects — text.intro"
+    },
+    {
+      "key": "projects.text.cta.1",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Read the case study →",
+      "maxCharacters": 80,
+      "label": "projects — text.cta.1"
+    },
+    {
+      "key": "projects.text.item.1.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Area",
+      "maxCharacters": 80,
+      "label": "projects — text.item.1.title"
+    },
+    {
+      "key": "projects.text.item.1.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "62,000 m²",
+      "maxCharacters": 80,
+      "label": "projects — text.item.1.meta"
+    },
+    {
+      "key": "projects.text.item.2.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Steel frame",
+      "maxCharacters": 80,
+      "label": "projects — text.item.2.title"
+    },
+    {
+      "key": "projects.text.item.2.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "4,800 t",
+      "maxCharacters": 80,
+      "label": "projects — text.item.2.meta"
+    },
+    {
+      "key": "projects.text.item.3.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Duration",
+      "maxCharacters": 80,
+      "label": "projects — text.item.3.title"
+    },
+    {
+      "key": "projects.text.item.3.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "14 months",
+      "maxCharacters": 80,
+      "label": "projects — text.item.3.meta"
+    },
+    {
+      "key": "projects.text.item.4.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Region",
+      "maxCharacters": 80,
+      "label": "projects — text.item.4.title"
+    },
+    {
+      "key": "projects.text.item.4.text",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lipetsk SEZ",
+      "maxCharacters": 80,
+      "label": "projects — text.item.4.text"
+    },
+    {
+      "key": "projects.services.heading",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How we run a project",
+      "maxCharacters": 80,
+      "label": "projects — services.heading"
+    },
+    {
+      "key": "projects.services.item.1.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "projects — services.item.1.meta"
+    },
+    {
+      "key": "projects.services.item.1.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Investigation and design",
+      "maxCharacters": 80,
+      "label": "projects — services.item.1.title"
+    },
+    {
+      "key": "projects.services.item.1.text",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Geotechnics, BIM model, approvals. 6–10 weeks.",
+      "maxCharacters": 92,
+      "label": "projects — services.item.1.text"
+    },
+    {
+      "key": "projects.services.item.2.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "projects — services.item.2.meta"
+    },
+    {
+      "key": "projects.services.item.2.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Fabrication and frame",
+      "maxCharacters": 80,
+      "label": "projects — services.item.2.title"
+    },
+    {
+      "key": "projects.services.item.2.text",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shop drawings, fabrication in Vorsino, frame erection.",
+      "maxCharacters": 108,
+      "label": "projects — services.item.2.text"
+    },
+    {
+      "key": "projects.services.item.3.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "projects — services.item.3.meta"
+    },
+    {
+      "key": "projects.services.item.3.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Envelope and services",
+      "maxCharacters": 80,
+      "label": "projects — services.item.3.title"
+    },
+    {
+      "key": "projects.services.item.3.text",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Roof, walls, HVAC, plumbing, power, low-voltage.",
+      "maxCharacters": 96,
+      "label": "projects — services.item.3.text"
+    },
+    {
+      "key": "projects.services.item.4.meta",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "projects — services.item.4.meta"
+    },
+    {
+      "key": "projects.services.item.4.title",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Commissioning and handover",
+      "maxCharacters": 80,
+      "label": "projects — services.item.4.title"
+    },
+    {
+      "key": "projects.services.item.4.text",
+      "entity": "page-projects",
+      "target": {
+        "block": "services.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Testing, as-built documentation, final acceptance.",
+      "maxCharacters": 100,
+      "label": "projects — services.item.4.text"
+    },
+    {
+      "key": "projects.cta.heading",
+      "entity": "page-projects",
+      "target": {
+        "block": "cta.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Planning something similar?",
+      "maxCharacters": 80,
+      "label": "projects — cta.heading"
+    },
+    {
+      "key": "projects.cta.intro",
+      "entity": "page-projects",
+      "target": {
+        "block": "cta.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Send dimensions, loads and your target date — we will come back with a budget estimate and references from comparable projects.",
+      "maxCharacters": 254,
+      "label": "projects — cta.intro"
+    },
+    {
+      "key": "projects.cta.cta.1",
+      "entity": "page-projects",
+      "target": {
+        "block": "cta.cta.1",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Request a quote",
+      "maxCharacters": 80,
+      "label": "projects — cta.cta.1"
+    },
+    {
+      "key": "projects.cta.cta.2",
+      "entity": "page-projects",
+      "target": {
+        "block": "cta.cta.2",
+        "attr": "text"
+      },
+      "type": "text",
+      "sample": "Services",
+      "maxCharacters": 80,
+      "label": "projects — cta.cta.2"
+    },
+    {
+      "key": "contact.contact.heading",
+      "entity": "page-contact",
+      "target": {
+        "block": "contact.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact",
+      "maxCharacters": 80,
+      "label": "contact — contact.heading"
+    },
+    {
+      "key": "contact.contact.intro",
+      "entity": "page-contact",
+      "target": {
+        "block": "contact.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Request a quote or book a site survey. Our sales team replies within 24 working hours.",
+      "maxCharacters": 172,
+      "label": "contact — contact.intro"
+    },
+    {
+      "key": "careers.text.heading",
+      "entity": "page-careers",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Working at Northgate",
+      "maxCharacters": 80,
+      "label": "careers — text.heading"
+    },
+    {
+      "key": "careers.text.intro",
+      "entity": "page-careers",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We build plants across 14 regions. We look for engineers who want to see their work in steel and concrete rather than in slide decks.",
+      "maxCharacters": 266,
+      "label": "careers — text.intro"
+    },
+    {
+      "key": "careers.stats.item.1.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "640",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.1.title"
+    },
+    {
+      "key": "careers.stats.item.1.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Employees",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.1.text"
+    },
+    {
+      "key": "careers.stats.item.2.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "34",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.2.title"
+    },
+    {
+      "key": "careers.stats.item.2.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "In-house design engineers",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.2.text"
+    },
+    {
+      "key": "careers.stats.item.3.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "8 yrs",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.3.title"
+    },
+    {
+      "key": "careers.stats.item.3.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Average tenure",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.3.text"
+    },
+    {
+      "key": "careers.stats.item.4.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "19",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.4.title"
+    },
+    {
+      "key": "careers.stats.item.4.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "stats.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Open roles",
+      "maxCharacters": 80,
+      "label": "careers — stats.item.4.text"
+    },
+    {
+      "key": "careers.services.heading",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How hiring works",
+      "maxCharacters": 80,
+      "label": "careers — services.heading"
+    },
+    {
+      "key": "careers.services.item.1.meta",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "careers — services.item.1.meta"
+    },
+    {
+      "key": "careers.services.item.1.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Application and call",
+      "maxCharacters": 80,
+      "label": "careers — services.item.1.title"
+    },
+    {
+      "key": "careers.services.item.1.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "HR gets back to you within two working days.",
+      "maxCharacters": 88,
+      "label": "careers — services.item.1.text"
+    },
+    {
+      "key": "careers.services.item.2.meta",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "careers — services.item.2.meta"
+    },
+    {
+      "key": "careers.services.item.2.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Technical interview",
+      "maxCharacters": 80,
+      "label": "careers — services.item.2.title"
+    },
+    {
+      "key": "careers.services.item.2.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A real task discussed with the head of discipline.",
+      "maxCharacters": 100,
+      "label": "careers — services.item.2.text"
+    },
+    {
+      "key": "careers.services.item.3.meta",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "careers — services.item.3.meta"
+    },
+    {
+      "key": "careers.services.item.3.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Site visit",
+      "maxCharacters": 80,
+      "label": "careers — services.item.3.title"
+    },
+    {
+      "key": "careers.services.item.3.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For site roles — meet the project and the crew.",
+      "maxCharacters": 94,
+      "label": "careers — services.item.3.text"
+    },
+    {
+      "key": "careers.services.item.4.meta",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "careers — services.item.4.meta"
+    },
+    {
+      "key": "careers.services.item.4.title",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Offer",
+      "maxCharacters": 80,
+      "label": "careers — services.item.4.title"
+    },
+    {
+      "key": "careers.services.item.4.text",
+      "entity": "page-careers",
+      "target": {
+        "block": "services.item.4.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Decision and terms within three days of the interview.",
+      "maxCharacters": 108,
+      "label": "careers — services.item.4.text"
+    },
+    {
+      "key": "investor-relations.text.eyebrow",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "MOEX · NGIN",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.eyebrow"
+    },
+    {
+      "key": "investor-relations.text.heading",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Investor and shareholder information",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.heading"
+    },
+    {
+      "key": "investor-relations.text.intro",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Northgate Industrial JSC discloses financial and corporate information in line with Russian statutory requirements and exchange listing rules.",
+      "maxCharacters": 284,
+      "label": "investor-relations — text.intro"
+    },
+    {
+      "key": "investor-relations.links.heading",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Reports and presentations",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.heading"
+    },
+    {
+      "key": "investor-relations.links.item.1.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Annual report 2025",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.1.title"
+    },
+    {
+      "key": "investor-relations.links.item.1.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "PDF · 6.4 MB · 28 Mar 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.1.meta"
+    },
+    {
+      "key": "investor-relations.links.item.2.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Consolidated IFRS statements 2025",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.2.title"
+    },
+    {
+      "key": "investor-relations.links.item.2.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "PDF · 2.1 MB · 28 Mar 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.2.meta"
+    },
+    {
+      "key": "investor-relations.links.item.3.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Investor presentation, Q2 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.3.title"
+    },
+    {
+      "key": "investor-relations.links.item.3.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "PDF · 4.8 MB · 31 Jul 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.3.meta"
+    },
+    {
+      "key": "investor-relations.links.item.4.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Statutory accounts, H1 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.4.title"
+    },
+    {
+      "key": "investor-relations.links.item.4.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "PDF · 1.3 MB · 14 Aug 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.4.meta"
+    },
+    {
+      "key": "investor-relations.links.heading",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Material disclosures",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.heading"
+    },
+    {
+      "key": "investor-relations.links.item.1.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Award of the Zavolzhye 2 infrastructure contract",
+      "maxCharacters": 96,
+      "label": "investor-relations — links.item.1.title"
+    },
+    {
+      "key": "investor-relations.links.item.1.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "12 Aug 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.1.meta"
+    },
+    {
+      "key": "investor-relations.links.item.2.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Resolutions of the annual general meeting",
+      "maxCharacters": 82,
+      "label": "investor-relations — links.item.2.title"
+    },
+    {
+      "key": "investor-relations.links.item.2.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "26 Jun 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.2.meta"
+    },
+    {
+      "key": "investor-relations.links.item.3.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dividend payment for 2025",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.3.title"
+    },
+    {
+      "key": "investor-relations.links.item.3.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "3 Jun 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.3.meta"
+    },
+    {
+      "key": "investor-relations.links.item.4.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Change in the composition of the board",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.4.title"
+    },
+    {
+      "key": "investor-relations.links.item.4.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "links.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "26 Jun 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — links.item.4.meta"
+    },
+    {
+      "key": "investor-relations.text.heading",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dividends",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.heading"
+    },
+    {
+      "key": "investor-relations.text.intro",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our policy provides for a payout of at least 30% of IFRS net profit.",
+      "maxCharacters": 136,
+      "label": "investor-relations — text.intro"
+    },
+    {
+      "key": "investor-relations.text.item.1.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "RUB 14.20 per share",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.1.title"
+    },
+    {
+      "key": "investor-relations.text.item.1.text",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Paid 22 Jul 2026",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.1.text"
+    },
+    {
+      "key": "investor-relations.text.item.1.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "FY 2025",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.1.meta"
+    },
+    {
+      "key": "investor-relations.text.item.2.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "RUB 10.80 per share",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.2.title"
+    },
+    {
+      "key": "investor-relations.text.item.2.text",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Paid 19 Jul 2025",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.2.text"
+    },
+    {
+      "key": "investor-relations.text.item.2.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "FY 2024",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.2.meta"
+    },
+    {
+      "key": "investor-relations.text.item.3.title",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "RUB 8.40 per share",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.3.title"
+    },
+    {
+      "key": "investor-relations.text.item.3.text",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.3.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Paid 24 Jul 2024",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.3.text"
+    },
+    {
+      "key": "investor-relations.text.item.3.meta",
+      "entity": "page-investor-relations",
+      "target": {
+        "block": "text.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "FY 2023",
+      "maxCharacters": 80,
+      "label": "investor-relations — text.item.3.meta"
+    },
+    {
+      "key": "project-detail.text.eyebrow",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Production building",
+      "maxCharacters": 80,
+      "label": "project-detail — text.eyebrow"
+    },
+    {
+      "key": "project-detail.text.heading",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Elektra appliance plant, Lipetsk SEZ",
+      "maxCharacters": 80,
+      "label": "project-detail — text.heading"
+    },
+    {
+      "key": "project-detail.text.intro",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-cycle main contract: from site earthworks to handover of ISO 8 cleanroom space — 24 days ahead of schedule.",
+      "maxCharacters": 224,
+      "label": "project-detail — text.intro"
+    },
+    {
+      "key": "project-detail.text.item.1.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Client",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.1.title"
+    },
+    {
+      "key": "project-detail.text.item.1.text",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.1.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Elektra JSC",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.1.text"
+    },
+    {
+      "key": "project-detail.text.item.2.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Region",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.2.title"
+    },
+    {
+      "key": "project-detail.text.item.2.text",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.2.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lipetsk SEZ",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.2.text"
+    },
+    {
+      "key": "project-detail.text.item.3.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Area",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.3.title"
+    },
+    {
+      "key": "project-detail.text.item.3.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "62,000 m²",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.3.meta"
+    },
+    {
+      "key": "project-detail.text.item.4.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Duration",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.4.title"
+    },
+    {
+      "key": "project-detail.text.item.4.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "19 months",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.4.meta"
+    },
+    {
+      "key": "project-detail.text.item.5.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.5.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Delivered",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.5.title"
+    },
+    {
+      "key": "project-detail.text.item.5.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.5.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2025",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.5.meta"
+    },
+    {
+      "key": "project-detail.text.item.6.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.6.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Role",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.6.title"
+    },
+    {
+      "key": "project-detail.text.item.6.text",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.item.6.text",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Main contractor",
+      "maxCharacters": 80,
+      "label": "project-detail — text.item.6.text"
+    },
+    {
+      "key": "project-detail.projects.heading",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Other projects",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.heading"
+    },
+    {
+      "key": "project-detail.projects.item.1.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.1.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "62,000 m² · 2025",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.1.meta"
+    },
+    {
+      "key": "project-detail.projects.item.1.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.1.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Elektra plant, Lipetsk SEZ",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.1.title"
+    },
+    {
+      "key": "project-detail.projects.item.2.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.2.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "48 ha · 2024",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.2.meta"
+    },
+    {
+      "key": "project-detail.projects.item.2.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.2.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Vorsino IP, phase 3",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.2.title"
+    },
+    {
+      "key": "project-detail.projects.item.3.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.3.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Utilities · 2024",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.3.meta"
+    },
+    {
+      "key": "project-detail.projects.item.3.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.3.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "110 kV Obninsk-2 substation",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.3.title"
+    },
+    {
+      "key": "project-detail.projects.item.4.meta",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.4.meta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "24,000 m² · 2023",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.4.meta"
+    },
+    {
+      "key": "project-detail.projects.item.4.title",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.4.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Zavolzhye logistics building",
+      "maxCharacters": 80,
+      "label": "project-detail — projects.item.4.title"
+    },
+    {
+      "key": "identity.name",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "name"
+      },
+      "type": "text",
+      "sample": "Northgate",
+      "maxCharacters": 80,
+      "siteIdentity": true,
+      "label": "site identity — site.name",
+      "input": "name"
+    },
+    {
+      "key": "identity.legalName",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "legalName"
+      },
+      "type": "text",
+      "sample": "Northgate Industrial JSC",
+      "maxCharacters": 120,
+      "siteIdentity": true,
+      "label": "site identity — site.legalName"
+    },
+    {
+      "key": "identity.slogan",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "slogan"
+      },
+      "type": "text",
+      "sample": "Design–build main contractor for industrial facilities in Russia since 2004.",
+      "maxCharacters": 200,
+      "siteIdentity": true,
+      "label": "site identity — site.slogan"
+    },
+    {
+      "key": "identity.monogram",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "monogram"
+      },
+      "type": "text",
+      "sample": "NG",
+      "maxCharacters": 4,
+      "siteIdentity": true,
+      "label": "site identity — site.monogram"
+    },
+    {
+      "key": "identity.contact.email",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "contact.email"
+      },
+      "type": "text",
+      "sample": "info@northgate-ind.ru",
+      "maxCharacters": 120,
+      "siteIdentity": true,
+      "label": "site identity — contact.email",
+      "input": "contact.email"
+    },
+    {
+      "key": "identity.contact.phone",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "contact.phone"
+      },
+      "type": "text",
+      "sample": "8 800 550-67-89",
+      "maxCharacters": 40,
+      "siteIdentity": true,
+      "label": "site identity — contact.phone",
+      "input": "contact.phone"
+    },
+    {
+      "key": "identity.contact.tel",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "contact.tel"
+      },
+      "type": "text",
+      "sample": "+78005506789",
+      "maxCharacters": 24,
+      "siteIdentity": true,
+      "label": "site identity — contact.tel"
+    },
+    {
+      "key": "identity.contact.address",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "contact.address"
+      },
+      "type": "text",
+      "sample": "Vorsino Industrial Park, Kaluga Region",
+      "maxCharacters": 200,
+      "siteIdentity": true,
+      "label": "site identity — contact.address",
+      "input": "contact.address"
+    },
+    {
+      "key": "identity.contact.hours",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "contact.hours"
+      },
+      "type": "text",
+      "sample": "Mon–Fri, 9:00–18:00 (MSK)",
+      "maxCharacters": 80,
+      "siteIdentity": true,
+      "label": "site identity — contact.hours"
+    },
+    {
+      "key": "identity.social.facebook",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "social.facebook"
+      },
+      "type": "url",
+      "sample": "",
+      "maxCharacters": 255,
+      "siteIdentity": true,
+      "label": "site identity — social.facebook"
+    },
+    {
+      "key": "identity.social.instagram",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "social.instagram"
+      },
+      "type": "url",
+      "sample": "",
+      "maxCharacters": 255,
+      "siteIdentity": true,
+      "label": "site identity — social.instagram"
+    },
+    {
+      "key": "identity.social.linkedin",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "social.linkedin"
+      },
+      "type": "url",
+      "sample": "",
+      "maxCharacters": 255,
+      "siteIdentity": true,
+      "label": "site identity — social.linkedin"
+    },
+    {
+      "key": "identity.social.tiktok",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "social.tiktok"
+      },
+      "type": "url",
+      "sample": "",
+      "maxCharacters": 255,
+      "siteIdentity": true,
+      "label": "site identity — social.tiktok"
+    },
+    {
+      "key": "identity.social.youtube",
+      "entity": "option-tracy_site_identity",
+      "target": {
+        "option": "tracy_site_identity",
+        "field": "social.youtube"
+      },
+      "type": "url",
+      "sample": "",
+      "maxCharacters": 255,
+      "siteIdentity": true,
+      "label": "site identity — social.youtube"
+    },
+    {
+      "key": "home.hero.img",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/hero-ru.png",
+      "sampleId": 91,
+      "maxCharacters": 255,
+      "label": "home — hero.img"
+    },
+    {
+      "key": "home.projects.item.1.img",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.1.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/factory-ru-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "home — projects.item.1.img"
+    },
+    {
+      "key": "home.projects.item.2.img",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.2.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/proj-ru-2.png",
+      "sampleId": 92,
+      "maxCharacters": 255,
+      "label": "home — projects.item.2.img"
+    },
+    {
+      "key": "home.projects.item.3.img",
+      "entity": "page-home",
+      "target": {
+        "block": "projects.item.3.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/proj-ru-3.png",
+      "sampleId": 93,
+      "maxCharacters": 255,
+      "label": "home — projects.item.3.img"
+    },
+    {
+      "key": "home.text.img",
+      "entity": "page-home",
+      "target": {
+        "block": "text.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/team-crew.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "home — text.img"
+    },
+    {
+      "key": "home.gallery.item.1.img",
+      "entity": "page-home",
+      "target": {
+        "block": "gallery.item.1.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/logo-ru-1.png",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "home — gallery.item.1.img"
+    },
+    {
+      "key": "home.gallery.item.2.img",
+      "entity": "page-home",
+      "target": {
+        "block": "gallery.item.2.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/logo-ru-2.png",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "home — gallery.item.2.img"
+    },
+    {
+      "key": "home.gallery.item.3.img",
+      "entity": "page-home",
+      "target": {
+        "block": "gallery.item.3.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/logo-ru-3.png",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "home — gallery.item.3.img"
+    },
+    {
+      "key": "home.gallery.item.4.img",
+      "entity": "page-home",
+      "target": {
+        "block": "gallery.item.4.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/logo-ru-4.png",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "home — gallery.item.4.img"
+    },
+    {
+      "key": "home.gallery.item.5.img",
+      "entity": "page-home",
+      "target": {
+        "block": "gallery.item.5.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/logo-ru-5.png",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "home — gallery.item.5.img"
+    },
+    {
+      "key": "about.text.img",
+      "entity": "page-about",
+      "target": {
+        "block": "text.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/factory-ru-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "about — text.img"
+    },
+    {
+      "key": "about.team.item.1.img",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.1.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/team-crew.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "about — team.item.1.img"
+    },
+    {
+      "key": "about.team.item.2.img",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.2.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/team-crew.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "about — team.item.2.img"
+    },
+    {
+      "key": "about.team.item.3.img",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.3.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/team-crew.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "about — team.item.3.img"
+    },
+    {
+      "key": "about.team.item.4.img",
+      "entity": "page-about",
+      "target": {
+        "block": "team.item.4.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/team-crew.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "about — team.item.4.img"
+    },
+    {
+      "key": "projects.text.img",
+      "entity": "page-projects",
+      "target": {
+        "block": "text.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/proj-big.png",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "projects — text.img"
+    },
+    {
+      "key": "careers.text.img",
+      "entity": "page-careers",
+      "target": {
+        "block": "text.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/team-crew.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "careers — text.img"
+    },
+    {
+      "key": "project-detail.text.img",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "text.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/factory-ru-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "project-detail — text.img"
+    },
+    {
+      "key": "project-detail.projects.item.1.img",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.1.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/factory-ru-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "project-detail — projects.item.1.img"
+    },
+    {
+      "key": "project-detail.projects.item.2.img",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.2.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/proj-ru-2.png",
+      "sampleId": 92,
+      "maxCharacters": 255,
+      "label": "project-detail — projects.item.2.img"
+    },
+    {
+      "key": "project-detail.projects.item.3.img",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.3.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/proj-ru-3.png",
+      "sampleId": 93,
+      "maxCharacters": 255,
+      "label": "project-detail — projects.item.3.img"
+    },
+    {
+      "key": "project-detail.projects.item.4.img",
+      "entity": "page-project-detail",
+      "target": {
+        "block": "projects.item.4.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/factory-ru-2.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "project-detail — projects.item.4.img"
+    }
+  ]
+}

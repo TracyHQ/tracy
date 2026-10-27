@@ -1,0 +1,78 @@
+[
+  {
+    "assertionIds": ["legacy:J4a#verdict"],
+    "edgeTags": ["rollback"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-site-changes-undo-rollback-undo-file",
+    "itemIds": ["flow:site-changes-undo", "capability:site-changes-diff-undo-backup", "journey:J4a"],
+    "kind": "legacy",
+    "legacyIds": ["J4a"],
+    "oracle": {
+      "invariant": "undo puts the file/value back to its bytes before the turn",
+      "ref": "ADR 0024; CONTEXT.md §6",
+      "source": "docs/adr/0024-backup-is-a-complete-restore-point.md"
+    },
+    "prerequisites": ["stand", "legacy-runner", "model-credentials"],
+    "redProof": null,
+    "ref": "J4a",
+    "requirement": "Site changes, diff, undo — undo file (rollback) [journey J4a: agent edits a file, diff, undo]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J4b#verdict"],
+    "edgeTags": ["rollback"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-site-changes-undo-rollback-undo-content",
+    "itemIds": ["flow:site-changes-undo", "capability:site-changes-diff-undo-backup", "journey:J4b"],
+    "kind": "legacy",
+    "legacyIds": ["J4b"],
+    "oracle": {
+      "invariant": "undo puts the file/value back to its bytes before the turn",
+      "ref": "ADR 0024; CONTEXT.md §6",
+      "source": "docs/adr/0024-backup-is-a-complete-restore-point.md"
+    },
+    "prerequisites": ["stand", "legacy-runner", "model-credentials"],
+    "redProof": null,
+    "ref": "J4b",
+    "requirement": "Site changes, diff, undo — undo content (rollback) [journey J4b: agent edits content, revert]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["empty"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-site-changes-undo-empty-no-changes",
+    "itemIds": ["flow:site-changes-undo", "capability:site-changes-diff-undo-backup"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "undo puts the file/value back to its bytes before the turn",
+      "ref": "ADR 0024; CONTEXT.md §6",
+      "source": "docs/adr/0024-backup-is-a-complete-restore-point.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Site changes, diff, undo — no changes (empty)",
+    "targets": ["local"]
+  }
+]

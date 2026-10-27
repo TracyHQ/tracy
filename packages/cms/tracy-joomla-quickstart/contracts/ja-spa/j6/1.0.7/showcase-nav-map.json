@@ -1,0 +1,418 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-spa/j6/1.0.7",
+  "baseHash": "dd5f2d225ccce4052435498e46cd2982f0694ff638fb964b7e969965147fb6f5",
+  "baseFiles": {
+    "manifest.json": "f20fe2e139832381051d849864f8c8102027b3d0e34973cd50b6eaca595476a0",
+    "content-map.json": "92b30c38278cf43da27d9761e2d9ec10dade7b351245953b2f62f9d6a5b06378",
+    "presentation-lock.json": "067334a145dd4a32a6ae84750a2074c5f932ea7709aa60541e31abcee5f2b3f0"
+  },
+  "inputs": {},
+  "decisionsHash": "c457e4b93b36d25c024455fd4e0d280e6e738e1754e3f2d24b8797126cffd4bd",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "page/joomla-content/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Category Blog",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-121",
+      "identity": {
+        "path": "page/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "page/joomla-content/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "page/other-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-127",
+      "identity": {
+        "path": "page/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-146",
+      "identity": {
+        "path": "homepage/home-navbar-vertical",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Navbar Vertical",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-148",
+      "identity": {
+        "path": "homepage/home-navbar-standard",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Navbar Standard",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Our Spa",
+      "where": "mainmenu/our-spa",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "Services",
+      "where": "mainmenu/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Page",
+      "where": "mainmenu/page",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-111",
+      "label": "Our Blog",
+      "where": "mainmenu/our-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "User Page",
+      "where": "mainmenu/page/user-page",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Login",
+      "where": "mainmenu/page/user-page/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Registration",
+      "where": "mainmenu/page/user-page/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "User Profile",
+      "where": "mainmenu/page/user-page/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Privacy",
+      "where": "mainmenu/page/user-page/privacy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "Featured Articles",
+      "where": "mainmenu/page/joomla-content/featured-articles",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to article:10, article:12: a branch hide may not take real content along"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "Other Pages",
+      "where": "mainmenu/page/other-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Smart Search",
+      "where": "mainmenu/page/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Products",
+      "where": "footnav-1/products",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "How It Works",
+      "where": "footnav-1/how-it-works",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "FAQ",
+      "where": "footnav-1/faq",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Reviews",
+      "where": "footnav-1/reviews",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Blog",
+      "where": "footnav-1/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Sports Massage",
+      "where": "footnav-2/sports-massage",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "Therophy",
+      "where": "footnav-2/therophy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Parlar",
+      "where": "footnav-2/parlar",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "Shadow",
+      "where": "footnav-2/shadow",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Waxing",
+      "where": "footnav-2/waxing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "Facebook",
+      "where": "footnav-3/facebook",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-139",
+      "label": "Instagram",
+      "where": "footnav-3/instagram",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-140",
+      "label": "Twitter",
+      "where": "footnav-3/twitter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "Home - Navbar Horizontal",
+      "where": "mainmenu/homepage/home-navbar-horizontal",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to article:10, article:12: a showcase rule may not take real content along"
+    },
+    {
+      "key": "menuItem-159",
+      "label": "Username Reminder Request",
+      "where": "usermenu/username-reminder-request",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "Password Reset",
+      "where": "usermenu/password-reset",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=reset): a working feature stays unless decided"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@mainnav",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 16 entries stay"
+    },
+    {
+      "key": "module-111",
+      "label": "Footnav 1",
+      "where": "mod_menu@footnav-1",
+      "rule": "keep.default",
+      "reason": "renders footnav-1: 5 entries stay"
+    },
+    {
+      "key": "module-112",
+      "label": "Footnav 2",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders footnav-2: 5 entries stay"
+    },
+    {
+      "key": "module-113",
+      "label": "Footnav 3",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders footnav-3: 3 entries stay"
+    },
+    {
+      "key": "module-116",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 16 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-118",
+      "label": "Joomla Content",
+      "where": "mainmenu/page/joomla-content",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-120, which stays"
+    }
+  ],
+  "counts": {
+    "menuItems": 7,
+    "modules": 0,
+    "kept": 40,
+    "unresolved": 1
+  }
+}

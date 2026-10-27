@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1015-claude-oauth-redirect",
+  "kind": "fix",
+  "title": "Connect Claude asks Anthropic for the loopback redirect http://localhost:53692/callback (not the old console.anthropic.com code-paste address Anthropic refuses with \"Invalid request format\"), catches the callback itself and exchanges the code with that same redirect",
+  "pr": 1015,
+  "area": "desktop/plan-connect",
+  "cms": ["any"],
+  "needs": ["desktop-app"],
+  "flaky_model": false,
+  "steps": [
+    "S1: in vendor/tracy/dsh-subscriptions, node --import ./test/_setup.mjs --test test/claude-oauth-loopback.test.mjs (the whole plugin through apply() with default config: the real /oauth/start, the real loopback on :53692 hit with code+state, the token request body captured by a stand-in fetch).",
+    "S2: the running Tracy Cowork app (local mode, --remote-debugging-port, TRACY_APP_CDP, default http://127.0.0.1:9334): from its dsh page GET /dsh-subscriptions/oauth/start?provider=claude&index=1; then read whether something listens on TCP 53692. Never open the returned URL."
+  ],
+  "expect": [
+    "S1: clean TAP; the named test passes.",
+    "S2: 200; redirectUri = http://localhost:53692/callback; autoCatch = true; the URL is https://claude.ai/oauth/authorize with redirect_uri = that loopback, code = true, client_id 9d1c250a-e61b-44d9-88ed-5944d1962f5e, code_challenge_method S256; TCP 53692 listens."
+  ],
+  "selectors": {
+    "doors": "/dsh-subscriptions/oauth/start (vendor/tracy/dsh-subscriptions/lib/routes/oauth.js)",
+    "default": "defaults().redirectUri in vendor/tracy/dsh-subscriptions/lib/vendors/claude.js"
+  },
+  "fence": "The redirect the plugin asks Anthropic for and the loopback that catches it. Not covered: Anthropic accepting it and a real sign-in (by hand: Settings › Model plan › Connect on Claude).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1015-claude-oauth-redirect.mjs"],
+    "timeout_s": 300
+  }
+}

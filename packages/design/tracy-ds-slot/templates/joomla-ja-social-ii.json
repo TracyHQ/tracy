@@ -1,0 +1,993 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-social-ii",
+  "minVersion": {
+    "quickstart/ja-social-ii/j6": "1.0.2"
+  },
+  "maxVersion": {
+    "quickstart/ja-social-ii/j6": "1.0.4"
+  },
+  "maxVersionNote": "1.0.4 16/10/2026 (#1375): re-cut of 1.0.3 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-social-ii/j6@1.0.1",
+  "roles": {
+    "page": "body.features-page",
+    "display": "h1.item-title",
+    "body": "div.features-item > p",
+    "button-primary": "a.btn.btn-primary",
+    "container": "div.t3-section > div.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 54px",
+    "displayFace": "Montserrat 500, tracking 0em",
+    "body": "first body paragraph of the page's own size (14px); re-probed 10/10/2026: discover.mjs took the slider caption p.item-desc (20px, weight 300 set by the template); under Toggl Track the body paragraphs take 500, the captions keep 300",
+    "button-primary": "first filled, coloured call to action: rgb(1, 87, 155)",
+    "container": "the page container (1200px at 1440); re-probed 10/10/2026: discover.mjs took div.features-content.col-md-6, a half-width column of the features slide (720px box, 560px content), which no page width can widen",
+    "displayPhone": "the same heading at 390 on the published release: 24px"
+  },
+  "keepScopes": [".bg-dark", ".jamasshead"],
+  "keepColors": {
+    ".bg-dark": "#44494c"
+  },
+  "keepNote": "kept: the dark stats and partner bands (.bg-dark, #272727; they paint no text colour of their own, so the released #44494c is given back — 33 of their elements took the worn page's text), the footer, and the logo cell (.logo: on the phone a #01579b box with the white name, under a light accent the white name read 1.94:1 on MotherDuck's #6fc2ff; on the desktop it is transparent over the hero photo)",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#f1f3f5",
+    "--fg": "#44494c",
+    "--fg-2": "#44494c",
+    "--accent": "#01579b",
+    "--accent-hover": "#014982",
+    "--surface": "#eeeeee",
+    "--meta": "#999999",
+    "--success": "#669900",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#dddddd",
+    "--muted": "#555555",
+    "--font-display": "\"Montserrat\", sans-serif",
+    "--font-body": "\"Questrial\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f1f3f5",
+      "fg": "#44494c",
+      "fg-2": "#222222",
+      "accent": "#01579b",
+      "accent-hover": "#014982",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#669900",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#dddddd",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#f1f3f5",
+      "surface": "#eeeeee",
+      "fg": "#44494c",
+      "muted": "#999999",
+      "fg-2": "#44494c",
+      "accent": "#01579b",
+      "accent-on": "#ffffff",
+      "surface-warm": "#ffffff"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "border": "#d7d9db",
+      "surface": "#e6e6e6",
+      "surface-warm": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "bg": "#ebf4fc",
+      "success": "#5c8b00",
+      "accent-active": "#0173ce"
+    },
+    {
+      "surface": "#ebedf0",
+      "border-soft": "#f1f3f5",
+      "border": "#dfe1e2",
+      "bg": "#f9f2f4"
+    },
+    {
+      "surface": "#f2dede",
+      "border-soft": "#e4e6e7",
+      "border": "#e0e2e3",
+      "bg": "#f3f3f3"
+    },
+    {
+      "surface": "#d9edf7",
+      "border-soft": "#f7f7f7",
+      "border": "#d7d7d7"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border": "#d5d5d5",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#e1e1e1",
+      "border-soft": "#eff0f4"
+    },
+    {
+      "surface": "#e8e8e8",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f0f0f0"
+    },
+    {
+      "surface": "#efefef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (79 line colours, 92 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 4450); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#d7d9db",
+      "uses": 736,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#e6e6e6",
+      "uses": 176,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 14
+    },
+    {
+      "hex": "#ebedf0",
+      "uses": 80,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 4
+    },
+    {
+      "hex": "#f2dede",
+      "uses": 65,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 23
+    },
+    {
+      "hex": "#d9edf7",
+      "uses": 64,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 23
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 64,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 20
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 40,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#ffffff",
+      "distance": 10
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 40,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 40,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 23
+    },
+    {
+      "hex": "#f1f3f5",
+      "uses": 32,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e4e6e7",
+      "uses": 32,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 7
+    },
+    {
+      "hex": "#dfe1e2",
+      "uses": 32,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#ebf4fc",
+      "uses": 24,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f3f5",
+      "distance": 9
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 23
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 8
+    },
+    {
+      "hex": "#d7d7d7",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 8,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f3f5",
+      "distance": 8
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 10
+    },
+    {
+      "hex": "#d5d5d5",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 14
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#5c8b00",
+      "uses": 8,
+      "kind": "line",
+      "role": "success",
+      "near": "#669900",
+      "distance": 17
+    },
+    {
+      "hex": "#f3f3f3",
+      "uses": 8,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f3f5",
+      "distance": 3
+    },
+    {
+      "hex": "#eff0f4",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 13
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#0173ce",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent-active",
+      "near": "#0066cc",
+      "distance": 13
+    },
+    {
+      "hex": "#efefef",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eeeeee",
+      "distance": 2
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (heading and text kinds added) on the published quickstart/ja-social-ii/j6 1.0.2 (webroot sha256 dd6a3190…; tasks/evidence/ds-remeasure-4-2026-10-11/ja-social-ii-j6): first 4/12 — the accent-text, muted and body kinds sampled nothing (no #t3-mainbody or .t3-sl on the home page), the kept dark bands' 33 elements took the worn page's text colour, the testimonial quote and author (#333333, #666666 by rules of their own) read 1.27-3.53:1 on a dark page, and the phone logo's white name read 1.94:1 on MotherDuck's accent. The kinds now read the whole wrapper, the dark bands' #44494c is given back, the logo cell is kept, the testimonial takes the system's text and muted colours; the carousel indicators' labels (pushed out of their 14 px dots) are no longer read as text (flow.mjs). Then 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, kept bands 0 differences, no text under 4.5:1 worse than the template's own (the lowest, 1.78, is the template's own), 54% or more of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at. Earlier: measured 10/10/2026 on ja-social-ii/j6 1.0.2 (tasks/evidence/followups-2026-10-10/p6-dsdata/ready-templates.txt): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 55% or more of the page follows; its body probe now reads the running text, not the slider caption, and its container probe the page container, not a half-width slide column",
+  "contrastNote": "re-measured 11/10/2026: the home page has no #t3-mainbody and no .t3-sl, so the first three kinds sampled nothing (the probe must find at least one element); they now read the whole wrapper: its links (accent-text), its paragraphs (muted, body) and list items (body); heading and text judge every visible heading and text element",
+  "followRules": {
+    ".testimonial-text": {
+      "color": "fg!"
+    },
+    ".author-info .author-name, .author-info .author-title": {
+      "color": "muted!"
+    },
+    ".carousel-indicators li": {
+      "background-color": "border",
+      "border-color": "border"
+    },
+    ".owl-theme .owl-controls .owl-page span": {
+      "background-color": "muted"
+    },
+    ".owl-theme .owl-controls .owl-page.active span": {
+      "background-color": "accent"
+    },
+    ".acm-features.style-2 .font-icon span": {
+      "border-color": "border"
+    },
+    ".acm-features.style-3 .ft-bottom .icon span": {
+      "border-color": "border"
+    },
+    ".t3-footnav .t3-module .module-title": {
+      "color": "fg-2!"
+    },
+    ".t3-footnav .t3-module ul > li > a, .t3-footer small, .t3-footer": {
+      "color": "muted"
+    },
+    ".t3-footnav .t3-module ul > li > a:hover, .t3-footnav .t3-module ul > li > a:focus, .t3-footnav .t3-module ul > li.active > a": {
+      "color": "accent-text"
+    },
+    ".t3-footnav .t3-module .module-title::after, .contact h3::after, .contact .contact-address::before": {
+      "background-color": "accent"
+    },
+    ".t3-header": {
+      "background-color": "accent!"
+    },
+    ".pricing-table .col-header": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".pricing-table .col-feature .col-header": {
+      "background-color": "accent-hover!",
+      "color": "accent-on!"
+    },
+    ".pricing-table ul li:nth-child(2n+1)": {
+      "background-color": "surface-warm"
+    },
+    ".content-mass-top .mod-thumb-list .item .item-image .mask": {
+      "background-color": "accent!"
+    },
+    ".example-colors .swatch-item a:hover, .example-colors .swatch-item a:focus, .example-colors .swatch-item a:active": {
+      "background-color": "accent-hover!"
+    },
+    ".example-colors .color-brand-secondary": {
+      "background-color": "accent-hover"
+    },
+    ".docs-section .page-header h1": {
+      "border-bottom-color": "accent"
+    },
+    ".nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus, .nav-tabs > li > a.active": {
+      "border-bottom-color": "accent"
+    },
+    ".btn-second": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".t3-megamenu .dropdown-header, .t3-megamenu .mega-nav .mega-group > .dropdown-header, .t3-megamenu .dropdown-menu, .t3-megamenu .t3-module .module-title": {
+      "border-bottom-color": "accent"
+    },
+    ".star": {
+      "color": "danger-text"
+    },
+    ".navbar-default .navbar-nav > .dropdown > a .caret": {
+      "border-top-color": "fg-2"
+    },
+    ".navbar-default .navbar-nav > .dropdown > a:hover .caret, .navbar-default .navbar-nav > .open > a .caret": {
+      "border-top-color": "accent"
+    },
+    ".navbar-default, .navbar-default .navbar-collapse, .navbar-nav > li, .t3-mainnav .t3-navbar-collapse .navbar-nav > li > a": {
+      "border-color": "border-soft"
+    },
+    "select": {
+      "border-color": "border"
+    },
+    ".list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus": {
+      "background-color": "surface-warm!",
+      "border-color": "border!",
+      "color": "fg-2!"
+    },
+    "blockquote p": {
+      "color": "fg-2"
+    },
+    "code, kbd": {
+      "color": "fg-2",
+      "background-color": "surface"
+    },
+    ".example-colors .color-brand-primary, .label-primary": {
+      "color": "accent-on!"
+    },
+    ".example-colors .color-brand-success, .example-colors .color-brand-danger, .example-colors .color-brand-warning, .example-colors .color-brand-info": {
+      "color": "bg"
+    },
+    ".example-colors .swatch-item a:hover span, .example-colors .swatch-item a:focus span, .example-colors .swatch-item a:hover .fa, .example-colors .swatch-item a:focus .fa": {
+      "color": "accent-on!"
+    },
+    ".module-title span": {
+      "border-bottom-color": "border"
+    },
+    ".acm-testimonials.style-1 .carousel-indicators li": {
+      "background-color": "border",
+      "border-color": "border"
+    },
+    ".content-box-grid ul.socials li a:hover, .content-box-grid ul.socials li a:focus, .content-box-grid ul.socials li a:active": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".content-box-grid ul.socials li a:hover .fa, .content-box-grid ul.socials li a:focus .fa, .content-box-grid ul.socials li a:active .fa": {
+      "color": "accent-on!"
+    },
+    ".panel-default > .panel-heading": {
+      "background-color": "surface-warm",
+      "color": "fg-2"
+    },
+    ".off-canvas-toggle.btn-inverse": {
+      "background-color": "fg-2!",
+      "border-color": "fg-2!"
+    },
+    ".off-canvas-toggle span": {
+      "background-color": "bg!"
+    },
+    ".btn-inverse, .btn-inverse:hover, .btn-inverse:focus": {
+      "background-color": "fg-2!",
+      "border-color": "fg-2!",
+      "color": "bg!"
+    },
+    ".btn-inverse .fa, .btn-inverse [class*=\"icon-\"]": {
+      "color": "bg!"
+    },
+    ".example-colors .color-gray-darker, .example-colors .color-gray-dark": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    },
+    ".t3-header .logo-text a, .t3-header .logo-text .site-slogan": {
+      "color": "accent-on!"
+    }
+  },
+  "followNote": "the testimonial quote and its author line are painted #333333 and #666666 by rules of their own (that win over a plain slot rule) while their band follows the page: on a dark page the quote read 1.27:1 (Toggl Track) and 1.6:1 (Moxie), the author 2.79:1 and 3.53:1; they take the system's text and muted colours (!important)",
+  "bands": {
+    ".bg-dark": {
+      "ground": "#272727",
+      "texts": ["#ffffff", "#999999", "#555555"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(.stats-subject, .stats-description)": {
+          "color": "text-2"
+        },
+        ".stats-item-icon": {
+          "color": "accent"
+        },
+        ".stats-subject": {
+          "color": "text"
+        }
+      }
+    },
+    ".jamasshead": {
+      "ground": "#555555",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true,
+      "paint": {
+        ".jamasshead-title span": {
+          "color": "accent"
+        }
+      },
+      "accentLarge": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the inner pages masthead (.jamasshead, JA Masshead module: a photo under white title and breadcrumb) is a picture band: its words stay white on the photo; under a light system they took its dark text and read 2.3-2.6:1 on the dark photo (JA Directory /contact-us and /news under Stripe, inner pages measured 14/10/2026)",
+  "contractNotes1317": "13/10/2026 (#1317): the stats band (.bg-dark) and the footer kept their grey words (#999, #555: 56 of the left paints) while their ground followed, so the page followed 60-76% under BMW, Stripe and Moxie; both repaint their words with the system text (text-2 for the subjects and descriptions). Carousel indicators, owl pagination and the feature icons follow too. Round 4 (14/10): the owl pagination dots and the feature icon rings are painted on their inner span (.owl-page span, .font-icon span, .ft-bottom .icon span), not on the element the round-3 rules named, so those rules never landed; they now name the span.",
+  "sideRules": {
+    "light": {
+      ".t3-footer": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg))"
+      },
+      ".jamasshead::after": {
+        "background": "rgba(0, 0, 0, 0.5)"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-primary": {
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".panel-primary .panel-heading": {
+        "color": "var(--ds-c-fg-2)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".panel-primary .panel-heading .panel-title": {
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-success-text) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-warn-text) !important"
+      },
+      ".btn-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-danger-text) !important"
+      },
+      ".btn-success:hover, .btn-success:focus, .btn-success:active": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "var(--ds-c-success-bg) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      ".btn-warning:hover, .btn-warning:focus, .btn-warning:active": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "var(--ds-c-warn-bg) !important"
+      },
+      ".btn-danger:hover, .btn-danger:focus, .btn-danger:active": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "var(--ds-c-danger-bg) !important"
+      },
+      ".example-colors .color-brand-info": {
+        "background-color": "var(--ds-c-info)"
+      },
+      "div.img-banner .mask": {
+        "background-color": "color-mix(in oklab, var(--ds-c-accent) 35%, #000000) !important",
+        "opacity": "0.6"
+      },
+      "div.img-banner .banner-ct .btn.btn-default": {
+        "background-color": "var(--ds-c-surface) !important",
+        "border-color": "var(--ds-c-surface) !important",
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      "div.img-banner .banner-ct .btn:hover, div.img-banner .banner-ct .btn:focus": {
+        "background-color": "var(--ds-c-accent-hover) !important",
+        "border-color": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".carousel-ctrl .carousel-indicators:not(.show-menu) li": {
+        "color": "transparent !important",
+        "font-size": "0 !important"
+      },
+      ".nav-pills li a, .nav-pills li a .badge": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".readmore .btn.btn-default, .btn.btn-link": {
+        "padding": "0 !important"
+      },
+      ".logo-text a, .acm-slideshow .owl-carousel .item .slider-content .item-title": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".features-intro .t3-section.bg-grey": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg)) !important"
+      },
+      ".wrap.bg-white": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg)) !important"
+      },
+      "h5, h6, .h5, .h6": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".head-menu .nav li, .nav-stacked li, .nav-tabs li, .pagination li a, .pagination li span:not([class*=\"icon-\"]), .t3-footnav .t3-module ul li a, .t3-mainnav": {
+        "font-family": "var(--ds-font-body)"
+      },
+      ".t3-footnav .t3-module": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg))"
+      },
+      ".t3-footnav .t3-module .module-ct": {
+        "background-color": "transparent"
+      },
+      ".client-img a:hover, .client-img a:focus, .client-img a:hover span, .client-img a:focus span": {
+        "color": "inherit !important"
+      },
+      "body.features-page #t3-header.t3-header": {
+        "background-color": "var(--ds-c-accent) !important"
+      },
+      ".img-grayscale .client-item span[style]": {
+        "width": "auto !important",
+        "height": "auto !important"
+      }
+    },
+    "dark": {
+      ".t3-footer": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg))"
+      },
+      ".jamasshead::after": {
+        "background": "rgba(0, 0, 0, 0.5)"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-primary": {
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".panel-primary .panel-heading": {
+        "color": "var(--ds-c-fg-2)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".panel-primary .panel-heading .panel-title": {
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-success-text) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-warn-text) !important"
+      },
+      ".btn-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-danger-text) !important"
+      },
+      ".btn-success:hover, .btn-success:focus, .btn-success:active": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "var(--ds-c-success-bg) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      ".btn-warning:hover, .btn-warning:focus, .btn-warning:active": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "var(--ds-c-warn-bg) !important"
+      },
+      ".btn-danger:hover, .btn-danger:focus, .btn-danger:active": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "var(--ds-c-danger-bg) !important"
+      },
+      ".example-colors .color-brand-info": {
+        "background-color": "var(--ds-c-info)"
+      },
+      "div.img-banner .mask": {
+        "background-color": "color-mix(in oklab, var(--ds-c-accent) 35%, #000000) !important",
+        "opacity": "0.6"
+      },
+      "div.img-banner .banner-ct .btn.btn-default": {
+        "background-color": "var(--ds-c-surface) !important",
+        "border-color": "var(--ds-c-surface) !important",
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      "div.img-banner .banner-ct .btn:hover, div.img-banner .banner-ct .btn:focus": {
+        "background-color": "var(--ds-c-accent-hover) !important",
+        "border-color": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".carousel-ctrl .carousel-indicators:not(.show-menu) li": {
+        "color": "transparent !important",
+        "font-size": "0 !important"
+      },
+      ".nav-pills li a, .nav-pills li a .badge": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".readmore .btn.btn-default, .btn.btn-link": {
+        "padding": "0 !important"
+      },
+      ".logo-text a, .acm-slideshow .owl-carousel .item .slider-content .item-title": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".features-intro .t3-section.bg-grey": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg)) !important"
+      },
+      ".wrap.bg-white": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg)) !important"
+      },
+      "h5, h6, .h5, .h6": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".head-menu .nav li, .nav-stacked li, .nav-tabs li, .pagination li a, .pagination li span:not([class*=\"icon-\"]), .t3-footnav .t3-module ul li a, .t3-mainnav": {
+        "font-family": "var(--ds-font-body)"
+      },
+      ".t3-footnav .t3-module": {
+        "background-color": "color-mix(in oklab, var(--ds-c-surface-warm) 50%, var(--ds-c-bg))"
+      },
+      ".t3-footnav .t3-module .module-ct": {
+        "background-color": "transparent"
+      },
+      ".client-img a:hover, .client-img a:focus, .client-img a:hover span, .client-img a:focus span": {
+        "color": "inherit !important"
+      },
+      "body.features-page #t3-header.t3-header": {
+        "background-color": "var(--ds-c-accent) !important"
+      },
+      ".img-grayscale .client-item span[style]": {
+        "width": "auto !important",
+        "height": "auto !important"
+      }
+    }
+  }
+}

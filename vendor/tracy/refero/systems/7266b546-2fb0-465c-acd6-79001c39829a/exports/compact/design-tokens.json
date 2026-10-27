@@ -1,0 +1,79 @@
+{
+  "color": {
+    "tesla-blue": {
+      "$value": "#3e6ae1",
+      "$type": "color",
+      "$description": "Tesla Blue — Primary CTAs ('Order Now') — a single, focused point of saturated color in an otherwise grayscale environment, creating an unmissable action prompt."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary page backgrounds, card surfaces, text on dark/blue buttons."
+    },
+    "off-white": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Off-White — Secondary content cards, subtle dividers between white sections."
+    },
+    "parchment": {
+      "$value": "#e5e3df",
+      "$type": "color",
+      "$description": "Parchment — Rare alternative background color for specific sections."
+    },
+    "light-border": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Light Border — Inactive UI element borders, subtle dividers."
+    },
+    "subtle-gray": {
+      "$value": "#8e8e8",
+      "$type": "color",
+      "$description": "Subtle Gray — Placeholder text, tertiary UI details."
+    },
+    "steel": {
+      "$value": "#5c5e62",
+      "$type": "color",
+      "$description": "Steel — Secondary text, footer links, icon fills."
+    },
+    "charcoal": {
+      "$value": "#393c41",
+      "$type": "color",
+      "$description": "Charcoal — Primary body text, text on light buttons, header navigation."
+    },
+    "onyx": {
+      "$value": "#171a20",
+      "$type": "color",
+      "$description": "Onyx — Primary heading text, dark button backgrounds."
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — SVG icon fills, text overlays on light images."
+    }
+  },
+  "font": {
+    "universal-sans-display": {
+      "$value": "Universal Sans Display",
+      "$type": "fontFamily",
+      "$description": "Used for all major headings and product titles. Its clean, geometric form provides a technical and confident voice that feels engineered, not decorated."
+    },
+    "universal-sans-text": {
+      "$value": "Universal Sans Text",
+      "$type": "fontFamily",
+      "$description": "The workhorse font for body copy, buttons, navigation, and all UI text. Chosen for its supreme legibility and neutrality, it delivers information efficiently without distracting from the product visuals."
+    },
+    "roboto": {
+      "$value": "Roboto",
+      "$type": "fontFamily",
+      "$description": "Reserved for fine print, legal disclaimers, and other low-hierarchy text where utility is the sole concern."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tesla.com",
+      "siteName": "Tesla",
+      "extractedAt": "2026-04-11T17:46:47.791Z",
+      "variant": "compact"
+    }
+  }
+}

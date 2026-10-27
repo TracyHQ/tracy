@@ -1,0 +1,219 @@
+# The deploy steps for the Tracy app stack, written once because dev and production must not drift.
+#
+# It is the sibling of `deploy-host-dsh`, and it exists for the same reason that one does: the two
+# jobs that will call it differ in exactly two things — the runner label that picks the machine and
+# the environment name that records the deploy — so if the steps were copied into both, the day
+# somebody fixes one is the day the two stop matching, and the half nobody fixed is production.
+#
+# 🔒 EVERYTHING THE DEPLOY ACTUALLY DOES IS IN `deploy-tracy-stack.sh`, NOT HERE. This file only
+# carries the files to the host and hands the script an image tag. A `.github/` file can be run and
+# read nowhere but GitHub, and the first night you want to read a deploy line by line is the night
+# it half-finished — the header of `deploy-host-dsh/action.yml` says it, and it is still true.
+#
+# ⚠ WHY THE FILES LAND UNDER `/opt/tracy-fleet/`, WHICH LOOKS LIKE THE WRONG NEIGHBOURHOOD.
+#
+# This action runs INSIDE the CI runner's container, and that container sees exactly three of the
+# host's paths at their real absolute names: `/opt/tracy-fleet`, `/etc/tracy`, `/srv/tracy`
+# (`/opt/tracy-runner/compose.yml`). Both halves matter. The runner has to be able to WRITE the
+# compose files, and the DAEMON has to be able to read the paths inside them — compose resolves a
+# relative bind against the compose file's own directory and then hands the daemon an absolute
+# path, which has to exist on the host under that same name. A directory that exists in only one
+# of the two produces a container that starts with an empty directory where a config should be.
+name: Deploy the Tracy app stack to this host
+description: Ship the compose files, pull tracy-web and tracy-host at one tag, bring them up, prove they answer, or roll back.
+
+inputs:
+  web-image:
+    description: Image repository for tracy-web, e.g. ghcr.io/tracyhq/tracy-web
+    required: true
+  host-image:
+    description: Image repository for tracy-host, e.g. ghcr.io/tracyhq/tracy-host
+    required: true
+  tag:
+    description: The one tag BOTH images carry
+    required: true
+  token:
+    description: GITHUB_TOKEN, used to pull from GHCR and discarded with the job
+    required: true
+  registry:
+    description: >-
+      Where this host pulls from: ghcr (the default, the GITHUB_TOKEN in `token`) or ecr (the AWS ECR
+      mirror, logged in with the aws-* inputs below). The caller passes the environment's
+      vars.PULL_REGISTRY; empty means ghcr.
+    required: false
+    default: 'ghcr'
+  ecr-image-prefix:
+    description: ECR registry plus repository prefix, e.g. 123456789012.dkr.ecr.us-east-1.amazonaws.com/lab3-image/tracy-ai (ecr only)
+    required: false
+    default: ''
+  aws-region:
+    description: Region of the ECR registry (ecr only)
+    required: false
+    default: ''
+  aws-access-key-id:
+    description: The environment's pull-only ECR key id, secrets.ECR_PULL_AWS_ACCESS_KEY_ID (ecr only)
+    required: false
+    default: ''
+  aws-secret-access-key:
+    description: The environment's pull-only ECR secret, secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY (ecr only)
+    required: false
+    default: ''
+  mirror-result:
+    description: needs.mirror-to-ecr.result of the calling job; ecr refuses to deploy unless it is success
+    required: false
+    default: ''
+  services:
+    description: >-
+      Comma-separated subset of postgres,tracy-web,tracy-host. A demo-only host (tracy-fleet-01)
+      runs tracy-host alone; every other host keeps the default.
+    required: false
+    default: 'postgres,tracy-web,tracy-host'
+  timeout:
+    description: Seconds to wait for the deployed services to report healthy
+    required: false
+    default: '300'
+
+outputs:
+  web-image:
+    description: The tracy-web repository this deploy pulled (the input, or its ECR name)
+    value: ${{ steps.reg.outputs.web }}
+  host-image:
+    description: The tracy-host repository this deploy pulled (the input, or its ECR name)
+    value: ${{ steps.reg.outputs.host }}
+
+runs:
+  using: composite
+  steps:
+    # 🔒 ghcr (the default) changes nothing: the repositories are the inputs as given and every
+    # command below is the one this action always ran. ecr swaps the registry part of each repository
+    # for `ecr-image-prefix` (same image name, same tag) and refuses unless this run's mirror job
+    # copied the tags to ECR. First, so a wrong setting stops the job before anything on this host
+    # changes.
+    - name: Choose the registry to pull from
+      id: reg
+      shell: bash
+      env:
+        REGISTRY: ${{ inputs.registry }}
+        ECR_PREFIX: ${{ inputs.ecr-image-prefix }}
+        MIRROR: ${{ inputs.mirror-result }}
+        HAS_KEY: ${{ inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != '' && inputs.aws-region != '' }}
+        WEB_IN: ${{ inputs.web-image }}
+        HOST_IN: ${{ inputs.host-image }}
+      run: |
+        set -euo pipefail
+        case "${REGISTRY:-ghcr}" in
+          ghcr)
+            echo "registry=ghcr" >> "$GITHUB_OUTPUT"
+            echo "web=$WEB_IN" >> "$GITHUB_OUTPUT"
+            echo "host=$HOST_IN" >> "$GITHUB_OUTPUT"
+            ;;
+          ecr)
+            [ "$MIRROR" = success ] || { echo "::error::PULL_REGISTRY=ecr but the mirror-to-ecr job of this run did not succeed (${MIRROR:-not run}) — the tag may not be in ECR"; exit 1; }
+            [ "$HAS_KEY" = true ] || { echo "::error::PULL_REGISTRY=ecr but ECR_PULL_AWS_ACCESS_KEY_ID / ECR_PULL_AWS_SECRET_ACCESS_KEY / AWS_REGION are not set for this environment"; exit 1; }
+            case "$ECR_PREFIX" in *.dkr.ecr.*.amazonaws.com/?*) ;; *) echo "::error::ecr-image-prefix '$ECR_PREFIX' is not <registry>/<path>"; exit 1 ;; esac
+            echo "registry=ecr" >> "$GITHUB_OUTPUT"
+            echo "ecr_host=${ECR_PREFIX%%/*}" >> "$GITHUB_OUTPUT"
+            echo "web=$ECR_PREFIX/${WEB_IN##*/}" >> "$GITHUB_OUTPUT"
+            echo "host=$ECR_PREFIX/${HOST_IN##*/}" >> "$GITHUB_OUTPUT"
+            echo "pulling from ECR: $ECR_PREFIX/${WEB_IN##*/}, $ECR_PREFIX/${HOST_IN##*/}"
+            ;;
+          *) echo "::error::PULL_REGISTRY is ghcr or ecr, not '$REGISTRY'"; exit 1 ;;
+        esac
+
+    # The three files travel together on purpose, and the deploy refuses to run without the second
+    # of them: `compose.server.yml` is what points `env_file` at `/etc/tracy/tracy-web.env` and
+    # what supplies `HOST_SECRET`. A host that received only `compose.yml` would fail at compose's
+    # own config step looking for a relative `.env` — or, if that were ever "fixed" by dropping the
+    # entry, would boot tracy-web with none of its 51 keys.
+    - name: Put the stack files in place
+      shell: bash
+      run: |
+        set -euo pipefail
+        install -d -m 0755 /opt/tracy-fleet/stack
+        install -m 0644 deploy/compose.yml        /opt/tracy-fleet/stack/
+        install -m 0644 deploy/compose.server.yml /opt/tracy-fleet/stack/
+        # Beside them, not in a `scripts/` subdirectory: the script finds the compose files by
+        # looking for them next to itself first, and a flat directory is what an operator over SSH
+        # can list in one command on the night this matters.
+        install -m 0755 deploy/scripts/deploy-tracy-stack.sh /opt/tracy-fleet/stack/
+        # Ships beside the deploy script for the same reason the compose files do: a person on
+        # this box needs it, and `docs/references/may-dev.md` tells them to run it by that exact
+        # path. Carrying it here also means the checks a deploy just satisfied and the checks a
+        # human runs afterwards are the SAME file at the SAME commit — a preflight that lags the
+        # stack it inspects starts passing for the wrong stack.
+        install -m 0755 deploy/scripts/check-server.sh /opt/tracy-fleet/stack/
+        # The database backup the host's `tracy-backup-postgres.timer` runs. Shipped by the deploy
+        # rather than copied once by hand, so the timer always runs the script at the stack's commit.
+        install -m 0755 deploy/scripts/backup-postgres.sh /opt/tracy-fleet/stack/
+        # Staging's DNS sync (docs/references/may-staging.md). Shipped to every host so the timer that
+        # runs it always runs this commit's copy; it refuses to act where SITE_ADDRESS_PREFIX is empty.
+        install -m 0755 deploy/scripts/sync-prefixed-site-dns.py /opt/tracy-fleet/stack/
+        ls -la /opt/tracy-fleet/stack/
+
+    # The registry credential lives for the length of this job and is then logged out. No host in
+    # the fleet stores a GHCR token — which is the reason the deploy runs HERE, on the target, and
+    # is not pushed at the host from somewhere else holding an SSH key.
+    - name: Log in to GHCR
+      if: steps.reg.outputs.registry == 'ghcr'
+      shell: bash
+      run: echo '${{ inputs.token }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+    # The keys reach the login step alone, as step env: not configure-aws-credentials, which would
+    # export them to every later step of the job, the deploy script on this host included.
+    # amazon-ecr-login masks the password and runs `docker login`; the logout step below and the
+    # action's own post step both log out again.
+    - name: Log in to ECR
+      if: steps.reg.outputs.registry == 'ecr'
+      uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_REGION: ${{ inputs.aws-region }}
+
+    - name: Deploy
+      shell: bash
+      run: |
+        /opt/tracy-fleet/stack/deploy-tracy-stack.sh \
+          --tag '${{ inputs.tag }}' \
+          --web-image '${{ steps.reg.outputs.web }}' \
+          --host-image '${{ steps.reg.outputs.host }}' \
+          --services '${{ inputs.services }}' \
+          --timeout '${{ inputs.timeout }}'
+
+    # Every deploy pulls a new image and nothing used to remove the old ones: on 24/09/2026 the dev
+    # machine held 467 images and a 99% disk, and the next deploy died mid-fetch with no error.
+    # Only after a green deploy, and never able to turn it red (`deploy/scripts/prune-old-images.sh`).
+    - name: Remove images this host can pull back
+      if: success()
+      shell: bash
+      run: bash deploy/scripts/prune-old-images.sh --repo '${{ steps.reg.outputs.web }}' --repo '${{ steps.reg.outputs.host }}' --keep-env /etc/tracy/tracy-web.env:APP_IMAGE_TAG || echo "::warning::image prune failed; the deploy stands"
+
+    - name: Log out of GHCR
+      if: always()
+      shell: bash
+      run: docker logout ghcr.io || true
+
+    - name: Log out of ECR
+      if: always() && steps.reg.outputs.registry == 'ecr'
+      shell: bash
+      run: docker logout '${{ steps.reg.outputs.ecr_host }}' || true
+
+    - name: Report
+      if: always()
+      shell: bash
+      run: |
+        # One `--format` per line: a Go template with embedded newlines ends the YAML block scalar
+        # it is written inside, and the parse error then names a line thirty below the cause.
+        {
+          echo "### ${{ runner.name }} — Tracy app stack"
+          echo
+          echo '```'
+          # Ask the project, not a guessed container name: compose derives names from
+          # `name: tracy` in compose.yml, and a hardcoded `tracy-tracy-web-1` here would go
+          # quietly blank the day that line changes.
+          for cid in $(docker ps -aq --filter 'label=com.docker.compose.project=tracy'); do
+            docker inspect "$cid" --format '{{.Name}} {{.Config.Image}} {{.State.Status}}/{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' 2>/dev/null || true
+          done
+          grep -m1 '^APP_IMAGE_TAG=' /etc/tracy/tracy-web.env 2>/dev/null || echo 'no APP_IMAGE_TAG on this host'
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"

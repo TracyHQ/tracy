@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1746-tb-wp-showcase-map-happy",
+  "itemIds": ["regression:REG-PR-1746-tb-wp-showcase-map"],
+  "requirement": "The WordPress showcase-nav map removes a kit screen linked only from a template part's mega menu (Tracy Business wp7)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1746-tb-wp-showcase-map.json",
+    "ref": "PR #1746 (fix); fix evidence: 25/10/2026 QA: tracy-business wp7 1.3.8 showcase-nav-map had operations 0, kept 615; on a real site apply completed and Style guide stayed in the header",
+    "invariant": "S1: Tracy Business — the Style guide link reached only from the header mega menu gets a templatePart.removeBlock op; the other entries stay S1: a kit screen also linked from a navigation entry follows that entry, with no second op S1: a kit screen in the markup that is not a list item of its own is a question, not removed S1: Tracy Base Typography with no inventory.json is unresolved route-not-proven, not removed",
+    "productSources": [
+      "packages/cms/tracy-wordpress-quickstart/scripts/capture-navigation-source.mjs:168",
+      "scripts/build-wordpress-showcase-nav.mjs:69",
+      "scripts/lib/showcase-nav/common.mjs:5",
+      "scripts/lib/showcase-nav/wp-navigation-ast.mjs:1514"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "scripts/build-wordpress-showcase-nav.mjs:83 readFileSync() with a computed path",
+      "scripts/build-wordpress-showcase-nav.mjs:84 readFileSync() with a computed path",
+      "scripts/lib/showcase-nav/common.mjs:13 readFileSync() with a computed path",
+      "scripts/lib/showcase-nav/common.mjs:16 readFileSync() with a computed path",
+      "scripts/test/build-wordpress-showcase-nav.test.mjs:1135 readFileSync() names packages/cms/tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.1.6/inventory.json, which is not a file",
+      "scripts/test/build-wordpress-showcase-nav.test.mjs:239 readFileSync() with a computed path",
+      "scripts/test/build-wordpress-showcase-nav.test.mjs:399 readFileSync() with a computed path",
+      "scripts/test/build-wordpress-showcase-nav.test.mjs:410 readFileSync() with a computed path",
+      "scripts/test/build-wordpress-showcase-nav.test.mjs:640 readFileSync() names packages/cms/tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.1.6/inventory.json, which is not a file"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "Tracy Business: a kit screen the header links only from its mega menu leaves it, the other entries stay",
+    "a kit screen linked from the markup and from a navigation entry follows the entry",
+    "a kit screen in the markup that is not a list item of its own is a question",
+    "Tracy Base: Typography, linked only from the header mega menu, is judged a kit screen"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1746-tb-wp-showcase-map"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1746-tb-wp-showcase-map",
+    "pr": 1746,
+    "kind": "fix",
+    "area": "contracts/showcase-nav/wordpress",
+    "file": "tests/regression/cases/REG-PR-1746-tb-wp-showcase-map.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "scripts/test/build-wordpress-showcase-nav.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "Tracy Business: a kit screen the header links only from its mega menu leaves it, the other entries stay",
+    "a kit screen linked from the markup and from a navigation entry follows the entry",
+    "a kit screen in the markup that is not a list item of its own is a question",
+    "Tracy Base: Typography, linked only from the header mega menu, is judged a kit screen"
+  ],
+  "timeoutS": 300
+}

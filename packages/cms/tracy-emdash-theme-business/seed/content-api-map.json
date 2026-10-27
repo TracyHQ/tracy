@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "collections": {
+    "site": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "home": {
+      "type": "page",
+      "urlPattern": "/"
+    },
+    "about": {
+      "type": "page",
+      "urlPattern": "/about"
+    },
+    "services_page": {
+      "type": "page",
+      "urlPattern": "/services"
+    },
+    "services": {
+      "type": "service",
+      "urlPattern": "/services/{slug}"
+    },
+    "projects_page": {
+      "type": "page",
+      "urlPattern": "/projects"
+    },
+    "projects": {
+      "type": "project",
+      "urlPattern": "/projects/{slug}"
+    },
+    "news_page": {
+      "type": "page",
+      "urlPattern": "/news"
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": "/news/{slug}"
+    },
+    "careers": {
+      "type": "page",
+      "urlPattern": "/careers"
+    },
+    "vacancies": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "investors": {
+      "type": "page",
+      "urlPattern": "/investors"
+    },
+    "contact": {
+      "type": "page",
+      "urlPattern": "/contact"
+    },
+    "pages": {
+      "type": "page",
+      "urlPattern": "/{slug}"
+    }
+  },
+  "chrome": {
+    "collection": "site",
+    "slug": "site"
+  }
+}

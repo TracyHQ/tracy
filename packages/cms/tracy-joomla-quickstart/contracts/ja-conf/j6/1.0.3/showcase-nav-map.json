@@ -1,0 +1,552 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-conf/j6/1.0.3",
+  "baseHash": "675f39cfe0575064d6cc24b966b0b9d9ce27ea899879f41954c3b36b2a28244f",
+  "baseFiles": {
+    "manifest.json": "612b0c2efc52af382c99680507b466b0338aa17b2ee38fe3b148f93ed3f10d4c",
+    "content-map.json": "b3b8b22870fd9db8678d1dad6b00b15e8aab8bfc53ff3a5e0e5c2e1b21afc913",
+    "presentation-lock.json": "6d986ef91b089908fd31100cc1a815e59abe386361fd8ccde7a64bb46e66649a"
+  },
+  "inputs": {},
+  "decisionsHash": "72a75f3b49401811d80e10deae6fdb94cb8891595e44b7ee54976df59633694c",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-103",
+      "identity": {
+        "path": "j-pages",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "J! Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-104",
+      "identity": {
+        "path": "other-pages",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Other Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-105",
+      "identity": {
+        "path": "joomla-content",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-106",
+      "identity": {
+        "path": "j-pages/login",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Login",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-107",
+      "identity": {
+        "path": "j-pages/registration",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Registration",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-108",
+      "identity": {
+        "path": "j-pages/user-profile",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "User Profile",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-109",
+      "identity": {
+        "path": "j-pages/edit-user-profile",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Edit User Profile",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-111",
+      "identity": {
+        "path": "other-pages/smart-search",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Smart Search",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-112",
+      "identity": {
+        "path": "other-pages/404-page",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "404 Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-113",
+      "identity": {
+        "path": "other-pages/offline-page",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-114",
+      "identity": {
+        "path": "joomla-content/featured-article",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Featured Article",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-115",
+      "identity": {
+        "path": "joomla-content/tagged-items",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-116",
+      "identity": {
+        "path": "joomla-content/single-article",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Single Article",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-168",
+      "identity": {
+        "path": "home/home-brutalism",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Brutalism",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-169",
+      "identity": {
+        "path": "home/home-dark",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Dark",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-170",
+      "identity": {
+        "path": "home/home-minimal",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Minimal",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-171",
+      "identity": {
+        "path": "home/home-purple",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Purple",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-172",
+      "identity": {
+        "path": "home/home-retro",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Retro",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-174",
+      "identity": {
+        "path": "joomla-content/typography",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-177",
+      "identity": {
+        "path": "pages/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "module.published",
+      "key": "module-139",
+      "identity": {
+        "title": "Bonus Pages",
+        "module": "mod_menu",
+        "position": "off-canvas"
+      },
+      "label": "Bonus Pages",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.module-renders-nothing",
+      "reason": "renders joomla-pages, whose 14 entries all leave the navigation"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "ja_conf - Default",
+        "template": "ja_conf",
+        "client_id": "0"
+      },
+      "label": "ja_conf - Default · Home",
+      "style": {
+        "id": 9,
+        "template": "ja_conf"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "f08fc0190ae48b51e2cd58432200bd8a67fbc3d9e0324f321ddde3e916661488",
+      "after": "2921f32ba600c6740c91a360300863a681ab1ea118827c7bc547f3555ce4ed5f",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_conf - Brutalism",
+        "template": "ja_conf",
+        "client_id": "0"
+      },
+      "label": "ja_conf - Brutalism · Home",
+      "style": {
+        "id": 10,
+        "template": "ja_conf"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "7607ad165f9c19cc8ec26b4f25364ef9c04a4468ed1fb9b9c22887719a271fcd",
+      "after": "97fea9ce8c512a3c74d60cbf069548ec322b39afb0f1b23d9f75ac457f30a53a",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "ja_conf - Dark",
+        "template": "ja_conf",
+        "client_id": "0"
+      },
+      "label": "ja_conf - Dark · Home",
+      "style": {
+        "id": 11,
+        "template": "ja_conf"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "d2f0d1b01502414b6ef3f94e088c3f010fd275ddf1679c35aeb9858286e4aabf",
+      "after": "02f0e48000000c825d7f3ee6291136ae5fc7a08fe8c30129171a1af569fa6478",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_conf - Minimal",
+        "template": "ja_conf",
+        "client_id": "0"
+      },
+      "label": "ja_conf - Minimal · Home",
+      "style": {
+        "id": 12,
+        "template": "ja_conf"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "76c17da86db94a64fa1dce67ebdcf3da45548f7253b3903114b2d11d54a2ea85",
+      "after": "12914bbd68f6b7841aa2a6339c7b679b2282c5b4e22219447b7542315591a746",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "ja_conf - Purple",
+        "template": "ja_conf",
+        "client_id": "0"
+      },
+      "label": "ja_conf - Purple · Home",
+      "style": {
+        "id": 13,
+        "template": "ja_conf"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "c60517a7ce7d37d03ea67cb68cd029efebc5fc2c52de2f0ce57e0271a995d364",
+      "after": "e087c732a811d6c5112fb4f276c99a1e2f29039f95a69ed626eb67ae37e81c0f",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-14",
+      "identity": {
+        "title": "ja_conf - Retro",
+        "template": "ja_conf",
+        "client_id": "0"
+      },
+      "label": "ja_conf - Retro · Home",
+      "style": {
+        "id": 14,
+        "template": "ja_conf"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "3178ed6b62c464c68208ed0a362375f53d1a6d6fb15a193122e82661f4feedc0",
+      "after": "bd6ffb5b942105a60e61019760fcb0a1a824bda9284d673c05295ebd1c576348",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Events",
+      "where": "mainmenu/pages/events",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-118",
+      "label": "Blogs",
+      "where": "mainmenu/blogs",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Speaker",
+      "where": "mainmenu/pages/speaker",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "templateStyle-9",
+      "label": "ja_conf - Default",
+      "where": "ja_conf",
+      "rule": "unresolved.offcanvas-toggle",
+      "reason": "addon_offcanvas_enable is \"1\" but every module at off-canvas leaves: the toggle would open an empty drawer"
+    },
+    {
+      "key": "templateStyle-10",
+      "label": "ja_conf - Brutalism",
+      "where": "ja_conf",
+      "rule": "unresolved.offcanvas-toggle",
+      "reason": "addon_offcanvas_enable is \"1\" but every module at off-canvas leaves: the toggle would open an empty drawer"
+    },
+    {
+      "key": "templateStyle-11",
+      "label": "ja_conf - Dark",
+      "where": "ja_conf",
+      "rule": "unresolved.offcanvas-toggle",
+      "reason": "addon_offcanvas_enable is \"1\" but every module at off-canvas leaves: the toggle would open an empty drawer"
+    },
+    {
+      "key": "templateStyle-12",
+      "label": "ja_conf - Minimal",
+      "where": "ja_conf",
+      "rule": "unresolved.offcanvas-toggle",
+      "reason": "addon_offcanvas_enable is \"1\" but every module at off-canvas leaves: the toggle would open an empty drawer"
+    },
+    {
+      "key": "templateStyle-13",
+      "label": "ja_conf - Purple",
+      "where": "ja_conf",
+      "rule": "unresolved.offcanvas-toggle",
+      "reason": "addon_offcanvas_enable is \"1\" but every module at off-canvas leaves: the toggle would open an empty drawer"
+    },
+    {
+      "key": "templateStyle-14",
+      "label": "ja_conf - Retro",
+      "where": "ja_conf",
+      "rule": "unresolved.offcanvas-toggle",
+      "reason": "addon_offcanvas_enable is \"1\" but every module at off-canvas leaves: the toggle would open an empty drawer"
+    }
+  ],
+  "counts": {
+    "menuItems": 20,
+    "modules": 1,
+    "megaSubs": 6,
+    "kept": 6,
+    "unresolved": 6
+  }
+}

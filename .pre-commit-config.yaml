@@ -1,0 +1,110 @@
+# Commit-time guard — DELIBERATELY LIGHT.
+#
+# Only formatting and automatic lint fixes. NO typecheck, NO tests, NO build: those are the
+# MERGE gate (`pnpm build:check`), not the commit gate. A hook that takes 15 seconds on every
+# commit is a hook people will `--no-verify`, and a skipped hook guards nothing.
+#
+# Installed automatically by package.json's `prepare` script on `pnpm install`, skipped when CI=1.
+#
+# 🔒 CALL `node_modules/.bin/` DIRECTLY, NOT THROUGH `pnpm exec`. With a `pnpm-lock.yaml` mid-edit
+# — the normal state of a commit that touches a dependency — `pnpm exec` runs `pnpm install`
+# first, including the `prepare` lifecycle. That takes a few seconds AND writes into the tree prek has
+# just stashed, so prek reports "Hook changes conflicted with the saved unstaged changes" and ABORTS the
+# commit. Measured 2026-08-30: two commits in a row were blocked exactly like that before switching to this path.
+
+default_install_hook_types: [pre-commit, commit-msg, pre-push, post-checkout, post-merge]
+
+repos:
+  - repo: local
+    hooks:
+      # 🔒 `stages: [pre-commit]` IS REQUIRED, NOT DECORATION. Without stages, prek
+      # runs the hook at EVERY stage — including `pre-push`, added 08/09. A `--write` hook running at
+      # push time edits files while prek has the unstaged part stashed, then reports "Hook changes
+      # conflicted with the saved unstaged changes" and ABORTS the push. Measured 08/09, on the very first push
+      # after adding pre-push: two files reformatted, push dead, not a line saying why. The same trap
+      # the header note describes for `pnpm exec`, at a different stage.
+      - id: biome-format
+        name: biome format
+        entry: node_modules/.bin/biome format --write --no-errors-on-unmatched
+        language: system
+        stages: [pre-commit]
+        # `.css` is absent on purpose: biome cannot yet parse the Tailwind v4 syntax in tokens.css.
+        files: \.(js|jsx|ts|tsx|cjs|mjs|json|jsonc)$
+        # 🔒 `exclude` RATHER THAN RELYING ON THE TOOL'S OWN ignorePatterns. `.oxlintrc.json` and
+        # `biome.jsonc` both already skip `vendor/**`, but that filter applies AFTER the tool has received
+        # the file list — and oxlint builds the config for each file BEFORE that step, so it reads
+        # upstream's own `.oxlintrc.json` inside the vendored tree and dies:
+        #   "Failed to load JS plugin: @e18e/eslint-plugin — Cannot find module"
+        # Measured 10/09, on the commit that grouped `vendor/` into four groups. Blocking in prek blocks before
+        # the file name leaves the hook, so no tool gets a chance to wander into someone else's config.
+        exclude: ^vendor/
+
+      # 🔒 `--no-error-on-unmatched-pattern`: oxlint exits 1 when there is NO file to lint, and
+      # prek reads that code as "hook red" and ABORTS the commit. A commit that only touches `vendor/` — which
+      # `.oxlintrc.json` deliberately skips as other people's code — lands exactly there: every staged file
+      # is filtered out, oxlint says "No files found to lint", and the commit never goes through.
+      # Measured 31/08 when committing the `dsh-better-sidebar` fork on its own. This flag does NOT loosen the gate: it only
+      # tells "nothing to check" apart from "checked and found something wrong".
+      - id: oxlint-fix
+        name: oxlint --fix
+        entry: node_modules/.bin/oxlint --fix --no-error-on-unmatched-pattern
+        language: system
+        stages: [pre-commit]
+        files: \.(js|jsx|ts|tsx|cjs|mjs)$
+        exclude: ^vendor/
+
+      # Local push feedback. Server enforcement requires protected branches and required PR checks;
+      # local hooks can be skipped. Publication setup is documented in public-repo-ci.md.
+      #
+      # ⚠ AT ODDS WITH THE "LIGHT" SPIRIT AT THE TOP OF THE FILE? No: this hook does NOT re-run the 26 gates. It only
+      # checks what CI has no time to check, plus invariants `CLAUDE.md` says outright that NO gate
+      # catches — a submodule pointer pulled backwards, which once quietly rolled the whole repo back at `606c6d82`.
+      # A push that does not touch `packages`/`workers`/`scripts` finishes in under a second.
+      #
+      # The full reasoning lives in `scripts/check-push.mjs`, and its decisions have their own tests
+      # (`scripts/test/check-push.test.mjs`) — a hook that can only be debugged by pushing is a
+      # hook nobody trusts.
+      #
+      # ⚠ ON A BRANCH OLDER THAN THE HOOK IT STANDS DOWN BY ITSELF, and that is the ONLY fail-open exception here.
+      # A hook installed into `.git/hooks` belongs to the whole repo and is shared by every worktree; a branch cut
+      # BEFORE this merge has no `scripts/check-push.mjs`, and then `node` dies with
+      # `Cannot find module` — a message that blocks the push while saying nothing about the cause. The stand-down
+      # condition is narrow and checkable: the gate's own code is not in the tree. CI still covers such a branch.
+      - id: pre-push-gate
+        name: pre-push gate (journal · submodule · test:workers)
+        entry: >-
+          bash -c 'if [ -f scripts/check-push.mjs ]; then node scripts/check-push.mjs;
+          else echo "cong pre-push dung xuong: nhanh nay chua co scripts/check-push.mjs
+          (tach ra truoc 08/09). Merge main vao de co no."; fi'
+        language: system
+        stages: [pre-push]
+        always_run: true
+        pass_filenames: false
+        verbose: true
+
+      # Commit messages are English (CI re-checks the whole pull request, because `--no-verify`
+      # skips this). A missing checker fails: an unscanned message is not proof of English.
+      - id: commit-msg-english
+        name: commit message is English
+        entry: node scripts/check-english-commits.mjs --msg-file
+        language: system
+        stages: [commit-msg]
+        always_run: true
+
+      # After switching branches or merging with a lockfile change, reinstall — otherwise the next
+      # run uses the old branch's node_modules and the error shows up somewhere unrelated.
+      - id: post-checkout-install
+        name: pnpm install (if the lockfile changed)
+        entry: bash -c 'git diff --name-only "$2" "$3" 2>/dev/null | grep -qE "(^|/)(package\.json|pnpm-lock\.yaml)$" && pnpm install --frozen-lockfile=false || true'
+        language: system
+        stages: [post-checkout]
+        always_run: true
+        pass_filenames: false
+
+      - id: post-merge-install
+        name: pnpm install (if the lockfile changed)
+        entry: bash -c 'git diff --name-only HEAD@{1} HEAD 2>/dev/null | grep -qE "(^|/)(package\.json|pnpm-lock\.yaml)$" && pnpm install --frozen-lockfile=false || true'
+        language: system
+        stages: [post-merge]
+        always_run: true
+        pass_filenames: false

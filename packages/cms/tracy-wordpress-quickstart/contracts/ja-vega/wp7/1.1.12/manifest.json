@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vega/wp7/1.1.12",
+  "platform": "wordpress",
+  "theme": "wp-ja-vega",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-vega/wp7",
+    "version": "1.1.12",
+    "platform": "wordpress",
+    "platformVersion": "7.1.2",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-vega",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-vega-wp7-webroot-1.1.12.tar.gz",
+        "bytes": 60796747,
+        "sha256": "5dcfe3fc9af49af2ce204aca56e3efc2b311ae646196b8bc0d73577b03ffeca0",
+        "githubAssetId": 619668571,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-vega%2Fwp7/ja-vega-wp7-webroot-1.1.12.tar.gz"
+      },
+      "database": {
+        "file": "ja-vega-wp7-database-1.1.12.sql.gz",
+        "bytes": 65985,
+        "sha256": "9d893c6eb89ca37509a5d68e93e53c74ec37cfb13d25a2f46c57e463d59124e4",
+        "githubAssetId": 619668570,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-vega%2Fwp7/ja-vega-wp7-database-1.1.12.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.0",
+  "mode": "content-recommendation"
+}

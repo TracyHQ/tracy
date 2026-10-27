@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1195-onboard-scan-stops-looking",
+  "kind": "fix",
+  "title": "Desktop first-run AI-account step stops \"Looking for AI tools…\" when the app cannot finish the scan (slow or failed login-shell read)",
+  "pr": 1195,
+  "area": "desktop/onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/ui/tracy-onboard run: node --test --test-reporter=tap test/scan.test.mjs test/flow.test.mjs test/mount.test.mjs",
+    "S2: Read the three named tests' ok/not ok lines."
+  ],
+  "expect": [
+    "scanAgents keeps asking every REPOLL_MS while scanComplete is false for MAX_REPOLLS * REPOLL_MS >= SCAN_CAP_MS > 10 000 ms (the app's login-shell limit), then returns the last incomplete answer.",
+    "flow scanStopped turns an incomplete answer into a settled state: mode found (what was found so far) or popular with a count, note false, warn null; a complete answer and waiting are left as they are; rescan looks again.",
+    "Mounted plugin with a bridge that never completes: data-mode starts 'looking' with Refresh disabled; after the cap data-mode is 'found', no .tv-ob-spinner, Refresh enabled, no .tv-ob-note, no [data-warn], detect asked at least 8 times."
+  ],
+  "selectors": {
+    "dom": "[data-step=account][data-mode], [data-action=refresh], .tv-ob-spinner, .tv-ob-note, [data-warn]",
+    "bridge": "window.tracyDesktop.app.agents.detect -> { results, scanComplete }"
+  },
+  "evidence": "PR #1195 description: packaged 0.6.0-dev.1 on the iMac, SHELL = 6 s / 9 s zsh or /bin/tcsh stays Looking with Refresh disabled; fixed bundle settles at 11.1 s / 12.9 s",
+  "fence": "SCAN_CAP_MS / MAX_REPOLLS in tracy-onboard scan.ts; scanStopped + Scan 'stopped' in flow.ts; the scan's then-branch in Onboard.tsx",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/scan.test.mjs",
+      "test/flow.test.mjs",
+      "test/mount.test.mjs"
+    ],
+    "cwd": "packages/ui/tracy-onboard",
+    "tests": [
+      "a scan that never completes is asked again until past the app",
+      "a scan stopped incomplete (the cap)",
+      "a scan the app never completes (slow or failed login-shell read)"
+    ]
+  }
+}

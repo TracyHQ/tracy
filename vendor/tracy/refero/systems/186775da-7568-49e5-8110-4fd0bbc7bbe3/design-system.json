@@ -1,0 +1,307 @@
+{
+  "dos": [
+    "Use #020108 for all primary text and heading copy — never substitute a softer gray for headlines",
+    "Apply the orange inline highlight pattern (one word in #fd7b03 within an otherwise #020108 sentence) for editorial emphasis in headlines and subheadings",
+    "Reach for display sizes of 73–100px at weight 400 — let scale carry authority, not weight",
+    "Use -0.02em to -0.031em letter-spacing on all text 27px and above; keep tracking normal at 15px and below",
+    "Set border-radius to 9999px for all buttons, links, and pill elements — 7px for cards, 20–27px for images",
+    "Keep the page background #f7f7f7 and card surfaces #ffffff or #f7f7f7 — rely on the two-tone surface step, never on shadow",
+    "Use 27px padding inside cards and 20px gaps between elements; 80px between major sections"
+  ],
+  "donts": [
+    "Do not introduce a second chromatic accent — the system is monochrome with a single orange highlight, and adding color dilutes the editorial discipline",
+    "Do not use bold or weight 600+ for headlines — weight 400–500 at large sizes is the signature; going heavy breaks the cover-type feel",
+    "Do not apply box-shadows to cards, buttons, or images — the system is entirely flat; elevation must be communicated through tonal surface steps",
+    "Do not use background colors on text spans, underlines, or pills for emphasis — color swap on a word within running text is the only emphasis pattern",
+    "Do not use the gradient system for large hero backgrounds or section fills — gradients are for accent strokes and small decorative elements only",
+    "Do not introduce more than two border-radius values per component type — 9999px is exclusively for buttons, 7px exclusively for cards, 20–27px exclusively for images",
+    "Do not use fully saturated primaries (pure red, pure green, pure blue) anywhere — the palette's chromatic notes all carry warmth or desaturation"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#020108",
+      "name": "Ink Black",
+      "role": "Primary text, borders, icon strokes — near-black carries all body and heading copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Charcoal",
+      "role": "Dominant border color across the entire interface, card outlines, dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5d5c61",
+      "name": "Steel",
+      "role": "Secondary borders, muted icon fills, tertiary structural lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#818084",
+      "name": "Pewter",
+      "role": "Muted helper text, secondary link text, subdued metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d7d7d6",
+      "name": "Ash",
+      "role": "Subtle background washes, low-contrast surface differentiation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Canvas White",
+      "role": "Card surfaces, image backgrounds, inverted text on dark regions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f7f7",
+      "name": "Paper",
+      "role": "Page background — the dominant canvas tone behind all content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fd7b03",
+      "name": "Ember Orange",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast.",
+      "group": "brand",
+      "gradient": "linear-gradient(rgb(249, 74, 0), rgb(253, 123, 3))"
+    },
+    {
+      "hex": "#3a54ff",
+      "name": "Cobalt Drift",
+      "role": "Gradient stop — blue-violet entry point in the tri-color brand gradient (blue → violet → orange) used for special accent surfaces",
+      "group": "brand",
+      "gradient": "linear-gradient(rgb(58, 84, 255), rgb(122, 103, 197) 23%, rgb(253, 123, 3))"
+    },
+    {
+      "hex": "#9a0101",
+      "name": "Crimson Edge",
+      "role": "Gradient stop — deep red entry in the four-color brand gradient variant",
+      "group": "brand",
+      "gradient": "linear-gradient(rgb(154, 1, 1), rgb(253, 123, 3))"
+    },
+    {
+      "hex": "#48a3d1",
+      "name": "Teal Bridge",
+      "role": "Gradient stop — cool blue bridge into orange in the dual-tone gradient",
+      "group": "brand",
+      "gradient": "linear-gradient(rgb(72, 163, 209), rgb(253, 123, 3))"
+    }
+  ],
+  "layout": "Max-width 1280px centered content with a left-edge sidebar ('What you can do') occupying roughly 20% of the viewport width. The main content area is 80% and uses a split pattern: text block (40%) + visual block (60%) for every major section. Section gap is 80px, establishing an airy, editorial magazine rhythm. The hero is a two-line display headline (100px) sitting flush-left, with the app preview visual positioned below at full content width. Navigation is minimal — a sidebar list rather than a top nav bar. The page flows in single-column at mobile, with the sidebar collapsing or moving above the main content. No alternating dark/light section bands — the entire page stays on the Paper surface with tonal cards as the only structural variation.",
+  "imagery": "Product photography is the primary visual content: tightly cropped fashion apparel (olive jackets with '4M' graphics, leather goods, perfume bottles) on neutral or environmental backgrounds. Images are presented as raw tiles in grids, not as lifestyle or contextualized scenes. The first-image-of-product is typically a flat white-background studio shot, followed by environment shots (wooden walls, city streets, studio backdrops). Imagery fills roughly 60% of the visual real estate on the page, with the remainder given to large-scale typography. No illustrations, no icons-within-imagery, no abstract graphics — only photography. Image containers use 20–27px border-radius, giving a subtle softness without becoming bubble-like.",
+  "similar": [
+    {
+      "why": "Same display-headline-as-cover-type approach with 100px+ weight 400 titles and tight negative tracking on a near-white canvas",
+      "business": "Looka"
+    },
+    {
+      "why": "Same editorial product-tool language: vast whitespace, single chromatic accent used as inline text highlight, product imagery carrying the visual weight",
+      "business": "Runway"
+    },
+    {
+      "why": "Same monochrome-with-one-orange-accent palette and ghost outlined pill buttons with 9999px radius",
+      "business": "Spline"
+    },
+    {
+      "why": "Same flat-surface two-step tonal ladder (Paper → White) with zero shadows and large-scale display type as the primary design move",
+      "business": "Framer"
+    },
+    {
+      "why": "Same restrained color discipline with near-black text on light canvas and single warm accent for emphasis",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "7px",
+      "badges": "1.3px",
+      "images": "27px",
+      "buttons": "9999px",
+      "featureCards": "40px",
+      "imageContainers": "20px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "80px",
+    "cardPadding": "27px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#f7f7f7",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Page background — the dominant canvas behind all content"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Canvas White",
+      "level": 1,
+      "purpose": "Card surfaces, image backgrounds, inverted text on dark regions"
+    },
+    {
+      "hex": "#d7d7d6",
+      "name": "Ash",
+      "level": 2,
+      "purpose": "Subtle background washes, low-contrast surface differentiation within cards"
+    },
+    {
+      "hex": "#020108",
+      "name": "Ink Black",
+      "level": 3,
+      "purpose": "Inverse surface for media player strips, dark app preview frames, terminal-like zones"
+    }
+  ],
+  "northStar": "editorial photography studio on white paper — headline display type as cover, orange as the editor's highlight pen",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.135
+    },
+    {
+      "role": "body-lg",
+      "size": 17,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.153
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 27,
+      "lineHeight": 1.15,
+      "letterSpacing": -0.351
+    },
+    {
+      "role": "heading",
+      "size": 43,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.645
+    },
+    {
+      "role": "heading-lg",
+      "size": 53,
+      "lineHeight": 1,
+      "letterSpacing": -1.06
+    },
+    {
+      "role": "display",
+      "size": 100,
+      "lineHeight": 0.94,
+      "letterSpacing": -3.1
+    }
+  ],
+  "components": [
+    {
+      "name": "Display Headline",
+      "role": "Hero and section titles at editorial scale",
+      "description": "Renders at 73–100px, weight 400, line-height 0.94, tracking -3.1%. Color #020108. Two-tone treatment: one noun or phrase is swapped to Ember Orange (#fd7b03) as inline emphasis while the rest stays Ink Black. The orange word is a continuation of the sentence, not a separate label — the sentence reads as a single typographic unit with a colored pivot."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Mid-page section introductions",
+      "description": "43–53px, weight 500, tracking -0.645 to -1.06px. #020108. Same orange inline highlight pattern as display headlines. Often paired with a 15–17px body paragraph in Pewter (#818084)."
+    },
+    {
+      "name": "Pill Button (Primary Ghost)",
+      "role": "Call-to-action and navigation links",
+      "description": "Border-radius 9999px. Thin border in #333333 or #020108 (1px). Padding 12px 20px. Text 14–15px weight 500, #020108. No background fill — ghost/outlined style. Inherits the system's flat, borderless-to-border contrast."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Container for product shots and video previews",
+      "description": "Background #f7f7f7, padding 27px, border-radius 7px (tight radius keeps it utilitarian). No border, no shadow. Contains an inner image area with its own 20–27px radius. The card itself is a subtle tonal step from the page canvas."
+    },
+    {
+      "name": "Image Tile",
+      "role": "Product photography thumbnail in grid",
+      "description": "Border-radius 20–27px. Fills its grid cell edge-to-edge. Often presented as part of a 5-column grid. No border, no shadow. The image does the work; the chrome is invisible."
+    },
+    {
+      "name": "Section Tag Badge",
+      "role": "Small contextual label above sections",
+      "description": "Text 11–12px, weight 500, #020108. Prefixed with a small upward triangle or arrow glyph (↑). No background, no border — purely typographic. Examples: '↑ AI Fashion Photoshoot', '↑ AI Product Shots'."
+    },
+    {
+      "name": "Product Card Header",
+      "role": "Label strip on AI-generated output tiles",
+      "description": "Pill shape with border-radius 1.3px (nearly square). 7px vertical padding, ~12px horizontal. White background (#ffffff) with a thin #333333 border. Contains small orange dot indicator + product code text in #020108 at 10–11px."
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "role": "Left-edge 'What you can do' navigation",
+      "description": "Plain text 13–14px, weight 400, #020108. No background, no active state chrome. Vertically stacked with ~20px gaps. A thin vertical rule separates it from the main content."
+    },
+    {
+      "name": "Media Player Strip",
+      "role": "Top bar of the app preview window",
+      "description": "Dark background (#020108) bar with traffic-light dots (red/orange/green) and a centered product breadcrumb in #ffffff. Border-radius matches the container (7px) at the top corners only. Serves as a meta-frame around the app preview content."
+    },
+    {
+      "name": "Expand/Action Floating Button",
+      "role": "Bottom-right interactive control on sections",
+      "description": "Perfectly circular, white (#ffffff) background, thin #333333 border. Contains four outward-pointing arrows (expand glyph) in #020108. Diameter ~48px. Floats with 20px offset from the section edge."
+    },
+    {
+      "name": "Highlighted Inline Word",
+      "role": "Editorial emphasis within running text",
+      "description": "A single word or short phrase within a headline or body sentence rendered in Ember Orange (#fd7b03) instead of #020108. No underline, no bold, no background — purely a color swap. Used sparingly: one or two per section maximum."
+    },
+    {
+      "name": "Split Section (Text + Visual)",
+      "role": "Primary content section layout",
+      "description": "Two-column grid at desktop: text block (40% width) on the left, visual block (60% width) on the right. 40–80px gap between columns. Text block contains tag → heading → body. Visual block is a bordered app-preview window containing a media strip and image grid."
+    },
+    {
+      "name": "Image Gallery Grid",
+      "role": "Product photography collection",
+      "description": "5-column grid of image tiles. All tiles same height, slight horizontal scroll overflow possible. Each tile has 20–27px radius. No gap between tiles in some variants, 7px gap in others."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.39"
+    },
+    {
+      "role": "Sole typeface across the system — display headlines reach 100px at weight 400 with -3.1% tracking, subheadings at 53px weight 500 with -2% tracking, body at 15–17px weight 400. The choice to use weight 400–500 even at display sizes (rather than going bold) is signature: the type commands attention through scale and tightness, not weight. Substitute: Inter, or any geometric grotesque with strong x-height and tight default tracking.",
+      "sizes": "8, 10, 11, 12, 13, 14, 15, 17, 20, 27, 43, 53, 73, 100",
+      "family": "SF Pro Display",
+      "weight": "400, 500",
+      "lineHeight": "0.94, 1.00, 1.05, 1.15, 1.20, 1.25, 1.50",
+      "substitute": "Inter",
+      "letterSpacing": "-0.0310em at 100px, -0.0300em at 73px, -0.0200em at 53px, -0.0150em at 43px, -0.0130em at 27px, -0.0100em at 20px, -0.0090em at 17px, normal at ≤15px",
+      "fontFeatureSettings": "\"ss01\" on"
+    }
+  ],
+  "description": "Fourmula is an editorial product-photography studio rendered in code: vast white pages, near-black display type at extreme sizes, and a single disciplined orange accent that reads like editorial highlight pen rather than brand chrome. The system is almost monochromatic — three near-grays carry the entire interface, and color appears only as semantic punctuation inside headlines and gradients. Surfaces are flat and borderless, relying on hairline gray dividers and generous whitespace to separate regions instead of shadow or elevation. Typography is the dominant design move: SF Pro Display at weights 400–500, tracked tight at large sizes, producing headlines that feel like magazine cover titles rather than SaaS hero copy. Components are quiet and minimal — a thin outlined button, a small tag badge, flat cards with generous padding, and a single rounded image corner. The result is a site that treats its product imagery as the spectacle while the chrome recedes.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #020108\n- background: #f7f7f7\n- surface (card): #ffffff\n- border: #333333\n- accent (inline highlight): #fd7b03\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n\n1. *Display headline with inline highlight*: Render at 100px, SF Pro Display weight 400, line-height 0.94, letter-spacing -3.1px, color #020108. One word within the sentence swaps to Ember Orange (#fd7b03). No background, no border, flush-left.\n\n2. *Split section (text left, visual right)*: Two-column grid, 40%/60% split, 40px column gap. Left column: section tag (12px weight 500, #020108, prefixed with ↑ glyph), heading (43px weight 500, tracking -0.645px, #020108 with one orange word), body (15px weight 400, #818084). Right column: bordered app-preview window at 7px radius, #020108 media strip on top (with traffic-light dots), image grid below.\n\n3. *Ghost pill button*: 1px border in #333333, border-radius 9999px, padding 12px 20px, background transparent. Text 14px weight 500, #020108. No shadow, no fill on hover.\n\n4. *Product image tile*: Fills its grid cell, border-radius 20px, no border, no shadow. Image extends to edges. No caption or label inside the tile itself.\n\n5. *Section tag badge*: Pure text at 12px weight 500, #020108, prefixed with a small upward-pointing arrow glyph (↑). Zero background, zero border, sits above the section heading with 10px gap."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Gradients are reserved for accent strokes and small decorative elements, never for large fills or hero backgrounds. The signature gradient is orange-to-orange-warm: linear-gradient(rgb(249, 74, 0), rgb(253, 123, 3)). A three-stop variant extends into cool territory: linear-gradient(rgb(58, 84, 255), rgb(122, 103, 197) 23%, rgb(253, 123, 3)) — blue → violet → orange, used for special accent surfaces. A teal bridge variant (linear-gradient(rgb(72, 163, 209), rgb(253, 123, 3))) and a crimson edge variant (linear-gradient(rgb(154, 1, 1), rgb(253, 123, 3))) exist as additional color-pivot options. All gradients resolve to Ember Orange at one terminus — the orange is the gravitational center of the gradient system."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids shadows entirely. Elevation is communicated exclusively through a two-step surface tonal ladder (Paper → Canvas White) and through the appearance of bordered containers. This is an editorial-print convention translated to screen: pages are flat, cards are defined by a one-step tonal shift, and depth is implied by content hierarchy, not visual lift."
+}

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1345-screen-1-backdrop-photo",
+  "kind": "fix",
+  "title": "SCREEN-1 reads JA Social II's first screen over its fixed backdrop photo, and JA Sensei and JA Smallbiz pass it through their contracts",
+  "pr": 1345,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/bands.test.mjs apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "S2: Read packages/cms/tracy-joomla-quickstart/contracts/{ja-sensei/j6/1.0.3,ja-smallbiz/j6/1.0.2,ja-social-ii/j6/1.0.3,ja-resume/j6/1.0.3}/design-system-measurement.json and score each with judgeMeasurement."
+  ],
+  "expect": [
+    "S1: every test passes: paintsBehind is true for a positioned box at a negative z-index only, the histogram probe uses it for a picture's holes, JA Sensei 1.0.3 and JA Social II 1.0.3 pass SCREEN-1 on /ops.",
+    "S2: SCREEN-1 pass on JA Sensei (max 3%), JA Smallbiz (max 9%) and JA Social II (max 11%); warn on JA Resume (1440 all pictures, 390 at most 4%); every row 12/12, controls 0."
+  ],
+  "selectors": {
+    "probe": "packages/design/tracy-ds-slot/src/remnant.mjs paintsBehind and histogramProbe",
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-sensei.json keepWhole, joomla-ja-smallbiz.json bands .bg-dark",
+    "files": "the four design-system-measurement.json files above"
+  },
+  "evidence": "Before: JA Sensei 90% (its gradient hero, kept as the template paints it but undeclared), JA Smallbiz 82% under Stripe at 390 (the #1d1d1d .bg-dark panel, not the slideshow photo), JA Social II null on every view (#features-bg, fixed at z-index -1, masked the white sections drawn over it)",
+  "fence": "No threshold or template change; the hero of JA Sensei is not worn, only declared keepWhole",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/bands.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+    ]
+  }
+}

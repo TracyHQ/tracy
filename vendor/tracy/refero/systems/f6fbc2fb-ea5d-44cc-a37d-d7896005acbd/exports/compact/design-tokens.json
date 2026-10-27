@@ -1,0 +1,89 @@
+{
+  "color": {
+    "dropbox-blue": {
+      "$value": "#0061fe",
+      "$type": "color",
+      "$description": "Dropbox Blue — Primary text, link borders, icon strokes, heading type, outlined action borders — the single most defining chromatic element, used wherever the brand needs to speak"
+    },
+    "dropbox-light": {
+      "$value": "#5f9dff",
+      "$type": "color",
+      "$description": "Dropbox Light — Soft surface washes, decorative icon accents, and secondary blue fields — a desaturated companion to Dropbox Blue for large background panels"
+    },
+    "sun-yellow": {
+      "$value": "#fad24b",
+      "$type": "color",
+      "$description": "Sun Yellow — Brand palette swatch, large color block panels, decorative fills"
+    },
+    "tangerine": {
+      "$value": "#ff8c19",
+      "$type": "color",
+      "$description": "Tangerine — Brand palette swatch, full-bleed color block panels, accent fills"
+    },
+    "sky-cyan": {
+      "$value": "#3dd3ee",
+      "$type": "color",
+      "$description": "Sky Cyan — Brand palette swatch, full-bleed color block panels, illustration accent"
+    },
+    "lime": {
+      "$value": "#b4dc19",
+      "$type": "color",
+      "$description": "Lime — Brand palette swatch, large color block panels, accent fills"
+    },
+    "coral": {
+      "$value": "#ffafa5",
+      "$type": "color",
+      "$description": "Coral — Brand palette swatch, warm color block panels, accent surfaces"
+    },
+    "lavender": {
+      "$value": "#c8aff0",
+      "$type": "color",
+      "$description": "Lavender — Brand palette swatch, soft color block panels, illustration accent"
+    },
+    "magenta": {
+      "$value": "#892055",
+      "$type": "color",
+      "$description": "Magenta — Brand palette swatch, deep accent panels, editorial accent"
+    },
+    "slate-navy": {
+      "$value": "#283750",
+      "$type": "color",
+      "$description": "Slate Navy — Brand palette swatch, dark accent panels, editorial contrast"
+    },
+    "ink": {
+      "$value": "#1e1919",
+      "$type": "color",
+      "$description": "Ink — Primary body text, hairline borders, structural dividers, nav type — the near-black workhorse of the grid system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, reverse text on color blocks, background beneath the visible grid"
+    },
+    "graphite": {
+      "$value": "#736c64",
+      "$type": "color",
+      "$description": "Graphite — Muted secondary text, subtle helper labels, low-emphasis borders"
+    }
+  },
+  "font": {
+    "dbsharpgroteskvariable-vf": {
+      "$value": "Dbsharpgroteskvariable Vf",
+      "$type": "fontFamily",
+      "$description": "Display and heading type — tight-tracked, geometric grotesque at heavy weights. The 0.80 line-height at 34px is a compression device for editorial taglines where lines almost touch, creating a block-of-text effect. Free substitute: Inter at 700, or Space Grotesk Bold."
+    },
+    "atlasgrotesk-web": {
+      "$value": "Atlasgrotesk Web",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation labels, link text, button labels, and all utility type. Neutral grotesque at compact sizes — 14px at line-height 1.67 gives breathing room for readable paragraphs while 12px at 1.43 keeps metadata tight. Free substitute: Inter or Atlas Grotesk via Adobe Fonts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://brand.dropbox.com",
+      "siteName": "Brand",
+      "extractedAt": "2026-06-03T21:51:22.051Z",
+      "variant": "compact"
+    }
+  }
+}

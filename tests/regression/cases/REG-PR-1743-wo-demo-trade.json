@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1743-wo-demo-trade",
+  "kind": "fix",
+  "title": "A non-restaurant business sent to POST /v1/demos is built for its own trade, not as a restaurant",
+  "pr": 1743,
+  "area": "website-opportunities/hand-off",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/wo-public-demos.test.mjs — POST /v1/demos with category fitness, Beauty, Vietnamese, pizza and an unknown word; read wo_opportunity.candidate.trade, then revisionForAction's brief"
+  ],
+  "expect": [
+    "S1: fitness and beauty keep their trade in the candidate and the brief, with no menu page and no 'dishes' in missing; Vietnamese and pizza become food; an unknown word becomes other"
+  ],
+  "selectors": {
+    "seam": "POST /v1/demos; importSnapshot candidate.trade (public-demos.js); buildBrief trade (brief.mjs)"
+  },
+  "evidence": "origin/develop 5b3b52f994: importSnapshot wrote candidate.category but no trade, so buildBrief defaulted to food",
+  "fence": "unrecognised text is never read as food",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/wo-demo-trade.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 300
+  }
+}

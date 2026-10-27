@@ -1,0 +1,39 @@
+{
+  "color": {
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Gallery White — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "ink-black": {
+      "$value": "#070707",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, filled buttons, nav text — the structural linework of the entire system; Dark surface for project cards and editorial spreads — the inverse of the canvas, used to make featured work feel like a framed plate"
+    },
+    "spearmint-wash": {
+      "$value": "#e7feda",
+      "$type": "color",
+      "$description": "Spearmint Wash — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "feature-deck": {
+      "$value": "Feature Deck",
+      "$type": "fontFamily",
+      "$description": "Display and section-heading face used exclusively for monumental wordmark treatments. The 104px 'Extract' lockup and 44px subheadings carry the entire brand voice through scale alone — no other display serif or grotesque is needed."
+    },
+    "abc-diatype": {
+      "$value": "ABC Diatype",
+      "$type": "fontFamily",
+      "$description": "Universal workhorse — body copy (18-19px), nav and meta (19px), subheadings (21px), and card titles (34px). Weight 700 is used sparingly for emphasis within body contexts. The tight 1.25 line-height on larger sizes keeps the editorial density."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://extract.studio",
+      "siteName": "Extract",
+      "extractedAt": "2026-06-03T21:53:12.837Z",
+      "variant": "compact"
+    }
+  }
+}

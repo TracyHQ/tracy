@@ -1,0 +1,158 @@
+[
+  {
+    "assertionIds": [],
+    "edgeTags": ["rollback"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-review-undo-rollback-undo-latest-request",
+    "itemIds": ["flow:review-undo"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the latest request is undone through one button; an older one goes back from there; a blocked one says why and offers no undo; the next turn is told once",
+      "ref": "doorUndo, view; REG-PR-968 (note for the agent, preview reload), REG-PR-971 (toolbar)",
+      "source": "tests/regression/cases/REG-PR-970-site-changes-undo.json"
+    },
+    "pendingReason": "not scripted: an undo needs a turn the agent really made (model credentials) and the host's turn moments; the door outcome is played in the api layer (QA-API-scenario-turn-undo-doors) says what the door half still lacks",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Undo a chat request from the chat card, the toolbar and Site changes — undo latest request (rollback)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["rollback"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-review-undo-rollback-go-back-to-an-older-request",
+    "itemIds": ["flow:review-undo"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the latest request is undone through one button; an older one goes back from there; a blocked one says why and offers no undo; the next turn is told once",
+      "ref": "doorUndo, view; REG-PR-968 (note for the agent, preview reload), REG-PR-971 (toolbar)",
+      "source": "tests/regression/cases/REG-PR-970-site-changes-undo.json"
+    },
+    "pendingReason": "not scripted: same prerequisites; the rule (newer turn first, NOT_LATEST for scope turn) is covered by the product test \"going back two turns undoes the newer turn first\" (apps/tracy-web/test/turn-undo-route.test.mjs)",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Undo a chat request from the chat card, the toolbar and Site changes — go back to an older request (rollback)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["invalid"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-review-undo-invalid-blocked-by-a-later-edit",
+    "itemIds": ["flow:review-undo"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the latest request is undone through one button; an older one goes back from there; a blocked one says why and offers no undo; the next turn is told once",
+      "ref": "doorUndo, view; REG-PR-968 (note for the agent, preview reload), REG-PR-971 (toolbar)",
+      "source": "tests/regression/cases/REG-PR-970-site-changes-undo.json"
+    },
+    "pendingReason": "not scripted: same prerequisites; covered by the product test \"an admin edit after the turn: POST is refused BLOCKED and writes nothing\"",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Undo a chat request from the chat card, the toolbar and Site changes — blocked by a later edit (invalid)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["repeat"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-review-undo-repeat-undo-twice",
+    "itemIds": ["flow:review-undo"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the latest request is undone through one button; an older one goes back from there; a blocked one says why and offers no undo; the next turn is told once",
+      "ref": "doorUndo, view; REG-PR-968 (note for the agent, preview reload), REG-PR-971 (toolbar)",
+      "source": "tests/regression/cases/REG-PR-970-site-changes-undo.json"
+    },
+    "pendingReason": "not scripted: a second press answers NOTHING_TO_UNDO (apps/tracy-web/src/sites/turn-undo.js); no stand turn to press on",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Undo a chat request from the chat card, the toolbar and Site changes — undo twice (repeat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["retry"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-review-undo-retry-partial-undo",
+    "itemIds": ["flow:review-undo"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the latest request is undone through one button; an older one goes back from there; a blocked one says why and offers no undo; the next turn is told once",
+      "ref": "doorUndo, view; REG-PR-968 (note for the agent, preview reload), REG-PR-971 (toolbar)",
+      "source": "tests/regression/cases/REG-PR-970-site-changes-undo.json"
+    },
+    "pendingReason": "not scripted: a partly undone turn (complete:false) needs a host fault injected mid-restore",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Undo a chat request from the chat card, the toolbar and Site changes — partial undo (retry)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["reload-resume"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["http", "db"],
+      "writes": ["site-file", "site-db"]
+    },
+    "id": "QA-FLOWS-review-undo-reload-resume-toolbar-and-preview-follow",
+    "itemIds": ["flow:review-undo"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the latest request is undone through one button; an older one goes back from there; a blocked one says why and offers no undo; the next turn is told once",
+      "ref": "doorUndo, view; REG-PR-968 (note for the agent, preview reload), REG-PR-971 (toolbar)",
+      "source": "tests/regression/cases/REG-PR-970-site-changes-undo.json"
+    },
+    "pendingReason": "not scripted: the toolbar state and the preview reload are browser events (REG-PR-971, REG-PR-968-undo-preview-reload)",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Undo a chat request from the chat card, the toolbar and Site changes — toolbar and preview follow (reload-resume)",
+    "targets": ["local"]
+  }
+]

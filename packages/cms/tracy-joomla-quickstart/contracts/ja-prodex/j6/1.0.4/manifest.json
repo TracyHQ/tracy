@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-prodex/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_prodex",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-prodex",
+    "id": "quickstart/ja-prodex/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_prodex",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-prodex-j6-webroot-1.0.4.tar.gz",
+        "bytes": 67381525,
+        "sha256": "43c63de5d9ce35bebd963f99f38a387ce8f4ed069dcd1425c615b71ffb169c38"
+      },
+      "database": {
+        "file": "ja-prodex-j6-database-1.0.4.sql.gz",
+        "bytes": 87129,
+        "sha256": "d9c86e160455d7808c3015083e0a4808bb7225d3e671cf428a1bf2fbf909ff51"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T19:28:03.662Z",
+    "builtFrom": {
+      "from": "quickstart/ja-prodex/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 185 files replaced (templates/ja_prodex/AGENTS.md, templates/ja_prodex/CLAUDE.md, templates/ja_prodex/README.md, templates/ja_prodex/component.php, templates/ja_prodex/error-t4.php, templates/ja_prodex/error.php, templates/ja_prodex/favicon.ico, templates/ja_prodex/index.php, templates/ja_prodex/layout.json, templates/ja_prodex/offline.php, templates/ja_prodex/templateDetails.xml, templates/ja_prodex/templateInfo.php, templates/ja_prodex/template_preview.png, templates/ja_prodex/template_thumbnail.png, templates/ja_prodex/css, templates/ja_prodex/docs, templates/ja_prodex/etc, templates/ja_prodex/fonts, templates/ja_prodex/html, templates/ja_prodex/images, templates/ja_prodex/js, templates/ja_prodex/scss, templates/ja_prodex/acm, templates/ja_prodex/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-prodex/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

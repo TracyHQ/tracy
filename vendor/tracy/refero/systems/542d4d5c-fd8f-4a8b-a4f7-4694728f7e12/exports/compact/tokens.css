@@ -1,0 +1,33 @@
+:root {
+  /* Colors */
+  --color-emerald-signal: #059669;
+  --color-mint-pulse: #10b981;
+  --color-onyx-ink: #18181b;
+  --color-pure-canvas: #ffffff;
+  --color-fog: #f4f4f5;
+  --color-slate-whisper: #71717a;
+  --color-graphite: #52525b;
+  --color-zinc-veil: #a1a1aa;
+  --color-charcoal: #3f3f46;
+  --color-ash-border: #e5e7eb;
+  --color-silver-trace: #d4d4d8;
+  --color-violet-tier: #9333ea;
+  --color-indigo-spark: #4f46e5;
+  --color-pink-pulse: #ec4899;
+  --color-cobalt-signal: #2563eb;
+  --color-sky-veil: #60a5fa;
+  --color-teal-trace: #14b8a6;
+  --color-sprout-wash: #d1fae5;
+  --color-crimson-ink: #b91c1c;
+  --color-rose-blush: #db2777;
+  --color-forest-verdant: #16a34a;
+  --color-marigold-spark: #eab308;
+  --color-mint-mist: #ecfdf5;
+  --color-sky-mist: #eff6ff;
+  --color-lilac-mist: #f3e8ff;
+
+  /* Typography — Font Families */
+  --font-inter-tight: 'Inter Tight', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif-system-stack: 'ui-sans-serif (system stack)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace-system-stack: 'ui-monospace (system stack)', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

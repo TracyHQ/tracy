@@ -1,0 +1,17 @@
+{
+  "failed": "Impossible d’afficher le PDF : {message}",
+  "loading": "Rendu du document…",
+  "pageImage": "Page PDF {page}",
+  "password": "Ce PDF exige un mot de passe. L’aperçu des fichiers protégés par mot de passe n’est pas pris en charge.",
+  "rendering": "Rendu de la page…",
+  "retry": "Réessayer",
+  "title": "PDF",
+  "unsupported": "L’aperçu PDF nécessite le contenu complet du fichier.",
+  "workerFailed": "Le processus de rendu du PDF n’a pas pu continuer. Veuillez réessayer.",
+  "zoomControls": "Commandes de zoom",
+  "zoomFitWidth": "Ajuster à la largeur",
+  "zoomIn": "Zoom avant",
+  "zoomMenu": "Choisir le niveau de zoom",
+  "zoomOut": "Zoom arrière",
+  "zoomValue": "{percent} %"
+}

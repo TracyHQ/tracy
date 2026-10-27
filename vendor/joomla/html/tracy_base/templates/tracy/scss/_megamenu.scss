@@ -1,0 +1,341 @@
+// EXTEND STYLE IN BASE
+// --------------------
+@import "../../../plugins/system/t4/themes/base/scss/megamenu";
+
+.t4-megamenu {
+
+  // THE MEGAMENU
+  //--------------------------------------------
+  .navbar-nav {
+    > li {
+      > a,
+      > .nav-link {
+        color: var(--mainnav-link-color);
+        font-size: $nav-link-font-size;
+        padding: $t4-nav-link-padding-y $t4-nav-link-padding-x;
+        height: $t4-nav-height;
+        line-height: $t4-nav-height - ($t4-nav-link-padding-y * 2);
+        transition: $nav-link-transition;
+
+        @include media-breakpoint-up(md) {
+        }
+
+        // Caret
+        .item-caret {
+          border-top-color: var(--mainnav-link-color);
+        }
+
+        &:hover, &:focus, &:active {
+          color: var(--mainnav-link-hover-color);
+
+          // Caret
+          .item-caret {
+            border-top-color: var(--mainnav-link-hover-color);
+          }
+        }
+      }
+
+      // Parent focus
+      &.show {
+        > a,
+        > .nav-link {
+          color: var(--mainnav-link-hover-color);
+
+          // Caret
+          .item-caret {
+            border-top-color: var(--mainnav-link-hover-color);
+          }
+        }
+      }
+
+      // Active item
+      &.active {
+        > a,
+        > .nav-link {
+          color: var(--mainnav-link-active-color);
+
+          // Caret
+          .item-caret {
+            border-top-color: var(--mainnav-link-active-color);
+          }
+        }
+      }
+
+      &:last-child {
+        > a,
+        > .nav-link {
+          border: 0;
+        }
+      }
+    }
+  }
+
+  // Caption
+  .mega-caption {
+    position: absolute;
+    bottom: $t4-nav-link-padding-y * 0.8;
+    line-height: 1;
+  }
+
+  // Dropdown menu
+  //
+  // This rule arrived from t4_bs5_blank untouched, and every value in it was the blank's: a white
+  // literal, a hand-written hairline, and `$z-depth-1` — a MATERIAL DESIGN elevation — under a
+  // breakpoint. None of it is this design system, whose DESIGN.md puts navigation surfaces at
+  // "Level 0: flat neutral surfaces" and gives the panel no shadow at all. The panel came out a
+  // floating bordered card where the design uses a flat field.
+  .dropdown-menu {
+    background: var(--surface);
+    box-shadow: none;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--fg);
+    min-width: $dropdown-min-width;
+    margin-top: 0;
+    padding: var(--space-8) var(--space-12);
+
+    @include media-breakpoint-up(lg) {
+      // Flat, deliberately. The blank raised it here; this design does not raise navigation.
+      box-shadow: none;
+    }
+
+    .dropdown-menu-inner {
+    }
+
+    a {
+      color: var(--mainnav-link-color);
+
+      &:hover, &:focus, &:active {
+        background-color: transparent;
+        color: var(--mainnav-link-hover-color);
+      }
+    }
+
+    li {
+      &:last-child {
+        border: 0;
+      }
+
+      > a,
+      > .nav-link,
+      .dropdown-item {
+        color: var(--mainnav-link-color);
+        display: flex;
+        justify-content: space-between;
+        padding: $nav-link-padding-y 0;
+        white-space: normal;
+        height: auto;
+        line-height: var(--body-line-height);
+
+        &:hover, &:focus, &:active {
+          color: var(--mainnav-link-hover-color);
+        }
+      }
+
+      &.active {
+        > a {
+          color: var(--mainnav-link-active-color);
+        }
+      }
+    }
+  }
+
+  // Parent hover
+  .parent {
+  }
+
+  .dropdown-toggle {
+    &:after {
+      margin-top: calc($spacer / 2);
+      float: right;
+    }
+  }
+
+  .dropdown {
+    &:hover {
+      > .dropdown-menu {
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+
+  // Modules in Megamenu
+  // -------------------
+  .mega-col-module {
+  }
+
+  // Inner padding
+  .mega-col-module .mega-inner {
+  }
+
+
+  .t4-module {
+    border-radius: 0;
+    border: 0;
+  }
+
+  .t4-module .module-inner {
+  }
+
+  // Module Title
+  // Navigation title
+  .t4-module .module-title,
+  .mega-col-nav .mega-col-title,
+  .mega-col-module .mega-col-title {
+    font-size: $t4-fs-mega-col-title;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+
+    span {
+      color: $t4-cl-mega-col-title;
+    }
+  }
+
+  // Navigation in Module
+
+  .t4-module .nav,
+  .mega-col-module .navbar {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+
+   li.nav-item {
+     list-style: none;
+     flex-basis: 100%;
+
+     a {
+       display: block;
+       padding: calc($spacer / 2) 0;
+
+       &:hover, &:focus, &:active {
+         background-color: transparent;
+       }
+     }
+   }
+ }
+
+  .dropstart {
+    .dropdown-menu {
+      right: 100%;
+      top: 0px;
+    }
+  }
+
+  .dropend {
+    .dropdown-menu {
+      left: 100%;
+      top: 0;
+    }
+  }
+
+
+  // ── Matching base.com, not just the token layer ────────────────────────────────────────────
+  //
+  // These two are a DESIGN DECISION, not a literal-to-token repair, and they are recorded as such:
+  // nothing in this system's DESIGN.md says a nav item may not carry a caret or how a mega column
+  // heading is set. `archetypes.json` classifies the nav BAR and stops; its `panel` field is null
+  // for this system, which is the honest state of the library rather than an oversight. What is
+  // below was read off base.com and applied deliberately.
+
+  // Base's global nav carries no disclosure arrows. T4 emits one from `mega.php` whenever an item
+  // has children (`$item->deeper`), so it is markup, not styling — hiding it here avoids an
+  // override of the framework's menu layout for one glyph.
+  //
+  // The selector matches the base sheet's `.dropdown-toggle .item-caret { display: flex }` rather
+  // than reaching for `!important`. A single-class rule loses to it however far down the file it
+  // sits: specificity is not order, and this file is full of two-class selectors that quietly win.
+  .dropdown-toggle .item-caret { display: none; }
+
+  // Base's mega columns are headed in sentence case, in the muted neutral, with no rule beneath.
+  // The blank set them in full ink, uppercased, over a border — three signals of emphasis on text
+  // whose whole job is to be quieter than the links under it.
+  // Same specificity rule as the caret above: the blank sets these on
+  // `.mega-col-nav .mega-col-title`, two classes deep, so a one-class selector never lands.
+  // The `span` is where the blank puts the colour, so the colour has to go there too.
+  .mega-col-nav .mega-col-title,
+  .mega-col-module .mega-col-title {
+    text-transform: none;
+    font-weight: 400;
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: var(--space-3);
+
+    span { color: var(--meta); }
+  }
+
+  // ── The BAND panel (data-align="justify") ───────────────────────────────────────────────────
+  //
+  // Base's mega panel is a field that spans the viewport with its columns held on the page's own
+  // measure — not an object floating under one nav item. T4 ships rules for exactly this shape
+  // (`.mega-align-justify > .dropdown-menu { left: 0; right: 0 }`) and they are DEAD CODE: the line
+  // that would add the class is commented out in the framework's own `mega.php`
+  //
+  //     $align = ' data-align="' . $item->mega['align'] . '"';
+  //     // $class .= ' mega-align-'.$item->mega['align'];
+  //
+  // so only the attribute survives. Hooking the attribute is what makes the setting mean anything.
+  li[data-align="justify"] {
+    // The item is `position: relative` by default, which is what pinned the panel to the item's own
+    // 104px. Static hands positioning up the tree.
+    position: static;
+
+    > .dropdown-menu {
+      // Every ancestor between here and the viewport is `overflow: visible`, so the panel can span
+      // the screen from inside a 1068px container. 50%/-50vw is the reliable form: it does not care
+      // which ancestor happens to be positioned.
+      left: 50%;
+      right: auto;
+      width: 100vw;
+      margin-left: -50vw;
+      padding-inline: 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .mega-dropdown-inner {
+      max-width: calc(var(--container-max) + var(--container-gutter-desktop) * 2);
+      margin-inline: auto;
+      padding: var(--space-12) var(--container-gutter-desktop);
+    }
+
+    // The columns are Bootstrap `.col-md`, which only equalise once the row has room. They had none
+    // while the panel was 104px wide.
+    .row { gap: 0; }
+
+    // Base's first column is the signature: the same links as the others, set in DISPLAY type.
+    // Nothing in this design system's DESIGN.md declares that — it is read off base.com, like the
+    // caret and the column headings above, and recorded here as a decision rather than a repair.
+    // The real path, measured: .mega-sub-1 > .mega-col-nav > .mega-inner > ul.mega-nav > li > a.
+    // The guess (`.mega-col-nav > .nav > li > a`) missed on both counts — a `.mega-inner` sits in
+    // between and the list is `.mega-nav`, not `.nav` — so it matched nothing and the links stayed
+    // at the navbar's 14px.
+    // `#t4-header .nav-link` in _base.scss sets 14px, and an ID beats any number of classes —
+    // (1,1,0) against this rule's (0,5,3). Five classes and three elements lose to one `#`. So the
+    // selector carries the ID too. `!important` would have worked and would have been the wrong
+    // tool: it wins by outranking the cascade rather than by being more specific about the thing
+    // it describes, and the next person then needs a second `!important` to move it.
+    #{'#t4-header'} & .mega-sub-1 .mega-nav > li > a.nav-link,
+    .mega-sub-1 .mega-nav > li > a.nav-link {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+      padding-block: var(--space-2);
+    }
+
+    #{'#t4-header'} & .mega-sub-2 .mega-nav > li > a.nav-link,
+    #{'#t4-header'} & .mega-sub-3 .mega-nav > li > a.nav-link,
+    .mega-sub-2 .mega-nav > li > a.nav-link,
+    .mega-sub-3 .mega-nav > li > a.nav-link {
+      font-size: var(--text-lg);
+      padding-block: var(--space-2);
+    }
+  }
+}

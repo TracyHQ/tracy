@@ -1,0 +1,57 @@
+---
+/**
+ * Bravada archive shell: content column with the shared sidebar-b
+ * widgets to the right — the same SidebarWidgets experience single
+ * posts and the layout pages use (theme #secondary: search, recent
+ * posts, tabbed widget). One sidebar implementation everywhere.
+ */
+import SidebarWidgets from "../components/SidebarWidgets.astro";
+---
+
+<div class="archive-shell">
+	<!-- A div, not <main>: Base already renders the page's single <main>
+	     landmark, and nesting a second one inside it is invalid. -->
+	<div class="archive-main">
+		<slot />
+	</div>
+	<aside class="archive-sidebar">
+		<SidebarWidgets name="sidebar-b" />
+	</aside>
+</div>
+
+<style>
+	.archive-shell {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 320px;
+		gap: 2.5em;
+		max-width: var(--wide-width);
+		margin: 0 auto;
+		padding: 4em var(--spacing-6);
+	}
+
+	.archive-main {
+		min-width: 0;
+	}
+
+	/* The two-up card grid every archive consumer renders in the main
+	   slot (blog index, term archives, search results) */
+	.archive-main :global(.archive-grid) {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2em;
+		align-items: start;
+	}
+
+	@media (max-width: 640px) {
+		.archive-main :global(.archive-grid) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 960px) {
+		.archive-shell {
+			grid-template-columns: 1fr;
+			padding: 2.5em var(--spacing-4);
+		}
+	}
+</style>

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-fresco/wp7/1.0.0",
+  "platform": "wordpress",
+  "theme": "wp-ja-fresco",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-fresco/wp7",
+    "version": "1.0.0",
+    "platform": "wordpress",
+    "platformVersion": "7.1.3",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-fresco",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-fresco-wp7-webroot-1.0.0.tar.gz",
+        "bytes": 51153577,
+        "sha256": "fe6f597bd5ed71afa3cf9e664d25d2ed63d5884ddd0f84029eaa89b2463f768a",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-webroot-1.0.0.tar.gz"
+      },
+      "database": {
+        "file": "ja-fresco-wp7-database-1.0.0.sql.gz",
+        "bytes": 45144,
+        "sha256": "6e19491a0e5ba6bde685683ccfb9b0b32cca8a0c70ddbbc1cd9299b604ce1480",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-database-1.0.0.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.22",
+  "mode": "content-recommendation"
+}

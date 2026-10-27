@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-060-pending",
+  "itemIds": ["regression:REG-060"],
+  "requirement": "Comment badge: the Comments card, the Comments tab pill and the Browser toolbar button show the OPEN thread count in grey and wear a red dot only while the viewer has an unread open thread; opening the thread clears the dot and keeps the number",
+  "oracle": {
+    "source": "tests/regression/cases/REG-060-comment-badge-open-count-unread-dot.json",
+    "ref": "PR #858 (feat); fix evidence: none recorded",
+    "invariant": "The build check prints a count >= 1. CARD_1.text === String(EXPECT_OPEN) (the number is the OPEN thread count, not the unread count), CARD_1.dot === true, CARD_1.background is not the primary terracotta (grey), CARD_1.title contains '1 unread' or 'unread'. PILL_1.count === String(EXPECT_OPEN), PILL_1.unread is a string >= '1', PILL_1.aria contains 'Comments', EXPECT_OPEN and 'unread'. FILTER_1 text ends with EXPECT_OPEN and has data-dot. TOOLBAR_1.text === String(EXPECT_OPEN) and TOOLBAR_1.dot === true (the fork reads {count, open} from tracy:comment-unread). After opening the thread: READ_ROW === 't'; PILL_2.count === String(EXPECT_OPEN) (unchanged) and PILL_2.unread === null; TOOLBAR_2.text === String(EXPECT_OPEN) and TOOLBAR_2.dot === false. After Mark as unread: PILL_3.unread is a string >= '1' and PILL_3.count === String(EXPECT_OPEN). No page error or console.error on the dsh pages whose message names tracy-chat-input, @tracy/core or dsh-better-sidebar, and no HTTP >= 400 to /api/sites/KEY/comments (any sub-path) (chrome-watch --errors --page KEY --json after the loads). Requests of the site’s own origin (KEY:8080 pages and assets, net::ERR_CACHE_MISS on back/forward, third-party analytics ERR_ABORTED) and errors of other doors are the site’s or another line’s: list them in the notes, do not fail on them.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer ui, needs stand, seat:owner, seat:editor"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:seat:owner", "need:seat:editor"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-060"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:ui"],
+  "regression": {
+    "id": "REG-060",
+    "pr": 858,
+    "kind": "feat",
+    "area": "comments/badge",
+    "file": "tests/regression/cases/REG-060-comment-badge-open-count-unread-dot.json"
+  },
+  "ownerLayer": "ui",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "seat:owner", "seat:editor"]
+}

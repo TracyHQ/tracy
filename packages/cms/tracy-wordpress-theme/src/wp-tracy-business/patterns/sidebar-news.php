@@ -1,0 +1,64 @@
+<?php
+/**
+ * Title: News sidebar
+ * Slug: wp-tracy-business/sidebar-news
+ * Description: The news sidebar (parts/sidebar-news.html): search, categories, latest articles and the newsletter card. Its words go through the theme's text domain, so a site in another language shows them in it.
+ * Categories: wp-tracy-business
+ * Inserter: no
+ *
+ * @package wp-tracy-business
+ */
+?>
+<!-- wp:group {"className":"tracy-aside__card tracy-aside__search","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-aside__card tracy-aside__search">
+<!-- wp:paragraph {"className":"tracy-aside__label"} -->
+<p class="tracy-aside__label"><?php echo esc_html__( 'Search', 'wp-tracy-business' ); ?></p>
+<!-- /wp:paragraph -->
+<!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Enter a keyword…","buttonText":"Search","buttonUseIcon":true,"className":"tracy-listing__search tracy-aside__search-form"} /-->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-aside__card tracy-aside__categories","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-aside__card tracy-aside__categories">
+<!-- wp:paragraph {"className":"tracy-aside__label"} -->
+<p class="tracy-aside__label"><?php echo esc_html__( 'Categories', 'wp-tracy-business' ); ?></p>
+<!-- /wp:paragraph -->
+<!-- wp:categories {"showPostCounts":true,"showOnlyTopLevel":false,"className":"tracy-aside__list tracy-aside__categories-list"} /-->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-aside__card tracy-aside__latest","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-aside__card tracy-aside__latest">
+<!-- wp:paragraph {"className":"tracy-aside__label"} -->
+<p class="tracy-aside__label"><?php echo esc_html__( 'Latest articles', 'wp-tracy-business' ); ?></p>
+<!-- /wp:paragraph -->
+<!-- wp:query {"queryId":4,"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":false},"className":"tracy-query tracy-aside__latest-query","layout":{"type":"default"}} -->
+<div class="wp-block-query tracy-query tracy-aside__latest-query">
+<!-- wp:post-template {"className":"tracy-aside__latest-list","layout":{"type":"default"}} -->
+<!-- wp:group {"tagName":"article","className":"tracy-aside__latest-item","layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"top"}} -->
+<article class="wp-block-group tracy-aside__latest-item">
+<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"1","width":"64px","className":"tracy-aside__latest-media"} /-->
+<!-- wp:group {"className":"tracy-aside__latest-body","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-aside__latest-body">
+<!-- wp:post-title {"level":3,"isLink":true,"className":"tracy-aside__latest-title"} /-->
+<!-- wp:post-date {"format":"j M Y","className":"tracy-aside__latest-date"} /-->
+</div>
+<!-- /wp:group -->
+</article>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+</div>
+<!-- /wp:query -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-aside__card tracy-aside__cta tracy-aside__subscribe","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-aside__card tracy-aside__cta tracy-aside__subscribe">
+<!-- wp:heading {"level":2,"className":"tracy-aside__cta-title"} -->
+<h2 class="wp-block-heading tracy-aside__cta-title"><?php echo esc_html__( 'Get our industry brief every two weeks', 'wp-tracy-business' ); ?></h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"className":"tracy-aside__cta-text"} -->
+<p class="tracy-aside__cta-text"><?php echo esc_html__( 'Tender news, material price movements and engineering notes.', 'wp-tracy-business' ); ?></p>
+<!-- /wp:paragraph -->
+<!-- wp:shortcode {"metadata":{"name":"news.subscribe.form"}} -->
+[contact-form-7 title="Newsletter"]
+<!-- /wp:shortcode -->
+</div>
+<!-- /wp:group -->

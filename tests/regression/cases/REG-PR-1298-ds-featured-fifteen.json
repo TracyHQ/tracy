@@ -1,0 +1,58 @@
+{
+  "id": "REG-PR-1298-ds-featured-fifteen",
+  "kind": "feat",
+  "title": "The fifteen featured design systems read as their sources say and look right on every template under any system of the library: brand colours and faces, the template’s text order, dark bands, bounded headline and heading sizes, structure rules, every contract checked against all 1334 systems",
+  "pr": 1298,
+  "area": "design-system/profiles",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/*.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/design-system-library-door.test.mjs apps/tracy-web/test/design-system-door.test.mjs.",
+    "S3: Run node --test packages/fleet/tracy-fleet-operation/test/cowork-extension.test.mjs apps/tracy-web/test/glyph-fallback.test.mjs apps/tracy-web/test/template-customization-question-readiness-fonts.test.mjs packages/fleet/tracy-fleet-operation/test/quickstart-cache.test.mjs.",
+    "S4: Run node --test apps/tracy-web/test/brief-guard.test.mjs packages/cms/tracy-seeder/test/plan-template-buttons.test.mjs.",
+    "S5: Run node --test packages/tools/tracy-site-tools/test/removal-check.test.mjs packages/tools/tracy-site-tools/test/recorded-door.test.mjs apps/tracy-web/test/recent-changes.test.mjs apps/tracy-web/test/apply-door-writes.test.mjs.",
+    "S6: Run node packages/design/tracy-ds-slot/scripts/matrix.mjs (every contract under every system of the library, no stand)."
+  ],
+  "expect": [
+    "S1: every test passes, including: Pitch's accent is its violet primary button with white text, Stripe's face Inter Tight, Linear's face Inter and main text white; JA Essence's headings take Moxie's strongest text (fg-2 first in its own order); Spotify's hero ink band stays dark with readable green words on EmDash; Eddie's display size is min(119px, 6vw); a display line on a Vietnamese page keeps line-height 1.2; Balsa's Bebas Neue sets section headings only; JA Nova's dark bands under MotherDuck take its strongest ink #383838 (not the #676665 its own text order put at --fg); no contract rounds a layout class such as .wp-block-group (JA Morgan); a card or listed post title keeps the template size and a section heading grows at most 1.25x the template own; menu toggles are never a filled button; Bootstrap components and utilities wear the system; a one-tone logo flips with the page; a button is at most 2em round; a hero in a face wider than the template's own is capped by its line width (Eddie 66px on Tracy Business), a band's button guard adds no weight (Tracy Business WordPress's footer monogram reads), a Joomla content button wraps a long label, a template that hangs arrows off its container keeps them inside the window (containerGutter), Joomla off-canvas panels wear the system's page, separation judges as score does, the EmDash slot holds each template's hero to its own size and line width (Eddie on tracy-base, Tracy Business, Tracy SaaS), a band whose ground is a flat-colour picture drops it (dropPicture), a Joomla off-canvas panel's header strip, close button and submenu chevrons follow the page, a WordPress logo picture the theme left empty is never forced visible; and every contract holds its invariants under one system in nine of the whole library (matrix.test.mjs). Since 15/10: a palette band takes the system's strongest ink (--ds-c-ink) and .h1–.h6 are page-wide headings that never take a band's words; a band that is one only at some widths gives its buttons the system's pair inside that media query; a card inside a band (`card`) steps away from the band's words; the kept-button probe skips buttons outside a clipping box (a slider's other slides); Joomla's own tab panels (joomla-tab) wear the system's surface; each status colour has a readable text shade (--ds-c-success-text, -warn-text, -danger-text) a contract can name; the contrast judge finds the template's own photo words at another place in the list; separation judges a width as score does.",
+    "S2: every test passes: the library opens with the fifteen featured systems (the twelve, then Stripe, Apple · apple.com, Linear), each offered system has its thumbnail, and the WordPress JA themes are checked up to their new versions.",
+    "S3: every test passes: a Joomla site's Cowork package is downloaded once per version into the host's cache and given up only when the transfer stalls (no total time cap); a quickstart's release files are kept on the host by sha256 and fetched once; Apply's glyph faces stay within the 24 the plugins print, every family kept; the readiness check never judges an icon font (Font Awesome, swiper-icons, a private-use face) as a text face that lacks Vietnamese.",
+    "S4: every test passes: Apply and the seeder's planner keep a social link's network name and an icon link's title, and never write a placeholder (\"empty\" stays out of the rewrite, \"trống\" is never written).",
+    "S5: every test passes: a removal whose title still shows on a page the conversation read says so (stillShows) and forbids saying it is gone; a shell write a recorded door makes (Joomla config:set sitename, wp option update blogname) is refused naming the door; apply.list without an apply_id lists the site's recent changes from Tracy's own record, an earlier conversation's site.identity write included, so apply.revert can take it back.",
+    "S6: the last line reads \"97/97 contracts hold every invariant under every system\"."
+  ],
+  "selectors": {
+    "profiles": "packages/design/tracy-ds-slot/src/normalise.mjs, src/fonts.mjs",
+    "emitters": "packages/design/tracy-ds-slot/src/tokens56.mjs, src/emit.mjs, src/wordpress.mjs, src/joomla.mjs",
+    "featured": "apps/tracy-web/src/lib/ds-slot.js FEATURED_REFERO_SYSTEMS"
+  },
+  "evidence": "Before this change Toggl Track's site turned plum with pink body text, Pitch wore a decorative yellow, Stripe and Linear were refused by the quality gate, JA Essence's headings were dimmer than its body under Moxie, Spotify's EmDash hero went white, and Eddie's 119px headline ran across Tracy Business's hero picture",
+  "fence": "A template that is not worn looks exactly as released; a system that already fits (under the size caps, a text face for headings) changes nothing; no rule names a system: the library matrix runs every contract under every system that passes the gate",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/slot.test.mjs",
+      "packages/design/tracy-ds-slot/test/tokenize.test.mjs",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "packages/design/tracy-ds-slot/test/contracts.test.mjs",
+      "packages/design/tracy-ds-slot/test/bands.test.mjs",
+      "packages/design/tracy-ds-slot/test/matrix.test.mjs",
+      "packages/design/tracy-ds-slot/test/two-modes.test.mjs",
+      "apps/tracy-web/test/design-system-library-door.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/cowork-extension.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/quickstart-cache.test.mjs",
+      "apps/tracy-web/test/glyph-fallback.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-fonts.test.mjs",
+      "apps/tracy-web/test/brief-guard.test.mjs",
+      "packages/cms/tracy-seeder/test/plan-template-buttons.test.mjs",
+      "packages/tools/tracy-site-tools/test/removal-check.test.mjs",
+      "packages/tools/tracy-site-tools/test/recorded-door.test.mjs",
+      "apps/tracy-web/test/recent-changes.test.mjs",
+      "apps/tracy-web/test/apply-door-writes.test.mjs"
+    ]
+  }
+}

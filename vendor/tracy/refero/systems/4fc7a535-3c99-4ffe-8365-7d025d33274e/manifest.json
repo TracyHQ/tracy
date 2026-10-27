@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4fc7a535-3c99-4ffe-8365-7d025d33274e",
+  "status": "complete",
+  "name": "Surfshark",
+  "url": "https://styles.refero.design/style/4fc7a535-3c99-4ffe-8365-7d025d33274e",
+  "sourceWebsite": "https://surfshark.com",
+  "extractedAt": "2026-06-03T21:03:35.803Z",
+  "capturedAt": "2026-10-08T05:11:30.092911+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "crisp ocean horizon at golden hour — warm coral sun meets teal sea, all floating on white sand",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/394f73f0-91c0-4e4b-a63b-829c49cf16d0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e6f9a601-2c51-44ac-afa3-52c26a37947b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/85802b65-9908-4ea3-a059-ede5252c207b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/7e3d9268-e308-4b13-9fac-b901aa0cdb88.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/220fe25c-b036-4bdd-83fa-3ce6e57bb88f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3f28eca9b46e1210240563dd8e380b5c0fd4ead89280611159ea73295048b863",
+      "bytes": 17264
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f8665fa106d7b1877163caea329e30bef355394a2b59ebf200b1a0ad88d9416e",
+      "bytes": 113829
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1245071f4c0eb11359d8a5f63dae5506809ee8845b66b6c12c9d02e6e2f2c0af",
+      "bytes": 15232
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "190f95d673c90642f294b3edad6dd5a746e606b59738d0d7c4178602d1991d6d",
+      "bytes": 11403
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f2fbce4032895e59dce11629b51cbe582926897311fcae20aac021865e261408",
+      "bytes": 11978
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3cc2e2f42b51895a268b052e1145a6778fc1a3631d4746b83e48656511ef6728",
+      "bytes": 3460
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "51e56cbdac0722c0c19295912322fc08b26957c54d27e787ba18c35e10bfe694",
+      "bytes": 557
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2e37ff592962354a06702e03a8b3c379738cb838ab832ae49474696a0e373e50",
+      "bytes": 574
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "44225e19db1df29cdde1e43e8fd080a03d0c1887bbaf657a6f981f2ff513d196",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "51a0ad74e0bccd6042c98af5c598b04d64ae4da9b0ec8ec80f78c68ef76c21f2",
+      "bytes": 43883
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c48d7deb611dbf2a83850246c3a7256f5e8044b1a58afe8588a2088f1fbf5a03",
+      "bytes": 23257
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c6f8e1f3434e3cedced1deb608f7e598687cb412170f947d07b6b4a4f8ce1e70",
+      "bytes": 49101
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ee9db14ac55898447053181ef945fd004dd5f731b1dce77a22d28457d136bf2b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6cf48fb0309c303f428219654cf2d6994125358e6040ac5eedfbf9812f945d38",
+      "bytes": 1511
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1115dfdf5956b6a6bcb553633b60bba9987e503046909bd1594b764f74524b79",
+      "bytes": 2099
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "41c479a9-7b41-445b-9ea7-c7a6331828f0",
+    "4fc7a535-3c99-4ffe-8365-7d025d33274e",
+    "51752cfb-4fd4-464f-8b78-ecbc813830e1",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "cfab7b43-ed24-41e9-9272-c858700b865b",
+    "da0bfca3-df1d-49d9-ae25-61d8f348426f",
+    "da6ad92d-4f29-4f92-a59a-3a46295d0d1c",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e60c61d3-2657-429e-a581-568aea27a448",
+    "eddfa579-89f1-467d-a486-99a56be36c30",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

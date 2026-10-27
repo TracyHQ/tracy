@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1392-site-backup-test-volume",
+  "kind": "fix",
+  "title": "A run of the site backup test suite leaves no anonymous MariaDB volume behind",
+  "pr": 1392,
+  "area": "fleet/backup",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, with a docker daemon: record the set of dangling volumes (docker volume ls -q -f dangling=true), then run node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/site-backup.test.mjs, then record the set again.",
+    "S2: For each volume in the second set and not in the first, check whether it holds MariaDB data files (/ibdata1)."
+  ],
+  "expect": [
+    "S1: the suite exits 0 with fail 0, cancelled 0, skipped 0 (the MariaDB tests ran against a real server).",
+    "S2: no new dangling volume holds MariaDB data files (pre-fix: one per run, because mariadb:11 declares VOLUME /var/lib/mysql and the throwaway container was removed with docker rm -f without -v)."
+  ],
+  "selectors": {},
+  "evidence": "Measured 15/10/2026 on a local checkout: dangling volumes 6 -> 7 around one run on the parent commit, the new volume holding aria_log, ibdata1, mysql/; 7 -> 7 after the fix.",
+  "fence": "packages/fleet/tracy-fleet-operation/test/site-backup.test.mjs: both removals of the throwaway MariaDB container use docker rm -f -v.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1392-site-backup-test-volume.mjs"]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "joomlart-t4",
+  "owner": {
+    "name": "JoomlArt"
+  },
+  "metadata": {
+    "description": "Build a customer Joomla website from a selected JoomlArt T4 quickstart and any design input; verify and package the finished site.",
+    "version": "1.3.0"
+  },
+  "plugins": [
+    {
+      "name": "joomlart-t4",
+      "source": "./",
+      "description": "Build a customer Joomla website from a selected JoomlArt T4 quickstart and any design input; verify and package the finished site."
+    }
+  ]
+}

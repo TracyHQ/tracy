@@ -1,0 +1,57 @@
+{
+  "name": "@tracy/dsh-ask-form",
+  "version": "0.1.0",
+  "description": "The agent's questions as one form in the right pane: a side-card tab that draws a pending ask_user_question with the ask form of @tracy/site-build-core, and a pointer card in the chat column in its place",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/ui/tracy-ask-form"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-session",
+        "dsh-better-sidebar"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "dsh-better-sidebar": ">=0.24.1-tracy.40 <0.24.1"
+  },
+  "peerDependenciesMeta": {
+    "dsh-better-sidebar": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.5",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT"
+}

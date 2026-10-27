@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1337-tdsr-contracts-round-4b",
+  "kind": "feat",
+  "title": "Round 4b of #1317: JA Impact, Directory, Prodex and Seven pass every built-site rule and JA Sensei passes ROLE-1 by contract alone; Tracy Business EmDash 1.7.18 carries its re-measured file, which fails UNDO-1 only",
+  "pr": 1337,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Score packages/cms/tracy-joomla-quickstart/contracts/{ja-impact,ja-directory,ja-prodex,ja-seven}/j6/1.0.2 and ja-sensei/j6/1.0.3 design-system-measurement.json with judgeMeasurement.",
+    "S2: Score packages/cms/tracy-emdash-theme-business/contracts/1.7.18/design-system-measurement.json the same way."
+  ],
+  "expect": [
+    "S1: every file valid; Impact, Directory, Prodex, Seven fail no rule; Sensei passes ROLE-1 and fails only SCREEN-1 (the template's hero photo, #1318).",
+    "S2: measured 14/10 or later with native and derived rows; UNDO-1 is its one failure (the theme keeps a worn dark side in localStorage ngi-theme)."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{impact,directory,prodex,seven,sensei}.json contractNotes1317 'Round 4 (14/10)'",
+    "emdash": "packages/cms/tracy-emdash-theme-business/contracts/1.7.18/design-system-measurement.json controls"
+  },
+  "evidence": "Before this PR Impact (ROLE-1 60%), Directory (ROLE-1 78%, CON-1), Prodex (CON-1), Seven (CON-1) and Sensei (ROLE-1 80%) failed, and the EmDash 1.7.18 file predated the extraColours fix and reported every rule passing",
+  "fence": "No template and no threshold changed; Smallbiz SCREEN-1 (a dark slideshow photo on Stripe/390) and the IDENT-1 empty logos stay template questions for #1318",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1337-tdsr-contracts-round-4b.mjs"]
+  }
+}

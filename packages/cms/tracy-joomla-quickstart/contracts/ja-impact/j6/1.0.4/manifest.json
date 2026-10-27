@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-impact/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_impact",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-impact",
+    "id": "quickstart/ja-impact/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_impact",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-impact-j6-webroot-1.0.4.tar.gz",
+        "bytes": 56842279,
+        "sha256": "dd5097dd65067a723ad72baecb14c3efec3bdf12b9a5c9d8c6274435867db17b"
+      },
+      "database": {
+        "file": "ja-impact-j6-database-1.0.4.sql.gz",
+        "bytes": 109066,
+        "sha256": "40fedaa61b63c576c001d6f968d1433d200171d3b8cf82b74bc409738161a57e"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T02:26:22.504Z",
+    "builtFrom": {
+      "from": "quickstart/ja-impact/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 229 files replaced (templates/ja_impact/AGENTS.md, templates/ja_impact/CLAUDE.md, templates/ja_impact/README.md, templates/ja_impact/component.php, templates/ja_impact/error-t4.php, templates/ja_impact/error.php, templates/ja_impact/favicon.ico, templates/ja_impact/index.php, templates/ja_impact/layout.json, templates/ja_impact/offline.php, templates/ja_impact/templateDetails.xml, templates/ja_impact/templateInfo.php, templates/ja_impact/template_preview.png, templates/ja_impact/template_thumbnail.png, templates/ja_impact/css, templates/ja_impact/docs, templates/ja_impact/etc, templates/ja_impact/fonts, templates/ja_impact/html, templates/ja_impact/images, templates/ja_impact/js, templates/ja_impact/scss, templates/ja_impact/acm, templates/ja_impact/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-impact/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

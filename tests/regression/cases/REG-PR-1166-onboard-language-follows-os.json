@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1166-onboard-language-follows-os",
+  "kind": "feat",
+  "title": "Desktop first-run: the interface language follows the computer's, a saved pick wins, an unoffered one falls back to English with a line",
+  "pr": 1166,
+  "area": "desktop/onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the desktop locale bootstrap/bridge tests and the tracy-onboard language-note tests (node:test).",
+    "S2: the end-to-end form of this case is ST-7 in tests/acceptance/desktop-onboard-v2 (app from source with -AppleLanguages de-AT / ja-JP and a saved fr pick)."
+  ],
+  "expect": [
+    "__DSH_LOCALE__ answers the OS languages; with no pick preference is null, with the tracy_lang cookie the pick is handed back so the device never overrides it.",
+    "A device language Tracy offers (de-AT) gives no line; an unoffered one (ja-JP) names it in its own language and the language used instead; a saved pick gives no line."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/locale-bootstrap.test.mjs",
+      "packages/desktop/tracy-desktop/test/locale-bridge.test.mjs",
+      "packages/ui/tracy-onboard/test/language-note.test.mjs"
+    ],
+    "tests": [
+      "no pick: the OS languages, preference null",
+      "a pick stands: it is handed back as the preference",
+      "the product page gets the OS languages, most preferred first",
+      "the device language is offered (vi-VN, de-AT, zh-Hans-CN): no line",
+      "not offered (ja-JP): the line names it in its own language",
+      "a saved pick: no line, whatever the device says"
+    ],
+    "timeout_s": 120
+  },
+  "fence": "the saved pick (tracy_lang) is never replaced by the OS language through the native bootstrap",
+  "selectors": {
+    "row": ".tv-ob-lang .ts-select",
+    "note": "[data-language-note]"
+  }
+}

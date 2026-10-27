@@ -1,0 +1,51 @@
+{
+  "id": "QA-UNIT-REG-100-pending",
+  "itemIds": ["regression:REG-100"],
+  "requirement": "The /ops Design inspiration screen shows exactly the cards GET /api/templates offers, says why the others are held back, and Unpublish/Publish moves a build off and back",
+  "oracle": {
+    "source": "tests/regression/cases/REG-100-ops-design-inspiration.json",
+    "ref": "PR #898 (feat); fix evidence: tasks/todo-ops-design-inspiration.md (dev 04/10/2026: the Quickstarts column and /api/templates disagreed on tracy/wp7; tracy-business/j6 released 1.2.0 with its demo on 1.1.0)",
+    "invariant": "The script exits 0 and prints verdict PASS checks 19. The rail lists Design inspiration directly above Quickstarts and still lists Repo catalogue; #ops-topbar-slot is empty on this screen (no environment picker). The rows of Shown are exactly the template ids of GET /api/templates (5), and the four stat tiles equal the counts computed from that answer (5 / Joomla 4 / WordPress 3 / EmDash 1). tracy-business is one row with three builds (Joomla, WordPress, EmDash); groups are Bold & Expressive, Professional & Corporate, Starter, in that order. A warnings badge is on tracy-base, ja-nova and ja-vega only; their tooltips read 'WordPress: No demo on this server to preview', 'The demo on this server runs 1.0.2, not the release’s 1.0.4' and '1 of 1 pictures are not on this server yet: ja-vega-home-1440.png', equal to the API's warnings. Filters: EmDash 1, WordPress 3, Joomla 4, All 5 rows; category Starter → tracy-base; search 'voy' → ja-voyara. Not shown lists quickstart/ja-vogue/j6 ('Unpublished from Design inspiration') and quickstart/ja-morgan/wp7 (the draft sentence); No card lists quickstart/ja-kinetic/j6; tracy-airbnb/j6 (design pack) appears on no tab and in neither answer. On Quickstarts the releases whose On Tracy badge is titled 'On Design inspiration…' are exactly the builds GET /api/templates lists. Unpublish tracy-business/wp7 from the sheet: tracy-business stays with two builds, /api/templates drops wp7, Not shown gains it with 'Unpublished from Design inspiration'. Publish from the same sheet: three builds again and Not shown is back to two. Editor seat: the design-systems switch has aria-disabled=true, Refresh from GitHub is disabled, Publish and Unpublish in the sheet are disabled, and DELETE /api/ops/quickstart/inspiration answers 403. No pageerror, no console error (the browser's own favicon probe is listed separately as ignoredConsole), and no request left the stand (outbound is empty).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer api, needs stand:isolated-ops-routes, postgres:TEST_DATABASE_URL, build:harness-web, browser:cdp-9222, playwright"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [
+    "need:stand:isolated-ops-routes",
+    "need:postgres:TEST_DATABASE_URL",
+    "need:build:harness-web",
+    "need:browser:cdp-9222",
+    "need:playwright"
+  ],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-100"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:api"],
+  "regression": {
+    "id": "REG-100",
+    "pr": 898,
+    "kind": "feat",
+    "area": "ops/design-inspiration",
+    "file": "tests/regression/cases/REG-100-ops-design-inspiration.json"
+  },
+  "ownerLayer": "api",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": [
+    "stand:isolated-ops-routes",
+    "postgres:TEST_DATABASE_URL",
+    "build:harness-web",
+    "browser:cdp-9222",
+    "playwright"
+  ]
+}

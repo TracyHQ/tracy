@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5f39e778-d204-42a9-8b8b-a1519dbd3971",
+  "status": "complete",
+  "name": "Microsoft",
+  "url": "https://styles.refero.design/style/5f39e778-d204-42a9-8b8b-a1519dbd3971",
+  "sourceWebsite": "https://microsoft.com",
+  "extractedAt": "2026-04-11T19:19:32.821Z",
+  "capturedAt": "2026-10-08T05:12:14.710455+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Retail shelf behind plate glass — products float forward, chrome recedes.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4ff04707-fe61-4571-a4a4-0308cc297473.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/afcff827-0918-4cb6-8111-33f5c0ad7d9f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b6db420c-dc60-4a99-a2db-44540569fd56.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6eeeecde-9f06-498c-b749-b5b0073c1ecd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/00310d3c-0a44-4d9f-896e-ffd3ab29ff7a.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "49b0a549b1d31b1633b8c7f7c509f840cc8e10c8722b59b3ab6782a49e6a5d4c",
+      "bytes": 16931
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5751f6833bb0d4ea9fa9e9d3cd63ddbc56d8d5bf8bddf04be025eae4d3cc0741",
+      "bytes": 121467
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a923248b52990f4e364025c66f29df54d9ad1ea6e4ea73254d19d4ae6fe8f795",
+      "bytes": 29090
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e8c31175b826eaf684b7a1a6d3b9d5721e02b6ee459476877bda682dfb4ff5c2",
+      "bytes": 8638
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1201aa53297c1fea511abb4f3861434974f4bdf28e451d2f8dacc17d87deb581",
+      "bytes": 11701
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3b0254fa3ff8b907b5d6b0ffe111c7b86e1f7850ec4ec970cfc8724bae2bda45",
+      "bytes": 2895
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "80e33bc1ce1fed1bdaa930f776cc2bc5d91dbee85aec357720bfa2a35ec3394e",
+      "bytes": 488
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5793aa51fc264b1023dd2a0841ff30ca6f0804644e355fb53faa473fb6e54e1c",
+      "bytes": 505
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "66d7ae475440b6961b15edf98771ad8496c2c568da19487c98b784af91681eef",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "95d100b25ba7db3419ec0b67d7911b17395f718ade394413b951dbc9045aca8e",
+      "bytes": 47846
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9dba6855987cc437030860fee2cd1975010b1cdaefbf60d3b3a3315da56fb6b9",
+      "bytes": 24270
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "56b7206afd45dd2c1432993be43f51fbb5f5d5150512a654cc1c545e61a2947b",
+      "bytes": 46799
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d4ae271fc68625030e80ce19f7bc374b8318fd72e49d7a981ff0f8df6f9185e3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1686a7168f0528f283bbc2ab7eb785f7821833952afc1cf95e071fa0ef1bc940",
+      "bytes": 939
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0b566bf97b72d6b0b030a19623ff510fc1dc0d6bf2df9179c85109c701490b7e",
+      "bytes": 1425
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "206c6c51-df38-425f-8d07-b0cc9dd065cf",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f39e778-d204-42a9-8b8b-a1519dbd3971",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "c70a9990-bc4b-4a64-a69b-aeb7b344fb74",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130"
+  ]
+}

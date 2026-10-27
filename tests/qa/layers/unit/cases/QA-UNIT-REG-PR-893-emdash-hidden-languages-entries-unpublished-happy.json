@@ -1,0 +1,82 @@
+{
+  "id": "QA-UNIT-REG-PR-893-emdash-hidden-languages-entries-unpublished-happy",
+  "itemIds": ["regression:REG-PR-893-emdash-hidden-languages-entries-unpublished"],
+  "requirement": "EmDash Apply: a language nobody chose leaves the site entry by entry after the hand-over, only when its chrome entry is off, counted and logged",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-emdash-hidden-languages-entries-unpublished.json",
+    "ref": "PR #893 (fix); fix evidence: Ledger L18, 05/10/2026: after Apply in en + vi on Tracy Business EmDash (40 languages shipped) every content page declared 41 hreflang alternates and 78 alternate links on a 65-page crawl led to 404; the tool's --hide-chrome-only unpublished only each hidden language's `site` entry. Reds 464adeab3, 8ebeb03a3, ba6cd2f16; fixes 13575806a, 69b9c4fea, 9625e16b7.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 29). Every named case is 'ok' (none 'not ok', none '# SKIP'): after the tool runs, every seed entry of each hidden language (chrome excepted) is unpublished, never deleted, so no page names it in hreflang and the sitemap lists only chosen languages; Apply hands the site over first and dispose waits; a language whose chrome entry is still published is left whole; unpublished / failed / notReached / served are counted and one '[brief] <siteKey>: hidden languages after hand-over: …' line is logged per site.",
+    "productSources": [
+      "apps/tracy-web/src/lib/emdash-tool.js:37",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:331",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:105",
+      "apps/tracy-web/src/sites/brief-normalize.js:403"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:231 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:53 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:75 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-real-pictures.js:100 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-real-pictures.js:204 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-wo-copy.js:37 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:173 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:223 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:482 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:555 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-emdash.test.mjs:1038 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:207 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:253 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:652 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:748 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:808 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:857 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:955 spawn() runs computed arguments",
+      "apps/tracy-web/test/brief-emdash.test.mjs:97 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-emdash.test.mjs:998 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a language nobody chose comes off entry by entry, so no page names it in its hreflang links nor EmDash in its sitemap",
+    "the customer is not kept waiting for it: Apply hands the site over first, and the run’s end waits for the rest",
+    "what the clean-up did is counted, and said in one line per site when the run ends",
+    "a hidden language whose chrome entry is still published is left whole: the tool did not hide it, or someone switched it back on"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-emdash-hidden-languages-entries-unpublished"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-emdash-hidden-languages-entries-unpublished",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply/emdash",
+    "file": "tests/regression/cases/REG-PR-893-emdash-hidden-languages-entries-unpublished.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-emdash.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a language nobody chose comes off entry by entry, so no page names it in its hreflang links nor EmDash in its sitemap",
+    "the customer is not kept waiting for it: Apply hands the site over first, and the run’s end waits for the rest",
+    "what the clean-up did is counted, and said in one line per site when the run ends",
+    "a hidden language whose chrome entry is still published is left whole: the tool did not hide it, or someone switched it back on"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-1705-sync-to-live-wording",
+  "kind": "fix",
+  "title": "Sync to live's Publish flow reads a size under 1 kB as bytes, plural (\"300 bytes\", not \"300 byte\"), and its tick boxes name no count (\"Also send these PHP files to my live site\")",
+  "pr": 1705,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/core/tracy-core/test/publish-push-dom.test.mjs"],
+  "expect": [
+    "S1: the files/settings/PHP case shows \"helper.php300 bytes\" and \"Also send these PHP files to my live site\"; the review case shows \"Will remove (2)\" and \"Also remove these from my live site\""
+  ],
+  "selectors": {
+    "client": "site-tabs/publish/push-words.ts sizeText; push.sendPhp; push.removeAll"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-to-live-wording.md",
+  "fence": "Sync to live's wording counts and sizes things the way a reader says them",
+  "run": {
+    "cmd": ["node", "--test", "packages/core/tracy-core/test/publish-push-dom.test.mjs"]
+  }
+}

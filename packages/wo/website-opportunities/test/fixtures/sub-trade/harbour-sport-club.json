@@ -1,0 +1,601 @@
+{
+  "_note": "Harbour Sport Club, a fictional business shaped like research collected on dev (26/10/2026): only what the brief needs. Names, phones, ids, post ids and review texts are made up; media URLs are placeholders.",
+  "opportunity": {
+    "id": "5a1e2b3c-4d5e-4f60-8a71-b2c3d4e5f607",
+    "name": "Padel & Tennis Coach",
+    "candidate": {
+      "lat": 25.1129871,
+      "lon": 55.2004113,
+      "kind": null,
+      "name": "Padel & Tennis Coach",
+      "chain": false,
+      "phone": "+971 50 000 1234",
+      "trade": "fitness",
+      "branch": null,
+      "rating": 5,
+      "address": "Harbour Lane - Al Barsha - Dubai - United Arab Emirates",
+      "cuisine": null,
+      "openNow": true,
+      "reviews": 4,
+      "socials": {
+        "instagram": "https://www.instagram.com/harbour.sportclub/"
+      },
+      "website": null,
+      "category": "Sports Club",
+      "contacts": {},
+      "provider": "google-places",
+      "distanceM": null,
+      "priceLevel": null,
+      "providerId": "ChIJHarbourSportClubFake01",
+      "primaryType": "sports_club"
+    }
+  },
+  "instagramCategory": "Personal Coach",
+  "profile": {
+    "name": "Harbour Sport Club",
+    "nameCheck": {
+      "name": "Harbour Sport Club",
+      "state": "check"
+    },
+    "bio": "🙋‍♀️🙋European Coaching in Dubai📍🇦🇪\n🎾 Tennis & Padel \n🏊‍♂️ Swimming Lessons\n📱 +971 50 000 5678 & +971 50 000 1234",
+    "phone": "+971 50 000 1234",
+    "address": "Harbour Lane - Al Barsha - Dubai - United Arab Emirates",
+    "businessType": "ExerciseGym",
+    "socials": {
+      "instagram": "https://www.instagram.com/harbour.sportclub/"
+    },
+    "provenance": {
+      "bio": {
+        "source": "instagram"
+      },
+      "name": {
+        "source": "google-places"
+      },
+      "phone": {
+        "source": "google-places"
+      },
+      "address": {
+        "source": "google-places"
+      }
+    },
+    "otherPhones": [
+      {
+        "phone": "+971 50 000 5678",
+        "sources": ["instagram"]
+      }
+    ],
+    "googlePlace": {
+      "placeId": "ChIJHarbourSportClubFake01",
+      "name": "Padel & Tennis Coach",
+      "primaryType": "sports_club",
+      "types": ["sports_club", "association_or_organization", "point_of_interest", "establishment"],
+      "fetchedAt": "2026-10-26T06:08:00.395Z",
+      "formattedAddress": "Harbour Lane - Al Barsha - Dubai - United Arab Emirates",
+      "addressComponents": [
+        {
+          "types": ["neighborhood", "political"],
+          "longText": "Al Barsha",
+          "shortText": "Al Barsha",
+          "languageCode": "en"
+        },
+        {
+          "types": ["sublocality_level_1", "sublocality", "political"],
+          "longText": "Harbour Lane",
+          "shortText": "Harbour Lane",
+          "languageCode": "en"
+        },
+        {
+          "types": ["locality", "political"],
+          "longText": "Dubai",
+          "shortText": "Dubai",
+          "languageCode": "en"
+        },
+        {
+          "types": ["administrative_area_level_1", "political"],
+          "longText": "Dubai",
+          "shortText": "Dubai",
+          "languageCode": "en"
+        },
+        {
+          "types": ["country", "political"],
+          "longText": "United Arab Emirates",
+          "shortText": "AE",
+          "languageCode": "en"
+        }
+      ],
+      "nationalPhoneNumber": "050 000 1234",
+      "internationalPhoneNumber": "+971 50 000 1234",
+      "reviews": [
+        {
+          "text": "We have been doing padel coaching with Alex and Sam for a few months now. Both coaches are patient, well organised and keep every session lively, so the hour flies by.\n\nOur kids take tennis lessons with the same team and look forward to them every week.\n\nA great choice if you want friendly, professional padel lessons.",
+          "author": "Google reviewer A",
+          "rating": 5,
+          "language": "en",
+          "publishTime": "2026-02-18T09:53:28.218023065Z"
+        },
+        {
+          "text": "Lovely coaches who teach my two daughters tennis. We would happily recommend them.",
+          "author": "Google reviewer B",
+          "rating": 5,
+          "language": "en",
+          "publishTime": "2026-02-18T12:47:04.680359056Z"
+        },
+        {
+          "text": "Alex has made a real difference to my padel game. I used to feel awkward on court, and now every lesson is relaxed and fun while I can see clear progress.\n\nShe adjusts easily to each player: she also coaches my partner, who plays at a much higher level, and keeps him challenged too.\n\nHer background in competitive tennis shows in how she explains technique and footwork. She also teaches our son tennis and swimming and is wonderful with children, calm and encouraging.\n\nWhether it is padel, tennis or swimming, we are very glad we found her and recommend her to anyone.",
+          "author": "Google reviewer C",
+          "rating": 5,
+          "language": "en",
+          "publishTime": "2026-09-14T14:01:57.429270752Z"
+        }
+      ]
+    }
+  },
+  "posts": [
+    {
+      "id": "3700000000000000001",
+      "url": "https://www.instagram.com/p/HSCpost0001/",
+      "source": "instagram",
+      "caption": "✨Join our padel sessions in Dubai!🎾\n\n🎉Fun, fitness & community - all in one.\n📍Locations across Dubai\n🧑‍🧑‍🧒‍🧒For all ages & levels\n\n📩DM us today to book your spot!\n📲050 000 1234\n\ntrenere)\n\n#PadelDubai #PadelLife #PadelCoach #PadelCommunity #PadelTraining #DubaiSports #DubaiActivities #ActiveDubai #MyDubai #sportsindubai",
+      "postedAt": "2025-09-20T16:22:50.000Z"
+    },
+    {
+      "id": "3700000000000000002",
+      "url": "https://www.instagram.com/p/HSCpost0002/",
+      "source": "instagram",
+      "caption": "🏅🎾 Start your tennis journey with us in Dubai! Whether you’re a beginner or pro, our lessons are tailored to help you grow on the court. Let’s have some fun! 🙌 \n📲 +971 50 000 1234\n\n#TennisDubai #TennisLife #PlayWithPassion#uae #sportdubai #padel",
+      "postedAt": "2025-08-30T14:55:14.000Z"
+    },
+    {
+      "id": "3700000000000000003",
+      "url": "https://www.instagram.com/p/HSCpost0003/",
+      "source": "instagram",
+      "caption": "First lesson with a client and already seeing amazing improvements! 😍 With the right guidance, results come fast. \n\n#padeldubai #tennisdubai #dubaifitness #dubaisports #healthdubai",
+      "postedAt": "2026-02-07T09:46:14.000Z"
+    },
+    {
+      "id": "3700000000000000004",
+      "url": "https://www.instagram.com/p/HSCpost0004/",
+      "source": "instagram",
+      "caption": "🎾 Boost your padel skills in Dubai!\nTrain, improve, and have fun on the court. 💪\nDM for lessons!\n\n#padeluae #dubaipadel #uaepadel #padelcoach #padeltraining",
+      "postedAt": "2026-01-14T09:48:51.000Z"
+    },
+    {
+      "id": "3700000000000000005",
+      "url": "https://www.instagram.com/p/HSCpost0005/",
+      "source": "instagram",
+      "caption": "Show up. Work hard. Believe in yourself. ✨\nThe court is where progress happens — one swing, one step, one lesson at a time. 🎾💛\n\n#tenniscoach #dubaitennis #dxbcoach #eliteperformance #tennispro #dxbtraining #mydubai #uaesports #workhardplayhard #levelup 🎾🔥",
+      "postedAt": "2025-11-23T11:11:22.000Z"
+    },
+    {
+      "id": "3700000000000000006",
+      "url": "https://www.instagram.com/p/HSCpost0006/",
+      "source": "instagram",
+      "caption": "Train with purpose. Move with confidence. Results will follow.🏊‍♀️💪💪\n\n#dubai #dubaicoach #dubaiswimming #swimmingcoach #swimmingdubai #tennisdubai #padeldubai #fitnessdubai\n#coachlife #motivation #sportscoach #trainhard #athletementality #fitdubai #dubaifitness#harbour.sportclub",
+      "postedAt": "2025-11-22T06:11:38.000Z"
+    },
+    {
+      "id": "3700000000000000007",
+      "url": "https://www.instagram.com/p/HSCpost0007/",
+      "source": "instagram",
+      "caption": "✨ Learning, smiling, and growing through tennis – that’s what it’s all about!\nCreating happy moments and strong foundations for future champions. 💫🎾\n\n#DubaiTennis #KidsTennis #TennisCoachDubai #PadelDubai #SwimmingDubai #FitnessDubai #ActiveKids #FutureChampions #TennisFun #SportsInDubai #DubaiSports #JuniorTraining #TennisLife #PadelLife #SwimCoachDubai #DubaiActivities #DubaiKids",
+      "postedAt": "2025-11-08T09:37:34.000Z"
+    },
+    {
+      "id": "3700000000000000008",
+      "url": "https://www.instagram.com/p/HSCpost0008/",
+      "source": "instagram",
+      "caption": "Tennis with kids is always full of smiles, laughter, and positive energy — every lesson is a new adventure on court!! 🎾✨\n\n#tennis #padel #swimming #tennisdubai #padeldubai #swimmingdubai #sportscoaching #coachlife #dubaisports #fitlifestyle #activekids #kidstennis #kidspadel #kidsswimming #sportsforkids #funlearning #juniorsports #youngathletes #adulttraining #stayactive #healthyhabits #trainhard #sportmotivation #dubaicommunity #dubailife #uaesports #sportstime #fitnessjourney #outdoortraining #learnandplay",
+      "postedAt": "2025-10-17T15:11:23.000Z"
+    },
+    {
+      "id": "3700000000000000009",
+      "url": "https://www.instagram.com/p/HSCpost0009/",
+      "source": "instagram",
+      "caption": "🎾 Book Your Spot Today – Let the Fun Begin!\nTennis for all ages and levels – from first swing to future champion! 🏆\nJoin our classes and discover the joy of the game!\n📲 050 000 1234\n\n#DubaiTennis #KidsTennis #TennisForKids #JuniorTennis #TennisLife #DubaiSports #ActiveKids #SportsForKids #DubaiActivities #TennisCoaching #TennisLessons #HealthyKids #TennisClubDubai #FutureChampions #TennisFun #DubaiLifestyle #YouthSports #KidsActivitiesDubai #LearnTennis #TennisInDubai",
+      "postedAt": "2025-09-15T11:01:47.000Z"
+    },
+    {
+      "id": "3700000000000000010",
+      "url": "https://www.instagram.com/p/HSCpost0010/",
+      "source": "instagram",
+      "caption": "New season, new goals! 🏆 Join us on the court – limited spots available. Contact us 📲050 000 1234 or via DM.\n\nFilmed by @coach.fixture ❣️❣️\n\n#KidsTennisDubai #DubaiSports #DubaiFitness #TennisDubai #PadelDubai #SwimmingDubai #KidsFitnessDubai #ActiveLifestyle #WorkoutDubai #FitnessGoals #GetActiveDubai",
+      "postedAt": "2025-09-07T13:50:17.000Z"
+    },
+    {
+      "id": "3700000000000000011",
+      "url": "https://www.instagram.com/p/HSCpost0011/",
+      "source": "instagram",
+      "caption": "Welcome!! \n\n#padel #GameOn #DubaiPadelCoach #DubaiFitness #HealthDubai #PadelDubai #DubaiPadel#DubaiSport #SportDubai #SwimmingDubai #MyDubai#dubaidutyfree",
+      "postedAt": "2025-02-28T15:17:36.000Z"
+    },
+    {
+      "id": "3700000000000000012",
+      "url": "https://www.instagram.com/p/HSCpost0012/",
+      "source": "instagram",
+      "caption": "🔥 Transform Your Body with Personalized Fitness Lessons! 🔥\n\nWant to get in shape, build strength, or lose weight? Join our customized fitness lessons and achieve your goals with expert guidance!\n\n✅ Personalized workout plans\n✅ Fat-burning & muscle-toning exercises\n✅ Motivation & professional support\n✅ Suitable for all fitness levels\n\n📍 Location: [Your Location]\n📅 Flexible scheduling\n📩 DM to book your first session!\n\nStart today—your best self is waiting! 💪\n\n#TennisCoachDubai\n#TennisLessons\n#TennisTraining\n#DubaiSports\n#ProfessionalTennis\n#GetFitDubai\n#SportsCoaching\n#TennisLife\n#FitnessGoals",
+      "postedAt": "2025-02-14T19:54:56.000Z"
+    }
+  ],
+  "media": [
+    {
+      "id": "31cd7ba9-8304-4ce1-9109-88bb60e7d83a",
+      "kind": "image",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "38102bd12058b3e607237ec4bcb692e5f3ce42261368ecbb2ebd7e12fe88a6aa",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "https://scontent-hou1-1.cdninstagram.com/v/t51.82787-19/fixture-1.jpg"
+    },
+    {
+      "id": "1d0c10dd-5931-42f0-869f-63c6e2d9bc24",
+      "kind": "image",
+      "width": 360,
+      "height": 640,
+      "postId": "3700000000000000001",
+      "sha256": "f0deaa72b35d8de506def2b658a8b9b547232764bb9ecad5b928ba20c0272058",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-09-20T16:22:50.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/fixture-2.jpg"
+    },
+    {
+      "id": "9cbb4175-521e-4fcb-9abe-f0f450a8020f",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000001",
+      "sha256": "0a5647e673f31a703e03fa3117c894f531d20ba0162f800ba19d2ca0c599798b",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-09-20T16:22:50.000Z",
+      "sourceUrl": "https://instagram.flas1-2.fna.fbcdn.net/o1/v/t2/f2/m367/fixture-3.mp4"
+    },
+    {
+      "id": "cd59aed1-c620-42a2-b114-5cea38e99d56",
+      "kind": "image",
+      "width": 361,
+      "height": 640,
+      "postId": "3700000000000000002",
+      "sha256": "a663b5eb5d4113b13efae07957eaa2af9ecf49da8b06912ec1d09fef5a001929",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-08-30T14:55:14.000Z",
+      "sourceUrl": "https://scontent-ord5-2.cdninstagram.com/v/t51.71878-15/fixture-4.jpg"
+    },
+    {
+      "id": "26139df8-24f0-4a91-9456-aa42c87538a4",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000002",
+      "sha256": "2e641eb92d25cee90319f3ed8cf315aabb4aae48e7396439f1651393231b8709",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-08-30T14:55:14.000Z",
+      "sourceUrl": "https://scontent-lga3-3.cdninstagram.com/o1/v/t2/f2/m367/fixture-5.mp4"
+    },
+    {
+      "id": "aeb1b975-661f-4746-a3a9-fb6bfd41bd92",
+      "kind": "image",
+      "width": 361,
+      "height": 640,
+      "postId": "3700000000000000003",
+      "sha256": "e76bc553f45d8c98f44f7753894d4a8103458fc6677740aaf511ea5d34eeba17",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2026-02-07T09:46:14.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/v/t51.71878-15/fixture-6.jpg"
+    },
+    {
+      "id": "80f8bced-79df-4417-bb53-99e09aacc013",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000003",
+      "sha256": "052939992d69ef159581999139fb196c5e28283cef27d53b74376cf3de79c077",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2026-02-07T09:46:14.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/o1/v/t2/f2/m367/fixture-7.mp4"
+    },
+    {
+      "id": "e17eff57-93fc-4f34-829d-b4f2f1baefab",
+      "kind": "image",
+      "width": 360,
+      "height": 640,
+      "postId": "3700000000000000004",
+      "sha256": "16b8dc52b4fbc8ffe655fbcd727d89378dd8e86d8761b81c4a1d470efef88f58",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2026-01-14T09:48:51.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/fixture-8.jpg"
+    },
+    {
+      "id": "940843da-ae36-4365-b2b5-29541c2b6562",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000004",
+      "sha256": "de58bb5da031e10e77caae6199e29b1ffca1bc45da0ae0fe67d612bba69a122d",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2026-01-14T09:48:51.000Z",
+      "sourceUrl": "https://scontent-iad3-1.cdninstagram.com/o1/v/t2/f2/m367/fixture-9.mp4"
+    },
+    {
+      "id": "d788f806-aa34-4a6a-a888-371c2d46ca0b",
+      "kind": "image",
+      "width": 360,
+      "height": 640,
+      "postId": "3700000000000000005",
+      "sha256": "47b24fec4183babe7bf4c7ba49cf4b05e462897d17760c84bc35e2d82d575df1",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-11-23T11:11:22.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/fixture-10.jpg"
+    },
+    {
+      "id": "d6a3bc9f-9c77-4a68-a761-f36847d8a10b",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000005",
+      "sha256": "9f92c147103cddea12497d0340b3c659c6c259cb12b3b38ecde2cde07e9a34a1",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-11-23T11:11:22.000Z",
+      "sourceUrl": "https://scontent-hou1-1.cdninstagram.com/o1/v/t2/f2/m367/fixture-11.mp4"
+    },
+    {
+      "id": "17a5f060-29dc-4035-a2e3-d9fba5015ec8",
+      "kind": "image",
+      "width": 361,
+      "height": 640,
+      "postId": "3700000000000000006",
+      "sha256": "b86053f52c477bf15ee5ff4422a2aa3854dc7411ea918bdeddf411080a4648eb",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-11-22T06:11:38.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/v/t51.82787-15/fixture-12.jpg"
+    },
+    {
+      "id": "66e9301a-a6ee-4ff5-a07d-a43d449bfeb8",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000006",
+      "sha256": "0df086d4479ce5a4f376195964f7955aaec370e16cd3ed94bbfd6450c2ba337c",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-11-22T06:11:38.000Z",
+      "sourceUrl": "https://scontent-ord5-2.cdninstagram.com/o1/v/t2/f2/m367/fixture-13.mp4"
+    },
+    {
+      "id": "d43b2fa4-8751-4bf7-8e33-e7d1d93ca3f7",
+      "kind": "image",
+      "width": 361,
+      "height": 640,
+      "postId": "3700000000000000008",
+      "sha256": "74aa68d9f9789c76889996646186fc9c803315023f90509a575fcc8ebc6c016c",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-10-17T15:11:23.000Z",
+      "sourceUrl": "https://scontent-ord5-2.cdninstagram.com/v/t51.71878-15/fixture-14.jpg"
+    },
+    {
+      "id": "b720d09d-7dbb-43d1-960d-c9007d8f51e6",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000008",
+      "sha256": "efa32ed165e557bf3b176dedcdc857eb94d05472e9cd6ad0c7215ae875b18d97",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-10-17T15:11:23.000Z",
+      "sourceUrl": "https://scontent-iad3-2.cdninstagram.com/o1/v/t2/f2/m367/fixture-15.mp4"
+    },
+    {
+      "id": "f4171f71-43f3-4583-9765-6aa1fe8c20dd",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000009",
+      "sha256": "4d0704bd27fcaea97011b1ea5f93a4ebc73395809f33fc5f4fefb994b4245abf",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-09-15T11:01:47.000Z",
+      "sourceUrl": "https://scontent-mia5-1.cdninstagram.com/o1/v/t2/f2/m367/fixture-16.mp4"
+    },
+    {
+      "id": "84086539-d99a-481e-a4a8-d3af6bf50ee7",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000010",
+      "sha256": "e5edc5b875ec1f473ebf88b4b9ad42558079d16dc3e4a63af076feb267edf786",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-09-07T13:50:17.000Z",
+      "sourceUrl": "https://scontent-lga3-2.cdninstagram.com/o1/v/t2/f2/m367/fixture-17.mp4"
+    },
+    {
+      "id": "ef5bce11-cdb8-40f7-a457-2e4d23710c1f",
+      "kind": "image",
+      "width": 567,
+      "height": 640,
+      "postId": "3700000000000000011",
+      "sha256": "abe92d423fe0ec6fa4c4eb2023166149b05094a16916f27ea44254116cca2f95",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-02-28T15:17:36.000Z",
+      "sourceUrl": "https://scontent-ord5-1.cdninstagram.com/v/t51.75761-15/fixture-18.jpg"
+    },
+    {
+      "id": "431b52fc-0bf6-4f17-9b9e-5f995777f0d2",
+      "kind": "image",
+      "width": 360,
+      "height": 640,
+      "postId": "3700000000000000012",
+      "sha256": "6be5f6ef68cc7c07fc2a06eb2223cfba1a249c9b3eae50ec3a9c45eb8fdb9649",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-02-14T19:54:56.000Z",
+      "sourceUrl": "https://scontent-ord5-2.cdninstagram.com/v/t51.75761-15/fixture-19.jpg"
+    },
+    {
+      "id": "9effb840-714e-48b1-8083-f39cb202d531",
+      "kind": "video",
+      "width": null,
+      "height": null,
+      "postId": "3700000000000000012",
+      "sha256": "b23ffc356caf485a89b4ec41a2765c789c2836130590f6a68ad74d128669b2d0",
+      "source": "instagram",
+      "category": "other",
+      "postedAt": "2025-02-14T19:54:56.000Z",
+      "sourceUrl": "https://instagram.fagc3-1.fna.fbcdn.net/o1/v/t2/f2/m367/fixture-20.mp4"
+    },
+    {
+      "id": "89136fc6-cc73-4543-b09e-43cf1ee320f7",
+      "kind": "image",
+      "width": 1600,
+      "height": 2133,
+      "sha256": "100ed9c5d70a322e0725930b654793978ac9975fb94df1fb5d44b90f3436fc2e",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-21"
+    },
+    {
+      "id": "0d32cdcb-49c6-4ac8-8d54-e584bc9f175e",
+      "kind": "image",
+      "width": 1152,
+      "height": 2048,
+      "sha256": "f056b94b1365a1ceeab156dcaef6e340a81e6fcd73026c111aaa3f7b446a664d",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-22"
+    },
+    {
+      "id": "9bf16dc7-0ab7-4332-a178-a4aed9024a45",
+      "kind": "image",
+      "width": 1242,
+      "height": 2208,
+      "sha256": "0f70352fd2b01576989b98f82d41aefea298381ac818dc087798e7a74117b936",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-23"
+    },
+    {
+      "id": "3705de83-1c52-47d6-86fc-7e53b6f2267c",
+      "kind": "image",
+      "width": 900,
+      "height": 1600,
+      "sha256": "aea646e01d359e78fed3cb8dae1a25e21b9d853b229c536611720374f941f1b4",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-24"
+    },
+    {
+      "id": "0e5b245c-ae0f-4753-8530-981f9dec290b",
+      "kind": "image",
+      "width": 1600,
+      "height": 2133,
+      "sha256": "004f8c7f2b03806c2c8e27983c4bafa75fee013cbb5586ed662e4afde2d02121",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-25"
+    },
+    {
+      "id": "2548b464-3292-4c47-acdb-fab295e7da8e",
+      "kind": "image",
+      "width": 1320,
+      "height": 2325,
+      "sha256": "e27402772a8b59b664424503aee10863fe0197a8d176bf3be538edf33478c37f",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-26"
+    },
+    {
+      "id": "92da592e-ced4-463f-88f8-18fa499b9725",
+      "kind": "image",
+      "width": 1166,
+      "height": 2048,
+      "sha256": "aefdd7d46690e1cffa257b98b427ee6a2254c58f9227a93aef79105d1b9f61f9",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-27"
+    },
+    {
+      "id": "7ce51c97-0478-4b9b-8a79-e4f93e314a7c",
+      "kind": "image",
+      "width": 1600,
+      "height": 2133,
+      "sha256": "11ff6a057c501989d92595cdada175b8087f1035da500c5de2272226f555a42f",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-28"
+    },
+    {
+      "id": "ea7e650b-86a2-41e0-8954-075b7e3de502",
+      "kind": "image",
+      "width": 1536,
+      "height": 2048,
+      "sha256": "ffeedca03a057a333e271bb13707f10776a7ed136dbb524f1bf4e267396621e0",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-29"
+    },
+    {
+      "id": "4c15a1e1-c80b-4f73-bd1c-22b467042f6d",
+      "kind": "image",
+      "width": 1200,
+      "height": 1600,
+      "sha256": "8e5e8bf5cc8b6f7589b5da5e9b75d7ff55ac84cbc0bb81d426b138e0abc44f84",
+      "source": "google-places",
+      "category": "other",
+      "postedAt": null,
+      "sourceUrl": "google-places:places/PLACE_ID/photos/photo-30"
+    }
+  ],
+  "brand": {
+    "origin": "social",
+    "colors": [
+      {
+        "hex": "#042515",
+        "role": "primary"
+      },
+      {
+        "hex": "#a78f45",
+        "role": "accent"
+      }
+    ],
+    "logo": "31cd7ba9-8304-4ce1-9109-88bb60e7d83a",
+    "logoResearch": {
+      "status": "found",
+      "chosen": {
+        "mediaId": "31cd7ba9-8304-4ce1-9109-88bb60e7d83a",
+        "via": "social-profile"
+      },
+      "candidates": [
+        {
+          "mediaId": "31cd7ba9-8304-4ce1-9109-88bb60e7d83a",
+          "via": "social-profile",
+          "reading": {
+            "isLogo": true
+          }
+        }
+      ]
+    }
+  },
+  "madeAt": "2026-10-27T04:32:55.553Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "057d7c66-76b7-4272-849c-4058543e6799",
+  "status": "complete",
+  "name": "Lamanna",
+  "url": "https://styles.refero.design/style/057d7c66-76b7-4272-849c-4058543e6799",
+  "sourceWebsite": "https://lamannabakery.com",
+  "extractedAt": "2026-06-03T17:40:16.304Z",
+  "capturedAt": "2026-10-08T05:07:59.182878+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Neon circus tent on a Naples sidewalk",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1799fa91-36ca-4296-afac-e50b69dfcb83.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/94eb1497-6dc0-48cd-879e-e888cf22571a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/46809e92-3e2b-4918-aaf8-16e6009235bd.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f80e8093-dcbf-4df4-a87f-67a82e1bac36.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/cf9d1cf1-aa13-4fe4-b8a0-5bebbe368266.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8b162cbd49de7b654495425bb27d25b45ad4930f49c8282022aeb4df4746ab8a",
+      "bytes": 17896
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b3da685a75ee5490c88edd2b51afe0ce115586b7413c8d9ef8c2cbe3ed31071d",
+      "bytes": 66124
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3b227d74fd2064e3370948e1aefa291280b13bc430536d9d0211e384216a823e",
+      "bytes": 13516
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c15b739ceab4aa826c4a282b3fc0ba782121b7be231702069d895d5af3b07139",
+      "bytes": 9863
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "d571e5cf89b272750e7e042b245dc2e4cc51da207fdd330562a435bb4d169c7b",
+      "bytes": 11333
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d88994713f3e45520ac7d315eee09569d48bd22592e649bcc9f955b70407259b",
+      "bytes": 3695
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8f37e02d3f3f4cb982b0632c47b51d29af768ebaa7f979d351565961f6cecfef",
+      "bytes": 1074
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "492385cfee31dcf4076652396c9638ea1633d00ee74e1c75245f48c3fb39dc5a",
+      "bytes": 1091
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "01dd6ccb1bd476ed88f3e7905f0f4ef6f677dcccae5259e5efd127918b616382",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "46b969b0e28ea58e5b41297850c00893274fbee5c5d3b5ba01fe5f8b0658bd72",
+      "bytes": 39910
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "11efdccbb21f407a9b1bb20e86338b47b81fe199b4e19b220ddad0aa906c3798",
+      "bytes": 20732
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a45c63f608df4de9b8078292ca10cf7f1bacc93a1b3d87a76ab4202d3c483f0b",
+      "bytes": 35197
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c3a7ad943ee89fb9121da5e38e3df86d8d48e8c181987a9450a4e336e586f2e1",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b5633f7838a3bb774e867e80cefba313d1b635acaa35c5d4688c3ec2d24097c9",
+      "bytes": 1909
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b61a4e71a334bbe047c752fd441de6df544f0f6011c364a8b3354d715ee2f1ed",
+      "bytes": 2336
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "057d7c66-76b7-4272-849c-4058543e6799",
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3e497155-bd96-4134-a4a5-855bd885a25c",
+    "5528d10f-2e7d-4502-aa49-7bde290e8fe2",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "87da9872-f6cc-4354-bf6a-1c02f0394d45",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b3f7b44d-6564-4015-902a-259b4790b9de",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495",
+    "f63bf016-5b53-4ddf-9f8c-da43f75a9e2b",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

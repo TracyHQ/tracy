@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1186 542" font-family="'JetBrains Mono', ui-monospace, monospace">
+<rect x="1" y="1" width="1184" height="538" rx="26" fill="#0C110F" stroke="#1B201E" stroke-width="2"/>
+<path d="M2 70V27A25 25 0 0 1 27 2H1159A25 25 0 0 1 1184 27V70Z" fill="#111514"/>
+<rect x="2" y="69" width="1182" height="2" fill="#1B201E"/>
+<circle cx="40" cy="37" r="11" fill="#E5484D"/><circle cx="73" cy="37" r="11" fill="#F5A623"/><circle cx="105" cy="37" r="11" fill="#30A46C"/>
+<text x="132" y="45" font-size="22.4" fill="#8D9290">query.hxql</text>
+<g font-size="26.6" fill="#D5DAD9" xml:space="preserve">
+<text x="39" y="134"><tspan style="fill:var(--ds-c-accent-on-ink,#A3E635)">from</tspan> traces</text>
+<text x="39" y="182"><tspan style="fill:var(--ds-c-accent-on-ink,#A3E635)">| where</tspan> duration &gt; 1s</text>
+<text x="39" y="230"><tspan style="fill:var(--ds-c-accent-on-ink,#A3E635)">| groupby</tspan> route, status</text>
+<text x="39" y="278"><tspan style="fill:var(--ds-c-accent-on-ink,#A3E635)">| sort by</tspan> p95 desc</text>
+<text x="39" y="326"><tspan style="fill:var(--ds-c-accent-on-ink,#A3E635)">| limit</tspan> 3</text>
+<text x="39" y="396"><tspan fill="#6A716F">→</tspan> POST /checkout <tspan fill="#E5484D">1.42s</tspan> <tspan fill="#F5A623">↑ retry storm</tspan></text>
+<text x="39" y="442"><tspan fill="#6A716F">→</tspan> GET&#160; /cart <tspan fill="#F5A623">0.82s</tspan></text>
+<text x="39" y="488"><tspan fill="#6A716F">→</tspan> POST /pay <tspan fill="#30A46C">0.41s</tspan></text>
+</g>
+<rect x="38" y="345" width="1112" height="2" fill="#1B201E"/>
+</svg>

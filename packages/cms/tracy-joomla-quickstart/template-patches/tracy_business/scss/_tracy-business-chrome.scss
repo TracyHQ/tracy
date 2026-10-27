@@ -1,0 +1,1150 @@
+//
+// Tracy Business — chrome: topbar · header · brand · megamenu · search panel · off-canvas · footer
+// -----------------------------------------------------------------------------------------
+// Every number here is a measurement from spec/chrome-measurements.md, not a guess. Colours go
+// through the tokens in css/styles/tracy-business.css so the dark remap flips them; the two bands that
+// the design keeps identical in both themes (topbar, forest CTA) use the --tb-band-* literals.
+//
+// Layout rules the source lacked and this file adds on purpose:
+//   • a real collapse below `lg` (the source had no breakpoints and no mobile menu at all)
+//   • `flex-wrap` on the topbar's right group (the RU build overflowed at 390 without it)
+//   • an authored focus ring (the source shipped none, so keyboard focus vanished on dark)
+//
+
+// ---------------------------------------------------------------- shared
+.tb-container {
+  margin: 0 auto;
+  max-width: var(--container-max);
+  padding-left: var(--container-gutter-desktop);
+  padding-right: var(--container-gutter-desktop);
+  width: 100%;
+
+  @include media-breakpoint-down(md) {
+    padding-left: var(--container-gutter-phone);
+    padding-right: var(--container-gutter-phone);
+  }
+}
+
+// Focus — one ring for the whole chrome.
+.tb-topbar a:focus-visible,
+.tb-topbar button:focus-visible,
+.tb-header a:focus-visible,
+.tb-header button:focus-visible,
+.tb-footer a:focus-visible,
+.tb-footer button:focus-visible,
+.tb-searchpanel input:focus-visible,
+.tb-searchpanel button:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: 2px solid var(--tb-signal);
+  outline-offset: 2px;
+}
+
+// ---------------------------------------------------------------- topbar
+.tb-topbar {
+  background: var(--tb-band-forest-bg);
+  color: var(--tb-band-forest-fg);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 15px;
+  padding: 9px 0;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover { color: var(--tb-band-forest-white); }
+  }
+
+  &__inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    justify-content: space-between;
+  }
+
+  &__group {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;           // the fix for the RU 390 overflow — the source used nowrap here
+    gap: 6px 18px;
+
+    &--left { gap: 6px 24px; }
+  }
+
+  &__slot {
+    align-items: center;
+    display: flex;
+    gap: 14px;
+
+    &:empty { display: none; }
+
+    // the "|" separator the design draws between the right-hand groups
+    & + &:not(:empty)::before {
+      color: var(--tb-forest-sep);
+      content: "|";
+    }
+  }
+
+  // mod_custom in topbar-l renders a list of contact items; keep them inline
+  .tb-contacts {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  // mod_menu in topbar-r renders T4's nav.navbar > ul.nav.navbar-nav; flatten it to inline links
+  .navbar { padding: 0; }
+
+  .navbar-nav,
+  .mod-menu,
+  .menu {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li { margin: 0; padding: 0; }
+
+    a,
+    .nav-link {
+      color: inherit;
+      font-size: 13px;
+      font-weight: 400;
+      padding: 0;
+      text-transform: none;
+
+      &:hover { color: var(--tb-band-forest-white); }
+    }
+  }
+}
+
+// mod_languages dropdown, restyled to the design's flag + name + caret pattern
+.tb-topbar .mod-languages {
+  align-items: center;
+  display: flex;
+  height: 15px;               // the visually-hidden helper paragraph must not add height
+  position: relative;
+
+  .visually-hidden { position: absolute !important; }
+
+  .tb-lang {
+    line-height: 15px;
+    position: static;
+
+    &__toggle {
+      align-items: center;
+      background: none;
+      border: 0;
+      color: var(--tb-band-forest-white);
+      cursor: pointer;
+      display: inline-flex;
+      font: inherit;
+      font-weight: 600;
+      gap: 8px;
+      padding: 0;
+
+      .tb-lang__caret {
+        color: var(--tb-forest-caret);
+        font-size: 9px;
+      }
+    }
+
+    &__flag {
+      display: inline-block;
+      height: 12px;
+      width: 18px;
+
+      img, svg { display: block; height: 100%; width: 100%; }
+    }
+
+    &__menu {
+      background: var(--tb-chrome-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 14px 30px rgba(20, 23, 26, .22);
+      list-style: none;
+      margin: 9px 0 0;
+      min-width: 190px;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      z-index: 70;
+
+      &[hidden] { display: none; }
+    }
+
+    &__item {
+      border-bottom: 1px solid var(--border-soft);
+      margin: 0;
+
+      &:last-child { border-bottom: 0; }
+
+      a {
+        align-items: center;
+        color: var(--fg);
+        display: flex;
+        font-size: 14px;
+        font-weight: 400;
+        gap: 10px;
+        padding: 11px 14px;
+
+        &:hover { background: var(--surface); color: var(--fg); }
+      }
+
+      .tb-lang__name { flex: 1; }
+
+      &.is-active .tb-lang__check {
+        color: var(--tb-signal);
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// theme toggle — moon when light, sun when dark, label swaps with it
+.tb-theme-toggle {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 7px;
+  padding: 0;
+
+  &__icon {
+    background: currentColor;
+    display: inline-block;
+    height: 15px;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E") center / contain no-repeat;
+    width: 15px;
+  }
+
+  &__label--to-light { display: none; }
+
+  html[data-theme="dark"] & {
+    color: var(--tb-band-forest-white);
+    font-weight: 600;
+
+    .tb-theme-toggle__icon {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='5'/%3E%3Cpath d='M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42'/%3E%3C/svg%3E");
+    }
+
+    .tb-theme-toggle__label--to-dark { display: none; }
+    .tb-theme-toggle__label--to-light { display: inline; }
+  }
+}
+
+// ---------------------------------------------------------------- header
+.tb-header {
+  background: var(--tb-chrome-bg);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 40;
+
+  &__bar {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 14px 18px;
+    justify-content: space-between;
+    min-height: 84px;
+    padding-bottom: 14px;
+    padding-top: 14px;
+  }
+
+  &__nav {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    min-width: 0;
+    position: static;
+
+    @include media-breakpoint-down(lg) { display: none; }
+  }
+
+  &__actions {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    gap: 10px;
+  }
+
+  &__cta {
+    &:empty { display: none; }
+
+    @include media-breakpoint-down(sm) { display: none; }
+  }
+}
+
+// brand lockup
+.tb-brand {
+  display: block;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+
+  &__link,
+  > a {
+    align-items: center;
+    color: var(--fg);
+    display: inline-flex;
+    gap: 14px;
+    text-decoration: none;
+
+    &:hover { color: var(--fg); }
+  }
+
+  &__mark {
+    align-items: center;
+    background: var(--tb-band-forest-bg);
+    color: var(--tb-band-forest-white);
+    display: inline-flex;
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 700;
+    height: 40px;
+    justify-content: center;
+    letter-spacing: -.02em;
+    width: 40px;
+  }
+
+  &__words {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  &__name {
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 20px;
+    text-transform: uppercase;
+  }
+
+  &__sub {
+    color: var(--tb-muted-2);
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: .13em;
+    margin-top: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    // the RU descriptor is 36px wider than the EN one; below md it may wrap instead of overflowing
+    @include media-breakpoint-down(md) { white-space: normal; }
+  }
+
+  &__logo {
+    display: inline-block;
+    max-height: 40px;
+
+    img, svg { display: block; height: 40px; width: auto; }
+  }
+}
+
+// a phone or a small tablet: the header's lockup wraps inside the room its buttons leave. Bootstrap's
+// .navbar-brand is nowrap, so "NORTHGATE INDUSTRIAL" ran 39px under the search button at 390px (and past
+// the page's edge at 320px, under the call to action at 576px) with no design system (15/10/2026)
+@include media-breakpoint-down(md) {
+  .tb-header .tb-brand {
+    white-space: normal;
+
+    .tb-brand__link { gap: 12px; }
+
+    .tb-brand__name { font-size: 17px; line-height: 19px; }
+  }
+}
+
+// icon button (search)
+.tb-iconbtn {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-btn-radius, 0);
+  color: var(--fg-2);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 15px;
+  height: 38px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 38px;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+// the quote CTA — a mod_custom holding one <a class="tb-btn tb-btn--forest">
+.tb-btn {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--ds-btn-radius, 0);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  gap: 8px;
+  line-height: 15px;          // 37px tall with the 11px padding, as measured; the border is inset
+  padding: 10px 19px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &--forest {
+    background: var(--tb-band-forest-bg);
+    border-color: var(--tb-band-forest-bg);
+    color: var(--tb-band-forest-white);
+
+    &:hover { background: var(--tb-forest-deep); border-color: var(--tb-forest-deep); color: var(--ds-c-accent-on, #fff); }
+  }
+
+  &--signal {
+    background: var(--tb-band-signal-bg);
+    border-color: var(--tb-band-signal-bg);
+    color: var(--ds-c-accent-on, #fff);
+
+    &:hover { background: var(--ds-c-accent-active, #c04e22); border-color: var(--ds-c-accent-active, #c04e22); color: var(--ds-c-accent-on, #fff); }
+  }
+
+  &--outline {
+    background: transparent;
+    border-color: var(--border-soft);
+    color: var(--fg);
+
+    &:hover { border-color: var(--accent); color: var(--accent); }
+  }
+
+  &--outline-light {
+    // ds-keep: the light outline button of the kept inverse bands (hero, closing call) is drawn in the band's own text colour (slot contract keptButtonsNote)
+    background: transparent;
+    border-color: rgba(255, 255, 255, .35);
+    color: #fff;
+
+    &:hover { border-color: #fff; color: #fff; } // ds-keep: hover of the light outline button on the kept inverse bands
+  }
+}
+
+// ---------------------------------------------------------------- main navigation + megamenu
+// every box between the mega li and .tb-header must be static, or the panel anchors to it instead
+.tb-header .navbar,
+.tb-header .t4-megamenu,
+.tb-header .navbar-collapse,
+.tb-header .navbar-nav { position: static !important; }
+
+.tb-header .navbar { height: auto !important; min-height: 0 !important; padding: 0 !important; }
+
+.tb-header .t4-megamenu {
+  height: auto !important;
+  min-height: 0 !important;
+
+  .navbar-nav.level0 {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    height: auto !important;
+    justify-content: flex-end;
+    min-height: 0 !important;
+
+    > .nav-item {
+      display: block;
+      height: auto !important;
+      margin: 0;
+      min-height: 0 !important;
+      padding: 0;
+
+      > .nav-link {
+        background: none;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        height: auto !important;
+        min-height: 0 !important;
+        color: var(--fg-2);
+        font-family: var(--font-body);
+        font-size: 14.5px;
+        font-weight: 500;
+        line-height: 1.25;
+        padding: 6px 0;
+        white-space: nowrap;
+
+        .menu-item-title { color: inherit; }
+
+        &:hover,
+        &:focus-visible {
+          border-bottom-color: var(--border);
+          color: var(--accent);
+        }
+      }
+
+      &.active > .nav-link,
+      &.current > .nav-link {
+        border-bottom-color: var(--tb-band-signal-bg);   // stays #DA5A2A in dark, as measured
+        color: var(--fg);
+        font-weight: 600;
+      }
+
+      // the "▼" caret on the Resources item
+      &.dropdown > .nav-link {
+        align-items: center;
+        display: inline-flex;
+        gap: 6px;
+
+        .item-caret {
+          border: 0;
+          color: var(--tb-meta);
+          font-size: 10px;
+          height: auto;
+          margin: 0;
+          width: auto;
+
+          &::after { content: "▼"; }
+        }
+
+        &::after { display: none; }
+      }
+
+      &.show > .nav-link .item-caret,
+      &.active > .nav-link .item-caret { color: var(--tb-muted-2); }
+    }
+  }
+
+  // The full-width panel. T4's megamenu.js sizes a `justify` panel to the navbar; the design wants
+  // the full viewport width under the header, so the li is made static and the panel resolves its
+  // absolute box against .tb-header (position: relative). `!important` beats the inline width/left
+  // the script writes.
+  .nav-item.mega { position: static; }
+
+  // Hover bridge. T4's megamenu.js opens the panel on mouseenter of the li and closes it on
+  // mouseleave; because the panel hangs from the header's bottom edge there is a ~26px strip of
+  // plain header between the link and the panel, and crossing it fired mouseleave — the panel
+  // vanished before a link in it could be clicked. A pseudo-element under the trigger (a DOM child
+  // of the li, so hovering it is still "inside") spans that strip. Only while open, only as wide
+  // as the trigger, so the neighbouring links stay clickable.
+  .nav-item.mega > .nav-link { position: relative; }
+  .nav-item.mega.show > .nav-link::after {
+    border: 0;                   // Bootstrap's .dropdown-toggle::after draws a caret with borders…
+    content: '';
+    display: block !important;   // …and the caret rule above hides the link's ::after
+    height: 32px;
+    left: 0;
+    margin: 0;                   // …and gives it a margin that would push the bridge off the gap
+    position: absolute;
+    right: 0;
+    top: 100%;
+    vertical-align: baseline;
+  }
+
+  // Second half of the bridge, on the panel itself: the strip between the nav row's bottom
+  // (header 85px, links end 26px above its edge) and the panel's top, full width, so a pointer
+  // that drifts sideways while dropping into the panel is still inside the li.
+  .nav-item.mega > .dropdown-menu.mega-dropdown-menu.show::before {
+    bottom: 100%;
+    content: '';
+    display: block;
+    height: 26px;
+    left: 0;
+    position: absolute;
+    right: 0;
+  }
+
+
+  .nav-item.mega > .dropdown-menu.mega-dropdown-menu {
+    background: var(--tb-chrome-bg);
+    border: 0;
+    border-bottom: 1px solid var(--tb-line-3);
+    border-radius: var(--ds-card-radius, 0);
+    border-top: 1px solid var(--border);
+    box-shadow: var(--elev-raised);
+    left: 0 !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    max-width: none !important;
+    padding: 0;
+    right: 0 !important;
+    top: 100% !important;
+    transform: none !important;
+    width: auto !important;
+
+    .mega-dropdown-inner {
+      margin: 0 auto;
+      max-width: var(--container-max);
+      padding: 36px var(--container-gutter-desktop) 32px;
+    }
+
+    .row {
+      --bs-gutter-x: 40px;
+      --t4-gutter-x: 40px;
+      margin: 0 -20px;
+    }
+
+    [class*="mega-sub-"] { padding: 0 20px; }
+
+    .mega-inner { padding: 0; }
+
+    .mega-col-nav .mega-col-title,
+    .mega-col-module .mega-col-title,
+    .mega-col-title {
+      background: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--tb-signal);
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      line-height: 1.2;
+      margin: 0 0 16px;
+      padding: 0 0 10px;
+      text-transform: uppercase;
+
+      span { border: 0; color: inherit; display: block; padding: 0; }
+    }
+
+    // column 1: titled links with a caption
+    .mega-nav > li {
+      margin: 0;
+
+      > a,
+      > .dropdown-item {
+        background: none;
+        border-bottom: 1px solid var(--border-soft);
+        border-left: 2px solid transparent;
+        color: var(--fg);
+        display: block;
+        font-size: 15.5px;
+        font-weight: 600;
+        line-height: 1.3;
+        padding: 10px;
+        white-space: normal;
+
+        [itemprop="name"] { display: flex; flex-direction: column; }
+
+        .menu-item-title { color: inherit; font-family: var(--font-body); }
+
+        .menu-item-caption,
+        .mega-caption {
+          bottom: auto;
+          color: var(--tb-muted-2);
+          display: block;
+          font-family: var(--font-body);
+          font-size: 13px;
+          font-weight: 400;
+          line-height: 1.35;
+          margin-top: 2px;
+          opacity: 1;
+          position: static;
+        }
+
+        &:hover,
+        &:focus-visible {
+          background: var(--tb-ds-signal-tint, var(--ds-c-accent, rgba(218, 90, 42, .10)));
+          border-left-color: var(--tb-signal);
+          color: var(--tb-signal);
+        }
+      }
+
+      &.active > a { color: var(--accent); }
+    }
+  }
+}
+
+// the 2×2 project tiles and the news list live in modules placed in the megamenu columns
+.tb-mega-tiles {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li { margin: 0; }
+
+  a {
+    border: 1px solid var(--border);
+    display: block;
+    height: 104px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .tb-mega-tiles__cap {
+      background: linear-gradient(180deg, rgba(20, 23, 26, 0) 30%, rgba(20, 23, 26, .86) 100%);
+      color: #fff; // ds-keep: caption over a photograph's dark gradient, a picture and not a role
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      font-weight: 600;
+      inset: 0;
+      justify-content: flex-end;
+      opacity: 0;
+      padding: 10px;
+      position: absolute;
+      transition: opacity .18s ease;
+
+      small { color: #C9C6BE; font-size: 11.5px; font-weight: 400; } // ds-keep: caption over a photograph's dark gradient, a picture and not a role
+    }
+
+    &:hover .tb-mega-tiles__cap,
+    &:focus-visible .tb-mega-tiles__cap { opacity: 1; }
+  }
+}
+
+.tb-mega-news {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li { margin: 0; }
+
+  a {
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--fg);
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr auto;
+    padding: 10px 0;
+    text-decoration: none;
+
+    .tb-mega-news__title { font-size: 14.5px; font-weight: 500; line-height: 1.4; }
+    .tb-mega-news__date  { color: var(--tb-meta); font-size: 12.5px; white-space: nowrap; }
+
+    &:hover .tb-mega-news__title { color: var(--accent); }
+  }
+
+  &__all {
+    border-bottom: 1px solid var(--accent);
+    color: var(--accent);
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+    padding-bottom: 2px;
+    text-decoration: none;
+
+    &:hover { border-bottom-color: var(--tb-signal); color: var(--tb-signal); }
+  }
+}
+
+// ---------------------------------------------------------------- search panel
+.tb-searchpanel {
+  background: var(--tb-chrome-bg);
+  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 45;
+
+  &[hidden] { display: none; }
+
+  &__inner { padding-bottom: 20px; padding-top: 20px; }
+
+  form { margin: 0; }
+
+  .tb-search {
+    display: flex;
+    gap: 10px;
+
+    input[type="search"],
+    input[type="text"] {
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      border-radius: var(--ds-input-radius, 0);
+      color: var(--fg);
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 15px;
+      height: 44px;
+      padding: 0 14px;
+
+      &::placeholder { color: var(--tb-meta); }
+      &:focus { border-color: var(--accent); outline: 0; }
+    }
+  }
+}
+
+// ---------------------------------------------------------------- off-canvas (mobile menu)
+.t4-offcanvas-toggle,
+#triggerButton {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-btn-radius, 0);
+  color: var(--fg-2);
+  display: inline-flex;
+  height: 38px;
+  justify-content: center;
+  padding: 0;
+  width: 38px;
+
+  .toggle-bars { font-size: 15px; }
+  &:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+.t4-offcanvas.tb-drawer {
+  background: var(--bg) !important;
+  color: var(--fg);
+  font-family: var(--font-body);
+
+  .tb-drawer__head {
+    align-items: center;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    min-height: 0;
+    padding: 14px 20px;
+
+    .tb-brand__mark { height: 34px; width: 34px; font-size: 16px; }
+    .tb-brand__name { font-size: 17px; }
+  }
+
+  .tb-drawer__close {
+    align-items: center;
+    background: none !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--ds-btn-radius, 0) !important;
+    color: var(--fg) !important;
+    display: inline-flex;
+    font-size: 22px;
+    height: 36px;
+    justify-content: center;
+    line-height: 1;
+    opacity: 1;
+    padding: 0;
+    width: 36px;
+
+    &:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+  }
+
+  .tb-drawer__body { padding: 8px 0 24px; }
+
+  .t4-module,
+  .module-inner,
+  .module-ct { background: none; margin: 0; padding: 0; }
+
+  .navbar { padding: 0 !important; }
+
+  .navbar-nav,
+  .mod-menu,
+  .menu {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li { border-bottom: 1px solid var(--border-soft); margin: 0; padding: 0; }
+
+    a,
+    .nav-link {
+      color: var(--fg) !important;
+      display: block;
+      font-family: var(--font-body) !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0 !important;
+      line-height: 1.3;
+      padding: 14px 20px !important;
+      text-decoration: none;
+      text-transform: none !important;
+
+      &:hover { color: var(--accent) !important; }
+    }
+
+    li.active > a,
+    li.current > a {
+      border-left: 3px solid var(--tb-signal);
+      color: var(--fg) !important;
+      font-weight: 600 !important;
+      padding-left: 17px !important;
+    }
+
+    // the Resources children stay visible in the drawer (no drill/accordion)
+    ul,
+    .dropdown-menu {
+      background: none !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      display: block !important;
+      list-style: none;
+      margin: 0;
+      padding: 0 0 8px;
+      position: static !important;
+
+      li { border: 0; }
+
+      a,
+      .dropdown-item {
+        color: var(--tb-muted-2) !important;
+        font-size: 14.5px !important;
+        font-weight: 400 !important;
+        padding: 8px 20px 8px 36px !important;
+      }
+    }
+
+    .item-caret { display: none; }
+  }
+
+  .tb-btn { margin: 16px 20px; }
+}
+
+// ---------------------------------------------------------------- footer
+.tb-footer {
+  background: var(--tb-ink-band);
+  color: var(--tb-ink-band-text);
+  font-family: var(--font-body);
+
+  a { color: inherit; text-decoration: none; }
+
+  &__grid {
+    display: grid;
+    gap: 48px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-bottom: 40px;
+    padding-top: 64px;
+
+    @include media-breakpoint-down(md) {
+      gap: 40px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-top: 48px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      gap: 48px;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__col:empty { display: none; }
+
+  // the brand column — one mod_custom holding this markup
+  .tb-footbrand {
+    &__lockup {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    &__mark {
+      align-items: center;
+      background: var(--tb-ds-accent, var(--tb-band-signal-bg));
+      color: var(--tb-ds-accent-on, var(--ds-c-accent-on, #fff));
+      display: inline-flex;
+      font-size: 17px;
+      font-weight: 700;
+      height: 36px;
+      justify-content: center;
+      width: 36px;
+    }
+
+    &__name {
+      color: var(--ds-c-on-ink, #fff);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+    }
+
+    &__lede {
+      font-size: 14.5px;
+      line-height: 1.7;
+      margin: 0 0 18px;
+      max-width: 32em;
+    }
+
+    &__legal {
+      color: var(--tb-ds-on-ink-meta, var(--tb-ink-band-meta)); // the root shade: the kept footer gives the variable back as a literal
+      font-size: 13.5px;
+      line-height: 1.7;
+      margin: 0;
+    }
+  }
+
+  // link columns — module chrome `tbfootnav` wraps a mod_menu / mod_custom with an h3 title
+  .tb-footcol {
+    &__title {
+      color: var(--ds-c-on-ink, #fff);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      line-height: 1.2;
+      margin: 0 0 16px;
+      text-transform: uppercase;
+    }
+
+    .navbar { padding: 0; }
+
+    .navbar-nav,
+    .mod-menu,
+    .menu,
+    .tb-footlist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li { margin: 0; padding: 0; }
+
+      li::before { content: none; }
+
+      a,
+      .nav-link {
+        color: var(--tb-ink-band-text);
+        display: inline;
+        font-size: 14.5px;
+        font-weight: 400;
+        letter-spacing: 0;
+        line-height: 1.4;
+        padding: 0;
+        text-transform: none;
+
+        &:hover { color: var(--ds-c-on-ink, #fff); }
+      }
+
+      span { font-size: 14.5px; line-height: 1.4; }
+    }
+
+    .tb-footlink {
+      align-self: flex-start;
+      border-bottom: 1px solid var(--tb-ink-band-line-3);
+      color: var(--ds-c-on-ink, #fff);
+      display: inline-block;
+      font-size: 14.5px;
+      font-weight: 600;
+      padding-bottom: 2px;
+
+      // the hover underline takes the system's accent read on the root: the slot resets --ds-c-accent*
+      // inside the kept footer, where --tb-signal falls back to the template's orange
+      &:hover { border-bottom-color: var(--tb-ds-accent, var(--tb-signal)); }
+    }
+  }
+
+  .tb-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+
+    li { margin: 0; }
+
+    a,
+    span {
+      border: 1px solid var(--tb-ink-band-line-2);
+      color: var(--tb-ink-band-chip);
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 14px;
+      padding: 7px 12px;
+
+      &:hover { border-color: var(--tb-signal); color: var(--ds-c-on-ink, #fff); }
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid var(--tb-ink-band-line);
+    color: var(--tb-ds-on-ink-meta, var(--tb-ink-band-meta)); // the root shade: the kept footer gives the variable back as a literal
+    font-size: 13.5px;
+  }
+
+  &__bottom-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .tb-copyright { margin: 0; }
+
+  &__bottom-inner .navbar { padding: 0; }
+
+  &__bottom-inner .navbar-nav,
+  .tb-copyright__links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li { margin: 0; padding: 0; }
+    li::before { content: none; }
+
+    a,
+    .nav-link {
+      color: var(--tb-ds-on-ink-meta, var(--tb-ink-band-meta)); // the root shade: the kept footer gives the variable back as a literal
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: 0;
+      padding: 0;
+      text-transform: none;
+
+      &:hover { color: var(--ds-c-on-ink, #fff); }
+    }
+  }
+}
+
+// T4 wraps modules in .t4-module / .module-inner; keep them from adding padding in the chrome
+.tb-topbar,
+.tb-header,
+.tb-footer {
+  .t4-module,
+  .module-inner { background: none; margin: 0; padding: 0; }
+
+  .t4-module + .t4-module { margin: 0; }
+}
+
+// Drawer type: Tracy's chrome layer sets Newsreader 28px on `.menu-item-title` below lg
+// (`_chrome.scss`, 4-class selector inside a media query). Tracy Business's drawer is an Archivo list;
+// the inner spans must inherit the link's font, and !important is the only way past that rule.
+@media (max-width: 991.98px) {
+  .t4-offcanvas.tb-drawer .t4-off-canvas-body .navbar .menu-item-title,
+  .t4-offcanvas.tb-drawer .t4-off-canvas-body .menu-item-title,
+  .t4-offcanvas.tb-drawer .t4-off-canvas-body [itemprop="name"] {
+    color: inherit !important;
+    font-family: var(--font-body) !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    letter-spacing: 0 !important;
+    line-height: inherit !important;
+  }
+
+  .t4-offcanvas.tb-drawer .t4-off-canvas-body .navbar .nav-link,
+  .t4-offcanvas.tb-drawer .t4-off-canvas-body .navbar a.nav-header {
+    padding-block: 14px !important;
+  }
+}

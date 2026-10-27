@@ -1,0 +1,612 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-diner",
+  "release": "quickstart/ja-diner/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1.slide-title",
+    "body": "p.lead",
+    "button-primary": "a.btn.btn-primary",
+    "section": "#Section95",
+    "input": "#email_field_886"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "Eczar 400, tracking -0.008em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(195, 99, 73)",
+    "section": "first padded full-width section, padding-top 144px",
+    "input": "first text field"
+  },
+  "keepScopes": ["#Section127"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fcfaf6",
+    "--fg": "#555555",
+    "--fg-2": "#222222",
+    "--accent": "#c36349",
+    "--accent-hover": "#90442f",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#e8e6e3",
+    "--muted": "#356635",
+    "--font-display": "\"Eczar\", sans-serif",
+    "--font-body": "\"Work Sans\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fcfaf6",
+      "fg": "#555555",
+      "fg-2": "#222222",
+      "accent": "#c36349",
+      "accent-hover": "#90442f",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#e8e6e3",
+      "muted": "#356635"
+    },
+    {
+      "bg": "#fcfaf6",
+      "fg": "#555555",
+      "fg-2": "#222222",
+      "accent": "#c36349",
+      "accent-on": "#ffffff"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "bg": "#fcf8e3",
+      "surface": "#f9f9f9",
+      "border": "#e5e5e5",
+      "danger": "#dd4b39",
+      "accent-hover": "#a34d36",
+      "border-soft": "#ebebeb",
+      "accent": "#b6563c"
+    },
+    {
+      "surface": "#eeeeee",
+      "border": "#e0e2e3",
+      "accent-hover": "#953b39",
+      "bg": "#fff6df",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f2f2f2",
+      "border": "#e0e0e0",
+      "accent-hover": "#9c4933"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border": "#e3e3e3"
+    },
+    {
+      "surface": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (65 line colours, 84 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title",
+    "heading": [".t3-wrapper h2:not(.member-ele *)", "main h2:not(.member-ele *)"],
+    "button": [".btn:not(.readmore a)", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section95"],
+    "bodyFace": ["body"],
+    "inkImages": [".logo-image .logo-img"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 15 tried (byte 5597); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#fcf8e3",
+      "uses": 84,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fcfaf6",
+      "distance": 19
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 60,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 58,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e6e3",
+      "distance": 4
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 24,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 24,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e6e3",
+      "distance": 9
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 9
+    },
+    {
+      "hex": "#e0e0e0",
+      "uses": 20,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e6e3",
+      "distance": 10
+    },
+    {
+      "hex": "#dd4b39",
+      "uses": 20,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    },
+    {
+      "hex": "#a34d36",
+      "uses": 16,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#90442f",
+      "distance": 22
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#953b39",
+      "uses": 12,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#90442f",
+      "distance": 14
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e6e3",
+      "distance": 6
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#fff6df",
+      "uses": 12,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fcfaf6",
+      "distance": 24
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#9c4933",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#90442f",
+      "distance": 14
+    },
+    {
+      "hex": "#b6563c",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#c36349",
+      "distance": 23
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the 1.0.1 release build itself (~/tracy-bench-work/release/ds-batch5/ja-diner/release, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-diner-j6 — 10/12 (the rest miss on type sizes or button shape against the system, not on reading), controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 91% or more of the page follows, checked by eye on the four systems' screenshots; with the earlier contract the yellow highlighter under the section titles held the worn title colour at 1.4–3.8:1 and the newsletter section's dark picture its orange title and grey note at 2.9–4.2:1 — fixed by followRules (.text-highlight::before takes the surface) and keepScopes (#Section127 keeps the template's colours); the dark-ink wordmark is inverted under a dark system (inkImages). Earlier: measured 11/10/2026 on the tokenized build of quickstart/ja-diner/j6@1.0.0 (tasks/evidence/ds-contracts-batch5-2026-10-11/ja-diner-j6): 10/12, default unchanged, no text made less readable than the template's own under the systems tried (every heading and text element judged against the same one on the default page), 93% or more of the page follows, checked by eye on the Toggl Track (dark) screenshot. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-diner 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 10/12 verdicts (the two failed are Toggl Track body font weight only), controls 0 differences, no text below 4.5:1 worse than the template's own, 91-99% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-diner-j6",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "minVersion": {
+    "quickstart/ja-diner/j6": "1.0.1"
+  },
+  "minVersionNote": "the tokenized re-release batch 5 built and verified locally (~/tracy-bench-work/release/ds-batch5/ja-diner; uploaded by ~/tracy-bench-work/RELEASE-DS-BATCH5.sh, run by a person): a site built from an older version is refused",
+  "followRules": {
+    ".text-highlight::before": {
+      "background-color": "surface"
+    },
+    ".btn-secondary, button.btn:not([class*=btn-])": {
+      "background-color": "surface",
+      "border-color": "border",
+      "color": "fg"
+    },
+    ".btn.btn-secondary:is(:hover, :focus)": {
+      "background-color": "accent",
+      "border-color": "accent",
+      "color": "accent-on"
+    },
+    ".list-group-item.active > .badge, .nav-pills > .active > a > .badge": {
+      "background-color": "surface",
+      "color": "fg"
+    },
+    ".label-primary": {
+      "color": "accent-on"
+    },
+    ".form-select, select.inputbox, input.acym__user__edit__email, .acym_module input.cell": {
+      "background-color": "surface",
+      "color": "fg",
+      "border-color": "border"
+    },
+    ".example-colors :is(.color-brand-primary, .color-brand-secondary)": {
+      "color": "accent-on"
+    },
+    ".example-colors .color-brand-success": {
+      "color": "success-text"
+    },
+    ".example-colors .color-brand-danger": {
+      "color": "danger-text"
+    },
+    ".example-colors .color-brand-warning": {
+      "color": "warn-text"
+    },
+    ".example-colors .color-brand-info": {
+      "color": "info-text"
+    },
+    ".example-colors :is(.color-gray-darker, .color-gray-dark, .color-gray)": {
+      "color": "on-ink"
+    }
+  },
+  "followNote": "the highlighter stripe under a few words of each section title (.text-highlight::before, a fixed #ffcc00) takes the worn surface: the worn title colour on the yellow read 1.4:1 under Moxie, 2.3:1 under Toggl Track, 3.8:1 under MotherDuck (re-measure 11/10/2026) 20/10/2026 (1.0.3, preview probe v10): Joomla core's .btn-secondary and bare button.btn (the smart search's Advanced Search, the password field's eye, the article pager), which Bootstrap 3 leaves to the browser's button face, take the surface and its text and the accent pair on hover; the badge on the typography page's active list item the surface and its text; Bootstrap's label-primary the accent's own text; the tags page's limit select, Joomla's .inputbox select and AcyMailing's newsletter field the surface, text and line of the system; the typography page's colour swatches, whose words the template leaves to the swatch's own white, take the words of the role each swatch now wears (accent, status, ink): written here, under a system only, so the page with no system is the 1.0.2 sheet declaration for declaration",
+  "keepColors": {
+    "#Section127": "rgb(85, 85, 85)"
+  },
+  "keepNote": "the newsletter section (#Section127) is drawn on a dark picture of its own (images/joomlart/others/bg-icon.png) that no system repaints: it keeps the template's colours — its orange title and grey note read 2.9–4.2:1 on the picture under MotherDuck, Moxie and Apple otherwise (re-measure 11/10/2026)",
+  "inkNote": "the wordmark is a dark-ink image: inverted with its hues kept under a dark system, where it all but vanished on the worn page",
+  "maxVersion": {
+    "quickstart/ja-diner/j6": "1.0.4"
+  },
+  "maxVersionNote": "1.0.4 20/10/2026: built from 1.0.3 (release-batch.mjs --overlay); the only change is the badge of a Bootstrap 3 status panel heading (.panel-<status> > .panel-heading .badge, 44 rules in 11 bootstrap.css), whose ground reads --ds-c-<status>-text in place of the status fill, the inverted pair of its words (--ds-c-<status>-bg), so its words never read a ground role (TEXT-1); every fallback is the colour 1.0.3 painted, and unworn the page is 1.0.3's (VERIFICATION.json: 0 computed differences desktop and phone, 26/26 pages as released). 1.0.3 20/10/2026: built from 1.0.2 (release-batch.mjs --overlay --replace); every role variable the template paints is read with its own value as the fallback (role scan 0 unresolved), Vietnamese pages use Alegreya in place of Eczar; unworn the page is the release's own (VERIFICATION.json: 0 computed differences desktop and phone, 26/26 pages as released; the screenshots differ only where the home page's Gallery carousel had moved on). 1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "keepDefaults": {},
+  "bands": {
+    "#Section127": {
+      "ground": "#fcfaf6",
+      "texts": ["#ffffff", "#999999"],
+      "picture": true,
+      "paint": {
+        ".section-title": {
+          "color": "accent"
+        },
+        "input.acym__user__edit__email": {
+          "background-color": "card",
+          "color": "text",
+          "border-color": "card"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours 20/10/2026 (1.0.3, preview probe v10): the newsletter band keeps its photograph, and its email field stayed the browser's white under a dark system (glare on every page with the newsletter): it takes the band's card step and its words",
+  "reviewV8Note": "15/10/2026 (look review v8): the about page’s team names (.member-ele h2) are 25px card titles, not section headings: under Moxie they took the 43px heading size and wrapped; the heading selectors leave them out",
+  "sideRules": {
+    "light": {
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success > .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info > .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning > .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger > .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".list-group-item.active": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".panel-success > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".panel-info > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".panel-warning > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".panel-danger > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".view-contact .contact-links ul li a::before": {
+        "border-radius": "inherit"
+      }
+    },
+    "dark": {
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success > .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info > .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning > .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger > .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".list-group-item.active": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".panel-success > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".panel-info > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".panel-warning > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".panel-danger > .panel-heading .panel-title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".view-contact .contact-links ul li a::before": {
+        "border-radius": "inherit"
+      }
+    }
+  },
+  "sideNote": "Bootstrap 3's status components (alerts, panels, labels, the info button), whose literal pale grounds and status words the release's bootstrap.css keeps (no tokenizing reached them): they wear the system's status pairs, as JA Restaurant and JA Social II (the same T3 Bootstrap) do. A panel's title reads the heading colour on its status ground (HIER-2: the warning title in warn-text read 4.95:1 beside body text at 10.37:1), its card the system's surface; code takes the system's mono face; the typography page's active list item the system's button corner (20/10/2026, 1.0.3, preview probe v10); the contact page's network buttons take the system's button corner, and the hover fill drawn by their ::before follows that corner (border-radius: inherit, a no-op at the template's square corner)",
+  "pictureRules": {
+    ".t3-masthead .ja-masthead::after, .acm-slideshow::before": {
+      "background-image": "none",
+      "background-color": "var(--ds-c-accent)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='196'%20height='196'%3E%3Cimage%20width='196'%20height='196'%20href='data:image/png%3Bbase64,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'/%3E%3C/svg%3E\")",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "-webkit-mask-size": "100% 100%",
+      "-webkit-mask-repeat": "no-repeat"
+    }
+  },
+  "pictureNote": "the round stamp under the page masthead and the home slideshow (images/decor/decor_<theme>.png, 196 x 196: one brand colour drawn on transparency, the same stamp in every colour theme) stayed the template's orange under every system (ACCENT-LEAK on 24 of 28 pages, 20/10/2026): the stamp's own alpha, re-encoded at 16 levels into a PNG inside an inline SVG (a data URI, nothing fetched), masks a fill of the system's accent",
+  "buttonNote": "the blog's Read more (.readmore a.btn) is an underlined text link the template styles as a button with no padding: the system's button padding made it a 141 x 48 box (CLIP-1, 20/10/2026), so it is left out of selectors.button and keeps its link look in the system's colours"
+}

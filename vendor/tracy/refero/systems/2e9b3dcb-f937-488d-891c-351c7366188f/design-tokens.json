@@ -1,0 +1,357 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, navigation surface, inputs, light cards, and high-contrast text on dark surfaces"
+    },
+    "ink": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Ink — Display text, headings, filled public buttons, dark rules, and inline control outlines"
+    },
+    "graphite": {
+      "$value": "#424242",
+      "$type": "color",
+      "$description": "Graphite — Secondary body copy and dense explanatory text"
+    },
+    "steel": {
+      "$value": "#706f6f",
+      "$type": "color",
+      "$description": "Steel — Muted metadata and low-emphasis supporting copy"
+    },
+    "rule-gray": {
+      "$value": "#dcdcdc",
+      "$type": "color",
+      "$description": "Rule Gray — Hairline dividers, grid rules, and low-emphasis structural borders"
+    },
+    "edge-gray": {
+      "$value": "#cbcac8",
+      "$type": "color",
+      "$description": "Edge Gray — Slightly stronger container and content-section borders"
+    },
+    "ice-panel": {
+      "$value": "#f0f8f9",
+      "$type": "color",
+      "$description": "Ice Panel — Contained story cards, problem/solution panels, and cool product-demonstration surfaces"
+    },
+    "forest-ledger": {
+      "$value": "#0c221d",
+      "$type": "color",
+      "$description": "Forest Ledger — Footer and full-width closing surfaces"
+    },
+    "plum-ledger": {
+      "$value": "#543b4e",
+      "$type": "color",
+      "$description": "Plum Ledger — Dark editorial/product cards and contrasting feature blocks"
+    },
+    "network-green": {
+      "$value": "#29735c",
+      "$type": "color",
+      "$description": "Network Green — Logo mark, payment-rail connector lines, and small solution markers — a restrained institutional green that makes the diagrams feel like live infrastructure"
+    },
+    "mint-subscription": {
+      "$value": "#bae0cf",
+      "$type": "color",
+      "$description": "Mint Subscription — Newsletter subscribe fill and bordered mint controls — the lone pale color action within the dark footer"
+    },
+    "ledger-brown": {
+      "$value": "#7b5953",
+      "$type": "color",
+      "$description": "Ledger Brown — Monospace problem labels and compact technical annotations"
+    }
+  },
+  "font": {
+    "mt-neue-display": {
+      "$value": "mt-neue-display",
+      "$type": "fontFamily",
+      "$description": "Hero and major section headings. The 450 weight keeps 71px headlines broad and quiet rather than bold; it makes financial infrastructure feel measured instead of promotional."
+    },
+    "mt-neue-text": {
+      "$value": "mt-neue-text",
+      "$type": "fontFamily",
+      "$description": "Product narrative headings and feature titles. Use the text cut for tighter, more practical statements below display-scale hierarchy."
+    },
+    "mt-sans": {
+      "$value": "mt-sans",
+      "$type": "fontFamily",
+      "$description": "Navigation, body copy, links, inputs, buttons, footer lists, and card UI. Use 330 for subdued footer links, 360 for body paragraphs, 500 for navigation, and 600 for controls."
+    },
+    "mt-mono": {
+      "$value": "mt-mono",
+      "$type": "fontFamily",
+      "$description": "Technical eyebrow labels and diagram annotations; the monospace treatment turns short labels into ledger metadata rather than conventional marketing eyebrows."
+    }
+  },
+  "typography": {
+    "sm": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "mt-mono",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "14px",
+        "fontWeight": 330,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "16px",
+        "fontWeight": 360,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "mt-sans",
+        "fontSize": "18px",
+        "fontWeight": 360,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "mt-neue-text",
+        "fontSize": "21px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 21px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "mt-neue-text",
+        "fontSize": "32px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "mt-neue-display",
+        "fontSize": "47px",
+        "fontWeight": 450,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 47px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "mt-neue-display",
+        "fontSize": "71px",
+        "fontWeight": 450,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 71px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "152": {
+      "$value": "152px",
+      "$type": "dimension",
+      "$description": "Spacing 152px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "2px",
+      "$type": "dimension",
+      "$description": "Border radius sm"
+    },
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgb(21, 21, 21) 0px 0px 0px 1px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "xl": {
+      "$value": "lab(0 0 0 / 0.04) 0px 20px 25px -5px, lab(0 0 0 / 0.04) 0px 8px 10px -6px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    }
+  },
+  "surface": {
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page canvas, navigation, and default content surface."
+    },
+    "ice-panel": {
+      "$value": "#f0f8f9",
+      "$type": "color",
+      "$description": "Surface level 1: Contained customer stories and product narrative panels."
+    },
+    "mint-subscription": {
+      "$value": "#bae0cf",
+      "$type": "color",
+      "$description": "Surface level 2: Footer subscription action surface."
+    },
+    "plum-ledger": {
+      "$value": "#543b4e",
+      "$type": "color",
+      "$description": "Surface level 3: Contrasting editorial and product feature card surface."
+    },
+    "forest-ledger": {
+      "$value": "#0c221d",
+      "$type": "color",
+      "$description": "Surface level 4: Footer and dark closing-region surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://moderntreasury.com",
+      "siteName": "Modern Treasury",
+      "extractedAt": "2026-09-24T17:42:35.263Z",
+      "variant": "extended"
+    }
+  }
+}

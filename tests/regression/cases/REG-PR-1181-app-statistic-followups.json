@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1181-app-statistic-followups",
+  "kind": "fix",
+  "title": "App Statistic reads JoomlArt as the account source of a first sign-in through JoomlArt, and Tracy answers /favicon.ico with its own icon instead of treating it as a site address",
+  "pr": 1181,
+  "area": "ops/app-statistic",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the App Statistic backend test that signs four accounts in through the real PostgreSQL identity store: JoomlArt with no utm, JoomlArt with utm medium and campaign but no utm_source, JoomlArt with utm_source newsletter, and Google.",
+    "Run the favicon tests: GET /favicon.ico on Tracy's own hostname signed out and signed in, GET /favicon.ico on a site hostname, and read packages/web/tracy-harness/index.html and public/favicon.svg."
+  ],
+  "expect": [
+    "The JoomlArt account with no utm reads source {source: joomlart} in users, quickstarts and detail; the source filter joomlart lists it and the source options include joomlart.",
+    "A JoomlArt account whose link carried utm medium/campaign keeps them and gains source joomlart; one whose link named utm_source newsletter keeps newsletter.",
+    "A Google first sign-in with no utm stays unknown (source null): a way to sign in is not an acquisition source.",
+    "GET /favicon.ico on Tracy's hostname answers 200 image/svg+xml with exactly the icon page-shell pages declare, signed out and signed in (before: 302 to /login or to /favicon-ico-…/join).",
+    "GET /favicon.ico on a site hostname is not answered with Tracy's icon.",
+    "The /ops bundle's index.html declares <link rel=icon type=image/svg+xml href=/favicon.svg> and its public/favicon.svg equals that icon byte for byte."
+  ],
+  "selectors": {
+    "list": "/api/ops/app-statistic?days=all",
+    "favicon": "/favicon.ico"
+  },
+  "evidence": "tasks/evidence/app-statistic-quickstarts/dev-2026-10-11/README.md (section 6 and 'Small observations')",
+  "fence": "Read-side only for the source: account_source derives joomlart from the first sign-in's recorded via, never from a later identity link; /favicon.ico is registered after customer-site host routing.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-app-statistic.test.mjs",
+      "apps/tracy-web/test/tracy-favicon.test.mjs"
+    ],
+    "tests": [
+      "an account whose first sign-in came through JoomlArt sign-in reads JoomlArt as its source",
+      "/favicon.ico on Tracy's own hostname is Tracy's icon, never a site address",
+      "the /ops bundle declares the same Tracy icon, so the browser never asks for /favicon.ico"
+    ],
+    "needs": ["postgres"]
+  }
+}

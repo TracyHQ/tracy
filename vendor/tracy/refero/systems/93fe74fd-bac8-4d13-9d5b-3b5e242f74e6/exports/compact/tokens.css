@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-warm-graphite: #393737;
+  --color-cream-canvas: #f7f7f7;
+  --color-paper-white: #ffffff;
+  --color-fog-gray: #888787;
+  --color-mist-blue: #e9eff6;
+  --color-lilac-field: #f3f0f8;
+  --color-spectrum-wash: #e9f6f2;
+  --gradient-spectrum-wash: conic-gradient(from 180deg, rgb(235, 246, 242) 0deg, rgb(231, 243, 224) 56.3deg, rgb(229, 239, 248) 118.8deg, rgb(254, 241, 216) 176.4deg, rgb(247, 244, 250) 237.6deg, rgb(247, 219, 229) 295.2deg, rgb(235, 246, 242) 360deg);
+
+  /* Typography — Font Families */
+  --font-untitled-serif: 'Untitled Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-messina-sans: 'Messina Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

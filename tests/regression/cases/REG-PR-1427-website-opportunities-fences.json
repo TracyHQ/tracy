@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1427-website-opportunities-fences",
+  "kind": "feat",
+  "title": "Website Opportunities keeps each account's restaurants, media and builds to itself, refuses private addresses, builds a demo once per revision, and puts the restaurant's own pictures on it without touching sites made from Add site",
+  "pr": 1427,
+  "area": "website-opportunities",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: account B calls every website-opportunities door on account A's opportunity, revision, media and build.",
+    "S2: create an opportunity from a URL whose host is private, loopback or rebinds to one.",
+    "S3: create the same candidate twice; two executors race for one job; an executor crashes holding a lease.",
+    "S4: accept a demo build of a chosen template, then withdraw that template before the demo worker runs.",
+    "S5: the brief engine reads pictures for a site made from Add site, for an unknown site, with another account's email, with a store returning other bytes, and with a failing database.",
+    "S6: a build's picture plan is run twice.",
+    "S7: render the hand-off prompt for a Joomla and a WordPress demo site."
+  ],
+  "expect": [
+    "S1: 404 on everything of account A.",
+    "S2: refused (SSRF), nothing fetched.",
+    "S3: one opportunity (201 then 200); exactly one executor claims the job; the expired lease is reclaimed and the job completes.",
+    "S4: the worker refuses before anything is created: the demo action reads failed TEMPLATE_UNAVAILABLE, no wo_build row, no create-site request.",
+    "S5: no pictures and no throw in every case; the site is built as without the feature.",
+    "S6: the second run reads the kept plan and places the same pictures.",
+    "S7: the prompt names each CMS's look doors (Joomla `templates/<template>/css/custom.css`, the template style's colour and font settings or inline styles; WordPress the Customizer's Additional CSS, the theme's own settings or inline styles, never custom.css) as the doors NOT to change colours through; for Joomla, WordPress and EmDash it keeps the template's bound design system and allows only layout CSS as plain CSS, never editing, rebuilding or replacing the template's compiled CSS or its SCSS."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/route.js, packages/wo/website-opportunities/src/executor.js, apps/tracy-web/src/opportunities-build/site-pictures.js, apps/tracy-web/src/sites/brief-engines/real-pictures.js",
+    "dom": ""
+  },
+  "evidence": "Plan tasks/plan-website-opportunities-phase-1.md section 8 and tasks/evidence-wo-pictures.md (stand wo, 18/10/2026); site marigoldhoian on stand wo 18/10/2026: the hand-off agent hand-compiled ja_impact's template.css with raw SCSS and a stray brace, so the browser dropped about 1,500 rules",
+  "fence": "Owner isolation by account id, the pinned fetch's address check, the job lease, and the injected picture reader's null answer",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "apps/tracy-web/test/website-opportunities-executor.test.mjs",
+      "apps/tracy-web/test/website-opportunities-site-pictures.test.mjs",
+      "apps/tracy-web/test/brief-real-pictures.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs"
+    ],
+    "tests": [
+      "owner isolation: account B gets 404 on everything of account A",
+      "create from a URL: a private, loopback or rebinding address is refused (SSRF)",
+      "create: the same candidate twice is one opportunity (201 then 200)",
+      "two executors racing: exactly one claims the job",
+      "a crashed executor: its expired lease is reclaimed and the job still completes",
+      "build: a template withdrawn after acceptance is refused before anything is created",
+      "a site made from the Add site form answers null, and so does an unknown site",
+      "another account’s email reads nothing, even for the right site",
+      "a store that answers other bytes than the manifest names gives no picture",
+      "a database that fails is a null answer and a warning, never a throw",
+      "no reader, no build behind the site, or a reader that fails: nothing changes for the site",
+      "a second run places what the first chose: the kept plan is read, not made again",
+      "the look doors are named per CMS as the doors NOT to change colours through; layout CSS stays plain, the compiled CSS untouched",
+      "the agent keeps the template’s design system: no restyle from brand observations, through any door (council 19/10/2026)"
+    ]
+  },
+  "history": [
+    "24/10/2026: S4 follows 4a446e83c4 (the build holds its CMS and template; a brief names no template) and c6f2705627, which replaced 'build: an unselected or withdrawn template is refused before anything is created' with 'build: a template withdrawn after acceptance is refused before anything is created'. An unselected template no longer exists to refuse; the withdrawn half of the fence is unchanged.",
+    "24/10/2026: S7 follows c7aa6ee28f (19/10/2026, council): the agent keeps the template's bound design system, so the prompt no longer sends restyling through custom.css or Additional CSS and dropped the reload check of fonts, header and hero. The compiled-CSS fence stays; the test was renamed in that commit, and the design-system test of the same commit is added."
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "charcoal-ink": {
+      "$value": "#303030",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, headings, body copy, icons, link color, input borders, badges — the single dominant ink that holds the whole monochrome system together"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, input fields, elevated panels, text on dark fills"
+    },
+    "concrete-gray": {
+      "$value": "#dbdbdb",
+      "$type": "color",
+      "$description": "Concrete Gray — Page canvas, the visible background behind every card — the tone that makes white cards feel floating rather than embedded"
+    },
+    "fog-mist": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Fog Mist — Subtle elevated surfaces, secondary panels, input hover states — a step between canvas and card"
+    },
+    "ash-border": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Ash Border — Hairline borders, input backgrounds, disabled-state fills"
+    },
+    "smoke": {
+      "$value": "#c2c2c2",
+      "$type": "color",
+      "$description": "Smoke — Muted text, disabled labels, badge backgrounds, inactive states"
+    },
+    "graphite": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, meta information, shadow tone, muted border accents"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon fills, maximum-contrast accents, deep text on light surfaces"
+    },
+    "sand-wash": {
+      "$value": "#e2ceb8",
+      "$type": "color",
+      "$description": "Sand Wash — Warm background tint on select cards and sections — the only warm chromatic wash in the system, used sparingly to break the cool gray monotony"
+    },
+    "slate-veil": {
+      "$value": "#6a728e",
+      "$type": "color",
+      "$description": "Slate Veil — Gray supporting accent for decorative details and low-frequency emphasis."
+    },
+    "highlight-yellow": {
+      "$value": "#f9f5a2",
+      "$type": "color",
+      "$description": "Highlight Yellow — Text-block highlight behind individual letters or words (the (y)our treatment) — the only vivid functional accent, used to mark a single altered character in an otherwise unstyled sentence"
+    },
+    "highlight-cyan": {
+      "$value": "#c7f6ff",
+      "$type": "color",
+      "$description": "Highlight Cyan — Secondary text highlight block, paired with yellow for selectable/emphasized letter swaps"
+    }
+  },
+  "font": {
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "Universal interface font — used for every body paragraph, every label, every button, every timestamp, every card caption, and at 43px for the largest display headlines. The single-font decision is the system's most defining choice: a monospace voice applied to a creative studio site signals that this is a tool, not a magazine. The 43px display size at weight 400 is deliberately unflamboyant — no bold headline shouting, just evenly-spaced characters that read like code commits or terminal output."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Secondary display font for occasional headline-level text where a humanist sans contrast is needed against the mono sea. Weight 300 is used for the largest 44px treatment to keep the system's anti-authoritarian restraint — no bold display shouting, just light Helvetica whispers"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://schoooool.com",
+      "siteName": "School",
+      "extractedAt": "2026-06-03T18:07:12.477Z",
+      "variant": "compact"
+    }
+  }
+}

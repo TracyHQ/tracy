@@ -1,0 +1,426 @@
+{
+ "categories": [
+  {
+   "id": "1",
+   "parent_id": "0",
+   "lft": "0",
+   "rgt": "5",
+   "level": "0",
+   "path": "",
+   "extension": "system",
+   "title": "ROOT",
+   "alias": "root",
+   "description": "",
+   "published": "1"
+  },
+  {
+   "id": "14",
+   "parent_id": "1",
+   "lft": "1",
+   "rgt": "2",
+   "level": "1",
+   "path": "pages",
+   "extension": "com_content",
+   "title": "Website pages",
+   "alias": "pages",
+   "description": "",
+   "published": "1"
+  },
+  {
+   "id": "15",
+   "parent_id": "1",
+   "lft": "3",
+   "rgt": "4",
+   "level": "1",
+   "path": "blog",
+   "extension": "com_content",
+   "title": "Blog",
+   "alias": "blog",
+   "description": "",
+   "published": "1"
+  }
+ ],
+ "content": [
+  {
+   "id": "11",
+   "title": "Home Two",
+   "alias": "home-two",
+   "introtext": "<p>Home two body.</p>",
+   "fulltext": "",
+   "state": "1",
+   "catid": "14",
+   "created": "2021-05-17 10:13:46",
+   "created_by": "42",
+   "created_by_alias": "",
+   "modified": "2026-09-11 18:51:05",
+   "publish_up": "2021-09-14 00:00:00",
+   "images": "{}",
+   "metadesc": "",
+   "ordering": "1",
+   "featured": "0",
+   "language": "*"
+  },
+  {
+   "id": "12",
+   "title": "Skipped Page",
+   "alias": "skipped-page",
+   "introtext": "<p>Skipped body text.</p>",
+   "fulltext": "",
+   "state": "1",
+   "catid": "14",
+   "created": "2021-05-17 10:13:46",
+   "created_by": "42",
+   "created_by_alias": "",
+   "modified": "2026-09-11 18:51:05",
+   "publish_up": "2021-09-14 00:00:00",
+   "images": "{}",
+   "metadesc": "",
+   "ordering": "1",
+   "featured": "0",
+   "language": "*"
+  },
+  {
+   "id": "13",
+   "title": "Plain Page",
+   "alias": "plain-page",
+   "introtext": "<p>Plain body text.</p>",
+   "fulltext": "",
+   "state": "1",
+   "catid": "14",
+   "created": "2021-05-17 10:13:46",
+   "created_by": "42",
+   "created_by_alias": "",
+   "modified": "2026-09-11 18:51:05",
+   "publish_up": "2021-09-14 00:00:00",
+   "images": "{}",
+   "metadesc": "",
+   "ordering": "1",
+   "featured": "0",
+   "language": "*"
+  },
+  {
+   "id": "20",
+   "title": "Blog Post",
+   "alias": "blog-post",
+   "introtext": "<p>Blog words.</p>",
+   "fulltext": "",
+   "state": "1",
+   "catid": "15",
+   "created": "2021-05-17 10:13:46",
+   "created_by": "42",
+   "created_by_alias": "",
+   "modified": "2026-09-11 18:51:05",
+   "publish_up": "2021-09-14 00:00:00",
+   "images": "{}",
+   "metadesc": "",
+   "ordering": "1",
+   "featured": "0",
+   "language": "*"
+  },
+  {
+   "id": "14",
+   "title": "Home Style One",
+   "alias": "home-style-1",
+   "introtext": "<p>Style one words.</p>",
+   "fulltext": "",
+   "state": "1",
+   "catid": "14",
+   "created": "2021-05-17 10:13:46",
+   "created_by": "42",
+   "created_by_alias": "",
+   "modified": "2026-09-11 18:51:05",
+   "publish_up": "2021-09-14 00:00:00",
+   "images": "{}",
+   "metadesc": "",
+   "ordering": "1",
+   "featured": "0",
+   "language": "*"
+  }
+ ],
+ "menu": [
+  {
+   "id": "1",
+   "menutype": "",
+   "title": "Menu_Item_Root",
+   "alias": "root",
+   "path": "",
+   "link": "",
+   "type": "",
+   "published": "1",
+   "parent_id": "0",
+   "level": "0",
+   "template_style_id": "0",
+   "params": "",
+   "lft": "0",
+   "rgt": "99",
+   "home": "0",
+   "client_id": "0"
+  },
+  {
+   "id": "101",
+   "menutype": "main",
+   "title": "Home",
+   "alias": "home",
+   "path": "home",
+   "link": "index.php?option=com_content&view=featured",
+   "type": "component",
+   "published": "1",
+   "parent_id": "1",
+   "level": "1",
+   "template_style_id": "0",
+   "params": "{}",
+   "lft": "3",
+   "rgt": "4",
+   "home": "1",
+   "client_id": "0"
+  },
+  {
+   "id": "128",
+   "menutype": "main",
+   "title": "Home 2",
+   "alias": "home-2",
+   "path": "home-2",
+   "link": "index.php?option=com_content&view=article&id=11",
+   "type": "component",
+   "published": "1",
+   "parent_id": "1",
+   "level": "1",
+   "template_style_id": "10",
+   "params": "{}",
+   "lft": "5",
+   "rgt": "6",
+   "home": "0",
+   "client_id": "0"
+  },
+  {
+   "id": "201",
+   "menutype": "main",
+   "title": "Skipped",
+   "alias": "skipped",
+   "path": "skipped",
+   "link": "index.php?option=com_content&view=article&id=12",
+   "type": "component",
+   "published": "1",
+   "parent_id": "1",
+   "level": "1",
+   "template_style_id": "0",
+   "params": "{}",
+   "lft": "7",
+   "rgt": "8",
+   "home": "0",
+   "client_id": "0"
+  },
+  {
+   "id": "202",
+   "menutype": "main",
+   "title": "Plain",
+   "alias": "plain",
+   "path": "plain",
+   "link": "index.php?option=com_content&view=article&id=13",
+   "type": "component",
+   "published": "1",
+   "parent_id": "1",
+   "level": "1",
+   "template_style_id": "0",
+   "params": "{}",
+   "lft": "9",
+   "rgt": "10",
+   "home": "0",
+   "client_id": "0"
+  },
+  {
+   "id": "301",
+   "menutype": "main",
+   "title": "Home Style 1",
+   "alias": "home-style-1",
+   "path": "home/home-style-1",
+   "link": "index.php?option=com_content&view=article&id=14",
+   "type": "component",
+   "published": "1",
+   "parent_id": "1",
+   "level": "1",
+   "template_style_id": "0",
+   "params": "{}",
+   "lft": "13",
+   "rgt": "14",
+   "home": "0",
+   "client_id": "0"
+  },
+  {
+   "id": "302",
+   "menutype": "main",
+   "title": "Blog",
+   "alias": "blog",
+   "path": "blog",
+   "link": "index.php?option=com_content&view=category&layout=blog&id=15",
+   "type": "component",
+   "published": "1",
+   "parent_id": "1",
+   "level": "1",
+   "template_style_id": "0",
+   "params": "{}",
+   "lft": "15",
+   "rgt": "16",
+   "home": "0",
+   "client_id": "0"
+  }
+ ],
+ "modules": [
+  {
+   "id": "21",
+   "title": "Hero band",
+   "content": "<p>Hero words</p>",
+   "ordering": "1",
+   "position": "hero",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{}"
+  },
+  {
+   "id": "22",
+   "title": "Top band",
+   "content": "<p>Section top words</p>",
+   "ordering": "1",
+   "position": "section-top",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{\"color-module\": \"white\", \"bg-module\": \"images/bg.jpg\", \"bg-position\": \"center\", \"padding-top\": \"1\", \"padding-bottom\": \"0\", \"border-top\": \"0\", \"border-bottom\": \"1\", \"module-width\": \"1\", \"sub-heading\": \"Our work\", \"header_tag\": \"h2\"}"
+  },
+  {
+   "id": "23",
+   "title": "Bottom band",
+   "content": "<p>Section bottom words</p>",
+   "ordering": "1",
+   "position": "section-bottom",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{\"color-module\": \"\", \"padding-top\": \"0\", \"module-width\": \"0\"}"
+  },
+  {
+   "id": "95",
+   "title": "Masthead not on 201 or 128",
+   "content": "<p>Masthead words</p>",
+   "ordering": "1",
+   "position": "masthead",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{}"
+  },
+  {
+   "id": "24",
+   "title": "Side words",
+   "content": "<p>Sidebar words</p>",
+   "ordering": "1",
+   "position": "sidebar-1",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{}"
+  },
+  {
+   "id": "25",
+   "title": "Only plain",
+   "content": "<p>Only plain words</p>",
+   "ordering": "2",
+   "position": "section-bottom",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{}"
+  },
+  {
+   "id": "26",
+   "title": "Topbar words",
+   "content": "<p>Topbar words</p>",
+   "ordering": "1",
+   "position": "topbar-left",
+   "published": "1",
+   "module": "mod_custom",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{}"
+  },
+  {
+   "id": "98",
+   "title": "Slideshow",
+   "content": "",
+   "ordering": "2",
+   "position": "section-top",
+   "published": "1",
+   "module": "mod_ja_acm",
+   "showtitle": "0",
+   "client_id": "0",
+   "params": "{\"jatools-config\": \"{\\\":type\\\": \\\"ja_t3:slideshow\\\", \\\"slideshow\\\": {\\\"jatools-layout-slideshow\\\": \\\"style-owl\\\", \\\"slideshow[auto-play]\\\": [\\\"false\\\"], \\\"slideshow[data]\\\": {\\\"slideshow[data][title]\\\": [\\\"First slide\\\", \\\"Second slide\\\"], \\\"slideshow[data][btn-link]\\\": [\\\"index.php/home/home-style-1\\\", \\\"index.php?Itemid=202\\\"], \\\"rows\\\": 2, \\\"cols\\\": 7, \\\"type\\\": \\\"list\\\"}}}\", \"jatools-layout-slideshow\": \"style-owl\"}"
+  }
+ ],
+ "modules_menu": [
+  {
+   "moduleid": "21",
+   "menuid": "0"
+  },
+  {
+   "moduleid": "22",
+   "menuid": "0"
+  },
+  {
+   "moduleid": "23",
+   "menuid": "0"
+  },
+  {
+   "moduleid": "95",
+   "menuid": "-201"
+  },
+  {
+   "moduleid": "95",
+   "menuid": "-128"
+  },
+  {
+   "moduleid": "24",
+   "menuid": "202"
+  },
+  {
+   "moduleid": "24",
+   "menuid": "201"
+  },
+  {
+   "moduleid": "25",
+   "menuid": "202"
+  },
+  {
+   "moduleid": "26",
+   "menuid": "0"
+  },
+  {
+   "moduleid": "98",
+   "menuid": "0"
+  }
+ ],
+ "template_styles": [
+  {
+   "id": "9",
+   "template": "ja_t3",
+   "client_id": "0",
+   "home": "1",
+   "title": "ja_t3 - Default",
+   "params": "{\"t3_template\": \"1\", \"mainlayout\": \"default\", \"sublayout\": \"\", \"skip_component_content\": [\"201\"]}"
+  },
+  {
+   "id": "10",
+   "template": "ja_t3",
+   "client_id": "0",
+   "home": "0",
+   "title": "ja_t3 - Style 2",
+   "params": "{\"t3_template\": \"1\", \"mainlayout\": \"home-2\", \"sublayout\": \"\", \"skip_component_content\": [\"201\", \"128\"]}"
+  }
+ ]
+}

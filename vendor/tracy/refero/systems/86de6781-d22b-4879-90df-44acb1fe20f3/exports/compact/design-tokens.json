@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Ink — Primary text, card borders, icon strokes, hairline dividers. A warm near-black chosen over #000 to soften contrast against white without losing authority"
+    },
+    "canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "fog": {
+      "$value": "#dbdada",
+      "$type": "color",
+      "$description": "Fog — Ambient shadow tint, muted background washes, subtle surface elevation. Carries the 0.16-alpha shadow that lifts cards off the canvas"
+    },
+    "slate": {
+      "$value": "#8e8e93",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, de-emphasized metadata, inactive nav borders, helper copy"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "signal-coral": {
+      "$value": "#ee585a",
+      "$type": "color",
+      "$description": "Signal Coral — Filled CTA backgrounds (action buttons, filter pills), inline text links, notification dot, hover/focus glow. The sole chromatic accent — one warm red against matte white creates urgency without aggression"
+    }
+  },
+  "font": {
+    "aeonik": {
+      "$value": "Aeonik",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI. 700 for the monumental wordmark and large display headings, 500 for medium-emphasis labels and nav, 400 for body and metadata. Tight -0.011em tracking across all sizes tightens the geometric forms and gives the wordmark its dense, packed look."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fonts.ninja",
+      "siteName": "Discover",
+      "extractedAt": "2026-06-03T20:57:16.917Z",
+      "variant": "compact"
+    }
+  }
+}

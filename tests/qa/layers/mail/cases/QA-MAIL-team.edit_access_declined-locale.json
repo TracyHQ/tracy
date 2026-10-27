@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.edit_access_declined-locale",
+  "itemIds": [
+    "letter:team.edit_access_declined:en",
+    "letter:team.edit_access_declined:vi",
+    "letter:team.edit_access_declined:de",
+    "letter:team.edit_access_declined:it",
+    "letter:team.edit_access_declined:fr",
+    "letter:team.edit_access_declined:nl",
+    "letter:team.edit_access_declined:zh",
+    "letter:team.edit_access_declined:es"
+  ],
+  "requirement": "team.edit_access_declined reads in each of the eight languages and any other language reads as English",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 5",
+    "invariant": "the 8 interface languages; every other value (ja, zh-TW, empty, garbage) is English"
+  },
+  "edgeTags": ["locale"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.locale#team.edit_access_declined:"],
+  "redProof": null,
+  "legacyIds": []
+}

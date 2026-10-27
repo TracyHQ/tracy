@@ -1,0 +1,254 @@
+{
+  "dos": [
+    "Use #bdff00 lime as the ONLY filled action color in the system; never substitute another hue for primary CTAs.",
+    "Set headlines at 64–94px with Denim Ink weight 600–700 and -0.045em tracking — the extreme size and tight tracking is the brand's visual signature.",
+    "Maintain the monochromatic green discipline: layer surfaces using #1b2d00 → #203400 → #335400, never introduce gray neutrals.",
+    "Use 32px radius for all cards and 16px radius for all buttons; pill shapes (9999px) are reserved for nav items and tag chips.",
+    "Place an 8px lime dot before every section eyebrow label — it is the brand's 'live signal' indicator.",
+    "Keep body text in Denim Ink weight 400 at 16–20px, #ffffff, with line-height 1.5 and -0.02em tracking.",
+    "Allow sections to breathe with 80px vertical gaps and full-width dark bands — density comes from content, not from tight spacing."
+  ],
+  "donts": [
+    "Never use #bdff00 as a large background outside of one featured decorative panel per page — rationing lime is what makes it feel like a signal.",
+    "Do not introduce drop shadows for elevation; the system separates layers through color tier shifts, not shadow depth.",
+    "Do not use gray (#808080, #999, etc.) for any UI element — the palette is green-monochrome plus white and lime only.",
+    "Never set body text below 16px except for the 8px Courier New micro-labels — legibility is non-negotiable.",
+    "Do not mix multiple accent greens (#73a303, #586740) into the same component — one accent per surface keeps the hierarchy clean.",
+    "Do not add gradients — the design relies on flat color blocks for its terminal/phosphor aesthetic.",
+    "Do not use heavy font weights below 32px — Denim Ink at weight 700 in body sizes destroys readability; reserve 700 for display moments only."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#203400",
+      "name": "Forest Canopy",
+      "role": "Primary page background, nav strip, footer canvas — the dominant surface that defines the entire brand atmosphere",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1b2d00",
+      "name": "Vault Floor",
+      "role": "Card surfaces, recessed panels, elevated content blocks within the forest canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#335400",
+      "name": "Canopy Mid",
+      "role": "Elevated card variant, highlighted surface tier above the base canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bdff00",
+      "name": "Lime Phosphor",
+      "role": "Primary action buttons, active state indicators, illustrative highlight panels, brand-accent moments — the sole chromatic signal in the system",
+      "group": "brand"
+    },
+    {
+      "hex": "#586740",
+      "name": "Moss Border",
+      "role": "Hairline dividers, list separators, subtle table borders — barely-there green-on-green rules",
+      "group": "neutral"
+    },
+    {
+      "hex": "#73a303",
+      "name": "Fern",
+      "role": "Secondary accent strokes, table emphasis borders, mid-saturation green used sparingly for variety within lime contexts",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Body text, heading text, icon strokes, ghost button borders, link colors, input fields — the only neutral light tone in the palette",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed dark canvas with a centered max-width content column (~1280px). Navigation is a slim top bar with logo left, nav center, login + lime CTA right. Hero is a two-column split: text block (60%) left with headline + subtext + 2–3 buttons, decorative illustration (40%) right. Subsequent sections alternate between text-left/visual-right two-column layouts and full-width centered headline stacks. A horizontal hairline divider separates major sections. Section rhythm is spacious: 80px vertical gaps between bands, each section introduced by a lime-dot eyebrow label. Card grids are not used heavily — content prefers single-column or two-column arrangements. No sidebar; no mega-menu. The overall page flows like vertical terminal output — section by section, each with its own green-dot identifier.",
+  "imagery": "Minimal illustrative photography; the brand favors flat lime-green geometric illustrations (hourglass, concentric circles) rendered in pixelated/dot-matrix style that echoes the phosphor-terminal aesthetic. Imagery is always contained within rounded-corner panels (32px radius), never full-bleed. No lifestyle photography, no people — the visual language is abstract-tech and object-focused. The only color used in illustrations is lime (#bdff00) as line-art on the dark canvas, or as a full solid-lime panel with white/green content inside. Icon style is line-based, thin stroke, monochromatic white or lime.",
+  "similar": [
+    {
+      "why": "Dark-mode developer platform with deep-green-to-near-black background and a single electric green accent for actions and data highlights",
+      "business": "Pinecone"
+    },
+    {
+      "why": "Extreme typographic hierarchy with massive display headlines on a dark canvas, and the discipline of one accent color used as signal",
+      "business": "Vercel"
+    },
+    {
+      "why": "Dense product UI with comfortable spacing, pill-shaped nav, and ghost outline buttons as the default interaction",
+      "business": "Retool"
+    },
+    {
+      "why": "Dark interface with precise typography, generous corner radii on cards, and a disciplined monochromatic palette accented by a single vibrant color",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "12px",
+      "cards": "32px",
+      "pills": "9999px",
+      "buttons": "16px",
+      "body-blocks": "24px",
+      "alternate-button": "20px"
+    },
+    "elementGap": "24px",
+    "sectionGap": "80px",
+    "cardPadding": "40px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#203400",
+      "name": "Forest Canopy",
+      "level": 1,
+      "purpose": "Base page background — the dominant canvas filling all viewports"
+    },
+    {
+      "hex": "#1b2d00",
+      "name": "Vault Floor",
+      "level": 2,
+      "purpose": "Card surfaces and recessed content blocks, one tier deeper than the canvas"
+    },
+    {
+      "hex": "#335400",
+      "name": "Canopy Mid",
+      "level": 3,
+      "purpose": "Elevated or active card states, highlighted content tiers"
+    },
+    {
+      "hex": "#bdff00",
+      "name": "Lime Phosphor",
+      "level": 4,
+      "purpose": "Featured decorative panel and primary action surface — the sole bright signal"
+    }
+  ],
+  "northStar": "Electric terminal in a deep forest vault — lime phosphor on midnight olive.",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "body",
+      "size": 20,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.7
+    },
+    {
+      "role": "heading-sm",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "heading",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -1.35
+    },
+    {
+      "role": "display",
+      "size": 94,
+      "lineHeight": 1,
+      "letterSpacing": -4.23
+    }
+  ],
+  "components": [
+    {
+      "name": "Lime Primary Button",
+      "role": "High-emphasis action — booking calls, starting contact flows",
+      "description": "Filled #bdff00 background, #1b2d00 or #203400 text, 16px radius, padding 18px 32px. Denim Ink weight 400–600 at 16–18px. The only fully filled button in the system — use sparingly as the lime is rationed."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action — press releases, read-more links, navigation",
+      "description": "Transparent background, 1px #ffffff border, #ffffff text, 16px radius, padding 18px 32px. Denim Ink weight 400. The default button for anything that isn't the page's single primary action."
+    },
+    {
+      "name": "Pill Navigation Link",
+      "role": "Top-nav items and supplementary action chips",
+      "description": "9999px radius, small padding (~10px horizontal), Denim Ink weight 400, #ffffff text on transparent background. No border on default nav items; the Login button uses the same pill shape but with a white 1px border."
+    },
+    {
+      "name": "Featured Lime Panel",
+      "role": "Decorative-content block — large visual moment with solid lime fill",
+      "description": "#bdff00 background, 32px radius, padding 40px. Contains illustration or large graphic. This is how the brand deploys lime as a large surface (not just a button), creating a phosphor-screen effect against the dark canvas."
+    },
+    {
+      "name": "Dark Content Card",
+      "role": "Section containers, content blocks, feature cards",
+      "description": "#1b2d00 or #203400 background, 32px radius, padding 40px. No border, no shadow — the card separates from the page purely through the subtle dark-green shift between vault floor and forest canopy. Text inside is #ffffff at body sizes."
+    },
+    {
+      "name": "Elevated Accent Card",
+      "role": "Highlighted variant for emphasis or hover/active states",
+      "description": "#335400 background, 32px radius, 40px padding. One tier brighter than the base card, used to mark active or featured content within card grids."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section separator, list rule, table border",
+      "description": "1px line in #586740 (moss border) or white at low opacity. Very low contrast — these dividers whisper rather than announce, maintaining the calm dark atmosphere."
+    },
+    {
+      "name": "Active Dot Indicator",
+      "role": "Status marker beside section labels (\"NG Powered by HYCU\", \"360° Protection\")",
+      "description": "8px solid #bdff00 circle, sits inline before a caption or label. Functions as a section's 'armed' indicator — the lime dot says this area is live/important."
+    },
+    {
+      "name": "Section Eyebrow Label",
+      "role": "Small green dot + tiny caption introducing each section",
+      "description": "#bdff00 dot (8px) + Denim Ink 8–16px caption in #ffffff, tight tracking. Always paired vertically (dot above text). Acts as a section's identifier badge."
+    },
+    {
+      "name": "Headline Block",
+      "role": "Hero and section headlines at display scale",
+      "description": "Denim Ink weight 600–700, 64–94px, line-height 1.0, letter-spacing -0.045em. #ffffff color. These headlines are massive and aggressively tracked-tight; they read as architectural statements, not flowing prose."
+    },
+    {
+      "name": "Ghost Input Field",
+      "role": "Form inputs, search fields, email capture",
+      "description": "Transparent or #203400 background, 1px #ffffff border, 12–16px radius, Denim Ink 16px white text. Padding ~10px vertical. Placeholder text in muted white."
+    },
+    {
+      "name": "CTA Card / Feature Card with Image",
+      "role": "Feature cards combining text and visual",
+      "description": "#1b2d00 surface, 32px radius, two-column internal layout (text left 60%, image right 40%) or stacked. 40px internal padding. No shadow — surface separation comes from color tier shift only."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All interface text — from tiny labels to massive display headlines. The custom geometric face is the voice of the brand; weight 400 covers body and body-large, 600 for subheadings and emphasized inline, 700 reserved for the largest display moments. Extreme size jumps (40→64→86→94) create a poster-like hierarchy where the largest text dwarfs everything else on the page.",
+      "sizes": "16px, 20px, 32px, 40px, 64px, 86px, 94px",
+      "family": "Denim Ink",
+      "weight": "400, 600, 700",
+      "lineHeight": "1.00–1.50",
+      "substitute": "Space Grotesk, or Inter Tight as a fallback",
+      "letterSpacing": "-0.045em at display (64–94px), -0.022em at heading (32–40px), -0.02em at body (16–20px)"
+    },
+    {
+      "role": "Tiny monospaced labels (8px) for micro-annotations, likely near icons or status indicators. Ultra-tight tracking (-0.14em) at this size reads as a decorative tech-glitch element rather than readable text.",
+      "sizes": "8px",
+      "family": "Courier New",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "JetBrains Mono, IBM Plex Mono",
+      "letterSpacing": "-0.14em"
+    }
+  ],
+  "description": "Assurestor operates as a dark-mode command console: a deep forest-green canvas (#203400) swallows the viewport while a single electric lime (#bdff00) acts as the only signal of action or emphasis — like phosphor readouts on a military terminal. The custom \"Denim Ink\" typeface dominates with extreme size jumps (64→86→94px) and aggressive negative tracking, producing headlines that feel carved rather than written. Surfaces layer subtly within the green family (#1b2d00 cards, #335400 elevated panels) rather than introducing grays, keeping the system chromatically disciplined. Components stay lightweight: ghost outlines replace heavy fills, generous corner radii (32px cards, 9999px pills) soften the dark density, and lime is rationed to CTAs, active dots, and one large illustrative block.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #ffffff\n- background: #203400\n- card surface: #1b2d00\n- elevated card: #335400\n- border / hairline: #586740\n- accent / decoration: #bdff00\n- primary action: #bdff00 (filled action)\n\n3–5 Example Component Prompts:\n\n1. Create a Primary Action Button: #bdff00 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a two-column feature section: dark background (#203400). Left column (60%): lime 8px dot eyebrow + Denim Ink 64px weight 600 headline in #ffffff, letter-spacing -0.045em, followed by 16px body text in #ffffff at line-height 1.5. Lime filled button below (18px 32px padding, 16px radius). Right column (40%): a large solid-lime (#bdff00) panel with 32px radius and 40px padding, containing a white geometric illustration centered inside.\n\n3. Create a dark content card: background #1b2d00, 32px radius, 40px padding. Title in Denim Ink 32px weight 600, #ffffff, letter-spacing -0.022em. Body in Denim Ink 16px weight 400, #ffffff, line-height 1.5. No shadow, no border — the card floats on the forest canvas purely through color shift.\n\n4. Create a ghost outline button: 1px solid #ffffff border, transparent background, Denim Ink 16px weight 400 in #ffffff, 16px border-radius, 18px 32px padding, line-height 1. Pair it next to a filled lime button with identical sizing but #bdff00 background and #1b2d00 text.\n\n5. Create a section eyebrow label: an 8px #bdff00 dot positioned inline-block, followed by a Denim Ink 16px caption in #ffffff with -0.02em tracking. Vertically centered. Used as the identifier marker above every major section headline."
+    }
+  ]
+}

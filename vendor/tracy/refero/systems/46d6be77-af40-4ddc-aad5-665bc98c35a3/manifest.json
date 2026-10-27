@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "46d6be77-af40-4ddc-aad5-665bc98c35a3",
+  "status": "complete",
+  "name": "AYOCIN",
+  "url": "https://styles.refero.design/style/46d6be77-af40-4ddc-aad5-665bc98c35a3",
+  "sourceWebsite": "https://ayocin.com",
+  "extractedAt": "2026-09-20T19:24:34.001Z",
+  "capturedAt": "2026-10-08T05:11:05.957279+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunlit wellness totem. Build screens like a warm interior photograph: monumental type, softly blurred architectural shadows, and a single glowing object held inside quiet cream space.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cc0ef416-ec68-40b9-9018-c27db5945717.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e2bffc92-bc3d-4361-b941-8bc27b7996bf.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/eb479178-d3e6-456f-9643-8c0f3e84a16c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/fd052466-498a-452e-b8c4-055733c41758.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/648d96f1-775f-4f86-bfd2-04b983cc31d7.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ea0617b6a9f2ee4eee6770f08fd35324eb3a9e734b41bf8d2548e3c2f86ad351",
+      "bytes": 19242
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "912bb51a50351a94991a898282de2cdf4d6970e223c139e9a664188f597a864f",
+      "bytes": 92200
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1366282b99461b61aaed849d3eb66a5bc20fd6048865c30a19bc1cf406bd7746",
+      "bytes": 16030
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "12aca6f919a1540ef0417acddbcd0efd3afe4016cf7fedefe194e0629159762f",
+      "bytes": 10422
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6c49f70543ed679d44c6404ebeffecbe5a2a6aff02fb2594cac14c54d11684ba",
+      "bytes": 11389
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "674573128f95c599b551c9354d4280d2e5db9ea28a6428df3e22f3c9588a2083",
+      "bytes": 2607
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ea2da576b6e21a7b4dbddcf9898130c3a51267a27e47c448d320ad4fc630c2c9",
+      "bytes": 547
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "730ab76e1cd2fe32cedaf8f4cd2ec91e85e3729b02dc3681a24195a1d543ab96",
+      "bytes": 660
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7038913a57c9cae6aa1b54ed240a7144362a227d88f518e0905bdeaa2cb930bd",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "854dd93b809dd3dbfcdb8defd332ef9cafb37b33bdfe809ddf9e0c480c29f07f",
+      "bytes": 41370
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "812087cb79f6c21666625ef3e884d3c43ea314eff1cb40ffc0a892534c27fcb7",
+      "bytes": 21968
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6ae61076a89d29772137e759e324586164da9c2ed068b0ef4409a3ed42c1c619",
+      "bytes": 48270
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "672de9ac9d74c3c714623a2ab3abfe556212ba4b16126c093d55fc9a58c34c9d",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4f8fdf8a312787dcc72007f5cfe25e9e4c6506f7ae0d8677a37e374cc634fe0d",
+      "bytes": 1701
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e5cb32b911074fa13ce6daa73078457dad2362c0e4314d883f8fc8e752f5e2cd",
+      "bytes": 2393
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1f204e95-454a-437e-845b-c1b169d35607",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "46d6be77-af40-4ddc-aad5-665bc98c35a3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "84a0fc5e-3610-4c10-a922-7848daa68b92",
+    "8d315332-6267-4dc0-a14c-e8b49c26b0e1",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "a6791bc8-c49d-4e7a-a09d-877afcd04c25",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e4e8fe86-47ed-4ddd-a6c6-2c28eae9aabe",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21"
+  ]
+}

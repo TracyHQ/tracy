@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8",
+  "kind": "fix",
+  "title": "JA Nova wp7 1.1.8: article, author, project, stat, related, video-intro, position and expertise blocks match the Joomla source heights at 320–1440px",
+  "pr": 991,
+  "area": "wordpress-theme/wp-ja-nova",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the shipped wp-ja-nova stylesheet and the overlay stylesheet in the checkout; strip comments and flatten whitespace. Both must carry the 1.1.8 rules (article title 32px, author name 24px up to 991.98px, stat title min-height, project tag row nowrap below 576px, video-intro pull-up, position row flex and title line box, expertise box padding and pill margins) and style.css must read Version: 1.1.8.",
+    "S2: Read tasks/ja-nova-wp7/release/fix-measure.json: it was taken by site-sweep.mjs on the released zip (its sha256 equals the wp-ja-nova-1.1.8.zip line of SHA256SUMS), all 11 checks pass with 0 heights defects, and its baseline is 1.1.7 whose heights check failed."
+  ],
+  "expect": [
+    "S1: every rule is present in both stylesheets and the version line reads 1.1.8.",
+    "S2: the release measure is bound to the released zip, 11/11 checks pass, heights has 0 open groups, and the 1.1.7 baseline failed heights."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.mjs",
+    "evidence": "tasks/ja-nova-wp7/release/fix-measure.json"
+  },
+  "evidence": "Full site sweep of 07/10/2026 UTC on the clean restore of the packed 1.1.8 site against the local Joomla source: 11/11 checks, heights 0 open and 3 accepted (D-02, D-07, D-17), 0 not measured; the 1.1.7 baseline had 18 open heights groups",
+  "fence": "Static presence of each 1.1.8 rule in the shipped and overlay stylesheets plus the recorded release measure; browser-measured behaviour is covered by the site sweep that produced the measure",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.mjs"]
+  }
+}

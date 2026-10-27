@@ -1,0 +1,24 @@
+{
+  "name": "@tracy/od-brand-engine",
+  "version": "0.1.5-tracy.1",
+  "description": "OpenDesign's brand pipeline, vendored: a site URL becomes a seed, a token system, a kit and six artifacts — plus Tracy's mapping onto the 56 tokens the design library speaks",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "NOTICE",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "undici": "7.29.0"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "color": {
+    "highlighter-mint": {
+      "$value": "#e2ffcc",
+      "$type": "color",
+      "$description": "Highlighter Mint — Primary brand accent — display text, nav links, button labels, icon fills. The signature color; reads as highlighter pen on topo map"
+    },
+    "sage-stone": {
+      "$value": "#84907f",
+      "$type": "color",
+      "$description": "Sage Stone — Muted secondary accent — subtle background washes, subdued UI elements where Highlighter Mint would be too loud"
+    },
+    "carbon-ink": {
+      "$value": "#161b13",
+      "$type": "color",
+      "$description": "Carbon Ink — Dark section backgrounds — near-black with the faintest green undertone, anchors the dark bands of the page"
+    },
+    "forest-charcoal": {
+      "$value": "#2d3329",
+      "$type": "color",
+      "$description": "Forest Charcoal — Mid-dark text and borders on light sections — softer than pure black, keeps the green-warmth consistent"
+    },
+    "topo-gray": {
+      "$value": "#dde2e4",
+      "$type": "color",
+      "$description": "Topo Gray — Light section backgrounds, card surfaces, hairlines — the base canvas for light bands"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon strokes, link underlines, high-contrast accents where maximum punch is needed"
+    }
+  },
+  "font": {
+    "f37stout": {
+      "$value": "F37stout",
+      "$type": "fontFamily",
+      "$description": "Display face for section openers and brand wordmark. The extreme condensed proportions at 0.90 line-height and a single weight (400) create landscape-blocking headlines that read as stamped signage, not web type. At 366px it fills the viewport; at 40–48px it becomes a tight sectional label."
+    },
+    "mono": {
+      "$value": "mono",
+      "$type": "fontFamily",
+      "$description": "All UI chrome, body copy, nav, captions, buttons, footer text. The -0.01em tracking and tight 1.20 line-height give it a screen-printed, field-guide density. Weight 700 is used sparingly for emphasis; weight 400 carries the load. All-caps treatments dominate — this face behaves like a typewriter."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Serif accent for inline links, providing a newspaper/editorial contrast against the mono body. Used sparingly — one or two link moments per page."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sanrita.ca/about",
+      "siteName": "San Rita",
+      "extractedAt": "2026-06-03T17:19:53.815Z",
+      "variant": "compact"
+    }
+  }
+}

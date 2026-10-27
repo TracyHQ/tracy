@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+  "status": "complete",
+  "name": "Apple",
+  "url": "https://styles.refero.design/style/06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+  "sourceWebsite": "https://www.apple.com/apple-watch-ultra-4",
+  "extractedAt": "2026-09-20T21:34:18.257Z",
+  "capturedAt": "2026-10-08T05:08:00.519033+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Midnight endurance instrument. Build screens as a sequence of black exhibition bays where oversized SF Pro headlines frame precision hardware, active data, and carefully rationed electric color.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/319a024b-8880-473f-88db-10fdca180589.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e001d398-9ceb-4847-97a2-84d43d847e33.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/867586bc-8c2c-44b9-8b0c-d912aa484fc9.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a3ee62c8-c674-48a3-84a9-e8269eefd621.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b8e514c1-2419-4b9a-b98f-2ab3c673ff23.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f6388781f61b68793f2d76c2b704b707443a2eb50c1c11c49a90ce57984b78cf",
+      "bytes": 21245
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7d00134fc47efd8b677d661e554cf5a9c67ef5bbf25c4200caf2f575df101e20",
+      "bytes": 82550
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "260f231bc4ea6e231b9910612e88c749786b0df22041f7a36beac89e108942f5",
+      "bytes": 17292
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3567e34b6f59f27ae0754436c0fa32c5f73e11fecfca1d1313a7df7deb2b59ae",
+      "bytes": 15724
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4191c6959b351240ccde4521c9b78c78dab2d23c6a87ca86ca77b4ef1de79605",
+      "bytes": 11502
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7f335bd1153364ce7d9227988a3d007cb626b6b4bd51b1fb7fb0c9524a7c9f97",
+      "bytes": 3564
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "109af7f3c626c31bb5b3aebb4e96035113e59467785903d8738e39d65b290278",
+      "bytes": 784
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c85bf5a74d1aa087f7583704e12d25d0de9404404eaa41c0b3e21073d8d7639a",
+      "bytes": 801
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9f788e17ce9f5a14873ae79e142555d45b44960ce11ea3cb7574bc11c9fbce98",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5af0813376ca621287d16f5891c60d207e1893d83227827da99eb3b8d27f23f0",
+      "bytes": 44762
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7e48506d5623a9d861423532ae0c8515c6f2ae7829bf4711399966bf539f1285",
+      "bytes": 24344
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6fe3bc0ba2aeb6355544d23a210b1841b074f8303dfacb5527acb07376548015",
+      "bytes": 74898
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ac545320f1dbe9b07306b6539989731d1f2ff2732c1181da5103bb23d74174b8",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "139ac1727a66dde36abb26c4eecfd5579a211dc1c45911b79fc5e1a9519596fd",
+      "bytes": 2454
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0ec590faa0795e1676e3d0b30241415152eaf7d19b25b29ca15b5f74cfd30c8a",
+      "bytes": 3095
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "375e255f-6e7b-4091-bf73-6df42a094263",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "b8c2e033-3846-47cf-a52d-2bb39e493d3b",
+    "c0717d1a-b446-4166-a445-6497fe287fea",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

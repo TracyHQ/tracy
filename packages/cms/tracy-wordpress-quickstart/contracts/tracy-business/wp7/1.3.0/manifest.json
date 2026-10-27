@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-business/wp7/1.3.0",
+  "platform": "wordpress",
+  "theme": "wp-tracy-business",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-business/wp7",
+    "version": "1.3.0",
+    "platform": "wordpress",
+    "platformVersion": "7.1",
+    "phpVersion": "8.3.33",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-tracy-business",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "tracy-business-wp7-webroot-1.3.0.tar.gz",
+        "bytes": 67903799,
+        "sha256": "238875f687b15fe42740338ceffd5543dea6805d8c3dd844f66bc2ec1bdc417c",
+        "githubAssetId": 599025885,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-webroot-1.3.0.tar.gz"
+      },
+      "database": {
+        "file": "tracy-business-wp7-database-1.3.0.sql.gz",
+        "bytes": 1591242,
+        "sha256": "3fbfd14fbf23b92e9f63e029a72508e93efe379b40302eea06e4c1d1b72304e6",
+        "githubAssetId": 599025884,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-database-1.3.0.sql.gz"
+      }
+    }
+  },
+  "coworkMinVersion": "0.8.0",
+  "mode": "content-only"
+}

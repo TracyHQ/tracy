@@ -1,0 +1,18 @@
+{
+  "extends": "joomla-ja-social-ii",
+  "template": "joomla/ja-social-ii",
+  "minVersion": {
+    "quickstart/ja-social-ii/j6": "1.0.5"
+  },
+  "maxVersion": {
+    "quickstart/ja-social-ii/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 19/10/2026 (dot 3): the template reads every role variable (role scan 1445 -> 0 unresolved, VARS-1), Tagged Items answers on Joomla 6 (no formbehavior.chosen), and the slot module has its own position rendered on every layout (tracy-ds); every read falls back to the released value (release-batch verify). Every other rule as joomla-ja-social-ii.",
+  "module": {
+    "title": "Tracy design system",
+    "position": "tracy-ds",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "a position the 1.0.5 template renders on every layout (tpls/blocks/header.php and header-features-intro.php, empty without a module); off-canvas renders only where the header shows its actions column, so Try on wore the system on 4 of 31 pages (PREVIEW-PARITY NOT_WORN, 19/10/2026)"
+  }
+}

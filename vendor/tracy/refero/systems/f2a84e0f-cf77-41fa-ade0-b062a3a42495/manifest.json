@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f2a84e0f-cf77-41fa-ade0-b062a3a42495",
+  "status": "complete",
+  "name": "GRAZA",
+  "url": "https://styles.refero.design/style/f2a84e0f-cf77-41fa-ade0-b062a3a42495",
+  "sourceWebsite": "https://graza.co",
+  "extractedAt": "2026-06-03T17:58:09.573Z",
+  "capturedAt": "2026-10-08T05:19:26.358173+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Mediterranean deli counter, sunlit and hand-set",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f9fbba96-f0b4-4b75-b3c1-63a3c1433ba0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ec13dc37-47f8-432a-bd4f-c2d1bec09d03.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c5e5a448-f2a8-4793-bd7a-c6e82b729879.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ec136f77-b251-4bcd-bee2-2bd2c06ff520.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b7ca43ba-0082-426b-a93f-5c956b3423ab.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b4cca00662058234df9e26abeeb97b24e6301d7474ea94aa488949cf2dbc1d38",
+      "bytes": 21599
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9652bbf21cd06526f4bd79dd27f447155ec07a257264467172500144f7b0f9d3",
+      "bytes": 164219
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6217fbdeca811d0f97e091490e2e2babf4bf8faecce16e63ba335ed821f60446",
+      "bytes": 17745
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "212a2296b1067483fbc34b299cc42a4ebadebcc87c6e23f55ce15eecb1afb126",
+      "bytes": 11554
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e0ade2f4d06471317ee5c268855b108970d6ba2f1eef19747e45f5384be4d5e2",
+      "bytes": 13047
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4773d183e94f85950df7c4d8eaa16fee7616cbb05c1860f1b59c213bd74e2e69",
+      "bytes": 2795
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "07f777fbc25cdcf5fd94a04cfa1304e93b7e8362d44442f5a980cbe1ccc8bd3a",
+      "bytes": 672
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3815aa889f91bb9cc11c09329ccf27ce06d60fc68def197061c3363d62301f38",
+      "bytes": 689
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "af809c3c38b6dd979fe1524aadecd33aa914c4993d8de0788f7dad9c3f5664fe",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8c0ecf811732162b20cd1d71e23a33bbc21019e5aa5507aac947145d2b26e331",
+      "bytes": 43017
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6bea6e20aa8cc314989f84b9ff457a5f08ef693c6ff3f692290486f89776df71",
+      "bytes": 22110
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d9c6f64965bf7629ee77924e454a1ef50aeab9d68da8586b2d354f4c98fe932c",
+      "bytes": 38310
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "207587d212460974ff6c2f58d8ed7f26762bbb4f0c7db0614eee1f0150ff9a76",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a243b1fcbaa67cfc755d5a453bde153f118de2466fe25a99240076cf822708b8",
+      "bytes": 1831
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c82dff19f0b8e1603726f55595365e8708bc50264adbec4059776f18a8f307e6",
+      "bytes": 2386
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "a6791bc8-c49d-4e7a-a09d-877afcd04c25",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

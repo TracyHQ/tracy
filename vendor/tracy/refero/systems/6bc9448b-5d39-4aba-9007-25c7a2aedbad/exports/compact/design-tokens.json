@@ -1,0 +1,84 @@
+{
+  "color": {
+    "lime-pulse": {
+      "$value": "#7bd428",
+      "$type": "color",
+      "$description": "Lime Pulse — Green outline accent for tags, dividers, and focused UI edges"
+    },
+    "signal-blue": {
+      "$value": "#2484f2",
+      "$type": "color",
+      "$description": "Signal Blue — Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-signal": {
+      "$value": "#2374c4",
+      "$type": "color",
+      "$description": "Deep Signal — Hover/pressed state for Signal Blue links and outlined actions, visited-link fallback — one step darker so the interactive state has a clear visual step"
+    },
+    "carbon": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon — Headline text, dark section headers, strong emphasis"
+    },
+    "graphite": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Graphite — Body text, default copy, long-form paragraphs, footer text — the working text color for the entire interface"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Heavy borders, heading underlines, icon fills, structural dividers"
+    },
+    "mist": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, input outlines, ghost button borders, neutral chip backgrounds"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, floating information cards, content panels, price badge surface"
+    }
+  },
+  "font": {
+    "roboto": {
+      "$value": "roboto",
+      "$type": "fontFamily",
+      "$description": "Secondary body, footer copy, link runs, button labels, small print — the workhorse text family that fills in around Proxima without competing with it"
+    },
+    "proximacapsbold": {
+      "$value": "proximacapsbold",
+      "$type": "fontFamily",
+      "$description": "Display lockup for the domain name itself (e.g. RELATE.APP). The all-caps heavy treatment at 46px is the single loudest element on the page — it IS the product. Substitute: Montserrat 800 uppercase, or League Gothic."
+    },
+    "proxima": {
+      "$value": "proxima",
+      "$type": "fontFamily",
+      "$description": "Primary UI and content family — section headings (31–33px), subheadings (22px), and larger body copy (20–21px). The 300/400 spread lets a subhead whisper while a label shouts without changing family. Substitute: Montserrat or Gotham."
+    },
+    "georgia": {
+      "$value": "Georgia",
+      "$type": "fontFamily",
+      "$description": "Italic-feel body passages and editorial pull quotes — Georgia's serif forms give a small block of text a magazine tone amid the otherwise sans-serif chrome"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Fallback body for system-rendered blocks, older browser fallback, and any third-party widget copy that ships in Arial"
+    },
+    "sourcesanspro": {
+      "$value": "sourcesanspro",
+      "$type": "fontFamily",
+      "$description": "sourcesanspro — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://relate.app",
+      "siteName": "Relate dot App",
+      "extractedAt": "2026-06-03T22:09:31.766Z",
+      "variant": "compact"
+    }
+  }
+}

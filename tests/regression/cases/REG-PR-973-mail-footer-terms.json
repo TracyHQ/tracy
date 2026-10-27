@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-973-mail-footer-terms",
+  "kind": "fix",
+  "title": "Every Tracy mail ends Terms · Privacy · tracy.ai, the whitelist mails carry the Did not request this? box, the site invitation drops Manage notifications, and a signed-out /?settings=notifications keeps its destination through /login",
+  "pr": 973,
+  "area": "tracy-web/mail",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL unset, run: node --test --test-reporter=tap apps/tracy-web/test/mail-footer-terms.test.mjs apps/tracy-web/test/notification-mail.test.mjs apps/tracy-web/test/whitelist-confirmation-i18n.test.mjs",
+    "S2: Record the exit code, the '# pass' and '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "The sign-in mail's footer reads 'Terms · Privacy · tracy.ai' with links to https://tracy.ai/terms and https://tracy.ai/privacy, tracy.ai itself unlinked, and its text part ends 'Terms: https://tracy.ai/terms · Privacy: https://tracy.ai/privacy'; in Vietnamese the footer reads 'Điều khoản · Quyền riêng tư · tracy.ai'.",
+    "A notification letter's footer reads 'Manage notifications · Terms · Privacy · tracy.ai', translated in the reader's language with no {{marker}} left.",
+    "The whitelist invitation's subject is 'About your Tracy sign-in' and both of its variants carry the 'Did not request this? You can safely ignore this email.' box after the JoomlArt member box, in HTML and in the text part.",
+    "The whitelist confirmation ends with the same box and no longer says \"Didn't ask to join?\".",
+    "A signed-out GET /?settings=notifications redirects to /login?next=%2F%3Fsettings%3Dnotifications, also where a guest landing exists; / stays /login and /?utm_source=joomlart stays /login?utm_source=joomlart; all four /login forms carry that next."
+  ],
+  "selectors": {
+    "footer": "apps/tracy-web/src/mail/templates/footer.html via brandFooter / brandFooterText in apps/tracy-web/src/mail/notification-mail.js",
+    "whitelist": "betaMail in apps/tracy-web/src/mail/emails.js, templates/join-whitelist.html",
+    "confirmation": "confirmationMail in apps/tracy-web/src/mail/confirmation-mail.js",
+    "root_door": "the scope === 'root' branch of apps/tracy-web/src/workspace/route.js"
+  },
+  "evidence": "Spec tracy-marketing/content/email/transactional/tracy-access/spec-2026-10-06 (Sarah, 06/10/2026): the whitelist mail landed in Gmail Promotions; on cowork.tracy.site a signed-out click on Manage notifications ended on the site with Settings closed. mail-footer-terms.test.mjs is 0/7 on origin/develop c0f766e94.",
+  "fence": "Pure mail renderers and the root workspace door mounted alone; no mail provider, no Gmail, no Postgres.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/mail-footer-terms.test.mjs",
+      "apps/tracy-web/test/notification-mail.test.mjs",
+      "apps/tracy-web/test/whitelist-confirmation-i18n.test.mjs"
+    ],
+    "tests": [
+      "1: the sign-in mail ends Terms · Privacy · tracy.ai",
+      "1: a notification letter keeps Manage notifications first",
+      "1: the sign-in mail in Vietnamese reads",
+      "2: the whitelist invitation is about the sign-in",
+      "3: the whitelist confirmation ends with the same box",
+      "5: a signed-out /?settings=notifications keeps where it was going in next",
+      "5: every way through /login keeps that next",
+      "the footer is one line: Manage notifications · Terms · Privacy · tracy.ai",
+      "the English mail kept its words"
+    ]
+  }
+}

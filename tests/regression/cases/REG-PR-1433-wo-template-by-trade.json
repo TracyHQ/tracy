@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1433-wo-template-by-trade",
+  "kind": "fix",
+  "title": "A restaurant demo is built on a restaurant, hotel or plain business template, never on a template made for another trade",
+  "pr": 1433,
+  "area": "website-opportunities/template",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: choose a template for a restaurant from the 28 cards develop offered on 19/10/2026, once per CMS.",
+    "S2: choose between a beauty spa card and a plain business card; between a charity card and a hotel card; with a restaurant card added."
+  ],
+  "expect": [
+    "S1: Joomla picks ja-resort (hospitality-match), never ja-spa; WordPress picks ja-morgan (multipurpose-match), never ja-impact; EmDash, offered only other trades, picks its first card and says first-available.",
+    "S2: the plain business card (business-match); the hotel card (hospitality-match); the restaurant card (restaurant-match)."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/revisions.js",
+    "dom": ""
+  },
+  "evidence": "PR 1433; before it, develop's cards gave Joomla ja-spa (the word spa matched the hospitality tier) and WordPress ja-impact (first-available), seen on the WordPress demo wp-marigold1 on stand wo, 18/10/2026",
+  "fence": "chooseTemplate's tier order and its other-trade exclusion",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-template-fit.test.mjs"
+    ],
+    "tests": [
+      "a restaurant template wins whenever one is offered",
+      "Joomla on develop: the hotel and resort template, never the beauty spa",
+      "WordPress on develop: the multipurpose business template, never the charity one",
+      "a hotel or resort template beats a template made for another trade",
+      "a beauty spa is not hospitality for a restaurant",
+      "with only other trades on offer, the first one is taken and says so"
+    ]
+  }
+}

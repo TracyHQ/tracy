@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-ink-violet: #01011b;
+  --color-plum-charcoal: #31263b;
+  --color-storm-mauve: #43394c;
+  --color-slate-iris: #717a94;
+  --color-ash-lavender: #89828d;
+  --color-parchment: #fffcfc;
+  --color-bone-mist: #ecedf2;
+  --color-fog-border: #dbd7da;
+  --color-twilight-plum: #473982;
+  --color-amethyst: #6f63b7;
+  --color-wisteria: #9e91d6;
+  --color-indigo-plum: #544692;
+  --gradient-indigo-plum: linear-gradient(90deg, #31263b 0%, #01011b 100%);
+
+  /* Typography — Font Families */
+  --font-pp-editorial-new: 'PP Editorial New', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-formula-semiextended: 'PP Formula SemiExtended', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-formula: 'PP Formula', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ibm-plex-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cinetype: 'Cinetype', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ibm-plex-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-lato: 'Lato', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

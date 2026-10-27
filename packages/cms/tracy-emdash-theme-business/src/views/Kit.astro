@@ -1,0 +1,59 @@
+---
+// Marketing-kit pages: static presentation samples (P5-G) whose copy is the page's `sample` JSON.
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import KitNewsletter from '@/components/kit/KitNewsletter.astro'
+import KitEmail from '@/components/kit/KitEmail.astro'
+import KitForm from '@/components/kit/KitForm.astro'
+import KitSlides from '@/components/kit/KitSlides.astro'
+import KitStyleGuide from '@/components/kit/KitStyleGuide.astro'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('pages', slug, { locale })
+if (!entry || entry.data.status !== 'published') {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const p = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request. The samples a kit view
+// draws are one JSON field the Content API does not project, so only the page's own fields carry one.
+const $page = stampFor(Astro.request, 'pages', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const sample = (p.sample ?? {}) as Record<string, any>
+const nl = (await getEmDashEntry('news_page', 'news', { locale })).entry?.data ?? {}
+// The newsletter form is bound on the investors entry too (template.config.json): the kit's subscribe card keeps a form
+// while an unticked News page is off the site (TCH #1013).
+const investors = (await getEmDashEntry('investors', 'investors', { locale })).entry?.data ?? {}
+const views: Record<string, any> = {
+  'kit-newsletter': KitNewsletter,
+  'kit-email': KitEmail,
+  'kit-form': KitForm,
+  'kit-slides': KitSlides,
+  'kit-style-guide': KitStyleGuide
+}
+const View = views[p.template]
+const kitLabel =
+  chrome.kit.find((k) => k.url.endsWith(`/${slug.replace(/^kit-/, '')}`) || k.url.endsWith(`/${slug}`))
+    ?.label ?? p.title
+const isGuide = p.template === 'kit-style-guide'
+---
+
+<Base chrome={chrome} title={p.title} description={p.lede} currentPath={`/kit/${slug}`} resourcesActive content={{ collection: "pages", id: entry.data.id, slug, toPath: (s) => `/kit/${s.replace(/^kit-/, "")}` }}>
+	<main class="container-site pb-24 pt-14">
+		{!isGuide && (
+			<div class="mb-5 flex gap-2.5 text-[13.5px] text-fg-meta"><a href={href(locale, "/")} class="text-forest-text" {...$site("home_label")}>{site.home_label}</a><span class="text-line-faint">/</span><span {...$site("kit_title")}>{site.kit_title}</span><span class="text-line-faint">/</span><span class="font-medium text-fg">{kitLabel}</span></div>
+		)}
+		<h1 class="h-kit mb-2.5" {...$page("title")}>{p.title}</h1>
+		{p.lede && <p class="mb-11 max-w-[46em] text-[16.5px] text-fg-muted" {...$page("lede")}>{p.lede}</p>}
+		{View ? <View sample={sample} locale={locale} site={site} news={nl} investors={investors} chrome={chrome} /> : <p class="text-fg-meta">—</p>}
+	</main>
+</Base>

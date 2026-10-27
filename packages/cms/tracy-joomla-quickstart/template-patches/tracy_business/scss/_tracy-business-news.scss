@@ -1,0 +1,798 @@
+//
+// Tracy Business — News (category blog with sidebar) and Article (full post with TOC / downloads / CTA).
+// Owned by the news build agent. Numbers measured on News.html / Article.html at 1440 (light).
+// The source has no media queries: the sidebar is `flex: 1 1 300px` and drops under the main
+// column once the row is too narrow. Here that drop is an explicit `lg` breakpoint.
+//
+
+// ---------------------------------------------------------------- shared: sidebar boxes
+.tb-sidebox {
+  border: 1px solid var(--border);
+  padding: 22px;
+
+  &--paper { background: var(--surface-warm); }
+
+  &__label {
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+  }
+}
+
+// a row list inside a box: name left, count/type right, hairline under each row
+.tb-siderows {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &__row {
+    align-items: center;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--accent);
+    display: flex;
+    font-size: 15px;
+    gap: 12px;
+    justify-content: space-between;
+    line-height: 1.2;
+    margin: 0;
+    padding: 9px 0;
+    text-decoration: none;
+
+    &:hover { color: var(--tb-signal); }
+  }
+
+  &__aux { color: var(--tb-meta); flex-shrink: 0; }
+}
+
+// dark CTA box (article aside) — Ink band constants, as in the shared CTA box
+.tb-sidecta {
+  background: var(--tb-ink-band);
+  color: var(--ds-c-on-ink, #F5F3EE);
+  padding: 24px;
+
+  &__title {
+    color: var(--ds-c-on-ink, #F5F3EE);
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin: 0 0 10px;
+  }
+
+  &__desc { color: var(--tb-ink-band-text); font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
+
+  .tb-btn { display: flex; font-size: 14.5px; justify-content: center; padding: 12px; width: 100%; }
+}
+
+// ---------------------------------------------------------------- News — category blog
+.tb-newsblog {
+  padding-bottom: 36px;
+
+  @include media-breakpoint-down(md) { padding-top: 24px; }
+
+  // page intro: H1 + lede left, "N articles" bottom-right
+  &__intro {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 400;
+    letter-spacing: -.025em;
+    line-height: 1.05;
+    margin: 0 0 10px;
+
+    @include media-breakpoint-down(md) { font-size: var(--text-3xl-phone); }
+  }
+
+  &__lede { color: var(--muted); font-size: 16.5px; line-height: 1.5; margin: 0; max-width: 44em; }
+  &__count { color: var(--meta); font-size: 13.5px; line-height: 1.2; white-space: nowrap; }
+
+  // filter chips = the category's children
+  &__chips {
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0 0 40px;
+    padding: 0 0 24px;
+
+    li { margin: 0; }
+  }
+
+  &__chip {
+    border: 1px solid var(--border);
+    color: var(--fg-2);
+    display: inline-block;
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 8px 16px;
+    text-decoration: none;
+
+    &:hover { border-color: var(--accent); color: var(--accent); }
+
+    &.is-active {
+      background: var(--tb-ink-fill);
+      border-color: var(--tb-ink-fill);
+      color: var(--tb-on-ink-fill);
+      font-weight: 600;
+
+      html[data-theme="dark"] & { background: var(--tb-ink-fill); border-color: var(--tb-ink-fill); color: var(--tb-on-ink-fill); }
+    }
+  }
+
+  // main | sidebar
+  &__row {
+    align-items: flex-start;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: minmax(0, 1fr) 450px;
+
+    @include media-breakpoint-down(xl) { grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; }
+    @include media-breakpoint-down(lg) { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  &__main { min-width: 0; }
+
+  &__empty { color: var(--muted); margin: 0 0 40px; }
+
+  // featured (leading) card: photo | copy
+  &__feat {
+    align-items: center;
+    background: var(--surface-warm);
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 28px;
+    grid-template-columns: 320px minmax(0, 1fr);
+    margin: 0 0 44px;
+
+    @include media-breakpoint-down(md) { gap: 0; grid-template-columns: 1fr; }
+  }
+
+  &__feat-media {
+    display: block;
+    height: 290px;
+    overflow: hidden;
+    padding: 24px 0;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+
+    @include media-breakpoint-down(md) { height: auto; padding: 0; img { aspect-ratio: 16 / 9; } }
+  }
+
+  &__feat-copy {
+    padding: 28px 28px 28px 0;
+
+    @include media-breakpoint-down(md) { padding: 24px; }
+  }
+
+  &__feat-title {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    margin: 0 0 12px;
+
+    a { color: var(--fg); text-decoration: none; &:hover { color: var(--accent); } }
+
+    @include media-breakpoint-down(md) { font-size: 26px; }
+  }
+
+  &__feat-desc { color: var(--muted); font-size: 15.5px; line-height: 1.65; margin: 0 0 18px; }
+  &__feat-meta { color: var(--meta); font-size: 13.5px; line-height: 1.2; margin: 0; }
+
+  // 2 × 2 intro cards
+  &__grid {
+    display: grid;
+    gap: 32px 28px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li { margin: 0; min-width: 0; }
+
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+
+  // pagination row
+  &__pager {
+    align-items: center;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    justify-content: space-between;
+    margin-top: 56px;
+    padding-top: 24px;
+  }
+
+  &__pages { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; li { margin: 0; } }
+
+  &__page {
+    align-items: center;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    display: flex;
+    font-size: 14px;
+    height: 38px;
+    justify-content: center;
+    text-decoration: none;
+    width: 38px;
+
+    &:hover { border-color: var(--accent); }
+
+    &--arrow { color: var(--meta); }
+    &--gap { border: 0; color: var(--tb-meta); font-size: 16px; }
+    &[aria-disabled="true"] { color: var(--tb-disabled-fg); pointer-events: none; }
+
+    &.is-active {
+      background: var(--tb-ink-fill);
+      border-color: var(--tb-ink-fill);
+      color: var(--tb-on-ink-fill);
+      font-weight: 600;
+
+      html[data-theme="dark"] & { background: var(--tb-ink-fill); border-color: var(--tb-ink-fill); color: var(--tb-on-ink-fill); }
+    }
+  }
+
+  &__pagemeta { color: var(--meta); font-size: 13.5px; line-height: 1.2; margin: 0; }
+
+  // sidebar: the modules of position `news-sidebar`, stacked
+  &__side {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    min-width: 0;
+  }
+}
+
+// news card (News grid). Not the Home `.tb-ncard`: the category sits ABOVE the title in Signal,
+// the title is Forest and bigger, the date sits last.
+.tb-newscard {
+  display: flex;
+  flex-direction: column;
+
+  &__media {
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    display: block;
+    margin: 0 0 16px;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__cat {
+    color: var(--tb-signal);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+
+    a { color: inherit; text-decoration: none; }
+  }
+
+  &__title {
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -.012em;
+    line-height: 1.32;
+    margin: 0 0 8px;
+
+    a { color: var(--accent); text-decoration: none; &:hover { color: var(--tb-signal); } }
+  }
+
+  &__desc { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin: 0 0 10px; }
+  &__date { color: var(--meta); font-size: 13px; line-height: 1.2; margin: 0; }
+}
+
+// sidebar: search box (mod_finder, layout tb-side)
+.tb-sidesearch {
+  display: flex;
+  margin: 0;
+
+  input[type="search"] {
+    appearance: none;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--ds-input-radius, 0);
+    color: var(--fg);
+    flex: 1 1 0%;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    line-height: 16px;
+    min-width: 0;
+    padding: 11px 12px;
+
+    &::placeholder { color: var(--tb-meta); }
+    &:focus-visible { box-shadow: var(--focus-ring); outline: 0; }
+  }
+
+  button {
+    background: var(--tb-band-forest-bg);
+    border: 0;
+    border-radius: var(--ds-btn-radius, 0);
+    color: var(--ds-c-accent-on, #fff);
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 15px;
+    line-height: 1;
+    padding: 0 16px;
+
+    &:hover { background: var(--tb-forest-deep); }
+    &:focus-visible { box-shadow: var(--focus-ring); outline: 0; }
+  }
+}
+
+// sidebar: latest articles (mod_articles, layout tb-latest)
+.tb-sidelatest {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li { margin: 0; }
+
+  &__item {
+    align-items: start;
+    color: var(--fg);
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 96px minmax(0, 1fr);
+    text-decoration: none;
+
+    &:hover .tb-sidelatest__title { color: var(--accent); }
+  }
+
+  &__item--noimg { grid-template-columns: minmax(0, 1fr); }
+
+  &__thumb {
+    border: 1px solid var(--border);
+    height: 68px;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__title { color: var(--fg); display: block; font-size: 14.5px; font-weight: 600; line-height: 1.35; margin: 0 0 4px; }
+  &__date { color: var(--meta); display: block; font-size: 12.5px; line-height: 1.2; margin: 0; }
+}
+
+// sidebar: newsletter — a static sample (mod_custom): no backend, the button is disabled
+.tb-sidenl {
+  background: var(--tb-band-forest-bg);
+  color: var(--ds-c-accent-on, #F5F3EE);
+  padding: 26px;
+
+  &__title {
+    color: var(--ds-c-accent-on, #F5F3EE);
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin: 0 0 10px;
+  }
+
+  &__desc { color: var(--tb-band-forest-fg); font-size: 14.5px; line-height: 1.6; margin: 0 0 16px; }
+
+  // `input.` keeps the specificity above the theme's global input[type="email"] rule
+  input.tb-sidenl__input {
+    appearance: none;
+    background: var(--tb-forest-deep);
+    border: 1px solid var(--tb-forest-sep);
+    border-radius: var(--ds-input-radius, 0);
+    color: var(--ds-c-accent-on, #fff);
+    display: block;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    line-height: 16px;
+    margin: 0 0 10px;
+    padding: 11px 12px;
+    width: 100%;
+
+    &::placeholder { color: var(--tb-forest-caret); }
+  }
+
+  &__btn {
+    background: var(--tb-band-signal-bg);
+    border: 0;
+    border-radius: var(--ds-btn-radius, 0);
+    color: var(--ds-c-accent-on, #fff);
+    display: block;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 16px;
+    padding: 12px;
+    width: 100%;
+
+    &[disabled] { cursor: default; opacity: .9; }
+  }
+}
+
+// ---------------------------------------------------------------- Article
+.tb-article {
+  align-items: flex-start;
+  display: grid;
+  gap: 64px;
+  grid-template-columns: minmax(0, 1fr) 436px;
+  padding-bottom: 36px;
+
+  @include media-breakpoint-down(md) { padding-top: 24px; }
+
+  @include media-breakpoint-down(xl) { gap: 40px; grid-template-columns: minmax(0, 1fr) 340px; }
+  @include media-breakpoint-down(lg) { grid-template-columns: minmax(0, 1fr); }
+
+  &--noaside { grid-template-columns: minmax(0, 1fr); }
+
+  &__main { min-width: 0; }
+
+  &__edit { margin-bottom: 16px; }
+
+  &__cat { color: inherit; text-decoration: none; &:hover { color: var(--accent); } }
+
+  // header
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 400;
+    letter-spacing: -.028em;
+    line-height: 1.08;
+    margin: 0 0 22px;
+
+    @include media-breakpoint-down(md) { font-size: var(--text-3xl-phone); }
+  }
+
+  &__lede {
+    color: var(--fg-2);
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1.5;
+    margin: 0 0 28px;
+
+    p { margin: 0; }
+  }
+
+  &__byline {
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0 0 36px;
+    padding: 18px 0;
+  }
+
+  &__avatar {
+    align-items: center;
+    background: var(--border-soft);
+    border-radius: 50%;
+    color: var(--fg-2);
+    display: flex;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 600;
+    height: 42px;
+    justify-content: center;
+    overflow: hidden;
+    width: 42px;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__author { flex: 1 1 200px; min-width: 0; }
+  &__author-name { color: var(--fg); font-size: 14.5px; font-weight: 600; line-height: 1.2; margin: 0 0 2px; }
+  &__author-meta { color: var(--meta); font-size: 13px; line-height: 1.2; margin: 0; }
+
+  &__share { display: flex; gap: 8px; list-style: none; margin: 0 0 0 auto; padding: 0; li { margin: 0; } }
+
+  &__share-btn {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--ds-btn-radius, 0);
+    color: var(--fg-2);
+    cursor: pointer;
+    display: flex;
+    font-family: var(--font-body);
+    font-size: 13px;
+    height: 36px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    text-decoration: none;
+    width: 36px;
+
+    &:hover { border-color: var(--accent); color: var(--accent); }
+    &.is-done { border-color: var(--accent); color: var(--accent); }
+  }
+
+  // hero photo + caption
+  &__hero {
+    margin: 0 0 36px;
+
+    img {
+      aspect-ratio: 676 / 420;
+      border: 1px solid var(--border);
+      display: block;
+      height: auto;
+      object-fit: cover;
+      width: 100%;
+    }
+  }
+
+  // the theme paints every figcaption as a dark uppercase band; these two are plain small captions
+  figure &__caption,
+  &__figs figure figcaption {
+    background: none;
+    color: var(--meta);
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: 0;
+    padding: 0;
+    position: static;
+    text-align: left;
+    text-transform: none;
+  }
+
+  figure &__caption { font-size: 13px; line-height: 1.3; margin: 12px 0 0; }
+
+  // body copy
+  &__body {
+    color: var(--tb-ink-2);
+    font-size: 17.5px;
+    line-height: 1.72;
+    max-width: 44em;
+
+    > p { margin: 0 0 22px; }
+
+    h2 {
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: clamp(22px, 2.3vw, 27px);
+      font-weight: 600;
+      letter-spacing: -.018em;
+      line-height: 1.2;
+      margin: 38px 0 14px;
+      scroll-margin-top: 100px;
+    }
+
+    ul, ol {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      line-height: 1.7;
+      margin: 0 0 22px;
+      padding-left: 22px;
+
+      li { margin: 0; }
+    }
+
+    blockquote {
+      background: var(--surface);
+      border-left: 3px solid var(--tb-signal);
+      margin: 32px 0;
+      padding: 24px 28px;
+
+      p {
+        color: var(--fg);
+        font-family: var(--font-display);
+        font-size: 22px;
+        line-height: 1.5;
+        margin: 0;
+      }
+    }
+
+    img { height: auto; max-width: 100%; }
+  }
+
+  // 2-up figures inside the body
+  &__figs {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 32px 0;
+
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+
+    figure { margin: 0; }
+
+    img {
+      aspect-ratio: 328 / 200;
+      border: 1px solid var(--border);
+      display: block;
+      height: auto;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    figure figcaption { font-size: 12.5px; line-height: 1.3; margin: 8px 0 0; }
+  }
+
+  // tags
+  &__tags {
+    align-items: center;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 40px 0;
+    padding-top: 24px;
+  }
+
+  &__tags-label { color: var(--meta); font-size: 13px; line-height: 1.2; margin-right: 4px; }
+
+  &__tag {
+    border: 1px solid var(--border);
+    color: var(--fg-2);
+    display: inline-block;
+    font-size: 13px;
+    line-height: 1.2;
+    padding: 7px 13px;
+    text-decoration: none;
+
+    &:hover { border-color: var(--accent); color: var(--accent); }
+  }
+
+  // prev / next (plg_content_pagenavigation, template override)
+  .tb-pagenav {
+    background: var(--border);
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 0 56px;
+
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+
+    &--single { grid-template-columns: 1fr; }
+
+    &__link {
+      background: var(--bg);
+      color: var(--fg);
+      display: block;
+      padding: 22px;
+      text-decoration: none;
+
+      &:hover .tb-pagenav__title { color: var(--accent); }
+      &--next { text-align: right; }
+      &--empty { background: var(--bg); }
+    }
+
+    &__label {
+      color: var(--meta);
+      font-size: 12px;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+    }
+
+    &__title { color: var(--fg); font-size: 16.5px; font-weight: 600; line-height: 1.4; margin: 0; }
+  }
+
+  // related articles
+  &__related { margin-top: 0; }
+
+  &__related-title {
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    margin: 0 0 24px;
+    padding-bottom: 16px;
+  }
+
+  &__related-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li { margin: 0; min-width: 0; }
+
+    @include media-breakpoint-down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+
+  &__relcard-media {
+    border: 1px solid var(--border);
+    display: block;
+    margin: 0 0 14px;
+    overflow: hidden;
+
+    img { aspect-ratio: 326 / 130; display: block; height: auto; object-fit: cover; width: 100%; }
+  }
+
+  &__relcard-title {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0 0 6px;
+
+    a { color: var(--accent); text-decoration: none; &:hover { color: var(--tb-signal); } }
+  }
+
+  &__relcard-date { color: var(--meta); font-size: 12.5px; line-height: 1.2; margin: 0; }
+
+  // aside: TOC · downloads · CTA. Sticky on desktop; on a phone the TOC would land under the
+  // whole article (the source's known 390 bug), so it is hidden below `lg` instead.
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+    position: sticky;
+    top: 120px;
+
+    @include media-breakpoint-down(lg) { position: static; }
+  }
+
+  &__toc {
+    @include media-breakpoint-down(lg) { display: none; }
+  }
+
+  &__toc-list { display: flex; flex-direction: column; gap: 10px; list-style: none; margin: 0; padding: 0; li { margin: 0; } }
+
+  &__toc-link {
+    border-left: 2px solid var(--border-soft);
+    color: var(--muted);
+    display: block;
+    font-size: 14.5px;
+    line-height: 1.4;
+    padding-left: 12px;
+    text-decoration: none;
+
+    &:hover { color: var(--fg); }
+
+    &.is-active { border-left-color: var(--tb-signal); color: var(--fg); font-weight: 600; }
+  }
+
+  &__dl-row {
+    font-size: 14.5px;
+    padding: 10px 0;
+
+    &--plain { color: var(--fg); }   // a download the source named without shipping the file
+  }
+}
+
+// the source dims every photo under the dark theme
+html[data-theme="dark"] {
+  .tb-newsblog__feat-media img,
+  .tb-newscard__media img,
+  .tb-sidelatest__thumb img,
+  .tb-article__hero img,
+  .tb-article__figs img,
+  .tb-article__relcard-media img { filter: brightness(.82) saturate(.88); }
+}

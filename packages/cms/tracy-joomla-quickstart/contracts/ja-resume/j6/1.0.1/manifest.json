@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resume/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_resume",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resume",
+    "id": "quickstart/ja-resume/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_resume",
+    "parts": {
+      "installer": {
+        "file": "ja-resume-j6-quickstart-1.0.1.zip",
+        "bytes": 77235082,
+        "sha256": "0c87e44ca5090b48cf28186cd653210172b21171026fe58b015cbaba4fc2af8d"
+      }
+    },
+    "release": "quickstart/ja-resume/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-10T21:03:13.036Z",
+    "builtFrom": {
+      "from": "quickstart/ja-resume/j6@1.0.0",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*); T3 dev mode off (8 template styles)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

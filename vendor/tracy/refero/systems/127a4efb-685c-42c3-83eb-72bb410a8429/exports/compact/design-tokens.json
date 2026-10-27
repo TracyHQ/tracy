@@ -1,0 +1,89 @@
+{
+  "color": {
+    "moss-canvas": {
+      "$value": "#314218",
+      "$type": "color",
+      "$description": "Moss Canvas — Page background, hero sections, dominant canvas — the deep mossy green that carries the entire site and grounds the editorial atmosphere"
+    },
+    "fern": {
+      "$value": "#3d521e",
+      "$type": "color",
+      "$description": "Fern — Mid-green surface for cards, elevated panels, and the topside of the surface stack"
+    },
+    "lichen": {
+      "$value": "#64754b",
+      "$type": "color",
+      "$description": "Lichen — Muted green for secondary surfaces, borders on cards, and subtle dividers against the canvas"
+    },
+    "forest-floor": {
+      "$value": "#212f0c",
+      "$type": "color",
+      "$description": "Forest Floor — Deeper green for nested surface layers and inset product UI backgrounds"
+    },
+    "deep-bog": {
+      "$value": "#18210c",
+      "$type": "color",
+      "$description": "Deep Bog — Darkest green for the deepest surface layer, code blocks, and high-contrast panels"
+    },
+    "amber-compass": {
+      "$value": "#dc8c46",
+      "$type": "color",
+      "$description": "Amber Compass — Primary action — filled CTA buttons, link borders, active link text. The single warm accent that cuts through the green monochrome like a compass needle"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary text, heading color, button text on amber fills, and the dominant border for ghost/outlined controls"
+    },
+    "parchment": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Parchment — Light surface for embedded product UI, inset map views, and light-mode panel surfaces against the dark canvas"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Text and borders inside the light parchment product UI panels — the dark-on-light text color for embedded app surfaces"
+    },
+    "limestone": {
+      "$value": "#d8dcd2",
+      "$type": "color",
+      "$description": "Limestone — Soft warm-tinted gray for badge backgrounds, subtle borders, and muted helper text inside light panels"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — SVG fills, max-contrast elements, and the map marker pin color"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "gt-alpina-standard": {
+      "$value": "GT Alpina Standard",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — the editorial headline face. Used at large sizes for hero headlines and section titles. The tight negative tracking (-0.033em to -0.040em) and line-height under 1.0 give the serif a compressed, almost carved-into-stone quality that evokes old cartographic title plates. This is the signature type choice: a humanist serif that feels hand-drawn rather than mechanical."
+    },
+    "atlas-grotesk": {
+      "$value": "Atlas Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body sans-serif — handles navigation, body text, button labels, badges, and links. The slight positive tracking (0.033em) on body sizes adds legibility on the dark green canvas. The grotesque geometry provides a clean utility counterpoint to the expressive serif headlines."
+    },
+    "times-new-roman": {
+      "$value": "Times New Roman",
+      "$type": "fontFamily",
+      "$description": "Fallback system serif at extreme display sizes. The 101px / 0.88 line-height ratio confirms the compressed display treatment for the largest headlines."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.felt.com",
+      "siteName": "Felt",
+      "extractedAt": "2026-06-03T21:47:27.821Z",
+      "variant": "compact"
+    }
+  }
+}

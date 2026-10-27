@@ -1,0 +1,44 @@
+{
+  "color": {
+    "cream": {
+      "$value": "#fff8f1",
+      "$type": "color",
+      "$description": "Cream — Page background, card surfaces, button text on filled variants"
+    },
+    "ash": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Ash — Hairline dividers, card borders, rule lines, neutral button outlines"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Body text, fine illustration strokes, icon fills"
+    },
+    "voltage-blue": {
+      "$value": "#006eff",
+      "$type": "color",
+      "$description": "Voltage Blue — Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "editorial-new": {
+      "$value": "Editorial New",
+      "$type": "fontFamily",
+      "$description": "Display headlines only. Weight 100 ultra-hairline at 77–120px for monumental section openers; weight 300 at 62px for secondary display. The extreme thinness against the heavy blue sans creates a chiaroscuro contrast that defines the brand's editorial voice."
+    },
+    "founders-grotesk": {
+      "$value": "Founders Grotesk",
+      "$type": "fontFamily",
+      "$description": "All non-display text. Weight 300 for headings up to 38px and nav labels; weight 400 for body and links. The 300-weight headings are an anti-convention choice — most systems use 600–700 here, but this whisper-weight lets the blue color do the shouting."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.thesummerdrive.com",
+      "siteName": "Drive Capital",
+      "extractedAt": "2026-06-03T18:17:14.872Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "QA-UNIT-REG-PR-1134-ds-contracts-batch6-happy",
+  "itemIds": ["regression:REG-PR-1134-ds-contracts-batch6"],
+  "requirement": "Batch 6 of the JA Joomla j6 slot contracts: all eleven templates carry a contract; JA Purity IV, JA Spark and JA Mono are offered after measuring, the other eight say why not",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1134-ds-contracts-batch6.json",
+    "ref": "PR #1134 (feat); fix evidence: tasks/evidence/ds-contracts-batch6-2026-10-11/README.md: first measure (single sample per kind) and second measure (every text judged) per template, screenshots checked by eye.",
+    "invariant": "S1: each contract's template is joomla/<slug> (JA Lawfirm, Magz II, Mason and Teline V left out: round 2 re-measured and offers them, REG-PR-1134-ds-contracts-r2a; JA Restaurant left out: made ready from its tokenized 1.0.4 build, REG-PR-1134-ds-contracts-r2d and REG-PR-1134-ds-remeasure-4); exactly ja-purity-iv, ja-spark and ja-mono are ready; every readyNote names tasks/evidence/ds-contracts-batch6-2026-10-11/templates/<slug>-j6, or for a ready one re-measured since a tasks/evidence/ds-remeasure-* folder of that template that exists (JA Spark: ds-remeasure-5, its 1.0.1 release build), and the not-ready ones start 'NOT offered yet'; Purity IV and Spark map --headings-color to var(--ds-c-fg-2) and --tpl-base-100 to var(--ds-c-surface) and judge heading contrast; Spark keeps .bg-white; Mono keeps .t3-footer, .style-dark and .style-highlight. S2: both sheets set --headings-color:var(--ds-c-fg-2) and give a kept band the template's own heading colour back: --headings-color:#212529 for Purity IV, --headings-color:#18181b for Spark (its 1.0.1 build, ds-remeasure-5; round 1 read #212529 off 1.0.0). S3: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following ≥ 0.5.",
+    "productSources": ["packages/design/tracy-ds-slot/scripts/pass-joomla.mjs:22"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1134-ds-contracts-batch6.mjs:22 import() with a computed specifier",
+      "tests/regression/scripts/REG-PR-1134-ds-contracts-batch6.mjs:23 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1134-ds-contracts-batch6.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1134-ds-contracts-batch6"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1134-ds-contracts-batch6",
+    "pr": 1134,
+    "kind": "feat",
+    "area": "design/slot",
+    "file": "tests/regression/cases/REG-PR-1134-ds-contracts-batch6.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-batch6.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 3000
+}

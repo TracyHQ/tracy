@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e586b296-bfac-4e93-add2-daa384712b39",
+  "status": "complete",
+  "name": "Watch new Originals",
+  "url": "https://styles.refero.design/style/e586b296-bfac-4e93-add2-daa384712b39",
+  "sourceWebsite": "https://www.disneyplus.com",
+  "extractedAt": "2026-06-03T20:37:55.488Z",
+  "capturedAt": "2026-10-08T05:18:42.480259+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "Cinematic void with electric spotlight. Picture a darkened theater lobby where a single cyan marquee light is the only chromatic thing in sight — everything else is monochrome depth leading the eye to the posters on the wall.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/048e5f06-98c3-448f-b13d-c2c0799729e2.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/8c94c56b-4c30-4e77-8e21-04638758fb9a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/7fb90462-4ec0-4b4f-bc93-d805a279e33e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f189db2b-25e3-4a8c-a20d-407f9bfe1300.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f6a787ea-48b6-44e4-873b-e01dab75c1f8.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "372c6fe4a6717c1cd2c357257dab51485e85cb5e1f4c63bb03e2e5cd769e6b23",
+      "bytes": 20991
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5c8ccdb909da4d7b0b64d98180ce0708530a609b8962e6f990f78c792d45622d",
+      "bytes": 213099
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "acde981cfb1d2fd48b6759483bdeecf1dfd6fb523eabd2229d4c5920f811e29f",
+      "bytes": 19147
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d633c2e4578e13f9338369de33a23a411d76a3b2b4074aaf47a0901a94f01bad",
+      "bytes": 8828
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "09c9478b6544a6148bec515679a5faf549c52bb9841741fde22d0f697eb3dd44",
+      "bytes": 14673
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1d162ad0f309adb2bbcde022c1181bfa48168987964f1f77170a0045fa8430b5",
+      "bytes": 3510
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3caae7ae938ff3742f8c17d26dcfeff318232098922e95a64810054ec7cbc186",
+      "bytes": 544
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c077c1b8beff77038b5abd7c8b3b96ee0b4536ec267d219b206a350e14f8cb4a",
+      "bytes": 561
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "501540406ddf63dc80191114938bc7cc16ee6e5ba38e0ccfdccb9441b8ebebf5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9e3d061a4c56bfe511eecf8d0e24e6d2b7edfc3dce4ef33055091957b5c5944a",
+      "bytes": 45539
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0ea0cc5311b73ff9318e726f6f30e6ed30688eb8ea564688fa7ba9e868cdde20",
+      "bytes": 23697
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "37dc5b32e0fccbf7b3ace613a6fe8d0c94ec7db2702e2c016b3e66bbc712d971",
+      "bytes": 46734
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "80996a24a8b9d0e66181f0067fbd2f193180411f5facddbbf06bef14b423a2e5",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8d97e97372e296375978b771a72a071b9839d067050fa5d4ac8cf3a8c36ab84a",
+      "bytes": 1335
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "adad51710909c9ed2deaf986075f004496e60f8cd5a172afc35ac9830b453465",
+      "bytes": 1872
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "09b5a06b-29dc-4d17-8722-d29bd93010c8",
+    "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "32959012-f50d-4465-bb01-2aa4d506e0a8",
+    "35f89ccd-614d-4f8f-9cce-bb94309df237",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "4367b4cd-b002-4719-a418-cbce020f0d33",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "898f0127-d235-4832-bf33-ab21104f0529",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "be6c7488-9cea-43db-bb28-2606f53ade14",
+    "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+    "e586b296-bfac-4e93-add2-daa384712b39",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1752-look-set-header-link-copies-and-roles",
+  "kind": "fix",
+  "title": "look.set writes a header link's copy visitors see together with the hidden phone-drawer copy a selector named, and on a site wearing no design system writes a literal through its one role itself, so no hand edit follows",
+  "pr": 1752,
+  "area": "site-agent/look-set",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/tools/tracy-site-tools/test/look-style.test.mjs: describeTarget on a T4 page printing the desktop bar and the phone drawer, the drawer's About link named by li.item-193 > a; a visible link by its words; a hidden drawer-only link. The shipped style script against a scripted CDP browser, look.set's read of a hidden link with one copy, and a page.look read of the same.",
+    "S2: run packages/tools/tracy-site-tools/test/look-set.test.mjs: look.set on the saigon-iron-boxing ABOUT case (drawer copy hidden, bar copy shown); look.set with a roles hand-back and with a failing one; the built tracy_site on WordPress whose slot read says none worn and the template reads --ds-c-accent.",
+    "S3: run packages/tools/tracy-site-tools/test/role-pins.test.mjs: throughRoles on one role, two roles sharing a value, no role, a var() value, a non-role prop, a button's corner."
+  ],
+  "expect": [
+    "S1: the drawer copy is hidden and names exactly one copy, whose selector matches only the bar's link; the visible link and the drawer-only link have no copies; with set the script finds the copy by its selector and reads one more cascade, the copy's rows carry sheet names; without set it never looks for copies.",
+    "S2: one rule holds the drawer's and the bar's selectors, the bar's at least as specific as .t4-megamenu .navbar-nav > li > a; the page is read again on the bar's copy and values say #ffffff -> #2e86de with no hidden; the roles hand-back is written and said (throughRoles, 'nothing more to do'), a failing one writes the literal; the built tool writes background-color: var(--ds-c-accent, #1d4ed8) in Additional CSS with no 'typed a value as a literal' note and no rolePins; every test of the three files passes."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/look-set.mjs, packages/tools/tracy-site-tools/src/host/look-style.mjs, packages/tools/tracy-site-tools/src/host/exec.mjs, packages/tools/tracy-site-tools/src/host/role-pins.mjs, packages/tools/tracy-site-tools/src/host/index.ts"
+  },
+  "evidence": "cowork.tracy.site 25/10/2026, saigon-iron-boxing after #1740: 'Change the colour of the ABOUT link in the top menu' took 109 s / 23 steps (selector li.item-193 > a matched only the hidden drawer copy, answered 'the only match', the agent fixed the bar's link by hand), PLANS 82 s; in two turns the agent rewrote look.set's literal as var(--ds-c-accent, #2E86DE) by hand after the answer asked for it (3 to 4 steps).",
+  "fence": "A link hidden at the measured width is written with the copies visitors see (same tag, href, words), each as specific as its own winner, and read again on a visible one; a literal is written through a role only when no system is worn and exactly one role is named",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+      "packages/tools/tracy-site-tools/test/role-pins.test.mjs"
+    ],
+    "cwd": ".",
+    "timeout_s": 300
+  }
+}

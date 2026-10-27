@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1479-visual-check-before-capture",
+  "kind": "fix",
+  "title": "Every turn that writes gets a before picture drawn before its write, never one older than the site's last write, and shared writes are checked on other pages",
+  "pr": 1479,
+  "area": "site-changes/visual-check",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: the previous turn (or another conversation) wrote after the picture.",
+    "S2: no Browser-tab picture; the turn writes.",
+    "S3: the drawing does not finish in time.",
+    "S4: a comment turn writes a shared header.",
+    "S5: a write the door asks about first.",
+    "S6: a hold whose turn already spent 4,990 ms of the 5 s default, with a drawing that never ends."
+  ],
+  "expect": [
+    "S1: no before from that picture, no comparison.",
+    "S2: the first write is held until its page is drawn, then sent; the check runs.",
+    "S3: the write goes at the budget; the late picture is never the before.",
+    "S4: its page and home are drawn before the write; one comparison of both.",
+    "S5: not held.",
+    "S6: the hold gives up after about 10 ms; with 5,000 ms spent nothing is drawn."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs, packages/tools/tracy-site-tools/test/check-pages.test.mjs",
+    "code": "host/view.mjs wrote/lastWrite, host/check-pages.mjs, host/visual-check.mjs elsewhere"
+  },
+  "evidence": "Review 20/10/2026: the before could predate the last write (the unasked-change verdict would then undo a requested change); turns with no Browser tab had no check; other pages were never looked at",
+  "fence": "Before pictures are taken before the write and after the site's last write",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs",
+      "packages/tools/tracy-site-tools/test/check-pages.test.mjs"
+    ],
+    "tests": [
+      "🔒 the previous turn wrote after the picture and the tab never said changed: no \"before\", no comparison",
+      "🔒 another conversation wrote the site after the picture: no \"before\" from it",
+      "🔒 no Browser-tab picture: the first write is held until its page is drawn, then sent, and the check runs",
+      "🔒 a draw that does not finish in time: the write is sent at the budget, the late picture is never the before",
+      "🔒 a comment turn writing a shared header: its page and home drawn before the write, one comparison of both",
+      "🔒 a delete or a hide without the customer’s yes is not held; with confirm:true it is",
+      "🔒 the 5 s budget is shared by every hold of the turn, and is the default"
+    ]
+  }
+}

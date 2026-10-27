@@ -1,0 +1,20 @@
+{
+  "action.decide": "Für mich entscheiden",
+  "action.followUp": "Stellen Sie mir erst Rückfragen",
+  "action.submit": "Antwort senden",
+  "ask.languagePlaceholder": "Sprache wählen…",
+  "ask.other": "Andere",
+  "ask.otherPlaceholder": "Oder geben Sie Ihre eigene Antwort ein",
+  "ask.recommended": "Empfohlen",
+  "ask.rewrite": "KI-Umformulierung",
+  "ask.rewriteFailed": "Umformulieren hat nicht geklappt. Versuchen Sie es erneut.",
+  "ask.rewriteUndo": "Rückgängig",
+  "ask.rewriting": "Wird umformuliert …",
+  "empty.title": "Es warten keine Fragen",
+  "error.answer": "Ihre Antwort hat den Agent nicht erreicht. Versuchen Sie es erneut.",
+  "pane.lead": "Tracy braucht Ihre Antwort, um weiterzumachen",
+  "pointer.many": "{count} Fragen warten im rechten Bereich",
+  "pointer.one": "Eine Frage wartet im rechten Bereich",
+  "pointer.open": "Öffnen",
+  "tab.title": "Fragen"
+}

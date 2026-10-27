@@ -1,0 +1,1602 @@
+{
+  "about": "button-role: probe data cut from the Add site preview under Moxie, light and dark visitor schemes, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1, no script as the frame runs). broken: Tracy Base WordPress 1.1.4, the CTA band buttons whose .tracy-btn--inverse wrapper paints a square black box around the pill; clean: JA Resort Joomla 1.0.4 worn, every button the system pill in its accent or outline.",
+  "broken": [
+    {
+      "source": "tracy-base/wp7@1.1.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#eae5cc",
+        "#eee9cf",
+        "#000000",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "plain": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": null
+          },
+          "buttons": [
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:1/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Service",
+              "w": 93,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:2/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Resources",
+              "w": 118,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:3/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Company",
+              "w": 110,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Contact",
+              "w": 100,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 113,
+                "b": 227,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 113,
+                "b": 227,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:2/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Explore our approach",
+              "w": 204,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:6/div:1/div:2/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 113,
+                "b": 227,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Starter",
+              "w": 275,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 245,
+                "g": 245,
+                "b": 247,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:2/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Studio",
+              "w": 275,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 113,
+                "b": 227,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 245,
+                "g": 245,
+                "b": 247,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Foundry",
+              "w": 275,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 245,
+                "g": 245,
+                "b": 247,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:1/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 44,
+              "radius": 0,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 113,
+                "b": 227,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:2/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Explore our services →",
+              "w": 216,
+              "h": 44,
+              "radius": 0,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 113,
+                "b": 227,
+                "a": 1
+              }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": {
+              "r": 103,
+              "g": 134,
+              "b": 196,
+              "a": 1
+            }
+          },
+          "buttons": [
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:1/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Service",
+              "w": 91,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:2/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Resources",
+              "w": 116,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:3/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Company",
+              "w": 108,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Contact",
+              "w": 101,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:2/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Explore our approach",
+              "w": 205,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:6/div:1/div:2/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Starter",
+              "w": 334,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:2/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Studio",
+              "w": 334,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Foundry",
+              "w": 334,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:1/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 34,
+              "radius": 0,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:2/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Explore our services →",
+              "w": 218,
+              "h": 34,
+              "radius": 0,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "tracy-base/wp7@1.1.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 dark",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": null
+          },
+          "buttons": [
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:1/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Service",
+              "w": 93,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:2/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Resources",
+              "w": 118,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:3/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Company",
+              "w": 110,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Contact",
+              "w": 100,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 41,
+                "g": 151,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 41,
+                "g": 151,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:2/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Explore our approach",
+              "w": 204,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:6/div:1/div:2/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 41,
+                "g": 151,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Starter",
+              "w": 275,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 29,
+                "g": 29,
+                "b": 31,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:2/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Studio",
+              "w": 275,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 41,
+                "g": 151,
+                "b": 255,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 29,
+                "g": 29,
+                "b": 31,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Foundry",
+              "w": 275,
+              "h": 44,
+              "radius": 980,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 29,
+                "g": 29,
+                "b": 31,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:1/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 44,
+              "radius": 0,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 41,
+                "g": 151,
+                "b": 255,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:2/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Explore our services →",
+              "w": 216,
+              "h": 44,
+              "radius": 0,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 41,
+                "g": 151,
+                "b": 255,
+                "a": 1
+              }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          "buttons": [
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:1/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Service",
+              "w": 91,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:2/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Resources",
+              "w": 116,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:2/div:1/div:3/button:1",
+              "at": "button.tracy-mega__trigger",
+              "text": "Company",
+              "w": 108,
+              "h": 41,
+              "radius": 8,
+              "fill": null,
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/header:1/div:1/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Contact",
+              "w": 101,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:1/div:1/div:1/div:1/div:2/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Explore our approach",
+              "w": 205,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:6/div:1/div:2/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:1/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Starter",
+              "w": 334,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:2/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Studio",
+              "w": 334,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:11/div:1/div:2/div:3/div:1/div:1/a:1",
+              "at": "a.wp-block-button__link.wp-element-button",
+              "text": "Discuss Foundry",
+              "w": 334,
+              "h": 34,
+              "radius": 1000,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:1/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Start a conversation",
+              "w": 193,
+              "h": 34,
+              "radius": 0,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:1/main:1/div:1/section:12/div:1/div:1/div:2/a:1",
+              "at": "div.wp-block-button.tracy-btn.tracy-btn--inverse",
+              "text": "Explore our services →",
+              "w": 218,
+              "h": 34,
+              "radius": 0,
+              "fill": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "border": null,
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-resort/j6@1.0.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#b7b39f",
+        "#000000",
+        "#868474",
+        "#93b6fb",
+        "#858273",
+        "#060605",
+        "#84acfb",
+        "#1a1a1a",
+        "#7a786a",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": null
+          },
+          "buttons": [
+            {
+              "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/div:1/div:1/p:1/a:1",
+              "at": "a.btn.btn-primary",
+              "text": "BOOK NOW!",
+              "w": 330,
+              "h": 120,
+              "radius": 0,
+              "fill": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "border": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "ground": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:3/a:1",
+              "at": "a.btn.btn-lg.btn-primary",
+              "text": "BOOK NOW",
+              "w": 190,
+              "h": 60,
+              "radius": 0,
+              "fill": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "border": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "ground": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 170,
+              "h": 60,
+              "radius": 0,
+              "fill": null,
+              "border": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              },
+              "ground": {
+                "r": 251,
+                "g": 246,
+                "b": 243,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 170,
+              "h": 60,
+              "radius": 0,
+              "fill": null,
+              "border": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              },
+              "ground": {
+                "r": 225,
+                "g": 219,
+                "b": 213,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:5/button:1",
+              "at": "button.btn.btn-primary",
+              "text": "CHECK",
+              "w": 123,
+              "h": 61,
+              "radius": 0,
+              "fill": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "border": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          "buttons": [
+            {
+              "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/div:1/div:1/p:1/a:1",
+              "at": "a.btn.btn-primary",
+              "text": "BOOK NOW!",
+              "w": 330,
+              "h": 120,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 65,
+                "g": 64,
+                "b": 59,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:3/a:1",
+              "at": "a.btn.btn-lg.btn-primary",
+              "text": "BOOK NOW",
+              "w": 129,
+              "h": 44,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 65,
+                "g": 64,
+                "b": 59,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 116,
+              "h": 44,
+              "radius": 1000,
+              "fill": null,
+              "border": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 116,
+              "h": 44,
+              "radius": 1000,
+              "fill": null,
+              "border": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:5/button:1",
+              "at": "button.btn.btn-primary",
+              "text": "CHECK",
+              "w": 106,
+              "h": 37,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-resort/j6@1.0.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 dark",
+      "systemColours": [
+        "#f4efd4",
+        "#b7b39f",
+        "#000000",
+        "#868474",
+        "#93b6fb",
+        "#858273",
+        "#060605",
+        "#84acfb",
+        "#1a1a1a",
+        "#7a786a",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": null
+          },
+          "buttons": [
+            {
+              "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/div:1/div:1/p:1/a:1",
+              "at": "a.btn.btn-primary",
+              "text": "BOOK NOW!",
+              "w": 330,
+              "h": 120,
+              "radius": 0,
+              "fill": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "border": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "ground": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:3/a:1",
+              "at": "a.btn.btn-lg.btn-primary",
+              "text": "BOOK NOW",
+              "w": 190,
+              "h": 60,
+              "radius": 0,
+              "fill": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "border": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "ground": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 170,
+              "h": 60,
+              "radius": 0,
+              "fill": null,
+              "border": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              },
+              "ground": {
+                "r": 251,
+                "g": 246,
+                "b": 243,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 170,
+              "h": 60,
+              "radius": 0,
+              "fill": null,
+              "border": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              },
+              "ground": {
+                "r": 225,
+                "g": 219,
+                "b": 213,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:5/button:1",
+              "at": "button.btn.btn-primary",
+              "text": "CHECK",
+              "w": 123,
+              "h": 61,
+              "radius": 0,
+              "fill": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "border": {
+                "r": 211,
+                "g": 178,
+                "b": 152,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "tokens": {
+            "radius": null,
+            "accent": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          "buttons": [
+            {
+              "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/div:1/div:1/p:1/a:1",
+              "at": "a.btn.btn-primary",
+              "text": "BOOK NOW!",
+              "w": 330,
+              "h": 120,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 65,
+                "g": 64,
+                "b": 59,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:3/a:1",
+              "at": "a.btn.btn-lg.btn-primary",
+              "text": "BOOK NOW",
+              "w": 129,
+              "h": 44,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 65,
+                "g": 64,
+                "b": 59,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 116,
+              "h": 44,
+              "radius": 1000,
+              "fill": null,
+              "border": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+              "at": "a.btn.btn-lg.btn-outline-secondary",
+              "text": "VIEW ALL",
+              "w": 116,
+              "h": 44,
+              "radius": 1000,
+              "fill": null,
+              "border": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:5/button:1",
+              "at": "button.btn.btn-primary",
+              "text": "CHECK",
+              "w": 106,
+              "h": 37,
+              "radius": 1000,
+              "fill": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "border": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

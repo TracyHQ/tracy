@@ -1,0 +1,397 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-boxing/j6/1.0.4",
+  "baseHash": "9ff3f23bdf79f77da322e07e63e25050d4c4ccaae1278d12f78803c07a697fc3",
+  "baseFiles": {
+    "manifest.json": "b9d66eb105333ff060f863b76893618df3eba30b845d0617f6f91952882f90ff",
+    "content-map.json": "351581fedbb316a7f11684109ebec56e2a2c9d70566cd5620a18a96d30d96f79",
+    "presentation-lock.json": "7e06daf6f9d188b8373b85b8c23a375d7a498f03f5f68c271b62185b1de33865"
+  },
+  "inputs": {},
+  "decisionsHash": "65934161160c82c0151c0943d64f8d5461468dfb0bd35ac511272379a2de3f58",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-152",
+      "identity": {
+        "path": "pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-153",
+      "identity": {
+        "path": "pages/users",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Users",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-154",
+      "identity": {
+        "path": "pages/j-pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "J!Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-155",
+      "identity": {
+        "path": "pages/j-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "J! Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-156",
+      "identity": {
+        "path": "pages/users/login-form",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Login Form",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-157",
+      "identity": {
+        "path": "pages/users/registration-form",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Registration Form",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-158",
+      "identity": {
+        "path": "pages/users/user-profile",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "User Profile",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-159",
+      "identity": {
+        "path": "pages/j-pages/offline-pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-160",
+      "identity": {
+        "path": "pages/j-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-161",
+      "identity": {
+        "path": "pages/j-pages/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-162",
+      "identity": {
+        "path": "pages/j-pages/smart-search",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Smart Search",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-163",
+      "identity": {
+        "path": "pages/j-content/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Category Blog",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-164",
+      "identity": {
+        "path": "pages/j-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-165",
+      "identity": {
+        "path": "pages/j-content/author-listting",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Author listting",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-166",
+      "identity": {
+        "path": "pages/j-content/blog-detail",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blog Detail",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-167",
+      "label": "Classes",
+      "where": "mainmenu/classes",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-168",
+      "label": "Contact",
+      "where": "mainmenu/about-us/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-169",
+      "label": "Plans",
+      "where": "mainmenu/plans",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-184",
+      "label": "About",
+      "where": "site-map/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-185",
+      "label": "Class",
+      "where": "site-map/class",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-186",
+      "label": "Schedule",
+      "where": "site-map/schedule",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-187",
+      "label": "Price",
+      "where": "site-map/price",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-188",
+      "label": "Pound it",
+      "where": "classes/pound-it",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-189",
+      "label": "Boxing Circuit",
+      "where": "classes/boxing-circuit",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-190",
+      "label": "Boxing Drills N Skills",
+      "where": "classes/boxing-drills-n-skills",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-191",
+      "label": "Beginners",
+      "where": "classes/beginners",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-192",
+      "label": "Try Free Intro",
+      "where": "classes/try-free-intro",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-193",
+      "label": "About",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-194",
+      "label": "Learning Center",
+      "where": "mainmenu/about-us/learning-center",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-195",
+      "label": "Our trainers",
+      "where": "mainmenu/about-us/our-trainers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-196",
+      "label": "About Us",
+      "where": "mainmenu/about-us/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 8 entries stay"
+    },
+    {
+      "key": "module-173",
+      "label": "CLASSES",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders classes: 5 entries stay"
+    },
+    {
+      "key": "module-174",
+      "label": "SITE MAP",
+      "where": "mod_menu@footnav-4",
+      "rule": "keep.default",
+      "reason": "renders site-map: 4 entries stay"
+    },
+    {
+      "key": "module-187",
+      "label": "Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 8 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 15,
+    "modules": 0,
+    "kept": 21,
+    "unresolved": 0
+  }
+}

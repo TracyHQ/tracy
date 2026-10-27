@@ -1,0 +1,17 @@
+{
+  "status": true,
+  "id": "4560789412",
+  "username": "theorchard_demo",
+  "full_name": "The Orchard",
+  "is_private": false,
+  "is_business_account": true,
+  "is_verified": false,
+  "category_name": "Restaurant",
+  "edge_followed_by": { "count": 59010 },
+  "edge_follow": { "count": 512 },
+  "edge_owner_to_timeline_media": {
+    "count": 0,
+    "page_info": { "has_next_page": false, "end_cursor": null },
+    "edges": []
+  }
+}

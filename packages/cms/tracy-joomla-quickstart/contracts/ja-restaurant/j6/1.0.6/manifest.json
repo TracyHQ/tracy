@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-restaurant/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_restaurant",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-restaurant",
+    "id": "quickstart/ja-restaurant/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_restaurant",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-restaurant-j6-webroot-1.0.6.tar.gz",
+        "bytes": 49396301,
+        "sha256": "c5810cd6f7fa200530cce2f0d454663dbd9d0553af13cbd6163574468090bacb"
+      },
+      "database": {
+        "file": "ja-restaurant-j6-database-1.0.6.sql.gz",
+        "bytes": 173900,
+        "sha256": "c70dd8d92a56948c4dfaeb35313115da6ceff2b94978c8aa81231db76d6eb7e0"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-20T13:41:04.480Z",
+    "builtFrom": {
+      "from": "quickstart/ja-restaurant/j6@1.0.5",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 251 files replaced (language/en-GB/en-GB.tpl_ja_restaurant.ini, templates/ja_restaurant/error.php, templates/ja_restaurant/offline.php, templates/ja_restaurant/css, templates/ja_restaurant/less, templates/ja_restaurant/html, templates/ja_restaurant/language, templates/ja_restaurant/tpls, templates/ja_restaurant/acm); demo content: 24 edits (module-100, module-100, module-142, article-2, article-3, article-4, article-6, article-8, article-9, article-10, article-11, article-13, article-15, article-16, article-17, article-18, article-19, article-20, article-21, article-22, article-23, article-25, article-26, article-27); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-restaurant/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,10 @@
+{
+  "answers": {
+    "name": "Golden Crust Bakery",
+    "about": "Golden Crust Bakery, a family bakery at 12 Hang Bac, Hanoi. Fresh bread, croissants and cakes baked every morning. Call 0912 345 678 or email hello@goldencrust.example. Open 6am-8pm every day.",
+    "pages": ["home", "product", "about", "contact"],
+    "languages": ["en-gb", "vi-vn"],
+    "tone": "warm"
+  },
+  "questionnaire": "02f3e55938e9b7cc38a81b3c51553eb0e3dbc4f87d3ee0d341a11cdc1e5c7dbd"
+}

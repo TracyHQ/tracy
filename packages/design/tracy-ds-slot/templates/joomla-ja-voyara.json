@@ -1,0 +1,306 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-voyara",
+  "minVersion": {
+    "quickstart/ja-voyara/j6": "1.0.5"
+  },
+  "maxVersion": {
+    "quickstart/ja-voyara/j6": "1.0.11"
+  },
+  "maxVersionNote": "1.0.11 21/10/2026 (TEXT-1 batch 2): built from 1.0.10 (release-batch.mjs --overlay); only css/contact.css, css/landing.css, css/taxonomy.css, css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 17/10/2026 (batch 2, role variables): 1.0.10 = 1.0.9 with every template stylesheet reading the design-system role variables (--ds-*), each falling back to the template's own value (verify: 0 computed differences unworn); role button-primary is the hero's \"Plan a trip\" link button (the hero search submit sits in a form, whose metrics the slot keeps the template's); the call band's words list names the writers/tags band classes. Measured at preview probe v9, 0 rules not passed. Earlier: 13/10/2026 (readiness, TracyHQ/tch#1318): 1.0.8 = the 1.0.7 pair with template 1.0.4 (block layouts print their module fields; six module rows of the database given those words); every css file is byte-identical to 1.0.7, so the 1185 var(--ds-c- reads stand; contract ja-voyara/j6/1.0.8 carried by Claude Cowork for Joomla 0.24.27. Earlier: 1.0.6 checked 11/10/2026 (ds-minversion-audit): its css files are byte-identical to 1.0.5 (1185 var(--ds-c- reads); the change is the typography of local/etc/site/default.json 1.0.9 16/10/2026 (#1375): re-cut of 1.0.8 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "modes": true,
+  "modesAuto": false,
+  "modeHook": "[data-theme=\"dark\"][data-bs-theme=\"dark\"].t4-dark",
+  "modeHookNote": "js/darkmode.js and the index.php pre-paint resolver mark the dark side with three marks on the root, set and cleared together: the class t4-dark (689 selectors in the template sheets), data-theme=\"dark\" and data-bs-theme=\"dark\". The Design system popup Light | Dark and the slot sides read and set all three (src/sides.mjs, design-system-live-page.js; grammar from d2aa12a507). With the default data-theme hook a press set only data-theme: in the live frame on the published 1.0.10 under Moxie the header switch kept the other side icon (moon or sun) and the hero search field kept the other side border (18/10/2026). selectors.themeToggle .t4-theme-toggle (the header, drawer and error-page buttons) lets the flow turn the hooked page with the template switch, as a visitor does.",
+  "modesNote": "17/10/2026 (batch 2, MODE-3): JA Voyara has a light/dark switch (the header moon, js/darkmode.js, cookie ja_voyara-theme; css/darkmode.css paints html.t4-dark / data-theme=dark and its --voy-* read the roles) and its pre-paint resolver always sets data-theme on <html> before the first paint (?theme, cookie, the template default, then the OS), so there is no unmarked auto state: the module writes the system's own side under the template's matching mode and the other side derived from it, and the switch stays shown under a system.",
+  "roles": {
+    "page": "body",
+    "display": "h1.acm-hero-title",
+    "heading": "main h2, .t4-section h2",
+    "body": "p.acm-hero-lead",
+    "button-primary": ".acm-hero-actions a.btn.btn-primary",
+    "card": "article.voy-card.acm-dest-card",
+    "container": "div.container.acm-hero-inner"
+  },
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#FAF6F0",
+    "--surface": "#FFFFFF",
+    "--surface-warm": "#F2EBE1",
+    "--fg": "#2B2420",
+    "--fg-2": "#1A1512",
+    "--muted": "#8A7E72",
+    "--meta": "#8A7E72",
+    "--border": "#E5DCD0",
+    "--border-soft": "#E5DCD0",
+    "--accent": "#C2562F",
+    "--accent-on": "#FFFFFF",
+    "--accent-hover": "#A6451F",
+    "--accent-active": "#A6451F",
+    "--success": "#1F6F6B",
+    "--warn": "#E0A458",
+    "--danger": "#C2362F",
+    "--font-display": "\"Playfair Display\", Georgia, \"Times New Roman\", serif",
+    "--font-body": "\"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+    "--font-mono": "\"Geist Mono\", ui-monospace, \"SFMono-Regular\", Menlo, monospace",
+    "--radius-sm": "8px",
+    "--radius-md": "14px",
+    "--radius-lg": "22px",
+    "--radius-pill": "9999px",
+    "--container-max": "1140px"
+  },
+  "baseNote": "measured off the release (quickstart/ja-voyara/j6 1.0.4): its --voy-* set in css/template.css",
+  "templateVars": {
+    "--voy-bg": "var(--ds-c-bg)",
+    "--voy-surface": "var(--ds-c-surface)",
+    "--voy-elevated": "var(--ds-c-surface-warm)",
+    "--voy-text": "var(--ds-c-fg)",
+    "--voy-heading": "var(--ds-c-fg-2)",
+    "--voy-muted": "var(--ds-c-muted)",
+    "--voy-text-dim": "var(--ds-c-meta)",
+    "--voy-border": "var(--ds-c-border)",
+    "--voy-field-border": "var(--ds-c-border)",
+    "--voy-primary": "var(--ds-c-accent)",
+    "--voy-primary-hover": "var(--ds-c-accent-hover)",
+    "--voy-on-primary": "var(--ds-c-accent-on)",
+    "--voy-font-body": "var(--ds-font-body)",
+    "--voy-font-head": "var(--ds-font-display-face)",
+    "--voy-font-mono": "var(--ds-font-mono)",
+    "--voy-container": "var(--ds-container)"
+  },
+  "contrast": {
+    "accent-text": ".t4-section p.voy-eyebrow, .t4-section .voy-eyebrow",
+    "muted": ".t4-section p.acm-features-sub",
+    "body": ".t4-section p.acm-fsplit-text",
+    "card-text": ".t4-section .voy-card__body :is(.acm-dest-loc, .acm-dest-meta span, .voy-card__title a)",
+    "footer": ".t4-footer a"
+  },
+  "darkTokens": {
+    "--bg": "#15110E",
+    "--surface": "#211B16",
+    "--surface-warm": "#1C1712",
+    "--fg": "#E8DFD4",
+    "--fg-2": "#FBF6EF",
+    "--muted": "#9C9085",
+    "--meta": "#9C9085",
+    "--border": "#352C24",
+    "--border-soft": "#4A3F35",
+    "--accent": "#D86A3F",
+    "--accent-on": "#FFFFFF",
+    "--accent-hover": "#E27E55",
+    "--success": "#46A39D",
+    "--warn": "#E8B66F",
+    "--danger": "#E2745A"
+  },
+  "darkNote": "its dark set: --voy-* in css/darkmode.css (html[data-theme=dark] / html.t4-dark)",
+  "selectors": {
+    "displaySize": "h1.acm-hero-title",
+    "display": "h1",
+    "heading": ["main h2", ".t4-section h2"],
+    "button": [".btn", "button.acm-hero-search-btn", ".acm-hero .btn"],
+    "buttonPrimary": [".btn-primary", "button.acm-hero-search-btn"],
+    "card": ["article.voy-card", ".voy-card"],
+    "container": [".acm-hero-inner.container", ".t4-section .container"],
+    "section": [".t4-section .acm-features, .t4-section > .t4-section-inner > section"],
+    "bodyFace": ["body"],
+    "eyebrow": [".voy-eyebrow", ".acm-dest-loc", ".acm-hero-eyebrow"],
+    "cardLike": [".voy-card", ".acm-feature"],
+    "onAccent": ["button.acm-hero-sm-btn"],
+    "themeToggle": ".t4-theme-toggle"
+  },
+  "keepScopes": [".acm-statistics"],
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 19 tried (byte 15330); pass-joomla.mjs"
+  },
+  "extraPalettes": [
+    {
+      "fg": "#212529",
+      "surface-warm": "#dee2e6",
+      "surface": "#f8f9fa"
+    },
+    {
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "nearPalette": [
+    {
+      "hex": "#212529",
+      "uses": 15,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#2B2420",
+      "distance": 13
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#F2EBE1",
+      "distance": 22
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#FFFFFF",
+      "distance": 10
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#F2EBE1",
+      "distance": 17
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#FAF6F0",
+    "--body-text-color": "#2B2420",
+    "--body-link-color": "#C2562F",
+    "--body-link-hover-color": "#A6451F",
+    "--color-primary": "#C2562F",
+    "--color-secondary": "#1F6F6B",
+    "--color-success": "#1F6F6B",
+    "--color-info": "#E0A458",
+    "--color-warning": "#E0A458",
+    "--color-danger": "#C2562F",
+    "--color-light": "#F2EBE1",
+    "--color-dark": "#1A1512",
+    "--mainnav-text-color": "#2B2420",
+    "--mainnav-link-color": "#2B2420",
+    "--mainnav-link-hover-color": "#C2562F",
+    "--mainnav-link-active-color": "#C2562F",
+    "--footer-bg-color": "#F2EBE1",
+    "--footer-text-color": "#8A7E72",
+    "--footer-link-color": "#8A7E72",
+    "--footer-link-hover-color": "#2B2420",
+    "--voy-bg": "#FAF6F0",
+    "--voy-surface": "#FFF",
+    "--voy-elevated": "#F2EBE1",
+    "--voy-text": "#2B2420",
+    "--voy-heading": "#1A1512",
+    "--voy-muted": "#8A7E72",
+    "--voy-text-dim": "#8A7E72",
+    "--voy-border": "#E5DCD0",
+    "--voy-field-border": "#E5DCD0",
+    "--voy-primary": "#C2562F",
+    "--voy-primary-hover": "#A6451F",
+    "--voy-on-primary": "#FFF",
+    "--voy-font-body": "\"Inter\",-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,sans-serif",
+    "--voy-font-head": "\"Playfair Display\",Georgia,\"Times New Roman\",serif",
+    "--voy-font-mono": "\"Geist Mono\",ui-monospace,\"SFMono-Regular\",Menlo,monospace",
+    "--voy-container": "1140px"
+  },
+  "ready": true,
+  "readyNote": "measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-voyara-j6): default unchanged, no text made less readable than the template's own under the systems tried. Re-measured 11/10/2026 with the per-element probe on quickstart/ja-voyara/j6 1.0.5 (published, its minVersion; tasks/evidence/ds-remeasure-5-2026-10-11/ja-voyara): 12/12 with Moxie, MotherDuck, Toggl Track, Apple after one fix, controls 0 differences, 96%–99% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Contrast kind card-text found no element before (it named card paragraphs the cards do not have); reading the cards' location, meta, title and price, it found the prices painted with the template's primary (MotherDuck 1.94, Apple 4.31): they take the readable accent (followRules)",
+  "followRules": {
+    ".voy-price": {
+      "color": "accent-text"
+    }
+  },
+  "followNote": "the destination cards' prices (.voy-price) are text painted with the template's primary (--voy-primary), which follows the system's accent fill: they take the readable accent (MotherDuck's light blue on the white card 1.94, Apple's blue on its grey card 4.31; found 11/10/2026 once contrast kind card-text read the cards' texts)",
+  "bands": {
+    ".acm-statistics": {
+      "ground": "#1f6f6b",
+      "texts": ["#ffffff", "#d2e2e1"],
+      "important": true
+    },
+    ".voy-sw.voy-sw-newsletter": {
+      "ground": "#1f6f6b",
+      "texts": ["#ffffff", "#deeae9"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".voy-sw-nl-title", ".voy-sw-nl-sub"]
+    },
+    ".voy-cta-band": {
+      "ground": "#c2562f",
+      "texts": ["#edcdc1", "#ffffff", "#f6e6e0"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [
+        ".voy-cta-eyebrow",
+        ".voy-cta-title",
+        ".voy-cta-sub",
+        ".voy-cta-band__title",
+        ".voy-cta-band__sub"
+      ],
+      "vars": {
+        "--voy-cta-text": "text"
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; reviewed 14/10/2026 (visual review: /index.php/pages/blog’s call band “Read it here.” kept white words and buttons on a light accent): the two drafted fills are right — .voy-cta-band (the orange call band: eyebrow, title, line repainted) and .voy-sw.voy-sw-newsletter (the teal newsletter card in the blog sidebar); the call band’s ghost button (.btn-ghost-white: white words, a white 55% line on white 10%) is a button whose class the band’s word paints stop at (they skip [class*=btn]) and that the outline rule does not name (it reads btn-outline / btn-border), so the band gives its words colour as a variable (--voy-cta-text) and sideRules paint the ghost with it, its line and veil currentColor at the template’s 55% and 10%",
+  "sideRules": {
+    "light": {
+      ".voy-cta-band .btn-ghost-white": {
+        "color": "var(--voy-cta-text, #ffffff)",
+        "border-color": "color-mix(in srgb, currentColor 55%, transparent)",
+        "background-color": "color-mix(in srgb, currentColor 10%, transparent)"
+      },
+      ".acm-hero-search": {
+        "top": "auto",
+        "bottom": "84px"
+      },
+      ".acm-hero-inner": {
+        "padding-top": "clamp(64px, calc((100vw - 640.5px) * 1000), 138px)",
+        "padding-bottom": "clamp(96px, calc((100vw - 640.5px) * 1000), 168px)"
+      }
+    },
+    "dark": {
+      ".voy-cta-band .btn-ghost-white": {
+        "color": "var(--voy-cta-text, #ffffff)",
+        "border-color": "color-mix(in srgb, currentColor 55%, transparent)",
+        "background-color": "color-mix(in srgb, currentColor 10%, transparent)"
+      },
+      ".acm-hero-search": {
+        "top": "auto",
+        "bottom": "84px"
+      },
+      ".acm-hero-inner": {
+        "padding-top": "clamp(64px, calc((100vw - 640.5px) * 1000), 138px)",
+        "padding-bottom": "clamp(96px, calc((100vw - 640.5px) * 1000), 168px)"
+      }
+    }
+  },
+  "onAccentNote": "14/10/2026 (visual review): the hero’s phone search button (button.acm-hero-sm-btn, “Search”) is filled with the accent through the tokenized sheet while its white words are a literal of its own: white on a light accent (Mailchimp, Linear); it takes the accent’s own text",
+  "sideNote": "14/10/2026 (visual review, Eddie): the hero’s desktop search bar (.acm-hero-search) is placed at a fixed top: 520px of a hero 660px high whose inner keeps 120px at its bottom for it; a system’s larger headline (Eddie’s three lines) grows the hero but not that top, so the bar sat over the hero’s buttons. On both sides the bar is anchored where the template draws it, 84px above the hero’s bottom (top: auto), and above 640px (where the bar shows; the phone has its own) the inner keeps room for it: 84px + the bar’s 56px + the template’s 28px gap = 168px; the phone keeps its 96px; 14/10/2026 (visual review, round 3): the 48px added under the inner made it 48px taller than the template’s, and the hero centres its inner, so every system’s hero text stood 24px higher, its block taller, than the template’s. The inner now takes the same 48px on top as well (138px / 168px above 640px; the phone keeps its 64px / 96px): centred in the 660px hero, the words sit exactly where the template sets them as long as they fit (up to 354px of content; the template’s own is 352px), and when a system’s headline is taller the hero grows with the bar still 28px below the buttons",
+  "literalsNote": "#ffffff: the fallback of the call band’s ghost button words (var(--voy-cta-text, #ffffff)) is the template’s own white, used only if the band keeps its own ground",
+  "pictureRules": {
+    "body.item-222 .acm-accordion .accordion-button::after": {
+      "background-image": "linear-gradient(var(--ds-c-meta), var(--ds-c-meta)), linear-gradient(var(--ds-c-meta), var(--ds-c-meta))",
+      "background-size": "13.34px 1.67px, 1.67px 13.34px",
+      "background-position": "center, center",
+      "background-repeat": "no-repeat, no-repeat"
+    },
+    "body.item-222 .acm-accordion .accordion-button:not(.collapsed)::after": {
+      "background-image": "linear-gradient(var(--ds-c-accent-text), var(--ds-c-accent-text))",
+      "background-size": "13.34px 1.67px",
+      "background-position": "center",
+      "background-repeat": "no-repeat"
+    },
+    ".voy-itinerary__button.accordion-button::after": {
+      "background-image": "linear-gradient(var(--ds-c-meta), var(--ds-c-meta)), linear-gradient(var(--ds-c-meta), var(--ds-c-meta))",
+      "background-size": "13.34px 1.67px, 1.67px 13.34px",
+      "background-position": "center, center",
+      "background-repeat": "no-repeat, no-repeat"
+    },
+    ".voy-itinerary__button.accordion-button:not(.collapsed)::after": {
+      "background-image": "linear-gradient(var(--ds-c-accent-text), var(--ds-c-accent-text))",
+      "background-size": "13.34px 1.67px",
+      "background-position": "center",
+      "background-repeat": "no-repeat"
+    }
+  },
+  "pictureRulesNote": "20/10/2026 (PIC-1): the FAQ accordion of /pricing (css/pricing.css, body.item-222) and the tour itinerary (css/tour.css, and its html.t4-dark twin) draw the open item’s minus as a data: SVG stroked in the brand terracotta #C2562F (#D86A3F dark) and the closed item’s plus in the template grey: pictures a worn system cannot recolour. Under a system both are drawn with gradients of the system’s roles at the same geometry (the SVG’s 14-unit line, 2 units thick, in a 20px box of 24 units): the minus in the accent text role, the plus in the meta role. The open rule carries :not(.collapsed), so it wins over the closed one; written under six :root, the contract rule outranks the html.t4-dark twin. No system worn: nothing of this is written (DEF-1)."
+}

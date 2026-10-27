@@ -1,0 +1,74 @@
+{
+  "color": {
+    "baba-red": {
+      "$value": "#bc2823",
+      "$type": "color",
+      "$description": "Baba Red — Large campaign bands, footer surfaces, branded links, icons, and red-on-white labels — the deep warm red establishes the site’s continuous care-setting atmosphere; Layer behind large red campaign panels and animated care-plan scenes"
+    },
+    "signal-red": {
+      "$value": "#ea1111",
+      "$type": "color",
+      "$description": "Signal Red — Filled conversion controls on light navigation and cream surfaces — the brighter red reads as a precise interruption within the warmer red system"
+    },
+    "red-light": {
+      "$value": "#cc5c56",
+      "$type": "color",
+      "$description": "Red Light — Lighter red panel illumination and gradient endpoint within red feature sections"
+    },
+    "cream-paper": {
+      "$value": "#faf9f1",
+      "$type": "color",
+      "$description": "Cream Paper — Page backgrounds, pale outlined controls, and light-on-dark typography"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Cards, light navigation controls, image badges, and high-contrast text on red surfaces"
+    },
+    "ink": {
+      "$value": "#2a1d18",
+      "$type": "color",
+      "$description": "Ink — Primary dark headings, body copy, dark controls, and dark feature-card surfaces"
+    },
+    "soft-ink": {
+      "$value": "#3e312c",
+      "$type": "color",
+      "$description": "Soft Ink — Long-form body copy and secondary explanatory text"
+    },
+    "warm-gray": {
+      "$value": "#645953",
+      "$type": "color",
+      "$description": "Warm Gray — Muted supporting copy and low-emphasis labels"
+    },
+    "paper-divider": {
+      "$value": "#ede7e2",
+      "$type": "color",
+      "$description": "Paper Divider — Hairline accordion rules, quiet control borders, and light-surface separation"
+    },
+    "blush": {
+      "$value": "#f8e2db",
+      "$type": "color",
+      "$description": "Blush — Soft feature-card surfaces and calm transitional blocks between cream content sections"
+    }
+  },
+  "font": {
+    "shne": {
+      "$value": "Söhne",
+      "$type": "fontFamily",
+      "$description": "Display headings, section titles, large statistics, care-plan labels, and image-overlay badges. The 600 display treatment uses -2.04px tracking at 68px, -1.68px at 56px, and -0.72px at 36px; this compression gives the oversized language its compact, direct silhouette."
+    },
+    "atkinson-hyperlegible-next": {
+      "$value": "Atkinson Hyperlegible Next",
+      "$type": "fontFamily",
+      "$description": "Navigation, controls, FAQ copy, labels, body text, and small step indicators. Its accessible letterforms remain deliberately plain beside Söhne’s compressed headings; use 500 for buttons and compact labels, 600 for numbered steps."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.callbaba.com",
+      "siteName": "Baba",
+      "extractedAt": "2026-09-20T19:26:49.571Z",
+      "variant": "compact"
+    }
+  }
+}

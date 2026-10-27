@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1457-joomlart-plan-when-gate-off",
+  "kind": "fix",
+  "title": "With the beta gate off, sign-in records the JoomlArt plan of a member and refuses nobody",
+  "pr": 1457,
+  "area": "identity/beta-gate",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With BETA_GATE off and aMember answering an active plan 10, sign in by email code; read the account.first_sign_in signal.",
+    "S2: With BETA_GATE off and aMember answering no subscription, then an API error, sign in by email code; read account.beta_admission."
+  ],
+  "expect": [
+    "S1: sign-in 200; signal badge \"JoomlArt member\" with plan id 10.",
+    "S2: sign-in 200 both times; badge \"gate off\", plans empty; lookup unset for no plan, \"failed\" for the API error."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/lib/beta-access.js",
+    "test": "apps/tracy-web/test/beta-operation-signal.test.mjs"
+  },
+  "evidence": "Production 15/10 to 19/10/2026: 21 first sign-ins all read \"gate off\" with no plans; a one-off aMember lookup found 6 active members among them",
+  "fence": "decide() with the gate off asks the cached membership call for the label only and always answers allow",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/beta-operation-signal.test.mjs"],
+    "tests": [
+      "gate off: a member signing in by email code is let in and labelled with their plans",
+      "gate off: no plan, or a membership call that fails, still signs in as \"gate off\""
+    ],
+    "needs": ["postgres"]
+  }
+}

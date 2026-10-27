@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1724-safe-demo-update",
+  "kind": "fix",
+  "title": "Updating a live demo fetches and verifies the new release first; a failed download leaves the old demo serving",
+  "pr": 1724,
+  "area": "ops/demos",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, with TEST_DATABASE_URL set to a Postgres: node --test --test-reporter=tap --test-name-pattern=\"cannot be fetched|published while the update was fetching|polling follows the demo\" apps/tracy-web/test/ops-demos.test.mjs",
+    "S2: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/quickstart-prefetch.test.mjs apps/tracy-host/test/prefetch.test.mjs",
+    "S3: Read the ok/not ok line of each test."
+  ],
+  "expect": [
+    "Every test reports ok: a live demo's update asks /_host/prefetch and never /_host/teardown while the prefetch runs or after it fails; the site row stays published with its port; /api/ops/demos still reports the demo live with the failed job's reason (403); a release published mid-fetch stops the update with nothing torn down; a done prefetch asks one teardown keyed by its job; quickstart.py --prefetch fills the cache, names a spent GitHub quota with its reset time and waits out a short Retry-After (pre-fix: the teardown was asked at the press, and a 403 at the download left the address blank)."
+  ],
+  "selectors": {},
+  "evidence": "25/10/2026 dev: ja-boxing-joomla teardown 08:55:51-08:56:22, provision failed 08:56:26 and 08:59:51 with 'quickstart download failed (HTTP 403)', success at 09:09; tracy-web logged 'GitHub rate limit exhausted for this token until 2026-10-25T09:05:13Z'.",
+  "fence": "apps/tracy-web/src/ops/demos.js installOnHost (live branch) + apps/tracy-web/src/lib/demo-update.js replaceAfterPrefetch + apps/tracy-host/src/prefetch.js + quickstart.py prefetch/open_release.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=cannot be fetched|published while the update was fetching|polling follows the demo",
+      "apps/tracy-web/test/ops-demos.test.mjs"
+    ],
+    "tests": [
+      "an update whose new release cannot be fetched leaves the live demo serving, and says why",
+      "a release published while the update was fetching stops it before anything comes down",
+      "polling follows the demo through provision, going public, and a fresh redeploy"
+    ]
+  }
+}

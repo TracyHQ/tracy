@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ember": {
+      "$value": "#ff4700",
+      "$type": "color",
+      "$description": "Ember — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ember-glow": {
+      "$value": "#8b2e09",
+      "$type": "color",
+      "$description": "Ember Glow — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ember-smoke": {
+      "$value": "#451e0e",
+      "$type": "color",
+      "$description": "Ember Smoke — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "obsidian": {
+      "$value": "#0f0d0a",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas and footer background — the base near-black with a faint warm bias that keeps the UI from feeling clinical"
+    },
+    "graphite": {
+      "$value": "#161412",
+      "$type": "color",
+      "$description": "Graphite — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Ash — Body copy, secondary text, hairline borders, icon strokes, footer dividers — the warm neutral that carries the majority of UI content at 95 occurrences"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Display headlines, primary headings, nav text, button text on dark fills, and image elements — the highest-contrast white reserved for moments that must shout"
+    }
+  },
+  "font": {
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Single system sans family carries the entire voice. The 140px weight-700 display with -0.0210em tracking and 0.90 line-height is the signature — a massive, tightly-set headline that functions almost as a logotype. Body copy sits at 15px/1.50, small meta and nav at 13px, and 22px serves as the subheading bridge between body and display."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cron.com",
+      "siteName": "Cron Calendar",
+      "extractedAt": "2026-06-03T15:46:38.134Z",
+      "variant": "compact"
+    }
+  }
+}

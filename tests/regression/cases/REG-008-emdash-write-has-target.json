@@ -1,0 +1,47 @@
+{
+  "id": "REG-008",
+  "kind": "fix",
+  "title": "An EmDash chat update is recorded with its entry as target and named in Site changes",
+  "pr": 772,
+  "area": "site-changes/record",
+  "cms": ["em"],
+  "needs": ["stand", "site:em", "model", "seat:owner"],
+  "flaky_model": true,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY and LABEL = site key and container prefix of an EmDash site where seat A is owner (e.g. scv2em.scv2.tracy.test / scv2em); RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c 'emdashWriteTarget(' /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js and docker exec $WEB grep -c 'writeTargetOf(body?.target)' /opt/tracy-web/src/sites/route.js must each print a number >= 1; otherwise stop with BLOCKED note image-older-than-1bf428e65.",
+    "Define em() { docker exec -w /app $LABEL-web-1 node -e 'const {DatabaseSync}=require(\"node:sqlite\");const d=new DatabaseSync(\"/app/data/data.db\",{readOnly:true});console.log(JSON.stringify(d.prepare(process.argv[1]).all()))' \"$1\" 2>/dev/null; } (read-only; if node:sqlite is missing use new (require('better-sqlite3'))('/app/data/data.db',{readonly:true})).",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); use a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}, reducedMotion:'no-preference'} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser (let the script exit).",
+    "In the new context page.goto(ORIGIN+'/'+KEY) and wait (<= 90 s) until page.url() contains '/s/session-' and the first [data-composer-input='true'] is visible.",
+    "Fixture: POST_ID = id from em \"select id from ec_posts where deleted_at is null and title like 'REG-0%' order by id desc limit 1\". If empty: set T0=$(pq \"select now()\"); send 'Create a new draft post (do not publish it) with the exact title: REG-008-' + RUN + '-base. Use tracy_emdash content_create. Change nothing else.' (README § Send a chat message: box = page.locator(\"[data-composer-input='true']\").first(); await box.fill(text); wait (<= 10 s) until box.textContent() === text, else fill once more, still different → BLOCKED note composer-rejected-text; box.press('Enter'); wait (<= 15 s) until box.textContent() === '', else BLOCKED note composer-did-not-send; never click, Meta+A, Backspace, page.keyboard.insertText in one go: the composer drops the text, 7/7 on scv2 03/10); poll pq \"select turn_id, state from site_turn where site_key='$KEY' and actor='$A' and opened_at > '$T0' order by opened_at desc limit 1\" every 5 s until its state is not 'open' (at most 10 min, else BLOCKED note turn-open-timeout); then POST_ID = em \"select id from ec_posts where title='REG-008-$RUN-base' and deleted_at is null\"; still empty → BLOCKED note agent-did-not-edit.",
+    "Set T0=$(pq \"select now()\"); send 'Change the title of the EmDash post with ID ' + POST_ID + ' to exactly: REG-008-' + RUN + '-edited. Use tracy_emdash content_update on that one entry of the posts collection. Change nothing else.' the same way.",
+    "TURN = turn_id from pq \"select turn_id, state from site_turn where site_key='$KEY' and actor='$A' and opened_at > '$T0' order by opened_at desc limit 1\", polled every 5 s until its state is not 'open' (at most 10 min; else BLOCKED note turn-open-timeout).",
+    "Read em \"select title from ec_posts where id='$POST_ID'\"; a title other than REG-008-$RUN-edited → BLOCKED note agent-did-not-edit.",
+    "Read pq \"select action, via, outcome, actor, coalesce(target->>'kind',''), coalesce(target->>'id','') from site_write where site_key='$KEY' and turn_id='$TURN' order by id\".",
+    "Read curl -s -H \"Cookie: tracy_sess=$COOKIE_A\" -H \"Origin: $ORIGIN\" \"$ORIGIN/api/sites/$KEY/activity?version=2&filter=chat&limit=50\" (follow nextCursor, at most 5 pages) and take the item whose id = TURN; none → FAIL note no-row.",
+    "UI: goto page.url() with searchParams tab=tracy:changes and site=KEY; wait (<= 90 s) for [data-site-changes-v2] and until no [data-site-changes-v2] [data-reading] remains; find li.tv-activity-event[data-event='<TURN>'] (README § Find a row in Site changes: at most 30 times — row present → stop; .tv-activity-more gone → the list ended; its button enabled → click it once, never while it reads 'Loading…' (disabled); wait 2 s, then wait (<= 90 s) until the row exists, .tv-activity-more is gone, or the button is enabled again; list ended without the row → FAIL note row-not-in-list); read the textContent of its [data-cell='description'] .tv-activity-desc-text."
+  ],
+  "expect": [
+    "Both build checks print a count >= 1.",
+    "If every via='emdash-mcp' row of TURN has action 'content_replace' → BLOCKED note agent-used-content-replace (that job names no single entry by design); otherwise every check below applies.",
+    "site_write has a row action='content_update', via='emdash-mcp', outcome='ok', actor=A, target kind='posts', target id=POST_ID (before #772 the same row carried target NULL: QA-A10-em r1, scv2em).",
+    "API item: origin.source='chat', description.key='resource.op', description.params.type='post', description.params.id=POST_ID (before #772: description.key='change.recorded' with params.operations=1).",
+    "API item: description.params.op='update' when every ok emdash-mcp row of TURN is content_update.",
+    "API item: effects.content.resources has an entry with type='post', id=POST_ID and 'update' in ops; effects.content.operations=0.",
+    "The row's description text names the post by its new title REG-008-<RUN>-edited and never shows the bare POST_ID (en reads 'Updated post “REG-008-<RUN>-edited”'; since #900 E3.2, a ULID is never shown — before it read 'Updated post <POST_ID>')."
+  ],
+  "selectors": {
+    "composer": "[data-composer-input='true'] (first)",
+    "siteToolsMarker": "'emdashWriteTarget(' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js (dsh container)",
+    "webMarker": "'writeTargetOf(body?.target)' in /opt/tracy-web/src/sites/route.js (web container)",
+    "changedDoor": "POST /api/sites/:key/changed body {tool, via:'emdash-mcp', target:{kind:<collection>, id}}",
+    "writeRecord": "site_write(site_key, turn_id, action, via, outcome, actor, target jsonb {kind, id})",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=chat&limit=50 → items[].description{key, params{op,type,id,title}}, items[].effects.content{resources[], operations}",
+    "row": "li.tv-activity-event[data-event='<turnId>'][data-source='chat']",
+    "descriptionText": "[data-cell='description'] .tv-activity-desc-text",
+    "siteChanges": "[data-site-changes-v2] (still reading: [data-site-changes-v2] [data-reading]); more rows: .tv-activity-more button",
+    "emdashPosts": "ec_posts(id, title, status, deleted_at) in /app/data/data.db of <label>-web-1"
+  },
+  "evidence": "apps/tracy-web/test/component.test.mjs",
+  "fence": "site-tools emdashWriteTarget puts {kind: <collection>, id} on the POST /api/sites/:key/changed report of a tracy_emdash write and the door's writeTargetOf keeps it as site_write.target, from which effectsOf builds a resource.op description with the collection singularised (posts → post)."
+}

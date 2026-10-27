@@ -1,0 +1,50 @@
+---
+/**
+ * Left column of a category list page, after the source's magazine layout (`sidebar-l`):
+ * the section list (`mod-articlescategories`) and the latest articles (`tracy-article-list`).
+ * Headings come from the site entry (`sections_title`, `latest_title`); the source shows the
+ * lists bare, the headings are kept for landmarks and hidden from nobody.
+ */
+import { href, type Locale } from '@/lib/i18n'
+import type { PostCard } from '@/lib/posts'
+import { type Attrs, stampFor } from '@/lib/stamps'
+
+interface Props {
+  /** `stamp`: the provenance stamp of the field a label comes from (`src/lib/stamps.ts`). */
+  sections: Array<{ label: string; url: string; active?: boolean; stamp?: Attrs }>
+  latest: PostCard[]
+  locale: Locale
+  site: Record<string, any>
+  class?: string
+}
+const { sections, latest, locale, site, class: className = '' } = Astro.props
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $site = stampFor(Astro.request, 'site', site)
+---
+
+<aside class={className}>
+	{sections.length > 0 && (
+		<nav aria-label={site.sections_title}>
+			<h2 class="footer-title" {...$site("sections_title")}>{site.sections_title}</h2>
+			<ul class="divide-y divide-dashed divide-line-soft border-b border-dashed border-line-soft">
+				{sections.map((s) => (
+					<li>
+						<a href={s.url} class:list={["block py-2 text-[15px] leading-[1.4]", s.active ? "font-semibold text-fg" : "text-fg-2 hover:text-accent"]} aria-current={s.active ? "page" : undefined} {...s.stamp}>{s.label}</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	)}
+	{latest.length > 0 && (
+		<section class="mt-8" aria-label={site.latest_title}>
+			<h2 class="footer-title" {...$site("latest_title")}>{site.latest_title}</h2>
+			<ul class="divide-y divide-line-soft border-b border-line-soft">
+				{latest.map((p) => (
+					<li {...stampFor(Astro.request, "posts", p)()}>
+						<a href={href(locale, `/blog/${p.slug}`)} class="block py-3 text-[13px] leading-[1.4] text-fg-2 hover:text-accent" {...stampFor(Astro.request, "posts", p)("title")}>{p.data.title}</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+</aside>

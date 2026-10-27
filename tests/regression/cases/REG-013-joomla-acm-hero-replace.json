@@ -1,0 +1,39 @@
+{
+  "id": "REG-013",
+  "kind": "fix",
+  "title": "Open Joomla: content.replace edits a JoomlArt ACM (mod_ja_acm) hero heading inside params.jatools-config, keeping ':type' and every other byte",
+  "pr": 786,
+  "area": "site-tools/joomla",
+  "cms": ["jo"],
+  "needs": ["stand", "site:jo", "seat:owner", "fixture:ja-mood-site"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: PORT = the stand's port; work in the repo root of a checkout at the stand's source commit with pnpm dependencies installed; RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c mod_ja_acm /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js must print a number >= 1; otherwise stop with BLOCKED note image-older-than-f9c734938.",
+    "Unit seam: node --test --test-reporter=tap --test-name-pattern='ACM hero|NOT_EDITABLE road sends the one key|escaped twice|only starts like JSON' packages/tools/tracy-site-tools/test/replace-joomla-open.test.mjs",
+    "Fixture: the same ja-mood Joomla site as REG-012 (KEY, SITE = 'http://' + KEY + ':' + PORT; create it the same way if absent: POST $ORIGIN/api/sites {label: 'reg13jo' + RUN, platform: 'joomla', design: 'ja-mood', buildId: <uuid v4>}, then poll GET $SITE/ every 10 s for up to 15 min until 200 with 'hero-heading', else BLOCKED note site-not-ready). Define apply(action, params) = POST $ORIGIN/api/sites/$KEY/apply, body JSON {action, params}, headers Cookie: tracy_sess=$COOKIE_A, content-type: application/json, Origin: $ORIGIN.",
+    "M = the digits of the last id=\"Mod<digits>\" before the first 'hero-heading' in the HTML of GET $SITE/ (if none: the first apply content.list {kind:'module', limit:100} item with module 'mod_ja_acm' and a position starting with 'masthead'). P0 = apply content.get {kind:'module', id:M} .item.params; C0 = JSON.parse(JSON.parse(P0)['jatools-config']); H0 = C0.hero['hero-style[hero-heading]'][0] (missing -> BLOCKED note fixture-has-no-hero-heading); NEW = 'REG-013-' + RUN.",
+    "Act: write a scratch Node ESM script that imports planReplace from <repo>/packages/tools/tracy-site-tools/src/host/replace.mjs and replaceOnJoomlaOpen from .../src/host/replace-joomla-open.mjs. door = apply; pageHtml(path) = fetch($SITE + path) returning {ok: status === 200, status, html: body text}. DRY = await replaceOnJoomlaOpen({plan: planReplace({find: H0, replace: NEW, path: '/', dryRun: true}), read: door, write: door, pageHtml, mintApplyId: () => 'reg-013-' + RUN, confirmed: false}); then WET = the same call with dryRun: false. Print DRY and WET.",
+    "Read P1 = apply content.get {kind:'module', id:M} .item.params, C1 = JSON.parse(JSON.parse(P1)['jatools-config']), and HTML1 = the HTML of GET $SITE/.",
+    "Clean up: apply apply.revert {apply_id: WET.apply_id}; then read P2 = apply content.get {kind:'module', id:M} .item.params."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "The unit seam exits 0 with TAP '# pass 5' and '# fail 0'.",
+    "DRY.ok === true and DRY.would.map(w => w.at) deep-equals ['module:<M>.params:jatools-config.hero.hero-style[hero-heading][0]'] (before #786 this call answered code 'NOT_EDITABLE' with a next containing 'fields:{params:\"<all of them>\"}', evidence transcript line 106).",
+    "WET.ok === true; WET.changed.map(w => w.at) deep-equals that same single address; WET.apply_id === 'reg-013-' + RUN; WET.undo deep-equals {action: 'apply.revert', params: {apply_id: WET.apply_id}}; WET.verified === 'shown on /'.",
+    "C1[':type'] === C0[':type']; C1.hero['hero-style[hero-heading]'] deep-equals [NEW]; C1 deep-equals C0 apart from that one value; every key of JSON.parse(P1) other than 'jatools-config' equals the same key of JSON.parse(P0).",
+    "HTML1 contains NEW, and the trimmed text of '#Mod<M> .hero-heading' === NEW.",
+    "After the revert JSON.parse(JSON.parse(P2)['jatools-config']) deep-equals C0."
+  ],
+  "selectors": {
+    "siteToolsMarker": "'mod_ja_acm' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js (dsh container)",
+    "applyDoor": "POST /api/sites/:key/apply body {action, params}",
+    "engine": "replaceOnJoomlaOpen in packages/tools/tracy-site-tools/src/host/replace-joomla-open.mjs (JOOMLA_WORD_PARAMS.module.mod_ja_acm, ACM_NOT_WORDS)",
+    "tool": "tracy_site action content.replace {find, replace, path}",
+    "unitAddress": "module:<M>.params:jatools-config.hero.hero-style[hero-heading][0]",
+    "heroOnPage": "#Mod<M> .hero-heading"
+  },
+  "evidence": "tasks/evidence/bug-0310-leemood/issue1/transcript-turns-1-3.txt (Studio-local, not in git); fix f9c734938 (#786) is on develop",
+  "fence": "replaceOnJoomlaOpen opens a mod_ja_acm module's params.jatools-config (JSON text inside JSON), reads each word field not matched by ACM_NOT_WORDS as its own unit, and splices the new words JSON-escaped twice into the params column while every other byte is kept."
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "17d0a00e-5de6-48c7-9f3b-25b04f7dab4c",
+  "status": "complete",
+  "name": "Canva",
+  "url": "https://styles.refero.design/style/17d0a00e-5de6-48c7-9f3b-25b04f7dab4c",
+  "sourceWebsite": "https://www.canva.com",
+  "extractedAt": "2026-06-03T21:53:09.561Z",
+  "capturedAt": "2026-10-08T05:08:44.065431+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "playful artist's studio bathed in violet dawn — a clean white workspace where every accent, icon, and gradient wash arrives pre-tuned for creative work.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1f1f605d-5819-4f97-8d68-3e763ca40afc.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8027bf73747b37f83b8b94263d07c84b646bfbd42442baab434a862b9ae2c411",
+      "bytes": 21624
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2c1d5e6da4ebeeed3e35f02dcb3977abda17b2705aa137a3e92b0a1dd6f35eb5",
+      "bytes": 96632
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "be71fb6bdda21efb84ba1d247ce3cbd1295785572ef2ab53a9f21ded71671cad",
+      "bytes": 17791
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "bd8430175bd12acf3d969fa3a7319c88669fad5645c3915e4ce03632d8553a2b",
+      "bytes": 11611
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "36b02be52269bcb4b349d17b131cd32f3a457ac3a37521ee19b71363c32bd706",
+      "bytes": 12909
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f9dbb57a602209a0aa4f6a60d74405cf9e59377127b23a0468aa2ecafaecae14",
+      "bytes": 3466
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a8dcb396d5516d13f2790e678eaefdeb66cf50ffa2c1a633fa86c271955fad0b",
+      "bytes": 793
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a1f12461bea765c7a35a7367212246435591b790afa2b0fd2071335201ddc7ea",
+      "bytes": 898
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5076704010240580c90781ee569a2056e4ebdd0d7c7f81072fb674a3c56c8757",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f81888db2d87b2f87c5c7b5657dfbbd761ecc5e220637e15b22b6d1709649321",
+      "bytes": 45918
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fefbdff60cdd31451b0ff42091565b241eb24ec60c1d3711d5eef0f26f730ae3",
+      "bytes": 24208
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e8bb45c2d43ad490428547bbd49403da9ce246f3d568c8bc56ce5f55a1eb528d",
+      "bytes": 57034
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8f1304b9b40a029a3121c4c3009bfd13467c80724a4ff7f9ef8870e2f9965b67",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c9dd87559b618e8c9644cfd342211c6b378171525b7e1d0a7c657a6a97aa796c",
+      "bytes": 1915
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2842c5e466f7fb49b107c77314001f622560437cf2ad91f26735a61f7a5e3ef8",
+      "bytes": 2564
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "155dbf6e-1187-424e-9ce8-59ffecff7e6b",
+    "17d0a00e-5de6-48c7-9f3b-25b04f7dab4c",
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "62f89392-609d-45b7-b9df-7a5acd529864",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "90b8631c-4e2c-407e-86a3-d2bff456dc93",
+    "9ff62d34-e48d-4fcb-9fd9-c018e2747542",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "bf5616e4-7bd1-40ce-8b2d-aae84c2e4ebd",
+    "c08ebca5-87d4-4c19-a5d7-ae5e670dae11",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

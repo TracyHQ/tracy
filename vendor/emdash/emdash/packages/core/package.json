@@ -1,0 +1,374 @@
+{
+  "name": "emdash",
+  "version": "1.1.0",
+  "description": "Astro-native CMS with WordPress migration support",
+  "type": "module",
+  "main": "dist/index.mjs",
+  "bin": {
+    "emdash": "./dist/cli/index.mjs",
+    "em": "./dist/cli/index.mjs"
+  },
+  "files": [
+    "dist",
+    "src",
+    "locals.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./astro": {
+      "types": "./dist/astro/index.d.mts",
+      "default": "./dist/astro/index.mjs"
+    },
+    "./plugin": {
+      "types": "./dist/plugin-types.d.mts",
+      "default": "./dist/plugin-types.mjs"
+    },
+    "./internal/plugin-test-runtime": {
+      "types": "./dist/plugin-test-runtime.d.mts",
+      "default": "./dist/plugin-test-runtime.mjs"
+    },
+    "./internal/testing/registry": {
+      "types": "./dist/registry/testing.d.mts",
+      "default": "./dist/registry/testing.mjs"
+    },
+    "./middleware": {
+      "types": "./dist/astro/middleware.d.mts",
+      "default": "./dist/astro/middleware.mjs"
+    },
+    "./internal/middleware/setup": {
+      "types": "./dist/astro/middleware/setup.d.mts",
+      "default": "./dist/astro/middleware/setup.mjs"
+    },
+    "./internal/middleware/auth": {
+      "types": "./dist/astro/middleware/auth.d.mts",
+      "default": "./dist/astro/middleware/auth.mjs"
+    },
+    "./internal/middleware/media-usage-write-fence": {
+      "types": "./dist/astro/middleware/media-usage-write-fence.d.mts",
+      "default": "./dist/astro/middleware/media-usage-write-fence.mjs"
+    },
+    "./internal/middleware/redirect": {
+      "types": "./dist/astro/middleware/redirect.d.mts",
+      "default": "./dist/astro/middleware/redirect.mjs"
+    },
+    "./ui": "./src/ui.ts",
+    "./ui/comments": "./src/ui-comments.ts",
+    "./ui/search": "./src/components/LiveSearch.astro",
+    "./ui/webmcp-search": "./src/components/WebMcpSearch.astro",
+    "./cli": {
+      "types": "./dist/cli/index.d.mts",
+      "default": "./dist/cli/index.mjs"
+    },
+    "./internal/routes/*.astro": "./src/astro/routes/*.astro",
+    "./internal/routes/*": {
+      "types": "./dist/astro/routes/*.d.mts",
+      "default": "./dist/astro/routes/*.mjs"
+    },
+    "./api/route-utils": {
+      "types": "./dist/api/route-utils.d.mts",
+      "default": "./dist/api/route-utils.mjs"
+    },
+    "./api/schemas": {
+      "types": "./dist/api/schemas/index.d.mts",
+      "default": "./dist/api/schemas/index.mjs"
+    },
+    "./auth/providers/github": {
+      "types": "./dist/auth/providers/github.d.mts",
+      "default": "./dist/auth/providers/github.mjs"
+    },
+    "./auth/providers/github-admin": "./src/auth/providers/github-admin.tsx",
+    "./auth/providers/google": {
+      "types": "./dist/auth/providers/google.d.mts",
+      "default": "./dist/auth/providers/google.mjs"
+    },
+    "./auth/providers/google-admin": "./src/auth/providers/google-admin.tsx",
+    "./auth/providers/microsoft": {
+      "types": "./dist/auth/providers/microsoft.d.mts",
+      "default": "./dist/auth/providers/microsoft.mjs"
+    },
+    "./auth/providers/microsoft-admin": "./src/auth/providers/microsoft-admin.tsx",
+    "./db": {
+      "types": "./dist/db/index.d.mts",
+      "default": "./dist/db/index.mjs"
+    },
+    "./db/sqlite": {
+      "types": "./dist/db/sqlite.d.mts",
+      "default": "./dist/db/sqlite.mjs"
+    },
+    "./internal/db/sqlite-migrations": {
+      "types": "./dist/db/sqlite-migrations.d.mts",
+      "default": "./dist/db/sqlite-migrations.mjs"
+    },
+    "./db/libsql": {
+      "types": "./dist/db/libsql.d.mts",
+      "default": "./dist/db/libsql.mjs"
+    },
+    "./internal/db/libsql-migrations": {
+      "types": "./dist/db/libsql-migrations.d.mts",
+      "default": "./dist/db/libsql-migrations.mjs"
+    },
+    "./db/postgres": {
+      "types": "./dist/db/postgres.d.mts",
+      "default": "./dist/db/postgres.mjs"
+    },
+    "./internal/db/postgres-migrations": {
+      "types": "./dist/db/postgres-migrations.d.mts",
+      "default": "./dist/db/postgres-migrations.mjs"
+    },
+    "./migrations": {
+      "types": "./dist/migrations/index.d.mts",
+      "default": "./dist/migrations/index.mjs"
+    },
+    "./database/instrumentation": {
+      "types": "./dist/database/instrumentation.d.mts",
+      "default": "./dist/database/instrumentation.mjs"
+    },
+    "./internal/database/pg-migration-lock": {
+      "types": "./dist/database/pg-migration-lock.d.mts",
+      "default": "./dist/database/pg-migration-lock.mjs"
+    },
+    "./internal/database/migration-lock": {
+      "types": "./dist/database/migration-lock.d.mts",
+      "default": "./dist/database/migration-lock.mjs"
+    },
+    "./storage/local": {
+      "types": "./dist/storage/local.d.mts",
+      "default": "./dist/storage/local.mjs"
+    },
+    "./storage/s3": {
+      "types": "./dist/storage/s3.d.mts",
+      "default": "./dist/storage/s3.mjs"
+    },
+    "./internal/object-cache/memory": {
+      "types": "./dist/object-cache/memory.d.mts",
+      "default": "./dist/object-cache/memory.mjs"
+    },
+    "./media": {
+      "types": "./dist/media/index.d.mts",
+      "default": "./dist/media/index.mjs"
+    },
+    "./internal/media/local-runtime": {
+      "types": "./dist/media/local-runtime.d.mts",
+      "default": "./dist/media/local-runtime.mjs"
+    },
+    "./media/image-endpoint": {
+      "types": "./dist/media/image-endpoint.d.mts",
+      "default": "./dist/media/image-endpoint.mjs"
+    },
+    "./internal/image-endpoint": {
+      "types": "./dist/astro/image-endpoint.d.mts",
+      "default": "./dist/astro/image-endpoint.mjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.mts",
+      "default": "./dist/runtime.mjs"
+    },
+    "./request-context": {
+      "types": "./dist/request-context.d.mts",
+      "default": "./dist/request-context.mjs"
+    },
+    "./seed": {
+      "types": "./dist/seed/index.d.mts",
+      "default": "./dist/seed/index.mjs"
+    },
+    "./internal/middleware/request-context": {
+      "types": "./dist/astro/middleware/request-context.d.mts",
+      "default": "./dist/astro/middleware/request-context.mjs"
+    },
+    "./locals": {
+      "types": "./locals.d.ts"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.mts",
+      "default": "./dist/client/index.mjs"
+    },
+    "./client/cf-access": {
+      "types": "./dist/client/cf-access.d.mts",
+      "default": "./dist/client/cf-access.mjs"
+    },
+    "./seo": {
+      "types": "./dist/seo/index.d.mts",
+      "default": "./dist/seo/index.mjs"
+    },
+    "./page": {
+      "types": "./dist/page/index.d.mts",
+      "default": "./dist/page/index.mjs"
+    },
+    "./plugin-utils": {
+      "types": "./dist/plugin-utils.d.mts",
+      "default": "./dist/plugin-utils.mjs"
+    },
+    "./internal/plugins/adapt-sandbox-entry": {
+      "types": "./dist/plugins/adapt-sandbox-entry.d.mts",
+      "default": "./dist/plugins/adapt-sandbox-entry.mjs"
+    },
+    "./internal/plugins/host": {
+      "types": "./dist/plugins/host.d.mts",
+      "default": "./dist/plugins/host.mjs"
+    },
+    "./plugins/secret-redactor": {
+      "types": "./dist/plugins/secret-redactor.d.mts",
+      "default": "./dist/plugins/secret-redactor.mjs"
+    },
+    "./internal/plugins/http-wire": {
+      "types": "./dist/plugins/http-wire.d.mts",
+      "default": "./dist/plugins/http-wire.mjs"
+    }
+  },
+  "imports": {
+    "#node-sqlite": "./src/db/node-sqlite-compat.js",
+    "#api/schemas.js": "./src/api/schemas/index.js",
+    "#api/*": "./src/api/*",
+    "#config/*": "./src/config/*",
+    "#db/*": "./src/database/*",
+    "#auth/*": "./src/auth/*",
+    "#cache/*": "./src/cache/*",
+    "#schema/*": "./src/schema/*",
+    "#search/*": "./src/search/*",
+    "#sections/*": "./src/sections/*",
+    "#menus/*": "./src/menus/*",
+    "#widgets/*": "./src/widgets/*",
+    "#import/*": "./src/import/*",
+    "#security/*": "./src/security/*",
+    "#utils/*": "./src/utils/*",
+    "#preview/*": "./src/preview/*",
+    "#seed/*": "./src/seed/*",
+    "#settings/*": "./src/settings/*",
+    "#seo/*": "./src/seo/*",
+    "#plugins/*": "./src/plugins/*",
+    "#media/*": "./src/media/*",
+    "#mcp/*": "./src/mcp/*",
+    "#comments/*": "./src/comments/*",
+    "#bylines/*": "./src/bylines/*",
+    "#taxonomies/*": "./src/taxonomies/*",
+    "#redirects/*": "./src/redirects/*",
+    "#types": "./src/astro/types.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "prepublishOnly": "node --run build",
+    "typecheck": "tsgo --noEmit",
+    "check": "publint && attw --pack --ignore-rules=cjs-resolves-to-esm --ignore-rules=no-resolution --ignore-rules=internal-resolution-error",
+    "test": "vitest",
+    "test:workerd": "vitest run --config vitest.workerd.config.ts",
+    "test:smoke": "vitest run --config vitest.smoke.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:repro": "vitest run --config vitest.repro.config.ts",
+    "test:types": "vitest run --config vitest.types.config.ts"
+  },
+  "dependencies": {
+    "@atcute/identity-resolver": "catalog:",
+    "@atcute/lexicons": "catalog:",
+    "@atcute/multibase": "catalog:",
+    "@emdash-cms/admin": "workspace:*",
+    "@emdash-cms/auth": "workspace:*",
+    "@emdash-cms/blocks": "workspace:*",
+    "@emdash-cms/gutenberg-to-portable-text": "workspace:*",
+    "@emdash-cms/plugin-types": "workspace:*",
+    "@emdash-cms/registry-client": "workspace:*",
+    "@emdash-cms/registry-lexicons": "workspace:*",
+    "@emdash-cms/registry-verification": "workspace:*",
+    "@floating-ui/react": "^0.27.16",
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@oslojs/crypto": "catalog:",
+    "@oslojs/encoding": "catalog:",
+    "@portabletext/toolkit": "^5.0.1",
+    "@tiptap/core": "catalog:",
+    "@tiptap/extension-code": "catalog:",
+    "@tiptap/extension-code-block": "catalog:",
+    "@tiptap/extension-code-block-lowlight": "catalog:",
+    "@tiptap/extension-focus": "catalog:",
+    "@tiptap/extension-image": "catalog:",
+    "@tiptap/extension-link": "catalog:",
+    "@tiptap/extension-list": "catalog:",
+    "@tiptap/extension-placeholder": "catalog:",
+    "@tiptap/extension-text-align": "catalog:",
+    "@tiptap/extension-typography": "catalog:",
+    "@tiptap/extension-underline": "catalog:",
+    "@tiptap/pm": "catalog:",
+    "@tiptap/react": "catalog:",
+    "@tiptap/starter-kit": "catalog:",
+    "@tiptap/suggestion": "catalog:",
+    "@unpic/placeholder": "^0.1.2",
+    "arctic": "^3.7.0",
+    "astro-portabletext": "^0.11.0",
+    "blurhash": "^2.0.5",
+    "citty": "^0.2.2",
+    "consola": "^3.4.2",
+    "croner": "^10.0.1",
+    "highlight.js": "catalog:",
+    "lowlight": "catalog:",
+    "jose": "^6.1.3",
+    "jpeg-js": "^0.4.4",
+    "jsonc-parser": "catalog:",
+    "kysely": "catalog:",
+    "mime": "^4.1.0",
+    "modern-tar": "^0.7.5",
+    "picocolors": "^1.1.1",
+    "sanitize-html": "^2.17.1",
+    "sax": "^1.4.1",
+    "smol-toml": "^1.6.0",
+    "ulidx": "^2.4.1",
+    "upng-js": "^2.1.0",
+    "zod": "catalog:",
+    "@atcute/client": "catalog:"
+  },
+  "optionalDependencies": {
+    "@libsql/kysely-libsql": "^0.4.0",
+    "pg": "^8.0.0"
+  },
+  "peerDependencies": {
+    "@astrojs/react": ">=5.0.0-beta.0",
+    "@emdash-cms/auth-atproto": "workspace:>=0.2.8",
+    "astro": ">=6.0.0-beta.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emdash-cms/auth-atproto": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "^12.1.0",
+    "@arethetypeswrong/cli": "catalog:",
+    "@astrojs/react": "catalog:",
+    "@cloudflare/vitest-plugin": "catalog:",
+    "@emdash-cms/atproto-test-utils": "workspace:*",
+    "@emdash-cms/registry-verification": "workspace:*",
+    "@types/pg": "^8.16.0",
+    "@types/react": "catalog:",
+    "@types/sanitize-html": "^2.16.0",
+    "@types/sax": "^1.2.7",
+    "@vitest/ui": "catalog:",
+    "astro": "catalog:",
+    "image-size": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "^6.0.0",
+    "vitest": "catalog:",
+    "zod-openapi": "^5.4.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emdash-cms/emdash.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/emdash-cms/emdash",
+  "keywords": [
+    "astro",
+    "cms",
+    "content",
+    "wordpress"
+  ],
+  "author": "Matt Kane",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.16"
+  }
+}

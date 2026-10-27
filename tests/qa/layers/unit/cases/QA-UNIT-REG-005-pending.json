@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-005-pending",
+  "itemIds": ["regression:REG-005"],
+  "requirement": "Backup and restore dialogs fit a 360 px viewport",
+  "oracle": {
+    "source": "tests/regression/cases/REG-005-backup-dialogs-fit-360px.json",
+    "ref": "PR #747 (fix); fix evidence: tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I15.md (fix dba4b5960); the QA note is Studio-local (not in git), the fix commit is on develop",
+    "invariant": "Each recorded dialog (create, everything, files): vw == 360 and sw == 360 (no sideways scroll). Each: boxSizing == 'border-box' (pre-fix: 'content-box' on the dialog root). Each: offsetWidth ≤ 328 (stand after fix: 328 = 360 − 2rem; pre-fix: 394 with left −17). Each: dialog.left ≥ 15 and dialog.right ≤ 345 (tracy-ui 1rem gutter kept). Each: close.left ≥ 0 and close.right ≤ 345 (after fix: 307..335; pre-fix: 340..368). Each: every control left ≥ 16 and right ≤ 344 (after fix: 33..327; pre-fix: 0..360). WORD deep-equals ['Gõ “Restore” để xác nhận', 'Restore', 'Huỷ', true] (vi-VN: the instruction is translated, the word is English; Cancel holds the focus; was the site address); OPEN === false (any case).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer flows, needs stand, seat:owner, viewport:360"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:seat:owner", "need:viewport:360"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-005"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:flows"],
+  "regression": {
+    "id": "REG-005",
+    "pr": 747,
+    "kind": "fix",
+    "area": "site-changes/dialogs",
+    "file": "tests/regression/cases/REG-005-backup-dialogs-fit-360px.json"
+  },
+  "ownerLayer": "flows",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "seat:owner", "viewport:360"]
+}

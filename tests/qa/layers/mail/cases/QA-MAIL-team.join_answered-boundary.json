@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.join_answered-boundary",
+  "itemIds": [
+    "letter:team.join_answered:en",
+    "letter:team.join_answered:vi",
+    "letter:team.join_answered:de",
+    "letter:team.join_answered:it",
+    "letter:team.join_answered:fr",
+    "letter:team.join_answered:nl",
+    "letter:team.join_answered:zh",
+    "letter:team.join_answered:es"
+  ],
+  "requirement": "team.join_answered stays well-formed for one-character, 10,000-character and Unicode facts",
+  "oracle": {
+    "source": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "ref": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "invariant": "subject has no CR/LF; the HTML document is complete"
+  },
+  "edgeTags": ["boundary"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.boundary#team.join_answered:"],
+  "redProof": null,
+  "legacyIds": []
+}

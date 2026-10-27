@@ -1,0 +1,250 @@
+/* tracy-base — the landing blocks imported from the Joomla source as HTML ([data-od-block]
+ * sections: the one-page home and its company blocks). Their inline styles read the OpenDesign
+ * brand names; here those names point at the active variation's variables, and the source's
+ * native-landing and company-onepage rules give the blocks their structure. Loaded after
+ * tracy-base.css. */
+
+/* ---- landing blocks carried over from the Joomla source as HTML (the one-page home and the
+   other pages that hold [data-od-block] sections): their inline styles read the OpenDesign
+   brand names (--brand-color-text, --brand-size-lg); here those names point at the active
+   variation's variables, and the source's native-landing and company-onepage rules give the
+   blocks their structure. ---- */
+.tracy [data-od-block] {
+  --brand-color-bg-container: var(--wp--preset--color--bg);
+  --brand-color-bg-layout: var(--wp--preset--color--bg);
+  --brand-color-bg-elevated: var(--wp--preset--color--surface);
+  --brand-color-border: var(--wp--preset--color--border);
+  --brand-color-border-secondary: var(--wp--preset--color--border-soft);
+  --brand-color-fill: var(--wp--preset--color--border);
+  --brand-color-fill-secondary: var(--wp--preset--color--surface);
+  --brand-color-fill-tertiary: var(--wp--preset--color--surface-warm);
+  --brand-color-fill-quaternary: var(--wp--preset--color--surface-warm);
+  --brand-color-primary: var(--wp--preset--color--accent);
+  --brand-color-primary-hover: var(--wp--preset--color--accent-hover);
+  --brand-color-primary-active: var(--wp--preset--color--accent-active);
+  --brand-color-primary-bg: var(--wp--preset--color--surface);
+  --brand-color-primary-border: var(--wp--preset--color--border);
+  --brand-color-primary-contrast: var(--wp--preset--color--accent-on);
+  --brand-color-primary-ink: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  --brand-color-primary-text: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  --brand-color-link: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  --brand-color-text: var(--wp--preset--color--fg);
+  --brand-color-text-secondary: var(--wp--preset--color--muted);
+  --brand-color-text-tertiary: var(--wp--preset--color--meta);
+  --brand-color-text-quaternary: var(--wp--preset--color--meta);
+  --brand-color-error: var(--wp--preset--color--danger);
+  --brand-color-warning: var(--wp--preset--color--warn);
+  --brand-color-success: var(--wp--preset--color--success);
+  --brand-size-xxs: 4px;
+  --brand-size-xs: 8px;
+  --brand-size-sm: 12px;
+  --brand-size: 16px;
+  --brand-size-md: 20px;
+  --brand-size-lg: 24px;
+  --brand-size-xl: 32px;
+  --brand-size-xxl: 48px;
+  --brand-font-family: var(--ds-font-body, var(--wp--preset--font-family--body));
+  --display-family: var(--ds-font-display, var(--wp--preset--font-family--display));
+  --brand-font-size: 17px;
+  --brand-font-size-sm: 12px;
+  --brand-font-size-lg: 21px;
+  --brand-font-size-xl: 21px;
+  --brand-font-size-heading-1: 38px;
+  --brand-font-size-heading-2: 32px;
+  --brand-font-size-heading-3: 26px;
+  --brand-font-size-heading-4: 22px;
+  --brand-font-size-heading-5: 18px;
+  --brand-font-weight-strong: 600;
+  --brand-line-height: 1.47;
+  --brand-line-height-heading: 1.05;
+  --brand-border-radius-xs: 4px; /* ds-keep: the corner of the imported mock's small bars and dots, drawing detail rather than a component corner */
+  --brand-border-radius-sm: var(--wp--custom--radius--sm);
+  --brand-border-radius: var(--wp--custom--radius--md);
+  --brand-border-radius-lg: var(--wp--custom--radius--lg);
+  --brand-line-width: 1px;
+  --brand-control-height-xs: 16px;
+  --brand-control-height-sm: 24px;
+  --brand-control-height: 32px;
+  --brand-control-height-lg: 40px;
+  font-family: var(--wp--preset--font-family--body);
+  color: var(--wp--preset--color--fg);
+}
+.tracy [data-od-block] :is(h1, h2, h3, h4) {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-weight: 600;
+  line-height: var(--wp--custom--leading--tight);
+  letter-spacing: var(--wp--custom--tracking--display);
+  color: var(--wp--preset--color--fg);
+}
+.tracy [data-od-block] h2 { font-size: 40px !important; }
+.tracy [data-od-block] h3 { font-size: 28px !important; }
+.tracy [data-od-block] p { margin: 0; }
+.tracy [data-od-block] a { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); text-decoration: none; }
+.tracy [data-od-block] :is(img, svg) { max-width: 100%; display: block; }
+.tracy [data-od-block] .wrap {
+  box-sizing: border-box;
+  max-width: calc(var(--wp--custom--container--max) + 2 * var(--wp--custom--container--gutter-desktop));
+  margin: 0 auto;
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+}
+.tracy [data-od-block].section { padding-block: var(--wp--custom--section-y--desktop); }
+.tracy [data-od-block] .kicker {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+.tracy [data-od-block] .section-head { max-width: 680px; margin: 0 auto 48px; text-align: center; }
+.tracy [data-od-block] .section-head p { margin-top: 12px; color: var(--wp--preset--color--muted); font-size: 21px; line-height: 1.47; }
+.tracy [data-od-block] .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.tracy [data-od-block] .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 20px; align-items: stretch; }
+.tracy [data-od-block] .zig { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.tracy [data-od-block] .zig + .zig { margin-top: 96px; }
+.tracy [data-od-block] .clamp-2,
+.tracy [data-od-block] .clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.tracy [data-od-block] .clamp-2 { -webkit-line-clamp: 2; }
+.tracy [data-od-block] .clamp-3 { -webkit-line-clamp: 3; }
+.tracy [data-od-block] .od-demo-note { margin: 0; padding: 20px 16px 0; font-size: 12px; line-height: 1.5; opacity: 0.7; text-align: center; }
+.tracy [data-od-block] a[style*='--brand-control-height'],
+.tracy [data-od-block] a[style*='display:inline-flex'][style*='height:'],
+.tracy [data-od-block] .op-button {
+  height: auto !important;
+  min-height: 44px;
+  padding: 12px 20px !important;
+  border-radius: var(--wp--custom--radius--pill) !important;
+  box-shadow: none !important;
+  font-family: var(--wp--preset--font-family--body) !important;
+  font-size: 17px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.005em;
+  white-space: normal !important;
+  text-align: center;
+}
+.tracy [data-od-block] a[style*='background:var(--brand-color-primary)'],
+.tracy [data-od-block] a[style*='display:inline-flex'][style*='background:var(--wp--preset--color--accent)'],
+.tracy [data-od-block] .op-button {
+  background: var(--wp--preset--color--accent) !important;
+  color: var(--wp--preset--color--accent-on) !important;
+  border-color: transparent !important;
+}
+.tracy [data-od-block] :is(a, button, summary):focus-visible { outline: 0; box-shadow: var(--wp--custom--focus-ring) !important; }
+/* company one-page blocks */
+.tracy [data-od-block] .op-lead { font-size: 21px; line-height: 1.47; color: var(--wp--preset--color--muted); }
+.tracy [data-od-block] .op-two-col { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 64px; }
+.tracy [data-od-block] .op-two-col p + p { margin-top: 20px; color: var(--wp--preset--color--muted); }
+.tracy [data-od-block] .op-values { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.tracy [data-od-block] .op-values span { padding: 8px 12px; border: 1px solid var(--wp--preset--color--border); border-radius: var(--wp--custom--radius--pill); font-size: 12px; }
+.tracy [data-od-block] .op-team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.tracy [data-od-block] .op-team img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; margin-bottom: 20px; border-radius: var(--wp--custom--radius--lg); }
+.tracy [data-od-block] .op-team h3 { margin-bottom: 6px; font-size: 22px; }
+.tracy [data-od-block] .op-team p { font-size: 14px; line-height: 1.6; color: var(--wp--preset--color--muted); }
+.tracy [data-od-block] .op-team .op-role { margin-bottom: 12px; font-size: 12px; color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+.tracy [data-od-block] .op-contact { padding: 64px 32px; text-align: center; border-radius: var(--wp--custom--radius--lg); background: var(--wp--preset--color--bg); }
+.tracy [data-od-block] .op-contact h2 { max-width: 24ch; margin: 0 auto 24px; }
+.tracy [data-od-block] .op-contact .op-lead { max-width: 720px; margin: 0 auto; }
+.tracy [data-od-block] .op-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 24px; margin-top: 28px; }
+@media (max-width: 1023px) {
+  .tracy [data-od-block].section { padding-block: var(--wp--custom--section-y--tablet); }
+  .tracy [data-od-block] .wrap { padding-inline: var(--wp--custom--container--gutter-tablet); }
+}
+@media (max-width: 880px) {
+  .tracy [data-od-block] .pillars { grid-template-columns: 1fr; }
+  .tracy [data-od-block] .zig { grid-template-columns: 1fr; gap: 28px; }
+  .tracy [data-od-block] .zig .zig-visual { order: -1; }
+}
+@media (max-width: 760px) {
+  .tracy [data-od-block] .op-two-col { grid-template-columns: 1fr; gap: 28px; }
+  .tracy [data-od-block] .op-team { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+  .tracy [data-od-block] .op-contact { padding: 40px 20px; }
+}
+@media (max-width: 640px) {
+  .tracy [data-od-block].section { padding-block: var(--wp--custom--section-y--phone); }
+  .tracy [data-od-block] .wrap { padding-inline: var(--wp--custom--container--gutter-phone); }
+  .tracy [data-od-block] h3 { font-size: 20px !important; }
+}
+@media (max-width: 400px) {
+  .tracy [data-od-block] .op-team { grid-template-columns: 1fr; }
+}
+/* The one-page home: no gap between its blocks, the "about" and "services" blocks on the page
+   ground (the source draws them on its container colour), no rule above "services". */
+.tracy.page-template-page-onepage .wp-block-post-content > * { margin-top: 0; margin-bottom: 0; }
+.tracy [data-od-block][style*='--wp--preset--color--surface'] { background: var(--wp--preset--color--bg) !important; }
+.tracy [data-od-block='services'] { border-top: 0 !important; }
+/* Its hero is the source's centred one: label, a 56px headline in 20ch, the lead in 720px, the
+   primary pill and a text link, then the picture full width below (560px tall, rounded). */
+.tracy.page-template-page-onepage .tracy-hero { padding-block: var(--wp--custom--section-y--desktop); }
+.tracy.page-template-page-onepage .tracy-hero__inner { display: block; max-width: var(--wp--custom--container--max); margin-inline: auto; text-align: center; }
+.tracy.page-template-page-onepage .tracy-hero__copy > * { margin-inline: auto; text-align: center; }
+.tracy.page-template-page-onepage .tracy-hero .tracy-eyebrow {
+  margin-bottom: 12px;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+.tracy.page-template-page-onepage .tracy-hero h1 { max-width: 20ch; margin-bottom: 24px; font-size: 56px; line-height: 1.05; }
+.tracy.page-template-page-onepage .tracy-hero .tracy-lead { max-width: 720px; font-size: 21px; color: var(--wp--preset--color--muted); }
+.tracy.page-template-page-onepage .tracy-hero .tracy-actions { justify-content: center; gap: 24px; margin-top: 28px; }
+.tracy.page-template-page-onepage .tracy-hero .wp-block-button + .wp-block-button .wp-block-button__link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+.tracy.page-template-page-onepage .tracy-hero__media { margin: 56px 0 0; box-shadow: none; }
+.tracy.page-template-page-onepage .tracy-hero__media img {
+  width: 100%;
+  height: auto;
+  max-height: 560px;
+  object-fit: cover;
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: none;
+}
+/* Its closing call is centred: label, a 40px question in 24ch, the lead in 720px, then the
+   contact page as the primary pill and the way back up as a text link. */
+.tracy.page-template-page-onepage .tracy-contact__grid { display: block; text-align: center; }
+.tracy.page-template-page-onepage .tracy-contact__copy { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 24px; }
+.tracy.page-template-page-onepage .tracy-contact__copy > * { flex: 0 0 100%; margin: 0; text-align: center; }
+.tracy.page-template-page-onepage .tracy-contact__copy > .tracy-eyebrow { margin-bottom: 12px; font-family: var(--wp--preset--font-family--body); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+.tracy.page-template-page-onepage .tracy-contact__copy > h2 { max-width: 24ch; margin: 0 auto 24px; font-size: 40px; line-height: 1.05; }
+.tracy.page-template-page-onepage .tracy-contact__copy > .tracy-lead { max-width: 720px; margin-inline: auto; font-size: 21px; color: var(--wp--preset--color--muted); }
+.tracy.page-template-page-onepage .tracy-contact__copy > p:has(> a) { flex: 0 0 auto; margin-top: 28px; }
+.tracy.page-template-page-onepage .tracy-contact__copy > p:has(> a) a { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); text-decoration: none; }
+.tracy.page-template-page-onepage .tracy-contact__copy > .tracy-lead + p:has(> a) a {
+  display: inline-flex;
+  padding: 12px 20px;
+  border-radius: var(--wp--custom--radius--pill);
+  background: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--accent-on);
+  line-height: 1.2;
+}
+/* Its own footer block, as the source's company one-page footer. */
+.tracy [data-od-block='footer'].op-footer { padding: 48px 0; border-top: 1px solid var(--wp--preset--color--border-soft); }
+.tracy [data-od-block] .op-wordmark { font-size: 21px; font-weight: 700; letter-spacing: -0.03em; color: var(--wp--preset--color--fg); text-decoration: none; }
+.tracy [data-od-block] .op-footer nav,
+.tracy .op-footer nav { display: flex; flex-wrap: wrap; gap: 24px; margin: 24px 0; font-size: 14px; }
+.tracy .op-footer nav a { color: var(--wp--preset--color--muted); }
+.tracy .op-footer p { font-size: 12px; line-height: 1.8; color: var(--wp--preset--color--meta); }
+
+/* The cards and visuals these blocks carry were imported on the surface colour with 14px corners;
+   the source draws them on its container colour (the page ground) with the large radius, the
+   icon tiles and placeholder bars on the surface. (The one-page home's template, page-onepage.html,
+   prints no site footer, as on the source.) */
+.tracy [data-od-block] [style*='background:var(--wp--preset--color--surface)'] { background: var(--wp--preset--color--bg) !important; }
+.tracy [data-od-block] [style*='border-radius:14px'] { border-radius: var(--wp--custom--radius--lg) !important; }
+.tracy [data-od-block] .pillars > div > div:first-child,
+.tracy [data-od-block] .zig-visual > div:first-child,
+.tracy [data-od-block] .zig-visual > div:nth-child(2),
+.tracy [data-od-block] .zig-visual > div:last-child > div:first-child { background: var(--wp--preset--color--surface) !important; }
+.tracy [data-od-block] .zig-visual > div:nth-child(3) { background: var(--wp--preset--color--surface-warm) !important; }
+.tracy [data-od-block] .pillars p { color: var(--wp--preset--color--muted); }
+@media (max-width: 640px) {
+  .tracy.page-template-page-onepage .tracy-hero h1 { font-size: 40px; }
+}

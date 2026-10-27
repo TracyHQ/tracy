@@ -1,0 +1,64 @@
+{
+  "color": {
+    "highlighter-lime": {
+      "$value": "#faff00",
+      "$type": "color",
+      "$description": "Highlighter Lime — Green action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "onyx-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Onyx Black — Page canvas, table row backgrounds, elevated card surfaces — the base layer everything else floats on"
+    },
+    "zinc-hairline": {
+      "$value": "#27272a",
+      "$type": "color",
+      "$description": "Zinc Hairline — Borders, dividers, table cell separators, card outlines — the most-used border color, barely visible against the canvas, defining structure without weight"
+    },
+    "carbon": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Carbon — Button hover/active surfaces, secondary card backgrounds — one step above canvas for subtle elevation"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, icon strokes, logo fills, filled-chip text — the default foreground for the entire interface"
+    },
+    "steel-gray": {
+      "$value": "#9d9d9d",
+      "$type": "color",
+      "$description": "Steel Gray — Secondary/muted text, inactive nav items, table metadata, helper labels"
+    },
+    "ash-gray": {
+      "$value": "#6c6c6c",
+      "$type": "color",
+      "$description": "Ash Gray — Tertiary text, disabled controls, low-emphasis metadata"
+    },
+    "smoke": {
+      "$value": "#3b3b3b",
+      "$type": "color",
+      "$description": "Smoke — Heavier borders, input field outlines — for elements that need more definition than the standard hairline"
+    }
+  },
+  "font": {
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Primary UI typeface — all body text, table data, buttons, inputs, navigation, prices, and metadata. The monospace choice gives the marketplace a terminal/trading-desk identity, aligning numerical data in tables and reinforcing a developer/collector audience."
+    },
+    "tomorrow": {
+      "$value": "Tomorrow",
+      "$type": "fontFamily",
+      "$description": "Display and section headings — section labels like 'Trending', 'Cards', 'Trusted by', and 'News'. A clean sans-serif contrast to the monospace body, giving headlines a slightly softer, more editorial voice while staying within the technical character."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://rarible.com",
+      "siteName": "Rarible",
+      "extractedAt": "2026-06-03T18:29:39.412Z",
+      "variant": "compact"
+    }
+  }
+}

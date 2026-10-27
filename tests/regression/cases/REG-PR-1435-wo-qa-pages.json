@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1435-wo-qa-pages",
+  "kind": "fix",
+  "title": "Website Opportunities after #1427: the QA reader follows nav links written to the published hostname (WordPress), a later research swaps stored feed-size Facebook photos for their originals, and the hand-off door queues its prompt into the site's chat itself",
+  "pr": 1435,
+  "area": "website-opportunities/demo-qa",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: export TEST_DATABASE_URL to a reachable Postgres (the web suites make and drop a throwaway database).",
+    "S2: From the TCH checkout run the four node --test files named in `run.cmd` (host demo-qa, web doors, web executor, plugin handoff-entry).",
+    "S3: Read the tap lines of the tests named in `run.tests` and the exit code."
+  ],
+  "expect": [
+    "navPathsOf keeps '/menu', '/about/', '/gallery?x=1' from a page on 127.0.0.1:5000 when the published host is wp-marigold1.wo.tracy.test (absolute menu links, case-insensitive host), and drops home, index.php, a .pdf, evil.test and facebook.com; without the published host only the page's own origin counts.",
+    "Executor: research 1 stores the Facebook feed copy (width 60) when its photo page is down; research 2 (source already complete, nothing collected) stores the original (width 1280, source_url the ctp=s1280x720 address) and marks the feed row status 'reference', reason 'superseded'; progress.media.upgraded = 1; coverage.photoPages = {tried: 2, upgraded: 1}; collected.media[0].url is the original and fallbackUrl the feed copy; research 3 reads no photo page and changes nothing.",
+    "Doors: the first hand-off press with no site row queues no prompt and answers no promptSent; the press after the site row exists queues exactly one prompt into the held chat 'wo-demo-<buildId>' with requestId 'wo-handoff:<buildId>:wo-demo-<buildId>' and the handoff's own prompt text, answers next '/<site>/s/wo-demo-<buildId>' and handoff.promptSent {at, sessionId: 'wo-demo-<buildId>'}; a third press makes no new chat, queues nothing more and keeps promptSent; GET …/handoff returns promptSent.",
+    "Doors: a chat that refuses the prompt fails closed: 503 HANDOFF_PROMPT_FAILED, nothing left for the page to send; the next press queues it again and promptSent names the session it went to.",
+    "Client handoff-entry: the page never sends a prompt. An old wo-handoff address only reads the server receipt and loses the parameter: with promptSent it reports nothing, without it HANDOFF_NOT_READY; neither drafts nor submits.",
+    "Every test named in run.tests reports ok and the command exits 0."
+  ],
+  "selectors": {
+    "host": "apps/tracy-host/src/demo-qa.js navPathsOf(hrefs, pageUrl, siteHosts); runDemoQa passes siteHosts = [asked.host]",
+    "web": "packages/wo/website-opportunities/src/executor.js media stage upgradeFacebookStored → store.supersedeMedia; route.js POST /api/website-opportunities/builds/:id/handoff → deps.prompt, handoff.promptSent",
+    "client": "packages/site/tracy-website-opportunities/src/client/handoff-entry.ts only reads the server receipt and removes wo-handoff; it has no composer to send through"
+  },
+  "evidence": "Stand wo, 18–19/10/2026: wp-marigold1 qa.pages = [\"/\"] with discover on (menu links are absolute to wp-marigold1.wo.tracy.test:46080, the reader opened a loopback address); Fern Station re-research kept 103 stored Facebook photos at ≤ 1419 px because the source was complete; qa-marigold3's prompt waited 40 min for a page that never settled (tasks/plan-website-opportunities-pictures.md §11–12).",
+  "fence": "Pure judge and the executor against a Postgres with the connectors stubbed; the browser half (readInPage handing back navHrefs) and a real WordPress demo on a stand are measured in tasks/evidence-wo-qa-pages.md, not here.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "apps/tracy-web/test/website-opportunities-executor.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-handoff-entry.test.mjs"
+    ],
+    "tests": [
+      "navPathsOf keeps links on the page origin or the published host",
+      "a later research swaps a stored feed-size Facebook photo for its original",
+      "handoff: the stored pictures go onto the ready site one by one, once, and the prompt names their paths",
+      "handoff: a refused prompt fails closed; the next press uses the same session and request id",
+      "historical URLs remove their parameter and only read server receipts; an unaccepted prompt cannot be sent by the page"
+    ],
+    "needs": ["postgres"]
+  },
+  "history": [
+    "24/10/2026: 1a7870661f (19/10/2026, durable demo builds) made the server the only sender of the hand-off prompt: a refused prompt now fails closed (503 HANDOFF_PROMPT_FAILED) instead of leaving it to the page, and handoff-entry only reads receipts. It replaced 'handoff: a chat that refuses the prompt leaves it to the page; the next press tries again' and 'a handoff the server already queued into the chat sends nothing and says nothing'.",
+    "24/10/2026: e3dcc4dd33 (20/10/2026) holds one chat per build, 'wo-demo-<buildId>', instead of 'session-made-1'; the doors line follows it."
+  ]
+}

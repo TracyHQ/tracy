@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10-happy",
+  "itemIds": ["regression:REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10"],
+  "requirement": "JA Vega wp7 1.1.10: service-card and related excerpts cut at 3 lines, the Continue Reading band is 24/32 px tall above the pill, and small text is .875em like the source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10.json",
+    "ref": "PR #986 (fix); fix evidence: Sweeps of 06/10/2026 against the local Joomla source stand: the 1.1.9 restore had 10/11 checks passing (heights: 16 groups, 272 cases); the 1.1.10 build stand has 11/11 (heights: 0 open, 13 accepted), measure117 12/12, measure118 20/20, measure116 5/5 + 3/3; release chain on the clean restore of the packed 1.1.10 site: 11/11, heights 0 open, 13 accepted, 0 not measured",
+    "invariant": "S1: the theme is version 1.1.10; the shipped stylesheet and the overlay both clamp service-card and related excerpts to 3 lines, pad the Continue Reading band 24 px from 576 and 32 px from 992, and size small text .875em. S2: the sweep was taken by site-sweep.mjs on the released theme zip, passes 11 of 11 checks with 0 heights defects, and its baseline is 1.1.9 with heights failing.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10.mjs:17 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10.mjs:22 packages/cms/tracy-wordpress-theme/src/wp-ja-vega/style.css has no code line to point at"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10",
+    "pr": 986,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-vega",
+    "file": "tests/regression/cases/REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

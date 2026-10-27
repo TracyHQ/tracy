@@ -1,0 +1,134 @@
+{
+  "color": {
+    "hero-violet": {
+      "$value": "#1348dc",
+      "$type": "color",
+      "$description": "Hero Violet — Headlines, primary text links, brand mark — the single chromatic anchor that carries identity across the page"
+    },
+    "signal-blue": {
+      "$value": "#2b7fff",
+      "$type": "color",
+      "$description": "Signal Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "sky-tint": {
+      "$value": "#8ec5ff",
+      "$type": "color",
+      "$description": "Sky Tint — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "frost": {
+      "$value": "#bedbff",
+      "$type": "color",
+      "$description": "Frost — Hairline blue borders, tag outlines, divider lines that need to read as on-brand rather than neutral"
+    },
+    "slate-blue": {
+      "$value": "#74ade8",
+      "$type": "color",
+      "$description": "Slate Blue — Icon strokes, secondary blue text, nav active markers — cool blue for chrome, not headlines"
+    },
+    "ice-wash": {
+      "$value": "#e6effe",
+      "$type": "color",
+      "$description": "Ice Wash — Subtle background tints behind selected nav, soft blue drop-shadow tint, hover wash"
+    },
+    "deep-cobalt": {
+      "$value": "#053794",
+      "$type": "color",
+      "$description": "Deep Cobalt — Pressed-state inset shadow and the deepest brand blue — appears only as a 2px inset top line on active nav items"
+    },
+    "silver-mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Silver Mist — Page canvas, dominant border color, the faint grid lines — the workhorse neutral that holds the system together"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, editor preview frames, raised content panels sitting on the Silver Mist canvas"
+    },
+    "off-white": {
+      "$value": "#f4f4f2",
+      "$type": "color",
+      "$description": "Off-White — Warm white surface variant, image backings, slightly creamier than Pure White"
+    },
+    "graphite": {
+      "$value": "#3a3d43",
+      "$type": "color",
+      "$description": "Graphite — Primary body and heading text, logo lockup color"
+    },
+    "charcoal": {
+      "$value": "#464b57",
+      "$type": "color",
+      "$description": "Charcoal — Strong body text, button text on light fills, dark UI labels"
+    },
+    "slate": {
+      "$value": "#5d636f",
+      "$type": "color",
+      "$description": "Slate — Secondary text, nav labels, supporting copy"
+    },
+    "pewter": {
+      "$value": "#6a7282",
+      "$type": "color",
+      "$description": "Pewter — Tertiary text, muted helper copy, disabled labels"
+    },
+    "ash": {
+      "$value": "#878a98",
+      "$type": "color",
+      "$description": "Ash — Muted icons, placeholder strokes, very low-emphasis UI"
+    },
+    "steel": {
+      "$value": "#b2b5bb",
+      "$type": "color",
+      "$description": "Steel — Muted text, icon outlines, very low-contrast labels"
+    },
+    "fog": {
+      "$value": "#cccfd3",
+      "$type": "color",
+      "$description": "Fog — Light borders, input borders at rest, disabled surfaces"
+    },
+    "mist": {
+      "$value": "#dadde2",
+      "$type": "color",
+      "$description": "Mist — Hairline dividers between rows, subtle background fills"
+    },
+    "onyx": {
+      "$value": "#282c33",
+      "$type": "color",
+      "$description": "Onyx — Dark editor preview surface, code block backgrounds"
+    },
+    "midnight": {
+      "$value": "#2f343e",
+      "$type": "color",
+      "$description": "Midnight — Dark surface variant for framed code/editor insets"
+    }
+  },
+  "font": {
+    "writer": {
+      "$value": "Writer",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body face — the calm, slightly condensed sans that carries every label, button, nav item, and paragraph. Its negative tracking (-0.4px at 16px) tightens the page into a dense, confident reading rhythm. At 9–11px it functions as micro-copy and tag text; at 14–16px it carries body paragraphs. Substitute: Inter, IBM Plex Sans, or Geist Sans at matching weights."
+    },
+    "plex-serif": {
+      "$value": "Plex Serif",
+      "$type": "fontFamily",
+      "$description": "Headlines and display text. The signature choice is weight 340 for large display ('Love your editor again' at 48px) — an unusually light cut that whispers rather than shouts, paired with tight -0.02em tracking (-0.96px at 48px). This is what makes the page read editorial rather than promotional. Used at 26px for section headlines, 17px for sub-headings, and occasionally for body emphasis. Substitute: IBM Plex Serif or Source Serif Pro."
+    },
+    "zed-mono": {
+      "$value": "Zed Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced face for keyboard shortcuts, command labels, keycaps, and editor chrome labels. Its +0.05em tracking (0.6px at 12px, 1.2px at 24px) deliberately widens letterforms to read as labels rather than code — a stylistic choice that signals 'this is a keybind, not syntax'. At 24px it functions as a large command-prompt display. Substitute: JetBrains Mono or IBM Plex Mono."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "System mono fallback for nav and small chrome where a custom face isn't loaded. Negative tracking (-0.38px at 12px) tightens it for label use rather than code reading."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://zed.dev",
+      "siteName": "Zed",
+      "extractedAt": "2026-06-03T15:17:35.888Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-putty-stone: #cac7b4;
+  --color-signal-yellow: #ffdd00;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-carbon: #191919;
+  --color-smoke: #cccccc;
+
+  /* Typography */
+  --font-gd-grio-vf: 'Gd Grio Vf', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

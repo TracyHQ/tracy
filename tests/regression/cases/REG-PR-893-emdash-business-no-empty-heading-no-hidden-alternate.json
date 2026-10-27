@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate",
+  "kind": "fix",
+  "title": "Tracy Business EmDash templates: no heading over nothing and no hreflang alternate in a language the site does not serve",
+  "pr": 893,
+  "area": "emdash-theme-business/templates",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-emdash-theme-business/tests/apply-leftovers.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a content page names a translation as its alternate only in a language the site serves (L18)\"; \"the Resources panel draws its kit column only when the kit menu has a link (L20)\"; \"the sitemap page draws a group only when it has a link (L20, L21)\"; \"the home page draws its news block only when there is a post to show (L21)\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 4).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): Base.astro names a translation as alternate only when chrome.locales holds its locale; ResourcesMenu draws the kit column only when the kit menu has a link; the sitemap page drops groups with no link; Home draws its news section only when there is a post."
+  ],
+  "selectors": {
+    "templates": "packages/cms/tracy-emdash-theme-business/src/layouts/Base.astro, src/components/islands/ResourcesMenu.tsx, src/views/Sitemap.astro, src/views/Home.astro"
+  },
+  "evidence": "05/10/2026 local stand, Tracy Business EmDash after Apply: pages named alternates in hidden languages (ledger L18), the Resources panel and Sitemap kept a 'Marketing Kit' heading over nothing once the kit pages were hidden (L20), and with no demo post left (L21) Home drew its news heading over an empty grid. Red 471b886d4, fix 39e00ffd3 (reaches customers with the next template release).",
+  "fence": "Source-contract checks of the four template files; the base and saas templates are not changed.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-business/tests/apply-leftovers.test.mjs"
+    ],
+    "tests": [
+      "a content page names a translation as its alternate only in a language the site serves (L18)",
+      "the Resources panel draws its kit column only when the kit menu has a link (L20)",
+      "the sitemap page draws a group only when it has a link (L20, L21)",
+      "the home page draws its news block only when there is a post to show (L21)"
+    ]
+  }
+}

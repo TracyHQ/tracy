@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2b6642d9-fa66-4c06-9804-30f56e544a6d",
+  "status": "complete",
+  "name": "Mural",
+  "url": "https://styles.refero.design/style/2b6642d9-fa66-4c06-9804-30f56e544a6d",
+  "sourceWebsite": "https://mural.co",
+  "extractedAt": "2026-04-11T19:05:34.543Z",
+  "capturedAt": "2026-10-08T05:09:39.794625+00:00",
+  "theme": "mixed",
+  "industry": null,
+  "description": "Blackboard flipping to whiteboard — same hand, same authority, opposite ground.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/26d4980f-8dbf-4388-80d3-9e2e348feab4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/748be883-7921-4ecb-96b9-05d1578f017c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ad12f3c5-2655-42b2-a339-60566ef09c43.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6e2a5194-d9f2-44f6-9ad1-3b435f9e21e3.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0e9139fe-cbb5-4479-9d29-1e02243c2055.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3d090142929ab44aac0642e50d3a86e78ebad6d4897df66fb4770d23d4cf641f",
+      "bytes": 24048
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8f0b11ebb9a8824c68e004dceba0c72165b6caf073b88343996543d8bf8c0ec1",
+      "bytes": 145535
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d9ecdc22ae4442220eae70bb5f75e4e4be85ac127123ed9ec631af0f0a1cc5de",
+      "bytes": 30412
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "745a6d3ce8a3ba79ccdd1f239f9140afc7c99334b121bc8d9bb62e01f1a280b4",
+      "bytes": 14271
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b40db83d4b6e098131f41b775660b7618d10763b6de4a942f0727ce3def0416f",
+      "bytes": 14275
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6d49e34845679d340b44f99eb7596502a52d82e0b55f1d9cdd00cae48647fc3e",
+      "bytes": 3800
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4cdabfecdb61d9c88e4d667a68d42f70837a442c6aa0e3c26a7b54851e69033c",
+      "bytes": 715
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6c590760fb92e20d13f302ae186ad41c85035a5d4c7587529a7af24e4c216b8b",
+      "bytes": 732
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2f43c0761d06a0512beb1f7c4eeeb07c9c28b34b83c03181458dd536e9585fe4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1846d6c71a740fb29dff8000c0949a455a81d38efc0e2f856d0779a8e4fedf54",
+      "bytes": 53557
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "79745db210042161f88ac8b19b6f96895dc03363c4522f53d3119b1c9e81dc22",
+      "bytes": 27058
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "90ee019c4be34f547418d6ba59882985ff7b40970f51890ff1776a85bd40b48f",
+      "bytes": 58092
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "acdf3d5dea5bdacc702dbe92afae39c25fe34dde3f7a1ab1a07d04d295c1d521",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d4ab4df0244a4fb6e18ab6cc5272c71386c89ecd053496fc8f5d86f206c90381",
+      "bytes": 1878
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8c916fea0ebfb626e5406a80e1a5ab5527b43bdcd22d7a71ec744286ce6a2495",
+      "bytes": 2530
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "2b6642d9-fa66-4c06-9804-30f56e544a6d",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "66eb1c37-a8e5-4e6c-b17f-a75385b462e7",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a26f1a4d-758c-4df0-a61e-88a7ca0931ce",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d5799c71-f9ae-4bad-aef3-4c07bac42c08",
+    "e869e214-f672-4ac3-bfc2-bd25de7b003b",
+    "ea9c37e8-c56c-42aa-8e81-9b55222a5cd3",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

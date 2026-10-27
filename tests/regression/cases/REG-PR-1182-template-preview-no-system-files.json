@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1182-template-preview-no-system-files",
+  "kind": "fix",
+  "title": "The preview dialog of a template card (JA Impact) asks for no design system file and no copy file under the template's id",
+  "pr": 1182,
+  "area": "design-inspiration/preview-dialog",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Mount the real PreviewDialog on a template card (id ja-impact, with a template) with fetch recording every address asked; let the first requests settle.",
+    "S2: Mount it on a design system card (id sys-alpha) the same way."
+  ],
+  "expect": [
+    "S1: no request names /systems/ja-impact or /copy/ja-impact (before the fix: components.html, slots, copy, system/artifacts/landing.html, artifact-slots/landing — five 404s per open, reported by Chrome as CORS).",
+    "S2: the design system's own components.html and copy are still asked for."
+  ],
+  "selectors": {
+    "test": "packages/design/tracy-design-inspiration/test/template-preview-requests.test.mjs"
+  },
+  "evidence": "tasks/evidence/e2e-full-dev/2026-10-04/R-em/bugs/J16.1-J12-design-preview-prod-fetch.md",
+  "fence": "PreviewDialog: a template card fetches no fixture, slot map, artifact or copy file (isSystem)",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/template-preview-requests.test.mjs"],
+    "cwd": "packages/design/tracy-design-inspiration",
+    "tests": [
+      "sweep 9: a template card asks for no design system file and no copy file under its id",
+      "sweep 9: a design system card still asks for its own fixture, slots and copy"
+    ]
+  }
+}

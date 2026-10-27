@@ -1,0 +1,79 @@
+{
+  "color": {
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, input fields, inverse text on dark surfaces"
+    },
+    "graphite": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Graphite — Primary text, headlines, body copy, nav links — near-black warmth over pure black"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Logo mark fill, select borders, deep shadow tone"
+    },
+    "hairline": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Hairline — Borders, dividers, outlined control strokes, card edges"
+    },
+    "fog": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Fog — Secondary card surfaces, disabled button fills, subtle elevation layers"
+    },
+    "cream-stone": {
+      "$value": "#f2ede9",
+      "$type": "color",
+      "$description": "Cream Stone — Warm accent card surface — the only chromatic neutral, used for editorial feature cards"
+    },
+    "muted": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Muted — Secondary link color, meta text, subdued captions"
+    },
+    "dim": {
+      "$value": "#757575",
+      "$type": "color",
+      "$description": "Dim — Tertiary text, low-priority helper copy"
+    },
+    "disabled": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Disabled — Disabled button backgrounds, inactive control fills"
+    },
+    "electric-yellow": {
+      "$value": "#fdf313",
+      "$type": "color",
+      "$description": "Electric Yellow — Announcement bar, single chromatic accent across the system — the only color permitted to break monochrome"
+    }
+  },
+  "font": {
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    },
+    "suisse-intl": {
+      "$value": "Suisse Intl",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface for headlines, navigation, body, and UI. The 55px display at line-height 1.10 with -0.015em tracking is the signature voice — editorial weight, magazine-tight rhythm. Weight 500 is reserved for nav links and select emphasis."
+    },
+    "system-sans-serif": {
+      "$value": "System Sans-Serif",
+      "$type": "fontFamily",
+      "$description": "Secondary UI text, system fallbacks, form labels. Used sparingly — Suisse Intl is the workhorse. System stack appears for form fields and accessibility fallbacks where neutral rendering matters."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://area17.com",
+      "siteName": "AREA 17",
+      "extractedAt": "2026-06-03T18:59:39.509Z",
+      "variant": "compact"
+    }
+  }
+}

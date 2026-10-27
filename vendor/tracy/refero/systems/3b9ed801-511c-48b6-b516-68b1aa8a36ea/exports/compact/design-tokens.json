@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, all borders, nav link color, product card frame, massive hero wordmark — the structural color of the entire system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card backgrounds, image backgrounds, inverted text on dark controls"
+    },
+    "graphite": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Graphite — Muted secondary text, tertiary borders, inactive UI elements"
+    }
+  },
+  "font": {
+    "helvmono": {
+      "$value": "HELVMONO",
+      "$type": "fontFamily",
+      "$description": "Primary interface font — all body text, navigation links, product names, section labels, card metadata. The monospaced character set is the signature choice; it makes even navigation read like a technical catalog. A 14px size with 1.0–1.3 line-height creates a dense, label-like rhythm."
+    },
+    "helvetica-bold": {
+      "$value": "helvetica-bold",
+      "$type": "fontFamily",
+      "$description": "Footer/legal micro-copy and secondary link text. The 12px size with 2.5 line-height signals fine-print territory."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Button labels and the dominant system fallback for interactive elements. The bold weight creates a single moment of typographic contrast against the 400-weight monospace body."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.b-line.it",
+      "siteName": "B—Line",
+      "extractedAt": "2026-06-03T19:45:37.229Z",
+      "variant": "compact"
+    }
+  }
+}

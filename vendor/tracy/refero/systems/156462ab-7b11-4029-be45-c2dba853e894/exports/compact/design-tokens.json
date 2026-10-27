@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ghia-burgundy": {
+      "$value": "#651c32",
+      "$type": "color",
+      "$description": "Ghia Burgundy — Primary brand color, header bar, statement sections, marquee bands, footer — the deep wine that grounds the whole system"
+    },
+    "coral-cta": {
+      "$value": "#ef6079",
+      "$type": "color",
+      "$description": "Coral CTA — Filled pill buttons (Shop Bestsellers, Add to Cart, Our Story), active tab indicators, small accent dots"
+    },
+    "aperitivo-cream": {
+      "$value": "#f2e2d5",
+      "$type": "color",
+      "$description": "Aperitivo Cream — Primary page canvas and warm card surfaces"
+    },
+    "bone-white": {
+      "$value": "#fef6ee",
+      "$type": "color",
+      "$description": "Bone White — Lightest surface, header text on dark, soft secondary card backgrounds"
+    },
+    "smoke-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Smoke Gray — Hairline borders, dividers, subtle structural separators"
+    },
+    "charcoal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal — Icons, fine details, logo strokes on light surfaces"
+    },
+    "olive-grove": {
+      "$value": "#3e4938",
+      "$type": "color",
+      "$description": "Olive Grove — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "dusty-rose": {
+      "$value": "#dfcac8",
+      "$type": "color",
+      "$description": "Dusty Rose — Soft accent border, tag backgrounds, muted product label echo"
+    },
+    "riviera-blue": {
+      "$value": "#abd2eb",
+      "$type": "color",
+      "$description": "Riviera Blue — Blue supporting accent for decorative details and low-frequency emphasis"
+    },
+    "limoncello-yellow": {
+      "$value": "#f0e87b",
+      "$type": "color",
+      "$description": "Limoncello Yellow — Highlight tags, sticker accents, energetic punctuation — the spark of citrus in the system"
+    },
+    "sage-mist": {
+      "$value": "#b6cfd0",
+      "$type": "color",
+      "$description": "Sage Mist — Muted surface accent, cool-toned badge or chip background"
+    }
+  },
+  "font": {
+    "vivey-22-positive": {
+      "$value": "Vivey 22 Positive",
+      "$type": "fontFamily",
+      "$description": "Primary text face — body copy, nav links, buttons, product cards, footer. The humanist serif carries warmth and editorial feel; its italic-influenced curves feel handwritten and aperitivo-friendly rather than corporate."
+    },
+    "fha-condensed-french-nc": {
+      "$value": "FHA Condensed French NC",
+      "$type": "fontFamily",
+      "$description": "Display headlines, section titles, large statements — always set in all-caps with tight leading. The condensed proportions create editorial authority and reference classic spirits-label typography."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://drinkghia.com",
+      "siteName": "Ghia",
+      "extractedAt": "2026-06-03T18:46:21.791Z",
+      "variant": "compact"
+    }
+  }
+}

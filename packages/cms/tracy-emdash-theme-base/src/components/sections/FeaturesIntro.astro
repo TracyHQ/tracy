@@ -1,0 +1,62 @@
+---
+/**
+ * The ACM `features-intro` block: a left-aligned head and the service cards. Four cards sit on a
+ * balanced two-by-two grid (the source's site-repairs rule); any other count keeps the source's
+ * 1.3fr/1fr/1fr row with the first card spanning wide on a tablet.
+ */
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  eyebrow?: string
+  title?: string
+  lead?: string
+  cards: Array<{ title?: string; text?: string; link_label?: string; link_url?: string }>
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; title?: string; lead?: string; cards?: string }
+}
+const { eyebrow, title, lead, cards, stamp, fields } = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(
+  Astro.request,
+  splitPath(Astro.url.pathname).locale,
+  cards.map((c) => c?.link_url)
+)
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const row = stamp && fields?.cards ? stamp.block(fields.cards) : none
+const sub = (k: string) => (stamp && fields?.cards ? stamp(`${fields.cards}.${k}`) : none)
+const list = cards.filter((c) => c?.title || c?.text)
+const two = list.length === 4
+---
+
+<div class="wrap" data-block="features-intro">
+	{(eyebrow || title || lead) && (
+		<div class="max-w-[717px]">
+			{eyebrow && <p class="eyebrow eyebrow--acm" {...at("eyebrow")}>{eyebrow}</p>}
+			{title && <h2 class="h-section leading-[1.1]" {...at("title")}>{title}</h2>}
+			{lead && <p class="lead mt-3" {...at("lead")}>{lead}</p>}
+		</div>
+	)}
+	<div class:list={["mt-8 grid gap-5 lg:mt-12", two ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr] max-lg:[&>:first-child]:sm:col-span-2"]}>
+		{list.map((c) => (
+			<article class="flex flex-col gap-3 rounded-[var(--ds-card-radius,18px)] border border-line-soft bg-surface-warm p-6 shadow-raised" {...row}>
+				{c.title && <h3 class="h-card" {...sub("title")}>{c.title}</h3>}
+				{c.text && <p class="text-[17px] leading-[1.47] text-fg-2" {...sub("text")}>{c.text}</p>}
+				{c.link_label && live(c.link_url) && (
+					<p class="mt-auto pt-2">
+						<a href={c.link_url || "#"} class="group inline-flex items-center gap-2 text-[14px] text-fg-2 hover:text-fg" {...sub("link_label")}>
+							{c.link_label}
+							<svg class="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+						</a>
+					</p>
+				)}
+			</article>
+		))}
+	</div>
+</div>

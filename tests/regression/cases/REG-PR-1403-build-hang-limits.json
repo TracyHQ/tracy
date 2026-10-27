@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1403-build-hang-limits",
+  "kind": "fix",
+  "title": "A site build that hangs ends: the host stops provision after 15 silent or 60 total minutes, the sweep fails a build still running after 75 minutes, and the wizard says when it cannot reach the build or the build is gone",
+  "pr": 1403,
+  "area": "add-site/build-limits",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: runScript a script that prints once then sleeps, with idleMs 300; and one that prints every 100 ms for a second.",
+    "S2: runProvisionJob with a run that answers timedOut and idle.",
+    "S3: settleProvisions on a creation whose host job answers running, at 30 minutes and past PROVISION_GIVE_UP_MS; and on one whose host does not answer, at 60 minutes and past PROVISION_UNREACHABLE_GIVE_UP_MS.",
+    "S4: watchBuild over a door that answers unknown for more than UNREACHABLE_SAY_MS then running; and one that answers gone."
+  ],
+  "expect": [
+    "S1: the first is stopped by the silence (idle: true, a log line saying so); the second runs to its end.",
+    "S2: run was given timeoutMs 60 min and idleMs 15 min; the job fails with reason idle and a detail naming the silence.",
+    "S3: left alone inside the limits; failed (reason timeout / host-unreachable) and the creation settled past them.",
+    "S4: unreachable true after two minutes, asking goes on, false once an answer lands; the gone build shows the form with the note 'gone'."
+  ],
+  "selectors": {
+    "files": "apps/tracy-host/src/{run.js,provision.js}, apps/tracy-web/src/cron.js, packages/site/tracy-add-site/src/client/{build-watch.mjs,wizard.tsx}",
+    "dom": "[data-build-unreachable], [data-build-gone]"
+  },
+  "evidence": "provision.js ran provision.sh with no timeoutMs; cron skipped running jobs for ever; the client polled with no cap. Local stand: \"fetching webroot\" ran 1110 s then failed; EmDash docker builds sat 29 and 49 minutes until the host restarted",
+  "fence": "Three layers each end a hung build; the host's silence limit does the real work, above the longest healthy build",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-host/test/run.test.mjs",
+      "apps/tracy-host/test/provision.test.mjs",
+      "apps/tracy-web/test/provision-settles.test.mjs",
+      "packages/site/tracy-add-site/test/build-watch.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "runScript: idleMs stops a run that went silent",
+      "a provision has a total limit and a silence limit",
+      "the sweep gives up on a build still running 75 minutes",
+      "watch: two minutes of unanswered asks are said on the console",
+      "watch: a build that is gone says so on the form"
+    ]
+  }
+}

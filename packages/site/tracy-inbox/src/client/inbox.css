@@ -1,0 +1,20 @@
+/* Tailwind source for the Inbox tab and its row in the left column. Same recipe as
+   tracy-my-sites/src/client/my-sites.css: theme + utilities only, NO preflight, because both live
+   inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+@source '../../../../ui/tracy-ui/src';
+@source '../../../../core/tracy-core/src/team';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text. Scoped to this plugin's
+   roots and placed in `base`, so every utility class on a `@tracy/ui` component still wins. */
+@layer base {
+  .tracy-inbox button, .tracy-inbox-nav button { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  .tracy-inbox, .tracy-inbox *, .tracy-inbox-nav, .tracy-inbox-nav * { box-sizing: border-box; }
+}

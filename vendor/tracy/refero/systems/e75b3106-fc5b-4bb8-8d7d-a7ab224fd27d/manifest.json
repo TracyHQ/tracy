@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+  "status": "complete",
+  "name": "Duties.xyz",
+  "url": "https://styles.refero.design/style/e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+  "sourceWebsite": "https://duties.xyz",
+  "extractedAt": "2026-06-03T18:47:38.049Z",
+  "capturedAt": "2026-10-08T05:18:48.398399+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Monochrome broadside manifesto — a cream-paper zine where the only ink is black and the only type that matters is shouting.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4f588353-1d30-46d2-8547-d04edd6c93fa.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d3d18785-77ba-4f5e-9899-6b5f0b012d35.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f6c614e4-e919-4767-a7a5-f6ca8feca43a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a3731c30-44fb-4df5-ba91-eececdba9be6.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a7ac1db2-6715-4531-a473-ae9628365b02.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "39858fbb4f96a4e0928322e5a135b733d0f92fce50334f669ac80b50ced975d1",
+      "bytes": 18488
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6f152a63570f341b94aa8a8e8e2d25080da1254a4079991558401bf560e4b05f",
+      "bytes": 78006
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ecf7436e3ec3fde858b81af6d6a68c3b4d925c435967151b43882b5cb9e47f0f",
+      "bytes": 14654
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "95591be2fe9ed937f54fd6705b7b7794b7c5546259b7effe340c7ac052ce0767",
+      "bytes": 7297
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "28cc6c8df889389d2b5e2dc657611ac4e1a0c53992c76871f7e3b6e2c205725f",
+      "bytes": 12502
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "15a56e45e9f12f08f15c949551e3b8f1500e7c1c421f1152e4cbba23955e9b59",
+      "bytes": 2649
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ac6841db0bdf3a261f24499b2319df1a717e2d18b16214fad1be04444f435849",
+      "bytes": 798
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "64e558a23027e4bfac50f9f27b6bc5f53c9750c96331837c3f191f72080eb065",
+      "bytes": 815
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "792cf5a0d0d355e74d252944b1a7bc28f850b3829531569fb1d8b5db573e81d4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c95339580050b8b4dfcb0ea0a40b1ebf4d3aac493766240977f1f4b8fa7ed52f",
+      "bytes": 38790
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "68835c9d3c2bbad1d785fe17e666484f520e7e105c4f1074a0dbde342bd09400",
+      "bytes": 19893
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2bd881a1617537b4a3053fd983628c92ac6822d603d74fcd5d0753816ad96532",
+      "bytes": 28765
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "05825145fac084a67cc55e70fdc8e59fd0dc177f5d2575fbb0b1c2a7218a7329",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "437e3b23a939969b33f2b503683373c92d8a81fa4b90430fed461f8d0d326cf4",
+      "bytes": 1643
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1caca2e8784c7598b32ef2a372b97d297c102c977681f98f525e82fcc5e0b714",
+      "bytes": 2159
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6eb5fc89-d0db-4293-8bff-13c5aa530a28",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b619e1b9-86ee-4a10-b6e6-47b10927c3a2",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e186e08f-e7ce-4b48-bd65-68bc300d2193",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f40e6a6c-1704-407a-b21b-6141fb90adfe",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

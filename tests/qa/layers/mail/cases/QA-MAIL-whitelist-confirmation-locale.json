@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-whitelist-confirmation-locale",
+  "itemIds": [
+    "direct:whitelist-confirmation:en",
+    "direct:whitelist-confirmation:vi",
+    "direct:whitelist-confirmation:de",
+    "direct:whitelist-confirmation:it",
+    "direct:whitelist-confirmation:fr",
+    "direct:whitelist-confirmation:nl",
+    "direct:whitelist-confirmation:zh",
+    "direct:whitelist-confirmation:es"
+  ],
+  "requirement": "the whitelist confirmation letter reads in eight languages; others read as English",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 5",
+    "invariant": "the 8 interface languages, else English"
+  },
+  "edgeTags": ["locale"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.locale:whitelist-confirmation"],
+  "redProof": null,
+  "legacyIds": []
+}

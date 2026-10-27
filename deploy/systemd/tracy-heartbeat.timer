@@ -1,0 +1,10 @@
+[Unit]
+Description=Tracy shard: heartbeat every 60 s (spec 5; never shares a lock with the updater)
+
+[Timer]
+OnBootSec=60
+OnUnitActiveSec=60
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

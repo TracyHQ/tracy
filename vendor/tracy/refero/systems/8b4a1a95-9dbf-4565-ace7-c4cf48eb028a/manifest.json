@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+  "status": "complete",
+  "name": "2.AG",
+  "url": "https://styles.refero.design/style/8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+  "sourceWebsite": "https://2ag.com",
+  "extractedAt": "2026-06-03T18:45:13.079Z",
+  "capturedAt": "2026-10-08T05:14:34.569049+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Clinical apothecary under teal light — a measured, prescriptive wellness brand that treats the product shot like a specimen slide.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/20f01c95-02d6-46c3-baee-1ecf4ccb903d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6fd4705b-367a-41ad-a714-04bc1e28e5bc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b0ca6681-89d3-4964-b5cd-392630e3d117.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/7b14ae7b-dc15-4b33-9077-e4e3a36106aa.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/1047d89a-d01b-4222-a3d9-a96175b8b123.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6301eb48c747156e3e4bea0edd8e423497a7960f5cfcdacce35421a2a48a9503",
+      "bytes": 20973
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e48f50b0a668cb6191729e53007fc23d7dd832356a58e72ef4f18c6df253614e",
+      "bytes": 145340
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ffb548ee6528620033bf5715cabef11bec7dea50aa020fcc6155ca31182fa29b",
+      "bytes": 18025
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "cfa3e43a9ed7ccab154ae9e188f5aef1427beed1cc781f4e528ed346b130a3f8",
+      "bytes": 18730
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "439f3673430f16a6fefa0bf5d204f223207f89e716abfd6a7a43ca2811bcfe11",
+      "bytes": 13443
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "88a94be3fc9b22376fe1164161c08d2dd492ec524fb3182f30e5e98723088079",
+      "bytes": 3374
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f2d9ab7ca1984547d7085bc13415ee732df788904caeeabef76aa2142e55dba0",
+      "bytes": 590
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6825dc1b6c5338a8c1a0632f8093d2ec5cf8d3a7447df568d69095c42cdd6d4d",
+      "bytes": 607
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f0055e0cbedabed28961314c207b9ba3dd6506a39018e8b477e0175d3199ddd5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "afb27a7d672600741a74553bfe9759215dd248c310f3906a09196430e703557b",
+      "bytes": 46678
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ec09888bb3fd8d37da7c6d7a198ef85becfa7c7a5f94ae22711c7a4b1ffe696d",
+      "bytes": 24733
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3c41177203b195f2cfb9492d202fafe4681f0aed09528652059206f124b92cf5",
+      "bytes": 64661
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "34df9613a22382899dbf4284527ab51553eb9316eb5e3a4fb32950ee01bbcc9a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "950e76153f41340ff1260f42f28231f861deb97306ee175b5fb281dbc231c0db",
+      "bytes": 1740
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a8e00c07f519b10ad29a19588d4c15790a66c4ee09a30b8985af523c85866840",
+      "bytes": 2345
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "035a098b-5a27-48a3-8a3a-c68a698e3eab",
+    "18975f37-2e5d-47ca-9367-8b201d20390d",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "51a9246f-9238-47dd-b254-48983b8713a2",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "7f7d3ff7-7a74-40f1-9098-a946ce53d4d4",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "81bd6ad6-b02b-4fb3-a600-91ecf8324171",
+    "8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "b44b0bb2-4ba3-4599-9706-3c3e0c8c2522",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "be17feca-c2bd-4e17-b4d2-ed3ae019a84c",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "cd723d5a-e7ea-4e4c-a3bb-6cf56e05057a",
+    "d7a73e16-4b3e-4b9d-aef2-2c31a9db7457",
+    "e9f5e976-53f7-42f5-a882-4e63b3c2f734",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

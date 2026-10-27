@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vogue/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_vogue",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vogue",
+    "id": "quickstart/ja-vogue/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_vogue",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vogue-j6-webroot-1.0.7.tar.gz",
+        "bytes": 79755186,
+        "sha256": "5dc1f10a878cd1d835b3c114f7198fb7cd0838b69f47d9ecd84759f2d9004b2c"
+      },
+      "database": {
+        "file": "ja-vogue-j6-database-1.0.7.sql.gz",
+        "bytes": 110015,
+        "sha256": "7bebcb82801129ce665e262915bd88b8e155f40a84fdfa05f97bd7c864ac4347"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T04:11:53.920Z",
+    "builtFrom": {
+      "from": "quickstart/ja-vogue/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 751 files replaced (templates/ja_vogue/AGENTS.md, templates/ja_vogue/CLAUDE.md, templates/ja_vogue/README.md, templates/ja_vogue/component.php, templates/ja_vogue/error-t4.php, templates/ja_vogue/error.php, templates/ja_vogue/favicon.ico, templates/ja_vogue/helper.php, templates/ja_vogue/index.php, templates/ja_vogue/layout.json, templates/ja_vogue/offline.php, templates/ja_vogue/templateDetails.xml, templates/ja_vogue/templateInfo.php, templates/ja_vogue/template_preview.png, templates/ja_vogue/template_thumbnail.png, templates/ja_vogue/contenttype, templates/ja_vogue/css, templates/ja_vogue/docs, templates/ja_vogue/etc, templates/ja_vogue/fonts, templates/ja_vogue/html, templates/ja_vogue/images, templates/ja_vogue/js, templates/ja_vogue/scss, templates/ja_vogue/acm, templates/ja_vogue/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-vogue/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

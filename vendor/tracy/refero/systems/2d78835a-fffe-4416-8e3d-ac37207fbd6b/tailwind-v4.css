@@ -1,0 +1,68 @@
+@theme {
+  /* Colors */
+  --color-void: #010101;
+  --color-charcoal-control: #1f1f23;
+  --color-porcelain: #e0e0e0;
+  --color-machine-well: #16191b;
+  --color-hairline-ash: #252525;
+  --color-muted-steel: #828b8d;
+  --color-dormant-graphite: #444444;
+  --color-faint-steel: #646e71;
+
+  /* Typography */
+  --font-office-times-round: 'Office Times Round', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-messina-sans: 'Messina Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-laica-mono: 'ABC Laica Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Typography — Scale */
+  --text-micro-label: 10px;
+  --leading-micro-label: 1.4;
+  --tracking-micro-label: 2.4px;
+  --text-utility-nav: 13px;
+  --leading-utility-nav: 1.4;
+  --tracking-utility-nav: 1.04px;
+  --text-utility-nav-tight: 13px;
+  --leading-utility-nav-tight: 1.3;
+  --tracking-utility-nav-tight: 1.04px;
+  --text-body: 16px;
+  --leading-body: 1.4;
+  --tracking-body: 0px;
+  --text-body-large: 18px;
+  --leading-body-large: 1.4;
+  --tracking-body-large: 0px;
+  --text-module-heading: 26px;
+  --leading-module-heading: 1.2;
+  --tracking-module-heading: -0.52px;
+  --text-feature-heading: 32px;
+  --leading-feature-heading: 1.2;
+  --tracking-feature-heading: -0.64px;
+  --text-display: 100px;
+  --leading-display: 1;
+  --tracking-display: -3px;
+  --text-display-monumental: 200px;
+  --leading-display-monumental: 0.8;
+  --tracking-display-monumental: -6px;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-60: 60px;
+  --spacing-96: 96px;
+  --spacing-120: 120px;
+  --spacing-192: 192px;
+  --spacing-224: 224px;
+
+  /* Border Radius */
+  --radius-lg: 8px;
+  --radius-2xl: 16px;
+  --radius-full: 80px;
+  --radius-full-2: 100px;
+}

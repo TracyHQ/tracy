@@ -1,0 +1,69 @@
+{
+  "color": {
+    "pine-vellum": {
+      "$value": "#143930",
+      "$type": "color",
+      "$description": "Pine Vellum — Page canvas, all section backgrounds, box-shadow tint for the only subtle elevation present"
+    },
+    "cedar-stroke": {
+      "$value": "#456859",
+      "$type": "color",
+      "$description": "Cedar Stroke — Stroke color for background architectural illustrations, icon outlines, sage decorative line art, secondary borders"
+    },
+    "parchment": {
+      "$value": "#f8f2de",
+      "$type": "color",
+      "$description": "Parchment — Primary text, link text, outlined button borders, heading characters, and the full suite of hairline rules and dividers"
+    },
+    "aged-tan": {
+      "$value": "#bead89",
+      "$type": "color",
+      "$description": "Aged Tan — Muted secondary text and metadata labels (project years, category tags) — sits between parchment and the background, a quieter tertiary"
+    }
+  },
+  "font": {
+    "editorialold": {
+      "$value": "EditorialOld",
+      "$type": "fontFamily",
+      "$description": "Primary editorial serif — runs the entire information layer: navigation links, project titles, body paragraphs, list items, inline labels. Weight 200 across all sizes keeps the type from competing with the architectural background; this is the workhorse face and everything else is a special occasion. Letter-spacing stays at +0.004–0.005em, giving the thin strokes a touch of air without becoming formal."
+    },
+    "wispy": {
+      "$value": "Wispy",
+      "$type": "fontFamily",
+      "$description": "The single monumental display cut — used exactly once for the owner's name in the hero. The -0.01em tracking pulls the hairlines tight; this is the only place the design allows itself to be loud, and it earns that volume by being the only 96px element on the page."
+    },
+    "old-standard-tt": {
+      "$value": "Old Standard TT",
+      "$type": "fontFamily",
+      "$description": "Google-available fallback for EditorialOld at the smallest sizes — 13px captions and 16px secondary paragraphs. Same ultra-light weight, same manuscript register."
+    },
+    "gta": {
+      "$value": "GTA",
+      "$type": "fontFamily",
+      "$description": "A secondary body serif with slightly more open leading (1.60) and a touch more weight (300) — appears in longer-form sections where the tighter EditorialOld would feel constraining. Looser tracking at +0.004em matches the primary family."
+    },
+    "bodoni-classic-ornaments": {
+      "$value": "bodoni-classic-ornaments",
+      "$type": "fontFamily",
+      "$description": "Ornamental display face — used sparingly for the small decorative motifs embedded in body text (flourishes, dingbats, the small flowers in the rose-window pattern). Wider tracking (+0.011em) is intentional, these characters need room to breathe as mark-making rather than text."
+    },
+    "altesse-std-24pt": {
+      "$value": "altesse-std-24pt",
+      "$type": "fontFamily",
+      "$description": "Reserved display serif for mid-level section headers — the rare heading that isn't set in EditorialOld. Tight line-height (1.10) and the highest stroke contrast in the family make it feel like a pull-quote."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "System fallback for the rare non-serif surface — the keyboard-shortcut chips (W, T, A) in the navigation, where a monospaced feel is needed for the boxed letter."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://haleys.design",
+      "siteName": "Haley Park",
+      "extractedAt": "2026-06-03T18:37:23.330Z",
+      "variant": "compact"
+    }
+  }
+}

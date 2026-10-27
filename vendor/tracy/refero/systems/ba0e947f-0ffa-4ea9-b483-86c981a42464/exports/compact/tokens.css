@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-parchment-stone: #dfe0db;
+  --color-bone-white: #eeefea;
+  --color-pure-white: #ffffff;
+  --color-carbon: #000000;
+  --color-graphite: #3c3c3b;
+  --color-ash: #808080;
+  --color-inkstone: #121212;
+  --color-oxblood: #66040c;
+  --color-olive-khaki: #9a9260;
+  --color-sage-stone: #c1c19f;
+  --color-buttercream: #f7dc99;
+  --color-pale-buttercream: #f8e9ac;
+  --color-cobalt-outline: #007aff;
+
+  /* Typography — Font Families */
+  --font-signifier: 'Signifier', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pitch: 'Pitch', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

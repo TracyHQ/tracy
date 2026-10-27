@@ -1,0 +1,64 @@
+{
+  "color": {
+    "studio-black": {
+      "$value": "#101012",
+      "$type": "color",
+      "$description": "Studio Black — Page canvas, default surface — the dominant background behind every screen"
+    },
+    "deep-anvil": {
+      "$value": "#17171a",
+      "$type": "color",
+      "$description": "Deep Anvil — Elevated surface — cards, input wells, modals layered above the canvas"
+    },
+    "pure-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Ink — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "warm-cream": {
+      "$value": "#f7f4ef",
+      "$type": "color",
+      "$description": "Warm Cream — Primary text color and high-contrast foreground — the signature off-white that keeps the dark UI from feeling cold"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Secondary text, icon strokes, and bright borders where maximum contrast is needed"
+    },
+    "smoke": {
+      "$value": "#c2c2c1",
+      "$type": "color",
+      "$description": "Smoke — Muted helper text, disabled labels, and low-emphasis captions"
+    },
+    "ember-coral": {
+      "$value": "#fd429c",
+      "$type": "color",
+      "$description": "Ember Coral — Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "dusk-wash": {
+      "$value": "#8a2a3a",
+      "$type": "color",
+      "$description": "Dusk Wash — Hero background gradient — warm amber-to-burgundy atmospheric wash that bleeds behind the headline; sets the mood of the brand"
+    }
+  },
+  "font": {
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Workhorse UI typeface — sets all body, labels, buttons, nav, captions, and mid-size headings; weight 300 is the default, weight 400 for body paragraphs, weight 500 reserved for emphasized UI labels. The ultra-compact tracking (-0.026em at large sizes) and the willingness to scale up to 140px at 0.87 line-height are the signature moves — text behaves as architectural mass, not just copy."
+    },
+    "editorial-new": {
+      "$value": "Editorial New",
+      "$type": "fontFamily",
+      "$description": "Reserved for editorial display moments — italic-leaning serif that injects a humanistic counterpoint into the otherwise geometric Neue Montreal system. Appears in hero headlines and curated pull-quotes only; never in product UI. Use it where the system needs to feel like a magazine cover rather than a dashboard."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://suno.com",
+      "siteName": "Suno",
+      "extractedAt": "2026-06-03T17:22:36.887Z",
+      "variant": "compact"
+    }
+  }
+}

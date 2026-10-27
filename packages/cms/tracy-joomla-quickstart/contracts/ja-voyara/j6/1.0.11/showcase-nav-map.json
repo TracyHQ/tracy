@@ -1,0 +1,512 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-voyara/j6/1.0.11",
+  "baseHash": "9b2b3229f495ff66f211eb8ca6385f6118007285ae60033d17031f629c3c68e5",
+  "baseFiles": {
+    "manifest.json": "c60306ad7dba945af3b5edba92bf0963e1c277e981443c49783efc0cc16eb943",
+    "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+    "presentation-lock.json": "44d43b156b2e6e3934783dc1e78be498f5dce558885bfbaf5b65eb864d508f48"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-269",
+      "identity": {
+        "path": "pages/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_content view=featured) in a showcase branch"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-278",
+      "identity": {
+        "path": "home/home-2",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 2",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-350",
+      "identity": {
+        "path": "pages/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-220",
+      "label": "Destinations",
+      "where": "mainmenu/destinations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-221",
+      "label": "Experiences",
+      "where": "mainmenu/experiences",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-222",
+      "label": "Pricing",
+      "where": "mainmenu/pricing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-223",
+      "label": "Resources",
+      "where": "mainmenu/resources",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-224",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-230",
+      "label": "Adventure & trekking",
+      "where": "mainmenu/destinations/adventure",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-231",
+      "label": "Food & culture",
+      "where": "mainmenu/destinations/food-culture",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-232",
+      "label": "Beaches & islands",
+      "where": "mainmenu/destinations/beaches-islands",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-233",
+      "label": "Wildlife & safari",
+      "where": "mainmenu/destinations/wildlife",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-234",
+      "label": "Slow rail journeys",
+      "where": "mainmenu/destinations/rail-journeys",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-235",
+      "label": "Europe",
+      "where": "mainmenu/destinations/europe",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-236",
+      "label": "Japan & Korea",
+      "where": "mainmenu/destinations/japan-korea",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-237",
+      "label": "Himalaya & Central Asia",
+      "where": "mainmenu/destinations/himalaya-central-asia",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-238",
+      "label": "Africa",
+      "where": "mainmenu/destinations/africa",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-239",
+      "label": "Southeast Asia",
+      "where": "mainmenu/destinations/southeast-asia",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-240",
+      "label": "The Americas",
+      "where": "mainmenu/destinations/the-americas",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-241",
+      "label": "Patagonia treks",
+      "where": "mainmenu/destinations/patagonia-treks",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-242",
+      "label": "Maldives escapes",
+      "where": "mainmenu/destinations/maldives-escapes",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-243",
+      "label": "Dolomites via ferrata",
+      "where": "mainmenu/destinations/dolomites-via-ferrata",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-250",
+      "label": "Travel Guides",
+      "where": "mainmenu/resources/travel-guides",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-251",
+      "label": "Help Center",
+      "where": "mainmenu/resources/help-center",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-252",
+      "label": "Booking Policy",
+      "where": "mainmenu/resources/booking-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-253",
+      "label": "Travel Insurance",
+      "where": "mainmenu/resources/travel-insurance",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-260",
+      "label": "Login",
+      "where": "mainmenu/pages/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-261",
+      "label": "Register",
+      "where": "mainmenu/pages/register",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-262",
+      "label": "Profile",
+      "where": "mainmenu/pages/profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-263",
+      "label": "Profile Edit",
+      "where": "mainmenu/pages/profile-edit",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-264",
+      "label": "Reset Password",
+      "where": "mainmenu/pages/reset-password",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=reset): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-265",
+      "label": "Remind Username",
+      "where": "mainmenu/pages/remind-username",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-272",
+      "label": "Tags",
+      "where": "mainmenu/pages/tags-index",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tags): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-273",
+      "label": "Search",
+      "where": "mainmenu/pages/search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-275",
+      "label": "Contact",
+      "where": "mainmenu/pages/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-320",
+      "label": "Destinations",
+      "where": "footer-explore/all-destinations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-321",
+      "label": "Experiences",
+      "where": "footer-explore/all-experiences",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-322",
+      "label": "Boutique Stays",
+      "where": "footer-explore/boutique-stays",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-323",
+      "label": "Travel Guides",
+      "where": "footer-explore/journal",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-330",
+      "label": "About Voyara",
+      "where": "footer-company/about-voyara",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-331",
+      "label": "Careers",
+      "where": "footer-company/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-332",
+      "label": "Press",
+      "where": "footer-company/press",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-333",
+      "label": "Sustainability",
+      "where": "footer-company/sustainability",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-340",
+      "label": "Help Center",
+      "where": "footer-resources/f-help",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-341",
+      "label": "Booking Policy",
+      "where": "footer-resources/f-booking",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-342",
+      "label": "Travel Insurance",
+      "where": "footer-resources/f-insurance",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-343",
+      "label": "Community",
+      "where": "footer-resources/community",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-344",
+      "label": "Privacy Policy",
+      "where": "legal/privacy-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-345",
+      "label": "Terms & Conditions",
+      "where": "legal/terms-conditions",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-346",
+      "label": "Cookie Policy",
+      "where": "legal/cookie-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-369",
+      "label": "Journal",
+      "where": "footer-explore/the-journal",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-370",
+      "label": "Contact",
+      "where": "footer-company/contact-foot",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-371",
+      "label": "Blog",
+      "where": "footer-resources/blog-foot",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-461",
+      "label": "Explore",
+      "where": "mod_menu@footnav-1",
+      "rule": "keep.default",
+      "reason": "renders footer-explore: 5 entries stay"
+    },
+    {
+      "key": "module-462",
+      "label": "Company",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders footer-company: 5 entries stay"
+    },
+    {
+      "key": "module-463",
+      "label": "Resources",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders footer-resources: 5 entries stay"
+    },
+    {
+      "key": "module-901",
+      "label": "[Global] Offcanvas Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 41 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-266",
+      "label": "Blog",
+      "where": "mainmenu/pages/blog",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-267",
+      "label": "Category List",
+      "where": "mainmenu/pages/category-list",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-268",
+      "label": "Single Article",
+      "where": "mainmenu/pages/single-article",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-270",
+      "label": "Author",
+      "where": "mainmenu/pages/writers",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-271",
+      "label": "Archive",
+      "where": "mainmenu/pages/archive",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-276",
+      "label": "Landing",
+      "where": "mainmenu/pages/landing",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-277",
+      "label": "About",
+      "where": "mainmenu/pages/about",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-351",
+      "label": "Component Wrapper",
+      "where": "mainmenu/pages/component",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Pages\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    }
+  ],
+  "counts": {
+    "menuItems": 3,
+    "modules": 0,
+    "kept": 55,
+    "unresolved": 8
+  }
+}

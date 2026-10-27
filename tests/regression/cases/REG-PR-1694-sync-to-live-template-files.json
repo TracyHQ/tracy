@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1694-sync-to-live-template-files",
+  "kind": "feat",
+  "title": "Sync to live sends a template's or theme's own files through the engine's template door, compare-and-set and undoable; a WordPress setting, meta or term (and a Joomla menu) both sides changed since the last sync is a conflict, never written over; a WordPress site with mixed collations on wp_options previews",
+  "pr": 1694,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs packages/fleet/tracy-fleet-operation/test/live-write.test.mjs packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: template/theme files are in the changeset with their reasons (PHP off, too large, not a live template, door off, old engine); the writer batches, resends past conflicts and undoes; the multilingual WordPress fixture with mixed collations previews; blogname, a theme mod, a page meta, a term description and a Joomla menu changed on both sides are conflicts while Tracy-only changes still go; the Docker flow pushes template CSS and undo removes the new file"
+  ],
+  "selectors": {
+    "host": "live_push.py template_files mark_kept KEPT_NAMES kept_names wordpress_specs; live-write.mjs templateFiles; webroot-live-push.sh stopped line"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-to-live-template-files.md",
+  "fence": "Sync to live never writes over a value the customer changed on the live site since the last sync",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+    ]
+  }
+}

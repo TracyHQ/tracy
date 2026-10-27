@@ -1,0 +1,94 @@
+{
+  "color": {
+    "lottie-teal": {
+      "$value": "#019d91",
+      "$type": "color",
+      "$description": "Lottie Teal — Teal action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "ink": {
+      "$value": "#09090b",
+      "$type": "color",
+      "$description": "Ink — Primary text, headings, dark card surfaces, footer background, icon strokes — near-black with a barely-perceptible cool cast"
+    },
+    "charcoal": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Charcoal — Dark card backgrounds, elevated dark surfaces, strong icon strokes, secondary dark UI blocks"
+    },
+    "slate-700": {
+      "$value": "#27272a",
+      "$type": "color",
+      "$description": "Slate 700 — Dark muted surfaces and inverse muted backgrounds"
+    },
+    "steel": {
+      "$value": "#71717b",
+      "$type": "color",
+      "$description": "Steel — Muted body text, secondary copy, icon fills, helper labels — sits between the primary ink and lighter grays"
+    },
+    "fog": {
+      "$value": "#9f9fa9",
+      "$type": "color",
+      "$description": "Fog — Subtle text, tertiary metadata, low-priority descriptions"
+    },
+    "cloud": {
+      "$value": "#e4e4e7",
+      "$type": "color",
+      "$description": "Cloud — Hairline borders, input outlines, subtle dividers between UI sections"
+    },
+    "mist": {
+      "$value": "#f2f2f3",
+      "$type": "color",
+      "$description": "Mist — Largest-volume border color across the UI; subtle separators, input borders, form outlines"
+    },
+    "warm-gray": {
+      "$value": "#f4f4f5",
+      "$type": "color",
+      "$description": "Warm Gray — Page canvas and soft card surfaces — the dominant background tone beneath white"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Pure white surfaces: raised cards, button fills, content containers on top of warm-gray canvas"
+    },
+    "sunshine": {
+      "$value": "#f0b100",
+      "$type": "color",
+      "$description": "Sunshine — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "mint-wash": {
+      "$value": "#b7ffe7",
+      "$type": "color",
+      "$description": "Mint Wash — Soft decorative fill in illustration/illustration-adjacent graphics"
+    },
+    "mint-pop": {
+      "$value": "#61f7cf",
+      "$type": "color",
+      "$description": "Mint Pop — Bright decorative fill used in hero illustration characters and supporting graphics"
+    },
+    "ember": {
+      "$value": "#ff6900",
+      "$type": "color",
+      "$description": "Ember — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "dm-sans": {
+      "$value": "DM Sans",
+      "$type": "fontFamily",
+      "$description": "Display and heading family. Used for hero headlines (48–96px, weight 500), section headings (24–32px, weight 500), and large body (20px, weight 400). Letter-spacing tightens aggressively at large sizes — -0.0500em at 96px pulls characters into a compressed, poster-like composition that feels editorial rather than utilitarian. The medium weight (500) is the headline default, avoiding the heavy 700-800 convention used by most SaaS sites."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Utility and body family. Owns all body copy (16px), navigation (14px medium), buttons (14px medium), small labels (10–12px medium), and supporting icons. Consistent -0.0100em letter-spacing keeps it visually aligned to DM Sans at smaller sizes. Two-weight discipline (regular and medium only) keeps the interface feeling light and fast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lottiefiles.com",
+      "siteName": "LottieFiles",
+      "extractedAt": "2026-07-03T03:45:00.181Z",
+      "variant": "compact"
+    }
+  }
+}

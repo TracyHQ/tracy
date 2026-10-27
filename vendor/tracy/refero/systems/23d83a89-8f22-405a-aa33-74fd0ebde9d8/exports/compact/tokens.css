@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-bone-canvas: #f4f3f1;
+  --color-ink: #333333;
+  --color-graphite: #4d4d4d;
+  --color-slate: #666666;
+  --color-ash: #aaaaaa;
+  --color-mist: #dddddd;
+
+  /* Typography — Font Families */
+  --font-system-ui-apple-system-sans-serif: 'system-ui, -apple-system, sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-works-trial: 'Suisse Works Trial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

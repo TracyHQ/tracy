@@ -1,0 +1,95 @@
+# Profile `native` — dsh IS THE SHELL, and this is a CUSTOMER surface.
+#
+# The name `native` is about the UI: dsh's native interface (session sidebar, plugin install
+# page, model settings) is the shell, instead of being cut down to a chat column inside another
+# shell's iframe. It is NOT about a "native app" — the Electron shell is `desktop`.
+#
+# ⚠ THIS PROFILE WAS ONCE NAMED `admin`, AND THE OLD NOTE HERE WAS WRONG. It said "an OPERATOR
+# door, not a customer surface" — an assumption, not a decision. On 31/08 the opposite was
+# settled: this profile can be handed straight to a customer in the **Site Admin** role, and if
+# the experience here is good, the "Tracy is the shell, dsh in an iframe" model (`web`) may no
+# longer be needed.
+#
+# Three customer surfaces, three shapes, do not mix them up:
+#
+#   web · desktop  → dsh is a SIDECAR in the `/agent` iframe; the Tracy shell owns navigation.
+#                    Loads `@tracy/dsh-cowork-bundle`, which turns OFF `ui-sidebar`.
+#   native         → dsh IS the shell. Loads `@tracy/dsh-native-bundle`, does NOT turn off
+#                    `ui-sidebar` — turning it off here removes the only navigation layer.
+#   (customer without a seat) → the same host dsh, only the ROLE differs: no tool touches customer data.
+#                    Until 06/09 this was a separate lane carrying `@tracy/dsh-guest-bundle`; that bundle is deleted.
+#
+# Same $DSH_HOME as `web`/`desktop`, so settings.yaml (API key, model) and storages are ONE —
+# changing the model here changes the customer's agent too. The PLUGIN TREE, however, is per
+# profile: to give the sidecar surface a new tool, add it to `@tracy/dsh-cowork-bundle`; do not
+# install it here and then wonder why customers on web do not have it.
+#
+# ✅ THE SEAT DOOR EXISTS, AND THIS PROFILE IS THE PRODUCTION SURFACE (01/09 — ADR 0004).
+#
+# The old block here said "NO SEAT DOOR YET — port 51730 not published" and forbade exposing the
+# port through a tunnel. That was true until 31/08 and wrong from 01/09: `dsh-passwords` carries
+# `MCP_SEAT_SECRET` plus the four `MCP_TRACY_*` variables of the Tracy sign-in door, and
+# `/gateway/login` returns 404 on every lane — measured in the container. `cowork.tracy.ai`
+# serves this very profile.
+#
+# ⚠ Port 51730 on THIS MACHINE is still loopback, and should stay so. It is the dev copy;
+# production is a lane in a container with its own seat door. Do not read the line above as
+# "expose the dev port through a tunnel".
+
+- id: webserver
+  config:
+    host: 127.0.0.1
+    port: 51730
+
+# ── One dsh, commands inside the site's container (ADR 0014) ──
+# dsh-base's host-local providers stand down; the docker-exec pair takes their two seams. Both
+# rows must go together: with `subprocess` still live the second registration throws at boot,
+# and with `sandbox` still live every confined command is wrapped in bwrap that the web
+# container does not have. The sites root is `/site`, or `TRACY_SITES_ROOT` from the environment the
+# harness is started in (a dev machine) — the plugin reads it, so this file stays plain YAML.
+- id: subprocess
+  disabled: true
+- id: sandbox
+  disabled: true
+- insert:
+    - id: tracy-sandbox-docker
+      name: '@tracy/dsh-sandbox-docker'
+    - id: tracy-subprocess-docker
+      name: '@tracy/dsh-subprocess-docker'
+
+# ── Dev local: design-inspiration must talk to the same site folder ──────────────
+#
+# Its `siteDirOf()` is `config.siteDir ?? path.resolve('.')` — the dsh process's cwd, the same
+# ailment `tracy-site-build` was just cured of. Without it, the copy door reads
+# `docs/agents/design-preview.json` at the REPO ROOT while the build lives in the site folder,
+# and it returns `404 NO_SUCH_CHIP`: two plugins of one build write to two places (measured 08/09).
+#
+# This is a STOPGAP for the one-site lane. The copy door is an HTTP route, so it has no session
+# to ask the way site-build does; the real fix needs a route carrying siteKey — work for the
+# image, not for this profile.
+- id: tracy-design-inspiration
+  config:
+    siteDir: /site/tracy-ai-8836f920
+
+# ── Dev local: the seeder is the in-tree build, not the one in the image ───────
+#
+# Stage `seed` looks for `<cmsDir>/seed-<platform>`; in the image the Dockerfile puts those two
+# binaries in `/opt/tracy/cms`. A dev machine has none, so the stage reports `skipped: no-seeder` —
+# a true statement about a folder that does not exist, and it swallows most of what the form
+# promised the customer: pages, menus, posts, languages. `pnpm --filter @tracy/seeder build`
+# builds exactly those two binaries into `dist/`.
+#
+# 🔒 `cmsDir` MUST NOT BE DECLARED HERE — this file is in git, and that path belongs to one
+# machine. It once carried one person's home folder, so every other clone got a path that does
+# not exist, and the `self-contained` gate went red for everyone because of one home folder.
+#
+# There is no way to write it that is right for every machine: these files do not interpolate
+# environment variables, and `materialize-profile.mjs` only reads plugin NAMES to link them; it
+# does not substitute config values. Without it, `host.ts` falls back to the default
+# `/opt/tracy/cms` — right for the image, and on a dev machine `seederOf` simply finds no binary.
+#
+# ⚠ And "finds no binary" is SILENT here: stage `seed` is SKIPPED, with no error (see the comment
+# right above `seederOf`). To seed for real on your machine, run `pnpm --filter @tracy/seeder
+# build`, then set `cmsDir` in an UNCOMMITTED override — do not put your machine's path back here.
+- id: tracy-site-build-wordpress
+- id: tracy-site-build-joomla

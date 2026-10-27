@@ -1,0 +1,68 @@
+{
+  "id": "REG-PR-1450-wo-shared-research",
+  "kind": "feat",
+  "title": "Website Opportunities shared research: one place per restaurant shared by every account, one place job, Tracy's cost ledger with caps, backfill of per-account research into places (with a one-time Google website pass that shares what the account already collected), URL to Google merge with an operator queue, /ops/wo Places doors, and WO_SHARED_RESEARCH=off falling back to the per-account path",
+  "pr": 1450,
+  "area": "website-opportunities/shared-research",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (dependencies installed, TEST_DATABASE_URL set to a scratch Postgres) run the server test files named in run.cmd.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures, 0 skipped.",
+    "Two accounts that save the same Google place get one place job and the same published snapshot; one account's cancel stops only its own request.",
+    "A client's candidate never becomes a source of the shared place; an account's private pages stay its own overlay, including the PageSpeed of its own website.",
+    "Paid calls of a place run are reserved in Tracy's ledger and pause the job at the cap; an account may create only newPlacesPerAccountPerDay new places a day.",
+    "WO_SHARED_RESEARCH=0 runs the per-account research and claims no place job.",
+    "The backfill links every opportunity, publishes one snapshot from the newest research, copies pictures to places/<place>/ keeping old keys, resumes after failed copies, and a re-run changes nothing.",
+    "The backfill's website pass asks Google for websiteUri once per place, charged once in the ledger (a re-run asks and charges nothing); over the cap the place waits and a later pass finishes it; no Google key asks nothing; the website is verified only when it is the one the account collected and socials only from that website's crawl; a new snapshot shares their pictures under places/<place>/ while a brief keeps its old snapshot; a place its own research published is left alone.",
+    "A pasted URL that redirects to Google's website merges into the Google place; a busy place makes the merge wait; ambiguous pairs wait for an operator; merge then split restores exactly.",
+    "/ops/wo Places lists places with accounts, costs, freshness and media; only an owner or admin from the same origin can act; the merge queue shows pending pairs and approved merges still waiting or failed."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/website-opportunities-shared-research.test.mjs",
+      "apps/tracy-web/test/website-opportunities-place-migrate.test.mjs",
+      "apps/tracy-web/test/website-opportunities-place-backfill-website.test.mjs",
+      "apps/tracy-web/test/ops-wo-places.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "two accounts, one Google place: ONE place job",
+      "cancel from one account stops its own request only",
+      "poisoning: a fake website or social",
+      "WO_SHARED_RESEARCH=0: a new request runs the per-account research",
+      "a paid call over Tracy",
+      "abuse limit: an account sends at most newPlacesPerAccountPerDay",
+      "backfill: two accounts, one Google place",
+      "backfill: pictures are copied to places/<place>/<sha>.<ext>",
+      "backfill: a run stopped by failing copies resumes",
+      "website pass: Google is asked once",
+      "website pass: over the research cap the place waits",
+      "website pass: a Google website that is not the one the account collected",
+      "website pass: only the socials the website",
+      "website pass: no Google key",
+      "website pass: a place its own research already published",
+      "first backfill with a Google key",
+      "the maintenance sweep asks Google",
+      "url ↔ Google: a pasted site that redirects",
+      "url ↔ Google: while either place is being researched the merge waits",
+      "url ↔ Google: a site two Google places name is not merged by itself",
+      "manual merge then split",
+      "place view: the account's own website keeps the PageSpeed",
+      "a place row counts its accounts",
+      "only an owner or admin from this origin may act",
+      "the merge queue lists pending pairs",
+      "an approval on a busy place waits"
+    ]
+  }
+}

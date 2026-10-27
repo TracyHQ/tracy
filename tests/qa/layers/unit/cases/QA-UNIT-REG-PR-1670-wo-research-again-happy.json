@@ -1,0 +1,91 @@
+{
+  "id": "QA-UNIT-REG-PR-1670-wo-research-again-happy",
+  "itemIds": ["regression:REG-PR-1670-wo-research-again"],
+  "requirement": "Research again looks only at what failed, is old or was never tried; each network's social search is a part of its own with a stricter, wider search",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1670-wo-research-again.json",
+    "ref": "PR #1670 (feat); fix evidence: none recorded",
+    "invariant": "S1: run reasons failed, outdated, rule-changed, never with each part's ceiling; kept none, up-to-date, unavailable; the cap drops the dearest part as over-cap. S2: one letter off + full branch phone → confirmed with name_near; without proof → pending; two letters off → rejected; closed page → pending page_closed; the phone query runs second and finds the page. S3: facebook-search/instagram-search rows with the social-search rule version; Research again runs only the two searches (Google Place Details not fetched again) and leaves nothing due; nothing due queues nothing; a press during a queued run joins it. S4: only the Instagram search runs and the try's time is on the current research. S5: RESEARCH_AGAIN_LIMIT, then a run started_by account with its plan; stranger: queued with a receipt and a ceiling within one job's cap, the second press joins, then PUBLIC_AGAIN_LIMIT, then PUBLIC_RESEARCH_SPENT. S6: the place gains the Instagram link verified by the operator; the unknown url is PAGE_NOT_FOUND. S7: the field mask asks for formattedAddress, nationalPhoneNumber, internationalPhoneNumber and the facts keep them.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/wo-host.js:36",
+      "packages/wo/website-opportunities/domain/gplaces-details.mjs:37",
+      "packages/wo/website-opportunities/domain/index.mjs:1",
+      "packages/wo/website-opportunities/domain/social-search.mjs:373"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "the plan names each part to run with its reason and price, and each part kept with its reason",
+    "a plan over a cap drops its dearest parts first and says so",
+    "a press runs a source our setup failed on an hour ago; the automatic rule still waits a day",
+    "match: a name one letter off with the branch phone → confirmed, marked name_near",
+    "match: two letters off, or a short word one letter off → rejected",
+    "match: a page that says it is closed is never confirmed",
+    "find: the first query finds nothing → the phone query finds the page",
+    "the search for each network leaves its own row on the published snapshot",
+    "a place researched before the search existed is searched by Research again, and nothing else runs",
+    "Research again with nothing due queues nothing",
+    "a Try again of one search that finds nothing new still records the try on the current research",
+    "a Research again pressed while a run is going joins it and queues nothing more",
+    "an account presses Research again on its place card: the run is its own, within its daily limit",
+    "a stranger on /find presses Research again: Tracy pays, once a place a day",
+    "/ops confirms a page the search left for a person to check, and the place gains it",
+    "facts carry the branch's own address and phone, what a found social page is matched on"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1670-wo-research-again"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1670-wo-research-again",
+    "pr": 1670,
+    "kind": "feat",
+    "area": "website-opportunities/research-again",
+    "file": "tests/regression/cases/REG-PR-1670-wo-research-again.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-concurrency=1",
+    "apps/tracy-web/test/website-opportunities-research-again-plan.test.mjs",
+    "apps/tracy-web/test/website-opportunities-research-again.test.mjs",
+    "packages/wo/website-opportunities/test/domain-social-search.test.mjs",
+    "packages/wo/website-opportunities/test/domain-gplaces-details.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "the plan names each part to run with its reason and price, and each part kept with its reason",
+    "a plan over a cap drops its dearest parts first and says so",
+    "a press runs a source our setup failed on an hour ago; the automatic rule still waits a day",
+    "match: a name one letter off with the branch phone → confirmed, marked name_near",
+    "match: two letters off, or a short word one letter off → rejected",
+    "match: a page that says it is closed is never confirmed",
+    "find: the first query finds nothing → the phone query finds the page",
+    "the search for each network leaves its own row on the published snapshot",
+    "a place researched before the search existed is searched by Research again, and nothing else runs",
+    "Research again with nothing due queues nothing",
+    "a Try again of one search that finds nothing new still records the try on the current research",
+    "a Research again pressed while a run is going joins it and queues nothing more",
+    "an account presses Research again on its place card: the run is its own, within its daily limit",
+    "a stranger on /find presses Research again: Tracy pays, once a place a day",
+    "/ops confirms a page the search left for a person to check, and the place gains it",
+    "facts carry the branch's own address and phone, what a found social page is matched on"
+  ],
+  "timeoutS": 600
+}

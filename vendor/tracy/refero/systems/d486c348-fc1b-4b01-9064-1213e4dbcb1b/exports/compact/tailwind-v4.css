@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-indigo-pulse: #3b3996;
+  --color-slate: #6e6d7a;
+  --color-graphite: #383938;
+  --color-ink: #111111;
+  --color-paper: #ffffff;
+  --color-mist: #edeef3;
+  --color-cloud: #f7f7f7;
+  --color-mint-whisper: #c3f5dd;
+  --color-lavender-drift: #d1cafa;
+
+  /* Typography */
+  --font-avenir-next: 'Avenir Next', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

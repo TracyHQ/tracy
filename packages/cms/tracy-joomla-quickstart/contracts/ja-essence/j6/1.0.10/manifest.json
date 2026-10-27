@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-essence/j6/1.0.10",
+  "platform": "joomla",
+  "template": "ja_essence",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-essence",
+    "id": "quickstart/ja-essence/j6",
+    "version": "1.0.10",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_essence",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-essence-j6-webroot-1.0.10.tar.gz",
+        "bytes": 57569703,
+        "sha256": "d6285e99ac0710a874f03b6de37cc41a8ba66a255481ec4181ada25ce6df8a46"
+      },
+      "database": {
+        "file": "ja-essence-j6-database-1.0.10.sql.gz",
+        "bytes": 103527,
+        "sha256": "890fc10c4ad8ce068e525c2c390f0f8efbf142e1e7ca6ed25e1cb27876448c26"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:06:08.998Z",
+    "builtFrom": {
+      "from": "quickstart/ja-essence/j6@1.0.9",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 2 files replaced (templates/ja_essence/css, templates/ja_essence/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-essence/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

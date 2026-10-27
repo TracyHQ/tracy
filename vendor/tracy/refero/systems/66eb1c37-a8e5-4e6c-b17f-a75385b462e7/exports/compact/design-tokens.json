@@ -1,0 +1,114 @@
+{
+  "color": {
+    "newsprint": {
+      "$value": "#ececea",
+      "$type": "color",
+      "$description": "Newsprint — Page canvas — the warm off-white ground that all sections sit on"
+    },
+    "bright-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bright White — Card surfaces, elevated panels, product mockup backgrounds"
+    },
+    "bone": {
+      "$value": "#f5f5f4",
+      "$type": "color",
+      "$description": "Bone — Subtle surface wash, alternating bands, input fills"
+    },
+    "stone-200": {
+      "$value": "#d4d2d1",
+      "$type": "color",
+      "$description": "Stone 200 — Hairline borders, dividers, stepper connectors, table row separators"
+    },
+    "stone-400": {
+      "$value": "#a6a09b",
+      "$type": "color",
+      "$description": "Stone 400 — Muted helper text, inactive labels, placeholder content"
+    },
+    "stone-500": {
+      "$value": "#87827d",
+      "$type": "color",
+      "$description": "Stone 500 — Secondary captions, footer text, icon strokes on light"
+    },
+    "stone-600": {
+      "$value": "#57534d",
+      "$type": "color",
+      "$description": "Stone 600 — Body text secondary, description copy below headlines"
+    },
+    "stone-700": {
+      "$value": "#44403b",
+      "$type": "color",
+      "$description": "Stone 700 — Body text, table data cells, form labels"
+    },
+    "stone-800": {
+      "$value": "#292524",
+      "$type": "color",
+      "$description": "Stone 800 — Emphasis body, active link text, nav links"
+    },
+    "ink-black": {
+      "$value": "#1c1917",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, display headlines, the darkest reading color"
+    },
+    "char": {
+      "$value": "#0c0a09",
+      "$type": "color",
+      "$description": "Char — Logo mark, maximum-emphasis text, the deepest ink in the system"
+    },
+    "volt-blue": {
+      "$value": "#0b64e9",
+      "$type": "color",
+      "$description": "Volt Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "amber-signal": {
+      "$value": "#f9b703",
+      "$type": "color",
+      "$description": "Amber Signal — Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "alert-coral": {
+      "$value": "#f24149",
+      "$type": "color",
+      "$description": "Alert Coral — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "ember-orange": {
+      "$value": "#f97006",
+      "$type": "color",
+      "$description": "Ember Orange — Orange supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "iris-violet": {
+      "$value": "#6b4aff",
+      "$type": "color",
+      "$description": "Iris Violet — Violet supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "fh-total-display": {
+      "$value": "FH Total Display",
+      "$type": "fontFamily",
+      "$description": "Hero display headline — a high-contrast didone-style serif at 106–183px with 0.80 line-height creating dramatic overlapping lines. This typeface is the brand's signature: it carries editorial gravitas and makes the hero feel like a magazine cover, not a SaaS landing page. Substitute: 'Playfair Display' or 'DM Serif Display' for close serif proportions."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "UI sans for headings, nav, button labels, card titles, and data labels — geometric and neutral so the serif hero remains the voice. Geist's slight technical character keeps the product UI feeling modern without competing with the display serif. The -0.02em tracking and character variants (cv03, cv04, cv09, cv11) give it a distinctive subtle optimization for screens."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Small body text, captions, metadata, helper text — uses the system stack with tight -0.03em tracking for compact information density. The tighter tracking at small sizes keeps narrow columns (like table data) legible."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://rox.com",
+      "siteName": "Rox",
+      "extractedAt": "2026-06-03T15:05:41.193Z",
+      "variant": "compact"
+    }
+  }
+}

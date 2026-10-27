@@ -1,0 +1,64 @@
+{
+  "color": {
+    "warm-paper": {
+      "$value": "#fcfcfc",
+      "$type": "color",
+      "$description": "Warm Paper — Page canvas, card surfaces, and nav background — the base layer everything sits on"
+    },
+    "deep-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Deep Ink — Primary text, body copy, nav links, and dominant border color — the structural voice"
+    },
+    "press-black": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Press Black — Heading text and heavy borders — slightly softer than pure black for large display sizes"
+    },
+    "charcoal-trace": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Charcoal Trace — Secondary borders, dividers, and muted text on dark surfaces"
+    },
+    "ash": {
+      "$value": "#a8a8a8",
+      "$type": "color",
+      "$description": "Ash — Helper text, disabled states, and hairline borders on light surfaces"
+    },
+    "dusty-mauve": {
+      "$value": "#6c5f7d",
+      "$type": "color",
+      "$description": "Dusty Mauve — Accent panel backgrounds, heading color, and chromatic border — a near-gray purple that signals brand moments without shouting"
+    },
+    "pale-sage": {
+      "$value": "#cee6cc",
+      "$type": "color",
+      "$description": "Pale Sage — Secondary heading tint and accent border — a near-gray green that appears as quiet punctuation alongside the mauve"
+    }
+  },
+  "font": {
+    "crimson-pro": {
+      "$value": "Crimson Pro",
+      "$type": "fontFamily",
+      "$description": "Display headlines at 44–50px, weight 300 with negative tracking. The anti-conventionally light serif whispers authority instead of projecting it; most agencies use 600–700 here, this restraint is the signature move."
+    },
+    "azeret-mono": {
+      "$value": "Azeret Mono",
+      "$type": "fontFamily",
+      "$description": "Body copy, labels, and metadata at 12–18px. Monospace for a portfolio is a deliberate editorial choice — it reads as technical, precise, and un-decorative, contrasting the flowing serif headlines."
+    },
+    "system-sans-serif": {
+      "$value": "System Sans-Serif",
+      "$type": "fontFamily",
+      "$description": "Navigation links and micro-labels at 12px. Neutral utility voice that stays out of the way of the serif/mono dialogue."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://allierho.com",
+      "siteName": "Allier Ho",
+      "extractedAt": "2026-06-03T21:35:16.285Z",
+      "variant": "compact"
+    }
+  }
+}

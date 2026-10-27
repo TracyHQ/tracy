@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1640-wo-auto-template-collected",
+  "kind": "feat",
+  "title": "Build from my business picks the template by the trade across every CMS while a plain demo build never picks for the person, and the demo check fails on any collected fact, review or own photo missing, or on a visible fault",
+  "pr": 1640,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: autoTemplate over develop's 22/10/2026 cards: a restaurant with eight seeds; a restaurant with Default CMS emdash; with Default CMS wordpress; a bar; forty seeds; no cards.",
+    "S2: acceptDemoActions with selection {auto:true} and ownSite for a bar and a plain place on Postgres, then the same request ids again, then with no cards; then a plain build with {auto:true}, with nothing, and with only a CMS named.",
+    "S3: validateAgentPlan on research with a review and photos: no review row, a row citing part:reviews, an unplaced reviews waiver, a short waiver, no replace-image row.",
+    "S4: host checkCollectedUsed on pages showing every collected fact, a quoted review and own photos; on a bare page; with only a waived review.",
+    "S5: createDemoLook with a faked capture and vision answer: four pages, faults outside the closed list, no model, a failed call, a budget refusal."
+  ],
+  "expect": [
+    "S1: always ja-restaurant/ja-fresco/ja-diner with reason auto:restaurant-match; emdash does not decide; wordpress does (cms:wordpress); a bar adds kind:bars; at least three distinct picks over forty seeds; no cards → unavailable.",
+    "S2: the bar gets the bar-restaurant Joomla card with reason auto:restaurant-match;kind:bars; replay makes no new action and no new charge; no cards → 503 NO_TEMPLATE_OFFERED; a plain {auto:true} or empty selection → 400 DEMO_TEMPLATE_REQUIRED and no action; a CMS alone takes its /ops/wo pin.",
+    "S3: coverage.reviews; valid; valid; unplaced; coverage.photos.",
+    "S4: pass; findings name, phone, email, address, hours, reviews, home-photo, photos in that order; pass with waived.reviews.",
+    "S5: one call with eight labelled pictures, 1024×2400 JPEG desktop slices; only closed-list faults kept; looked:false with NO_VISION_MODEL, VISION_FAILED, BUDGET_EXCEEDED, pass true."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/lib/wo-revision-choice.js apps/tracy-web/src/opportunities/demo-actions.js apps/tracy-web/src/opportunities/agent-demo.js apps/tracy-web/src/opportunities/demo-look.js apps/tracy-host/src/demo-qa.js",
+    "dom": ""
+  },
+  "fence": "autoTemplate's tier → kind → Default CMS order; plan coverage at plan.save; collected-used and looks-finished in tracy_demo check",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-actions.test.mjs",
+      "apps/tracy-web/test/website-opportunities-template-fit.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "apps/tracy-web/test/wo-demo-look.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "auto: a restaurant always lands on a restaurant template, whichever CMS has one",
+      "auto: EmDash as the Default CMS does not put a restaurant on the agency template",
+      "auto: a bar takes the restaurant-and-bar template",
+      "a plan must place what the research collected: a review (or say why the template has none) and own photos",
+      "faults come back as findings the agent can act on; anything outside the closed list is dropped",
+      "no vision model, no shots, a failed call or an over-budget call: not looked at, said so, not failed",
+      "collected-used: the name, phone, email, street, an opening time, a review and own photos must all show",
+      "a build names its CMS and template: the human choice is what is frozen",
+      "a CMS named without a template takes the template /ops/wo pins for it",
+      "an auto selection is refused on a plain build; no template and no CMS is refused too"
+    ]
+  }
+}

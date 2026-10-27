@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1706-wo-demo-photos-required",
+  "kind": "fix",
+  "title": "/v1/demos refuses a request with no usable photo (PHOTOS_REQUIRED / PHOTOS_UNUSABLE / PHOTO_STORE_UNAVAILABLE) before anything is accepted",
+  "pr": 1706,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/public-demos",
+  "steps": ["S1: Run the /v1/demos door suite on the test Postgres."],
+  "expect": [
+    "S1: the suite passes; the no-photo test sees 422/422/503 and no action or opportunity left behind."
+  ],
+  "selectors": {
+    "door": "POST /v1/demos (apps/tracy-web/src/opportunities-build/public-demos.js submit)",
+    "tool": "tests/regression/scripts/REG-PR-1706-wo-demo-photos-required.mjs"
+  },
+  "evidence": "Stranger run 25/10/2026: demos 02c17715 and dff32d00 built a site then failed SITE_FILL_FAILED",
+  "fence": "Early photo check at the /v1/demos door",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1706-wo-demo-photos-required.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-magz-ii",
+  "release": "quickstart/ja-magz-ii/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "heading": "#t3-section h3.module-title",
+    "body": "section.article-intro"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "a section title of the magazine (Videos, World, Business): 30px",
+    "body": "the intro text of the lead article"
+  },
+  "keepScopes": [".dark"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#3c3c3c",
+    "--fg-2": "#000000",
+    "--accent": "#00bfe6",
+    "--accent-hover": "#007f9a",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eaeaea",
+    "--muted": "#555555",
+    "--font-display": "\"Helvetica Neue\", sans-serif",
+    "--font-body": "\"Helvetica Neue\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#3c3c3c",
+      "fg-2": "#000000",
+      "accent": "#00bfe6",
+      "accent-hover": "#007f9a",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eaeaea",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg-2": "#000000"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border": "#e5e5e5",
+      "border-soft": "#e0e2e3",
+      "accent-hover": "#00778f"
+    },
+    {
+      "surface": "#eaeaea",
+      "border": "#ebebeb",
+      "border-soft": "#e1e1e1"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border": "#e3e3e3"
+    },
+    {
+      "surface": "#f9f9f9"
+    },
+    {
+      "surface": "#f8f8f8"
+    },
+    {
+      "surface": "#f9f2f4"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (73 line colours, 93 text colours seen)",
+  "selectors": {
+    "heading": ["#t3-section h3.module-title"],
+    "button": [".btn:not(.off-canvas-toggle)"],
+    "buttonPrimary": [".btn-primary:not(.off-canvas-toggle)"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper .article-aside, .t3-wrapper .article-footer",
+    "body": ".t3-wrapper .article-intro",
+    "heading": ".t3-wrapper :is(h2.article-title, h3.module-title)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 14 tried (byte 7450); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 51,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 23
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 42,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 30,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 28,
+      "kind": "line",
+      "role": "border",
+      "near": "#eaeaea",
+      "distance": 9
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 7,
+      "kind": "line",
+      "role": "border",
+      "near": "#eaeaea",
+      "distance": 2
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#eaeaea",
+      "distance": 12
+    },
+    {
+      "hex": "#00778f",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#007f9a",
+      "distance": 14
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (text judged per element, paint stack under each text) on the 1.0.1 build stood up from its own zip (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-magz-ii-j6): 12/12, controls 0, kept bands unchanged, no text under 4.5:1 worse than the template's own under Moxie, MotherDuck, Toggl Track and Apple, 75–93% of the page follows, every contrast kind sampled, dark and light screenshots read by eye; earlier: measured 11/10/2026 (round 2) on quickstart/ja-magz-ii/j6 1.0.0, stylesheets tokenized as the next release (1.0.1) ships them (tasks/evidence/ds-contracts-r2a-2026-10-11/templates/ja-magz-ii-j6): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 75% or more of the page follows; every contrast kind finds text (intros, article meta, article and section titles, links, footer); the section-heading rule names the section titles only, so article titles keep their sizes; the dark article cards are kept (keepText); the black logo is inverted with its hue under dark systems (sideRules); checked by eye on the Moxie, MotherDuck and Toggl Track screenshots Re-verified 12/10/2026 on the unified probe (fix/ds-remeasure) on quickstart/ja-magz-ii/j6 1.0.1: before, the meta line on the photo cards read 3.48 under MotherDuck and 3.75 under Apple (the system's muted grey on the dark photo); sideRules.light now keeps the template's own greys (#aaaaaa, #999999) on those cards. After: 12/12, controls 0, regressed 0, 75-93% follows; the meta reads 6.59 under MotherDuck and Apple (default 8.08) (tasks/evidence/ds-reverify-c-2026-10-12/ja-magz-ii)",
+  "selectorsNote": "the magazine titles every article with an h2 (14–30px): the heading rule names the section titles (h3.module-title) only; the off-canvas toggle is a .btn-primary icon and stays out of the button rules",
+  "contrastNote": "the magazine sets its texts in sections and asides, not paragraphs: every intro, article meta, article title and section title of the page wrapper, each judged against itself on the default page",
+  "sideRules": {
+    "dark": {
+      ".logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".logo-img-sm": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    },
+    "light": {
+      ".items-row article.image .item-content": {
+        "color": "#aaaaaa"
+      },
+      ".items-row article.image .item-content .article-info a": {
+        "color": "#aaaaaa"
+      },
+      ".items-row article.image .article-aside .category-name a": {
+        "color": "#999999"
+      },
+      ".items-row article.image .article-aside": {
+        "color": "#999999"
+      },
+      ".items-row article.image .article-aside .containerCountComment a": {
+        "color": "#999999"
+      },
+      ".items-row article.image .article-footer": {
+        "color": "#999999"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page the template's black logo (drawn for its white page) is inverted with its hue kept, so the cyan dot stays cyan; under a light worn page the photo cards of the lists (article.image: the photo at 40% over black, its meta and category written light for that dark ground) keep the template's own light greys (#aaaaaa, #999999) — the system's dark meta on the photo read 3.48:1 (MotherDuck) and 3.75:1 (Apple) on the unified probe, 12/10/2026",
+  "followRules": {
+    ".off-canvas-toggle .patty:not([class*=\"cat-\"] *), .off-canvas-toggle .patty:not([class*=\"cat-\"] *)::before, .off-canvas-toggle .patty:not([class*=\"cat-\"] *)::after": {
+      "background-color": "fg"
+    }
+  },
+  "followNote": "15/10/2026 (look review v8): the phone menu's bars (.patty and its ::before/::after) are #111111 in off-canvas.css, a sheet the 1.0.x release does not tokenize: under Moxie, Spotify and Linear the header turned black and the only menu control vanished (1.1:1). They take the page's text colour; on a category page (.cat-*) the template paints them white on its coloured box and keeps that",
+  "keepNote": "kept: the dark article cards of the lists (article.dark, #111111 with light text and a yellow title); they paint no text colour on the card itself, so it takes the template page text back (keepText, #3c3c3c as the released page computes it)",
+  "keepDefaults": {
+    "--body-text-color": "#3c3c3c"
+  },
+  "keepText": [".dark"],
+  "minVersion": {
+    "quickstart/ja-magz-ii/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-magz-ii/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".dark": {
+      "ground": "#111111",
+      "texts": ["#999999", "#aaaaaa"],
+      "paint": {
+        ".article-title a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "literalsNote": "#aaaaaa #999999: the words of the photo article cards (article.image) sit on their photo, in the template’s own greys"
+}

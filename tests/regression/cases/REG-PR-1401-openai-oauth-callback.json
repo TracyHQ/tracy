@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1401-openai-oauth-callback",
+  "kind": "fix",
+  "title": "Complete browser consent with the observed OpenAI callback and strict Origin validation",
+  "pr": 1401,
+  "area": "mcp/oauth",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the real OAuth authorize route with the OpenAI Portal callback, content scope, resource and S256 challenge while signed out.",
+    "Repeat with callback lookalikes and the obsolete private callback.",
+    "Submit Allow and Cancel in Chromium using the real signed consent page; inspect the browser-generated Origin and the real OAuth route response. Navigate to an intercepted foreign fixture to check referrer privacy; replay signed POSTs with null and foreign Origins."
+  ],
+  "expect": [
+    "The valid request redirects to sign-in and preserves its exact callback and resource without minting a session.",
+    "Every invalid callback returns 400 invalid_request without a redirect.",
+    "Both browser submissions carry the exact Tracy Origin and return the expected 303 callback. Allow stores one site-bound code, Cancel stores none. No referrer reaches the foreign fixture; null and foreign Origins remain 403 without additional codes."
+  ],
+  "selectors": {
+    "door": "GET /oauth/authorize",
+    "test": "apps/tracy-web/test/mcp-callback.test.mjs"
+  },
+  "fence": "Only the exact registered OpenAI callback can pass authorization validation; a signed-out request cannot read accounts or sites. Consent form navigation preserves the same-origin CSRF proof without disclosing a referrer across origins.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/mcp-callback.test.mjs",
+      "apps/tracy-web/test/e2e/mcp-consent.test.mjs"
+    ],
+    "tests": [
+      "OpenAI Portal callback reaches sign-in instead of invalid_request",
+      "OpenAI callback lookalikes and the obsolete callback are refused without redirect",
+      "browser consent allow: same-origin POST passes the strict Origin check without leaking a referrer",
+      "browser consent deny: same-origin POST passes the strict Origin check without leaking a referrer"
+    ]
+  }
+}

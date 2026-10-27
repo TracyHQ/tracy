@@ -1,0 +1,1438 @@
+{
+  "about": "Tamarel (facebook) and The Larch House (website, facebook, instagram): fictional places with English captions; picture labels and measured features from a hand-labelled contact sheet, stand wo 18/10/2026",
+  "pictures": [
+    {
+      "id": "tamarel-00",
+      "width": 720,
+      "height": 540,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-2.xx.fbcdn.net/v/t1.6435-9/55345303_9772619278096249_9596280965369357660_n.jpg",
+      "postedAt": "2019-06-21T10:40:11+00:00",
+      "caption": "We are ready",
+      "alt": null,
+      "dhash": "d820ecd0e9e0f838",
+      "features": {
+        "top2Share": 0.4985,
+        "edgeDensity": 0.2183,
+        "centreLuminance": 0.5402
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Reopening announcement sign for Tamarel Restaurant & Bar"
+      }
+    },
+    {
+      "id": "tamarel-01",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/252221336_3216598088209823_9818174658667524772_n.jpg",
+      "postedAt": "2026-05-24T04:00:00+00:00",
+      "caption": "✨ It’s been a while since our last post… but Tamarel Restaurant & Bar is still here every day, welcoming guests from around the world 💛\n\nSome things never change in Hoi An ✨\n🏮 Lantern light\n🍤 Good local food\n🍷 Cosy dinners\n😊 And slow evenings with people you love\n\nA few of t",
+      "alt": null,
+      "dhash": "3979d9d9de71434e",
+      "features": {
+        "top2Share": 0.323,
+        "edgeDensity": 0.1889,
+        "centreLuminance": 0.5898
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "heroWorthy": true,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Plate of crispy topped appetizers with tomato garnish"
+      }
+    },
+    {
+      "id": "tamarel-02",
+      "width": 443,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.6435-9/313561854_1484179093584455_2723566328613908550_n.jpg",
+      "postedAt": "2020-09-10T07:03:03+00:00",
+      "caption": "We think of so many old regulars ... ❤️❤️ we hope they are all doing well.",
+      "alt": null,
+      "dhash": "5f753636363634a0",
+      "features": {
+        "top2Share": 0.3862,
+        "edgeDensity": 0.2224,
+        "centreLuminance": 0.4597
+      },
+      "human": {
+        "subject": "people",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "absent",
+        "quality": "good",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Two young girls posing in front of bamboo bar"
+      }
+    },
+    {
+      "id": "tamarel-03",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/501924154_3487699079078016_9191941121852196353_n.jpg",
+      "postedAt": "2025-09-18T11:00:30+00:00",
+      "caption": "🤔 Can’t decide what to eat tonight?\n👉 Easy! Just come to Tamarel!\n\nGood vibes, tasty bites and refreshing drinks are waiting for you 🍹✨\nBring your friends, your date, or just yourself – it’s always a good time here.\n______________________________________________\n𝐓𝐀𝐌𝐀𝐑𝐄𝐋",
+      "alt": null,
+      "dhash": "feabe193ce939a0c",
+      "features": {
+        "top2Share": 0.2788,
+        "edgeDensity": 0.18,
+        "centreLuminance": 0.6853
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Chopsticks dipping a fresh spring roll in sauce"
+      }
+    },
+    {
+      "id": "tamarel-04",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.fagc3-2.fna.fbcdn.net/v/t39.30808-6/506846389_3077322853158201_106014817138607614_n.jpg",
+      "postedAt": "2025-08-02T10:29:30+00:00",
+      "caption": "We’re still here – and still serving your favourite Vietnamese dishes!\n\nIt’s been a while since our last post, but Tamarel Restaurant & Bar is open daily, cooking fresh Vietnamese seafood with care and local flavour ❤️\n\n🍤 Try local favourites like Grilled Scallops, Roasted Prawn",
+      "alt": null,
+      "dhash": "71ca4c78b369491f",
+      "features": {
+        "top2Share": 0.218,
+        "edgeDensity": 0.3835,
+        "centreLuminance": 0.6623
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Grilled scallops plated with lime and salt"
+      }
+    },
+    {
+      "id": "tamarel-05",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-6/261306224_3337167932899655_6047717167963089126_n.jpg",
+      "postedAt": "2026-05-26T04:00:23+00:00",
+      "caption": "Thank you for your continued support of Tamarel. ❤️\n\nTamarel is all about tasty local dishes, fresh seafood and a warm welcome that makes every guest feel at home in Hoi An.\n\nFrom dinners for two and family gatherings to long evenings with friends from around the world, your trus",
+      "alt": null,
+      "dhash": "d48fa36775512330",
+      "features": {
+        "top2Share": 0.27,
+        "edgeDensity": 0.3317,
+        "centreLuminance": 0.3262
+      },
+      "human": {
+        "subject": "interior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "interior",
+        "textPresence": "present",
+        "quality": "good",
+        "heroWorthy": true,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Busy dining room with cocktails in foreground"
+      }
+    },
+    {
+      "id": "tamarel-06",
+      "width": 590,
+      "height": 443,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/546693211_98446831087202530_9337681266328378305_n.jpg",
+      "postedAt": "2017-06-28T04:16:38+00:00",
+      "caption": "Tamarel restaurant & bar is so happy that everyone enjoyed the evening ... Thank you all",
+      "alt": null,
+      "dhash": "6475e0e86b4f5ede",
+      "features": {
+        "top2Share": 0.3025,
+        "edgeDensity": 0.3379,
+        "centreLuminance": 0.2825
+      },
+      "human": {
+        "subject": "interior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "absent",
+        "quality": "good",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Guests smiling and dining in bamboo interior"
+      }
+    },
+    {
+      "id": "tamarel-07",
+      "width": 590,
+      "height": 443,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/571759414_94611008093125401_5896789773555204299_n.jpg",
+      "postedAt": "2017-06-25T16:11:36+00:00",
+      "caption": "Happy anniversary to us !!!",
+      "alt": null,
+      "dhash": "d210220b872b2939",
+      "features": {
+        "top2Share": 0.259,
+        "edgeDensity": 0.282,
+        "centreLuminance": 0.4519
+      },
+      "human": {
+        "subject": "interior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "interior",
+        "textPresence": "absent",
+        "quality": "dark",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Woven basket ceiling with hanging lanterns"
+      }
+    },
+    {
+      "id": "tamarel-08",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.fagc3-2.fna.fbcdn.net/v/t39.30808-6/553232995_3773832799821298_5701355481236797979_n.jpg",
+      "postedAt": "2025-08-05T09:11:14+00:00",
+      "caption": "✨Let's start dinner with a few starters at Tamarel!\n\n🥞Hoi An Rice Pancake - crispy pancake with shrimp and pork, served with fresh herbs and dipping sauce.\n🥭Mango Salad With Shrimp - green mango, shrimp, peanuts and a sweet and sour dressing\n🥑 Avocado Salad With Egg - creamy a",
+      "alt": null,
+      "dhash": "e6ef1c6c676b7af0",
+      "features": {
+        "top2Share": 0.3074,
+        "edgeDensity": 0.4019,
+        "centreLuminance": 0.4656
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Close-up of noodle dish topped with crushed peanuts and shrimp"
+      }
+    },
+    {
+      "id": "tamarel-09",
+      "width": 590,
+      "height": 443,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/598829533_97181741576394704_493488406345265307_n.jpg",
+      "postedAt": "2017-06-28T04:16:38+00:00",
+      "caption": "Tamarel restaurant & bar is so happy that everyone enjoyed the evening ... Thank you all",
+      "alt": null,
+      "dhash": "6a631f1b35310fdc",
+      "features": {
+        "top2Share": 0.3042,
+        "edgeDensity": 0.2393,
+        "centreLuminance": 0.5769
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "dark",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Plated shrimp and vegetable appetizer on white dish"
+      }
+    },
+    {
+      "id": "tamarel-10",
+      "width": 590,
+      "height": 392,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.flas1-1.fna.fbcdn.net/v/t39.30808-6/575990474_3067125603240461_6051802890450704286_n.jpg",
+      "postedAt": "2025-12-01T02:55:41+00:00",
+      "caption": "Hoi An is peaceful, the food is authentic!\n\n📸: Shoreline.lens",
+      "alt": null,
+      "dhash": "0f0b9b034b8cae01",
+      "features": {
+        "top2Share": 0.386,
+        "edgeDensity": 0.0921,
+        "centreLuminance": 0.2809
+      },
+      "human": {
+        "subject": "exterior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "absent",
+        "quality": "dark",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Street vendors in conical hats sitting by yellow wall"
+      }
+    },
+    {
+      "id": "tamarel-11",
+      "width": 472,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.flas1-1.fna.fbcdn.net/v/t39.30808-6/558116871_3304037210196811_3970571286361101534_n.jpg",
+      "postedAt": "2025-12-01T02:55:41+00:00",
+      "caption": "Hoi An is peaceful, the food is authentic!\n\n📸: Shoreline.lens",
+      "alt": null,
+      "dhash": "0650913373155274",
+      "features": {
+        "top2Share": 0.7932,
+        "edgeDensity": 0.1155,
+        "centreLuminance": 0.1459
+      },
+      "human": {
+        "subject": "exterior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "exterior",
+        "textPresence": "absent",
+        "quality": "dark",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Narrow alley with glowing lantern and silhouetted people"
+      }
+    },
+    {
+      "id": "tamarel-12",
+      "width": 393,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.fagc3-1.fna.fbcdn.net/v/t39.30808-6/511212406_3552421242873120_5563527238579549787_n.jpg",
+      "postedAt": "2025-08-05T09:11:14+00:00",
+      "caption": "✨Let's start dinner with a few starters at Tamarel!\n\n🥞Hoi An Rice Pancake - crispy pancake with shrimp and pork, served with fresh herbs and dipping sauce.\n🥭Mango Salad With Shrimp - green mango, shrimp, peanuts and a sweet and sour dressing\n🥑 Avocado Salad With Egg - creamy a",
+      "alt": null,
+      "dhash": "21098d0c2c2869e0",
+      "features": {
+        "top2Share": 0.2383,
+        "edgeDensity": 0.359,
+        "centreLuminance": 0.4382
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Promotional graphic for delicious starters with contact details"
+      }
+    },
+    {
+      "id": "tamarel-13",
+      "width": 590,
+      "height": 443,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/506691291_90880115722644029_6116884606213724220_n.jpg",
+      "postedAt": "2017-06-28T04:16:38+00:00",
+      "caption": "Tamarel restaurant & bar is so happy that everyone enjoyed the evening ... Thank you all",
+      "alt": null,
+      "dhash": "11233b3f3d31878f",
+      "features": {
+        "top2Share": 0.3982,
+        "edgeDensity": 0.1548,
+        "centreLuminance": 0.3767
+      },
+      "human": {
+        "subject": "interior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "interior",
+        "textPresence": "absent",
+        "quality": "dark",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Colorfully lit bar counter with bottles and glasses"
+      }
+    },
+    {
+      "id": "tamarel-14",
+      "width": 590,
+      "height": 392,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.flas1-2.fna.fbcdn.net/v/t39.30808-6/508382443_3553600410543151_1770825428520933078_n.jpg",
+      "postedAt": "2025-12-01T02:55:41+00:00",
+      "caption": "Hoi An is peaceful, the food is authentic!\n\n📸: Shoreline.lens",
+      "alt": null,
+      "dhash": "93c3671b09191919",
+      "features": {
+        "top2Share": 0.3452,
+        "edgeDensity": 0.1857,
+        "centreLuminance": 0.6524
+      },
+      "human": {
+        "subject": "other",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Man photographing river view under a town sign"
+      }
+    },
+    {
+      "id": "tamarel-15",
+      "width": 572,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/548197049_3429523003309328_3595728350941416327_n.jpg",
+      "postedAt": "2025-08-12T08:51:10+00:00",
+      "caption": "🌟Tamarel is delighted and truly thankful to every guest who enjoyed their visit and left us a review.\n\nYour happiness is the best gift Tamarel could get. Every kind review is a joy and a reason to keep improving, with tasty meals and memorable evenings.\n\nWe look forward to welco",
+      "alt": null,
+      "dhash": "8649341567834673",
+      "features": {
+        "top2Share": 0.9329,
+        "edgeDensity": 0.1041,
+        "centreLuminance": 0.9802
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "other",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Screenshot of online restaurant reviews and ratings"
+      }
+    },
+    {
+      "id": "tamarel-16",
+      "width": 443,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/881984362_402402735102266_3866988099507959642_n.jpg",
+      "postedAt": "2023-08-12T07:51:46+00:00",
+      "caption": "",
+      "alt": null,
+      "dhash": "860f38fa4e9c3c39",
+      "features": {
+        "top2Share": 0.2683,
+        "edgeDensity": 0.2427,
+        "centreLuminance": 0.4972
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Grilled meat with rice, lettuce, cucumber and tomato on plate"
+      }
+    },
+    {
+      "id": "tamarel-17",
+      "width": 590,
+      "height": 392,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.flas1-2.fna.fbcdn.net/v/t39.30808-6/553912582_3157445604364527_9042879037483664170_n.jpg",
+      "postedAt": "2025-12-01T02:55:41+00:00",
+      "caption": "Hoi An is peaceful, the food is authentic!\n\n📸: Shoreline.lens",
+      "alt": null,
+      "dhash": "4b1f1f237b264f0f",
+      "features": {
+        "top2Share": 0.2771,
+        "edgeDensity": 0.3522,
+        "centreLuminance": 0.4234
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Round baskets of golden noodles drying in sunlight"
+      }
+    },
+    {
+      "id": "tamarel-18",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/589541051_3911869618606967_5965368667783962117_n.jpg",
+      "postedAt": "2025-09-18T11:00:30+00:00",
+      "caption": "🤔 Can’t decide what to eat tonight?\n👉 Easy! Just come to Tamarel!\n\nGood vibes, tasty bites and refreshing drinks are waiting for you 🍹✨\nBring your friends, your date, or just yourself – it’s always a good time here.\n______________________________________________\n𝐓𝐀𝐌𝐀𝐑𝐄𝐋",
+      "alt": null,
+      "dhash": "42c6f5dab1b31939",
+      "features": {
+        "top2Share": 0.3003,
+        "edgeDensity": 0.257,
+        "centreLuminance": 0.649
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Table spread of dishes and colorful drinks with text overlay"
+      }
+    },
+    {
+      "id": "tamarel-19",
+      "width": 443,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/830364612_454419793356592_5947884420753302609_n.jpg",
+      "postedAt": "2023-08-12T07:51:46+00:00",
+      "caption": "",
+      "alt": null,
+      "dhash": "383cda68dce9d571",
+      "features": {
+        "top2Share": 0.2786,
+        "edgeDensity": 0.2862,
+        "centreLuminance": 0.4009
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Skewered grilled prawns on lettuce on white plate"
+      }
+    },
+    {
+      "id": "tamarel-20",
+      "width": 443,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/891415906_4187299418611729_3177643742075434485_n.jpg",
+      "postedAt": "2022-08-15T16:12:49+00:00",
+      "caption": "Thank you all once again, and stay safe after covid. Thank you for remembering us \nA returning guest since 2018 \n❤️❤️❤️",
+      "alt": null,
+      "dhash": "6373362726067f6d",
+      "features": {
+        "top2Share": 0.3174,
+        "edgeDensity": 0.2575,
+        "centreLuminance": 0.4124
+      },
+      "human": {
+        "subject": "people",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Guests and staff talking around a wooden table"
+      }
+    },
+    {
+      "id": "tamarel-21",
+      "width": 443,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/830954681_474144238018661_9264983922732592684_n.jpg",
+      "postedAt": "2023-08-12T07:51:46+00:00",
+      "caption": "",
+      "alt": null,
+      "dhash": "1b1359c3d1e1797b",
+      "features": {
+        "top2Share": 0.2961,
+        "edgeDensity": 0.3098,
+        "centreLuminance": 0.383
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Beef skewers with peppers, cucumber and tomato on plate"
+      }
+    },
+    {
+      "id": "larch-22",
+      "width": 1365,
+      "height": 1365,
+      "source": "instagram",
+      "sourceUrl": "https://scontent-mxp1-1.cdninstagram.com/v/t39.30808-6/284600248_3940990394269537_5932536109583835584_n.jpg",
+      "postedAt": "2026-09-05T09:00:49+00:00",
+      "caption": "A Deli Table for the opening night of Cool Breeze Kitchen.\n\nCheeses, cold cuts, breads, pickles and small desserts, prepared by The Larch House for guests to gather around all evening.\n\nPlanning a gathering of your own? Get in touch with us about catering.",
+      "alt": null,
+      "dhash": "0249cf0305c1c8dd",
+      "features": {
+        "top2Share": 0.6064,
+        "edgeDensity": 0.2664,
+        "centreLuminance": 0.2773
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "dark",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Charcuterie board with cheese, meats and small jars"
+      }
+    },
+    {
+      "id": "larch-23",
+      "width": 810,
+      "height": 540,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-iad6-1.xx.fbcdn.net/v/t39.30808-6/531712314_3222706219817512_4339239204499642787_n.jpg",
+      "postedAt": "2026-03-16T09:35:39+00:00",
+      "caption": "First introduced during the darkest days of Covid, our take on the classic Reuben sandwich is still one of the most loved things on the menu.\n\nOur Menu: https://www.thelarchhouse.example/menu \nReserve your table: https://www.tablecheck.com/en/the-larch-house-vietnam/reserve/landi",
+      "alt": null,
+      "dhash": "50742969602387c6",
+      "features": {
+        "top2Share": 0.3669,
+        "edgeDensity": 0.2245,
+        "centreLuminance": 0.4349
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Stacked sandwich with purple cabbage and salad on tray"
+      }
+    },
+    {
+      "id": "larch-24",
+      "width": 2048,
+      "height": 1305,
+      "source": "instagram",
+      "sourceUrl": "https://scontent-mrs2-1.cdninstagram.com/v/t39.30808-6/664204005_3114431931466966_6226607904971711068_n.jpg",
+      "postedAt": "2026-10-14T13:25:59+00:00",
+      "caption": "𝐂𝐡𝐢𝐜𝐤𝐞𝐧 & 𝐂𝐡𝐨𝐫𝐢𝐳𝐨 𝐒𝐭𝐞𝐰\n\nNow that the cool, rainy days are back in Hoi An, this one feels right at home.\n\nChicken, smoky chorizo, chickpeas and paprika, cooked slowly together until the sauce turns thick and rich. It comes hot with toasted sourdough, and a glass ",
+      "alt": null,
+      "dhash": "7c4d3a43b3231a1d",
+      "features": {
+        "top2Share": 0.3357,
+        "edgeDensity": 0.3374,
+        "centreLuminance": 0.421
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Hearty bean and meat stew in a bowl with parsley"
+      }
+    },
+    {
+      "id": "larch-25",
+      "width": 2047,
+      "height": 1364,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.fqro1-1.fna.fbcdn.net/v/t39.30808-6/500867454_3990938859320597_247062650642034482_n.jpg",
+      "postedAt": "2026-03-12T09:00:24+00:00",
+      "caption": "We’ve added a few new cheeses to the board.\nHollow Oak Vintage Cheddar, a black pepper cheddar, a port wine cheddar, and the classic Five Valleys.\nFour different cheeses, now served together as a tasting platter at The Larch House.\n\nOur Menu: https://www.thelarchhouse.example/men",
+      "alt": null,
+      "dhash": "c7cfcbd9d991b1d3",
+      "features": {
+        "top2Share": 0.3828,
+        "edgeDensity": 0.1202,
+        "centreLuminance": 0.3536
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Wedge of orange cheese on a wooden table"
+      }
+    },
+    {
+      "id": "larch-26",
+      "width": 590,
+      "height": 393,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-mia5-2.xx.fbcdn.net/v/t39.30808-6/548622108_3333807485853024_279275823692645694_n.jpg",
+      "postedAt": "2026-04-13T09:00:28+00:00",
+      "caption": "We are always glad when guests bring The Larch House into their own gatherings.\n\nLast week we joined our sister venues Quiet Tamarind and Saffron Loaf Bakery to cater a private occasion in the calm of a guest's own home.\n\nIf you have a gathering in mind, we would be happy to be p",
+      "alt": null,
+      "dhash": "640daf736d8e8c99",
+      "features": {
+        "top2Share": 0.2563,
+        "edgeDensity": 0.3465,
+        "centreLuminance": 0.5987
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": true,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Charcuterie board with meats, bread and cheese by pool"
+      }
+    },
+    {
+      "id": "larch-27",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lax3-1.xx.fbcdn.net/v/t39.30808-6/528175903_3228825663166029_1482820103469298197_n.jpg",
+      "postedAt": "2025-11-19T10:46:20+00:00",
+      "caption": "RIVERSIDE CHRISTMAS MARKET 2025 🎄✨\n\n✨ The Riverside Christmas Market 2025 is just around the corner! Mark your calendar and join The Larch House at this festive event!\n🎄 It runs on December 5th, 6th and 7th at the Example Convention Centre.\n🟢 FREE ENTRY for everyone!",
+      "alt": null,
+      "dhash": "4d0d4d44ccd44c0e",
+      "features": {
+        "top2Share": 0.4475,
+        "edgeDensity": 0.2906,
+        "centreLuminance": 0.3609
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Riverside Christmas Market 2025 event poster"
+      }
+    },
+    {
+      "id": "larch-28",
+      "width": 137,
+      "height": 91,
+      "source": "website",
+      "sourceUrl": "https://static.wixstatic.com/media/0hh083_1y7c991g073a23ys97l95486k3q0wh5f~mv2.jpg/v1/fill/w_137,h_91,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/0hh083_1y7c991g073a23ys97l95486k3q0wh5f~mv2.jpg",
+      "postedAt": null,
+      "caption": "4b.jpg",
+      "alt": null,
+      "dhash": "0e0e222795d4d092",
+      "features": {
+        "top2Share": 0.2566,
+        "edgeDensity": 0.0164,
+        "centreLuminance": 0.2839
+      },
+      "human": {
+        "subject": "other",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "absent",
+        "quality": "blurry",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Blurry dark view of people in a room"
+      }
+    },
+    {
+      "id": "larch-29",
+      "width": 590,
+      "height": 393,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-ord5-1.xx.fbcdn.net/v/t39.30808-6/569168478_3701831506783714_3261703323792300802_n.jpg",
+      "postedAt": "2026-02-19T01:00:02+00:00",
+      "caption": "🌸 𝐓𝐞𝐭 𝐢𝐬 𝐡𝐞𝐫𝐞 🌸\n\nA peek behind the scenes as our team adds the last Lunar New Year touches around the house. A few flowers, some lucky details and plenty of care, all to welcome the new year with you.",
+      "alt": null,
+      "dhash": "9adc1fa7b7ede7ce",
+      "features": {
+        "top2Share": 0.2959,
+        "edgeDensity": 0.2066,
+        "centreLuminance": 0.4224
+      },
+      "human": {
+        "subject": "other",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Traditional wrapped rice cakes with conical hat and fan"
+      }
+    },
+    {
+      "id": "larch-30",
+      "width": 1200,
+      "height": 1500,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.ffec11-1.fna.fbcdn.net/v/t39.30808-6/287207811_3068153902840324_3676047125253336701_n.jpg",
+      "postedAt": "2026-09-08T12:00:06+00:00",
+      "caption": "𝐀 𝐒𝐡𝐨𝐫𝐭 𝐏𝐚𝐮𝐬𝐞 𝐚𝐭 𝐭𝐡𝐞 𝐎𝐥𝐝 𝐇𝐨𝐮𝐬𝐞\n\nOur team is heading away on the yearly trip with the rest of Larch Hospitality Group, so The Larch House will be closed on 9–10 September.\n\nWe open again at 7 AM on 11 September. See you then!\n----------\nMenu & Reserve: link",
+      "alt": null,
+      "dhash": "683323330e170743",
+      "features": {
+        "top2Share": 0.8311,
+        "edgeDensity": 0.218,
+        "centreLuminance": 0.0864
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Off duty on tour closure announcement graphic"
+      }
+    },
+    {
+      "id": "larch-31",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lax3-1.xx.fbcdn.net/v/t39.30808-6/513676030_3847269214036727_516748395212186269_n.jpg",
+      "postedAt": "2025-12-03T12:45:09+00:00",
+      "caption": "RIVERSIDE CHRISTMAS MARKET 2025\nOFFICIAL AGENDA\nThe biggest Christmas event on the central coast lights up the season with 3 full days of festive activities from December 5–7th, 2025.\nExpect a European-style winter with performances, music and holiday cheer all around!\n✨ HIGHLIGH",
+      "alt": null,
+      "dhash": "4f1b19a949dba913",
+      "features": {
+        "top2Share": 0.3074,
+        "edgeDensity": 0.4597,
+        "centreLuminance": 0.5654
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": true,
+        "hasTextOverlay": true,
+        "oneLine": "Christmas market poster with four dance performance photos"
+      }
+    },
+    {
+      "id": "larch-32",
+      "width": 590,
+      "height": 375,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lax3-1.xx.fbcdn.net/v/t39.30808-6/544942993_3234950994564817_5359054605037614628_n.jpg",
+      "postedAt": "2025-11-19T10:46:20+00:00",
+      "caption": "RIVERSIDE CHRISTMAS MARKET 2025 🎄✨\n\n✨ The Riverside Christmas Market 2025 is just around the corner! Mark your calendar and join The Larch House at this festive event!\n🎄 It runs on December 5th, 6th and 7th at the Example Convention Centre.\n🟢 FREE ENTRY for everyone!",
+      "alt": null,
+      "dhash": "184d0f0c0c0ecfc1",
+      "features": {
+        "top2Share": 0.2817,
+        "edgeDensity": 0.236,
+        "centreLuminance": 0.632
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Melted cheese poured over potatoes and charcuterie plate"
+      }
+    },
+    {
+      "id": "larch-33",
+      "width": 1365,
+      "height": 1365,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.fmxp12-1.fna.fbcdn.net/v/t39.30808-6/564133088_3381134833387293_6346157267193369346_n.jpg",
+      "postedAt": "2026-02-19T01:00:10+00:00",
+      "caption": "🌸 𝐓𝐞𝐭 𝐢𝐬 𝐡𝐞𝐫𝐞 🌸\n\nA peek behind the scenes as our team adds the last Lunar New Year touches around the house. A few flowers, some lucky details and plenty of care, all to welcome the new year with you.",
+      "alt": null,
+      "dhash": "19190919591c4636",
+      "features": {
+        "top2Share": 0.2996,
+        "edgeDensity": 0.2807,
+        "centreLuminance": 0.4263
+      },
+      "human": {
+        "subject": "interior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "other",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Potted orange tree on windowsill between shutters"
+      }
+    },
+    {
+      "id": "larch-34",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/530755843_3449780541773692_9890344379303363921_n.jpg",
+      "postedAt": "2025-11-29T02:19:46+00:00",
+      "caption": "🎅🎅🎅 A free Christmas photo spot right in the heart of the city!\n✨✨ Join the countdown to the biggest holiday event of the season: the RIVERSIDE CHRISTMAS MARKET 2025 ✨\nOver 60 booths, festive food, Christmas gifts, live bands and photos with Santa.",
+      "alt": null,
+      "dhash": "0c8e273313472733",
+      "features": {
+        "top2Share": 0.3604,
+        "edgeDensity": 0.4253,
+        "centreLuminance": 0.5382
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": true,
+        "hasTextOverlay": true,
+        "oneLine": "Christmas market poster with photo collage and dates"
+      }
+    },
+    {
+      "id": "larch-35",
+      "width": 1637,
+      "height": 2048,
+      "source": "instagram",
+      "sourceUrl": "https://scontent-iad3-2.cdninstagram.com/v/t39.30808-6/287316255_3588024041574229_9317201330931769126_n.jpg",
+      "postedAt": "2026-08-01T03:00:16+00:00",
+      "caption": "Wine service is made of small moments.\n\nOpening the bottle gently at the table, a quick check that all is well, and making sure everyone is comfortable.\n\nQuiet, thoughtful and attentive.",
+      "alt": null,
+      "dhash": "0919d9e9b99a4e0d",
+      "features": {
+        "top2Share": 0.2524,
+        "edgeDensity": 0.3897,
+        "centreLuminance": 0.3378
+      },
+      "human": {
+        "subject": "people",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "people",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Waitress pouring wine for seated guests"
+      }
+    },
+    {
+      "id": "larch-36",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/571595031_3048066076547331_9134876802858916816_n.jpg",
+      "postedAt": "2025-11-19T10:46:20+00:00",
+      "caption": "RIVERSIDE CHRISTMAS MARKET 2025 🎄✨\n\n✨ The Riverside Christmas Market 2025 is just around the corner! Mark your calendar and join The Larch House at this festive event!\n🎄 It runs on December 5th, 6th and 7th at the Example Convention Centre.\n🟢 FREE ENTRY for everyone!",
+      "alt": null,
+      "dhash": "150f49c21f355317",
+      "features": {
+        "top2Share": 0.5417,
+        "edgeDensity": 0.2646,
+        "centreLuminance": 0.4227
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Illustrated Christmas market poster with tree and stalls"
+      }
+    },
+    {
+      "id": "larch-37",
+      "width": 526,
+      "height": 789,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-6/504310219_3220498558031543_5180373695208278093_n.jpg",
+      "postedAt": "2026-03-30T03:00:43+00:00",
+      "caption": "Look back at photos of The Larch House since the opening in 2015 and chances are you will spot this exact chalkboard and its words.\n\nThe Happy Hour has never changed and has become a meeting point in our small corner of town.\n\nOur Menu: https://www.thelarchhouse.example/menu \nRes",
+      "alt": null,
+      "dhash": "b0b0181808202869",
+      "features": {
+        "top2Share": 0.239,
+        "edgeDensity": 0.2544,
+        "centreLuminance": 0.4691
+      },
+      "human": {
+        "subject": "menu-board",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "menu-board",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Chalkboard happy hour sign on blue shutter"
+      }
+    },
+    {
+      "id": "larch-38",
+      "width": 590,
+      "height": 393,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.fabe1-1.fna.fbcdn.net/v/t39.30808-6/587021835_3492832148525988_9980809151850972084_n.jpg",
+      "postedAt": "2026-03-12T09:00:14+00:00",
+      "caption": "We’ve added a few new cheeses to the board.\nHollow Oak Vintage Cheddar, a black pepper cheddar, a port wine cheddar, and the classic Five Valleys.\nFour different cheeses, now served together as a tasting platter at The Larch House.\n\nOur Menu: https://www.thelarchhouse.example/men",
+      "alt": null,
+      "dhash": "1f27070b2b2b2429",
+      "features": {
+        "top2Share": 0.3376,
+        "edgeDensity": 0.1727,
+        "centreLuminance": 0.5754
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Stacked artisan cheese blocks with logo watermark"
+      }
+    },
+    {
+      "id": "larch-39",
+      "width": 2048,
+      "height": 1366,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.fhnd3-2.fna.fbcdn.net/v/t39.30808-6/296708603_3182897766242201_9555170397701894951_n.jpg",
+      "postedAt": "2026-09-16T09:00:34+00:00",
+      "caption": "𝐀 𝐂𝐡𝐚𝐧𝐠𝐞 𝐨𝐟 𝐒𝐜𝐞𝐧𝐞𝐫𝐲\n\nOld walls made way for open skies, and the usual pace of service was swapped for games, long meals and time by the sea.\n\nThe Larch House team joined colleagues from across Larch Hospitality Group for two days away from the daily routine.",
+      "alt": null,
+      "dhash": "6c2f25a4850d0961",
+      "features": {
+        "top2Share": 0.3081,
+        "edgeDensity": 0.4129,
+        "centreLuminance": 0.413
+      },
+      "human": {
+        "subject": "event",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "event",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Costumed performers on stage at celebration event"
+      }
+    },
+    {
+      "id": "larch-40",
+      "width": 810,
+      "height": 540,
+      "source": "facebook",
+      "sourceUrl": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/516549695_3702056881372592_5965665713318520764_n.jpg",
+      "postedAt": "2025-11-13T03:27:13+00:00",
+      "caption": "THE LARCH HOUSE HOI AN IS HIRING!\n\nJoin us in creating memorable dining experiences in the heart of the old town!\n\n💼 POSITIONS\n\n- Service Staff\n\n- Cook\n\n- Steward\n\nNo experience required.",
+      "alt": null,
+      "dhash": "33136b6b7bea6272",
+      "features": {
+        "top2Share": 0.5188,
+        "edgeDensity": 0.1379,
+        "centreLuminance": 0.3992
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": true,
+        "oneLine": "Recruitment poster for The Larch House staff"
+      }
+    },
+    {
+      "id": "larch-41",
+      "width": 42,
+      "height": 42,
+      "source": "website",
+      "sourceUrl": "https://static.wixstatic.com/media/33759i_5p2475zs380t5173s6816jc543z7y437~mv2.png/v1/fill/w_42,h_42,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/33759i_5p2475zs380t5173s6816jc543z7y437~mv2.png",
+      "postedAt": null,
+      "caption": "Instagram",
+      "alt": null,
+      "dhash": "61962317172b9641",
+      "features": {
+        "top2Share": 0.8596,
+        "edgeDensity": 0.2495,
+        "centreLuminance": 0.3217
+      },
+      "human": {
+        "subject": "logo",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "logo",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Instagram logo icon on black background"
+      }
+    },
+    {
+      "id": "larch-42",
+      "width": 1440,
+      "height": 1440,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.fpoz3-1.fna.fbcdn.net/v/t39.30808-6/604592451_3932974689715695_5259977029656231888_n.jpg",
+      "postedAt": "2026-10-03T10:07:24+00:00",
+      "caption": "𝐅𝐫𝐨𝐦 𝐦𝐨𝐮𝐧𝐭𝐚𝐢𝐧 𝐦𝐢𝐬𝐭 𝐭𝐨 𝐇𝐨𝐢 𝐀𝐧\n\nGuests still ask about the name now and then, usually in the middle of a hot Hoi An summer.\n\nThe Larch House actually began in the winter of 2011, high up in the cold mist of Sa Pa: a warm fire, simple comfort food, and a room ",
+      "alt": null,
+      "dhash": "656f6e0eed3dfddd",
+      "features": {
+        "top2Share": 0.5593,
+        "edgeDensity": 0.2198,
+        "centreLuminance": 0.7455
+      },
+      "human": {
+        "subject": "poster",
+        "textPresence": "present"
+      },
+      "visionRecorded": {
+        "subject": "poster",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "right",
+        "heroWorthy": false,
+        "isCollage": true,
+        "hasTextOverlay": true,
+        "oneLine": "Promotional graphic with building and rice terraces"
+      }
+    },
+    {
+      "id": "larch-43",
+      "width": 590,
+      "height": 590,
+      "source": "facebook",
+      "sourceUrl": "https://scontent.fpit1-1.fna.fbcdn.net/v/t39.30808-6/537995080_3056114365537490_5431350202582838941_n.jpg",
+      "postedAt": "2025-12-16T13:18:27+00:00",
+      "caption": "It is that time of year again, when the warm smell of mulled wine, a cosy room and the flavours of home are just what the doctor ordered.\n\nOur mulled wine is back on the menu for the season.",
+      "alt": null,
+      "dhash": "4e4e4a7a1c1c5919",
+      "features": {
+        "top2Share": 0.271,
+        "edgeDensity": 0.2042,
+        "centreLuminance": 0.4325
+      },
+      "human": {
+        "subject": "drink",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "drink",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Hand holding dark cocktail with orange peel"
+      }
+    },
+    {
+      "id": "larch-44",
+      "width": 2048,
+      "height": 1365,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.fgrq1-1.fna.fbcdn.net/v/t39.30808-6/661509006_3453110780932960_5158916488628300070_n.jpg",
+      "postedAt": "2026-10-07T10:00:29+00:00",
+      "caption": "𝐎𝐩𝐞𝐧 𝐬𝐡𝐮𝐭𝐭𝐞𝐫𝐬, 𝐛𝐮𝐬𝐲 𝐚𝐟𝐭𝐞𝐫𝐧𝐨𝐨𝐧𝐬\n\nBy the afternoon the shutters are open and the house spills out onto Example Lane.\n\nWine glasses make their way to the tables outside, friends settle in under the arches, and conversations go on while the street drifts pas",
+      "alt": null,
+      "dhash": "79b6b6b69692b74f",
+      "features": {
+        "top2Share": 0.1904,
+        "edgeDensity": 0.4129,
+        "centreLuminance": 0.4182
+      },
+      "human": {
+        "subject": "exterior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "exterior",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": true,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Yellow colonial cafe facade with guests seated outside"
+      }
+    },
+    {
+      "id": "larch-45",
+      "width": 2048,
+      "height": 1366,
+      "source": "instagram",
+      "sourceUrl": "https://instagram.fhnd3-1.fna.fbcdn.net/v/t39.30808-6/258007735_3994058223076032_5781448624814530890_n.jpg",
+      "postedAt": "2026-09-16T09:00:34+00:00",
+      "caption": "𝐀 𝐂𝐡𝐚𝐧𝐠𝐞 𝐨𝐟 𝐒𝐜𝐞𝐧𝐞𝐫𝐲\n\nOld walls made way for open skies, and the usual pace of service was swapped for games, long meals and time by the sea.\n\nThe Larch House team joined colleagues from across Larch Hospitality Group for two days away from the daily routine.",
+      "alt": null,
+      "dhash": "33316226e5ec961b",
+      "features": {
+        "top2Share": 0.2898,
+        "edgeDensity": 0.4417,
+        "centreLuminance": 0.586
+      },
+      "human": {
+        "subject": "event",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "event",
+        "textPresence": "present",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Large group photo on beach with banner"
+      }
+    },
+    {
+      "id": "larch-46",
+      "width": 834,
+      "height": 1043,
+      "source": "instagram",
+      "sourceUrl": "https://scontent-ams2-1.cdninstagram.com/v/t39.30808-6/227581296_3424403121034941_100252130790217703_n.jpg",
+      "postedAt": "2026-05-18T12:00:46+00:00",
+      "caption": "The real gift of this century-old house is in its quiet corners. Here, time and weather have turned bare walls into a living canvas.\n\nOur Menu: https://www.thelarchhouse.example/menu \nReserve your table: https://www.tablecheck.com/en/the-larch-house-vietnam/reserve/landing",
+      "alt": null,
+      "dhash": "8167407392634744",
+      "features": {
+        "top2Share": 0.2888,
+        "edgeDensity": 0.2222,
+        "centreLuminance": 0.5849
+      },
+      "human": {
+        "subject": "interior",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "interior",
+        "textPresence": "absent",
+        "quality": "cluttered",
+        "focus": "center",
+        "heroWorthy": false,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Weathered yellow wall with hanging lantern"
+      }
+    },
+    {
+      "id": "larch-47",
+      "width": 480,
+      "height": 265,
+      "source": "website",
+      "sourceUrl": "https://static.wixstatic.com/media/0hh083_297x78p0kczq640a1839225p3qa3i790~mv2.jpg/v1/fit/w_480,h_266,q_90,enc_avif,quality_auto/0hh083_297x78p0kczq640a1839225p3qa3i790~mv2.jpg",
+      "postedAt": null,
+      "caption": "A signature dish served at The Larch House, Hoi An.",
+      "alt": null,
+      "dhash": "fcfcfcfcf6d0f8d2",
+      "features": {
+        "top2Share": 0.4773,
+        "edgeDensity": 0.187,
+        "centreLuminance": 0.5185
+      },
+      "human": {
+        "subject": "food",
+        "textPresence": "absent"
+      },
+      "visionRecorded": {
+        "subject": "food",
+        "textPresence": "absent",
+        "quality": "good",
+        "focus": "center",
+        "heroWorthy": true,
+        "isCollage": false,
+        "hasTextOverlay": false,
+        "oneLine": "Pink pasta dish garnished with herbs and cheese"
+      }
+    }
+  ],
+  "vision": "deepseek-chat, prompt p1, 512px q70 thumbnails, answered 18/10/2026 (48 pictures, 6 calls, 15339 tokens, 6.3 s)"
+}

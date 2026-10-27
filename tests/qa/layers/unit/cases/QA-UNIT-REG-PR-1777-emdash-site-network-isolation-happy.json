@@ -1,0 +1,88 @@
+{
+  "id": "QA-UNIT-REG-PR-1777-emdash-site-network-isolation-happy",
+  "itemIds": ["regression:REG-PR-1777-emdash-site-network-isolation"],
+  "requirement": "secure-site-access.sh can isolate a quickstart EmDash site: render-compose keeps its tracy/<template>-emdash[-tools] image and mounts the access key",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1777-emdash-site-network-isolation.json",
+    "ref": "PR #1777 (fix); fix evidence: 26/10/2026: secure-site-access.sh failed on every EmDash site (prod1 base-emdash, business-emdash; 15 on dev) with '!! tracy/tracy-base-emdash:0.5.6-tools is not a tracy/emdash tag ... refusing rather than moving it', so EmDash sites stayed on the shared tracy_tracy network and could reach every other site's container by name.",
+    "invariant": "S1: the render succeeds; the image line is exactly the one the site ran; the web service is on [default] only, no tracy_tracy network; the key directory is mounted read-only at /run/tracy-access. S2: the render succeeds and the image line is unchanged. S3: the render is refused with 'refusing rather than moving it' and the compose file is byte-for-byte unchanged.",
+    "productSources": [
+      "apps/tracy-host/src/webroot.js:1176",
+      "apps/tracy-web/src/sites/label.js:74",
+      "packages/fleet/tracy-fleet-operation/scripts/lib/web-image.sh:42",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/emdash/migrate-token-mount.mjs:722",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/mint-agent-token.sh:83",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/php_matrix.py:25",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/render-compose.sh:85"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1044 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1049 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1066 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1110 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1128 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1142 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1174 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1189 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:1197 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:138 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:164 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:221 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:233 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:245 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:247 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:259 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:351 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:376 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:425 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:427 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:503 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:539 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:550 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:572 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:597 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:761 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:910 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs:95 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "P0: a quickstart EmDash site (-tools image) re-renders isolated, on exactly the image it runs",
+    "a quickstart EmDash image without -tools is kept too",
+    "an EmDash site on an image outside Tracy's namespace is still refused, compose untouched"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1777-emdash-site-network-isolation"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/fleet/tracy-fleet-operation", "tracy-fleet-operation"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1777-emdash-site-network-isolation",
+    "pr": 1777,
+    "kind": "fix",
+    "area": "fleet/site-access",
+    "file": "tests/regression/cases/REG-PR-1777-emdash-site-network-isolation.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "test/render-compose.test.mjs"],
+  "cwd": "packages/fleet/tracy-fleet-operation",
+  "needs": [],
+  "tests": [
+    "P0: a quickstart EmDash site (-tools image) re-renders isolated, on exactly the image it runs",
+    "a quickstart EmDash image without -tools is kept too",
+    "an EmDash site on an image outside Tracy's namespace is still refused, compose untouched"
+  ],
+  "timeoutS": 600
+}

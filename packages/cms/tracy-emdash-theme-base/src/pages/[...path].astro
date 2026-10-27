@@ -1,0 +1,69 @@
+---
+/**
+ * One router for every locale. Astro resolves `Astro.currentLocale` from the URL, so a single
+ * catch-all serves the whole site; unknown paths render the 404 view with a 404 status.
+ * Route table: tasks/emdash-tracy-base/inventory/routes.json (DECISIONS D6).
+ */
+export const prerender = false
+import { splitPath } from '@/lib/i18n'
+import { loadChrome } from '@/lib/chrome'
+import Home from '@/views/Home.astro'
+import Article from '@/views/Article.astro'
+import NotFound from '@/views/NotFound.astro'
+
+const { locale, path } = splitPath(Astro.url.pathname)
+const chrome = await loadChrome(locale)
+const segs = path.split('/').filter(Boolean)
+const [a, b, c] = segs
+const SLUG = /^[a-z0-9][a-z0-9-]*$/
+const VIEWS: Record<string, () => Promise<any>> = {
+  onepage: () => import('@/views/Onepage.astro'),
+  landing: () => import('@/views/Landing.astro'),
+  'home-2': () => import('@/views/Home2.astro'),
+  product: () => import('@/views/Product.astro'),
+  services: () => import('@/views/Services.astro'),
+  service: () => import('@/views/Service.astro'),
+  pricing: () => import('@/views/Pricing.astro'),
+  blog: () => import('@/views/Blog.astro'),
+  topics: () => import('@/views/Topics.astro'),
+  team: () => import('@/views/Team.astro'),
+  person: () => import('@/views/Person.astro'),
+  about: () => import('@/views/About.astro'),
+  careers: () => import('@/views/Careers.astro'),
+  help: () => import('@/views/Help.astro'),
+  contact: () => import('@/views/Contact.astro'),
+  search: () => import('@/views/Search.astro'),
+  'design-system': () => import('@/views/DesignSystem.astro'),
+  marketing: () => import('@/views/Marketing.astro'),
+  sitemap: () => import('@/views/Sitemap.astro')
+}
+const load = async (name: string) => (await VIEWS[name]()).default
+
+type View = { component: any; props: Record<string, unknown> } | null
+let view: View = null
+if (segs.length === 0) view = { component: Home, props: {} }
+else if (segs.length === 1) {
+  if (a === '404') view = null
+  else if (a in VIEWS && !['service', 'person', 'topics'].includes(a))
+    view = { component: await load(a), props: {} }
+} else if (segs.length === 2) {
+  if (a === 'services' && SLUG.test(b)) view = { component: await load('service'), props: { slug: b } }
+  else if (a === 'blog' && b === 'topics') view = { component: await load('topics'), props: {} }
+  else if (a === 'blog' && SLUG.test(b)) view = { component: Article, props: { slug: b } }
+  else if (a === 'team' && SLUG.test(b)) view = { component: await load('person'), props: { slug: b } }
+  else if (a === 'design-system' && ['typography', 'colour', 'spacing'].includes(b))
+    view = { component: await load('design-system'), props: { section: b } }
+  else if (a === 'marketing' && SLUG.test(b))
+    view = { component: await load('marketing'), props: { sample: b } }
+} else if (segs.length === 3) {
+  if (a === 'blog' && b === 'category' && SLUG.test(c))
+    view = { component: await load('blog'), props: { category: c } }
+  else if (a === 'blog' && b === 'tag' && SLUG.test(c))
+    view = { component: await load('blog'), props: { tag: c } }
+}
+
+const Component = view?.component ?? NotFound
+if (!view) Astro.response.status = 404
+---
+
+<Component chrome={chrome} locale={locale} path={path} {...(view?.props ?? {})} />

@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1126-ja-essence-j6-1-0-4-pinned",
+  "kind": "feat",
+  "title": "JA Essence (Joomla) 1.0.4 is sealed with the contract and the plugin it was released with: ja-essence/j6/1.0.4 is the contract Claude Cowork for Joomla 0.24.9 carries, and both quickstarts.json pin quickstart/ja-essence/j6 at 1.0.4 on 0.24.9 with the pack's own files",
+  "pr": 1126,
+  "area": "quickstart/contracts",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: SHA-256 of packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.4/{manifest,content-map,presentation-lock}.json, and its coworkContractVersion.",
+    "S2: the quickstart/ja-essence/j6 entry of both quickstarts.json.",
+    "S3: pnpm exec tsx scripts/check-all.ts --only contracts --only quickstart-overrides."
+  ],
+  "expect": [
+    "S1: the three hashes are those Claude Cowork for Joomla 0.24.9 carries (14661d62…, 836b332e…, 9e190a61…); floor 0.24.9, quickstart version 1.0.4.",
+    "S2: version 1.0.4, contract ja-essence/j6/1.0.4, Claude Cowork 0.24.9, webroot and database sha256 equal to the contract manifest's parts with asset ids, every pinned contract file hash equal to the tch file's, contractVersions [1.0.3] with the 1.0.3 hashes equal to tch's.",
+    "S3: both gates pass."
+  ],
+  "selectors": {
+    "contracts": "packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-10-ja-essence-j6-1-0-4.md",
+  "fence": "What this repository seals and pins for JA Essence on Joomla.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1126-ja-essence-j6-1-0-4-pinned.mjs"],
+    "needs": []
+  }
+}

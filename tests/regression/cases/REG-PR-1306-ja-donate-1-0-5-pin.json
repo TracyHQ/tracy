@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1306-ja-donate-1-0-5-pin",
+  "kind": "fix",
+  "title": "JA Donate 1.0.5 is pinned end to end: contract in the tree naming the published archive and Claude Cowork for Joomla 0.24.26, maxVersion 1.0.5, every Joomla quickstart pinned on 0.24.26 in both catalogues",
+  "pr": 1306,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read packages/cms/tracy-joomla-quickstart/contracts/ja-donate/j6/1.0.5/*, 1.0.5.design.json, 1.0.5.copy.json, packages/design/tracy-ds-slot/templates/joomla-ja-donate.json and both quickstarts.json catalogues.",
+    "S2: Run node --test --test-name-pattern maxVersion apps/tracy-web/test/design-system-door.test.mjs."
+  ],
+  "expect": [
+    "S1: the five contract files exist; manifest id ja-donate/j6/1.0.5, quickstart version 1.0.5 of quickstart/ja-donate/j6, webroot ja-donate-j6-webroot-1.0.5.tar.gz with sha256 8d447a0d…6746d6 (the published asset), coworkContractVersion 0.24.26; maxVersion 1.0.5 not below minVersion, maxVersionNote names 1.0.5; every Joomla pin in apps/tracy-web/src/quickstarts.json is 0.24.26 or newer and the provision copy pins the same.",
+    "S2: the door tests pass: the moved maxVersion is offered and the next version refused."
+  ],
+  "selectors": {
+    "contract": "packages/cms/tracy-joomla-quickstart/contracts/ja-donate/j6/1.0.5/manifest.json",
+    "template": "packages/design/tracy-ds-slot/templates/joomla-ja-donate.json maxVersion",
+    "pins": "apps/tracy-web/src/quickstarts.json + packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json cowork.version"
+  },
+  "evidence": "Before this PR the Design system door stopped at 1.0.4 (TEMPLATE_VERSION_UNCHECKED for a site built from 1.0.5) and no Claude Cowork pin carried the 1.0.5 contract",
+  "fence": "The 1.0.5 default look is the released 1.0.4 one: 0 computed differences at desktop and phone, 29/29 pages as released (VERIFICATION.json on the release)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1306-ja-donate-1-0-5-pin.mjs"]
+  }
+}

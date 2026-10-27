@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-cooperative-green: #44d991;
+  --color-civic-blue: #4c92e9;
+  --color-sunset-coral: #ff6a51;
+  --color-mint-whisper: #eaf9f2;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-steel-gray: #666666;
+
+  /* Typography — Font Families */
+  --font-athletics: 'Athletics', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-manrope: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "tracy-quickstart-patch-evidence/wordpress/v1",
+  "$comment": "What packages/cms/tracy-wordpress-quickstart/scripts/patch-artifacts.mjs compared to cut this dossier from the release and the previous version. Every value is recomputed by scripts/check-contracts.ts from files committed for the two versions (manifest parts, presentation locks, content maps, brand facts, the profile row); an inherited design-system measurement is decided from those files, never from this one.",
+  "contract": "ja-restaurant/wp7/1.0.1",
+  "tag": "quickstart/ja-restaurant/wp7",
+  "version": "1.0.1",
+  "previous": "ja-restaurant/wp7/1.0.0",
+  "archives": {
+    "webroot": {
+      "file": "ja-restaurant-wp7-webroot-1.0.1.tar.gz",
+      "bytes": 55886818,
+      "sha256": "171712e0a901b833aa9bcd1fe3a65cab345fa8da6f575e636565b0e9754fd201"
+    },
+    "database": {
+      "file": "ja-restaurant-wp7-database-1.0.1.sql.gz",
+      "bytes": 83753,
+      "sha256": "61314673b80414fb1455f8cd82a4ecd6d7d1dda21e158497afe163ace1aca7dc"
+    }
+  },
+  "slotContract": {
+    "file": "packages/design/tracy-ds-slot/templates/wordpress-wp-ja-restaurant.json",
+    "maxVersion": null
+  },
+  "themeFiles": {
+    "sha256": "f344913c0f3ea48201daa39c8ce0f380c9a42be3e9f5e22b29cacced4c3aeee0",
+    "previousSha256": "82758e111e4ab06f8be2dfbfbc851bcb34bfa4f2b21018900e76d048965a89e8"
+  },
+  "presentationLock": {
+    "sha256": "b08cf515fdb57e491c25899eeeace02877d4ab136630c9b77403d889bf579d14",
+    "previousSha256": "32da7d95a095c3c550205cfebb3ec187718d1b69c9c4a770ec76391126cea00b"
+  },
+  "contentMap": {
+    "sha256": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+    "previousSha256": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+    "changeAccepted": false
+  },
+  "webrootDiff": {
+    "theme": {
+      "added": [],
+      "removed": [],
+      "changed": [
+        "wp-content/themes/wp-ja-restaurant/assets/css/groups/g1.css",
+        "wp-content/themes/wp-ja-restaurant/assets/css/groups/home.css",
+        "wp-content/themes/wp-ja-restaurant/assets/css/source/acm-hero.css",
+        "wp-content/themes/wp-ja-restaurant/readme.txt",
+        "wp-content/themes/wp-ja-restaurant/style.css"
+      ]
+    },
+    "database": "changed"
+  },
+  "brandFacts": {
+    "sha256": "46d7659fbc328f23cd91dd6a2dd6cb456793da406f14e79605cc7ec028eff794",
+    "previousSha256": "46d7659fbc328f23cd91dd6a2dd6cb456793da406f14e79605cc7ec028eff794"
+  },
+  "profileRow": "d6d7e98a2ad434af22b944df2d8dd56176d8711bb7465d5d09958a933a7ef155",
+  "measurement": "own"
+}

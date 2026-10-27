@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1434-wo-handoff-template-logo-people",
+  "kind": "fix",
+  "title": "The hand-off prompt has the template's logo replaced and its people and cut-outs removed, and keeps only maps, icons and decoration",
+  "pr": 1434,
+  "area": "website-opportunities/handoff",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: render the hand-off prompt with a picture plan whose untouched places are a map, an icon, the template logo, a cut-out, an avatar and a person needing evidence, with the restaurant's logo uploaded.",
+    "S2: the same without a collected logo."
+  ],
+  "expect": [
+    "S1: no 'kept on purpose (logos, faces' heading; the map and the icon under 'leave as they are'; the logo under 'replace it' with the uploaded logo's path; the cut-out, the avatar and the person under 'hide or remove them'.",
+    "S2: the logo is replaced by the restaurant's name as text."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/tracy-website-opportunities/domain/agent-prompt.mjs",
+    "dom": ""
+  },
+  "evidence": "pic-hill6 on stand wo, 18/10/2026: the template's chef cut-out and 'RES est 1982' logo stayed after hand-off because the prompt said 'do not replace', then the demo QA gate failed them",
+  "fence": "renderAgentPrompt's grouping of the build's untouched pictures",
+  "run": {
+    "cwd": "packages/wo/website-opportunities",
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/domain-agent-prompt.test.mjs"],
+    "tests": [
+      "pictures the build left alone: maps and icons stay, the template logo becomes the restaurant's, people and cut-outs go"
+    ]
+  }
+}

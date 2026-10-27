@@ -1,0 +1,334 @@
+{
+  "dos": [
+    "Use the 60px pill radius for all buttons and active tabs — this is the system's signature curve",
+    "Push display type to 90px+ with leoSans weight 800–900 and line-height compressed to 0.80–0.90; let headlines become graphic objects",
+    "Use #6e60ee (Leonardo Violet) as the single brand accent for logo, active state, and brand surfaces — never as a decorative fill",
+    "Apply the six-color accent palette (#03e65b, #ffc533, #ff3386, #ff5d4b, #d25fff, #33d0ff) exclusively to tag chips, category badges, and small color-coded markers",
+    "Set page background to #000000 and card surfaces to #353535 — the 3-step neutral ramp is the entire surface system",
+    "Use hairlines (1px #e5e5e5) rather than shadows for structural separation; on the black canvas, shadows disappear",
+    "Keep body type in canvaSans at 10–19px; reserve leoSans for everything 34px and above"
+  ],
+  "donts": [
+    "Do not place the white-filled pill on a non-black surface — the white-on-black contrast is what makes it work",
+    "Do not use the accent palette for large fills, backgrounds, or hero sections — those colors are for tag-sized elements only",
+    "Do not use line-height above 1.0 for any leoSans text — the compressed leading is what gives the type its poster-like density",
+    "Do not use the 8.4px card radius for buttons; cards are sharp-cornered, buttons are pill-shaped — do not mix",
+    "Do not introduce new accent colors beyond the six-color palette — the rainbow is the taxonomy",
+    "Do not add drop shadows larger than 1px on dark surfaces; they vanish into the black and create visual noise",
+    "Do not use #6e60ee for body text or large headings; violet is identity, not information"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Midnight Canvas",
+      "role": "Primary page background, hero canvas, footer base",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Obsidian Surface",
+      "role": "Elevated surface, nav backdrop, deep overlay wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#353535",
+      "name": "Charcoal Card",
+      "role": "Card surface, image card background, raised panel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Fog",
+      "role": "Light surface inversion, subtle highlight wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone White",
+      "role": "Primary text, filled primary action background, high-contrast iconography",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e5e5",
+      "name": "Mist",
+      "role": "Hairline borders, dividers, subtle structural lines across all surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Ash Text",
+      "role": "Muted body text, list items, secondary link color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Charcoal Mute",
+      "role": "De-emphasized text, disabled states, tertiary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#030303",
+      "name": "Ink Black",
+      "role": "SVG decorative fills, near-black accent inside dark composition",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6e60ee",
+      "name": "Leonardo Violet",
+      "role": "Brand identity color — logo mark, active tab indicator, brand surface highlights, signature wordmark",
+      "group": "brand"
+    },
+    {
+      "hex": "#03e65b",
+      "name": "Toxic Lime",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffc533",
+      "name": "Voltage Yellow",
+      "role": "Warm accent for category tags, feature highlight chips, energy-coded badges",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff3386",
+      "name": "Shock Pink",
+      "role": "Hot accent for tag chips, creator-type badges, vibrant category markers",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff5d4b",
+      "name": "Ember Coral",
+      "role": "Warm accent for tag chips, plan indicators, red-orange category coding",
+      "group": "accent"
+    },
+    {
+      "hex": "#d25fff",
+      "name": "Plasma Pink",
+      "role": "Magenta-violet accent for card backgrounds, secondary brand surface treatment",
+      "group": "accent"
+    },
+    {
+      "hex": "#33d0ff",
+      "name": "Arc Blue",
+      "role": "Cool accent for tag chips, informational category markers, data-state indicators",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1440px contained, centered on a full-bleed #000000 canvas. The hero is a full-viewport sculptural typography piece — oversized violet leoSans wordmarks (90–165px) float on black in a perspective/3D arrangement, with the actual headline ('THE CREATOR-FIRST GENERATIVE AI PLATFORM') centered at a comparatively modest 34–48px in white. Below the hero, sections alternate between image gallery grids (3–4 columns, tight 10–14px gaps) and centered text blocks with the vivid six-color tag palette. Tab filter rows sit above gallery sections as horizontal pill bars. Navigation is a minimal transparent top bar with a left wordmark, centered dropdown links, and right-aligned utility buttons. Footer is a multi-column link grid in muted gray (#999999). Vertical rhythm uses 80px section gaps with compact 10px element gaps within sections — the page breathes vertically but packs information horizontally.",
+  "imagery": "Imagery is the product. AI-generated images are presented as gallery prints: edge-to-edge fills in dark cards with 8.4px corners, no padding, no captions, no chrome around them. The images are always tightly cropped and high-quality, arranged in dense 3–4 column grids. The page treats generated output like a portfolio wall — the UI is the gallery, the art is the content. Decorative elements include a sculptural violet wordmark in the hero (leoSans at 165px, sometimes perspective-warped into a 3D environment) and small iconographic creator silhouettes in violet. No stock photography, no lifestyle imagery, no abstract gradients used as backgrounds.",
+  "similar": [
+    {
+      "why": "Same dark-canvas gallery model with AI-generated imagery as the hero; identical 'the art is the UI' philosophy",
+      "business": "Midjourney"
+    },
+    {
+      "why": "Same dark-mode creative-tool aesthetic with minimal chrome and vivid accent-color category tags",
+      "business": "Runway"
+    },
+    {
+      "why": "Same creator-first AI art platform with grid-based gallery showcase and compact card surfaces",
+      "business": "NightCafe Creator"
+    },
+    {
+      "why": "Same oversize display type on black, minimal navigation, and treatment of generated media as the page's primary content",
+      "business": "Pika"
+    },
+    {
+      "why": "Same editorial-poster hero treatment with massive brand wordmarks and a single saturated accent against pure black",
+      "business": "Stability AI"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "270px",
+      "cards": "8px",
+      "inputs": "6px",
+      "buttons": "60px",
+      "cardsLarge": "20px",
+      "imageCards": "8px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Midnight Canvas",
+      "level": 0,
+      "purpose": "Base page background, hero immersion field, footer plane"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Obsidian Surface",
+      "level": 1,
+      "purpose": "Navigation bar, sticky overlays, slightly lifted dark zones"
+    },
+    {
+      "hex": "#353535",
+      "name": "Charcoal Card",
+      "level": 2,
+      "purpose": "Image card panels, content blocks, gallery items"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 1px rgba(229,229,229,0.06), 0 20px 40px rgba(0,0,0,0.5)",
+      "element": "Image Card"
+    },
+    {
+      "style": "0 0 24px rgba(110,96,238,0.45)",
+      "element": "Active Tab Pill"
+    },
+    {
+      "style": "0 0 0 1px rgba(255,255,255,0.08)",
+      "element": "Primary CTA"
+    }
+  ],
+  "northStar": "Inverted editorial gallery. A black-walled museum where 165px violet headlines act as wall installations and AI-generated portraits hang in a tight grid below.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 1.15
+    },
+    {
+      "role": "heading-sm",
+      "size": 34,
+      "lineHeight": 0.92,
+      "letterSpacing": -0.68
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 0.9,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "heading-lg",
+      "size": 78,
+      "lineHeight": 0.85,
+      "letterSpacing": -1.56
+    },
+    {
+      "role": "display",
+      "size": 98,
+      "lineHeight": 0.8,
+      "letterSpacing": -1.96
+    },
+    {
+      "role": "display-xl",
+      "size": 165,
+      "lineHeight": 0.8,
+      "letterSpacing": -3.3
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Filled Pill)",
+      "role": "Main conversion action — the only filled button in the system",
+      "description": "White-filled pill button: 60px border-radius (full pill), white background (#ffffff), black text (#0a0a0a), canvaSans weight 500 at 14–16px, padding 27px horizontal × 10px vertical. No border, no drop shadow — the white-on-black contrast is the elevation. Used for the single primary action per screen ('Start now')."
+    },
+    {
+      "name": "Secondary Ghost Button (Outlined Pill)",
+      "role": "Companion action beside the primary CTA",
+      "description": "Transparent-fill pill button: 60px border-radius, 1px border in #e5e5e5 (or #b3b3b3 at lower contrast), canvaSans weight 500 white text at 14–16px, padding 27px × 10px. Sits beside the primary CTA as a quieter alternative path ('Developer API')."
+    },
+    {
+      "name": "Active Tab Pill",
+      "role": "Selected category tab in horizontal filter bars",
+      "description": "Filled violet pill: 60px border-radius, #6e60ee background, white canvaSans weight 500 text at 16px, padding 20px × 10px. Carries a subtle violet glow (0 0 24px rgba(110,96,238,0.45)) to mark the active state. Inactive tabs are plain white text on black, no background."
+    },
+    {
+      "name": "Nav Utility Button (Tutorial / Log in)",
+      "role": "Top-right navigation actions",
+      "description": "Ghost pill for 'Tutorial' (transparent fill, 1px #e5e5e5 border, white text) paired with a filled white pill for 'Log in' (matching the primary CTA style but smaller — padding 14px × 7px, 14px text). These sit as a utility pair in the top-right corner of the nav bar."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Site-wide top navigation",
+      "description": "Transparent or #0a0a0a background, full-bleed, 60–80px tall. Left: LEONARDO.AI wordmark in canvaSans weight 700 white at ~16px. Center: dropdown nav links (Create, Industry, Business, Learn, Pricing, Contact) in canvaSans weight 500 white at 14–16px. Right: Tutorial ghost + Log in filled pill. No visible bottom border — the nav floats on the dark canvas."
+    },
+    {
+      "name": "Gallery Image Card",
+      "role": "Showcase tile for AI-generated output in galleries and grids",
+      "description": "Charcoal (#353535) or near-black background with a single generated image filling the card. 8.4px border-radius. No padding around the image — the image bleeds to the card edge. Image-as-hero treatment: the card is a frame, not a container. Arranged in a tight 3–4 column grid with 10–14px gaps."
+    },
+    {
+      "name": "Category Tag Chip",
+      "role": "Color-coded labels for creator types, plan tiers, style categories",
+      "description": "Pill-shaped (270px or 60px radius), small height (auto from text). Background fills with one of the six accent colors (#03e65b, #6e60ee, #ffc533, #ff3386, #ff5d4b, #33d0ff). Text in canvaSans weight 700 white, 12–14px. Padding 7px × 14px. The rainbow palette IS the taxonomy — each tag is immediately identifiable by color alone."
+    },
+    {
+      "name": "Hero Display Wordmark",
+      "role": "Brand expression in the hero — the signature element",
+      "description": "leoSans weight 800–900 at 90–165px, color #6e60ee (violet). Line-height compressed to 0.80–0.85, letter-spacing -0.02em. The word 'LEONARDO' is rendered oversized, sometimes perspective-warped or repeated in 3D, filling the full hero viewport. This is not a heading — it is a graphic object that IS the hero."
+    },
+    {
+      "name": "Section Headline",
+      "role": "Standard heading for content sections below the hero",
+      "description": "leoSans weight 800 at 44–78px, white (#ffffff), line-height 0.85–0.90, letter-spacing -0.01em to -0.02em. Centered or left-aligned. Below it, canvaSans body text at 14–18px in #999999 or #e5e5e5."
+    },
+    {
+      "name": "Icon Button / Creator Avatar Tile",
+      "role": "Tab or filter activation in the 'For Makers' section",
+      "description": "A square tile containing a stylized illustration of a creator type (e.g., profile silhouette in violet). The illustration replaces a traditional icon — the artwork itself is the icon. Violet (#6e60ee) fill for the active selection; neutral grayscale for inactive. ~120px square, 6–8px radius."
+    },
+    {
+      "name": "Footer Link List",
+      "role": "Secondary navigation in the footer",
+      "description": "Vertical list of canvaSans links at 14px weight 500 in #999999, 7–10px row gap. No list bullets. On hover, links brighten to #ffffff. Organized in multi-column groups at the page bottom."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and editorial headlines. The signature font — used at massive scale (up to 165px) for brand wordmarks, section heroes, and sculptural typography. Weights 800–900 create the compressed, almost-condensed poster feel; the extremely tight line-heights (0.80–0.90) let words stack into blocks. Letter-spacing tightens to -0.02em on the largest sizes to optically close the gaps between heavy strokes.",
+      "sizes": "34, 44, 65, 90, 165",
+      "family": "leoSans",
+      "weight": "500, 800, 900",
+      "lineHeight": "0.80–0.93",
+      "substitute": "Druk, Tungsten, Inter (900 only)",
+      "letterSpacing": "-0.02em (display) down to -0.01em (mid-headings)"
+    },
+    {
+      "role": "UI and body text — navigation, buttons, tab labels, captions, list items, card metadata. Clean geometric sans across 10–19px. Weight 500 carries the most UI presence; 700 is reserved for emphasis in tabs and active states. The narrow 10–19px range keeps the type system disciplined and UI-focused.",
+      "sizes": "10, 12, 14, 16, 18, 19",
+      "family": "canvaSans",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.10–1.33",
+      "substitute": "Inter, Plus Jakarta Sans, General Sans",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Specialty editorial accent — used sparingly for a single mid-scale heading where a different personality is needed",
+      "sizes": "34",
+      "family": "ufficioDisplay",
+      "weight": "500",
+      "lineHeight": "0.92",
+      "substitute": "Times Now, Playfair Display, GT Sectra",
+      "letterSpacing": "-0.02em"
+    }
+  ],
+  "description": "Leonardo.ai is a cinematic dark-mode creative arena: near-black canvas (#000000) serves as an infinite gallery floor, and the interface speaks through sheer typographic mass rather than chrome. The brand voice is built on one saturated violet (#6e60ee) used sparingly as identity punctuation, surrounded by a vivid six-color tag palette (green, violet, yellow, pink, coral, blue) that acts as categorical color-coding for plans, styles, and creator types. Display type reaches absurd scale (up to 165px) with compressed line-heights of 0.80–0.90 and tight -0.02em tracking, making headlines feel like sculptural objects rather than text. Controls are soft and pill-shaped (60px radius), surfaces are nearly borderless, and the layout breathes with generous negative space punctuated by a tight card grid of generated imagery. The system is editorial-meets-product: it treats the page itself as a generative canvas where the UI recedes and the creator's output dominates.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #ffffff\n- background: #000000\n- surface (card): #353535\n- border: #e5e5e5\n- accent: #6e60ee (Leonardo Violet — brand)\n- primary action: #ffffff (filled action)\n\n## Example Component Prompts\n1. **Hero Wordmark Block**: Full-viewport black (#000000) background. Oversized leoSans weight 900 at 165px, #6e60ee, line-height 0.80, letter-spacing -3.3px. Repeating the brand name as a sculptural element.\n\n2. Create a Primary Action Button: #ffffff background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n3. **Ghost Outline Pill**: 60px border-radius, transparent background, 1px border #e5e5e5, canvaSans weight 500 at 16px, text #ffffff, padding 27px × 10px.\n\n4. **Active Tab Filter**: Horizontal row of filter labels. Active = 60px radius pill, #6e60ee fill, white canvaSans 16px weight 500. Inactive = plain white text, no background. 27px horizontal gap between pills.\n\n5. **Gallery Image Card**: 8.4px border-radius, image fills the card edge-to-edge with no padding, #353535 fallback background. Arrange in a 3-column grid with 14px gaps. The image IS the content — the card is just a frame."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is a whisper, not a shout. On the near-black canvas, shadows alone are nearly invisible — depth is created through subtle 1px hairlines (rgba(229,229,229,0.06)), faint violet glows on active states, and the contrast between #000000 and #353535 card surfaces. No large drop shadows; no material skeuomorphism. Cards sit on the page the way prints hang on a gallery wall."
+}

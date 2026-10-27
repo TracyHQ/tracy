@@ -1,0 +1,64 @@
+{
+  "color": {
+    "graphite": {
+      "$value": "#2d2d2d",
+      "$type": "color",
+      "$description": "Graphite — Primary text, hairline borders, structural lines — the dominant neutral carrying all interface weight"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Strongest text and most emphatic borders, logo dots, footer marks"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, nav backgrounds — the unbroken white field everything floats on"
+    },
+    "fog": {
+      "$value": "#878887",
+      "$type": "color",
+      "$description": "Fog — Muted helper text, secondary borders, dimmed metadata"
+    },
+    "periwinkle": {
+      "$value": "#738ae5",
+      "$type": "color",
+      "$description": "Periwinkle — Sole chromatic accent — selected nav state, badge fills, a rare pressure point in an otherwise colorless system"
+    }
+  },
+  "font": {
+    "gillsansnova-book": {
+      "$value": "GillSansNova-Book",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for body, headings, nav, links, and icon-adjacent text — carries the entire English typographic system at a medium weight with wide tracking"
+    },
+    "gillsansnova-semibold": {
+      "$value": "GillSansNova-SemiBold",
+      "$type": "fontFamily",
+      "$description": "Emphasis and key headings — the bolder weight creates hierarchy without size inflation; the 8px variant carries micro-labels and badge text"
+    },
+    "yu-gothic": {
+      "$value": "游ゴシック体 (Yu Gothic)",
+      "$type": "fontFamily",
+      "$description": "Japanese text rendering — sits at the same metric scale as the English system, ensuring bilingual visual parity"
+    },
+    "cezannepro-db": {
+      "$value": "CezannePro-DB",
+      "$type": "fontFamily",
+      "$description": "Micro-decorative and brand-specific marks — a secondary display face for labels that need a different visual texture from the main Gill system"
+    },
+    "gillsansnova-medium": {
+      "$value": "GillSansNova-Medium",
+      "$type": "fontFamily",
+      "$description": "GillSansNova-Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.shupatto.com/en",
+      "siteName": "Shupatto",
+      "extractedAt": "2026-06-03T19:40:57.383Z",
+      "variant": "compact"
+    }
+  }
+}

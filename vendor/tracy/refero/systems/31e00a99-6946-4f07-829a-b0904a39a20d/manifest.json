@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "31e00a99-6946-4f07-829a-b0904a39a20d",
+  "status": "complete",
+  "name": "ON.energy",
+  "url": "https://styles.refero.design/style/31e00a99-6946-4f07-829a-b0904a39a20d",
+  "sourceWebsite": "https://www.on.energy",
+  "extractedAt": "2026-06-03T17:12:41.267Z",
+  "capturedAt": "2026-10-08T05:09:58.185896+00:00",
+  "theme": "mixed",
+  "industry": "other",
+  "description": "High-voltage caution yellow on midnight steel",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/04db1b49-ffa6-44aa-8952-c11953264f76.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/8cb728d1-6311-4a3d-8f75-2067cebe3c10.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0e9d7def-7eba-49d5-b430-f143a08dd016.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/147dfa94-4a0f-4bd7-b718-869c14bc318b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/52a4c420-bed1-4220-8f04-c8dfaec3179c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "87eeb9ab82a2c3345392a7f424fc73c73af28cd3a20e7d92a31f66c158cb7df1",
+      "bytes": 16507
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ffbfd1685f247e3b6d564ffa2b612cc55945ebc7f7f53ee42f6e370c93e170b8",
+      "bytes": 91878
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7b6d32191f77996572afff3a1d10a3e1b9bfba53314f73761d3ef26ee70185e6",
+      "bytes": 14268
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c19a161d0c0bb656e5be213dc9e454f82c3ea6125fe612e1154412aac5e15140",
+      "bytes": 6734
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e9a08b9a8fae8214b05946d25703e0b2683e2501788efddd946c40ca07123fe3",
+      "bytes": 10918
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "908238e9ed632c28fa7c89301f99084b707bf509ef7e759df1c895e548ea9881",
+      "bytes": 1877
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "793750c281ed10d9645009f74d6f2a34fbf0967d4e357c0ba0912af59713e04c",
+      "bytes": 377
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2957ab1e32be54ad1396fb95f59550018fe88d9d539f4e09ee55191ba8aeb1f3",
+      "bytes": 394
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "069b9691dbe264ea28d264e9186688efe397fd1fa80b69391a41b028978e4abb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "06e559071d72b29ce3b5d7f2c31511c89540661c842e539f1cc3875f5d38884b",
+      "bytes": 39953
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "82bf2220fd4558fda7fffec058deefe085eb296d2afc4e68701571648f4ecaa3",
+      "bytes": 20829
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8dacfe84fb41599eee78fb3248832516e53c28b4aedad85abe93b3eb907ce401",
+      "bytes": 30188
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ae75f5c0f29d1054100e762cf6ca951fd1dab48da0aeffa95f8a8f3aaec43d55",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4f4856a49ed54995ccc46c4aa20e2276287a5c6e98753e232875a10c198a8e5b",
+      "bytes": 1107
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c5c337bc643dd2fd4a8e66f4603d992dd71c877d485fe19bcc6d78809c54bdac",
+      "bytes": 1622
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "297f65f7-0fbd-4521-ab91-a5f6e17175d9",
+    "30dfffb4-ff6d-4128-b3e5-39046ba258f0",
+    "31e00a99-6946-4f07-829a-b0904a39a20d",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4ef4a6dc-bee9-420a-b197-f20415b9caaa",
+    "57160546-4cf7-4d52-bb05-cd8b88e1fbf9",
+    "6f365ecd-a040-4533-88c1-3f60fe062632",
+    "a3af7369-b61c-4923-a628-931861c8097f",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "b721fa94-72e6-49ad-a9bc-bab3d075f19c",
+    "d9a60077-619a-4cb7-95ed-0c428c2b51ed",
+    "e79b761d-f476-4c5d-8943-e31a58664e4d",
+    "ea9c37e8-c56c-42aa-8e81-9b55222a5cd3",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

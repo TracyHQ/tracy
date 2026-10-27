@@ -1,0 +1,24 @@
+---
+/**
+ * GitHub Gist embed component for Portable Text
+ *
+ * Wraps astro-embed's Gist component, extracting props from the PT block node.
+ * astro-portabletext passes `node` (not `value`) for custom type components.
+ */
+import { Gist as AstroGist } from "astro-embed";
+import type { GistBlock } from "../schemas.js";
+
+interface Props {
+	node: GistBlock;
+}
+
+const { node } = Astro.props;
+const { id, file } = node;
+
+// astro-embed renders the fetched gist HTML unsanitized and appends `.json` to any path,
+// so only gist page paths may reach it: other gist.github.com paths redirect to raw files.
+const isGitHubGist =
+	/^https:\/\/gist\.github\.com\/(?!raw\/)(?:[\w-]+\/)?[0-9a-f]+\/?(?:[?#]\S*)?$/i.test(id);
+---
+
+{isGitHubGist && <AstroGist id={id} file={file} />}

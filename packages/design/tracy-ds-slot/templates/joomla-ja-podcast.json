@@ -1,0 +1,309 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-podcast",
+  "minVersion": {
+    "quickstart/ja-podcast/j6": "1.0.2"
+  },
+  "maxVersionNote": "13/10/2026: 1.0.4 = 1.0.3 with its stylesheets tokenized again with today's contract (words on the accent read accent-on; TDSR CSS-2, fix/tdsr-css2), verified from its own archive: 0 computed differences in the default look, every page answers as 1.0.3.",
+  "maxVersion": {
+    "quickstart/ja-podcast/j6": "1.0.4"
+  },
+  "release": "quickstart/ja-podcast/j6@1.0.2",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1",
+    "heading": "h2.cta-title",
+    "body": "p.mb-0",
+    "button-primary": "div.btn-action a.btn.btn-primary",
+    "card": "div.mod-podcast-list.style-2 div.row-cols-1.row-cols-md-2 div.col div.item-inner",
+    "container": "div.t4-section-inner.container",
+    "section": "#Mod123",
+    "input": "#email_field_894"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 52px",
+    "displayFace": "Archivo 800, tracking 0em",
+    "heading": "first section heading: 52px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(141, 83, 255)",
+    "card": "repeated rounded box ×6",
+    "container": "first content container, max-width 1140px",
+    "section": "first padded full-width section, padding-top 128px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 28px"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#181d24",
+    "--fg-2": "#ffffff",
+    "--accent": "#8d53ff",
+    "--accent-hover": "#8d53ff",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#181d24",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#666666",
+    "--font-display": "\"Archivo\", sans-serif",
+    "--font-body": "\"Archivo\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f8f5ee",
+      "fg-2": "#212529",
+      "accent": "#8d53ff",
+      "accent-hover": "#8d53ff",
+      "surface": "#f8f9fa",
+      "surface-warm": "#181d24",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#181d24",
+      "fg-2": "#ffffff",
+      "accent": "#8d53ff",
+      "accent-on": "#ffffff",
+      "surface-warm": "#000000"
+    },
+    {
+      "accent": "#3ec910"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#ffffff",
+      "surface": "#e9ecef",
+      "bg": "#212529",
+      "border": "#dee2e6"
+    },
+    {
+      "surface": "#f8f9fa",
+      "bg": "#181d24"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (52 line colours, 44 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.item-inner", ".card"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#Mod123"],
+    "bodyFace": ["body"],
+    "onAccent": [
+      ".cta-wrap.bg-primary :is(h1, h2, h3, h4, p, div, span):not(.btn)",
+      ".testimonial-wrap :is(h3, h4, h5, p, .description, .testimonial-name, .testimonial-position)",
+      "span.label-title",
+      ".nav-tabs .nav-link.active"
+    ],
+    "pill": [".count-item"],
+    "cardLike": [".item-inner"],
+    "themeToggle": ".ja-dark-mode"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a, div.mod-footer a, div.footer-copyright a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 21 tried (byte 7174); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 78,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 23,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 23
+    },
+    {
+      "hex": "#212529",
+      "uses": 20,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#181d24",
+      "distance": 13
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 6,
+      "kind": "custom",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#181d24",
+      "uses": 5,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#181d24",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "followRules": {
+    ".btn-dark": {
+      "color": "bg!"
+    },
+    ".btn-light": {
+      "color": "fg!"
+    },
+    ".acm-features.style-4 .title-lead h1": {
+      "color": "fg-2"
+    },
+    ".acm-features.style-4 .desc-section": {
+      "color": "fg"
+    },
+    ".t4-offcanvas .t4-off-canvas-header .close": {
+      "background-color": "bg"
+    },
+    ".t4-off-canvas-header": {
+      "background-color": "bg"
+    }
+  },
+  "followNote": "re-measured 11/10/2026: the dark button ('Start listening') takes the system's strongest text as its fill, so under a dark system it turns light while its literal white text stayed (1.16:1 under Moxie); its text takes the page colour. The light button ('Subscribe' on the call-to-action band) has its fill on the system's surface while its released stylesheet reads its black text as surface-warm (#f9f9f9 on #f5f5f7 under Apple, seen on the screenshot: buttons are not in the text probe); its text takes the system's page text (fg); the About page intro card (.acm-features.style-4, the template’s cream panel) follows the page while its heading (.title-lead h1, a literal #181d24) and text (.desc-section, black at 75%) kept the template’s dark: dark on black under Moxie (1.24 and 1.30:1, visual review 14/10/2026). The heading takes the system’s heading ink, the text its body text; 14/10/2026 (visual review, round 3): with the off-canvas menu panel now on the system’s page (general rule), its close button (.t4-off-canvas-header .close, a 32px circle the template fills with its page white, so it does not show on its white panel) stayed a white disc on the dark panel under a dark system, its × in the system’s grey at 3.6–3.9:1 (Moxie, Spotify). It takes the page colour, as the template’s does; the panel’s header strip (.t4-off-canvas-header, the template’s white) takes the page as well — it stayed a white strip atop the dark panel",
+  "sideRules": {
+    "light": {
+      "a span.d-dark:not(.logo-mobile)": {
+        "display": "none"
+      },
+      "a span.d-light:not(.logo-mobile)": {
+        "display": "inline"
+      },
+      ".custom img[src*=Logo-light]": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      "div.title-lead h1 span": {
+        "color": "var(--ds-c-accent-text)"
+      },
+      ".clients-wrap.bg-primary": {
+        "background-color": "var(--ds-c-fg) !important"
+      },
+      ".clients-wrap.bg-primary .clients-title": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-offcanvas .btn-toggle::after": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".dark-active .t4-header-r .form-search input.js-finder-search-query": {
+        "filter": "invert(1) hue-rotate(180deg)",
+        "background-color": "transparent",
+        "border-color": "transparent",
+        "color": "var(--ds-c-bg)"
+      }
+    },
+    "dark": {
+      ".t4-offcanvas .btn-toggle::after": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".cta-wrap .btn-dark": {
+        "color": "var(--ds-c-bg)!important"
+      }
+    }
+  },
+  "sideNote": "re-measured 11/10/2026: on a light system the template's own light-mode logo shows (span.d-light; its white dark-mode wordmark had vanished on the light page), and the footer's white wordmark is inverted with its hues kept. the hero title's yellow word (#fed90f, drawn for the template's dark page) read 1.39:1 on a light system's page; on a light page it takes the system's readable accent. The 'Listen our podcast on' card is a 20% black veil drawn for the dark page, with white platform logos (pictures): on a light page it was a pale grey card with the logos fading into it, so there it takes the system's strongest text as its fill and its title the page colour; 14/10/2026 (visual review, round 3): the off-canvas submenu chevrons (.t4-offcanvas .btn-toggle::after, a Font Awesome glyph) computed black on the panel that now takes the system’s page, so under a dark system they vanished on it (Moxie, Spotify, Linear); on both sides they take the system’s text (fg)",
+  "onAccentNote": "re-measured 11/10/2026 with the per-element probe: the call-to-action band (.cta-wrap.bg-primary), the testimonial card, the 'new' label and the active category tab are painted with the accent, which follows the system, while their text took the page's text or accent-text colour (1.07:1 under Moxie, 2.13:1 under Apple); they take the accent's own text colour",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on quickstart/ja-podcast/j6 1.0.2 as published, T4's generated CSS cleared and rebuilt as on a new site (tasks/evidence/ds-remeasure-4-2026-10-11/ja-podcast-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.51), 96% or more of the page follows, every contrast kind sampled in every view. The first pass with this probe failed 8 of 8 system views: text on the accent fills (call-to-action band, testimonial card, 'new' label, active category tab) read 1.07:1 under Moxie (selectors.onAccent), the dark button's white text sat on its now-light fill (followRules .btn-dark), the hero's yellow word read 1.39:1 on light pages, the platform card and both wordmarks were drawn for the dark page (sideRules light), and the light button's text took surface-warm (followRules .btn-light); checked by eye on the four systems' screenshots, desktop and phone. Earlier: measured 11/10/2026 on ja-podcast/j6@1.0.2 as released (its stylesheets already read the slot, 09/10) (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-podcast-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 94% or more of the page follows; no new release; module-side only: the slot also sets T4's runtime colours on .dark-active (the template's dark look redeclares --body-text-color there), and its header, newsletter band and episode timeline literals take the page colour / surface (templateVars)",
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"], .dark-active",
+  "tokenScopeNote": "its dark look is a .dark-active class on the page that redeclares T4 runtime colours (--body-text-color: rgba(255,255,255,.5)): the slot sets them there too, or a light system kept that white text on its light page (09/10: 1.14:1)",
+  "templateVars": {
+    "--heading-bg": "var(--ds-c-bg)",
+    "--bg-acymailing": "var(--ds-c-surface)",
+    "--bg-episode-timeline": "var(--ds-c-surface)"
+  },
+  "templateNote": "its dark look paints the header (--heading-bg #181D24, the page colour), the newsletter band and the episode timeline (#13171D) through literals no palette holds, while the text on them follows: under a system the header takes the page colour and the two bands the surface",
+  "bands": {
+    ".cta-wrap": {
+      "ground": "#8d53ff",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".cta-title", ".cta-desc"]
+    },
+    ".testimonial-wrap": {
+      "ground": "#8d53ff",
+      "texts": ["#ffffff", "#fed90f"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".star", ".description", ".testimonial-name", ".testimonial-position"]
+    },
+    ".item-inner.bg-primary": {
+      "ground": "#8d53ff",
+      "texts": ["#ffffff", "#c6a9ff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".title", ".desc"]
+    },
+    ".item-inner.bg-pink": {
+      "ground": "#f959b3",
+      "texts": ["#ffffff", "#fcacd9"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".title", ".desc"]
+    },
+    ".item-inner.bg-green": {
+      "ground": "#3ec910",
+      "texts": ["#ffffff", "#9fe488"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".title", ".desc"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; the About counters (.item-inner.bg-primary / .bg-pink / .bg-green, drafted 14/10 as fills) name their figure and its label (.title, .desc) as their words, so they take the words that read on the ground each wears (white on Moxie’s light blue was 2.26:1). The \"Start Listening\" button (.btn-dark) already reads (followRules .btn-dark → bg, dark on the light fill a dark system gives it), re-checked under Moxie, Spotify, Linear",
+  "reviewV8Note": "15/10/2026 (look review v8): the call band’s secondary button (.btn-dark) is filled with the page text colour and its label stayed white (followRules stop at the fill band): under a dark system the label takes the page colour; the header search field’s white icon picture sat on the system’s light field: under a light system the field is inverted, transparent; the moon toggle is the template’s theme toggle (hidden under a system)"
+}

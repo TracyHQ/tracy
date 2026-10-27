@@ -1,0 +1,132 @@
+---
+/**
+ * page_masthead — the inner-page title band on the 32px grid, closed by a rule. `align` is `center`
+ * (every source record) or `left`.
+ */
+import type { Style } from '@/lib/sections'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the 760px article column of inner pages (DECISIONS D18). */
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+const align = data.align === 'left' ? 'left' : 'center'
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'page_masthead', null)
+---
+
+{
+	(data.eyebrow || data.title || data.sub) && (
+		<section class:list={['pm', 'k-grid-bg', `pm--${align}`, narrow && 'is-narrow']} {...s()}>
+			<div class="k-container">
+				<header class="pm-head">
+					{data.eyebrow && (
+						<p class="k-eyebrow pm-eyebrow" {...s('eyebrow')}>
+							{narrow && <span class="k-dot" aria-hidden="true" />}
+							{data.eyebrow}
+						</p>
+					)}
+					{data.title && <h1 class="pm-title" {...s('title')}>{data.title}</h1>}
+					{data.sub && <p class="pm-sub" {...s('sub')}>{data.sub}</p>}
+				</header>
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.pm {
+		padding-block: 66px 58px;
+		border-bottom: 1px solid var(--k-border);
+	}
+	.pm-head {
+		max-width: 760px;
+	}
+	.pm--center .pm-head {
+		margin-inline: auto;
+		text-align: center;
+	}
+	.pm-eyebrow {
+		margin-bottom: 16px;
+	}
+	.pm-title {
+		font-size: 46px;
+		line-height: 1.08;
+		letter-spacing: -1.3px;
+		font-weight: 700;
+	}
+	.pm-sub {
+		margin-top: 18px;
+		max-width: 640px;
+		font-size: 17px;
+		line-height: 1.55;
+		/* N-850fb6: keeps the lede from ending on a one-word line (Contact: "day."). */
+		text-wrap: pretty;
+	}
+	.pm--center .pm-sub {
+		margin-inline: auto;
+	}
+
+	/* Responsive type, swept on the source 1440 → 360 (round 4). Unframed (Contact): 46px, then 38px from
+	   860px down, with no further step. Framed pages step at 860px and 620px, but each page picks its own
+	   size through per-page styling; 38px then 32px is the shared step (median, majority spacing). */
+	@media (max-width: 860px) {
+		.pm-title {
+			font-size: 38px;
+			letter-spacing: -1px;
+		}
+	}
+	@media (max-width: 767px) {
+		.pm {
+			padding-block: 56px 48px;
+		}
+	}
+	@media (max-width: 620px) {
+		.is-narrow .pm-title {
+			font-size: 32px;
+		}
+		.pm-sub {
+			font-size: 16px;
+		}
+	}
+
+	/* Inside the 760px article column the band becomes a grid card whose eyebrow is a pill. The source's
+	   pill type varies page by page (11.5/1.5 on four pages, 12.5/2 or `normal` on others) through
+	   per-page styling, not data; every masthead keeps the shared eyebrow type (round 3). */
+	.is-narrow .pm-eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		padding: 5px 12px;
+		border-radius: 999px;
+		border: 1px solid color-mix(in srgb, var(--k-primary) 25%, transparent);
+		background: color-mix(in srgb, var(--k-primary) 8%, transparent);
+	}
+	/* In the article column the sub opens up to 1.75 (source Pricing, Features, FAQ, About, Team: 29.75px at 17px);
+	   Integrations and Changelog use 1.6 through per-page styling, not data — DECISIONS D27. */
+	.is-narrow .pm-sub {
+		line-height: 1.75;
+	}
+	/* Dark theme: the source lights the card from the top with the primary colour. */
+	:global(html[data-theme='dark']) .pm.is-narrow {
+		background-image:
+			radial-gradient(90% 90% at 30% 0%, color-mix(in srgb, var(--k-primary) 9%, transparent), transparent 70%),
+			linear-gradient(var(--k-grid) 1px, transparent 1px),
+			linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+		background-size:
+			auto,
+			32px 32px,
+			32px 32px;
+	}
+	@media (max-width: 767px) {
+		/* The source's article column keeps a 20px inset from the viewport on phones. */
+		.pm.is-narrow {
+			margin-inline: 20px;
+		}
+	}
+</style>

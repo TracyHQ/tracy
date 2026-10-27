@@ -1,0 +1,54 @@
+{
+  "color": {
+    "burnt-wine": {
+      "$value": "#38141b",
+      "$type": "color",
+      "$description": "Burnt Wine — Footer background, sectional dark bands, atmospheric accent — the sole chromatic note in an otherwise achromatic palette, used sparingly to anchor gravity"
+    },
+    "ink-stone": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Ink Stone — Primary text, hairline borders, image frames, nav links — the structural near-black that defines every edge and label"
+    },
+    "warm-parchment": {
+      "$value": "#e0ded8",
+      "$type": "color",
+      "$description": "Warm Parchment — Dominant page canvas, section backgrounds, card surfaces — warm stone tone that gives the site its gallery-like, hand-made feel"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Elevated surfaces, inverted text on dark sections, nav text over imagery, subtle highlight washes"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Body text fallback — sparse usage suggests it appears in long-form paragraphs where readability supersedes brand expression"
+    },
+    "legquinne-vf": {
+      "$value": "Legquinne VF",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — the single voice of the brand. Variable font allows optical weight tuning per context. Custom typeface; no system equivalent."
+    },
+    "basis-grotesque-pro": {
+      "$value": "Basis Grotesque Pro",
+      "$type": "fontFamily",
+      "$description": "Navigation links, small caps-style captions, and compact body labels — the quiet supporting sans that stays out of the serif's way"
+    },
+    "basisgrotesquepro-500": {
+      "$value": "Basisgrotesquepro 500",
+      "$type": "fontFamily",
+      "$description": "Basisgrotesquepro 500 — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ashtonbespoke.co.uk",
+      "siteName": "Ashton Bespoke",
+      "extractedAt": "2026-06-03T17:50:22.827Z",
+      "variant": "compact"
+    }
+  }
+}

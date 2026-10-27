@@ -1,0 +1,59 @@
+{
+  "color": {
+    "forest-green": {
+      "$value": "#278458",
+      "$type": "color",
+      "$description": "Forest Green — Primary CTA fill, brand accent, star glyph in wordmark, active states — a single chromatic note anchoring an otherwise achromatic interface"
+    },
+    "charcoal": {
+      "$value": "#444340",
+      "$type": "color",
+      "$description": "Charcoal — Primary body and UI text, icon strokes, default border outlines"
+    },
+    "soft-gray": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Soft Gray — Page canvas and section backgrounds — warm off-white that makes white cards feel layered rather than floating"
+    },
+    "warm-gray": {
+      "$value": "#9a988b",
+      "$type": "color",
+      "$description": "Warm Gray — Muted helper text, secondary metadata, list dividers, de-emphasized links"
+    },
+    "hairline-gray": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Hairline Gray — Card and component borders, subtle dividers between sections and list items"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, button text, input fills — the elevated surface above the gray canvas"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Heading text, dark secondary action fill (App Store button), heavy borders on featured headings"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All functional UI — body copy, buttons, navigation, inputs, captions, feature descriptions, hero subtext"
+    },
+    "libre-baskerville": {
+      "$value": "Libre Baskerville",
+      "$type": "fontFamily",
+      "$description": "Reserved exclusively for section and page headings — the serif is the editorial signal that separates display from interface"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://literal.club",
+      "siteName": "Literal",
+      "extractedAt": "2026-06-03T20:56:31.318Z",
+      "variant": "compact"
+    }
+  }
+}

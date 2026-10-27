@@ -1,0 +1,304 @@
+{
+  "dos": [
+    "Use Roobert at -0.04em tracking for all UI text; never let letter-spacing drift to 0 or positive values",
+    "Reserve #000aff exclusively for New In badges, the active Shop pill, and current-state indicators — no more than 3% of any screen should carry this color",
+    "Apply 10px border-radius to all cards, buttons, inputs, and images; 30px only for pill-shaped badges",
+    "Use Space Mono for prices, rank numerals, and 'By {brand}' credit lines — never for headlines or body",
+    "Set product card surfaces to #ecedee (Plaster), not #ffffff, to create a gentle tier above the white canvas",
+    "Anchor product card metadata (brand mark, name, price) to a 16-20px padding from the card edge with a consistent 40x40 brand thumbnail",
+    "Keep the hero image full-bleed and let overlays sit on the bottom third — the shoe should be the visual subject, the UI floats on top"
+  ],
+  "donts": [
+    "Don't introduce new chromatic colors beyond the single cobalt (#000aff) and its pale variant (#e5e7ff)",
+    "Don't use drop shadows on product cards — the system relies on surface color stepping and 10px radius for separation",
+    "Don't set type larger than 128px (display) or smaller than 12px (Space Mono micro labels)",
+    "Don't use rounded radii other than 10px and 30px — no fully square corners, no fully circular elements",
+    "Don't center body text or metadata; left-align all product information including the 'By {brand}' credit",
+    "Don't apply color to icons — keep all line icons monochrome Ink (#111) at 1.5px stroke",
+    "Don't separate badge variants by shape — all status badges share the 30px pill; differentiate by fill color only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#000aff",
+      "name": "Electric Cobalt",
+      "role": "New In badges, active nav pill, current-slide indicator, claim moments — the only chromatic signal in the system, used sparingly so it reads as activation not decoration",
+      "group": "brand"
+    },
+    {
+      "hex": "#e5e7ff",
+      "name": "Pale Iris",
+      "role": "New Color badge fill, soft highlight wash, tinted surface for variant callouts — a desaturated ghost of the cobalt that whispers color without breaking the monochrome regime",
+      "group": "accent"
+    },
+    {
+      "hex": "#111111",
+      "name": "Ink Black",
+      "role": "Primary text, default borders, icon strokes, hairline dividers — the dominant structural color across headings, lists, and links",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ecedee",
+      "name": "Plaster",
+      "role": "Secondary surface for product cards, nav bar background, soft elevation tier above the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a4aa",
+      "name": "Slate",
+      "role": "Card border tone, neutral button fill, muted button border — the gray that defines card edges without darkening them",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d7d7d7",
+      "name": "Fog",
+      "role": "Light card border, divider lines, inactive surface tint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#444955",
+      "name": "Graphite",
+      "role": "List and navigation borders, structural dividers between rows and cells",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737780",
+      "name": "Ash",
+      "role": "Secondary text, muted body copy, de-emphasized metadata, link rest state",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3b3b3b",
+      "name": "Charcoal",
+      "role": "Body text alternate, subtle dark surface for inset blocks",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page is full-bleed with a 1440px content rail. The hero is a full-viewport photographic banner with floating overlay UI. The product sections use a 4-column grid that collapses to 2 on tablet and 1 on mobile. Section rhythm: large product feature → ranked editorial grid → fresh releases grid → press credentials bar. Each product section centers its content within the rail and uses 80px vertical breathing room between sections. The navigation is a sticky single-row top bar with a thin announcement strip above it. Product cards align to a strict grid — image area always centers the shoe silhouette with 40px top/bottom padding inside the card, metadata cluster anchors to the bottom-left corner with a 40x40 brand mark leading.",
+  "imagery": "Product photography is the dominant visual — each shoe is shot on a pure white or plaster surface at a three-quarter angle, filling the card with no lifestyle context, no model, no environment. The hero pushes full-bleed lifestyle photography: cropped shots of legs and shoes on sand or concrete floors, always at human scale, never studio-perfect. The 'object IS the hero' principle — shoes occupy 40-60% of the visible frame even in the editorial hero. No decorative graphics, no abstract patterns, no illustrations. Icons are line-based 1.5px stroke in Ink Black, never filled, never colored.",
+  "similar": [
+    {
+      "why": "Same restrained monochrome product-grid approach with warm neutral card surfaces and minimal accent color use",
+      "business": "Allbirds"
+    },
+    {
+      "why": "Similar flat product cards on subtle gray backgrounds with brand-credit thumbnails and tight typographic hierarchy",
+      "business": "Rothy's"
+    },
+    {
+      "why": "Same editorial product page rhythm — large display type, single accent color, objects photographed on plinth-like surfaces",
+      "business": "Mansur Gavriel"
+    },
+    {
+      "why": "Same 'gallery rather than store' atmosphere with generous whitespace, lowercase wordmarks, and almost-zero color saturation",
+      "business": "Aesop"
+    },
+    {
+      "why": "Same oversized serif-adjacent grotesque display type at -0.04em tracking and the object's-silhouette-as-hero photography treatment",
+      "business": "Hermès footwear section"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "10px",
+      "pills": "30px",
+      "badges": "30px",
+      "images": "10px",
+      "inputs": "10px",
+      "buttons": "10px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background, outer frame, top-level layout"
+    },
+    {
+      "hex": "#ecedee",
+      "name": "Plaster",
+      "level": 1,
+      "purpose": "Product cards, nav strip, soft elevated content blocks"
+    },
+    {
+      "hex": "#d7d7d7",
+      "name": "Fog",
+      "level": 2,
+      "purpose": "Inset panels, muted inactive states"
+    },
+    {
+      "hex": "#111111",
+      "name": "Ink",
+      "level": 3,
+      "purpose": "Featured In media bar, inverted text blocks, deep footer"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 8px 24px rgba(0, 0, 0, 0.15)",
+      "element": "Floating Product Info Card"
+    },
+    {
+      "style": "0 1px 2px rgba(0, 0, 0, 0.04)",
+      "element": "See All Button"
+    }
+  ],
+  "northStar": "Sculptor's atelier on white marble — monolithic plinth surfaces, single cobalt spark, lowercase whispers from floor to ceiling.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.52
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.35,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -1.28
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.15,
+      "letterSpacing": -1.6
+    },
+    {
+      "role": "heading-lg",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -2.56
+    },
+    {
+      "role": "display",
+      "size": 128,
+      "lineHeight": 1,
+      "letterSpacing": -5.12
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page promotional strip",
+      "description": "Full-bleed deep navy (~#000340) background, centered white Roobert 13px body text reading promotional copy. Sits above the main navigation as a thin 32-40px bar. No close button visible — passive, always-on."
+    },
+    {
+      "name": "Main Navigation",
+      "role": "Primary site navigation",
+      "description": "White surface, horizontal flex layout. Left: grid icon button (icon stroke 1.5px, #111). Center-left: 'Shop' pill button — white background, #111 border, 10px radius, 8px 14px padding, 14px Roobert 500. Center: wordmark 'zellerfeld' in Roobert with the logomark. Right: search icon button, 'Account' text link in Ash (#737780), wishlist heart icon. 48-56px height. Border-bottom: 1px #ecedee."
+    },
+    {
+      "name": "Hero with Background Imagery",
+      "role": "Above-the-fold product feature",
+      "description": "Full-bleed photographic background covering the full viewport height. Image bleeds edge-to-edge with no border-radius. Overlaid bottom-left: 'New In' cobalt badge (see badge spec), then a 64-128px display headline in Roobert 700 white, lowercase ('studio runner'), letter-spacing -5px. Beneath: 15-16px subhead in white at ~80% opacity. Right-side floating product card (see Floating Product Card)."
+    },
+    {
+      "name": "Floating Product Info Card",
+      "role": "In-hero product buy card",
+      "description": "White surface, 14.4-20px radius, 16-20px padding. Contains: small product thumbnail (60x60, 10px radius), product name in Roobert 600 16px Ink, 'By studio' in Space Mono 12px Ash, price in Space Mono 600 14px Ink. CTA: 'Shop studio runner' — black (#111) filled button, white text, 10px radius, 8px 20px padding."
+    },
+    {
+      "name": "Ranked Product Card (Top 10)",
+      "role": "Numbered editorial product list item",
+      "description": "Plaster (#ecedee) surface, 10px radius, no border. Each card spans 1/4 of viewport width. Giant translucent rank numeral (1, 2, 3, 4) in Roobert 700 at 200-280px, white at ~60% opacity, positioned top-right as a watermark. Product image centered, natural proportions. Below image: 20px gap, then small 40x40 brand logo thumbnail (white bg, 4px radius), product name in Roobert 600 16px Ink, 'By {brand}' in Space Mono 12px Ash, price in Space Mono 400 12px Ink."
+    },
+    {
+      "name": "Standard Product Card (New Releases)",
+      "role": "Grid product display card",
+      "description": "Plaster (#ecedee) surface, 10px radius, no border. Width 1/4 of grid. Top-left: status badge (New In / Sold Out / New Color). Centered product image fills the card with ~60% height. Below: 16px gap, brand logo thumbnail 40x40 (white surface, 4px radius), product name Roobert 600 16px Ink, 'By {brand}' in Space Mono 12px Ash, price in Space Mono 400 12px Ink."
+    },
+    {
+      "name": "New In Badge",
+      "role": "Status indicator for fresh products",
+      "description": "Electric Cobalt (#000aff) background, white text 'New In' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Sits absolute top-left of product card with 12px offset."
+    },
+    {
+      "name": "Sold Out Badge",
+      "role": "Inventory status indicator",
+      "description": "Slate (#a1a4aa) background, white text 'Sold Out' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Identical dimensions to New In badge so badge layout doesn't shift."
+    },
+    {
+      "name": "New Color Badge",
+      "role": "Variant announcement",
+      "description": "Pale Iris (#e5e7ff) background, Ink (#111) text 'New Color' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Reads as a softer sibling of the New In badge."
+    },
+    {
+      "name": "See All Button",
+      "role": "Section-end navigation",
+      "description": "Full-width of content column (not edge-to-edge), white surface, Ink (#111) text 'See All' in Roobert 500 16px, 10px radius, 12px 24px padding, 1px #ecedee border. Centered below product grid."
+    },
+    {
+      "name": "Featured In Media Bar",
+      "role": "Press credentials strip",
+      "description": "Ink (#111) background, full-bleed width, 80-100px height. Centered label 'Featured in' in Space Mono 12px Ash above the bar. Inside: horizontally distributed press logos (COMPLEX, POPULAR MECHANICS, VOGUE, WIRED) in white at 60% opacity, even spacing, max ~60px height each."
+    },
+    {
+      "name": "Section Header with Carousel Arrows",
+      "role": "List section title",
+      "description": "Full-width of content area. Left: section title in Roobert 600 20px Ink (e.g. 'Featured New Releases'). Right: prev/next arrow buttons, 40x40 square, 1px #ecedee border, 10px radius, chevron icon in Ash 1.5px stroke. Arrows are part of a horizontal carousel control."
+    },
+    {
+      "name": "Brand Logo Thumbnail",
+      "role": "Partner brand mark in product card",
+      "description": "40x40 square, white (#ffffff) surface, 4-6px radius, 1px #ecedee border. Contains the partner brand's mark centered at ~50% fill. Used in both ranked and standard product cards to credit the designer."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary brand typeface — used for everything from 13px body to 128px hero. The -0.04em tracking is consistent across all sizes, pulling the lowercase wordmark into a tight, sculpted mass. Weights escalate by context: 400 for body and UI, 500 for emphasized labels, 600 for product names, 700 for large display.",
+      "sizes": "13, 14, 15, 16, 20, 32, 40, 64, 128",
+      "family": "Roobert",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00, 1.15, 1.20, 1.35, 1.40, 1.50",
+      "substitute": "Inter, General Sans, Satoshi",
+      "letterSpacing": "-0.04em at all sizes"
+    },
+    {
+      "role": "Technical metadata — prices (€189,00), Top 10 rank numerals, ticker marks, shop name credits. Drops in where the page needs to feel like a spec sheet rather than marketing copy.",
+      "sizes": "12, 14",
+      "family": "Space Mono",
+      "weight": "400, 600",
+      "lineHeight": "1.00, 1.35, 1.50",
+      "substitute": "JetBrains Mono, IBM Plex Mono"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Zellerfeld reads as a digital sculptor's gallery on white marble — a 3D-printing footwear marketplace where monochrome surfaces, generous whitespace, and oversized lowercase typography let each product behave like a museum object. The interface commits to extreme restraint: 99% achromatic canvas with a single electric cobalt (#000aff) reserved for urgency — badges, the active 'Shop' nav, the current-slide state. Cards float on a warm pearl gray rather than pure white, giving the grid a tactile, plaster-cast quality. Type stays in a single custom grotesque (Roobert) at tight -0.04em tracking, with Space Mono dropped in only for prices, ranks, and technical metadata. The result is a product page that feels closer to a design press site than a retail checkout — objects are photographed, not sold.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Primary text: #111111 (Ink Black)\n- Page background: #ffffff (Pure White)\n- Card surface: #ecedee (Plaster)\n- Border: #ecedee (subtle) / #a1a4aa (defined) / #444955 (structural)\n- Brand accent (badges, active state, claim moments): #000aff (Electric Cobalt)\n- primary action: #000aff (filled action)\n\n**Example Component Prompts**\n\n1. Build a 'New Releases' product card: Plaster (#ecedee) background, 10px radius, no border, 20px padding. Top-left has a 'New In' badge — Electric Cobalt (#000aff) fill, white text in Roobert 600 12px, 30px pill radius, 4px 8px padding, positioned 12px from the card edge. Center the product image at 60% of card height. Below the image at 16px gap, place a 40x40 white brand logo thumbnail (4px radius, 1px #ecedee border). Underneath: product name in Roobert 600 16px Ink (#111111), 'By {brand}' in Space Mono 12px Ash (#737780), price in Space Mono 400 12px Ink (#111111).\n\n2. Build a full-bleed product hero: Background fills 100vw at 80vh minimum — a photographic image of shoes on a natural surface. Bottom-left overlay stack: 'New In' badge (Electric Cobalt #000aff, 30px pill, 12px from edge), then a display headline 'studio runner' in Roobert 700 at 128px white with -5px letter-spacing, lowercase, 20px line-height. Below: 15px subhead in white at 80% opacity, Roobert 400. Right side floats a 280px-wide white product info card with 14.4px radius, 20px padding, containing a 60x60 thumbnail, product name, 'By studio' credit, and a black 'Shop studio runner' button (10px radius, 8px 20px padding, #111 background, white text).\n\n3. Build the 'Featured In' press bar: Full-bleed Ink (#111111) background, 100px height, centered. Above the bar (separated by 24px): 'Featured in' label in Space Mono 12px Ash (#737780). Inside the bar, distribute 5 press wordmarks (COMPLEX, POPULAR MECHANICS, VOGUE, WIRED) horizontally with even spacing, all white at 60% opacity, 32-48px cap height, Roobert 700.\n\n4. Create a Primary Action Button: #000aff background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n5. Build the 'See All' call-to-action button below a product grid: Full content-column width (not full-bleed), white (#ffffff) surface, Ink (#111111) text 'See All' in Roobert 500 16px, 10px radius, 12px 24px padding, 1px #ecedee border, centered. Subtle 0 1px 2px shadow for tap affordance. Place 32px below the grid it summarizes."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is used only when a component must lift off a photographic background (the floating product card over the hero image) or to suggest a tappable surface. The product grid cards themselves sit flat on the plaster surface — no shadow, relying on the 10px radius and the subtle gray-on-gray border for separation. This keeps the gallery feeling like printed press pages rather than floating glass tiles."
+}

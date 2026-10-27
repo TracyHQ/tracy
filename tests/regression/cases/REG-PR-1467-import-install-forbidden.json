@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1467-import-install-forbidden",
+  "kind": "fix",
+  "title": "A Joomla import whose account the Extension Manager refuses (403) stops as install_forbidden, not unreachable",
+  "pr": 1467,
+  "area": "add-site/import",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the real joomla.installCowork (packages/site/tracy-add-site/src/host/joomla.ts) with a signed-in session, fetch mocked: com_config and com_installer&view=install both answer 403 'You do not have permission to view this resource.'",
+    "S2: Read the result and the recorded requests."
+  ],
+  "expect": [
+    "S1: the result is { ok: false, reason: 'install_forbidden' }.",
+    "S2: every recorded request is a GET; no install was posted."
+  ],
+  "selectors": {
+    "test": "packages/site/tracy-add-site/test/install-language.test.mjs",
+    "code": "joomla.installCowork install_forbidden, refusal.tsx IMPORT_ERRORS, strings.ts import_error_install_forbidden"
+  },
+  "evidence": "Production 19/10/2026, energy-solutions24.de (Joomla 6.2.0): signed in as an Administrator who is not a Super User, run mvf6rwylq0f3c2 failed 2.5 s later as installing / unreachable; the Extension Manager answers 403 to that account",
+  "fence": "The Extension Manager read in installCowork: a 403 there names the account's missing permission instead of an unreachable site",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/install-language.test.mjs"
+    ],
+    "tests": ["an account the Extension Manager refuses (403) is install_forbidden, not unreachable"]
+  }
+}

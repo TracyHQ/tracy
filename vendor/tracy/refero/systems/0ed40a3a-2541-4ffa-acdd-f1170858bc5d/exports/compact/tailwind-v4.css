@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-forest-canopy: #203400;
+  --color-vault-floor: #1b2d00;
+  --color-canopy-mid: #335400;
+  --color-lime-phosphor: #bdff00;
+  --color-moss-border: #586740;
+  --color-fern: #73a303;
+  --color-white: #ffffff;
+
+  /* Typography */
+  --font-denim-ink: 'Denim Ink', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-courier-new: 'Courier New', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

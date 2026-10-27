@@ -1,0 +1,18 @@
+@tracy/mattpocock-skills
+========================
+
+The `skills/` folder is third-party work, copied verbatim from
+
+    Matt Pocock — https://github.com/mattpocock/skills
+    MIT License (see the accompanying LICENSE)
+    Pinned to tag `v1.2.3` (commit 6acc160e), subtree added on 2026-09-06
+
+Tracy does not modify a single line in `skills/`. Tracy modifies exactly ONE file: `package.json` — upstream
+declares `private: true` under the name `mattpocock-skills`; this copy renames it to `@tracy/mattpocock-skills`,
+drops `private`, and limits `files` to `skills/`, `LICENSE`, `NOTICE` so it can be published to `npm.tracy.ai` for
+`dsh/Dockerfile` to install into the agent image (the same way as `@tracy/od-skill`). The list of ENABLED skills
+does not live here but in `packages/design/tracy-design-skill/matt-enabled.txt`.
+
+Why this package exists: from 05/09 to 06/09 those seven skills reached the lane through `dsh-mattpocock-skills-deck`
+(FeatherHunter), an issue-board plugin that carried a v1.2.3 snapshot of this repo. That plugin was dropped on
+06/09 (`tasks/todo-go-deck.md`); the skills stayed, and are now taken straight from the source.

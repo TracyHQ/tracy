@@ -1,0 +1,673 @@
+# Build `tracy/dsh` once, on a machine that can, instead of on every fleet host.
+#
+# WHY THIS EXISTS. ADR 0014 killed the private registry and left the image built in place:
+# `docker build` on contabo, then again on DO. That works on contabo (6 cores, 68 GB free) and
+# cannot work on DO — 2 cores, 3 GB RAM and 17 GB free against a 4.4 GB image whose build runs
+# `pnpm build:official` over ~300 packages plus Playwright and Chromium. A host that cannot build
+# its own image is a host that silently keeps running last month's agent.
+#
+# So the build moves off the fleet entirely: one self-hosted runner (`tracy-build`, 8 cores /
+# 23 GB / 290 GB, x86_64 like the fleet) builds the image and pushes it to GHCR, and every host
+# does `docker pull` — a step DO can afford. Nothing here touches a customer's machine.
+#
+# ARCHITECTURE IS NOT A DETAIL. The runner must be x86_64. An arm64 build (a laptop, a Mac runner)
+# produces an image the fleet cannot run, and the failure surfaces at `docker run` on the host,
+# far from the build that caused it. `runs-on` names the label, and the label is on one machine.
+#
+# THE SUBMODULE IS THE PART THAT BREAKS QUIETLY. `vendor/tracy/deepseek-harness` is a private repository,
+# and `GITHUB_TOKEN` cannot read another private repo. Without credentials `git submodule update`
+# fails — but if it were merely skipped, the Dockerfile's `COPY vendor/tracy/deepseek-harness/ ./` would
+# copy an EMPTY directory and the build would die several minutes later inside `pnpm build:official`
+# with an error that says nothing about a missing submodule. Hence the explicit checkout step below,
+# a read-only deploy key, and a guard that counts the files before handing anything to Docker.
+
+name: build-dsh-image
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: 'Push the image to GHCR (uncheck to build only)'
+        type: boolean
+        default: true
+      deep_verify:
+        description: 'Also pull the image back in full (~1 min, 6 GB) — for a new host or registry change'
+        type: boolean
+        default: false
+      # The deploy a push does not do: bringing up a host for the first time, and putting a known
+      # commit back after a bad one. Rolling back is `Run workflow` on the last good commit — the
+      # tag is derived from the ref, so choosing the ref chooses the build.
+      deploy_to:
+        description: 'Also deploy this build to a host'
+        type: choice
+        options: ['no', 'dev', 'staging', 'production']
+        default: 'no'
+      rebuild:
+        description: 'Build even if the registry already holds an image for this context fingerprint'
+        type: boolean
+        default: false
+  push:
+    # `main` is production for the tracy-web/tracy-host architecture, and it is the ref
+    # `deploy-prod` below matches (renamed 15/09/2026 — the old `main` is `main-old`, `main-v2` is
+    # `main-archived`, and the branch that carried the tracy.ai cutover, `main-v3`, became `main`).
+    #
+    # Only `main` and `develop` build on a push (15/09/2026: a branch nobody deploys does not
+    # need an image built on every push). `ci/image-build` used to be here as a build-without-deploy
+    # lane; a manual run does the same thing on ANY branch without a standing trigger:
+    #   gh workflow run build-dsh-image.yml --ref <branch> -f push=false -f deploy_to=no
+    #
+    # 🔒 ALL THREE IMAGES SHARE ONE TAG, and that is why the list here has to agree with
+    # `build-app-images.yml`'s. The tag is `$(date +%F)-<short sha>`, derived from the commit
+    # rather than passed between workflows, so a commit that builds in both puts THREE images on
+    # GHCR under one name and "which build is this host running" keeps one answer. A branch named
+    # in one file and not the other produces two of the three, and the dsh half of the answer
+    # silently becomes whatever that host last deployed.
+    branches: [main, staging, develop]
+    # 🔒 `paths-ignore`, NOT `paths`, AND THE DIRECTION IS THE WHOLE POINT.
+    #
+    # A `paths:` allowlist that misses an entry silently skips a build the push needed, and the
+    # host keeps serving last week's plugin code with nothing red — the fail-open shape this repo
+    # refuses everywhere. An ignore list that misses an entry costs one extra build.
+    #
+    # What is listed here provably cannot enter the image: `grep '^COPY' dsh/Dockerfile` names only
+    # `packages/` and `vendor/`. Workers reach Cloudflare through the other workflow entirely.
+    #
+    # WHY IT EARNS ITS KEEP: a push carries a deploy, and a deploy RESTARTS `tracy-dsh` — every
+    # agent session on that host stops mid-command. Measured 07/09: a one-line comment change in
+    # a Cloudflare Worker's `wrangler.toml` rebuilt 5.7 GB and restarted the dev dsh (that tree is gone
+    # since 16/09/2026; the measurement is why the list exists). On `main` that same
+    # push would restart a host serving customers, to ship a change the image does not contain.
+    #
+    # Extended 2026-09-14, and every entry below is provable the same way: `apps/` and `deploy/`
+    # feed `build-app-images.yml`'s two images, not this one; and a workflow file other than THIS one cannot change what this
+    # build produces. Before that day a one-line edit to `tracy-ci.yml` rebuilt 5.8 GB and
+    # restarted the dev dsh — the exact cost this block is written about.
+    # Since 15/09 this list is only the cheap outer filter: the `decide` job below asks the
+    # Dockerfile itself what enters the image and skips the build when none of it changed, so a
+    # path missing here costs one 30-second decide job, not a 22-minute build.
+    paths-ignore:
+      - 'docs/**'
+      - 'tasks/**'
+      - 'apps/**'
+      - 'deploy/**'
+      # NOT `scripts/**` — removed 15/09. It was here on the claim that "`scripts/` is the repo's
+      # own tooling and never enters the context", and the seeder bundle imports
+      # `scripts/lib/od-slots-dom.mjs` and `od-slot-rules.mjs` into the image. A push touching only
+      # those did not even start `decide`. Now it costs one 30-second decide job.
+      - '*.md'
+      - '.github/workflows/build-app-images.yml'
+      - '.github/workflows/changelog-check.yml'
+      - '.github/workflows/pr-description-check.yml'
+      - '.github/workflows/tracy-ci.yml'
+      - '.github/actions/deploy-tracy-stack/**'
+      - '.github/pull_request_template.md'
+      # The tracy-web / tracy-host stack. Nothing under these enters the dsh image (the Dockerfile
+      # COPYs only `packages/…` and the build stage's own output), and this workflow reads none of
+      # them — so a push that only touches them restarting the production dsh is pure cost: every
+      # customer's agent session drops for the ~3 minutes of `start_period`, onto an equivalent image.
+      # Measured 15/09/2026, twice in one morning: renaming `main`, then a one-file edit to
+      # `build-app-images.yml`, each started a 4.4 GB build that would have ended in exactly that
+      # restart. Both were cancelled by hand before `deploy-prod`; this list is so nobody has to.
+      - 'apps/**'
+      - 'deploy/**'
+      - '.github/workflows/build-app-images.yml'
+
+# One deploy at a time per branch, and never cancel one halfway: a cancelled job between
+# `docker compose up -d` and the health check leaves a host running an image nothing verified.
+concurrency:
+  group: build-dsh-image-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/tracyhq/tracy-dsh
+
+jobs:
+  # ── Decide: does this commit change what goes INTO the image? ──────────────────────────────
+  #
+  # `paths-ignore` above is a hand-kept list and it goes stale in silence (a COPY line added to the
+  # Dockerfile without an entry here = an image quietly not rebuilt). This job asks the Dockerfile
+  # itself: `dsh-image-context.sh` hashes every COPY source at this commit (a build output is
+  # replaced by the inputs it is built from, and an unexplained source is RED, never "unchanged").
+  # The fingerprint is a tag on the pushed image, so "already built" is a registry question, not a
+  # runner-disk question — any of the three runners answers it the same.
+  #
+  # Measured 14/09 before this job existed: a merge touching only `packages/dev` (the Storybook
+  # bench, which `.dockerignore` drops) and `apps/` rebuilt 5.8 GB for 21.6 minutes, restarted the
+  # dev dsh under everyone's sessions, and held the next merge's build in this workflow's
+  # concurrency group for 24 more minutes.
+  decide:
+    # `tracy-check`, not `tracy-build` — changed 2026-09-21. This job asks the REGISTRY whether a
+    # tag exists; `docker manifest inspect` is a registry client and needs no daemon. Measured on
+    # j-static: `docker run -e DOCKER_HOST=unix:///nonexistent docker:cli manifest inspect
+    # alpine:latest` exits 0 with the full manifest. So a 20-second decision does not have to
+    # occupy one of the few machines that hold the docker socket.
+    runs-on: [self-hosted, linux, tracy-check, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: read
+    outputs:
+      ctx: ${{ steps.ctx.outputs.ctx }}
+      skip: ${{ steps.registry.outputs.skip }}
+    steps:
+      - name: Checkout (without submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+
+      - name: Fingerprint the build context
+        id: ctx
+        run: |
+          set -euo pipefail
+          packages/fleet/tracy-fleet-operation/scripts/tools/dsh-image-context.sh --explain
+          CTX=$(packages/fleet/tracy-fleet-operation/scripts/tools/dsh-image-context.sh)
+          echo "ctx=$CTX" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        run: echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      # `manifest inspect` reads metadata only — no layer is pulled. A forced rebuild
+      # (`inputs.rebuild`) skips the question and builds regardless.
+      - name: Ask the registry whether this context is already built
+        id: registry
+        env:
+          CTX: ${{ steps.ctx.outputs.ctx }}
+          FORCE: ${{ inputs.rebuild && 'yes' || 'no' }}
+        run: |
+          set -euo pipefail
+          if [ "$FORCE" = yes ]; then
+            echo "rebuild requested — building regardless of $IMAGE:$CTX"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          elif docker manifest inspect "$IMAGE:$CTX" > /dev/null 2>&1; then
+            echo "$IMAGE:$CTX already exists — nothing this commit changed enters the image; build skipped, deploy reuses it"
+            echo "::notice title=dsh image unchanged::$IMAGE:$CTX is already in the registry; the build is skipped and the deploy reuses it"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "$IMAGE:$CTX is not in the registry — building"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Log out of GHCR
+        if: always()
+        run: docker logout ghcr.io
+
+  build:
+    needs: decide
+    if: needs.decide.outputs.skip != 'true'
+    # The one x86_64 build box. NOT `ubuntu-latest`: a GitHub-hosted runner has ~14 GB of disk and
+    # this build needs several times that between the pnpm store, Chromium and the two image stages.
+    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 90
+
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+      image: ${{ env.IMAGE }}
+
+    steps:
+      - name: Checkout (without submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+
+      # Separate from checkout because the submodule lives in a DIFFERENT private repository, which
+      # `GITHUB_TOKEN` has no access to. The deploy key is read-only and scoped to that one repo.
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — vendor/tracy/deepseek-harness cannot be fetched"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          # 🔒 THE umask IS IN A SUBSHELL, AND THAT IS THE WHOLE POINT. A bare `umask 077` here
+          # applies to the REST of this step — including the checkout below — so every file and
+          # directory git writes lands 600/700. Those modes ride into the build context, `/opt/dsh`
+          # becomes root-only, and the runtime stage (`USER www-data`, uid 33) cannot traverse it.
+          # Node then reports `Cannot find module '/opt/dsh/apps/cli/lib/bin.js'` — a message about
+          # a file that is present and readable by root, twelve layers after the cause.
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          # No --depth: the submodule is pinned to an exact commit, which a shallow fetch may not carry.
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+
+      # The guard the comment at the top of this file is about: prove the directory has contents
+      # BEFORE Docker copies it, so an empty submodule fails here, by name, in seconds.
+      - name: Assert the submodule is populated
+        run: |
+          set -euo pipefail
+          COUNT=$(find vendor/tracy/deepseek-harness -mindepth 1 -maxdepth 1 | wc -l)
+          echo "vendor/tracy/deepseek-harness holds $COUNT entries"
+          if [ "$COUNT" -lt 5 ]; then
+            echo "::error::vendor/tracy/deepseek-harness looks empty — the image would fail deep inside the build instead of here"
+            exit 1
+          fi
+          git submodule status vendor/tracy/deepseek-harness
+
+          # The runtime stage runs as uid 33 and only READS /opt/dsh, so anything owner-only in the
+          # context is unreachable there. Caught once, from a umask that leaked out of the step
+          # above; the symptom was MODULE_NOT_FOUND on a file that existed. Check the mode here,
+          # where the message can say what is actually wrong.
+          BAD=$(find vendor/tracy/deepseek-harness -maxdepth 3 \
+                  \( -type d ! -perm -o+rx \) -o \( -type f ! -perm -o+r \) | sed -n 1,3p)
+          if [ -n "$BAD" ]; then
+            echo "::error::vendor/tracy/deepseek-harness holds entries uid 33 cannot read — the image would build and then fail as MODULE_NOT_FOUND on a file that exists:"
+            printf '  %s\n' $BAD
+            exit 1
+          fi
+          echo "submodule permissions: readable by every uid"
+
+      - name: Resolve tags
+        id: meta
+        run: |
+          set -euo pipefail
+          # DSH_COMMIT is baked into the image so a running container can answer "which dsh is this".
+          DSH_COMMIT=$(git ls-tree HEAD vendor/tracy/deepseek-harness | awk '{print $3}')
+          # 🔒 `--short=8`, NOT A BARE `--short`, AND THIS WAS MEASURED THE HARD WAY.
+          #
+          # `git rev-parse --short HEAD` picks its length from `core.abbrev=auto`, which git
+          # derives from how many objects THAT CLONE holds. Three runners share this repo but not
+          # a checkout, so the same commit abbreviates differently on each. Measured 10/09 on one
+          # commit, `88c5eafd…`: `build-app-images` on one runner produced `2026-09-10-88c5eafd`
+          # and `build-dsh-image` on another produced `2026-09-10-88c5eafd6` — one character
+          # apart, two tags, and the whole "which build is dev running has ONE answer" property
+          # gone. Nothing was red; the images simply did not line up.
+          #
+          # Both workflows pin the same explicit length for that reason. Change it in one and the
+          # invariant breaks again, silently.
+          SHORT=$(git rev-parse --short=8 HEAD)
+          TAG="$(date +%Y-%m-%d)-${SHORT}"
+          {
+            echo "dsh_commit=$DSH_COMMIT"
+            echo "tag=$TAG"
+            echo "short=$SHORT"
+          } >> "$GITHUB_OUTPUT"
+          echo "image tag : $TAG"
+          echo "DSH_COMMIT: $DSH_COMMIT"
+
+      # 🔒 THE IMAGE'S `COPY cms/` LAYER READS BUILD OUTPUT, NOT SOURCE, AND `dsh/cms/` IS GITIGNORED.
+      # The seeder is built here and staged beside the Dockerfile. Without this step the build fails at
+      # the layer's own assert — which is the intended direction: an image whose "Create with …" press
+      # cannot find the command it runs must not reach a host.
+      #
+      # ⚠ THE SCRIPT WAS `stage-cms-themes.sh` UNTIL 07/09 AND NO GATE WATCHES THIS FILE. `main` renamed
+      # it to `stage-cms-seeder.sh` when the two look zips left the image (they are released from
+      # TracyHQ/claude-cowork instead). The 08/09 merge of `main` into `develop` carried the rename and
+      # fixed the Dockerfile's comment but not this line, and `build:check` stayed green through it:
+      # every gate reads `packages/`, `apps/` or `docs/`, and none of them opens a workflow YAML. The
+      # first thing that noticed was this job, on the push that followed the merge — `No such file or
+      # directory`, exit 127, after a 59-second install.
+      #
+      # It needs the workspace, so it runs after the submodule is in place and in the order CLAUDE.md §5
+      # pins: `dsh:build` claims the 410 members, THEN the root install relinks and compiles `fs-ext`.
+      - name: Stage the CMS seeder
+        run: |
+          set -euo pipefail
+          corepack enable pnpm
+
+          # 🔒 START FROM NO node_modules, BECAUSE TWO WORKFLOWS SHARE ONE CHECKOUT.
+          #
+          # A self-hosted runner keeps one `_work/<repo>/<repo>` per repository, and BOTH workflows
+          # bootstrap in it — this one and `tracy-ci.yml` — with the two-step order CLAUDE.md
+          # §5 pins (`dsh:build` claims the submodule's members, then the root install relinks them
+          # against the root store). Run the second workflow's bootstrap on top of the first's
+          # finished state and the tree ends up in neither shape.
+          #
+          # Measured 08/09, twice: `pnpm dsh:build` died with
+          #   Cannot find package '@jridgewell/gen-mapping' imported from
+          #   vendor/tracy/deepseek-harness/packages/typert/generator/lib/types/emitter.js
+          # with the root `node_modules` gone and the submodule's present but incomplete. It reads
+          # like a missing dependency and is not one — the lockfiles are fine; the tree on disk is
+          # a mixture of two installs. `--frozen-lockfile` does not repair it, and the first time it
+          # cost a run to work out and was "fixed" by deleting the checkout, which is not a fix.
+          #
+          # The pnpm store survives this, so it is a relink and not a download.
+          rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
+
+          # ⚡ `--skip-if-built` (15/09): the image does not use THIS build of dsh — the Dockerfile
+          # builds its own from the submodule source — it exists only so the root install below can
+          # link the workspace the seeder is built in. The runner keeps its checkout and the submodule
+          # rarely moves, so rebuilding it every run was most of this step (median 83 s, p90 290 s).
+          node scripts/build-dsh.mjs --skip-if-built
+          pnpm install --frozen-lockfile
+          packages/fleet/tracy-fleet-operation/scripts/tools/stage-cms-seeder.sh
+
+      # GHCR is needed for the CACHE as well as the push, so this is no longer conditional: a
+      # `push=false` smoke build still reads `:buildcache`, which is the whole point of having one.
+      - name: Log in to GHCR
+        run: echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      # ─────────────────────────────────────────────────────────────────────────────────────────
+      # A BUILDER THAT CAN READ AND WRITE CACHE IN THE REGISTRY — added 2026-09-20
+      #
+      # 🔒 THE DEFAULT BUILDER CANNOT DO THIS, AND THAT IS WHY BUILDS WERE PINNED TO ONE MACHINE.
+      # `docker buildx ls` on the CI box shows `default / docker`, and the `docker` driver refuses
+      # `--cache-to` ("Cache export is not supported for the docker driver"). So the only cache a
+      # build ever had was the local daemon's, which lives on exactly one disk. That is the real
+      # reason `tracy-build` sat on one host: not security, not CPU — a cache that could not travel.
+      #
+      # `docker-container` can export, so the cache moves to `ghcr.io/...:buildcache` and any runner
+      # starts warm. Creating it is idempotent and costs about a second when it already exists.
+      #
+      # 🔒 THE BUILDER IS NAMED AFTER THE RUNNER, AND THAT IS NOT COSMETIC. buildx keeps its
+      # builder list per USER (`~/.docker/buildx`), so each runner container has its own empty
+      # list — but the `docker-container` driver creates a container on the HOST daemon, named
+      # `buildx_buildkit_<builder>0`, which every runner on that host shares. Measured on j-static
+      # 21/09/2026: a second runner running the identical `create --name tracy` does not fail and
+      # does not reuse — it RECREATES the container ("Up Less than a second"), which would kill a
+      # build already running in it. And the two image workflows fire as a PAIR on every push, so
+      # two runners on one host racing here is the normal case, not the rare one.
+      #
+      # With `$RUNNER_NAME` in the name the containers coexist (verified: `tracy-r1` and `tracy-r2`
+      # both Up at once). Each runner keeps its own local cache; the SHARED cache is the registry,
+      # which is the whole point — a local cache that travels was never the goal.
+      - name: A builder whose cache lives in the registry, not on this disk
+        run: |
+          set -euo pipefail
+          BUILDER="tracy-${RUNNER_NAME:-local}"
+          echo "BUILDER=$BUILDER" >> "$GITHUB_ENV"
+          docker buildx inspect "$BUILDER" > /dev/null 2>&1 \
+            || docker buildx create --name "$BUILDER" --driver docker-container --bootstrap
+          docker buildx inspect "$BUILDER" --bootstrap | sed -n '1,6p'
+
+      - name: Build the image
+        run: |
+          set -euo pipefail
+          # ⚠ WITH `docker-container` THE RESULT DOES NOT LAND IN THE LOCAL DAEMON unless asked.
+          # A push writes it to the registry (where every deploy reads it from anyway); a
+          # `push=false` smoke build keeps nothing, which is correct — it is asking "does this
+          # still build", not "give me an image".
+          if [ '${{ github.event_name }}' = 'push' ] || [ '${{ inputs.push }}' = 'true' ]; then
+            OUT=(--push)
+          else
+            OUT=(--output type=cacheonly)
+          fi
+          docker buildx build --builder "$BUILDER" \
+            -f packages/fleet/tracy-fleet-operation/dsh/Dockerfile \
+            --build-arg DSH_COMMIT='${{ steps.meta.outputs.dsh_commit }}' \
+            --build-arg SOURCE_COMMIT='${{ github.sha }}' \
+            --build-arg SOURCE_REPO='${{ github.repository }}' \
+            --label "org.tracy.ctx=${{ needs.decide.outputs.ctx }}" \
+            --cache-from "type=registry,ref=$IMAGE:buildcache" \
+            --cache-to "type=registry,ref=$IMAGE:buildcache,mode=max,image-manifest=true" \
+            "${OUT[@]}" \
+            -t "$IMAGE:${{ steps.meta.outputs.tag }}" \
+            -t "$IMAGE:${{ needs.decide.outputs.ctx }}" \
+            -t "$IMAGE:latest" \
+            .
+
+      # ⚠ THE PUSH IS PART OF THE BUILD NOW. `docker buildx build --push` writes all three tags
+      # straight from the builder to the registry, so the three `docker push` lines that used to
+      # live here would look for an image the local daemon never received. The tags themselves are
+      # unchanged, including the context tag `decide` looks for next time and the deploys pull.
+      #
+      # The verification below is therefore MORE important, not less: nothing local was produced,
+      # so the registry is the only witness that anything was built at all.
+
+      # A push that returns a digest has been ACCEPTED, which is not the same as servable. Ask the
+      # REGISTRY what it stored, over the network, in about a second — this catches the failures
+      # that actually recur: a package a puller cannot see, credentials that only worked for write,
+      # a tag that never landed.
+      - name: Ask the registry for what it stored
+        if: github.event_name == 'push' || inputs.push
+        run: docker buildx imagetools inspect "$IMAGE:${{ steps.meta.outputs.tag }}"
+
+      # The whole round trip a fleet host performs, and the only check that covers a layer the
+      # registry accepted but cannot serve. It costs a minute and re-downloads 6 GB, so it is not
+      # what every push pays — run it before trusting a new host, a new package, or a registry
+      # change. Dropping the local copy first is the point: with the image still in the daemon,
+      # `docker pull` answers from what it holds and proves nothing.
+      #
+      # ⚠ `docker rmi` IS NOW BEST-EFFORT, not a precondition. With the `docker-container` builder
+      # the image never entered this daemon in the first place, so there is usually nothing to drop
+      # — which is exactly the state this step wanted to create. It stays because a runner that
+      # pulled the tag in an earlier job would otherwise answer from what it holds and prove nothing.
+      - name: Pull the image back in full
+        if: inputs.deep_verify
+        run: |
+          set -euo pipefail
+          docker rmi "$IMAGE:${{ steps.meta.outputs.tag }}" "$IMAGE:latest" > /dev/null 2>&1 || true
+          docker pull "$IMAGE:${{ steps.meta.outputs.tag }}"
+          docker image inspect "$IMAGE:${{ steps.meta.outputs.tag }}" \
+            --format 'pulled back: {{.Id}}'
+
+      # ⚠ SIZE COMES FROM THE REGISTRY, NOT THE DAEMON. `docker image inspect` used to answer here
+      # because the build left a copy behind; with the container builder it does not, and asking
+      # the daemon would fail the step on a build that in fact succeeded. `imagetools` reads the
+      # manifest over the network, so this reports the COMPRESSED size a fleet host downloads —
+      # a different (and more useful) number than the uncompressed one this row used to show.
+      - name: Report
+        run: |
+          {
+            echo "### tracy/dsh"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| image | \`$IMAGE:${{ steps.meta.outputs.tag }}\` |"
+            echo "| size (compressed, as a host downloads it) | $(docker buildx imagetools inspect "$IMAGE:${{ steps.meta.outputs.tag }}" --raw 2>/dev/null | awk -F'[,:]' '/"size"/{for(i=1;i<=NF;i++) if($i ~ /"size"/) {gsub(/[^0-9]/,"",$(i+1)); s+=$(i+1)}} END{printf "%.2f GB", s/1024/1024/1024}') |"
+            echo "| repo commit | \`${{ steps.meta.outputs.short }}\` |"
+            echo "| DSH_COMMIT | \`${{ steps.meta.outputs.dsh_commit }}\` |"
+            echo "| context | \`${{ needs.decide.outputs.ctx }}\` |"
+            echo
+            echo "Pull on a fleet host: \`docker pull $IMAGE:${{ steps.meta.outputs.tag }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The key is a credential on a machine that persists between jobs — it does not get to stay.
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+  # ── Mirror to AWS ECR (plan docs/sre/2026-10-20-chuyen-ghcr-sang-ecr-plan.md, P1) ─────────────
+  #
+  # GHCR stays the registry the build pushes to and the default every deploy pulls from. This job
+  # copies the tags this run built OR will deploy into ECR (`scripts/ci/mirror-to-ecr.sh`): a tag
+  # ECR lacks is copied from GHCR, which is also the backfill of a context tag reused without a
+  # build; a tag ECR has is not copied again.
+  # Most pushes reuse a context tag (`decide` found it, `build` skipped), so the context tag is copied
+  # whether or not this run built it: that is the tag every dsh deploy pulls.
+  #
+  # 🔒 `environment: ecr-push` IS WHERE THE PUSH KEY LIVES, and that environment only admits
+  # develop, main and staging, so the `if:` names the same three refs (a dispatch from any other
+  # branch skips this job rather than waiting on an environment that refuses it). The key is an IAM
+  # user's (push/pull on lab3-image/tracy-ai/*), given to the login step alone as step env.
+  #
+  # No key yet → a notice and a green job: ECR is not required until an environment sets
+  # PULL_REGISTRY=ecr, and the deploys only wait for this job, they do not need it to succeed.
+  mirror-to-ecr:
+    needs: [decide, build]
+    if: >-
+      ${{ !cancelled() && needs.decide.result == 'success'
+      && (needs.build.result == 'success' || needs.build.result == 'skipped')
+      && (github.event_name == 'push' || inputs.push)
+      && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging') }}
+    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    environment:
+      name: ecr-push
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout (without submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+
+      - name: Is the ECR push key set?
+        id: keys
+        env:
+          KEY_ID: ${{ secrets.ECR_PUSH_AWS_ACCESS_KEY_ID }}
+          KEY_SECRET: ${{ secrets.ECR_PUSH_AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+          ECR_REPO_PREFIX: ${{ vars.ECR_REPO_PREFIX }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          if [ -n "$KEY_ID" ] && [ -n "$KEY_SECRET" ] && [ -n "$ECR_REGISTRY" ] && [ -n "$ECR_REPO_PREFIX" ] && [ -n "$AWS_REGION" ]; then
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+            echo "ECR_PREFIX=$ECR_REGISTRY/$ECR_REPO_PREFIX" >> "$GITHUB_ENV"
+          else
+            echo "::notice title=ECR mirror skipped::ECR_PUSH_AWS_* secrets (environment ecr-push) or vars ECR_REGISTRY / ECR_REPO_PREFIX / AWS_REGION are not set; nothing was copied to ECR"
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Log in to GHCR
+        if: steps.keys.outputs.ready == 'yes'
+        run: echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      # Not configure-aws-credentials: it would export the key to every later step of the job.
+      - name: Log in to ECR
+        if: steps.keys.outputs.ready == 'yes'
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ECR_PUSH_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_PUSH_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      - name: Copy this run's tags to ECR
+        if: steps.keys.outputs.ready == 'yes'
+        env:
+          CTX: ${{ needs.decide.outputs.ctx }}
+          BUILT: ${{ needs.build.result }}
+          DATED: ${{ needs.build.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # The context tag is what every deploy pulls, built by this run or an earlier one. The dated
+          # tag and `latest` moved in GHCR only when this run built, so only then here.
+          extra=()
+          if [ "$BUILT" = success ] && [ -n "$DATED" ]; then extra=(--tag "$DATED" --tag latest); fi
+          bash scripts/ci/mirror-to-ecr.sh --from "$IMAGE" --to "$ECR_PREFIX/tracy-dsh" --source "$CTX" ${extra[@]+"${extra[@]}"}
+          echo "### ECR mirror: \`$ECR_PREFIX/tracy-dsh:$CTX\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Log out of both registries
+        if: always()
+        run: |
+          docker logout ghcr.io || true
+          if [ -n "${{ vars.ECR_REGISTRY }}" ]; then docker logout '${{ vars.ECR_REGISTRY }}' || true; fi
+
+  # ── Deploy ─────────────────────────────────────────────────────────────────────────────────
+  #
+  # The job runs ON the target host, on a runner labelled for it. Nothing here holds an SSH key,
+  # and no host stores a registry credential: `docker login` below uses this run's GITHUB_TOKEN,
+  # which expires with the job. Production on a different machine is a runner with the label
+  # `tracy-prod` — no address anywhere in this file.
+  #
+  # `environment:` is not a gate here (deploys are automatic, since 02/09: merging IS deploying).
+  # It is the ledger: GitHub records which commit reached which environment, when, and at whose
+  # push — the question CLAUDE.md §5 says a deploy has to be able to answer.
+  #
+  # ⚠ A RUNNER ON A HOST IS ROOT ON THAT HOST. It holds the docker socket, so anyone who can merge
+  # a workflow can run anything on production. That is the cost of this shape, and it is the same
+  # cost as a deploy key in secrets; what keeps it honest is branch protection and review on
+  # `.github/workflows/**`, not anything in this file.
+
+  # Both deploys pull the CONTEXT tag, whether this run built it or an earlier one did. Pulling a
+  # tag the host already runs is seconds (every layer is present) and `compose up -d` leaves a
+  # container whose image did not change alone — so an unchanged image never restarts dsh.
+  # `!cancelled()` + the two `needs.*.result` checks: run after a skipped build, never after a
+  # failed one (a bare `always()` would deploy on top of a red build).
+  #
+  # 🔒 Each deploy also `needs:` mirror-to-ecr and reads the environment's `vars.PULL_REGISTRY`
+  # (ghcr | ecr; unset = ghcr, the commands it always ran). The `if:` does not look at the mirror:
+  # skipped (no key) or red, it never holds a ghcr deploy; with ecr the action refuses unless the
+  # mirror succeeded. Same rule as build-app-images.yml.
+  deploy-dev:
+    needs: [decide, build, mirror-to-ecr]
+    if: >-
+      ${{ !cancelled() && needs.decide.result == 'success'
+      && (needs.build.result == 'success' || needs.build.result == 'skipped')
+      && (github.ref == 'refs/heads/develop' || inputs.deploy_to == 'dev') }}
+    runs-on: [self-hosted, linux, x64, tracy-dev]
+    environment:
+      name: dev
+    # 20 for the deploy itself + up to 20 of `deploy-host-dsh.sh` waiting for running imports (issue #83).
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      - uses: ./.github/actions/deploy-host-dsh
+        with:
+          image: ${{ env.IMAGE }}
+          tag: ${{ needs.decide.outputs.ctx }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.PULL_REGISTRY || 'ghcr' }}
+          ecr-image-prefix: ${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO_PREFIX }}
+          aws-region: ${{ vars.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ECR_PULL_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY }}
+          mirror-result: ${{ needs.mirror-to-ecr.result }}
+
+  # Staging (06/10/2026): the host between `develop` and `main`, a copy of production that runs the
+  # week's release before `main` takes it. Same shape as the other two, its own one runner
+  # labelled `tracy-staging` (TracyHQ/tracy-runners `hosts.tsv`), its own environment.
+  deploy-staging:
+    needs: [decide, build, mirror-to-ecr]
+    if: >-
+      ${{ !cancelled() && needs.decide.result == 'success'
+      && (needs.build.result == 'success' || needs.build.result == 'skipped')
+      && (github.ref == 'refs/heads/staging' || inputs.deploy_to == 'staging') }}
+    runs-on: [self-hosted, linux, x64, tracy-staging]
+    environment:
+      name: staging
+    # 20 for the deploy itself + up to 20 of `deploy-host-dsh.sh` waiting for running imports (issue #83).
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      - uses: ./.github/actions/deploy-host-dsh
+        with:
+          image: ${{ env.IMAGE }}
+          tag: ${{ needs.decide.outputs.ctx }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.PULL_REGISTRY || 'ghcr' }}
+          ecr-image-prefix: ${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO_PREFIX }}
+          aws-region: ${{ vars.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ECR_PULL_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY }}
+          mirror-result: ${{ needs.mirror-to-ecr.result }}
+
+  deploy-prod:
+    needs: [decide, build, mirror-to-ecr]
+    if: >-
+      ${{ !cancelled() && needs.decide.result == 'success'
+      && (needs.build.result == 'success' || needs.build.result == 'skipped')
+      && (github.ref == 'refs/heads/main' || inputs.deploy_to == 'production') }}
+    runs-on: [self-hosted, linux, x64, tracy-prod]
+    environment:
+      name: production
+    # 20 for the deploy itself + up to 20 of `deploy-host-dsh.sh` waiting for running imports (issue #83).
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      - uses: ./.github/actions/deploy-host-dsh
+        with:
+          image: ${{ env.IMAGE }}
+          tag: ${{ needs.decide.outputs.ctx }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.PULL_REGISTRY || 'ghcr' }}
+          ecr-image-prefix: ${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO_PREFIX }}
+          aws-region: ${{ vars.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ECR_PULL_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY }}
+          mirror-result: ${{ needs.mirror-to-ecr.result }}

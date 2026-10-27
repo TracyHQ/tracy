@@ -1,0 +1,119 @@
+{
+  "color": {
+    "deep-void": {
+      "$value": "#0d1117",
+      "$type": "color",
+      "$description": "Deep Void — Page canvas, section backgrounds, footer — the absolute darkness that lets all other layers float"
+    },
+    "abyss": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Abyss — Hero section canvas, deepest background layer, terminal/code surfaces"
+    },
+    "carbon": {
+      "$value": "#090d0a",
+      "$type": "color",
+      "$description": "Carbon — Button surface, near-black accent fill"
+    },
+    "obsidian": {
+      "$value": "#151a22",
+      "$type": "color",
+      "$description": "Obsidian — Elevated button surface, card depth, input fields on dark canvas"
+    },
+    "slate-edge": {
+      "$value": "#21262d",
+      "$type": "color",
+      "$description": "Slate Edge — Hairline borders, card outlines, divider rules — the primary border that does elevation work"
+    },
+    "iron": {
+      "$value": "#3d4145",
+      "$type": "color",
+      "$description": "Iron — Card surface background, subtle elevated panel"
+    },
+    "fog": {
+      "$value": "#484f58",
+      "$type": "color",
+      "$description": "Fog — Secondary borders, stronger dividers between content blocks"
+    },
+    "mercury": {
+      "$value": "#818b98",
+      "$type": "color",
+      "$description": "Mercury — Muted borders, inactive form outlines"
+    },
+    "ash": {
+      "$value": "#9ea0a2",
+      "$type": "color",
+      "$description": "Ash — Mid-gray borders, icon strokes at reduced contrast"
+    },
+    "pearl": {
+      "$value": "#a4aea6",
+      "$type": "color",
+      "$description": "Pearl — Body text, secondary copy, muted nav labels, icon fills at 183 instances — the workhorse neutral"
+    },
+    "moss": {
+      "$value": "#7c8980",
+      "$type": "color",
+      "$description": "Moss — Tertiary headings, low-emphasis section titles that should recede"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Primary headings, primary text, button text, nav labels — the foreground voice"
+    },
+    "terminal-green": {
+      "$value": "#08872b",
+      "$type": "color",
+      "$description": "Terminal Green — Primary CTA fill (Sign up for GitHub) — the one warm color in the system, deliberately evokes a terminal cursor"
+    },
+    "phosphor": {
+      "$value": "#5fed83",
+      "$type": "color",
+      "$description": "Phosphor — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "canopy": {
+      "$value": "#0d3024",
+      "$type": "color",
+      "$description": "Canopy — Gray wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "ultraviolet": {
+      "$value": "#8c93fb",
+      "$type": "color",
+      "$description": "Ultraviolet — Featured card border accent — signals the selected or highlighted card in a grid"
+    },
+    "sky": {
+      "$value": "#8dd6ff",
+      "$type": "color",
+      "$description": "Sky — Body text accent, icon fills, link text — the cool companion to warm green, 73 instances making it the second-most-present chromatic color"
+    },
+    "cobalt": {
+      "$value": "#1f6feb",
+      "$type": "color",
+      "$description": "Cobalt — Link/button accent at low frequency, icon-secondary token — reserved for marketing moments"
+    }
+  },
+  "font": {
+    "mona-sans": {
+      "$value": "Mona Sans",
+      "$type": "fontFamily",
+      "$description": "Primary interface and display typeface — custom GitHub typeface with variable weight axis. Weight 425 at 64px display is the signature choice: lighter than conventional bold but heavier than regular, creating a confident but engineered voice. Mona Sans Mono at 12px uppercase handles micro-labels (nav, button tags) with its 0.015em tracking giving labels a technical, stamped feel."
+    },
+    "mona-sans-mono": {
+      "$value": "Mona Sans Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced companion for code-related labels, small-caps tags, and terminal-feel micro-text"
+    },
+    "mona-sans-vf": {
+      "$value": "Mona Sans VF",
+      "$type": "fontFamily",
+      "$description": "Mona Sans VF — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://github.com",
+      "siteName": "GitHub",
+      "extractedAt": "2026-07-03T03:46:17.051Z",
+      "variant": "compact"
+    }
+  }
+}

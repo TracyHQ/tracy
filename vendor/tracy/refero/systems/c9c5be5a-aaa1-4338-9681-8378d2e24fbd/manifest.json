@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c9c5be5a-aaa1-4338-9681-8378d2e24fbd",
+  "status": "complete",
+  "name": "Lamborghini.com",
+  "url": "https://styles.refero.design/style/c9c5be5a-aaa1-4338-9681-8378d2e24fbd",
+  "sourceWebsite": "https://lamborghini.com",
+  "extractedAt": "2026-06-03T16:36:06.256Z",
+  "capturedAt": "2026-10-08T05:17:27.852180+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "Showroom black with one yellow car under spotlights",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/fd767818-e45d-44b8-a34a-d9907d14217e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/64a4914f-fddc-401e-b59a-0e9879450c44.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/976de80a-b67c-475b-8527-10871051b3b6.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/e9370cc0-7e21-469f-98db-2dcbf4b7727f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ca77e2d5-b807-4035-ab02-c56778ca9195.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "843221c56a280a2a8cedd03fe1a6cd8e854698bc35e5f2a06b4c5d8c12ac685e",
+      "bytes": 21291
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e79efa19a31dc50277ea49c09850eb5d36d46046beade088acd4b263dd4f9aef",
+      "bytes": 65613
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d57ca85eda16a332a05c4220b49eebec7c70a331358c70a839fd8ec23d08f2e4",
+      "bytes": 18213
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "cbfa30260955968fe76c5c5c51d551ffb67c33fbace9482196aede842a079895",
+      "bytes": 10703
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7bd46b5f385ce01d0ebfd63fbc0b6d680e67aa7b8015df9eaa81f8db83f2ea05",
+      "bytes": 14261
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e4727c9e2c2665181093f0d0f406d2dce62c06ac9c15c52a3eb0c6d26b15e791",
+      "bytes": 3490
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1bd767c51da7bd3251fa37b631710ef87dffeb6ff7bb43bfeb40759378c93c93",
+      "bytes": 646
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4908c21c81cce51472fa51866029f565468f85ba811bd3a9772dfe9273d0b439",
+      "bytes": 663
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bf61b57cff885e5eb251663f203ba8a91f789c909542dc1360b2c6690ed809bf",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4ba365568e2987bef0b5e165291784890c25b3e7ad62c1e92889c84a1c984ce6",
+      "bytes": 43289
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4d50d5db7eb55bc9bcc7cedc9e76da82fc93015bf7e77fbfe454d35531102719",
+      "bytes": 21882
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b07dd04e4f48d043b74268aae7afcc6a5c1a8cf953e68ac881a6cf07a8883162",
+      "bytes": 39226
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "df52bd84369c81de3671059874d5feaa894df745da5ccfea641a85604576e210",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1e158e0494d8f52505373b6a21cf268c914fd8354a45bec9881a796b84f1ccbd",
+      "bytes": 1655
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0ebad5ecd7ff5d9ce33e82e56321c281c9df26b3233144212939f6c2c7a0e987",
+      "bytes": 2167
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "355e8465-df7d-486a-9d76-2ace37d076a2",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "5528d10f-2e7d-4502-aa49-7bde290e8fe2",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "80164adf-a898-4f7c-bce7-12f3f62e1649",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+    "c9c5be5a-aaa1-4338-9681-8378d2e24fbd",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1103-emdash-menu-kit-language-share-card",
+  "kind": "fix",
+  "title": "EmDash: the menu planner leaves sample and error-page items alone and writes labels in the site's language; Tracy Business 1.7.5 shares the customer's card over a hero picture",
+  "pr": 1103,
+  "area": "sites/apply/emdash",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no site. From the TCH checkout run: node --test --test-name-pattern=\"sample page or an error page|asked again in the site|keeps the English the owner wrote|the share picture\" apps/tracy-web/test/brief-emdash.test.mjs packages/cms/tracy-emdash-theme-business/tests/brand.test.mjs",
+    "S2: brief-emdash runs seedMenus and planMenuLabels over the Tracy Business seed with a fake model: kit items (seed/personalize.json samples) and /404 must not be planned; an English label copied from the description on a non-English site is asked again once, then dropped.",
+    "S3: brand.test.mjs calls shareImageOf (src/lib/share-image.ts) with and without a share card (seo.defaultOgImage).",
+    "S4: Read the node:test summary lines (tests / pass / fail) and every failing test name."
+  ],
+  "expect": [
+    "S4: tests 4 or more, fail 0.",
+    "No item leading to /kit/* or /404 reaches the planner; their labels stay the seed's for the tool to translate.",
+    "On a Vietnamese site a label that only repeats unaccented words of the description is asked again in Vietnamese and dropped if it comes back the same; an English site keeps the owner's English and nothing is asked again.",
+    "shareImageOf: an own picture is kept; a hero gives way to the share card; with no card the hero is shared; a card without url is no card."
+  ],
+  "selectors": {
+    "seam": "seedMenus / planMenuLabels in apps/tracy-web/src/sites/brief-engines/emdash-menus.js; shareImageOf in packages/cms/tracy-emdash-theme-business/src/lib/share-image.ts read by src/layouts/Base.astro",
+    "door": "the menu-label model (fake in the tests); og:image in the page head"
+  },
+  "evidence": "Dev (cowork.tracy.site), 10/10/2026, g55-biz-emd-full (Tracy Business 1.7.4, Vietnamese): the Resources menu read 'Bánh mì', 'Sourdough', 'Freshly baked', 'Dubai' while opening /kit/newsletter, /kit/email, /kit/slides and /404 (PAGE-5, K3); the footer carried English 'Sourdough', 'Vietnamese bread' (LANG-2); the home page shared its generated hero photo instead of the logo share card (D5).",
+  "fence": "Unit tests over the real seed and a fake model; no live EmDash site or model ran. The 1.7.5 theme reaches customers only after its release.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=sample page or an error page|asked again in the site|keeps the English the owner wrote|the share picture",
+      "apps/tracy-web/test/brief-emdash.test.mjs",
+      "packages/cms/tracy-emdash-theme-business/tests/brand.test.mjs"
+    ]
+  }
+}

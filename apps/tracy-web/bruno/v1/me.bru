@@ -1,0 +1,19 @@
+meta {
+  name: me
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: inherit
+}
+
+docs {
+  # Who is this key?
+
+  Answers `{email, keyId, siteKey, scopes}` from the key alone; the site is not called. Send it
+  first: a `200` means the key and the environment are right. `401 KEY_INVALID` means the
+  `apiKey` value is wrong or the key was revoked; `401 NOT_SIGNED_IN` means no Bearer arrived.
+}

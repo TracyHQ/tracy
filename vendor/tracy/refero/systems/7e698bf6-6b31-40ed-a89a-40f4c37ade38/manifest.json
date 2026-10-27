@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7e698bf6-6b31-40ed-a89a-40f4c37ade38",
+  "status": "complete",
+  "name": "Literal",
+  "url": "https://styles.refero.design/style/7e698bf6-6b31-40ed-a89a-40f4c37ade38",
+  "sourceWebsite": "https://literal.club",
+  "extractedAt": "2026-06-03T20:56:31.318Z",
+  "capturedAt": "2026-10-08T05:14:00.042329+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Library in soft daylight — a reading room where warm cream walls meet dark walnut shelves.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2b30d39b-d619-4120-a573-9e1fdbcd2120.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e6178f21-10d2-402e-a497-969528d3f553.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/05ca903a-d4a2-4b70-8423-40d269d8afd1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0e1735bb-83c6-4ff3-b55c-76c5f75133a6.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c2c3b950-4c10-4807-9780-98c6f595cff3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f1327575e855c4f14800c6685c91307852661656b5b6ff60a123c2eb16023e16",
+      "bytes": 15852
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "57c19ad048619b849e2cb72ac209f2321884bf529912873f27dcc3613ccf2d56",
+      "bytes": 136140
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f609d8d93b4427aa0a9108a911511db95cc7796f5e685fb3fb9ad37a65267448",
+      "bytes": 13767
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c6f7f5d9650ae6742f60b681f59259f8bef15089ec293100df193fa86fe77034",
+      "bytes": 7060
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c6e4a24d732198011764b75911ba7ea0501f6a93931979085a0be6360c6cd0f5",
+      "bytes": 10463
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a179a9c02212da23f7ba6a3f0a44982b4ce507463c0428d8010fe0a7fce2444e",
+      "bytes": 2168
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "fc744f722dbaaa7291c5b4e170ea2e3f4c4ae6927ae6bb75dec07d3c2533ac89",
+      "bytes": 523
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ab8cb5c24884b0ecdb8fe301b3bd1b0568174ce4a5e48186691f6e36780dfb60",
+      "bytes": 540
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3b2a6b5dc3a7742d4f0cb408a7da05e4794948de068c90393e0bb4b79a5c53d6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "76c5fe1acfe27d35446be205a7dc4e51a071b1dbc63e6ce0cb2aa71d6bfb8dea",
+      "bytes": 40636
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "30d686244b8c443203152aae3bae86ca4f6efa7ea364ddb242635b24b8b760a9",
+      "bytes": 21371
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9c23b1e4829c293c057ba48c1fb032d7f14013e4d88c075f27cd818d873386be",
+      "bytes": 35038
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ba63e10def6f78977c60f0722bc5b5daadb8f540af693b89f6c4d56ee63a9059",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "202db71b0a72fe7d75beb8437fa57e01940806423e55eb3d7c47edeed40d1074",
+      "bytes": 1109
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6d058ed80744ef1a1f770d0952c5da9caf5df8dbeec093e7d0bad155adab001c",
+      "bytes": 1626
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "34c8dbee-f5d9-4495-a0e0-a25c6ca4b95b",
+    "37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+    "5af6b791-6cad-4497-9e94-ace28e4fbd51",
+    "65f775f1-6dcc-4c49-80d2-b5a017b76f59",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "7e698bf6-6b31-40ed-a89a-40f4c37ade38",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9623a699-230d-4ee2-a174-8209e1e9ef16",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "9c92c3d1-a2fe-4a27-a324-826b19501774",
+    "ab650279-aa18-43e5-a998-34190d7bedc7",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e1497817-b9f1-4d7a-842f-58a08dd9e455",
+    "f240ed7d-d466-478e-bbce-6c93420dfd1c",
+    "f89bad29-019a-48d7-9724-c40a0d7d8171",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "source": "quickstart/ja-nova/j6@1.0.6 https://ja-nova-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "light",
+  "capturedAt": "2026-10-14",
+  "note": "dark-lettered logo made for a white header, kept on the system black header",
+  "plain": [
+    {
+      "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1/span:1/img:1",
+      "at": "img.logo-img",
+      "src": "logo/item-1.png",
+      "filter": null,
+      "ground": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 1
+      },
+      "ink": null
+    },
+    {
+      "path": "div:1/div:1/div:15/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/img:1",
+      "at": "img",
+      "src": "logo/item-2.png",
+      "filter": null,
+      "ground": {
+        "r": 33,
+        "g": 37,
+        "b": 41,
+        "a": 1
+      },
+      "ink": null
+    }
+  ],
+  "worn": [
+    {
+      "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1/span:1/img:1",
+      "at": "img.logo-img",
+      "src": "logo/item-1.png",
+      "filter": null,
+      "ground": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      },
+      "ink": null
+    },
+    {
+      "path": "div:1/div:1/div:15/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/img:1",
+      "at": "img",
+      "src": "logo/item-2.png",
+      "filter": null,
+      "ground": {
+        "r": 26,
+        "g": 26,
+        "b": 26,
+        "a": 1
+      },
+      "ink": null
+    }
+  ]
+}

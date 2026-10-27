@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-893-emdash-forms-mail-account-without-valid-email",
+  "kind": "fix",
+  "title": "EmDash Apply: with no valid email typed, every form of the map mails the account that pressed Apply, in every language",
+  "pr": 893,
+  "area": "sites/apply/emdash",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-emdash.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"no email typed: the forms mail the person who pressed Apply, an address no page shows; a typed email still wins\"; \"an email the tool would not take\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 29).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): with no email, or one the tool's rule rejects ('n/a', a phone), every <slug>-<locale> form of the map in every seed language (hidden ones included) gets settings.notifyEmails = [account email] through the forms door with the settings alone (never pages), a form the map does not name is left, the account address reaches no page and no --answers-json; a typed valid email still wins."
+  ],
+  "selectors": {
+    "engine": "mailFormsTo, TOOL_EMAIL in apps/tracy-web/src/sites/brief-engines/emdash.js",
+    "door": "/_emdash/api/plugins/emdash-forms/forms/update {id, settings}"
+  },
+  "evidence": "Ledger L05 (EmDash part), 05/10/2026: an EmDash site made with Apply where the customer gave no email mailed every enquiry and newsletter signup to the demo company's sales desk; after the first fix a junk email answer, and hidden languages' forms, still did. Reds 1806d9d55, a36ab61c4, 42e28727b; fixes 134766517, 47f0776ca, f021b0477.",
+  "fence": "The account address is a recipient only: never one of the tool's answers, never on a page; forms outside the map are untouched.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-emdash.test.mjs"],
+    "tests": [
+      "no email typed: the forms mail the person who pressed Apply, an address no page shows; a typed email still wins",
+      "an email the tool would not take"
+    ]
+  }
+}

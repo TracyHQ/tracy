@@ -1,0 +1,615 @@
+{
+  "source": "quickstart/ja-kinetic/j6@1.0.6",
+  "pages": ["/", "/index.php", "/index.php/home-menu/home-blueprint", "/index.php/home-menu/home-signal"],
+  "page": "#0a0d0c",
+  "rules": [
+    [
+      ".acm-header-cta .hx-btn--primary:hover, .acm-header-cta .hx-btn--primary:focus-visible, .acm-header-cta .hx-cta-pill:hover, .acm-header-cta .hx-cta-pill:focus-visible",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".acm-header-cta .hx-btn--primary:hover, .acm-header-cta .hx-btn--primary:focus-visible, .acm-header-cta .hx-cta-pill:hover, .acm-header-cta .hx-cta-pill:focus-visible",
+      "background-color",
+      "accent",
+      0,
+      "--primary-hover"
+    ],
+    [".acm-hero", "background-color", "bg", 0, "--bg"],
+    [".acm-hero .hx-btn--primary", "color", "on-accent", 0, "--primary-ink"],
+    [".acm-hero .hx-btn--primary", "background-color", "accent", 0, "--primary"],
+    [
+      ".acm-hero .hx-btn--primary:hover, .acm-hero .hx-btn--primary:focus-visible",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".acm-hero .hx-btn--primary:hover, .acm-hero .hx-btn--primary:focus-visible",
+      "background-color",
+      "accent",
+      0,
+      "--primary-hover"
+    ],
+    [".acm-clients-ticker", "background-color", "band", 0],
+    [".acm-clients-ticker", "border-top-color", "border", 0],
+    [".acm-clients-ticker", "border-bottom-color", "border", 0],
+    [".acm-clients-ticker .acm-tick-dot", "background-color", "accent", 0],
+    [".acm-clients-ticker .acm-tick-item.is-bright", "color", "on-band", 0],
+    [".acm-clients-ticker .acm-tick-item.is-dim", "color", "on-band", 0],
+    [".acm-incident-timeline .hx-section", "background-color", "bg", 0, "--elevated"],
+    [".acm-incident-timeline .hx-eyebrow", "color", "accent-text", 0, "--primary"],
+    [".acm-incident-timeline .hx-h2", "color", "heading", 0, "--heading"],
+    [".acm-incident-timeline .hx-inc-line", "background-color", "border", 0, "--border"],
+    [".acm-incident-timeline .hx-inc-node", "background-color", "surface", 0, "--surface"],
+    [".acm-incident-timeline .hx-inc-node svg", "color", "accent-text", 0, "--primary"],
+    [".acm-incident-timeline .hx-inc-time", "color", "accent-text", 0, "--primary"],
+    [".acm-incident-timeline .hx-inc-phase", "color", "muted", 0, "--muted"],
+    [".acm-incident-timeline .hx-inc-title", "color", "heading", 0, "--heading"],
+    [".acm-incident-timeline .hx-inc-text", "color", "fg", 0, "--text"],
+    [".acm-features-ledger", "color", "fg", 0, "--text"],
+    [".acm-features-ledger .hx-metrics-card", "background-color", "surface", 0, "--surface"],
+    [".acm-features-ledger .hx-metrics-head", "background-color", "surface", 0, "--chrome-elevated"],
+    [".acm-features-ledger .hx-metrics-cardlabel", "color", "muted", 0, "--muted"],
+    [".acm-features-ledger .hx-metrics-badge", "color", "accent-text", 0, "--primary"],
+    [".acm-features-ledger .hx-metrics-dot", "background-color", "accent", 0, "--primary"],
+    [".acm-features-ledger .hx-metric-label", "color", "muted", 0, "--muted"],
+    [".acm-features-ledger .hx-metric-value", "color", "heading", 0, "--heading"],
+    [".acm-features-ledger .hx-metric-desc", "color", "fg", 0, "--text"],
+    [
+      ".acm-features-ledger.layout-metrics .hx-section",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-elevated",
+      "(max-width: 991.98px)"
+    ],
+    [".acm-cta .hx-cta-btn-primary", "color", "on-accent", 0, "--primary-ink"],
+    [".acm-cta .hx-cta-btn-primary", "background-color", "accent", 0, "--primary"],
+    [
+      ".acm-cta .hx-cta-btn-primary:hover, .acm-cta .hx-cta-btn-primary:focus-visible",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".acm-cta .hx-cta-btn-primary:hover, .acm-cta .hx-cta-btn-primary:focus-visible",
+      "background-color",
+      "accent",
+      0,
+      "--primary-hover"
+    ],
+    [".acm-cta .hx-cta-chip", "background-color", "surface", 0],
+    [".acm-social .hx-social-label", "color", "muted", 0, "--muted"],
+    [".onefield .acym__field__error__block", "background-color", "band", 0],
+    [".onefield .acym__field__error__block", "border-top-color", "border", 0],
+    [".onefield .acym__field__error__block", "border-right-color", "border", 0],
+    [".onefield .acym__field__error__block", "border-bottom-color", "border", 0],
+    [".onefield .acym__field__error__block", "border-left-color", "border", 0],
+    [
+      ".kinetic-footer .hx-foot-bottom .kinetic-legal-band .hx-legal a:hover, .kinetic-footer .hx-foot-bottom .kinetic-legal-band .hx-legal a:focus-visible",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    ["body", "color", "fg", 0, "--t4-body-color"],
+    ["body", "background-color", "bg", 0, "--t4-body-bg"],
+    ["h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1", "color", "heading", 0, "--t4-heading-color"],
+    ["a:hover, a:focus, a:active", "color", "accent-text", 0],
+    [
+      ".kinetic-footer .hx-foot-news-band .acym_form input[type=\"email\"], .kinetic-footer .hx-foot-news-band .acym_form input[type=\"text\"]",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-footer .hx-foot-news-band .acym_form input[type=\"email\"], .kinetic-footer .hx-foot-news-band .acym_form input[type=\"text\"]",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-surface"
+    ],
+    [
+      ".kinetic-footer .hx-foot-news-band .acym_form input[type=\"email\"]::placeholder, .kinetic-footer .hx-foot-news-band .acym_form input[type=\"text\"]::placeholder",
+      "color",
+      "muted",
+      0,
+      "--chrome-muted"
+    ],
+    [
+      ".kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a",
+      "color",
+      "on-accent",
+      1,
+      "--primary-ink"
+    ],
+    [
+      ".kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a",
+      "background-color",
+      "accent",
+      1,
+      "--primary"
+    ],
+    [
+      ".kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:active, .kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:focus-visible, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:active, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:focus-visible, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:hover, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:focus, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:active, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:active, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:active, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:focus-visible, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:focus-visible, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:focus-visible",
+      "color",
+      "on-accent",
+      1,
+      "--primary-ink"
+    ],
+    [
+      ".kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:active, .kinetic-footer .hx-foot-news-band .acysubbuttons input.subbutton:focus-visible, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:active, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button:focus-visible, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:hover, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:hover, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:focus, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:focus, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:active, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:active, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:active, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn:focus-visible, .kinetic-footer .hx-foot-news-band .acysubbuttons .blog-list .item-readmore a:focus-visible, .blog-list .item-readmore .kinetic-footer .hx-foot-news-band .acysubbuttons a:focus-visible",
+      "background-color",
+      "accent",
+      1,
+      "--primary-hover"
+    ],
+    ["figure figcaption", "color", "fg", 0],
+    ["figure figcaption", "background-color", "surface", 0],
+    [
+      ".t4-megamenu .navbar-nav > li > a, .t4-megamenu .navbar-nav > li > .nav-link",
+      "color",
+      "fg",
+      0,
+      "--mainnav-link-color"
+    ],
+    [
+      ".t4-megamenu .navbar-nav > li > a:hover, .t4-megamenu .navbar-nav > li > a:focus, .t4-megamenu .navbar-nav > li > a:active, .t4-megamenu .navbar-nav > li > .nav-link:hover, .t4-megamenu .navbar-nav > li > .nav-link:focus, .t4-megamenu .navbar-nav > li > .nav-link:active",
+      "color",
+      "fg",
+      0,
+      "--mainnav-link-hover-color"
+    ],
+    [
+      ".t4-megamenu .navbar-nav > li.active > a, .t4-megamenu .navbar-nav > li.active > .nav-link",
+      "color",
+      "fg",
+      0,
+      "--mainnav-link-active-color"
+    ],
+    [".t4-megamenu .dropdown-menu", "color", "fg", 0, "--mainnav-text-color"],
+    [".t4-megamenu .dropdown-menu", "background-color", "band", 0],
+    [".t4-megamenu .dropdown-menu a", "color", "fg", 0, "--mainnav-link-color"],
+    [
+      ".t4-megamenu .dropdown-menu a:hover, .t4-megamenu .dropdown-menu a:focus, .t4-megamenu .dropdown-menu a:active",
+      "color",
+      "fg",
+      0,
+      "--mainnav-link-hover-color"
+    ],
+    [
+      ".t4-megamenu .dropdown-menu li > a, .t4-megamenu .dropdown-menu li > .nav-link, .t4-megamenu .dropdown-menu li .dropdown-item",
+      "color",
+      "fg",
+      0,
+      "--mainnav-link-color"
+    ],
+    [
+      ".t4-megamenu .dropdown-menu li > a:hover, .t4-megamenu .dropdown-menu li > a:focus, .t4-megamenu .dropdown-menu li > a:active, .t4-megamenu .dropdown-menu li > .nav-link:hover, .t4-megamenu .dropdown-menu li > .nav-link:focus, .t4-megamenu .dropdown-menu li > .nav-link:active, .t4-megamenu .dropdown-menu li .dropdown-item:hover, .t4-megamenu .dropdown-menu li .dropdown-item:focus, .t4-megamenu .dropdown-menu li .dropdown-item:active",
+      "color",
+      "fg",
+      0,
+      "--mainnav-link-hover-color"
+    ],
+    [".t4-megamenu .dropdown-menu li.active > a", "color", "fg", 0, "--mainnav-link-active-color"],
+    [".t4-offcanvas", "background-color", "band", 0],
+    [".t4-offcanvas .t4-off-canvas-header", "background-color", "band", 0],
+    [".t4-offcanvas .t4-off-canvas-header .close", "background-color", "band", 0],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .nav-link, .t4-offcanvas .t4-off-canvas-body .navbar .separator",
+      "color",
+      "fg",
+      0,
+      "--body-text-color"
+    ],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu .dropdown-item, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu .nav-link",
+      "color",
+      "fg",
+      0,
+      "--body-text-color"
+    ],
+    [".t4-offcanvas-toggle", "color", "fg", 0, "--mainnav-link-color"],
+    [".t4-offcanvas-toggle:hover", "color", "fg", 0, "--mainnav-link-hover-color"],
+    [".nav-breakpoint-lg .t4-megamenu", "background-color", "band", 0, null, "(max-width: 991.98px)"],
+    [".t4-footer", "color", "fg", 0, "--footer-text-color"],
+    [".t4-footer", "background-color", "surface", 0, "--footer-bg-color"],
+    [".t4-footer a", "color", "fg", 0, "--footer-link-color"],
+    [
+      ".t4-footer a:hover, .t4-footer a:focus, .t4-footer a:active",
+      "color",
+      "fg",
+      0,
+      "--footer-link-hover-color"
+    ],
+    [".t4-footer .nav > li > a", "color", "fg", 0, "--footer-link-color"],
+    [
+      ".t4-footer .nav > li > a:hover, .t4-footer .nav > li > a:active, .t4-footer .nav > li > a:focus",
+      "color",
+      "fg",
+      0,
+      "--footer-link-hover-color"
+    ],
+    ["#back-to-top:hover, #back-to-top:focus, #back-to-top:active", "color", "on-accent", 0, "--color-white"],
+    [
+      "#back-to-top:hover, #back-to-top:focus, #back-to-top:active",
+      "background-color",
+      "accent",
+      0,
+      "--color-primary"
+    ],
+    [".t4-header", "background-color", "band", 0],
+    ["h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6", "color", "heading", 0, "--heading"],
+    ["a", "color", "accent-text", 0, "--primary"],
+    ["a:hover", "color", "accent-text", 0, "--primary-hover"],
+    [".hx-btn--primary, .kinetic-btn--primary", "color", "on-accent", 0, "--primary-ink"],
+    [".hx-btn--primary, .kinetic-btn--primary", "background-color", "accent", 0, "--primary"],
+    [".hx-btn--primary:hover, .kinetic-btn--primary:hover", "color", "on-accent", 0, "--primary-ink"],
+    [
+      ".hx-btn--primary:hover, .kinetic-btn--primary:hover",
+      "background-color",
+      "accent",
+      0,
+      "--primary-hover"
+    ],
+    [".hx-btn--ghost:hover, .kinetic-btn--ghost:hover", "background-color", "bg", 0, "--elevated"],
+    [".hx-card, .kinetic-card", "background-color", "surface", 0, "--surface"],
+    [".hx-check", "color", "accent-text", 0, "--primary"],
+    [".kinetic-logo .kinetic-logo-text", "color", "heading", 0, "--chrome-heading"],
+    [".t4-section.t4-header", "background-color", "bg", 0, "--chrome-bg"],
+    [".kinetic-header .item-caret, .kinetic-header .nav-link .caret", "color", "fg", 0, "--chrome-text"],
+    [".kinetic-header", "background-color", "bg", 0, "--chrome-bg"],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu > ul > li > a, .kinetic-header .hx-desknav .t4-megamenu .nav > li > a, .kinetic-header .hx-desknav .t4-megamenu > ul > li > .nav-link, .kinetic-header .hx-desknav .t4-megamenu .nav > li > .nav-link",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu > ul > li > a .caret, .kinetic-header .hx-desknav .t4-megamenu > ul > li > a::after, .kinetic-header .hx-desknav .t4-megamenu .nav > li > a .caret, .kinetic-header .hx-desknav .t4-megamenu .nav > li > a::after, .kinetic-header .hx-desknav .t4-megamenu > ul > li > .nav-link .caret, .kinetic-header .hx-desknav .t4-megamenu > ul > li > .nav-link::after, .kinetic-header .hx-desknav .t4-megamenu .nav > li > .nav-link .caret, .kinetic-header .hx-desknav .t4-megamenu .nav > li > .nav-link::after",
+      "color",
+      "muted",
+      0,
+      "--chrome-muted"
+    ],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu > ul > li > a:hover, .kinetic-header .hx-desknav .t4-megamenu .nav > li > a:hover, .kinetic-header .hx-desknav .t4-megamenu > ul > li > .nav-link:hover, .kinetic-header .hx-desknav .t4-megamenu .nav > li > .nav-link:hover",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu > ul > li.active > a, .kinetic-header .hx-desknav .t4-megamenu .nav > li.active > a, .kinetic-header .hx-desknav .t4-megamenu > ul > li.current > a, .kinetic-header .hx-desknav .t4-megamenu .nav > li.current > a, .kinetic-header .hx-desknav .t4-megamenu > ul > li.active > .nav-link, .kinetic-header .hx-desknav .t4-megamenu .nav > li.active > .nav-link",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu .dropdown-menu, .kinetic-header .hx-desknav .t4-megamenu .mega-dropdown-menu",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-surface"
+    ],
+    [".kinetic-header .hx-desknav .t4-megamenu .mega-col-title", "color", "fg", 0, "--chrome-text"],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu .mega-nav > li > a, .kinetic-header .hx-desknav .t4-megamenu .mega-nav > li > .nav-link, .kinetic-header .hx-desknav .t4-megamenu .dropdown-menu .mega-nav > li > a, .kinetic-header .hx-desknav .t4-megamenu .dropdown-menu-inner ul > li > a",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu .mega-nav > li > a:hover, .kinetic-header .hx-desknav .t4-megamenu .dropdown-menu-inner ul > li > a:hover",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-header .hx-desknav .t4-megamenu .mega-nav > li.active > a, .kinetic-header .hx-desknav .t4-megamenu .mega-nav > li.current > a, .kinetic-header .hx-desknav .t4-megamenu .mega-nav > li.active > .nav-link, .kinetic-header .hx-desknav .t4-megamenu .mega-nav > li.current > .nav-link, .kinetic-header .hx-desknav .t4-megamenu .dropdown-menu .mega-nav > li.active > a, .kinetic-header .hx-desknav .t4-megamenu .dropdown-menu-inner ul > li.active > a",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-header .hx-right-links a, .kinetic-header .hx-right-links .hx-signin",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-header .hx-right-links a:hover, .kinetic-header .hx-right-links .hx-signin:hover",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-header .hx-right-links .hx-cta, .kinetic-header .hx-right-links a.btn, .kinetic-header .hx-right-links .blog-list .item-readmore a, .blog-list .item-readmore .kinetic-header .hx-right-links a, .kinetic-header .hx-right-links .btn, .kinetic-header .hx-right-links .hx-cta-pill, .kinetic-header .hx-right-links .hx-btn--primary, .kinetic-header .hx-right-links .kinetic-btn--primary",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".kinetic-header .hx-right-links .hx-cta, .kinetic-header .hx-right-links a.btn, .kinetic-header .hx-right-links .blog-list .item-readmore a, .blog-list .item-readmore .kinetic-header .hx-right-links a, .kinetic-header .hx-right-links .btn, .kinetic-header .hx-right-links .hx-cta-pill, .kinetic-header .hx-right-links .hx-btn--primary, .kinetic-header .hx-right-links .kinetic-btn--primary",
+      "background-color",
+      "accent",
+      0,
+      "--primary"
+    ],
+    [
+      ".kinetic-header .hx-right-links .hx-cta:hover, .kinetic-header .hx-right-links a.btn:hover, .kinetic-header .hx-right-links .blog-list .item-readmore a:hover, .blog-list .item-readmore .kinetic-header .hx-right-links a:hover, .kinetic-header .hx-right-links .btn:hover, .kinetic-header .hx-right-links .hx-cta-pill:hover, .kinetic-header .hx-right-links .hx-btn--primary:hover, .kinetic-header .hx-right-links .kinetic-btn--primary:hover",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".kinetic-header .hx-right-links .hx-cta:hover, .kinetic-header .hx-right-links a.btn:hover, .kinetic-header .hx-right-links .blog-list .item-readmore a:hover, .blog-list .item-readmore .kinetic-header .hx-right-links a:hover, .kinetic-header .hx-right-links .btn:hover, .kinetic-header .hx-right-links .hx-cta-pill:hover, .kinetic-header .hx-right-links .hx-btn--primary:hover, .kinetic-header .hx-right-links .kinetic-btn--primary:hover",
+      "background-color",
+      "accent",
+      0,
+      "--primary-hover"
+    ],
+    [".kinetic-header .kinetic-theme-toggle", "color", "fg", 0, "--chrome-text"],
+    [".kinetic-header .kinetic-theme-toggle", "background-color", "surface", 0, "--chrome-surface"],
+    [".kinetic-header .kinetic-theme-toggle:hover", "color", "heading", 0, "--chrome-heading"],
+    [".kinetic-header .t4-offcanvas-toggle", "color", "heading", 0, "--chrome-heading"],
+    [".kinetic-header .t4-offcanvas-toggle", "background-color", "surface", 0, "--chrome-surface"],
+    [
+      ".kinetic-header .t4-offcanvas-toggle .toggle-bars, .kinetic-header .t4-offcanvas-toggle i",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [".kinetic-offcanvas.t4-offcanvas", "color", "fg", 0, "--chrome-text"],
+    [".kinetic-offcanvas.t4-offcanvas", "background-color", "surface", 0, "--chrome-surface"],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-header",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-surface"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-header .kinetic-logo-text",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-header .close, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-header .js-offcanvas-close",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li > a", "color", "heading", 0, "--chrome-heading"],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li > a",
+      "background-color",
+      "bg",
+      0,
+      "--chrome-bg"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li.active > a, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li.current > a",
+      "color",
+      "accent-text",
+      0,
+      "--chrome-primary"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li.active > a, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li.current > a",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-elevated"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li.parent > a::after, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li.deeper > a::after, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar li.parent > a::after, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar li.deeper > a::after",
+      "color",
+      "muted",
+      0,
+      "--chrome-muted"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar .nav-link, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu .nav-link, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar .dropdown-item",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar .active > .nav-link, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar .current > .nav-link, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar li.active > a, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .navbar li.current > a",
+      "color",
+      "accent-text",
+      0,
+      "--chrome-primary"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-signin, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a:not(.hx-cta-pill):not(.hx-btn--primary)",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-signin:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a:not(.hx-cta-pill):not(.hx-btn--primary):hover",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-cta-pill, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-btn--primary, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a.btn, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .blog-list .item-readmore a, .blog-list .item-readmore .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .btn",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-cta-pill, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-btn--primary, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a.btn, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .blog-list .item-readmore a, .blog-list .item-readmore .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .btn",
+      "background-color",
+      "accent",
+      0,
+      "--primary"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-cta-pill:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-btn--primary:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a.btn:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .blog-list .item-readmore a:hover, .blog-list .item-readmore .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .btn:hover",
+      "color",
+      "on-accent",
+      0,
+      "--primary-ink"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-cta-pill:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .hx-btn--primary:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a.btn:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .blog-list .item-readmore a:hover, .blog-list .item-readmore .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta a:hover, .kinetic-offcanvas.t4-offcanvas .kinetic-oc-cta .btn:hover",
+      "background-color",
+      "accent",
+      0,
+      "--primary-hover"
+    ],
+    [".kinetic-footer", "color", "fg", 0, "--chrome-text"],
+    [".kinetic-footer", "background-color", "surface", 0, "--chrome-elevated"],
+    [".kinetic-footer .hx-foot-brand .hx-brand-glyph", "color", "accent-text", 0, "--chrome-primary"],
+    [".kinetic-footer .hx-foot-brand .hx-brand-word", "color", "heading", 0, "--chrome-heading"],
+    [".kinetic-footer .hx-foot-brand .acm-social .hx-social-label", "color", "fg", 0, "--chrome-text"],
+    [
+      ".kinetic-footer .hx-foot-brand p, .kinetic-footer .hx-foot-brand .hx-foot-tag",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-footer .hx-foot-col h3, .kinetic-footer .hx-foot-col .h3, .kinetic-footer .hx-foot-col .module-title, .kinetic-footer .hx-foot-col .moduletable-title",
+      "color",
+      "muted",
+      0,
+      "--chrome-muted"
+    ],
+    [
+      ".kinetic-footer .hx-foot-col ul.menu li > a, .kinetic-footer .hx-foot-col ul.nav li > a, .kinetic-footer .hx-foot-col .menu li > a",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-footer .hx-foot-col ul.menu li > a:hover, .kinetic-footer .hx-foot-col ul.nav li > a:hover, .kinetic-footer .hx-foot-col .menu li > a:hover",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [".kinetic-footer .hx-foot-news-band .hx-news-title", "color", "heading", 0, "--chrome-heading"],
+    [".kinetic-footer .hx-foot-news-band .hx-news-desc", "color", "muted", 0, "--chrome-muted"],
+    [
+      ".kinetic-footer .hx-foot-bottom .hx-copy, .kinetic-footer .hx-foot-bottom p, .kinetic-footer .hx-foot-bottom span",
+      "color",
+      "muted",
+      0,
+      "--chrome-muted"
+    ],
+    [
+      ".kinetic-footer .hx-foot-bottom .hx-legal a, .kinetic-footer .hx-foot-bottom ul.menu a, .kinetic-footer .hx-foot-bottom .menu a",
+      "color",
+      "muted",
+      0,
+      "--chrome-muted"
+    ],
+    [
+      ".kinetic-footer .hx-foot-bottom .hx-legal a:hover, .kinetic-footer .hx-foot-bottom ul.menu a:hover, .kinetic-footer .hx-foot-bottom .menu a:hover",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .kinetic-drill-back",
+      "color",
+      "heading",
+      0,
+      "--chrome-heading"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .kinetic-drill-back svg",
+      "color",
+      "accent-text",
+      0,
+      "--chrome-primary"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .kinetic-drill-back:hover",
+      "color",
+      "accent-text",
+      0,
+      "--chrome-primary"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .kinetic-drill-back:focus-visible",
+      "color",
+      "accent-text",
+      0,
+      "--chrome-primary"
+    ],
+    [
+      ".kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body .kinetic-drill-sublabel",
+      "color",
+      "fg",
+      0,
+      "--chrome-text"
+    ],
+    [".t4-content", "background-color", "bg", 0, "--body-bg-color"],
+    [".btn.btn-primary", "background-color", "accent", 0, "--color-primary"],
+    ["body.item-216, body.item-216 .t4-content", "background-color", "surface", 0, "--bg"]
+  ],
+  "vars": [
+    ["--chrome-primary-hover", "accent"],
+    ["--color-primary", "accent"],
+    ["--color-secondary", "accent"],
+    ["--color-success", "accent"],
+    ["--color-info", "accent"],
+    ["--color-warning", "accent"],
+    ["--color-danger", "accent"],
+    ["--body-link-color", "accent"],
+    ["--body-link-hover-color", "accent"]
+  ],
+  "inline": [],
+  "colours": {
+    "#0a0d0c": "on-accent",
+    "#bcf25a": "accent",
+    "#a3e635": "accent",
+    "#0d1110": "bg",
+    "#1b211e": "border",
+    "#0f1311": "bg",
+    "#f2f5f3": "fg",
+    "#232a27": "border",
+    "#121614": "surface",
+    "#7f8b86": "muted",
+    "#9aa6a1": "fg",
+    "#161b18": "surface",
+    "#ffffff": "band",
+    "#333333": "border",
+    "#0a58ca": "accent-text",
+    "#adb5bd": "fg",
+    "#343a40": "surface",
+    "#f8f9fa": "band",
+    "#0a0f1a": "surface"
+  }
+}

@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-espresso-bark: #3c261c;
+  --color-terracotta-ember: #e97451;
+  --color-iris-ink: #4a43dd;
+  --color-honey-parchment: #f7efc5;
+  --color-warm-linen: #f9f8f0;
+  --color-ash-mist: #dddedf;
+  --color-blush-cream: #fcede8;
+  --color-lilac-mist: #e4e3f2;
+  --color-carbon: #000000;
+
+  /* Typography — Font Families */
+  --font-monasans: 'MonaSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-paradigm-pro: 'paradigm-pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

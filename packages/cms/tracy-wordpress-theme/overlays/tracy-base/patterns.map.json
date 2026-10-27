@@ -1,0 +1,831 @@
+{
+  "$comment": "ACM block type (+ style) of the Tracy Base Joomla site -> the tracy-base WordPress pattern that renders it, field by field. Locate blocks by their metadata.name, never by position. Convention: every editable block in a pattern carries metadata {\"role\":\"content\",\"name\":\"<type>.<field>[.<n>]\"} where <type> is the ACM type, <field> the ACM field name (verbatim, inner name for nested groups: slide-title, not slide.slide-title), and <n> the 1-based index inside a repeated group. A repeated item's wrapper carries metadata {\"name\":\"<type>.item.<n>\"} with no role: clone or delete the wrapper to change the item count, its children keep the same names with the new index. One block that renders two ACM fields lists both, e.g. a button carries btn-1-text (its text) and btn-1-link (its href); an image carries the media field (src) and its alt field (alt). \"attr\" says which block attribute or HTML attribute the field lands in; \"repeat\" names the ACM group when the field is repeated, null otherwise. \"dropped\" lists ACM fields with no block, and why.",
+  "schemaVersion": "tracy-base-patterns-map/v1",
+  "types": {
+    "accordion:style-1": {
+      "pattern": "tracy-base/section-accordion",
+      "root": ".acm-accordion",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "accordion.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "accordion.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "intro": {
+          "block": null,
+          "path": null,
+          "repeat": null,
+          "note": "empty on all 4 instances; add a core/paragraph.tracy-lead after the heading when present"
+        },
+        "surface": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "canvas -> bg-bg (drop the band classes), warm -> bg-surface-warm, gray -> bg-surface"
+        },
+        "first-open": {
+          "block": "core/details",
+          "path": "accordion.item.1",
+          "attr": "showContent",
+          "repeat": null
+        },
+        "one-at-a-time": {
+          "block": "core/details",
+          "path": "accordion.item.*",
+          "attr": "name",
+          "repeat": null,
+          "note": "any value but \"0\" means on: keep name=\"acm-accordion\" on every item; \"0\" removes it"
+        },
+        "entry-question": {
+          "block": "core/details",
+          "path": "accordion.item.<n>",
+          "attr": "summary",
+          "repeat": "entries"
+        },
+        "entry-answer": {
+          "block": "core/paragraph",
+          "path": "accordion.entry-answer.<n>",
+          "attr": "content",
+          "repeat": "entries"
+        }
+      },
+      "item": "accordion.item.<n>"
+    },
+    "carousel:style-1": {
+      "pattern": "tracy-base/section-carousel",
+      "root": ".acm-carousel",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "carousel.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": { "block": "core/heading", "path": "carousel.heading", "attr": "content", "repeat": null },
+        "intro": { "block": "core/paragraph", "path": "carousel.intro", "attr": "content", "repeat": null },
+        "ground": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "canvas -> bg-bg, warm -> bg-surface-warm, gray -> bg-surface; also acm-carousel--<ground>"
+        },
+        "per-view": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "acm-carousel--per-<N>, read by sections-extra.css"
+        },
+        "slide-kicker": {
+          "block": "core/paragraph",
+          "path": "carousel.slide-kicker.<n>",
+          "attr": "content",
+          "repeat": "slide"
+        },
+        "slide-title": {
+          "block": "core/heading",
+          "path": "carousel.slide-title.<n>",
+          "attr": "content",
+          "repeat": "slide"
+        },
+        "slide-text": {
+          "block": "core/paragraph",
+          "path": "carousel.slide-text.<n>",
+          "attr": "content",
+          "repeat": "slide"
+        }
+      },
+      "item": "carousel.item.<n>",
+      "dropped": {
+        "slide-image": "empty on the only instance; when present insert a core/image.tracy-card__media before the kicker",
+        "slide-link": "empty on the only instance; when present with slide-link-text append a core/paragraph with the link",
+        "slide-link-text": "see slide-link"
+      }
+    },
+    "clients:style-1": {
+      "pattern": "tracy-base/section-clients",
+      "root": ".acm-clients",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "clients.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "mark-image": {
+          "block": "core/image",
+          "path": "clients.mark-image.<n>",
+          "attr": "src",
+          "repeat": "marks"
+        },
+        "mark-name": {
+          "block": "core/image",
+          "path": "clients.mark-image.<n>",
+          "attr": "alt",
+          "repeat": "marks"
+        }
+      },
+      "item": "clients.mark-image.<n>",
+      "dropped": {
+        "mark-link": "empty on the only instance; when present set the image block's href (linkDestination custom)"
+      }
+    },
+    "contact-information:style-1": {
+      "pattern": "tracy-base/section-contact-information",
+      "root": ".acm-contact-information",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "contact-information.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "email-label": {
+          "block": "core/paragraph",
+          "path": "contact-information.email-label",
+          "attr": "content",
+          "repeat": null
+        },
+        "email": {
+          "block": "core/paragraph",
+          "path": "contact-information.email",
+          "attr": "content",
+          "repeat": null,
+          "note": "plain text; wrap in <a href=\"mailto:\"> only for a real address, never for example/invalid/test domains (source rule)"
+        },
+        "notice": {
+          "block": "core/paragraph",
+          "path": "contact-information.notice",
+          "attr": "content",
+          "repeat": null
+        }
+      },
+      "item": null,
+      "dropped": {
+        "social-heading": "the source template never renders it",
+        "unavailable-label": "the source template never renders it",
+        "social-label": "the source template never renders the socials group",
+        "social-url": "the source template never renders the socials group"
+      }
+    },
+    "cta-capsule:style-1": {
+      "pattern": "tracy-base/section-cta-capsule",
+      "root": ".acm-cta-capsule",
+      "fields": {
+        "statement": {
+          "block": "core/paragraph",
+          "path": "cta-capsule.statement",
+          "attr": "content",
+          "repeat": null
+        },
+        "support": {
+          "block": "core/paragraph",
+          "path": "cta-capsule.support",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn-text": { "block": "core/button", "path": "cta-capsule.btn", "attr": "text", "repeat": null },
+        "btn-link": { "block": "core/button", "path": "cta-capsule.btn", "attr": "url", "repeat": null },
+        "link-text": { "block": "core/button", "path": "cta-capsule.link", "attr": "text", "repeat": null },
+        "link-url": { "block": "core/button", "path": "cta-capsule.link", "attr": "url", "repeat": null }
+      },
+      "item": null
+    },
+    "features-intro:style-1": {
+      "pattern": "tracy-base/section-features-intro",
+      "root": ".acm-features-intro",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-intro.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "lead": {
+          "block": "core/paragraph",
+          "path": "features-intro.lead",
+          "attr": "content",
+          "repeat": null
+        },
+        "spotlight-label": {
+          "block": "core/paragraph",
+          "path": "features-intro.spotlight-label",
+          "attr": "content",
+          "repeat": null,
+          "note": "lives inside features-intro.item.1 only; the first card is the spotlight, as in the source"
+        },
+        "card-title": {
+          "block": "core/heading",
+          "path": "features-intro.card-title.<n>",
+          "attr": "content",
+          "repeat": "cards"
+        },
+        "card-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.card-text.<n>",
+          "attr": "content",
+          "repeat": "cards"
+        },
+        "card-link-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.card-link.<n>",
+          "attr": "content",
+          "repeat": "cards",
+          "note": "the <a> inside the paragraph; keep the trailing arrow"
+        },
+        "card-link-url": {
+          "block": "core/paragraph",
+          "path": "features-intro.card-link.<n>",
+          "attr": "href",
+          "repeat": "cards"
+        }
+      },
+      "item": "features-intro.item.<n>",
+      "dropped": {
+        "card-icon": "empty on both instances; when present insert a core/image before the card title",
+        "card-icon-alt": "see card-icon"
+      }
+    },
+    "hero:style-1": {
+      "pattern": "tracy-base/section-hero-split",
+      "root": ".acm-hero--split",
+      "fields": {
+        "eyebrow": { "block": "core/paragraph", "path": "hero.eyebrow", "attr": "content", "repeat": null },
+        "title": { "block": "core/heading", "path": "hero.title", "attr": "content", "repeat": null },
+        "lead": { "block": "core/paragraph", "path": "hero.lead", "attr": "content", "repeat": null },
+        "btn-1-text": { "block": "core/button", "path": "hero.btn-1", "attr": "text", "repeat": null },
+        "btn-1-link": { "block": "core/button", "path": "hero.btn-1", "attr": "url", "repeat": null },
+        "btn-2-text": { "block": "core/button", "path": "hero.btn-2", "attr": "text", "repeat": null },
+        "btn-2-link": { "block": "core/button", "path": "hero.btn-2", "attr": "url", "repeat": null },
+        "hero-image": { "block": "core/image", "path": "hero.hero-image", "attr": "src", "repeat": null },
+        "hero-image-alt": { "block": "core/image", "path": "hero.hero-image", "attr": "alt", "repeat": null }
+      },
+      "item": null,
+      "dropped": {
+        "aside-label": "the aside renders only when hero-image is empty; never on the source site",
+        "aside-badge": "see aside-label",
+        "aside-badge-state": "see aside-label",
+        "note": "see aside-label"
+      }
+    },
+    "hero:style-2": {
+      "pattern": "tracy-base/section-hero-centered",
+      "root": ".acm-hero--centered",
+      "fields": {
+        "eyebrow": { "block": "core/paragraph", "path": "hero.eyebrow", "attr": "content", "repeat": null },
+        "title": { "block": "core/heading", "path": "hero.title", "attr": "content", "repeat": null },
+        "lead": { "block": "core/paragraph", "path": "hero.lead", "attr": "content", "repeat": null },
+        "btn-1-text": { "block": "core/button", "path": "hero.btn-1", "attr": "text", "repeat": null },
+        "btn-1-link": { "block": "core/button", "path": "hero.btn-1", "attr": "url", "repeat": null },
+        "btn-2-text": { "block": "core/button", "path": "hero.btn-2", "attr": "text", "repeat": null },
+        "btn-2-link": { "block": "core/button", "path": "hero.btn-2", "attr": "url", "repeat": null }
+      },
+      "item": null
+    },
+    "marketing-samples:style-1": {
+      "pattern": "tracy-base/section-marketing-samples",
+      "root": ".acm-marketing-samples",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "marketing-samples.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "marketing-samples.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "lead": {
+          "block": "core/paragraph",
+          "path": "marketing-samples.lead",
+          "attr": "content",
+          "repeat": null
+        },
+        "note": {
+          "block": "core/paragraph",
+          "path": "marketing-samples.note",
+          "attr": "content",
+          "repeat": null
+        },
+        "sample-key": {
+          "block": "core/heading",
+          "path": "marketing-samples.sample-title.<n>",
+          "attr": "href",
+          "repeat": "samples",
+          "note": "href of the <a> inside the heading: <base><sample-key>-light.html once the documents exist on the site; \"#\" until then"
+        },
+        "sample-title": {
+          "block": "core/heading",
+          "path": "marketing-samples.sample-title.<n>",
+          "attr": "content",
+          "repeat": "samples"
+        },
+        "sample-description": {
+          "block": "core/paragraph",
+          "path": "marketing-samples.sample-description.<n>",
+          "attr": "content",
+          "repeat": "samples"
+        }
+      },
+      "item": "marketing-samples.item.<n>",
+      "dropped": {
+        "base": "only used to build the sample hrefs (see sample-key)",
+        "light-label": "the iframe viewer and its appearance switch need the source's samples.js/samples.css; not carried",
+        "dark-label": "see light-label",
+        "appearance-label": "see light-label",
+        "open-label": "see light-label",
+        "download-label": "see light-label"
+      }
+    },
+    "menu-feature:style-1": {
+      "pattern": "tracy-base/section-menu-feature",
+      "root": ".acm-menu-feature",
+      "fields": {
+        "image": { "block": "core/image", "path": "menu-feature.image", "attr": "src", "repeat": null },
+        "image-alt": { "block": "core/image", "path": "menu-feature.image", "attr": "alt", "repeat": null },
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "menu-feature.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": { "block": "core/heading", "path": "menu-feature.title", "attr": "content", "repeat": null },
+        "description": {
+          "block": "core/paragraph",
+          "path": "menu-feature.description",
+          "attr": "content",
+          "repeat": null
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "menu-feature.action",
+          "attr": "content",
+          "repeat": null,
+          "note": "the <a> inside the paragraph; keep the trailing arrow"
+        },
+        "link": { "block": "core/paragraph", "path": "menu-feature.action", "attr": "href", "repeat": null }
+      },
+      "item": null
+    },
+    "pricing:style-1": {
+      "pattern": "tracy-base/section-pricing",
+      "root": ".acm-pricing",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "pricing.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": { "block": "core/heading", "path": "pricing.heading", "attr": "content", "repeat": null },
+        "heading-level": {
+          "block": "core/heading",
+          "path": "pricing.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": { "block": "core/paragraph", "path": "pricing.intro", "attr": "content", "repeat": null },
+        "surface": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "canvas -> bg-bg (drop the band classes), warm -> bg-surface-warm, gray -> bg-surface; also acm-pricing--<surface>"
+        },
+        "tier-name": {
+          "block": "core/heading",
+          "path": "pricing.tier-name.<n>",
+          "attr": "content",
+          "repeat": "tiers"
+        },
+        "tier-summary": {
+          "block": "core/paragraph",
+          "path": "pricing.tier-summary.<n>",
+          "attr": "content",
+          "repeat": "tiers"
+        },
+        "tier-price": {
+          "block": "core/paragraph",
+          "path": "pricing.tier-price.<n>",
+          "attr": "content",
+          "repeat": "tiers"
+        },
+        "tier-period": {
+          "block": "core/paragraph",
+          "path": "pricing.tier-period.<n>",
+          "attr": "content",
+          "repeat": "tiers"
+        },
+        "tier-features": {
+          "block": "core/list",
+          "path": "pricing.tier-features.<n>",
+          "attr": "innerBlocks",
+          "repeat": "tiers",
+          "note": "split the textarea on newlines: one core/list-item.py-2.border-t.border-border-soft per line"
+        },
+        "tier-action-label": {
+          "block": "core/button",
+          "path": "pricing.tier-action.<n>",
+          "attr": "text",
+          "repeat": "tiers"
+        },
+        "tier-action-link": {
+          "block": "core/button",
+          "path": "pricing.tier-action.<n>",
+          "attr": "url",
+          "repeat": "tiers"
+        },
+        "tier-recommended": {
+          "block": "core/group",
+          "path": "pricing.item.<n>",
+          "attr": "className",
+          "repeat": "tiers",
+          "note": "\"1\" on the FIRST such tier only (source rule): add is-hot border-accent shadow-[...] to the card, make its button tracy-btn--primary (drop is-style-outline / tracy-btn--ghost)"
+        },
+        "tier-badge": {
+          "block": "core/paragraph",
+          "path": "pricing.tier-badge.<n>",
+          "attr": "content",
+          "repeat": "tiers",
+          "note": "present only on the recommended tier; first child of the card"
+        }
+      },
+      "item": "pricing.item.<n>"
+    },
+    "site-notice:style-1": {
+      "pattern": "tracy-base/section-site-notice",
+      "root": ".acm-site-notice",
+      "fields": {
+        "notice": {
+          "block": "core/paragraph",
+          "path": "site-notice.notice",
+          "attr": "content",
+          "repeat": null
+        }
+      },
+      "item": null
+    },
+    "social-links:style-1": {
+      "pattern": "tracy-base/section-social-links",
+      "root": ".acm-social-links",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "social-links.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "handle": {
+          "block": "core/paragraph",
+          "path": "social-links.handle",
+          "attr": "content",
+          "repeat": null,
+          "note": "once, under the heading; the source repeats it beside every icon, core/social-links cannot"
+        },
+        "platform": {
+          "block": "core/social-link",
+          "path": "social-links.item.<n>",
+          "attr": "service",
+          "repeat": "socials",
+          "note": "linkedin | instagram | facebook | tiktok | youtube, all known to core/social-link"
+        },
+        "social-url": {
+          "block": "core/social-link",
+          "path": "social-links.item.<n>",
+          "attr": "url",
+          "repeat": "socials"
+        }
+      },
+      "item": "social-links.item.<n>"
+    },
+    "statistics:style-1": {
+      "pattern": "tracy-base/section-statistics",
+      "root": ".acm-statistics",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "statistics.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "statistics.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "acm-statistics--cols-<N>; on the grid group lg:grid-cols-4 or lg:grid-cols-3"
+        },
+        "figure-value": {
+          "block": "core/paragraph",
+          "path": "statistics.figure-value.<n>",
+          "attr": "content",
+          "repeat": "figures"
+        },
+        "figure-caption": {
+          "block": "core/paragraph",
+          "path": "statistics.figure-caption.<n>",
+          "attr": "content",
+          "repeat": "figures"
+        }
+      },
+      "item": "statistics.item.<n>",
+      "note": "when eyebrow and heading are both empty (instance 191) remove the tracy-section__head group"
+    },
+    "story-chapter:style-1": {
+      "pattern": "tracy-base/section-story-chapter-media-right",
+      "root": ".acm-story-chapter--media-right",
+      "fields": {
+        "heading-level": {
+          "block": "core/heading",
+          "path": "story-chapter.statement",
+          "attr": "level",
+          "repeat": null
+        },
+        "statement": {
+          "block": "core/heading",
+          "path": "story-chapter.statement",
+          "attr": "content",
+          "repeat": null
+        },
+        "support": {
+          "block": "core/paragraph",
+          "path": "story-chapter.support",
+          "attr": "content",
+          "repeat": null
+        },
+        "media": { "block": "core/image", "path": "story-chapter.media", "attr": "src", "repeat": null },
+        "media-alt": { "block": "core/image", "path": "story-chapter.media", "attr": "alt", "repeat": null },
+        "link-text": { "block": "core/button", "path": "story-chapter.link", "attr": "text", "repeat": null },
+        "link-url": { "block": "core/button", "path": "story-chapter.link", "attr": "url", "repeat": null },
+        "link-style": {
+          "block": "core/button",
+          "path": "story-chapter.link",
+          "attr": "className",
+          "repeat": null,
+          "note": "secondary -> is-style-outline tracy-btn tracy-btn--ghost; primary -> tracy-btn tracy-btn--primary"
+        }
+      },
+      "item": null
+    },
+    "story-chapter:style-2": {
+      "pattern": "tracy-base/section-story-chapter-media-left",
+      "root": ".acm-story-chapter--media-left",
+      "fields": {
+        "heading-level": {
+          "block": "core/heading",
+          "path": "story-chapter.statement",
+          "attr": "level",
+          "repeat": null
+        },
+        "statement": {
+          "block": "core/heading",
+          "path": "story-chapter.statement",
+          "attr": "content",
+          "repeat": null
+        },
+        "support": {
+          "block": "core/paragraph",
+          "path": "story-chapter.support",
+          "attr": "content",
+          "repeat": null
+        },
+        "media": { "block": "core/image", "path": "story-chapter.media", "attr": "src", "repeat": null },
+        "media-alt": { "block": "core/image", "path": "story-chapter.media", "attr": "alt", "repeat": null },
+        "link-text": { "block": "core/button", "path": "story-chapter.link", "attr": "text", "repeat": null },
+        "link-url": { "block": "core/button", "path": "story-chapter.link", "attr": "url", "repeat": null },
+        "link-style": {
+          "block": "core/button",
+          "path": "story-chapter.link",
+          "attr": "className",
+          "repeat": null,
+          "note": "secondary -> is-style-outline tracy-btn tracy-btn--ghost; primary -> tracy-btn tracy-btn--primary"
+        }
+      },
+      "item": null
+    },
+    "tabs:style-1": {
+      "pattern": "tracy-base/section-tabs",
+      "root": ".acm-tabs",
+      "fields": {
+        "eyebrow": { "block": "core/paragraph", "path": "tabs.eyebrow", "attr": "content", "repeat": null },
+        "heading": { "block": "core/heading", "path": "tabs.heading", "attr": "content", "repeat": null },
+        "ground": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "canvas -> (none), warm -> bg-surface-warm, gray -> bg-surface; also acm-tabs--<ground>"
+        },
+        "tab-label": {
+          "block": "core/list-item",
+          "path": "tabs.tab-label.<n>",
+          "attr": "content",
+          "repeat": "tab",
+          "note": "the <a href=\"#acm-tab-<n>\"> inside the item; the panel group's anchor is acm-tab-<n>"
+        },
+        "tab-title": {
+          "block": "core/heading",
+          "path": "tabs.tab-title.<n>",
+          "attr": "content",
+          "repeat": "tab"
+        },
+        "tab-body": {
+          "block": "core/paragraph",
+          "path": "tabs.tab-body.<n>",
+          "attr": "content",
+          "repeat": "tab",
+          "note": "the source stores HTML; one <p> becomes this paragraph, richer HTML becomes sibling blocks inside tabs.item.<n>"
+        }
+      },
+      "item": "tabs.item.<n>",
+      "dropped": {
+        "tab-image": "empty on the only instance; when present insert a core/image after the body and give the panel a two-column grid"
+      }
+    },
+    "team:style-1": {
+      "pattern": "tracy-base/section-team-grid",
+      "root": ".acm-team--grid",
+      "fields": {
+        "eyebrow": { "block": "core/paragraph", "path": "team.eyebrow", "attr": "content", "repeat": null },
+        "heading": { "block": "core/heading", "path": "team.heading", "attr": "content", "repeat": null },
+        "columns": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "acm-team--cols-<N>; on the grid group lg:grid-cols-4 or lg:grid-cols-3"
+        },
+        "member-portrait": {
+          "block": "core/image",
+          "path": "team.member-portrait.<n>",
+          "attr": "src",
+          "repeat": "members",
+          "note": "alt is the member name; when the portrait is empty remove the image (the source draws initials, core cannot)"
+        },
+        "member-name": {
+          "block": "core/heading",
+          "path": "team.member-name.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "member-role": {
+          "block": "core/paragraph",
+          "path": "team.member-role.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "member-bio": {
+          "block": "core/paragraph",
+          "path": "team.member-bio.<n>",
+          "attr": "content",
+          "repeat": "members"
+        }
+      },
+      "item": "team.item.<n>",
+      "dropped": {
+        "link-label": "empty on both instances; with member-link, append a core/paragraph link to the member",
+        "member-link": "see link-label"
+      }
+    },
+    "team:style-2": {
+      "pattern": "tracy-base/section-team-query",
+      "root": ".acm-team--query",
+      "fields": {
+        "heading": { "block": "core/paragraph", "path": "team.heading", "attr": "content", "repeat": null },
+        "source-category": {
+          "block": "core/query",
+          "path": "team.source-category",
+          "attr": "query.taxQuery.category",
+          "repeat": null,
+          "note": "the WordPress term id of the category the members are posted in; the block has no category set until the seeder writes one"
+        },
+        "selected-members": {
+          "block": "core/query",
+          "path": "team.source-category",
+          "attr": "query.include",
+          "repeat": null,
+          "note": "WordPress post ids; leave empty to take the first four of the category by menu_order, as the source does"
+        }
+      },
+      "item": null,
+      "note": "the 'all' link (team.all-link) has no ACM field: the source builds it from the category route; set its href to the category archive. The source splits 'Name — Role' out of the article title; here the post title is the name and the excerpt the role."
+    },
+    "testimonials:style-1": {
+      "pattern": "tracy-base/section-testimonials",
+      "root": ".acm-testimonials",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "testimonials.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "testimonials.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "acm-testimonials--cols-<N>; on the grid group lg:grid-cols-3 or lg:grid-cols-2"
+        },
+        "quote": {
+          "block": "core/paragraph",
+          "path": "testimonials.quote.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "quote-name": {
+          "block": "core/paragraph",
+          "path": "testimonials.quote-name.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "quote-role": {
+          "block": "core/paragraph",
+          "path": "testimonials.quote-role.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        }
+      },
+      "item": "testimonials.item.<n>",
+      "dropped": {
+        "quote-avatar": "empty on both instances; when present insert a core/image before the name"
+      }
+    },
+    "timeline:style-1": {
+      "pattern": "tracy-base/section-timeline",
+      "root": ".acm-timeline",
+      "fields": {
+        "heading-level": {
+          "block": "core/heading",
+          "path": "timeline.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "timeline.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": { "block": "core/heading", "path": "timeline.heading", "attr": "content", "repeat": null },
+        "intro": { "block": "core/paragraph", "path": "timeline.intro", "attr": "content", "repeat": null },
+        "ground": {
+          "block": "core/group",
+          "path": "root",
+          "attr": "className",
+          "repeat": null,
+          "note": "canvas -> (none), warm -> bg-surface-warm, gray -> bg-surface; also acm-timeline--<ground>"
+        },
+        "entry-marker": {
+          "block": "core/paragraph",
+          "path": "timeline.entry-marker.<n>",
+          "attr": "content",
+          "repeat": "entry"
+        },
+        "entry-title": {
+          "block": "core/heading",
+          "path": "timeline.entry-title.<n>",
+          "attr": "content",
+          "repeat": "entry"
+        },
+        "entry-text": {
+          "block": "core/paragraph",
+          "path": "timeline.entry-text.<n>",
+          "attr": "content",
+          "repeat": "entry"
+        }
+      },
+      "item": "timeline.item.<n>"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "color": {
+    "iris-violet": {
+      "$value": "#49369e",
+      "$type": "color",
+      "$description": "Iris Violet — Outlined action borders, link color, heading accents, navigation emphasis — the singular brand hue, deployed as a fine outline or thin underline rather than a filled mass"
+    },
+    "soft-lavender": {
+      "$value": "#a9a7db",
+      "$type": "color",
+      "$description": "Soft Lavender — Muted secondary accent for list borders, decorative link borders, and subtle dividers — the diluted echo of Iris Violet used when the full intensity would overpower"
+    },
+    "iris-focus": {
+      "$value": "#524eb7",
+      "$type": "color",
+      "$description": "Iris Focus — Input focus state text/border — a slightly lifted tonal variant of Iris Violet to signal active text fields"
+    },
+    "blush-petal": {
+      "$value": "#ec9bad",
+      "$type": "color",
+      "$description": "Blush Petal — Atmospheric surface wash and decorative accent — warm pink used for full-bleed product stage backgrounds and occasional badge fills"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, product image cutouts, nav and button borders, inverted text on dark or violet fields"
+    },
+    "stone-linen": {
+      "$value": "#f2f1ef",
+      "$type": "color",
+      "$description": "Stone Linen — Page canvas — the warm off-white that grounds every section, used as the base layer beneath product stages and text blocks"
+    },
+    "warm-ash": {
+      "$value": "#a09c97",
+      "$type": "color",
+      "$description": "Warm Ash — Muted background panels, announcement bar, low-emphasis surfaces"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text and low-emphasis fills — softer than pure black for body copy and metadata"
+    },
+    "graphite": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite — Primary text, button outlines, icon strokes — used at hairline weights to stay quiet"
+    }
+  },
+  "font": {
+    "martina-plantijn": {
+      "$value": "Martina Plantijn",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body sans-serif — used for navigation, buttons, body text, product copy, form fields, badges, and micro-labels. The weight 300 thin gives the system its airy, unforced feel; weight 700 is reserved for navigation emphasis and select labels. This is the workhorse — almost everything visible reads in this face."
+    },
+    "regola-pro-book": {
+      "$value": "Regola Pro Book",
+      "$type": "fontFamily",
+      "$description": "Display and editorial serif — used for the brand wordmark and large hero/display copy. Its 80px presence carries the entire brand identity: the 'EMMA LEWISHAM' logotype and product-feature headlines float in Regola Pro Book, creating a distinctive serif-on-sans pairing. The single weight keeps the display quiet and editorial rather than decorative."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://emmalewisham.co.uk",
+      "siteName": "Emmalewisham",
+      "extractedAt": "2026-06-03T19:36:36.578Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "styles": {
+    "css": "/* wp-ja-essence: dark mode. The source (JA Essence, Joomla 6 T4) follows the OS until the visitor picks: its head script sets html[data-theme] from prefers-color-scheme, the .ja-theme-toggle button switches it (css/darkmode.css). Here every colour preset carries both halves through light-dark(): light = tokens.css (measured 01/10 on the source stand), dark = the source's --dm-* block (css/darkmode.css: bg #11151f, band #161b27, surface #1a2130, border #2b3548, text #c2c9d6, heading #eef1f6, muted #8c97a8, accent #4d6bff, accent hover #7d93ff), each read back as computed style in the design contract (desktop-dark). No attribute = auto, the OS decides; assets/js/wp-ja-essence-dark.js writes data-theme light|dark from the tracy_theme cookie before the first paint. */ :root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #f8f8ff),var(--ds-c-bg, #11151f));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #ffffff),var(--ds-c-surface, #1a2130));--wp--preset--color--surface-warm:light-dark(var(--ds-c-surface-warm, #ffffff),var(--ds-c-surface-warm, #161b27));--wp--preset--color--fg:light-dark(var(--ds-c-fg, rgba(37,36,36,0.7)),var(--ds-c-fg, #c2c9d6));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #212529),var(--ds-c-heading, #eef1f6));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #6c757d),var(--ds-c-muted, #8c97a8));--wp--preset--color--meta:light-dark(var(--ds-c-meta, #86868b),var(--ds-c-meta, #8c97a8));--wp--preset--color--border:light-dark(var(--ds-c-border, rgba(0,0,0,0.125)),var(--ds-c-border, #2b3548));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, #e8e8ed),var(--ds-c-border-soft, #2b3548));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #4d6bff),var(--ds-c-accent, #4d6bff));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #ffffff),var(--ds-c-accent-on, #ffffff));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #1a3eed),var(--ds-c-accent-hover, #7d93ff));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #1a3eed),var(--ds-c-accent-active, #7d93ff));}:root[data-theme=\"light\"]{color-scheme:light}:root[data-theme=\"dark\"]{color-scheme:dark}"
+  },
+  "customTemplates": [
+    {
+      "name": "page-landing",
+      "title": "Landing (lead slider, choice and list)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-login",
+      "title": "Sign-in form",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-register",
+      "title": "Registration form",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-account",
+      "title": "Account (visitors are sent to the sign-in page)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-article",
+      "title": "Article (card with picture, badge, heading and byline)",
+      "postTypes": ["page"]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    }
+  ]
+}

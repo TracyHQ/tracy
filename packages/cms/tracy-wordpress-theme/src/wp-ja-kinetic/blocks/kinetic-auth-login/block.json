@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/kinetic-auth-login",
+  "version": "0.1.0",
+  "title": "Kinetic login card",
+  "category": "design",
+  "icon": "unlock",
+  "description": "The source's login form card and benefits panel, posting to wp-login.php.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

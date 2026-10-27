@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-ink-teal: #102126;
+  --color-slate-veil: #3d5761;
+  --color-fog-gray: #677b82;
+  --color-chalk-white: #ffffff;
+  --color-pale-mist: #f1f7f9;
+  --color-hairline-gray: #e9eef0;
+  --color-ember-orange: #fa4e1d;
+  --color-sunset-coral: #fb6338;
+  --color-signal-blue: #0c67ff;
+  --color-info-indigo: #0519d5;
+  --color-soft-sky: #e4eeff;
+
+  /* Typography */
+  --font-graphik: 'Graphik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

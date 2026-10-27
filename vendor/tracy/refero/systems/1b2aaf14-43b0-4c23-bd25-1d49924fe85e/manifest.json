@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+  "status": "complete",
+  "name": "Buymeacoffee",
+  "url": "https://styles.refero.design/style/1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+  "sourceWebsite": "https://buymeacoffee.com",
+  "extractedAt": "2026-06-03T17:11:22.129Z",
+  "capturedAt": "2026-10-08T05:08:59.880505+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Cream-paper café scrapbook with floating polaroid testimonials",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/272fa8a9-6eca-447b-adad-9d1fa78ef4ff.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5ed85a25-4566-4846-a900-49989fe78d36.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a004d427-4d44-4aa2-8faf-48aeee28550a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/67297234-e7f3-4121-9137-521cb482777a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/36c60cc8-7001-4913-a6f8-04bb21eea01c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "26af8f7e28334feb3f4e8a09b10c5be7fccfb53f90d8d4964e4a65d792942b14",
+      "bytes": 24120
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5894886a03a877b3ba8d96037c0499c02a1b88ebc77320bbd8886c222630b62c",
+      "bytes": 94877
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bbc23651a6ad4d3c54adea25de6cec53ab7150bc43a37afd55cd702980efd068",
+      "bytes": 18878
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "239fe4c154e19cf5e9199f1d4d8f79c1656315ef7fdd538236c2f85c81743d6d",
+      "bytes": 16426
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a22e5ef71b25aef14c72e9a638b4bd17acb3284b6511b2b2ddd4ea29fdb5b4bb",
+      "bytes": 14040
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0b8d5b0f44594de41b237a9184313df8a0b6d9689819bb8b780a9fa9c036106f",
+      "bytes": 4198
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9b9e67a2e36a8699c4941fb8a8e44edf68f832bb9458bf8d8ec9e8d3ebbb2750",
+      "bytes": 1033
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1a887c6dd428c2205cd19f002227642574dbdaad6d0d91b1a29e5ccfde05cc55",
+      "bytes": 1050
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bb75b96360d5ade8c4fa48eaea83e408e3b8f3df06d7ef7adfd97ca579cfe250",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "087080dd70c292e937f2cef05f5d928072b052b7932c59627f47e564ab79e899",
+      "bytes": 47281
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1a8160895ddbcd04841d22a2df1745fff07b7379df92aded30c5beb63e7e5a74",
+      "bytes": 24761
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "497d6cb632ac01f28c9d905b958a77ce78bd8028fc330b112dbd5be970b6bc16",
+      "bytes": 59905
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "1c9b83141abebe66382400426e0185611a13af824f40f0d91ac2030f995aab29",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "de5f7aa875192bc4e21f92eded798465b16e0c0aaefd158a47c1060ce1334eff",
+      "bytes": 2489
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "264694d4dd78c0f39558ca43b36e3715ea901a41946daadf4d5e3abe7464481d",
+      "bytes": 3095
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "342f1c3b-a123-49b6-a980-3491bc7793db",
+    "35ae81e1-273c-43d7-9bcd-ea186d062c13",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "6b201ccd-16ae-4c2d-84bb-498f7cb568dd",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "7f7d24b9-6878-4548-82ca-a26bbf7a6f2c",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d67e1407-6d16-47e8-89cf-22f5c5f2dd88",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e6b53c1e-644b-4300-b42f-0e64905d1443",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87"
+  ]
+}

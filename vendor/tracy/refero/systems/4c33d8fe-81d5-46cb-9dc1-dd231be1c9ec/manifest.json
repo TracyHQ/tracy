@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+  "status": "complete",
+  "name": "Cake Equity",
+  "url": "https://styles.refero.design/style/4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+  "sourceWebsite": "https://www.cakeequity.com",
+  "extractedAt": "2026-06-03T18:13:36.941Z",
+  "capturedAt": "2026-10-08T05:11:19.994625+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "founder's command center on warm bone-white, electric violet switches, chartreuse receipts",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4d59b112-d21c-437a-9965-e6f03d8a5d06.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "046b681bffaad2045b39eded2e3ebf702828583bcc6d67c274e94cdfb1dfa1f8",
+      "bytes": 24263
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7e0119f71e0459edd52b40fe7bec54145a733a2b5c0b1159da20e04e5e7f991b",
+      "bytes": 152774
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3ef5f8b469b0017f3c4aaf02725902e6892708ed0378966dcef9d8e6f9226187",
+      "bytes": 20752
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9b24bca0b7ea8d504a9dc8a16309919d2ac59fbedac0ae504912d49de9f20dbc",
+      "bytes": 21023
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1cee10ba05533daf15f88aded49da8777012e5a35ab5b9c256168368418ce388",
+      "bytes": 15296
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "cc44290974d66f563b6ceab421b26f8b2977cb107ec3fba630659da80bba2fff",
+      "bytes": 4929
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "634fa3ccdbcbd5bf68c72e692d3853aa34b8c36f532d27e7d1625579bb245405",
+      "bytes": 809
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f13a4cad914faeb5278d85a18c53ffe77887156459bf42de98420c5cd759ca17",
+      "bytes": 826
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "48f5ee83a17dc448ba0b2213f43e1a84bb460f9def7bf6f099e751154b99266a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a154b380d5ce19493f4832363c4aafe8b5c970eee264a348ff191b9c03f145e6",
+      "bytes": 48722
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1f91a3229b0da533c94d27b1f234fa3e6a284cb25734ccea12becf5cf5ee8774",
+      "bytes": 25683
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "831491aafde9a7fb517078b8da87d8403ee5b7af9284416a3f565d145918f624",
+      "bytes": 68040
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6b137b625ad0fbd8e6030f21fd948a4c592bf32d8cda860fa1d6590c25322296",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b6d21fb159aba3eacc1ce4509a855a88a55bb1a2327b155e6f87c113ba55751b",
+      "bytes": 1839
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f7399c5a5b26506e044bb0256efe7616d9ec57cacf9589b7c92213a2db5e8f5a",
+      "bytes": 2512
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "b136f0a0-8064-4978-a18e-db54b9362c24",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

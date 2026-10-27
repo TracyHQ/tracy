@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "542d4d5c-fd8f-4a8b-a4f7-4694728f7e12",
+  "status": "complete",
+  "name": "Podscan.fm",
+  "url": "https://styles.refero.design/style/542d4d5c-fd8f-4a8b-a4f7-4694728f7e12",
+  "sourceWebsite": "https://podscan.fm",
+  "extractedAt": "2026-06-03T19:01:17.300Z",
+  "capturedAt": "2026-10-08T05:11:44.666734+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Green-lit podcast radar on white paper — a quiet instrument panel where one emerald signal cuts through grayscale data.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/38001c98-fce6-4b3b-b7d1-f2cc145064c7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/59e8aa61-1df7-411a-a025-7766f3816695.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ff6ea9f0-4f23-4584-b403-1f5fb1cde095.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/251c78b8-ba55-4af6-b873-e75a4d32310e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4bd61d14-30ff-4fc2-bc96-38c8221c7a00.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3986bd9ef94309db5dd35cbc67d0fcf1ca9f5f2b7b853a1029a3c7ffa7b3a4f5",
+      "bytes": 30099
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6c65666e962570f63cb4df29706ebbd371a8c9246c1e8452accbf7865afc9400",
+      "bytes": 90093
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6a4d52e49fa2f20c8b868ae9589fbcbc42ef445431134b4c961611304e1e1a4c",
+      "bytes": 24240
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "71f65fb9b6339878980619b6e557fdfe3c8b704aef0e46b83d0fa5359797ee1d",
+      "bytes": 17947
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "36a946dd2bee91684e92442eb51f0a6eea5e7c271ab05e5fe5e8342b14e56e8a",
+      "bytes": 18048
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "98800bfe021b96ee6cb4227762454bc251ece46e0c14b2cce891c3fc107d04f5",
+      "bytes": 6548
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c4f13fd0961e132cf6e4baa649666efff1ca8c63b69f20e955e79d8d8852daff",
+      "bytes": 1252
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "79492a06d6f803ad14b5c3fcfdd38a530108fc548344ca8e54035b8c3e838088",
+      "bytes": 1269
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6470b20f9bee54492d6b6d000323a2f52414435a0ade8990072a3c279136b0b8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b62c80f3d878d038dc93ccc4729640ee49487159f8bdb226de826215d805b93d",
+      "bytes": 56545
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b43c581fd4ffeadceeead32c5b6c94fe3538f1038d123806c0d00dfd7539a913",
+      "bytes": 30848
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "198ff0836f2293e0f7d4b639c740f7204842b71cb75690ced469b37b08523aea",
+      "bytes": 94551
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6eaefde60acbe3650029500b4d303319c7f67f681aecb740ab36ca5bd599a4d6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7a27d930951e96e081c596ebebaf9f8126db34be05eba4ced7045c7304db8943",
+      "bytes": 2958
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7cd56d05d3026cef24d7332bed56396a7338dc572030dcad8e3f3a0b4c8c285a",
+      "bytes": 3618
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "542d4d5c-fd8f-4a8b-a4f7-4694728f7e12",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "b409c050-ab0f-4cf0-a388-95fd7072cd6a",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "e7876363-181a-44a9-9e5c-2255cf98aea5",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

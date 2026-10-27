@@ -1,0 +1,757 @@
+// Database (only types and utilities - internal functions not exported)
+export {
+	EmDashDatabaseError,
+	getMigrationStatus,
+	getExactMigrationStatus,
+	MIGRATION_NAMES,
+} from "./database/index.js";
+export type {
+	DatabaseConfig,
+	MigrationStatus,
+	ExactMigrationStatus,
+	Database,
+	UserTable,
+	MediaTable,
+} from "./database/index.js";
+export { EmDashConfigurationError } from "./config/errors.js";
+export type { EmDashConfigurationErrorCode } from "./config/errors.js";
+export { resolvePluginEncryptionKeys } from "./config/secrets.js";
+
+// Repositories
+export {
+	ContentRepository,
+	CommentRepository,
+	RevisionRepository,
+	MediaRepository,
+	PluginStorageRepository,
+	UserRepository,
+	OptionsRepository,
+	EmDashValidationError,
+	InvalidCursorError,
+} from "./database/repositories/index.js";
+export type {
+	ContentItem,
+	ContentSeo,
+	ContentSeoInput,
+	CreateContentInput,
+	UpdateContentInput,
+	FindManyOptions,
+	FindManyResult,
+} from "./database/repositories/index.js";
+export type {
+	ContentFieldFilterScalar,
+	ContentFieldFilterValue,
+	ContentFieldFilters,
+	ContentFieldInFilter,
+	ContentFieldRangeFilter,
+} from "./content-list-query.js";
+export type { MediaItem, CreateMediaInput } from "./database/repositories/media.js";
+export type { CompoundSelectLimitedAdapter } from "./database/dialect-helpers.js";
+
+// Fields
+export { portableText, image, file, reference } from "./fields/index.js";
+export { normalizeMediaValue } from "./media/normalize.js";
+export { generatePlaceholder } from "./media/placeholder.js";
+export type { PlaceholderData } from "./media/placeholder.js";
+export type {
+	FieldDefinition,
+	FieldUIHints,
+	PortableTextBlock,
+	MediaValue,
+	ImageValue,
+	FileValue,
+} from "./fields/index.js";
+
+// API handlers
+export {
+	handleContentList,
+	handleContentAuthors,
+	handleContentGet,
+	handleContentGetIncludingTrashed,
+	handleContentCreate,
+	handleContentUpdate,
+	handleContentDelete,
+	handleContentDuplicate,
+	handleContentRestore,
+	handleContentPermanentDelete,
+	handleContentListTrashed,
+	handleContentCountTrashed,
+	handleContentPublish,
+	handleContentUnpublish,
+	handleContentSchedule,
+	handleContentUnschedule,
+	handleScheduledPolicyRejection,
+	handleContentCountScheduled,
+	handleContentDiscardDraft,
+	handleContentCompare,
+	handleContentTranslations,
+	handleMediaList,
+	handleMediaGet,
+	handleMediaCreate,
+	handleMediaRegisterUpload,
+	handleMediaUpdate,
+	handleMediaReplaceMetadata,
+	handleMediaDelete,
+	handleMediaUsageActivationAdvance,
+	handleMediaUsageProgress,
+	handleMediaUsageRepair,
+	handleRevisionList,
+	handleRevisionGet,
+	handleRevisionRestore,
+	generateManifest,
+} from "./api/index.js";
+export type {
+	ListResponse,
+	ContentListResponse,
+	ContentResponse,
+	MediaListResponse,
+	MediaResponse,
+	RevisionListResponse,
+	RevisionResponse,
+	ManifestResponse,
+	ManifestCollectionMap,
+	ManifestCollectionDescriptor,
+	ManifestFieldDescriptor,
+	FieldDescriptor,
+	ApiContext,
+} from "./api/index.js";
+
+// Content converters (Portable Text <-> ProseMirror)
+export {
+	portableTextIdentityExtensions,
+	prosemirrorToPortableText,
+	portableTextToProsemirror,
+} from "./content/index.js";
+export type {
+	PortableTextToProsemirrorOptions,
+	PortableTextSpan,
+	PortableTextMarkDef,
+	PortableTextLinkMark,
+	PortableTextTextBlock,
+	PortableTextImageBlock,
+	PortableTextCodeBlock,
+	PortableTextHtmlBlock,
+	PortableTextIframeBlock,
+	PortableTextTableAlignment,
+	PortableTextTableBlock,
+	PortableTextTableCell,
+	PortableTextTableRow,
+	PortableTextUnknownBlock,
+	ProseMirrorMark,
+	ProseMirrorNode,
+	ProseMirrorDocument,
+} from "./content/index.js";
+
+// Utilities
+export { ulid } from "ulidx";
+export { computeContentHash, hashString } from "./utils/hash.js";
+export { sanitizeHref, isSafeHref } from "./utils/url.js";
+export { decodeSlug, slugify } from "./utils/slugify.js";
+
+// Live Collections query functions (loader is in emdash/runtime)
+export {
+	getEmDashCollection,
+	getEmDashEntry,
+	getEmDashReferences,
+	getEditMeta,
+	getTranslations,
+	resolveEmDashPath,
+} from "./query.js";
+export type {
+	CacheHint,
+	CollectionFilter,
+	CollectionResult,
+	ContentEntry,
+	EditFieldMeta,
+	EntryResult,
+	EmDashCollections,
+	EmDashCollectionReferences,
+	InferCollectionData,
+	InferCollectionReferences,
+	ReferencePage,
+	ReferencePages,
+	ReferenceQuery,
+	ReferenceResult,
+	ReferenceSelection,
+	ResolvePathResult,
+	SelectableReferences,
+	SelectedReferences,
+	TranslationSummary,
+	TranslationsResult,
+	WhereRange,
+	WhereValue,
+} from "./query.js";
+
+// Request context (ALS-based ambient state for query functions)
+export { getRequestContext, runWithContext } from "./request-context.js";
+export type { EmDashRequestContext } from "./request-context.js";
+
+// Defer work past the response (waitUntil on workerd, fire-and-forget on Node)
+export { after } from "./after.js";
+export type { WaitUntilFn } from "./after.js";
+
+// i18n configuration (from Astro config)
+export {
+	getI18nConfig,
+	isI18nEnabled,
+	getFallbackChain,
+	resolveContentCreateLocale,
+} from "./i18n/config.js";
+export type { I18nConfig } from "./i18n/config.js";
+
+// Visual editing
+export {
+	createEditable,
+	createNoop,
+	type CMSAnnotation,
+	type EditProxy,
+	type FieldAnnotation,
+} from "./visual-editing/editable.js";
+
+// Re-export loader types (but not the loader itself - use emdash/runtime)
+export type {
+	EntryData,
+	EntryFilter,
+	CollectionFilter as LoaderCollectionFilter,
+} from "./loader.js";
+
+// WordPress import
+export { parseWxr, parseWxrString } from "./cli/wxr/parser.js";
+export type {
+	WxrData,
+	WxrSite,
+	WxrPost,
+	WxrAttachment,
+	WxrCategory,
+	WxrTag,
+	WxrTerm,
+	WxrAuthor,
+} from "./cli/wxr/parser.js";
+
+// Storage types
+export type {
+	Storage,
+	SignedUploadUrl,
+	SignedUploadOptions,
+	UploadResult,
+	DownloadResult,
+	ListResult,
+	ListOptions,
+	FileInfo,
+	S3StorageConfig,
+	LocalStorageConfig,
+	StorageDescriptor,
+	CreateStorageFn,
+} from "./storage/types.js";
+export { EmDashStorageError } from "./storage/types.js";
+
+// Object cache (distributed read-through query cache)
+export {
+	cachedQuery,
+	invalidateObjectCache,
+	invalidateCollectionCache,
+	invalidateTaxonomyObjectCache,
+	invalidateBylineObjectCache,
+	invalidateMenuObjectCache,
+	invalidateSchemaObjectCache,
+	invalidateCommentObjectCache,
+	contentNamespace,
+	contentNamespaces,
+	CacheNamespace,
+} from "./object-cache/index.js";
+export type { CachedQueryOptions } from "./object-cache/index.js";
+export type {
+	ObjectCacheBackend,
+	ObjectCacheDescriptor,
+	ObjectCacheRuntimeConfig,
+	CreateObjectCacheBackendFn,
+} from "./object-cache/types.js";
+
+// Plugin system
+export { pluginResponse } from "./plugin-types.js";
+export {
+	definePlugin,
+	definePluginRoute,
+	adaptSandboxEntry,
+	pluginManifestSchema,
+	createHookPipeline,
+	HookPipeline,
+	PluginManager,
+	createPluginManager,
+	PluginRouteError,
+	StorageSerializationError,
+	ContentSaveRejectedError,
+	isContentSaveRejection,
+	SCHEDULED_POLICY_REJECTION_PREFIX,
+	isScheduledPolicyRejection,
+	scheduledPolicyRejectionKey,
+	// Scheduler (Node timer heartbeat — used by virtual:emdash/scheduler)
+	NodeCronScheduler,
+	// Sandbox
+	NoopSandboxRunner,
+	SandboxNotAvailableError,
+	SandboxUnavailableError,
+	createSandboxRouteError,
+	createSandboxRouteErrorEnvelope,
+	getSandboxRouteErrorDetails,
+	getSandboxRouteErrorEnvelope,
+	MAX_SANDBOX_SAVE_REJECTION_REASON_LENGTH,
+	SANDBOX_HOOK_RESULT_VERSION,
+	inspectSandboxHookResult,
+	createNoopSandboxRunner,
+	// HTTP access for plugins (shared between in-process, Cloudflare, and workerd runners)
+	createHttpAccess,
+	createUnrestrictedHttpAccess,
+	PLUGIN_HTTP_MAX_REQUEST_BYTES,
+	PLUGIN_HTTP_MAX_RESPONSE_BYTES,
+	bufferPluginHttpRequest,
+	pluginHttpRedirectAction,
+	pluginHttpResponseFromWire,
+	pluginHttpResponseToWire,
+	readPluginHttpBytes,
+	rewritePluginHttpRedirect,
+	createContentAccess,
+	createContentAccessWithWrite,
+	createSettingsAccess,
+	createPluginSecretRedactor,
+	decodePluginSettingValue,
+	encryptPluginSetting,
+	isEncryptedPluginSetting,
+	PluginSettingEncryptionError,
+	createCommentAccess,
+	createRedirectAccess,
+	RedirectAccessError,
+	createSchemaAccess,
+	createBylineAccess,
+	createMediaAccess,
+	DEFAULT_PLUGIN_MEDIA_READ_BYTES,
+	MAX_PLUGIN_MEDIA_READ_BYTES,
+	parsePluginMediaMetadataPatch,
+	readPluginMediaBytes,
+	toPluginMediaItem,
+	updatePluginMediaMetadata,
+	CronAccessImpl,
+} from "./plugins/index.js";
+export type {
+	EncryptedPluginSetting,
+	PluginSecretRedactor,
+	PluginDefinition,
+	ResolvedPlugin,
+	PluginCapability,
+	PluginContext,
+	PluginStorageConfig,
+	StorageCollection,
+	PaginatedResult,
+	NumericDelta,
+	UpdateIfArgs,
+	UpdateIfResult,
+	VersionedValue,
+	VersionedContentItem,
+	ConditionalWriteResult,
+	ConditionalDeleteResult,
+	ContentActionCallbacks,
+	KVAccess,
+	SettingsAccess,
+	SettingField,
+	ContentAccess,
+	ContentItem as PluginContentItem,
+	ContentTranslationSummary,
+	ContentRevisionInfo,
+	SchemaAccess,
+	CollectionSchemaInfo,
+	FieldSchemaInfo,
+	ContentCreateOptions,
+	ContentListOptions,
+	CronTaskInfo,
+	MediaAccess,
+	MediaBytes,
+	MediaMetadataPatch,
+	HttpAccess,
+	PluginHttpResponseWire,
+	PluginHttpRedirectAction,
+	LogAccess,
+	SiteInfo,
+	TaxonomyAccess,
+	TaxonomyAccessWithWrite,
+	TaxonomyDefInfo,
+	TaxonomyTermInfo,
+	TaxonomyTermCreateInput,
+	TaxonomyReadOptions,
+	BylineAccess,
+	BylineCreditInfo,
+	BylineInfo,
+	BylineListOptions,
+	EntryBylineCredits,
+	RedirectAccess,
+	RedirectAccessWithWrite,
+	RedirectCreateInput,
+	RedirectInfo,
+	RedirectListOptions,
+	RedirectStatus,
+	RedirectUpdateInput,
+	VersionedRedirect,
+	PluginHooks,
+	HookConfig,
+	HookName,
+	ResolvedHook,
+	ResolvedPluginHooks,
+	ActorInfo,
+	ScheduledPolicyRejection,
+	VersionedScheduledPolicyRejection,
+	ContentActionOrigin,
+	ContentHookEvent,
+	ContentPolicyDecision,
+	ContentPolicyEvent,
+	ContentSchedulePolicyEvent,
+	ContentDeleteEvent,
+	ContentPublishStateChangeEvent,
+	ContentRestoreStateChangeEvent,
+	ContentScheduleStateChangeEvent,
+	ContentStateChangeEvent,
+	MediaUploadEvent,
+	HookResult,
+	PluginRoute,
+	PluginRouteDefinition,
+	RouteContext,
+	PluginAdminConfig,
+	PluginAdminPage,
+	PluginEditorPanel,
+	PluginEditorAction,
+	PluginAdminExports,
+	FieldWidgetConfig,
+	PortableTextBlockConfig,
+	PortableTextBlockField,
+	BylineAfterSaveEvent,
+	BylineAfterDeleteEvent,
+	BylineAfterSaveHandler,
+	BylineAfterDeleteHandler,
+	// Comment types
+	CommentBeforeCreateEvent,
+	CommentModerateEvent,
+	CommentAfterCreateEvent,
+	CommentAfterModerateEvent,
+	CommentBeforeCreateHandler,
+	CommentModerateHandler,
+	CommentAfterCreateHandler,
+	CommentAfterModerateHandler,
+	ModerationDecision,
+	CollectionCommentSettings,
+	StoredComment,
+	PluginComment,
+	PluginCommentStatus,
+	CommentAccess,
+	CommentListOptions,
+	CommentCountOptions,
+
+	// Scheduler types
+	CronScheduler,
+	SystemCleanupFn,
+
+	// Sandbox runtime types
+	SandboxRunner,
+	SandboxedPluginInstance,
+	SandboxInvocationOptions,
+	SandboxRunnerFactory,
+	SandboxOptions,
+	SandboxEmailMessage,
+	SandboxEmailSendCallback,
+	SandboxCommentModerateCallback,
+	SandboxContentCreateCallback,
+	SandboxHttpFetchCallback,
+	PluginManifest,
+	ValidatedPluginManifest,
+	SerializedRequest,
+	SandboxRouteErrorCode,
+	SandboxRouteErrorDetails,
+	SandboxRouteErrorEnvelope,
+	SandboxHookErrorEnvelope,
+	SandboxHookResultInspection,
+	SandboxSaveRejectedError,
+} from "./plugins/index.js";
+
+// Capability normalization (legacy → canonical alias layer)
+export {
+	CAPABILITY_RENAMES,
+	isDeprecatedCapability,
+	normalizeCapability,
+	normalizeCapabilities,
+	normalizePluginCapabilities,
+} from "./plugins/index.js";
+export type { CurrentPluginCapability, DeprecatedPluginCapability } from "./plugins/index.js";
+
+// Plugin descriptor (for astro.config.mjs)
+export type { PluginDescriptor } from "./astro/integration/runtime.js";
+
+// Schema registry
+export {
+	SchemaRegistry,
+	SchemaError,
+	BlockTypeRegistry,
+	expandCollectionBlockFields,
+	normalizeBlocksData,
+	resolveBlockTypes,
+	getCollectionInfo,
+} from "./schema/index.js";
+export type {
+	FieldType,
+	ColumnType,
+	CollectionSupport,
+	CollectionSource,
+	FieldValidation,
+	FieldWidgetOptions,
+	UnsupportedFieldType,
+	Collection,
+	Field,
+	CreateCollectionInput,
+	UpdateCollectionInput,
+	CreateFieldInput,
+	UpdateFieldInput,
+	CollectionWithFields,
+	BlockFieldDefinition,
+	BlockFieldOptions,
+	BlockFieldType,
+	BlockType,
+	BlockTypeCompatibility,
+	BlockTypeDifference,
+	BlockTypeSource,
+	BlockTypeVersion,
+	CreateBlockTypeInput,
+	UpdateBlockTypeInput,
+	ApplySeedBlockTypeInput,
+	SeedBlockTypeVersionInput,
+	BlockWriteOptions,
+	ResolvedBlockTypes,
+	StoredBlockValue,
+} from "./schema/index.js";
+export {
+	FIELD_TYPE_TO_COLUMN,
+	RESERVED_FIELD_SLUGS,
+	RESERVED_COLLECTION_SLUGS,
+} from "./schema/index.js";
+
+// Import sources system
+export {
+	registerSource,
+	getSource,
+	getAllSources,
+	getFileSources,
+	getUrlSources,
+	probeUrl,
+	clearSources,
+	wxrSource,
+	parseWxrDate,
+	wordpressRestSource,
+	importReusableBlocksAsSections,
+} from "./import/index.js";
+export type {
+	ImportSource,
+	ImportAnalysis,
+	ImportContext,
+	SourceInput,
+	FileInput,
+	UrlInput,
+	OAuthInput,
+	SourceProbeResult,
+	ProbeResult,
+	SourceAuth,
+	SourceCapabilities,
+	SuggestedAction,
+	PostTypeAnalysis,
+	ImportFieldDef,
+	FieldCompatibility,
+	CollectionSchemaStatus,
+	AttachmentInfo,
+	NormalizedItem,
+	ImportConfig,
+	ImportResult,
+	FetchOptions,
+	PostTypeMapping,
+} from "./import/index.js";
+
+// Preview system
+export {
+	generatePreviewToken,
+	verifyPreviewToken,
+	parseContentId,
+	getPreviewUrl,
+	buildPreviewUrl,
+	isPreviewRequest,
+	getPreviewToken,
+} from "./preview/index.js";
+export type {
+	PreviewTokenPayload,
+	GeneratePreviewTokenOptions,
+	VerifyPreviewTokenResult,
+	VerifyPreviewTokenOptions,
+	GetPreviewUrlOptions,
+} from "./preview/index.js";
+// Site Settings
+export {
+	getPluginSetting,
+	getPluginSettings,
+	getSiteSetting,
+	getSiteSettings,
+	getSiteSettingsWithCacheHint,
+	setSiteSettings,
+} from "./settings/index.js";
+export type {
+	SiteSettings,
+	SiteSettingsUpdate,
+	SiteSettingKey,
+	MediaReference,
+	SeoSettings,
+	SeoSettingsUpdate,
+} from "./settings/types.js";
+
+// SEO
+export { getSeoMeta, getContentSeo, getHreflangAlternates } from "./seo/index.js";
+export type { SeoMeta, SeoMetaOptions, HreflangAlternate, HreflangOptions } from "./seo/index.js";
+
+// Public page contribution types
+export type {
+	PagePlacement,
+	PublicPageContext,
+	BreadcrumbItem,
+	PageMetadataEvent,
+	PageMetadataContribution,
+	PageMetadataHandler,
+	PageFragmentEvent,
+	PageFragmentContribution,
+	PageFragmentHandler,
+} from "./plugins/types.js";
+
+// Comments
+export { getComments, getCommentCount } from "./comments/query.js";
+export type { GetCommentsOptions, GetCommentsResult } from "./comments/query.js";
+
+// Menus
+export { getMenu, getMenuWithCacheHint, getMenus } from "./menus/index.js";
+export type {
+	Menu,
+	MenuItem,
+	MenuItemType,
+	CreateMenuInput,
+	UpdateMenuInput,
+	CreateMenuItemInput,
+	UpdateMenuItemInput,
+	ReorderMenuItemsInput,
+} from "./menus/types.js";
+
+// Bylines
+export { getByline, getBylineBySlug, getEntriesByByline } from "./bylines/index.js";
+export type { BylineSummary, ContentBylineCredit } from "./database/repositories/types.js";
+
+// Taxonomies
+export {
+	getTaxonomyDefs,
+	getTaxonomyDef,
+	getTaxonomyTerms,
+	getTaxonomyTermsWithCacheHint,
+	getTerm,
+	getEntryTerms,
+	getTermsForEntries,
+	getAllTermsForEntries,
+	getEntriesByTerm,
+	invalidateTermCache,
+} from "./taxonomies/index.js";
+export type {
+	TaxonomyDef,
+	TaxonomyTerm,
+	TaxonomyTermRow,
+	CreateTermInput,
+	UpdateTermInput,
+} from "./taxonomies/types.js";
+
+// Widgets
+export {
+	getWidgetArea,
+	getWidgetAreaWithCacheHint,
+	getWidgetAreas,
+	getWidgetComponents,
+} from "./widgets/index.js";
+export type {
+	Widget,
+	WidgetArea,
+	WidgetType,
+	WidgetComponentDef,
+	PropDef,
+	CreateWidgetAreaInput,
+	CreateWidgetInput,
+	UpdateWidgetInput,
+	ReorderWidgetsInput,
+} from "./widgets/index.js";
+
+// Sections
+export { getSection, getSections } from "./sections/index.js";
+export type {
+	Section,
+	SectionSource,
+	CreateSectionInput,
+	UpdateSectionInput,
+	GetSectionsOptions,
+} from "./sections/index.js";
+
+// Seeding
+export { applySeed, validateSeed } from "./seed/index.js";
+export type {
+	SeedFile,
+	SeedCollection,
+	SeedField,
+	SeedTaxonomy,
+	SeedTaxonomyTerm,
+	SeedMenu,
+	SeedMenuItem,
+	SeedWidgetArea,
+	SeedWidget,
+	SeedContentEntry,
+	SeedApplyOptions,
+	SeedApplyResult,
+	ValidationResult,
+} from "./seed/index.js";
+
+// Search
+export {
+	SEARCH_TOKENIZERS,
+	FTSManager,
+	search,
+	searchWithDb,
+	searchCollection,
+	getSuggestions,
+	getSearchStats,
+	extractPlainText,
+	extractSearchableFields,
+} from "./search/index.js";
+export type {
+	SearchConfig,
+	SearchTokenizer,
+	SearchOptions,
+	CollectionSearchOptions,
+	SearchResult,
+	SearchResponse,
+	SuggestOptions,
+	Suggestion,
+	SearchStats,
+} from "./search/index.js";
+
+// Auth types (for platform-specific auth providers and pluggable login methods)
+export type {
+	AuthDescriptor,
+	AuthProviderDescriptor,
+	AuthProviderAdminExports,
+	AuthProviderModule,
+	AuthResult,
+	AuthRouteDescriptor,
+	ExternalAuthConfig,
+} from "./auth/types.js";
+
+// Database descriptor (for platform-specific database adapters)
+export type {
+	DatabaseDescriptor,
+	DatabaseDialectType,
+	SqliteConfig,
+	LibsqlConfig,
+	PostgresConfig,
+	CollectionDeletionGuardInput,
+	CollectionDeletionGuardResult,
+	ExecuteCollectionDeletionGuard,
+} from "./db/adapters.js";

@@ -1,0 +1,20 @@
+{
+  "_note": "Shaped like the live ScrapeCreators /v1/facebook/profile answer checked 24/10/2026 (Tin Lantern Saigon): profilePhoto.url is the photo PAGE, profilePicture is absent, the image files are profilePicLarge/Medium/Small. Values are placeholders.",
+  "success": true,
+  "id": "107884544303345",
+  "name": "Tin Lantern Saigon",
+  "pageIntro": "Live music bar in District 1",
+  "category": "Bar",
+  "phone": "+84 90 000 0000",
+  "address": "1 Example Street, Ho Chi Minh City",
+  "followerCount": 1200,
+  "likeCount": 1100,
+  "profilePhoto": {
+    "url": "https://www.facebook.com/photo/?fbid=170644816821858",
+    "viewer_image": { "height": 960, "width": 960 }
+  },
+  "profilePicLarge": "https://scontent.xx.fbcdn.net/v/t39.30808-1/large.jpg",
+  "profilePicMedium": "https://scontent.xx.fbcdn.net/v/t39.30808-1/medium.jpg",
+  "profilePicSmall": "https://scontent.xx.fbcdn.net/v/t39.30808-1/small.jpg",
+  "coverPhoto": { "photo": { "image": { "uri": "https://scontent.xx.fbcdn.net/v/t39.30808-6/cover.jpg" } } }
+}

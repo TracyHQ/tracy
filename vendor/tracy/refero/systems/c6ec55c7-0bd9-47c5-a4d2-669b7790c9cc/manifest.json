@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+  "status": "complete",
+  "name": "OLIPOP",
+  "url": "https://styles.refero.design/style/c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+  "sourceWebsite": "https://drinkolipop.com",
+  "extractedAt": "2026-06-03T17:12:16.293Z",
+  "capturedAt": "2026-10-08T05:17:21.334094+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Retro apothecary cream and forest teal — a soda fountain menu printed on warm paper.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/eed5bd83-d74d-4364-b21e-178f7c56947e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/3dac8cd1-3a85-4db3-8b3e-085256645f0a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/13d18d5b-97d5-4775-93c0-bcca896d0286.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/92c10b36-e993-4d2c-ac75-1c04c787e3cc.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a0276da1-f0a8-41e3-9a7e-745bdfe661e0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "af36e99975ac39cbf144f4af8c30dea176d1645a72dc78d9704715cc212bc5fd",
+      "bytes": 23427
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f660d9bbc656a16a7df2b2f2b171b7fe4d3b34039db0415ac2119ed67b2df95e",
+      "bytes": 100398
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "08c19a34c0b2378265005857accae0a9a60d589a0201f48e77fdff087b5b957b",
+      "bytes": 19441
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dde3d8b12afa049c584783709e54bebc0147f71599684d10449c02e14b0ebed1",
+      "bytes": 16420
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "47a7c01142702089f7ff155f90fd1ea3e802a2d022770220307330fabbc89059",
+      "bytes": 13770
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7ede79f4de4d1592d81862ae096be40dbbe3fd5042a6088b7e1dcd128c1d52b2",
+      "bytes": 4669
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "eb088520f0803619d64827abad36f8b8d3388fd824ca00038f41b32a2a892813",
+      "bytes": 896
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "369bfd487fe0f0fe0c27588ec94160cc63f0a6a17cb9f82aa03ca6b46c295e80",
+      "bytes": 913
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f43c32bfec2bda9d770fa9ae5796e77788f4e185c34e41267181413c498e5333",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "91f6fe7dfe25ef4c20c2e41745e10ee787b885857006915340ef24ef8f06f666",
+      "bytes": 47048
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1aea414baf0374f15c73efa9e881a9438fe473bfcf3675258b99b2aaa65aee92",
+      "bytes": 24663
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d4d177763659d7800754595425585f1dcd6119099fcf511293b5df1d730b42f4",
+      "bytes": 56144
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "738a64ac97c348d78bd7ecbe570de5b2aa49006679612bbdbb019413dca02093",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c04ec6199c9329eaa2b814fb017112159766da4beeaae6de67f889026dcebc1e",
+      "bytes": 1986
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "69c5b845486139102305b6a97ba55e331443115b93a571cfce1d09e86ee5713f",
+      "bytes": 2627
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "2c7a280c-7cc1-4766-b043-bc8bdd9b868c",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "734ab03c-a326-43e3-a463-c5f90247404f",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "be17feca-c2bd-4e17-b4d2-ed3ae019a84c",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "dfbcffc2-79a3-4349-b5c6-1aa9fae4fcf4",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

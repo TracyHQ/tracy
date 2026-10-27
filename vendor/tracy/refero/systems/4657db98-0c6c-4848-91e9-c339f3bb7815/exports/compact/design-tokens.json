@@ -1,0 +1,74 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#151316",
+      "$type": "color",
+      "$description": "Void Canvas — Page background, hero canvas, footer — near-black with a faint violet undertone that keeps the dark from feeling flat or sterile"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text and icon color on dark surfaces; borders on dark UI; inverted text on light feature cards"
+    },
+    "elevated-surface": {
+      "$value": "#444245",
+      "$type": "color",
+      "$description": "Elevated Surface — Card and panel surface above the void canvas — subtle lift achieved through one tonal step rather than shadow"
+    },
+    "mist": {
+      "$value": "#8e8e8e",
+      "$type": "color",
+      "$description": "Mist — Muted body text, hairline dividers, inactive icon strokes, and low-emphasis borders on dark backgrounds"
+    },
+    "smoke": {
+      "$value": "#585657",
+      "$type": "color",
+      "$description": "Smoke — Mid-weight borders and subtle UI separators — slightly darker than Mist for structural rules"
+    },
+    "ash": {
+      "$value": "#b9b9b9",
+      "$type": "color",
+      "$description": "Ash — Light-mode body borders and secondary text on warm light sections"
+    },
+    "bone": {
+      "$value": "#f4f2ee",
+      "$type": "color",
+      "$description": "Bone — Hairline borders, dividers, input outlines, and card edges on light surfaces."
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Primary text on light feature sections and nav borders in light mode"
+    },
+    "mint-filament": {
+      "$value": "#8ef5b5",
+      "$type": "color",
+      "$description": "Mint Filament — The single chromatic accent — filled primary CTAs, eyebrow pill labels, active nav indicator, logo glow, and green-text logo tints. Against #151316 the contrast is 14:1, making it legible as both text and fill"
+    },
+    "deep-teal": {
+      "$value": "#24574d",
+      "$type": "color",
+      "$description": "Deep Teal — Muted teal used for gradient stops and subtle secondary accents — never appears alone, always paired as a background fade or shadow; Gradient overlay creating soft elevation behind product screenshot and logo wall"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Entire UI — body, nav, headings, buttons, cards. Only two weights used (regular 400, medium 500) which is the core typographic discipline: no bold display weight, no light italic, just calm and confident Inter. The 13px/17px pair forms the dense product text; 40–60px carries the marketing voice. Headlines use -0.03em tracking to pull letters tight against the dark canvas."
+    },
+    "inconsolata-custom-mapped-eyebrow-face": {
+      "$value": "Inconsolata (custom-mapped eyebrow face)",
+      "$type": "fontFamily",
+      "$description": "Eyebrow labels, status pills, and small ALL CAPS markers like 'ASSEMBLY 15 NOW ORDINAL', 'SCHEDULING', 'WATCH A DEMO 4:15'. The monospace character at 13–17px is a deliberate break from Inter's proportions — signals 'metadata / system status / not body content'. 0.01em positive tracking on the eyebrow adds the ALL CAPS breath small caps need."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.meetassembly.com",
+      "siteName": "Ordinal",
+      "extractedAt": "2026-06-03T20:00:03.203Z",
+      "variant": "compact"
+    }
+  }
+}

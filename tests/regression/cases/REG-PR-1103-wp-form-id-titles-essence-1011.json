@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1103-wp-form-id-titles-essence-1011",
+  "kind": "fix",
+  "title": "WordPress: a form id that holds no form no longer costs the site its translated menus; page titles follow relabelled menus; JA Essence 1.0.11 tiles skip unticked pages and ships theme translations",
+  "pr": 1103,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no site. From the TCH checkout run: node --test --test-name-pattern=\"form id that holds no form|titles its pages|category tile whose page the customer unticked|every word the theme prints\" apps/tracy-web/test/brief-wordpress.test.mjs packages/cms/tracy-wordpress-theme/test/essence.test.mjs",
+    "S2: brief-wordpress runs the WordPress brief engine against a fake site whose Contact page embeds a contact-form-7 id the door answers not_found, and against a Vietnamese site whose menu entries are relabelled.",
+    "S3: essence.test.mjs reads the JA Essence theme source: the home-2 category tiles' page lookup, and languages/<locale>.l10n.php against every string the theme prints through its text domain.",
+    "S4: Read the node:test summary lines (tests / pass / fail) and every failing test name."
+  ],
+  "expect": [
+    "S4: tests 4 or more, fail 0.",
+    "A form that cannot be read costs only its own lines, with a note; menus, other lines and page metas are still judged and written in the site language.",
+    "On a site written in one language other than English, a page titled exactly as a relabelled menu entry takes the new label.",
+    "A category tile whose page is unticked (drafted) links the category itself, never /?page_id=N; every theme string has a translation in de_DE, es_ES, fr_FR, it_IT, nl_NL, vi, zh_CN, zh_TW."
+  ],
+  "selectors": {
+    "seam": "the forms read and page-title writes in apps/tracy-web/src/sites/brief-engines/wordpress.js and wp-residue.js; inc/extra.php and languages/ of packages/cms/tracy-wordpress-theme (src and overlays wp-ja-essence)",
+    "door": "the WordPress site door (fake in the tests); theme PHP read as text"
+  },
+  "evidence": "Dev (cowork.tracy.site), 10/10/2026, g55-ess-wp-full (JA Essence WordPress 1.0.10, Vietnamese, Category Style 1 unticked): Contact embeds [contact-form-7 id=\"65\"], id 65 is an attachment, the door answered not_found and the whole judging step returned null, so menus, header/footer lines and the Contact intro stayed English (LANG-2); the 404 page read 'Page not found'; home-2 tiles linked /?page_id=137 (404) for the unticked page (PAGE-4).",
+  "fence": "Engine tests over a fake site and source-reading theme tests; no live WordPress ran. Essence 1.0.11 reaches customers only after its release.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=form id that holds no form|titles its pages|category tile whose page the customer unticked|every word the theme prints",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "packages/cms/tracy-wordpress-theme/test/essence.test.mjs"
+    ]
+  }
+}

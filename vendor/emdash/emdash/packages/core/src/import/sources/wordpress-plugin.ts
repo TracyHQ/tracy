@@ -1,0 +1,944 @@
+/**
+ * WordPress Plugin (EmDash Exporter) import source
+ *
+ * Connects to self-hosted WordPress sites running the EmDash Exporter plugin.
+ * Provides full access to all content including drafts, custom post types, and ACF fields.
+ */
+
+import { gutenbergToPortableText } from "@emdash-cms/gutenberg-to-portable-text";
+
+import { encodeBase64 } from "../../utils/base64.js";
+import type { PluginComment } from "../comments.js";
+import type { PluginMenu } from "../menus.js";
+import { ssrfSafeFetch, validateExternalUrl } from "../ssrf.js";
+import type {
+	ImportSource,
+	ImportAnalysis,
+	ImportContext,
+	SourceInput,
+	SourceProbeResult,
+	I18nDetection,
+	FetchOptions,
+	NormalizedItem,
+	PostTypeAnalysis,
+	AttachmentInfo,
+} from "../types.js";
+import {
+	BASE_REQUIRED_FIELDS,
+	FEATURED_IMAGE_FIELD,
+	mapPostTypeToCollection,
+	mapWpStatus,
+	normalizeUrl,
+	checkSchemaCompatibility,
+	isPluginBookkeepingMeta,
+	relativizeContentLinks,
+	sanitizeFieldSlug,
+} from "../utils.js";
+
+// =============================================================================
+// API Response Types
+// =============================================================================
+
+/** Detected i18n plugin info from the WordPress site */
+interface PluginI18nInfo {
+	/** Which multilingual plugin is active */
+	plugin: "wpml" | "polylang";
+	/** BCP 47 default locale */
+	default_locale: string;
+	/** All configured locales */
+	locales: string[];
+}
+
+/** Probe response from /emdash/v1/probe */
+interface PluginProbeResponse {
+	emdash_exporter: string;
+	wordpress_version: string;
+	site: {
+		title: string;
+		description: string;
+		url: string;
+		home: string;
+		language: string;
+		timezone: string;
+	};
+	capabilities: {
+		application_passwords: boolean;
+		acf: boolean;
+		yoast: boolean;
+		rankmath: boolean;
+	};
+	post_types: Array<{
+		name: string;
+		label: string;
+		count: number;
+	}>;
+	media_count: number;
+	endpoints: Record<string, string>;
+	auth_instructions: {
+		method: string;
+		instructions: string;
+		url?: string;
+	};
+	/** Detected multilingual plugin (WPML or Polylang). Absent when neither is active. */
+	i18n?: PluginI18nInfo;
+}
+
+/** Analyze response from /emdash/v1/analyze */
+interface PluginAnalyzeResponse {
+	site: {
+		title: string;
+		url: string;
+	};
+	post_types: Array<{
+		name: string;
+		label: string;
+		label_singular: string;
+		total: number;
+		by_status: Record<string, number>;
+		supports: Record<string, unknown>;
+		taxonomies: string[];
+		custom_fields: Array<{
+			key: string;
+			count: number;
+			inferred_type: string;
+			sample: string | null;
+		}>;
+		hierarchical: boolean;
+		has_archive: boolean;
+	}>;
+	taxonomies: Array<{
+		name: string;
+		label: string;
+		hierarchical: boolean;
+		term_count: number;
+		object_types: string[];
+	}>;
+	authors: Array<{
+		id: number;
+		login: string;
+		email: string;
+		display_name: string;
+		post_count: number;
+	}>;
+	attachments: {
+		count: number;
+		by_type: Record<string, number>;
+	};
+	acf?: Array<{
+		key: string;
+		title: string;
+		fields: Array<{
+			key: string;
+			name: string;
+			label: string;
+			type: string;
+			required: boolean;
+		}>;
+	}>;
+	/** Detected multilingual plugin (WPML or Polylang). Absent when neither is active. */
+	i18n?: PluginI18nInfo;
+}
+
+/** Content response from /emdash/v1/content */
+interface PluginContentResponse {
+	items: PluginPost[];
+	total: number;
+	pages: number;
+	page: number;
+	per_page: number;
+}
+
+/** Single post from plugin API */
+interface PluginPost {
+	id: number;
+	post_type: string;
+	status: string;
+	slug: string;
+	title: string;
+	content: string;
+	excerpt: string;
+	date: string;
+	date_gmt: string;
+	modified: string;
+	modified_gmt: string;
+	author: {
+		id: number;
+		login: string;
+		email: string;
+		display_name: string;
+	} | null;
+	parent: number | null;
+	menu_order: number;
+	taxonomies: Record<string, Array<{ id: number; name: string; slug: string }>>;
+	featured_image?: {
+		id: number;
+		url: string;
+		filename: string;
+		mime_type: string;
+		alt: string;
+		title: string;
+		caption: string;
+		width: number | null;
+		height: number | null;
+	};
+	meta: Record<string, unknown>;
+	acf?: Record<string, unknown>;
+	yoast?: Record<string, string>;
+	rankmath?: Record<string, string>;
+	/** BCP 47 locale from WPML/Polylang (when detected) */
+	locale?: string;
+	/** Translation group ID from WPML trid or Polylang (when detected) */
+	translation_group?: string;
+}
+
+/** Media response from /emdash/v1/media */
+interface PluginMediaResponse {
+	items: PluginMediaItem[];
+	total: number;
+	pages: number;
+	page: number;
+	per_page: number;
+}
+
+interface PluginMediaItem {
+	id: number;
+	url: string;
+	filename: string;
+	mime_type: string;
+	title: string;
+	alt: string;
+	caption: string;
+	description: string;
+	width?: number;
+	height?: number;
+	filesize?: number;
+}
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+/** Pattern to remove spaces from application passwords */
+const SPACE_PATTERN = /\s/g;
+
+/**
+ * Build the REST API URL for a plugin endpoint.
+ *
+ * `restRoute: false` uses the pretty form (`/wp-json/emdash/v1/...`),
+ * `restRoute: true` uses the `?rest_route=` form that works on sites with
+ * plain permalinks (where `/wp-json/` doesn't exist).
+ */
+function pluginApiUrl(
+	siteUrl: string,
+	path: string,
+	params: Record<string, string> = {},
+	restRoute = false,
+): string {
+	if (restRoute) {
+		const url = new URL(siteUrl + "/");
+		url.searchParams.set("rest_route", `/emdash/v1/${path}`);
+		for (const [key, value] of Object.entries(params)) {
+			url.searchParams.set(key, value);
+		}
+		return url.toString();
+	}
+	const url = new URL(`${siteUrl}/wp-json/emdash/v1/${path}`);
+	for (const [key, value] of Object.entries(params)) {
+		url.searchParams.set(key, value);
+	}
+	return url.toString();
+}
+
+/**
+ * Fetch a plugin API endpoint, falling back to the `?rest_route=` form when
+ * the pretty `/wp-json/` route 404s or is unreachable. Sites with "Plain"
+ * permalinks have no `/wp-json/` rewrite, so without this fallback they
+ * always fail with a misleading 404.
+ */
+async function fetchPluginApi(
+	siteUrl: string,
+	path: string,
+	params: Record<string, string>,
+	headers: HeadersInit,
+	timeoutMs: number,
+): Promise<Response> {
+	let pretty: Response | null = null;
+	try {
+		pretty = await ssrfSafeFetch(pluginApiUrl(siteUrl, path, params), {
+			headers,
+			signal: AbortSignal.timeout(timeoutMs),
+		});
+	} catch {
+		// Network-level failure -- try the rest_route form before giving up.
+	}
+	// Any response other than 404 (including 401/403/500) is authoritative:
+	// the route exists, so don't mask the real error with a fallback attempt.
+	if (pretty && pretty.status !== 404) {
+		return pretty;
+	}
+	return ssrfSafeFetch(pluginApiUrl(siteUrl, path, params, true), {
+		headers,
+		signal: AbortSignal.timeout(timeoutMs),
+	});
+}
+
+// =============================================================================
+// Import Source
+// =============================================================================
+
+export const wordpressPluginSource: ImportSource = {
+	id: "wordpress-plugin",
+	name: "WordPress (EmDash Exporter)",
+	description: "Import from WordPress sites with the EmDash Exporter plugin installed",
+	icon: "plug",
+	requiresFile: false,
+	canProbe: true,
+
+	async probe(url: string): Promise<SourceProbeResult | null> {
+		try {
+			const siteUrl = normalizeUrl(url);
+
+			// SSRF protection: validate URL before any outbound requests
+			validateExternalUrl(siteUrl);
+
+			const response = await fetchPluginApi(
+				siteUrl,
+				"probe",
+				{},
+				{ Accept: "application/json" },
+				10000,
+			);
+
+			if (!response.ok) {
+				return null;
+			}
+
+			const data: PluginProbeResponse = await response.json();
+
+			// Verify it's actually our plugin
+			if (!data.emdash_exporter) {
+				return null;
+			}
+
+			return {
+				sourceId: "wordpress-plugin",
+				confidence: "definite",
+				detected: {
+					platform: "wordpress",
+					version: data.wordpress_version,
+					siteTitle: data.site.title,
+					siteUrl: data.site.url,
+				},
+				capabilities: {
+					publicContent: true,
+					privateContent: true, // Full access with auth
+					customPostTypes: true,
+					allMeta: true,
+					mediaStream: true,
+				},
+				auth: data.capabilities.application_passwords
+					? {
+							type: "password",
+							instructions: data.auth_instructions.instructions,
+						}
+					: undefined,
+				preview: {
+					posts: data.post_types.find((p) => p.name === "post")?.count,
+					pages: data.post_types.find((p) => p.name === "page")?.count,
+					media: data.media_count,
+				},
+				suggestedAction: {
+					type: "proceed",
+				},
+				i18n: pluginI18nToDetection(data.i18n),
+			};
+		} catch {
+			return null;
+		}
+	},
+
+	async analyze(input: SourceInput, context: ImportContext): Promise<ImportAnalysis> {
+		const { siteUrl, headers } = getRequestConfig(input);
+
+		const response = await fetchPluginApi(siteUrl, "analyze", {}, headers, 30000);
+
+		if (!response.ok) {
+			const body: unknown = await response.json().catch(() => undefined);
+			const message =
+				typeof body === "object" &&
+				body !== null &&
+				"message" in body &&
+				typeof body.message === "string"
+					? body.message
+					: "";
+			throw new Error(message || `Failed to analyze site: ${response.statusText}`);
+		}
+
+		const data: PluginAnalyzeResponse = await response.json();
+
+		// Get existing collections for schema check
+		const existingCollections = context.getExistingCollections
+			? await context.getExistingCollections()
+			: new Map();
+
+		// Build post type analysis
+		const postTypes: PostTypeAnalysis[] = data.post_types
+			.filter((pt) => pt.total > 0)
+			.map((pt) => {
+				const suggestedCollection = mapPostTypeToCollection(pt.name);
+				const existingCollection = existingCollections.get(suggestedCollection);
+
+				// Include featured_image if post type supports thumbnails
+				const supportsThumbnail = pt.supports && "thumbnail" in pt.supports;
+				const requiredFields = supportsThumbnail
+					? [...BASE_REQUIRED_FIELDS, FEATURED_IMAGE_FIELD]
+					: [...BASE_REQUIRED_FIELDS];
+
+				// Surface the post type's custom fields (ACF and plain meta) so
+				// the prepare step creates them — without this, execute() has no
+				// matching schema fields and silently drops the values.
+				const knownSlugs = new Set(requiredFields.map((f) => f.slug));
+				for (const customField of pt.custom_fields ?? []) {
+					if (isPluginBookkeepingMeta(customField.key)) continue;
+					const slug = sanitizeFieldSlug(customField.key);
+					if (knownSlugs.has(slug)) continue;
+					knownSlugs.add(slug);
+					requiredFields.push({
+						slug,
+						label: fieldLabelFromKey(customField.key),
+						type: mapInferredFieldType(customField.inferred_type),
+						required: false,
+					});
+				}
+
+				return {
+					name: pt.name,
+					count: pt.total,
+					suggestedCollection,
+					requiredFields,
+					schemaStatus: checkSchemaCompatibility(requiredFields, existingCollection),
+				};
+			});
+
+		// Fetch the full media list, paginated. Stopping after the first page
+		// silently capped imports at 500 attachments (wp-emdash #1).
+		const attachments: AttachmentInfo[] = [];
+		if (data.attachments.count > 0) {
+			try {
+				let page = 1;
+				let totalPages = 1;
+				while (page <= totalPages) {
+					const mediaResponse = await fetchPluginApi(
+						siteUrl,
+						"media",
+						{ per_page: "500", page: String(page) },
+						headers,
+						30000,
+					);
+					if (!mediaResponse.ok) break;
+					const mediaData: PluginMediaResponse = await mediaResponse.json();
+					totalPages = mediaData.pages;
+					for (const item of mediaData.items) {
+						attachments.push({
+							id: item.id,
+							url: item.url,
+							filename: item.filename,
+							mimeType: item.mime_type,
+							title: item.title,
+							alt: item.alt,
+							caption: item.caption,
+							width: item.width,
+							height: item.height,
+						});
+					}
+					page++;
+				}
+			} catch (e) {
+				console.warn("Failed to fetch media list:", e);
+			}
+		}
+
+		// Count categories and tags
+		const categoryTaxonomy = data.taxonomies.find((t) => t.name === "category");
+		const tagTaxonomy = data.taxonomies.find((t) => t.name === "post_tag");
+
+		return {
+			sourceId: "wordpress-plugin",
+			site: {
+				title: data.site.title,
+				url: data.site.url,
+			},
+			postTypes,
+			attachments: {
+				count: data.attachments.count,
+				items: attachments,
+			},
+			categories: categoryTaxonomy?.term_count ?? 0,
+			tags: tagTaxonomy?.term_count ?? 0,
+			authors: data.authors.map((a) => ({
+				id: a.id,
+				login: a.login,
+				email: a.email,
+				displayName: a.display_name,
+				postCount: a.post_count,
+			})),
+			i18n: pluginI18nToDetection(data.i18n),
+		};
+	},
+
+	async *fetchContent(input: SourceInput, options: FetchOptions): AsyncGenerator<NormalizedItem> {
+		const { siteUrl, headers } = getRequestConfig(input);
+
+		for (const postType of options.postTypes) {
+			let page = 1;
+			let totalPages = 1;
+			let yielded = 0;
+
+			while (page <= totalPages) {
+				const status = options.includeDrafts ? "any" : "publish";
+				const response = await fetchPluginApi(
+					siteUrl,
+					"content",
+					{ post_type: postType, status, per_page: "100", page: String(page) },
+					headers,
+					60000,
+				);
+
+				if (!response.ok) {
+					throw new Error(`Failed to fetch ${postType}: ${response.statusText}`);
+				}
+
+				const data: PluginContentResponse = await response.json();
+				totalPages = data.pages;
+
+				for (const post of data.items) {
+					yield pluginPostToNormalizedItem(post, siteUrl);
+					yielded++;
+
+					if (options.limit && yielded >= options.limit) {
+						return;
+					}
+				}
+
+				page++;
+			}
+		}
+	},
+
+	async fetchMedia(url: string, _input: SourceInput): Promise<Blob> {
+		// SSRF protection: validate media URL before fetching
+		validateExternalUrl(url);
+
+		// Media URLs are publicly accessible on WP (ssrfSafeFetch validates redirects)
+		const response = await ssrfSafeFetch(url);
+		if (!response.ok) {
+			throw new Error(`Failed to fetch media: ${response.statusText}`);
+		}
+		return response.blob();
+	},
+};
+
+/**
+ * Fetch a single page of content for one post type. This is the unit of
+ * work for the chunked import: one Worker invocation imports one page,
+ * keeping each request far below Cloudflare's CPU and subrequest limits
+ * (see issue #475).
+ */
+export async function fetchPluginContentPage(options: {
+	siteUrl: string;
+	token: string;
+	postType: string;
+	page: number;
+	perPage: number;
+	includeDrafts: boolean;
+}): Promise<{ items: NormalizedItem[]; totalPages: number }> {
+	const { siteUrl, headers } = getRequestConfig({
+		type: "url",
+		url: options.siteUrl,
+		token: options.token,
+	});
+
+	const response = await fetchPluginApi(
+		siteUrl,
+		"content",
+		{
+			post_type: options.postType,
+			status: options.includeDrafts ? "any" : "publish",
+			per_page: String(options.perPage),
+			page: String(options.page),
+		},
+		headers,
+		60000,
+	);
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch ${options.postType}: ${response.statusText}`);
+	}
+
+	const data: PluginContentResponse = await response.json();
+	return {
+		items: data.items.map((post) => pluginPostToNormalizedItem(post, siteUrl)),
+		totalPages: data.pages,
+	};
+}
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+/** Plugin `inferred_type` values that are valid EmDash field types as-is */
+const VALID_INFERRED_TYPES = new Set([
+	"string",
+	"text",
+	"number",
+	"integer",
+	"boolean",
+	"datetime",
+	"json",
+	"reference",
+]);
+
+/**
+ * Map the plugin's inferred custom-field type to an EmDash field type.
+ * Unknown values fall back to string (always safe for TEXT storage).
+ */
+function mapInferredFieldType(inferredType: string): string {
+	return VALID_INFERRED_TYPES.has(inferredType) ? inferredType : "string";
+}
+
+const FIELD_KEY_SEPARATORS = /[_-]+/;
+
+/** Derive a human label from a meta key: "event_start-date" -> "Event Start Date" */
+function fieldLabelFromKey(key: string): string {
+	return key
+		.split(FIELD_KEY_SEPARATORS)
+		.filter(Boolean)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ");
+}
+
+/**
+ * Convert plugin i18n info to the shared I18nDetection type.
+ * Returns undefined when no multilingual plugin is detected.
+ */
+function pluginI18nToDetection(i18n: PluginI18nInfo | undefined): I18nDetection | undefined {
+	if (!i18n) return undefined;
+	return {
+		plugin: i18n.plugin,
+		defaultLocale: i18n.default_locale,
+		locales: i18n.locales,
+	};
+}
+
+/**
+ * Get request configuration from input
+ */
+function getRequestConfig(input: SourceInput): {
+	siteUrl: string;
+	headers: HeadersInit;
+} {
+	if (input.type === "url") {
+		const siteUrl = normalizeUrl(input.url);
+
+		// SSRF protection: validate URL before any outbound requests
+		validateExternalUrl(siteUrl);
+		const headers: HeadersInit = {
+			Accept: "application/json",
+		};
+
+		if (input.token) {
+			// Token format: "username:password" base64 encoded
+			headers["Authorization"] = `Basic ${input.token}`;
+		}
+
+		return { siteUrl, headers };
+	}
+
+	if (input.type === "oauth") {
+		const oauthSiteUrl = normalizeUrl(input.url);
+
+		// SSRF protection: validate URL before any outbound requests
+		validateExternalUrl(oauthSiteUrl);
+
+		return {
+			siteUrl: oauthSiteUrl,
+			headers: {
+				Accept: "application/json",
+				Authorization: `Bearer ${input.accessToken}`,
+			},
+		};
+	}
+
+	throw new Error("WordPress plugin source requires URL or OAuth input");
+}
+
+/**
+ * Convert plugin post to normalized item
+ */
+function pluginPostToNormalizedItem(post: PluginPost, siteUrl: string): NormalizedItem {
+	const content = post.content ? gutenbergToPortableText(post.content) : [];
+	relativizeContentLinks(content, siteUrl);
+
+	// Extract categories and tags from taxonomies
+	const categories =
+		post.taxonomies?.category?.map((c) => c.slug) ??
+		post.taxonomies?.categories?.map((c) => c.slug) ??
+		[];
+	const tags =
+		post.taxonomies?.post_tag?.map((t) => t.slug) ??
+		post.taxonomies?.tags?.map((t) => t.slug) ??
+		[];
+
+	// Everything else is a custom taxonomy assignment (genre, product_cat, ...)
+	const customTaxonomies: Record<string, string[]> = {};
+	for (const [name, terms] of Object.entries(post.taxonomies ?? {})) {
+		if (["category", "categories", "post_tag", "tags"].includes(name)) continue;
+		if (Array.isArray(terms) && terms.length > 0) {
+			customTaxonomies[name] = terms.map((t) => t.slug);
+		}
+	}
+
+	// Build meta from various sources
+	const meta: Record<string, unknown> = { ...post.meta };
+
+	// Include ACF fields in meta
+	if (post.acf) {
+		meta._acf = post.acf;
+	}
+
+	// Include SEO data in meta
+	if (post.yoast) {
+		meta._yoast = post.yoast;
+	}
+	if (post.rankmath) {
+		meta._rankmath = post.rankmath;
+	}
+
+	return {
+		sourceId: post.id,
+		postType: post.post_type,
+		status: mapWpStatus(post.status),
+		slug: post.slug,
+		title: post.title,
+		content,
+		excerpt: post.excerpt || undefined,
+		date: new Date(post.date_gmt || post.date),
+		modified: post.modified_gmt ? new Date(post.modified_gmt) : new Date(post.modified),
+		author: post.author?.login,
+		categories,
+		tags,
+		customTaxonomies: Object.keys(customTaxonomies).length > 0 ? customTaxonomies : undefined,
+		meta,
+		featuredImage: post.featured_image?.url,
+		locale: post.locale,
+		translationGroup: post.translation_group,
+	};
+}
+
+// =============================================================================
+// Utility Functions for External Use
+// =============================================================================
+
+/**
+ * Create a Basic Auth token from username and password
+ */
+export function createBasicAuthToken(username: string, password: string): string {
+	// Remove spaces from application password (WP formats them with spaces)
+	const cleanPassword = password.replace(SPACE_PATTERN, "");
+	return encodeBase64(`${username}:${cleanPassword}`);
+}
+
+/**
+ * Fetch media list from plugin API
+ */
+export async function fetchPluginMedia(
+	siteUrl: string,
+	authToken: string,
+	page = 1,
+	perPage = 100,
+): Promise<PluginMediaResponse> {
+	const normalizedSiteUrl = normalizeUrl(siteUrl);
+
+	// SSRF protection: validate URL before any outbound requests
+	validateExternalUrl(normalizedSiteUrl);
+
+	const response = await fetchPluginApi(
+		normalizedSiteUrl,
+		"media",
+		{ per_page: String(perPage), page: String(page) },
+		{ Accept: "application/json", Authorization: `Basic ${authToken}` },
+		30000,
+	);
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch media: ${response.statusText}`);
+	}
+
+	return response.json();
+}
+
+/**
+ * Fetch taxonomies from plugin API
+ */
+export async function fetchPluginTaxonomies(
+	siteUrl: string,
+	authToken: string,
+): Promise<
+	Array<{
+		name: string;
+		label: string;
+		/** Singular label (added in emdash-exporter 1.2.0) */
+		label_singular?: string;
+		hierarchical: boolean;
+		/** WP post types this taxonomy is registered for (added in emdash-exporter 1.2.0) */
+		post_types?: string[];
+		terms: Array<{
+			id: number;
+			name: string;
+			slug: string;
+			description: string;
+			parent: number | null;
+			count: number;
+		}>;
+	}>
+> {
+	const normalizedSiteUrl = normalizeUrl(siteUrl);
+
+	// SSRF protection: validate URL before any outbound requests
+	validateExternalUrl(normalizedSiteUrl);
+
+	const response = await fetchPluginApi(
+		normalizedSiteUrl,
+		"taxonomies",
+		{},
+		{ Accept: "application/json", Authorization: `Basic ${authToken}` },
+		30000,
+	);
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch taxonomies: ${response.statusText}`);
+	}
+
+	return response.json();
+}
+
+/**
+ * Fetch navigation menus from plugin API (added in emdash-exporter 1.1.0).
+ * Returns an empty array when the endpoint doesn't exist (older plugin).
+ */
+export async function fetchPluginMenus(siteUrl: string, authToken: string): Promise<PluginMenu[]> {
+	const normalizedSiteUrl = normalizeUrl(siteUrl);
+
+	// SSRF protection: validate URL before any outbound requests
+	validateExternalUrl(normalizedSiteUrl);
+
+	const response = await fetchPluginApi(
+		normalizedSiteUrl,
+		"menus",
+		{},
+		{ Accept: "application/json", Authorization: `Basic ${authToken}` },
+		30000,
+	);
+
+	if (response.status === 404) {
+		return [];
+	}
+	if (!response.ok) {
+		throw new Error(`Failed to fetch menus: ${response.statusText}`);
+	}
+
+	return response.json();
+}
+
+/**
+ * Fetch site options from plugin API (title, tagline, logo, favicon, ...)
+ */
+export async function fetchPluginOptions(
+	siteUrl: string,
+	authToken: string,
+): Promise<Record<string, unknown>> {
+	const normalizedSiteUrl = normalizeUrl(siteUrl);
+
+	// SSRF protection: validate URL before any outbound requests
+	validateExternalUrl(normalizedSiteUrl);
+
+	const response = await fetchPluginApi(
+		normalizedSiteUrl,
+		"options",
+		{},
+		{ Accept: "application/json", Authorization: `Basic ${authToken}` },
+		30000,
+	);
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch options: ${response.statusText}`);
+	}
+
+	return response.json();
+}
+
+/** Comments response from /emdash/v1/comments */
+interface PluginCommentsResponse {
+	items: PluginComment[];
+	total: number;
+	pages: number;
+	page: number;
+	per_page: number;
+}
+
+/**
+ * Fetch a single page of comments from the plugin API (added in
+ * emdash-exporter 1.2.0). The exporter orders by comment ID ascending, so
+ * parents always appear before their children across pages. Returns
+ * `totalPages: 0` when the endpoint doesn't exist (older plugin).
+ */
+export async function fetchPluginCommentsPage(
+	siteUrl: string,
+	authToken: string,
+	page: number,
+): Promise<{ items: PluginComment[]; totalPages: number }> {
+	const normalizedSiteUrl = normalizeUrl(siteUrl);
+
+	// SSRF protection: validate URL before any outbound requests
+	validateExternalUrl(normalizedSiteUrl);
+
+	const response = await fetchPluginApi(
+		normalizedSiteUrl,
+		"comments",
+		{ per_page: "500", page: String(page) },
+		{ Accept: "application/json", Authorization: `Basic ${authToken}` },
+		30000,
+	);
+
+	if (response.status === 404) {
+		return { items: [], totalPages: 0 };
+	}
+	if (!response.ok) {
+		throw new Error(`Failed to fetch comments: ${response.statusText}`);
+	}
+
+	const data: PluginCommentsResponse = await response.json();
+	return { items: data.items, totalPages: data.pages };
+}
+
+/**
+ * Fetch all comments from plugin API, paginating through every page.
+ * Returns an empty array when the endpoint doesn't exist (older plugin).
+ */
+export async function fetchPluginComments(
+	siteUrl: string,
+	authToken: string,
+): Promise<PluginComment[]> {
+	const comments: PluginComment[] = [];
+	let page = 1;
+	let totalPages = 1;
+
+	while (page <= totalPages) {
+		const result = await fetchPluginCommentsPage(siteUrl, authToken, page);
+		totalPages = result.totalPages;
+		comments.push(...result.items);
+		page++;
+	}
+
+	return comments;
+}

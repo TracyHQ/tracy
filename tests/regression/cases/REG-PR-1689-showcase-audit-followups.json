@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1689-showcase-audit-followups",
+  "kind": "fix",
+  "title": "A showcase phase whose only written owners kept their style settles failed; WP sweep keeps pages the map names by address; Akeeba guard files are completed, never written through a link",
+  "pr": 1689,
+  "area": "quickstart/showcase-nav",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the three suites in run.cmd from the repo root; they drive joomla-bootstrap.php, wordpress.sh, showcase-nav-map.js, wp-residue.js and webroot-skipped-dirs.sh under test doubles."
+  ],
+  "expect": [
+    "Joomla and WordPress: a status with conflicts plus only kept mega-menu styles and nothing hidden is a failed phase naming the kept styles, and what it applied is reverted",
+    "A status with conflicts plus at least one owner hidden is applied and names the left owners (1 of N)",
+    "showcasePageIds resolves a templatePart.removeBlock href against the site pages: JA Kinetic gives 1748 and 1749",
+    "An unticked showcase page named only by its address stays published; a non-showcase page is drafted",
+    "A half-made Akeeba output folder gets only the guard files it lacks, and only those are printed",
+    "A guard file or an output folder that is a link is not written through",
+    "A removed template-part link to another host, including the URL parser's own base host, protects no site page"
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/{provision/joomla-bootstrap.php,provision/platform/wordpress.sh,lib/webroot-skipped-dirs.sh}; apps/tracy-web/src/{lib/showcase-nav-map.js,sites/brief-engines/wp-residue.js}"
+  },
+  "fence": "Provisioning scripts and brief engines under test doubles; no live site",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/webroot-skipped-dirs.test.mjs",
+      "apps/tracy-web/test/showcase-nav-hidden.test.mjs",
+      "apps/tracy-web/test/brief-wp-residue.test.mjs"
+    ],
+    "tests": [
+      "owners the status leaves as they were are named; all of them left is a failed phase, not applied",
+      "a new site has its template showcase taken out of the menus; skips, losses and refusals are said",
+      "WordPress: a link removed from a template part names its page by address, resolved against the site pages",
+      "a showcase page the map names only by its address stays published when unticked",
+      "a folder made half-way gets the guard files it lacks, and only those are printed",
+      "a guard file or an output folder that is a link is not written through",
+      "WordPress: a removed template-part link to another host names none of the site pages"
+    ]
+  }
+}

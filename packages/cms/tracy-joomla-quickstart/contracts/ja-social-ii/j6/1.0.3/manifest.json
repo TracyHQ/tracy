@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-social-ii/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_social_ii",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-social-ii",
+    "id": "quickstart/ja-social-ii/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_social_ii",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-social-ii-j6-webroot-1.0.3.tar.gz",
+        "bytes": 95208914,
+        "sha256": "51e6fd0f6c999f79d4096bbf83f56e92ac20232cd5de2ac66927604d1ece2064"
+      },
+      "database": {
+        "file": "ja-social-ii-j6-database-1.0.3.sql.gz",
+        "bytes": 85125,
+        "sha256": "dc687a953eeeb91e44bd2e089f474be0577e030278ffa993c5810b29ded50d4f"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T10:58:21.335Z",
+    "builtFrom": {
+      "site": "asocial-rp",
+      "tag": "local:ja-social-ii-j6-1.0.3",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-social-ii/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

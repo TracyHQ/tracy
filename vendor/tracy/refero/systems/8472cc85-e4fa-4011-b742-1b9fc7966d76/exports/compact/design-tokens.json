@@ -1,0 +1,44 @@
+{
+  "color": {
+    "page-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Page White — Page canvas, card surfaces, input fills — the base everything sits on"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, headings, nav links, border lines, icon strokes — the dominant structural color"
+    },
+    "hairline-gray": {
+      "$value": "#e4e4e4",
+      "$type": "color",
+      "$description": "Hairline Gray — Footer divider border — barely-there separator"
+    },
+    "input-border": {
+      "$value": "#b4b4b4",
+      "$type": "color",
+      "$description": "Input Border — Search input and form field borders"
+    },
+    "glitch-magenta": {
+      "$value": "#ff00bc",
+      "$type": "color",
+      "$description": "Glitch Magenta — Pink accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "intervariable": {
+      "$value": "InterVariable",
+      "$type": "fontFamily",
+      "$description": "All text across the site — navigation, body, headings, dates, links. Inter Variable provides a neutral editorial voice that lets the artwork speak. Weight 400 carries body and meta, weight 600–700 carries titles and nav for confident hierarchy without serifs."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://glitch.com",
+      "siteName": "Glitch Blog",
+      "extractedAt": "2026-06-03T19:55:05.942Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "source": "quickstart/ja-voyara/j6@1.0.8 https://ja-voyara-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "light",
+  "capturedAt": "2026-10-14",
+  "note": "clean: brand mark and footer logo stay readable",
+  "plain": [
+    {
+      "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1/span:1/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 194,
+        "g": 86,
+        "b": 47,
+        "a": 1
+      },
+      "ink": 1
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/a:1/span:1/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 194,
+        "g": 86,
+        "b": 47,
+        "a": 1
+      },
+      "ink": 1
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 1
+      },
+      "ink": 0.0188
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:2/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 1
+      },
+      "ink": 0.0188
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:3/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 1
+      },
+      "ink": 0.0188
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:4/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 1
+      },
+      "ink": 0.0188
+    }
+  ],
+  "worn": [
+    {
+      "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1/span:1/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 132,
+        "g": 172,
+        "b": 251,
+        "a": 1
+      },
+      "ink": 0
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/a:1/span:1/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 132,
+        "g": 172,
+        "b": 251,
+        "a": 1
+      },
+      "ink": 0
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 26,
+        "g": 26,
+        "b": 26,
+        "a": 1
+      },
+      "ink": 0.8572
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:2/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 26,
+        "g": 26,
+        "b": 26,
+        "a": 1
+      },
+      "ink": 0.8572
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:3/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 26,
+        "g": 26,
+        "b": 26,
+        "a": 1
+      },
+      "ink": 0.8572
+    },
+    {
+      "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:4/svg:1",
+      "at": "svg",
+      "src": null,
+      "filter": null,
+      "ground": {
+        "r": 26,
+        "g": 26,
+        "b": 26,
+        "a": 1
+      },
+      "ink": 0.8572
+    }
+  ]
+}

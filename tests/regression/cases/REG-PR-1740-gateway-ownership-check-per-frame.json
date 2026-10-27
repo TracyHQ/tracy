@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1740-gateway-ownership-check-per-frame",
+  "kind": "fix",
+  "title": "Gateway H20: the per-frame workspace ownership check gives upstream's exact answer at a fraction of the cost, and still refuses another subuser's workspace",
+  "pr": 1740,
+  "area": "dsh-passwords/gateway",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Compare H20 with upstream's predicate over aliases, symlinks, missing and dangling folders, roles and shared grants; count rows reads and filesystem calls on the dev host's shape (117 rows, 87 missing folders).",
+    "S2: Through the real gateway, a seat granted a folder another subuser registered lists it and opens a session there."
+  ],
+  "expect": [
+    "S1: every answer equals upstream's; one rows read per check, realpath only per existing folder; faster than upstream's predicate.",
+    "S2: the folder is not listed and session creation is refused with 403, nothing sent to dsh."
+  ],
+  "selectors": {
+    "tool": "vendor/tracy/dsh-passwords/src/tracy/ownership.ts",
+    "evidence": "vendor/tracy/dsh-passwords/test/tracy/ownership.test.ts"
+  },
+  "evidence": "Dev profile 25/10/2026: workspaceOwnedByAnotherSubuser was 49% of gateway samples; on dev's real rows H20 gave 702/702 identical answers, 5.79 ms -> 1.34 ms per check",
+  "fence": "Unit test against upstream's predicate rebuilt from its exported helpers, plus a gateway harness test through H20",
+  "run": {
+    "cwd": "vendor/tracy/dsh-passwords",
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "test/tracy/ownership.test.ts",
+      "test/tracy/gateway-ownership-h20.test.ts"
+    ],
+    "tests": [
+      "H20: the same answer as upstream",
+      "🔒 H20: a workspace another subuser owns is still refused",
+      "H20: per check, one read of the rows",
+      "🔒 H20: another seat granted that folder",
+      "🔒 H20: and the other seat is refused"
+    ]
+  }
+}

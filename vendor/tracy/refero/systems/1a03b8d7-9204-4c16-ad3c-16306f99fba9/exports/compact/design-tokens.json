@@ -1,0 +1,99 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#0f0f10",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page background, hero base, footer — the dominant near-black field that holds everything else"
+    },
+    "graphite-layer": {
+      "$value": "#1d1d1f",
+      "$type": "color",
+      "$description": "Graphite Layer — Elevated surfaces, icon strokes, secondary button borders — one step lighter than the canvas to create depth without elevation"
+    },
+    "bone-white": {
+      "$value": "#fefef7",
+      "$type": "color",
+      "$description": "Bone White — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "cream-paper": {
+      "$value": "#f7f3ee",
+      "$type": "color",
+      "$description": "Cream Paper — Light surface variant, gradient terminus — a soft warm white paired with Obsidian for AAA contrast"
+    },
+    "ash-border": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash Border — Hairline borders, dividers, list separators, muted structural lines — the most-used neutral border color"
+    },
+    "slate-mute": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Slate Mute — Secondary text, inactive link borders, de-emphasized chrome"
+    },
+    "cool-steel": {
+      "$value": "#868f97",
+      "$type": "color",
+      "$description": "Cool Steel — Body helper text, icon outlines, subtle annotation"
+    },
+    "warm-pewter": {
+      "$value": "#86868b",
+      "$type": "color",
+      "$description": "Warm Pewter — Heading and body muted variant — the slightly warmer counterpart to Cool Steel"
+    },
+    "pale-mist": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Pale Mist — Body borders, very subtle structural separators"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Body text on light surfaces, icon fills, deep contrast anchor"
+    },
+    "bronze-glow": {
+      "$value": "#f2b98b",
+      "$type": "color",
+      "$description": "Bronze Glow — Outlined action border, link underline, decorative icon accent — warm copper against matte black, the only chromatic punctuation in the system"
+    },
+    "apricot-highlight": {
+      "$value": "#ffaf7c",
+      "$type": "color",
+      "$description": "Apricot Highlight — Lighter amber accent for secondary decorative rules and gradient highlights"
+    },
+    "amber-wash": {
+      "$value": "#d49065",
+      "$type": "color",
+      "$description": "Amber Wash — Gradient start color — the warm horizon glow that bleeds into the lower viewport"
+    }
+  },
+  "font": {
+    "verlag": {
+      "$value": "Verlag",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface. Weight 400 for body, 600 for nav and emphasized labels, 700 for buttons and card headings. The wide letter-spacing at small sizes (0.056em–0.167em) on 9–10px creates editorial all-caps labels that read as section markers, not body text. Substitute: Inter, Untitled Sans, or Söhne for a similar geometric grotesque with editorial weight range."
+    },
+    "verlag-condensed": {
+      "$value": "Verlag Condensed",
+      "$type": "fontFamily",
+      "$description": "Display headlines only. The compressed letterforms at weight 900 create tall, magazine-cover impact on hero text — the signature of the Mesh brand voice. Substitute: Oswald, Barlow Condensed, or Roboto Condensed Black for a tall, narrow display face."
+    },
+    "chronicle-text-g1-roman": {
+      "$value": "Chronicle Text G1 Roman",
+      "$type": "fontFamily",
+      "$description": "Editorial subhead accent — a serif counterpoint to Verlag's sans, used sparingly for humanizing mid-page text. Substitute: Tiempos Text, Source Serif, or PT Serif."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "System fallback for body and heading contexts where Verlag is unavailable. The 0.1em tracking at 10px mirrors the wide-label pattern."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://clay.earth",
+      "siteName": "Mesh",
+      "extractedAt": "2026-06-03T15:51:10.744Z",
+      "variant": "compact"
+    }
+  }
+}

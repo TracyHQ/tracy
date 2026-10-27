@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1139-desktop-onboarding-screen",
+  "kind": "feat",
+  "title": "Desktop first-run screen: three steps end to end in the app from source, Done records the pick and opens Settings › AI accounts on that row, Help reopens it",
+  "pr": 1139,
+  "area": "desktop/onboarding",
+  "cms": ["any"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: read GET <stand>/api/desktop/config; launch the desktop app from source (test/e2e/launch.mjs) on the stand with TRACY_DESKTOP_ONBOARDING=again in a fresh profile, sign in with a session cookie minted from the stand web container's SESSION_SECRET for ceo@tracy.ai, load the stand's root.",
+    "S2: the overlay [data-tracy-onboard] has role=dialog and three step buttons ([data-rail-step] in the setup-rail layout, .tv-ob-bar in the one-column layout).",
+    "S3: step 1 lists one [data-agent] card per catalogue id; tracyDesktop.app.agents.detect(catalogue ids) until scanComplete; when some are found, the cards marked data-found=true and the section count equal the found ids.",
+    "S4: click the codex card ([data-agent=codex]), Continue ([data-action=next]); step 2: click [data-theme-pick=dark] then [data-theme-pick=system] then [data-theme-pick=light]; Continue.",
+    "S5: step 3 shows [data-action=notify] and [data-action=send-test]; read app.notifications.status(), click send-test, read status() again.",
+    "S6: Done ([data-action=next]); read <profile>/preferences.json; wait for Settings › AI accounts.",
+    "S7: close and relaunch the same profile without TRACY_DESKTOP_ONBOARDING; then click the app menu item id tracy-getting-started (Help › Getting started with Tracy Cowork) from the main process."
+  ],
+  "expect": [
+    "S1: catalogue is a non-empty list of {id, name, homepage}; the page sees tracyDesktop.app.protocolVersion 2.",
+    "S2: [data-tracy-onboard] present, role=dialog, exactly 3 step buttons.",
+    "S3: every catalogue id has a card; found count on screen = found ids from detect; claude found on this machine.",
+    "S4: after Continue data-step-index is 1; body[data-ds-dark-theme] true after Dark, false after System and after Light; after Continue data-step-index is 2.",
+    "S5: both controls present; the second status() answers with supported true and lastShownAt a number newer than before (or supported false and lastShownAt unchanged).",
+    "S6: the overlay is gone; preferences.json onboarding.closedAt is a number, outcome 'completed', picked 'codex'; the address carries settings=ai-accounts&vendor=codex and the focused element sits in [data-vendor=codex].",
+    "S7: no [data-tracy-onboard] after the relaunch; after the menu click [data-tracy-onboard] is back."
+  ],
+  "selectors": {
+    "overlay": "[data-tracy-onboard][role=dialog][data-step-index]",
+    "steps": "[data-rail-step] | .tv-ob-bar",
+    "cards": "[data-agent][data-found]",
+    "actions": "[data-action=next|send-test|notify], [data-theme-pick=dark|system|light]",
+    "settings row": "[data-vendor=<id>]",
+    "bridge": "window.tracyDesktop.app.agents.detect / notifications.status",
+    "menu": "Menu.getApplicationMenu().getMenuItemById('tracy-getting-started')",
+    "file": "<profile>/preferences.json"
+  },
+  "fence": "The first-run screen is device-local: it shows until closed, Done writes completed + the pick to preferences.json and nothing reopens it but Help › Getting started.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1139-desktop-onboarding-screen.mjs"],
+    "needs": ["stand"],
+    "timeout_s": 420
+  }
+}

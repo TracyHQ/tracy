@@ -1,0 +1,12 @@
+-- WHICH COMMENTS A CHAT TURN WAS SENT FROM (site changes plan §5, P1).
+--
+-- A turn sent from the Browser tab ("Send to Tracy") carries its comments' numbers in the prompt
+-- itself (`parseCommentTurn` of `tracy-chat-input`, items[].n); the host dsh reads them when the turn
+-- opens and sends them on `POST /api/sites/:key/turn`. The Site changes tab joins a comment turn to
+-- its `site_request` row by `(site_key, session_id, n)` to link the comment.
+--
+-- 🔒 NOT `rpc_id`. Measured on the stand (Q2, `tasks/evidence/site-changes/Q2/regression-comment-edit/`):
+-- `site_turn.rpc_id` is dsh's prompt RPC id, `site_request.request_id` is an id the Browser tab mints
+-- itself — two sources that never match. Null here means a dsh that predates this column, or a
+-- panel turn.
+alter table site_turn add column if not exists comment_ns integer[];

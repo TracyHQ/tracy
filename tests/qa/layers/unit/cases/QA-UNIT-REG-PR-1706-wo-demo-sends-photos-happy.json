@@ -1,0 +1,52 @@
+{
+  "id": "QA-UNIT-REG-PR-1706-wo-demo-sends-photos-happy",
+  "itemIds": ["regression:REG-PR-1706-wo-demo-sends-photos"],
+  "requirement": "Build it with Tracy sends the place’s own public photos, read from its research rows; a Places resource name is never sent",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1706-wo-demo-sends-photos.json",
+    "ref": "PR #1706 (fix); fix evidence: Stranger run 25/10/2026: demo dff32d00 (29 website photos stored) sent 0 photos and failed QUICKSTART_PHOTOGRAPHS_REQUIRED",
+    "invariant": "S1: both pass with 0 failed/skipped; the photo test sends exactly the website photo address.",
+    "productSources": [
+      "packages/wo/website-opportunities/domain/demo-request.mjs:86",
+      "packages/wo/website-opportunities/src/plugins/builders/tracy-request.js:363",
+      "packages/wo/website-opportunities/src/schema/index.js:67",
+      "packages/wo/website-opportunities/src/standalone/config.js:31",
+      "packages/wo/website-opportunities/src/standalone/operator-principal.js:10",
+      "packages/wo/website-opportunities/src/standalone/server.js:70"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/wo/website-opportunities/src/schema/index.js:28 readFile() with a computed path",
+      "packages/wo/website-opportunities/src/standalone/disk-objects.js:55 createReadStream() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": ["REG-PR-1706-wo-demo-sends-photos.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1706-wo-demo-sends-photos"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1706-wo-demo-sends-photos",
+    "pr": 1706,
+    "kind": "fix",
+    "area": "wo/tracy-builder",
+    "file": "tests/regression/cases/REG-PR-1706-wo-demo-sends-photos.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1706-wo-demo-sends-photos.mjs"],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [],
+  "timeoutS": 600
+}

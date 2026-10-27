@@ -1,0 +1,81 @@
+{
+  "id": "QA-UNIT-REG-PR-1356-ds-wear-auto-palette-happy",
+  "itemIds": ["regression:REG-PR-1356-ds-wear-auto-palette"],
+  "requirement": "A worn design system maps every template colour by its role, and the preview rules judge what a visitor sees",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1356-ds-wear-auto-palette.json",
+    "ref": "PR #1356 (fix); fix evidence: 14/10/2026: under Moxie the Add site preview of JA Resort showed a khaki band with black text and JA Impact kept its orange and navy blocks while every built-site rule passed",
+    "invariant": "S1: every auto palette test passes; every Joomla slot with a palette is under 60 KB under Moxie. S2: the rules are unmeasurable without a preview block and fail per system and scheme with one. S3: every door test passes.",
+    "productSources": [
+      "apps/tracy-web/src/lib/ds-preview-ticket.js:62",
+      "apps/tracy-web/src/lib/ds-slot.js:405",
+      "apps/tracy-web/src/sites/design-system-preview-assets.js:44",
+      "apps/tracy-web/src/sites/design-system-preview-links.js:169",
+      "apps/tracy-web/src/sites/design-system-preview-page.js:121",
+      "apps/tracy-web/src/sites/design-system-preview-wordpress.js:174",
+      "apps/tracy-web/src/sites/design-system-preview.js:155",
+      "apps/tracy-web/src/sites/resolver.js:112",
+      "packages/design/tracy-ds-slot/src/auto-palette.mjs:477",
+      "packages/design/tracy-ds-slot/src/joomla.mjs:19",
+      "packages/design/tracy-ds-slot/src/library.mjs:5",
+      "packages/design/tracy-ds-slot/src/measurement-io.mjs:19",
+      "packages/design/tracy-ds-slot/src/measurement.mjs:26",
+      "packages/design/tracy-ds-slot/src/preview-probe-version.mjs:143"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/ds-slot.js:411 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:578 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:79 import() with a computed specifier",
+      "packages/design/tracy-ds-slot/src/library.mjs:104 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:116 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:43 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:44 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:52 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:55 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:71 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:88 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/measurement-io.mjs:24 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/measurement-io.mjs:33 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/test/measurement.test.mjs:536 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/test/measurement.test.mjs:545 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1356-ds-wear-auto-palette.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1356-ds-wear-auto-palette"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/design/tracy-ds-slot", "tracy-ds-slot"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1356-ds-wear-auto-palette",
+    "pr": 1356,
+    "kind": "fix",
+    "area": "design-system/slot",
+    "file": "tests/regression/cases/REG-PR-1356-ds-wear-auto-palette.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/design/tracy-ds-slot/test/auto-palette.test.mjs",
+    "packages/design/tracy-ds-slot/test/measurement.test.mjs",
+    "apps/tracy-web/test/design-system-preview-door.test.mjs",
+    "apps/tracy-web/test/design-system-preview-assets.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 300
+}

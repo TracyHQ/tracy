@@ -1,0 +1,388 @@
+{
+  "dos": [
+    "Use #266df0 (Cobalt Core) as the single accent for all interactive highlights, active states, and link text — never introduce additional saturated colors",
+    "Set display headlines in InterDisplay weight 600 at 40-64px with tracking -0.015em to -0.02em and line-height 1.0-1.1",
+    "Use 10px border-radius for all buttons and inputs, 7px for tags and badges, 11-14px for cards",
+    "Apply blue-tinted shadows at very low opacity (rgba(28, 40, 64, 0.04) to rgba(28, 40, 64, 0.1)) — never use warm-gray or pure-black shadows",
+    "Use Inter weight 500 as the default UI weight, not 400 — the slightly heavier weight is the system's default voice",
+    "Activate 'ss03' on all Inter and InterDisplay text for the alternate geometric character",
+    "Keep the max-width at 1440px and maintain 80-120px vertical gaps between major sections"
+  ],
+  "donts": [
+    "Don't use rounded buttons with radius above 12px — the 10px radius is part of the system identity",
+    "Don't introduce secondary accent colors, gradients on buttons, or decorative color — one blue accent is the rule",
+    "Don't use TiemposText for anything other than testimonial pull-quote headings — the serif/sans contrast is earned by rarity",
+    "Don't use Inter weight 400 as a default — weight 500 carries the UI voice",
+    "Don't apply shadows warmer than rgba(28, 40, 64, ...) — the blue-tinted shadow is deliberate, not neutral",
+    "Don't use letter-spacing wider than 0 for body or heading text — the system is consistently tight-tracked",
+    "Don't place the cobalt accent on filled backgrounds in body copy — it belongs to links, icons, and small interactive moments"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "role": "Primary page background, card surfaces, button backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1c1d1f",
+      "name": "Ink Black",
+      "role": "Primary heading and body text, logo mark",
+      "group": "neutral"
+    },
+    {
+      "hex": "#232529",
+      "name": "Graphite",
+      "role": "Dark surface text, dark filled button background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#101113",
+      "name": "Obsidian",
+      "role": "Deepest text and dark surface fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2e3238",
+      "name": "Carbon",
+      "role": "Secondary dark text, nav states, button text on light fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#505967",
+      "name": "Slate 500",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6f7988",
+      "name": "Slate 600",
+      "role": "Muted body text, secondary descriptions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8f99a8",
+      "name": "Slate 700",
+      "role": "Tertiary headings, captions, low-emphasis text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9fa1a7",
+      "name": "Fog 400",
+      "role": "Placeholder text, disabled states, subtle icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b5bdc9",
+      "name": "Mist 300",
+      "role": "Muted body text, secondary copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cad0d9",
+      "name": "Cloud 200",
+      "role": "Hairline borders on cards, input borders, dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d3d8df",
+      "name": "Cloud 100",
+      "role": "Card borders, surface boundaries",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e7ec",
+      "name": "Mist 50",
+      "role": "Primary border color, dividers, subtle backgrounds, button borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeeff1",
+      "name": "Haze",
+      "role": "Subtle background fills, section bands, inset borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f5f6",
+      "name": "Paper",
+      "role": "Alternate surface background, subtle elevated panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#266df0",
+      "name": "Cobalt Core",
+      "role": "Primary brand accent — link text, focus rings, active states, highlighted icons, gradient midtone",
+      "group": "brand"
+    },
+    {
+      "hex": "#407ff2",
+      "name": "Cobalt Bright",
+      "role": "Secondary accent, hover states, decorative strokes in illustrations",
+      "group": "brand"
+    },
+    {
+      "hex": "#538bf3",
+      "name": "Cobalt Soft",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content.",
+      "group": "brand"
+    },
+    {
+      "hex": "#bad0fa",
+      "name": "Periwinkle",
+      "role": "Decorative card borders, subtle blue-tinted surface outlines",
+      "group": "accent"
+    },
+    {
+      "hex": "#e4edff",
+      "name": "Ice Wash",
+      "role": "Soft blue-tinted background, highlight washes, button box-shadow tints",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx Footer",
+      "role": "Footer background, dark section backgrounds, high-contrast text on light",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1440px centered, with a prominent top promo banner (48px) + nav header (68px) → fixed total header of ~116px. Hero pattern: centered headline + subtext + two-button row, with a product screenshot card below — no split-image, no full-bleed hero. Section rhythm: white → white with subtle Paper-tone bands, alternating full-bleed white and off-white. Content arrangement is predominantly centered stacks and symmetrical 2-column grids; asymmetric layouts are rare. Feature sections use 3-column card grids and side-by-side text+product-screenshot rows. Footer is full-bleed black with a 4-column link grid. Overall density is spacious — 80-120px between major sections, compact 8-12px gaps within cards and lists.",
+  "imagery": "Product screenshots are the primary visual — real interface captures rendered as cards with subtle blue-tinted shadows, zero internal padding (the screenshot fills the card). One hero section uses a grid of small user avatar tiles arranged in a wave/contour pattern as decorative atmosphere. Customer logos appear in a monochrome strip (all rendered in near-black) — no photography, no lifestyle imagery. Iconography is 16-20px line icons, 1.5px stroke weight, monochrome, consistent across nav and UI. The overall visual density is low — white space dominates, and imagery is either product UI or abstract decorative elements, never stock photography.",
+  "similar": [
+    {
+      "why": "Same monochrome restraint with a single vivid accent (Linear's purple), Inter-based type stack, hairline borders, and near-white canvas with tight 10px button radii",
+      "business": "Linear"
+    },
+    {
+      "why": "Editorial SaaS language with a custom display sans for headlines, generous white space, and the same 'one accent color doing all the work' philosophy",
+      "business": "Stripe"
+    },
+    {
+      "why": "Black-and-white interface with a single bright accent, Inter at weight 500 for UI, and the same compact card padding with subtle shadows",
+      "business": "Vercel"
+    },
+    {
+      "why": "Near-white canvas with a serif/sans contrast in headings, compact component density, and the same editorial approach to product marketing pages",
+      "business": "Notion"
+    },
+    {
+      "why": "Bold display headlines, single cobalt-blue accent, dark footer inversion, and the same 'architectural editorial' treatment of product UI cards",
+      "business": "Framer"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "10px",
+      "cards": "11-14px",
+      "badges": "7px",
+      "inputs": "10px",
+      "buttons": "10px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80-120px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Primary page background, dominant surface"
+    },
+    {
+      "hex": "#f4f5f6",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Subtle elevated panels, alternate section backgrounds"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 2,
+      "purpose": "Cards, inputs, product screenshots — sits on Canvas"
+    },
+    {
+      "hex": "#000000",
+      "name": "Dark Surface",
+      "level": 3,
+      "purpose": "Footer, promo banner, dark section bands"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(28, 40, 64, 0.1) 0px 2px 3px -2px, rgba(28, 40, 64, 0.04) 0px 4px 6px -2px",
+      "element": "Card (subtle)"
+    },
+    {
+      "style": "rgba(28, 40, 64, 0.06) 0px 2px 6px 0px, rgba(28, 40, 64, 0.08) 0px 6px 20px -2px",
+      "element": "Card (elevated)"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.04) 0px 12px 30px 0px",
+      "element": "Card (drifting)"
+    },
+    {
+      "style": "rgb(238, 239, 241) 0px 0px 0px 1px inset",
+      "element": "Inset border (input/focus)"
+    }
+  ],
+  "northStar": "Architectural editorial on white marble",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.42,
+      "letterSpacing": -0.22
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.38,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.19,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.84
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -1.28
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main conversion action",
+      "description": "Dark filled button, background #232529 (Graphite) or near-black, text #ffffff (white), 10px border-radius, 12px horizontal padding, height ~40px. Inter weight 500, 15px. No border. Signature element: the only colored-fill button in the system. Examples: 'Start for free'."
+    },
+    {
+      "name": "Secondary Outline Button",
+      "role": "Companion action beside primary",
+      "description": "White background (#ffffff), 1px border #e4e7ec (Mist 50), text #1c1d1f (Ink Black), 10px radius, 12px horizontal padding. Inter weight 500, 15px. Ghost-like restraint — sits beside the dark primary without competing. Examples: 'Talk to sales'."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Tertiary inline action",
+      "description": "Transparent background, no border, text in #1c1d1f or #2e3238, 10px radius, 0px padding. Inter weight 500, 15px. Used in nav and inline contexts where the action is implied, not proclaimed. Examples: nav items, 'Sign in'."
+    },
+    {
+      "name": "Dark Inverted Button",
+      "role": "Action on dark surfaces",
+      "description": "Background #1c1d1f (Ink Black), text #ffffff, 1px border #2e3238, 10px radius. Same dimensions as primary but inverted for use on dark bands or footers."
+    },
+    {
+      "name": "Tab Bar",
+      "role": "Section navigation",
+      "description": "Horizontal tab strip with bottom-border active indicator. Text Inter 15px weight 500, inactive in #6f7988 (Slate 600), active in #1c1d1f (Ink Black) with a 2px bottom border in Ink Black. No background fill. Examples: 'Ask Attio / Data model / Workflows / Reporting'."
+    },
+    {
+      "name": "Product Screenshot Card",
+      "role": "Product visual showcase",
+      "description": "White background (#ffffff), 11-14px border-radius, subtle blue-tinted shadow (rgba(28, 40, 64, 0.04) 0px 12px 30px 0px or rgba(28, 40, 64, 0.08) 0px 6px 20px -2px). Zero or very minimal internal padding — the screenshot IS the card. No border."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Content card with description",
+      "description": "White background, 12px border-radius, 1px border #e4e7ec or subtle shadow stack (rgba(28, 40, 64, 0.1) 0px 2px 3px -2px + rgba(28, 40, 64, 0.04) 0px 4px 6px -2px), 11-24px internal padding. Heading 20-32px InterDisplay 600, body 15-16px Inter 500 in #6f7988."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof / customer logos",
+      "description": "Inline row of monochrome customer logos on white background, all rendered in #1c1d1f or #2e3238. No card wrapping, no dividers. Generous vertical padding (60-80px) above and below. Example: granola, Flow, Listen, Obvious, Modal, USV logos."
+    },
+    {
+      "name": "Eyebrow Pill / Tag",
+      "role": "Section category label",
+      "description": "Small pill or bordered label above section headings. Transparent or very light background, 1px border #e4e7ec, 7px radius, 6-8px vertical padding, 10-12px horizontal. Inter weight 500, 12px. Used as a quiet signifier. Example: 'Explore GTM frameworks from operators like Elena Verna'."
+    },
+    {
+      "name": "New Badge",
+      "role": "Status indicator",
+      "description": "Small filled badge, background #538bf3 (Cobalt Soft), text #ffffff or dark, 7px radius, ~5px vertical / 8px horizontal padding. Inter weight 500, 11-12px. The only chromatic badge in the system — its rarity makes it meaningful."
+    },
+    {
+      "name": "Promo Banner",
+      "role": "Top-of-page announcement",
+      "description": "Thin dark bar at top of page (48px height), background #000000 or #101113, text #ffffff, Inter 14px weight 500, centered content with an arrow link in white. Dismissable. Example: 'Orchestrate revenue agents with the new Workflows →'."
+    },
+    {
+      "name": "Chat Input Field",
+      "role": "AI query input",
+      "description": "White background, 1px border #e4e7ec, 10-12px radius, subtle shadow, generous internal padding (12-16px). Placeholder text in #9fa1a7 (Fog 400). Send button: small cobalt blue square, #266df0 background, 7px radius."
+    },
+    {
+      "name": "Sidebar Navigation",
+      "role": "In-product navigation",
+      "description": "Light background (#ffffff or #f4f5f6), no visible border separating from main content. Items: Inter 14-15px weight 500, text #1c1d1f, hover/active state in #2e3238. Indentation uses 16-24px left padding. Icons: 16px, 1.5px stroke, monochrome."
+    },
+    {
+      "name": "Footer",
+      "role": "Site-wide footer",
+      "description": "Black background (#000000), text #ffffff and #b5bdc9 (muted), Inter 14-15px weight 500. Column-based layout (4 columns: Platform, Import from, Apps, Resources). Logo + wordmark in white at top-left. Generous vertical padding (80-120px)."
+    }
+  ],
+  "typography": [
+    {
+      "role": "UI body — used for all body text, buttons, nav, links, card content, footers, icons. Weight 500 is the default for nearly all UI text (buttons, nav, body), giving Attio a slightly heavier, more confident UI voice than typical 400-only systems. Activated 'ss03' alternates give the text a distinctive geometric character.",
+      "sizes": "10, 11, 12, 13, 14, 15, 16, 18, 20, 32px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.2–1.5",
+      "substitute": "Inter (Google Fonts) — already a freely available open-source font, no substitute needed",
+      "letterSpacing": "-0.02em at 14px, -0.01em at 16px, 0 at 12px",
+      "fontFeatureSettings": "\"ss03\" on"
+    },
+    {
+      "role": "Marketing headlines and display copy — weight 600 exclusively for large hero and section headings, with tight tracking (-0.015em to -0.02em) and near-1.0 line-heights creating dramatic, compact display blocks. The 56px size with -0.015em tracking is the signature hero voice. Activates 'ss03' and 'calt' for the same alternate character as Inter body.",
+      "sizes": "12, 19, 20, 32, 40, 56, 64px",
+      "family": "InterDisplay",
+      "weight": "500, 600",
+      "lineHeight": "1.0–1.2",
+      "substitute": "Inter Tight (Google Fonts) — same family tree, tighter default metrics",
+      "letterSpacing": "-0.02em at 64px, -0.015em at 56px, -0.01em at 32-40px, -0.017em at 19px body display, 0.06em at 12px eyebrow",
+      "fontFeatureSettings": "\"ss03\" on, \"calt\" on"
+    },
+    {
+      "role": "Editorial pull-quote and testimonial headings — a humanist serif that breaks the sans-serif system to create warmth and editorial weight. Used sparingly for quoted customer voices. This serif/sans contrast is the single most distinctive typographic choice in the system.",
+      "sizes": "28, 40px",
+      "family": "TiemposText",
+      "weight": "400, 500",
+      "lineHeight": "1.1–1.23",
+      "substitute": "Source Serif 4 (Google Fonts) or Spectral (Google Fonts)",
+      "letterSpacing": "-0.015em at 28-40px",
+      "fontFeatureSettings": "\"ss03\" on"
+    }
+  ],
+  "description": "Attio uses an editorial SaaS language: near-white canvas, near-black type, and one vivid cobalt accent (#266df0) that does the talking while everything else stays quiet. The type stack is a deliberate three-voice system — Inter for UI, InterDisplay for marketing headlines at weight 600 with tight tracking, and TiemposText (serif) for testimonial/pull-quote moments that need warmth and human weight. Components feel light and precise: 7px and 12px radii, hairline borders, blue-tinted shadows at very low opacity, and ghost/outline buttons that defer to the primary filled dark action. Layout breathes — generous vertical rhythm with a 1440px max-width — but density is compact within cards and lists. The signature move is restraint: the same monochrome restraint you'd see in a financial publication, punctuated by exactly one chromatic moment per screen.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text primary: #1c1d1f (Ink Black)\n- text muted: #6f7988 (Slate 600)\n- background: #ffffff (Page Canvas)\n- border: #e4e7ec (Mist 50)\n- accent: #266df0 (Cobalt Core)\n- primary action: #232529 (filled action)\n\nExample Component Prompts:\n\n1. Create a Primary Action Button: #232529 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a product screenshot card: white background, 14px border-radius, shadow rgba(0,0,0,0.04) 0px 12px 30px 0px, zero internal padding, product UI image fills the card edge-to-edge.\n\n3. Create a section with eyebrow pill + heading + body: Eyebrow pill (7px radius, 1px border #e4e7ec, Inter 12px weight 500, #6f7988 text, 8px 12px padding). Heading at 40px InterDisplay 600, #1c1d1f, tracking -0.4px. Body at 16px Inter weight 500, #6f7988, line-height 1.38.\n\n4. Create a chat input field: white background, 1px border #e4e7ec, 12px radius, shadow rgba(28,40,64,0.06) 0px 2px 6px 0px. Placeholder in #9fa1a7 (Fog 400) Inter 15px weight 500. Send button: 28px square, #266df0 background, 7px radius, white arrow icon.\n\n5. Create a footer: full-bleed #000000 background, 4-column grid with column titles (Inter 15px weight 500, #b5bdc9) and links below (Inter 14px weight 500, #ffffff). Logo + wordmark in white at top-left, 80-120px vertical padding."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is sparse and deliberate — shadows are blue-tinted (rgba(28, 40, 64, ...)) rather than pure black, at very low opacity (0.04-0.10). Most surface separation is achieved through hairline 1px borders in #e4e7ec, not shadows. When shadows appear, they are layered with a tight close shadow and a wider ambient shadow at lower opacity."
+}

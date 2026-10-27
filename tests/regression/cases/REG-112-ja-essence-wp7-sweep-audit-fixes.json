@@ -1,0 +1,30 @@
+{
+  "id": "REG-112",
+  "kind": "fix",
+  "pr": 911,
+  "title": "JA Essence wp7 1.0.6: link colours, current-item highlights, header insets, home-2 category pictures and social icons, badges and source-CMS wording match the Joomla source",
+  "area": "wordpress-theme/wp-ja-essence",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-essence theme under test (local stand restored from the quickstart pack) and the Joomla source (local stand from quickstart/ja-essence/j6, with its web fonts: the typography of the template style must be set, or every text width shifts).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-essence-wp7 --out <dir> (about 3 minutes).",
+    "S3: Run: node tasks/ja-essence-wp7/tools/measure106.mjs --site <site> --source <source> --sweep <dir>/fix-measure.json --zip <theme.zip> --out <file> (wording of the error and offline pages, home-2 category pictures per view, home-2 header social icons).",
+    "S4: Run tasks/ja-essence-wp7/tools/measure105.mjs the same way as REG-047 (full sweep about 35 minutes in three parallel parts) as the regression group.",
+    "S5: On the clean restore of the released pack, list every file under wp-content/uploads and every upload path the database owns or references (each attachment's file and metadata sizes; upload paths in posts, post meta, options, terms, users, comments). Compare the pack's file list with the previous release's."
+  ],
+  "expect": [
+    "site-sweep: overflow, scheme and background pass with 0 defects on every route at 320, 390, 768, 1024, 1180 and 1440px, light and dark.",
+    "site-sweep header: the only groups left are the source's own (its menu wraps to a second row at 1024px; its dark Home 4 logo picture answers 404), recorded as D-90; chips: 0 defects, the cases the tool cannot pair are listed as not measured.",
+    "measure106: wording 2/2 (no page names Joomla), slider 13/13 widths (same cards per view and width as the source), icons 3/3 widths (glyph boxes within 1px).",
+    "measure105: TOTAL 10/10 checks pass.",
+    "The pack carries no upload file that belongs to nothing: the webroot of 1.0.6 has the same file list as 1.0.5's (5067 entries, 504 under wp-content/uploads/2026/10) and no '-2' duplicate; on 31 routes at 1440 and 390 no image, style, script or font request answers 4xx/5xx."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-essence-wp7/tools/measure106.mjs",
+    "evidence": "tasks/ja-essence-wp7/release/fix-measure.json"
+  },
+  "evidence": "Sweeps of 04/10/2026 against a local copy of the Joomla source: baseline on 1.0.5 failed header and chips; 1.0.6 on the clean restore passes overflow, scheme, background, wording, slider and icons, header and chips keep only the source's own groups (D-90, D-91); measure105 10/10 on the build stand with the 1.0.6 theme (wp-ja-essence-1.0.6.zip f261ca71)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; header and chips are not asserted to zero because the source itself differs there and the tool cannot pair 47 chip cases"
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Testimonials Style 1</title>
+  <fields name="testimonials">
+    <fieldset name="band" label="TPL_TRACY_BASE_ACM_TESTIMONIALS_BAND_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_EYEBROW_DESC"
+      />
+      <field
+        name="heading"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_HEADING_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_HEADING_DESC"
+      />
+      <field
+        name="columns"
+        type="list"
+        default="3"
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_COLUMNS_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_COLUMNS_DESC"
+      >
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </field>
+    </fieldset>
+    <fieldset name="quotes" label="TPL_TRACY_BASE_ACM_TESTIMONIALS_QUOTES_LABEL" multiple="1">
+      <field
+        name="quote"
+        type="textarea"
+        default=""
+        rows="4"
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_QUOTE_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_QUOTE_DESC"
+      />
+      <field
+        name="quote-name"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_NAME_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_NAME_DESC"
+      />
+      <field
+        name="quote-role"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_ROLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_ROLE_DESC"
+      />
+      <field
+        name="quote-avatar"
+        type="media"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TESTIMONIALS_AVATAR_LABEL"
+        description="TPL_TRACY_BASE_ACM_TESTIMONIALS_AVATAR_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

@@ -1,0 +1,94 @@
+{
+  "color": {
+    "uniswap-magenta": {
+      "$value": "#ff37c7",
+      "$type": "color",
+      "$description": "Uniswap Magenta — Pink supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav labels, headings, body copy, and default icon strokes — near-black rather than pure black for a slightly softer read"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text and strong UI borders where extra weight is needed without going to pure black"
+    },
+    "steel": {
+      "$value": "#6a6a6a",
+      "$type": "color",
+      "$description": "Steel — Muted helper text, secondary labels, inactive nav items, and supporting copy"
+    },
+    "fog": {
+      "$value": "#acacac",
+      "$type": "color",
+      "$description": "Fog — Disabled states, placeholder text, and faint dividers"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, and button text on magenta fills"
+    },
+    "bone": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Bone — Subtle button borders and faint surface tints"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Maximum-contrast text and select icon fills where absolute black is required"
+    },
+    "electric-violet": {
+      "$value": "#8251fb",
+      "$type": "color",
+      "$description": "Electric Violet — Decorative icon accent and floating orb color — part of the hero atmosphere palette, not a UI state"
+    },
+    "ember-orange": {
+      "$value": "#ff4d00",
+      "$type": "color",
+      "$description": "Ember Orange — Decorative orb and icon accent in the hero atmosphere"
+    },
+    "hot-pink": {
+      "$value": "#f50db4",
+      "$type": "color",
+      "$description": "Hot Pink — Decorative orb accent — deeper sibling to the primary magenta for tonal variety in background blobs"
+    },
+    "sky-cyan": {
+      "$value": "#2abdff",
+      "$type": "color",
+      "$description": "Sky Cyan — Decorative orb and icon accent in the hero atmosphere"
+    },
+    "mint-teal": {
+      "$value": "#00c3a0",
+      "$type": "color",
+      "$description": "Mint Teal — Decorative orb and icon accent in the hero atmosphere"
+    },
+    "coral-red": {
+      "$value": "#e01a2b",
+      "$type": "color",
+      "$description": "Coral Red — Decorative orb accent and select icon tint"
+    },
+    "forest-green": {
+      "$value": "#0c8911",
+      "$type": "color",
+      "$description": "Forest Green — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "basel": {
+      "$value": "Basel",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for every text surface — nav, body, buttons, headings, and display. The signature 485 weight (slightly heavier than regular, lighter than medium) creates a distinctive subtly-compressed feel that no system font replicates. Consistent -0.02em tracking tightens the rhythm at every scale, from 12px captions to 64px display."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://uniswap.org",
+      "siteName": "Uniswap",
+      "extractedAt": "2026-06-03T19:05:51.909Z",
+      "variant": "compact"
+    }
+  }
+}

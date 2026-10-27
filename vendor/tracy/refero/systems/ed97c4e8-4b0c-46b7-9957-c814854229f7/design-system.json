@@ -1,0 +1,302 @@
+{
+  "dos": [
+    "Use Inter for all text — no secondary families except the handwritten annotation script",
+    "Use #34c759 exclusively for the primary CTA and handwritten annotations — no other green or chromatic accent",
+    "Apply 100px border-radius to all buttons and the floating nav capsule",
+    "Set page canvas to #f5f5f4 and card surfaces to #ffffff — never invert this stack",
+    "Use the Dawn Wash gradient only at the top of the page as atmospheric light — never as a section divider",
+    "Write display headlines at 60-70px with letter-spacing -0.031em to -0.043em and weight 400 — not 700",
+    "Place the product mockup with its 40px 60px deep shadow as the only dramatic elevation on the page"
+  ],
+  "donts": [
+    "Don't add additional chromatic accents — blue (#3575f8) is only for inline links, not buttons or icons",
+    "Don't use heavy borders — prefer #eeeeee or #dddddd at 1px for all separators",
+    "Don't introduce a second sans-serif — Inter carries the entire system alone",
+    "Don't use box-shadow on standard cards — the product mockup shadow is the page's only dramatic elevation",
+    "Don't fill buttons with black — the only filled button color is Signal Green",
+    "Don't use sharp corners below 12.5px — minimum radius is 12.5px on inputs, 20px on cards",
+    "Don't use uppercase body text — uppercase tracking (+0.036em) is reserved for 9-10px labels only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f5f5f4",
+      "name": "Paper White",
+      "role": "Page canvas — the warm off-white ground the entire page sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Snow",
+      "role": "Card surfaces, product mockup backgrounds, floating nav capsule",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fdf8f7",
+      "name": "Blush Mist",
+      "role": "Subtle warm-tinted surface for accent cards or highlighted zones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary headings, strong borders, icon strokes — maximum contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1c1d1f",
+      "name": "Body Charcoal",
+      "role": "Body text, secondary borders — near-black that softens display ink",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6a6b6c",
+      "name": "Steel Gray",
+      "role": "Icon fills/strokes, secondary borders, muted interface elements",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Graphite",
+      "role": "Muted headings, link borders, tertiary text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#aaaaaa",
+      "name": "Ash",
+      "role": "Light borders, disabled text, subtle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Hairline",
+      "role": "Divider lines, light background washes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dddddd",
+      "name": "Mist",
+      "role": "Card borders, link underlines, soft outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeeeee",
+      "name": "Cloud",
+      "role": "Lightest borders, soft card outlines, gentle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#34c759",
+      "name": "Signal Green",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "brand"
+    },
+    {
+      "hex": "#3575f8",
+      "name": "Link Blue",
+      "role": "Inline links, highlight text within body copy",
+      "group": "accent"
+    },
+    {
+      "hex": "#96dfff",
+      "name": "Dawn Wash",
+      "role": "Atmospheric top-of-page gradient — soft sky blue bleeding down into warm gray, the page's only colored light source",
+      "group": "accent",
+      "gradient": "linear-gradient(180deg, rgb(150, 223, 255) 0%, rgb(237, 237, 237) 58.17%, rgb(221, 221, 221) 100%)"
+    }
+  ],
+  "layout": "Centered, max-width 1200px page model with generous vertical breathing room. Hero: centered headline stack on paper-white canvas with a soft gradient bleed at the very top — headline, subtext, and CTA all center-aligned. Section 2: product mockup card centered with a bold left-aligned statement beside or above it, anchored by a handwritten green annotation. Floating nav: pill-shaped capsule at bottom-center, persistent. Sections separated by 80px gaps with no dividers — the off-white canvas flows continuously. Content density is compact but unhurried: 10px element gaps, 20px card padding, but 80px between sections creates the spacious feel.",
+  "imagery": "Product screenshots are the dominant visual: full laptop/tablet frames showing the Merlin inbox UI with a Van Gogh Starry Night-style painted landscape as the app's background — this painted backdrop is the brand's signature visual moment. Hands holding the device ground the mockup in human use. Logo trust bar uses flat grayscale company marks. The top of the page bleeds a soft blue-to-gray gradient as atmospheric light. No photography of people, no abstract 3D renders, no illustration outside the painted product backdrop.",
+  "similar": [
+    {
+      "why": "Same single-accent-color restraint with Inter typography and generous whitespace",
+      "business": "Linear"
+    },
+    {
+      "why": "Paper-warm canvas with off-white tones, soft borders, and handwritten-feeling annotations",
+      "business": "Notion AI"
+    },
+    {
+      "why": "Bold display headlines with tight tracking, pill-shaped CTAs, and product-forward hero",
+      "business": "Arc Browser"
+    },
+    {
+      "why": "Compact density, Inter-only typography, and a single vivid accent against neutral surfaces",
+      "business": "Raycast"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "20px",
+      "inputs": "12.5px",
+      "buttons": "100px",
+      "nav-capsule": "100px",
+      "product-mockup": "30px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#f5f5f4",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Warm off-white ground covering the entire page"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Snow",
+      "level": 1,
+      "purpose": "Standard card and component surface"
+    },
+    {
+      "hex": "#fdf8f7",
+      "name": "Blush Mist",
+      "level": 2,
+      "purpose": "Warm-tinted accent surface for featured elements"
+    },
+    {
+      "hex": "#96dfff",
+      "name": "Atmospheric Wash",
+      "level": 3,
+      "purpose": "Gradient zone — soft blue light at page top"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.25) 0px 40px 60px 0px",
+      "element": "Product mockup card"
+    },
+    {
+      "style": "rgb(235, 232, 233) 1px 3px 1px 0px",
+      "element": "Standard card"
+    },
+    {
+      "style": "rgb(238, 238, 238) 0px 3px 8px 0px",
+      "element": "Floating nav capsule"
+    }
+  ],
+  "northStar": "Handwritten margin notes on white paper. A calm off-white page where one vivid green dot says yes, soft pastel light bleeds in from the edges, and Inter does the heavy talking.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.036
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 25,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.15
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.86
+    },
+    {
+      "role": "display",
+      "size": 70,
+      "lineHeight": 1.13,
+      "letterSpacing": -3.01
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "The single filled action on the page — the only chromatic filled element",
+      "description": "Pill-shaped, 100px border-radius. Fill: #34c759 (Signal Green). Text: #ffffff, Inter 14px weight 500, no tracking override. Padding: 10px 20px. No border. The green against the paper-white canvas is the page's only warm chroma — it must stay rare to remain meaningful."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary inline actions with no visual weight",
+      "description": "Transparent fill, no border. Text: #1c1d1f, Inter 14px weight 400. Used for 'Pricing' and 'Manifesto' in the floating nav."
+    },
+    {
+      "name": "Outline Sign-Up Button",
+      "role": "Nav-level action that sits beside ghost text but needs more presence",
+      "description": "Transparent fill, 1px border #1c1d1f, 100px radius. Text: #1c1d1f, Inter 14px weight 500. Rounded pill matching the nav capsule curvature."
+    },
+    {
+      "name": "Floating Navigation Capsule",
+      "role": "Page-level navigation that hovers at the bottom-center",
+      "description": "White (#ffffff) capsule, 100px border-radius, shadow rgb(238,238,238) 0px 3px 8px 0px. Contains logo icon, ghost text links (Pricing, Manifesto), Login text, and outlined Sign-up button. Floats above content with generous bottom margin."
+    },
+    {
+      "name": "Social Proof Badge",
+      "role": "Trust indicator above the headline",
+      "description": "Small pill with green dot indicator, text '7,000+ Merlin' in #1c1d1f at ~12px. Dot: 4px circle #34c759."
+    },
+    {
+      "name": "Handwritten Annotation",
+      "role": "Warm, personal margin note — the signature human touch",
+      "description": "Script/handwritten font in #34c759 (Signal Green), ~20px. Used as decorative labels ('Imagine', 'Try merlin free for 7 days') with small curved arrow connectors. This is the only element that breaks the sans-serif system — it introduces a second voice that feels like a note from a friend."
+    },
+    {
+      "name": "Display Headline",
+      "role": "Page-level statement — the largest typographic element",
+      "description": "Inter 60-70px weight 400, color #000000, letter-spacing -0.031em to -0.043em. Multi-line with inline brand mark. Line-height 1.13."
+    },
+    {
+      "name": "Body Description",
+      "role": "Sub-headline supporting text",
+      "description": "Inter 16px weight 400, color #6a6b6c, line-height 1.5. Centered, max-width constrained for readability."
+    },
+    {
+      "name": "Logo Trust Bar",
+      "role": "Row of client/company logos below the CTA",
+      "description": "Horizontal row of grayscale logos (Notion, Salesforce, Harvard, HubSpot, McKinsey) with 'Used by professionals at' label above. Logos rendered in #808080 or #6a6b6c for monochrome treatment."
+    },
+    {
+      "name": "Product Mockup Card",
+      "role": "Laptop/tablet frame containing the product UI screenshot",
+      "description": "Rounded rectangle 30px radius, large drop-shadow rgba(0,0,0,0.25) 0px 40px 60px 0px. Contains a Van Gogh-style painted landscape background behind a white product UI window. The shadow is dramatic — this is the page's one moment of depth."
+    },
+    {
+      "name": "Feature Description Block",
+      "role": "Section-level statement beside product mockups",
+      "description": "Bold Inter 20-25px weight 500 statement, left-aligned. Accompanied by a handwritten annotation in green above it. No card chrome — sits directly on the canvas."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface — display headlines at 60-70px weight 400-500 with negative tracking, body at 14-16px weight 400, uppercase labels at 9-10px with wide positive tracking. The whisper-to-shout range (300-600) lets one family carry hierarchy without ever leaving the page.",
+      "sizes": "9, 10, 12, 13, 14, 16, 20, 23, 25, 26, 30, 40, 60, 70",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.00, 1.13, 1.15, 1.17, 1.40, 1.50, 1.55",
+      "substitute": "Inter via Google Fonts",
+      "letterSpacing": "-0.043em at 70px, -0.031em at 60px, 0.025em at 13px, 0.031em at 12px, 0.036em at 10px, 0.038em at 9px, 0.042em at 10px (uppercase tracking)"
+    }
+  ],
+  "description": "Merlin uses a hushed, paper-like productivity language: a warm off-white canvas, flat white surfaces, a single vivid green accent that makes the primary action feel like a green light turning on, and soft pastel atmospheric gradients reserved for the page's top and the product backdrop. Type is bold and confident at display sizes but quiet at body sizes — Inter carries the entire voice in one family, letting weight and tracking do all the work. The system feels hand-touched: handwritten green annotations in a script style sit beside machine-clean sans-serif, bridging warmth and product precision. Components stay close to the page — thin hairlines replace heavy elevation, pills replace boxes, and the nav floats as a capsule rather than anchoring as a bar.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000 (headings), #1c1d1f (body), #6a6b6c (muted)\n- background: #f5f5f4 (canvas), #ffffff (cards)\n- border: #eeeeee (light), #dddddd (card), #1c1d1f (button outline)\n- accent: #34c759 (Signal Green — CTA + handwriting)\n- gradient: Dawn Wash — linear-gradient(180deg, #96dfff 0%, #ededed 58%, #dddddd 100%)\n- primary action: #34c759 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. Create a Primary Action Button: #34c759 background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Product Mockup Card**: 30px border-radius, shadow rgba(0,0,0,0.25) 0px 40px 60px 0px. Inside: painted landscape background (Van Gogh-style blue sky with swirls) framing a white product UI window with inbox cards. The mockup sits centered on the canvas with 80px margin above and below.\n\n3. **Floating Nav Capsule**: White (#ffffff) pill, 100px radius, shadow rgb(238,238,238) 0px 3px 8px 0px. Contents left to right: logo icon, 'Pricing' ghost text, 'Manifesto' ghost text, 'Login' ghost text, 'Sign up' outlined button (1px border #1c1d1f, 100px radius, Inter 14px weight 500). All text #1c1d1f. Position: bottom-center, fixed, 24px from bottom.\n\n4. **Feature Statement Block**: Handwritten green annotation ('Imagine') in script font #34c759, ~20px, with a curved arrow connector. Below: bold statement in Inter 25px weight 500, #000000, left-aligned, max-width 600px. No card chrome — sits directly on canvas.\n\n5. **Trust Logo Bar**: 'Used by professionals at' label in Inter 10px weight 500, uppercase, #808080, letter-spacing 0.036em, centered. Below: horizontal row of 5 grayscale company logos in #808080, evenly spaced, ~20px gap between each."
+    },
+    {
+      "title": "Design Philosophy",
+      "content": "Merlin's visual system runs on three tensions: **paper and pixel** (off-white canvas with crisp Inter), **typewriter and handwriting** (bold sans-serif headlines with script annotations), and **flat and deep** (mostly borderless surfaces with one dramatic shadow on the product mockup). These pairings are what make it feel human rather than corporate. The single green accent and the painted product background are the only chromatic moments — everything else is grayscale, which means when color does appear it carries all the weight."
+    }
+  ]
+}

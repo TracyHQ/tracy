@@ -1,0 +1,33 @@
+{
+  "id": "REG-020",
+  "kind": "fix",
+  "title": "A quickstart patch release with no profile of its own version is bound to the nearest lower profile of the same major",
+  "pr": 816,
+  "area": "contracts/lookup",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/contracts.test.mjs",
+    "S2: Read the pass/fail counts and the test named for the nearest-lower fallback."
+  ],
+  "expect": [
+    "0 failures.",
+    "contractFor(index, '<release>', '1.0.3') with only a 1.0.0 profile returns that profile with id '<release>/1.0.0' and fallbackFrom '1.0.3'.",
+    "An exact profile wins; a higher version, another major or another release is never returned; a non-semver version returns null.",
+    "mayName treats a release served by a fallback profile as having a contract."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/lib/contracts.js contractFor",
+    "test": "apps/tracy-web/test/contracts.test.mjs"
+  },
+  "evidence": "Patch releases JA Nova 1.1.5, Essence 1.0.3, Impact 1.0.3 had no profile of their own version, so provisioning bound no contract (catalogue `contract` empty).",
+  "fence": "The lookup rule in contractFor; the bound id stays the profile's own id (a plain string)",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/contracts.test.mjs"],
+    "tests": [
+      "a UI patch release falls back to the nearest LOWER profile",
+      "a release served by a fallback profile may be named"
+    ]
+  }
+}

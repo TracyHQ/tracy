@@ -1,0 +1,247 @@
+/* tpl_tracy — layout, keyed on <body data-nav data-hero>. Five header geometries × four hero
+ * geometries, from archetypes.json of the vendored library. Only structure here; every colour,
+ * size and shadow comes through tracy.css from the design system's tokens. */
+
+/* ---- nav: top-left (default) ---- */
+
+/* .tracy-header__inner is already flex, brand start / menu end. */
+
+/* ---- nav: top-centered — brand on its own line, menu centred below ---- */
+
+body[data-nav='top-centered'] .tracy-header__inner {
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+}
+
+body[data-nav='top-centered'] .tracy-menu {
+  justify-content: center;
+}
+
+/* ---- nav: brand-centered — menu split around a centred brand ---- */
+
+body[data-nav='brand-centered'] .tracy-header__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  justify-items: center;
+  padding-block: var(--space-4);
+}
+
+body[data-nav='brand-centered'] .tracy-brand {
+  grid-column: 2;
+  font-size: var(--text-xl);
+}
+
+body[data-nav='brand-centered'] .tracy-nav {
+  grid-column: 1 / -1;
+}
+
+body[data-nav='brand-centered'] .tracy-menu {
+  justify-content: center;
+}
+
+/* ---- nav: sidebar — header becomes a sticky column ---- */
+
+@media (min-width: 1025px) {
+  body[data-nav='sidebar'] {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+  }
+
+  body[data-nav='sidebar'] .tracy-header {
+    grid-row: 1 / -1;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-bottom: 0;
+    border-inline-end: 1px solid var(--border-soft);
+  }
+
+  body[data-nav='sidebar'] .tracy-header__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+    padding-block: var(--space-8);
+  }
+
+  body[data-nav='sidebar'] .tracy-menu {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  body[data-nav='sidebar'] .tracy-main,
+  body[data-nav='sidebar'] .tracy-sidebar,
+  body[data-nav='sidebar'] .tracy-footer,
+  body[data-nav='sidebar'] .tracy-skip {
+    grid-column: 2;
+  }
+}
+
+/* ---- nav: overlay — on the home page the header floats over the hero; the menu stays inline
+   on wide screens and collapses behind the toggle only on small ones, like every other nav.
+   (Same reading as the WordPress theme's .tracy-nav-overlay.) ---- */
+
+body[data-nav='overlay'][data-page='home'] {
+  position: relative;
+}
+
+body[data-nav='overlay'][data-page='home'] .tracy-header {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 10;
+  background: transparent;
+  border-bottom: 0;
+}
+
+body[data-nav='overlay'][data-page='home'] .tracy-hero {
+  padding-top: calc(var(--section-y-desktop) + var(--space-12));
+}
+
+/* ---- hero: split (default) — copy left, image right ---- */
+
+body[data-hero='split'] .tracy-hero__inner {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+
+/* ---- hero: centered — single column, centred, image below ---- */
+
+body[data-hero='centered'] .tracy-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  text-align: center;
+}
+
+body[data-hero='centered'] .tracy-hero__copy {
+  max-width: 60ch;
+}
+
+body[data-hero='centered'] .tracy-lead {
+  margin-inline: auto;
+}
+
+body[data-hero='centered'] .tracy-actions {
+  justify-content: center;
+}
+
+body[data-hero='centered'] .tracy-hero__media {
+  width: min(100%, 56rem);
+}
+
+/* ---- hero: stack — copy above a full-width image ---- */
+
+body[data-hero='stack'] .tracy-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body[data-hero='stack'] .tracy-hero__copy {
+  max-width: 64ch;
+}
+
+body[data-hero='stack'] .tracy-hero__media img {
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+}
+
+/* ---- hero: cover — image fills the section, copy sits on it ---- */
+
+body[data-hero='cover'] .tracy-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 80vh;
+  display: grid;
+  align-items: end;
+  color: var(--bg);
+}
+
+body[data-hero='cover'] .tracy-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body[data-hero='cover'] .tracy-hero__copy {
+  max-width: 64ch;
+}
+
+body[data-hero='cover'] .tracy-display,
+body[data-hero='cover'] .tracy-lead,
+body[data-hero='cover'] .tracy-eyebrow {
+  color: inherit;
+}
+
+body[data-hero='cover'] .tracy-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+body[data-hero='cover'] .tracy-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body[data-hero='cover'] .tracy-hero__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--fg), transparent 15%),
+    color-mix(in oklab, var(--fg), transparent 60%)
+  );
+}
+
+body[data-hero='cover'] .tracy-hero .tracy-btn--ghost:not(.wp-block-button),
+body[data-hero='cover'] .tracy-hero .tracy-btn--ghost .wp-block-button__link {
+  color: inherit;
+  border-color: currentColor;
+}
+
+body[data-hero='cover'][data-nav='overlay'][data-page='home'] .tracy-brand,
+body[data-hero='cover'][data-nav='overlay'][data-page='home'] .tracy-nav-toggle {
+  color: var(--bg);
+  border-color: currentColor;
+  background: transparent;
+}
+
+/* ---- small screens: every header collapses to brand + toggle ---- */
+
+@media (max-width: 1024px) {
+  .tracy-nav-toggle {
+    display: inline-block;
+  }
+
+  .tracy-nav {
+    display: none;
+    flex-basis: 100%;
+  }
+
+  .tracy-nav.is-open {
+    display: block;
+  }
+
+  .tracy-header__inner {
+    flex-wrap: wrap;
+  }
+
+  .tracy-menu {
+    flex-direction: column;
+  }
+
+  body[data-nav='brand-centered'] .tracy-header__inner {
+    display: flex;
+  }
+
+  body[data-hero='split'] .tracy-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body[data-hero='cover'] .tracy-hero {
+    min-height: 60vh;
+  }
+}

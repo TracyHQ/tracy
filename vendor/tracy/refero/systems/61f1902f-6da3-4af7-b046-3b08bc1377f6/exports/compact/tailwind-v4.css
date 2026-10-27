@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-ice-signal: #83c3ff;
+  --color-paper-white: #ffffff;
+  --color-fog: #acadae;
+  --color-iron: #34353c;
+  --color-slate: #3c3d40;
+  --color-graphite: #26272d;
+  --color-charcoal: #1b1d1f;
+  --color-obsidian: #141415;
+  --color-void: #080809;
+
+  /* Typography */
+  --font-gtamerica: 'gtAmerica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtamericamono: 'gtAmericaMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

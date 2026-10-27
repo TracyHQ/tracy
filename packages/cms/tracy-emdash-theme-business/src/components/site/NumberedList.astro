@@ -1,0 +1,24 @@
+---
+/** "01 · Title · text" rows with a serif signal-coloured number (process/how/steps). */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  items: Array<{ number: string; title: string; text: string }>
+  /** The entry and repeater the rows come from, for provenance stamps (`src/lib/stamps.ts`). */
+  stamp?: Stamp
+  field?: string
+}
+const { items, stamp, field = '' } = Astro.props
+const none = {}
+const at = (key: string) => (stamp && field ? stamp(`${field}.${key}`) : none)
+---
+
+{(items ?? []).map((p) => (
+	<div class="grid grid-cols-[50px_1fr] gap-[18px] border-b border-line-soft py-4" {...(stamp && field ? stamp.block(field) : none)}>
+		<div class="font-serif text-[24px] leading-[1.1] text-signal-text" {...at("number")}>{p.number}</div>
+		<div>
+			<div class="text-[16.5px] font-semibold" {...at("title")}>{p.title}</div>
+			<div class="mt-1 text-[15px] leading-[1.6] text-fg-muted" {...at("text")}>{p.text}</div>
+		</div>
+	</div>
+))}

@@ -1,0 +1,13 @@
+---
+// Portable Text block for the article body. Replaces EmDash's default so the `lead` style gets its
+// own element class instead of falling back to a bare paragraph. A block `stampBlocks()` stamped
+// (`src/lib/stamps.ts`) prints its provenance stamp; an unstamped block prints no attribute at all.
+import { BLOCK_SRC } from '@/lib/stamps'
+
+const { node, index: _index, isInline: _isInline, ...attrs } = Astro.props as Record<string, any>
+const style: string = node?.style ?? 'normal'
+const TAGS: Record<string, string> = { h2: 'h2', h3: 'h3', h4: 'h4', blockquote: 'blockquote' }
+const Tag = (TAGS[style] ?? 'p') as any
+---
+
+<Tag class={style === 'lead' ? 'lead' : undefined} {...attrs} data-tracy-src={node?.[BLOCK_SRC]}><slot /></Tag>

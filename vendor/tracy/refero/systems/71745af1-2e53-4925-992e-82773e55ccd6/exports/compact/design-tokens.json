@@ -1,0 +1,34 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairline borders, video frame outlines, pill button stroke — the only chromatic event in the UI"
+    },
+    "paper": {
+      "$value": "#fbfbfa",
+      "$type": "color",
+      "$description": "Paper — Soft icon strokes, subtle dividers, and low-emphasis decorative details. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#bec0c5",
+      "$type": "color",
+      "$description": "Ash — Muted text in the cycling manifesto, list dividers, inactive link tone — desaturated gray stays quiet next to ink"
+    }
+  },
+  "font": {
+    "magicuipro": {
+      "$value": "MagicUiPro",
+      "$type": "fontFamily",
+      "$description": "Single-family system: body text and micro-headlines both sit in the 18–24px range at medium weight, with weight 600 reserved for the active manifesto item and button labels. The tight -0.01em tracking and modest size range mean type never breaks 24px — the page treats every word as a label, not a headline."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://one-is.com",
+      "siteName": "ONE",
+      "extractedAt": "2026-06-03T20:19:46.835Z",
+      "variant": "compact"
+    }
+  }
+}

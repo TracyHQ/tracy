@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Story Chapter Style 1</title>
+  <fields name="story-chapter">
+    <fieldset name="chapter" label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_FIELDSET_LABEL">
+      <field name="heading-level" type="list" default="h2" label="TPL_TRACY_ACM_HEADING_LEVEL_LABEL" description="TPL_TRACY_ACM_HEADING_LEVEL_DESC">
+        <option value="h2">TPL_TRACY_ACM_HEADING_SECTION</option>
+        <option value="h1">TPL_TRACY_ACM_HEADING_PAGE</option>
+      </field>
+      <field
+        name="statement"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_STATEMENT_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_STATEMENT_DESC"
+      />
+      <field
+        name="support"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_SUPPORT_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_SUPPORT_DESC"
+      />
+      <field
+        name="media"
+        type="media"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_MEDIA_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_MEDIA_DESC"
+      />
+      <field
+        name="media-alt"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_MEDIA_ALT_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_MEDIA_ALT_DESC"
+      />
+      <field
+        name="link-text"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_TEXT_DESC"
+      />
+      <field
+        name="link-url"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_URL_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_URL_DESC"
+      />
+      <field
+        name="link-style"
+        type="list"
+        default="secondary"
+        label="TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_STYLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_STYLE_DESC"
+      >
+        <option value="secondary">TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_STYLE_SECONDARY</option>
+        <option value="primary">TPL_TRACY_BASE_ACM_STORY_CHAPTER_LINK_STYLE_PRIMARY</option>
+      </field>
+    </fieldset>
+  </fields>
+</form>

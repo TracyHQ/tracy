@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2175034b-96d7-417e-886f-ff5a4d8551ae",
+  "status": "complete",
+  "name": "Playdate",
+  "url": "https://styles.refero.design/style/2175034b-96d7-417e-886f-ff5a4d8551ae",
+  "sourceWebsite": "https://play.date",
+  "extractedAt": "2026-06-03T17:10:18.598Z",
+  "capturedAt": "2026-10-08T05:09:15.387163+00:00",
+  "theme": "mixed",
+  "industry": "other",
+  "description": "A yellow Game Boy under museum lights. Playdate's whole identity is that single bright product held against neutral gray, with one violet spark doing all the interactive work.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/97be8693-cbf8-4654-a05f-f42d47b4667e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5dc2c38b-fa1a-4d43-9db3-54c22f048cb0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a4527513-d4ef-4bc8-8699-853d68e482b3.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6e12cb00-e324-472e-9998-97a258b0ead7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7bb93d02-6c27-46ae-86a8-6bc356db21f5.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "905bd1ecc79694fdbe0c179fcafc0c00a6fa0032e54a39e4ad19b1e7b7db09d3",
+      "bytes": 19227
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7d108afff38ab064ee88c4b7dab226450f06acd2098bf9d8fe8b68ea6c94ad06",
+      "bytes": 64354
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "76405664b1ba83355a726e8722a3af72e2f730fb2d2878a9b16ae390cdcb1fbd",
+      "bytes": 16166
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "79f4ac6ee2d5d3df34b19f429a924726fec60e5dc5e02402ac005f988f9d9fd0",
+      "bytes": 13535
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1bcc19c287b91771d28ba62c8da50e0edfcb7f817a37d75e20385bc6bd94ff83",
+      "bytes": 12581
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "417acd39e4e5b843c7c5774a9473f9c76f914c368a72c03fed9c56937be31940",
+      "bytes": 2477
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "749cafb9cc296a0387b3add7448e3d6260337a706323ce903f0cd85fac8768c3",
+      "bytes": 401
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "424abbed2e912da1397e146a33c08aada550ae043e32d8a53be36dc7dd14d638",
+      "bytes": 508
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "908005da6816adfab0e4978195a61b0df7a34ed47372da4ebcca515cf117e5f1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "584db5a9b63153a464483d6208d9b2ccba9d8c65859a5781800045c55bea77a1",
+      "bytes": 43517
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "689d754ab514ccdc24c9e1e21ced2cf7639691074b6201441162564fb3a34533",
+      "bytes": 22452
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fa1a06e240ad96baeb54a3b299e83f3bb1c87b1973c3cbeea2a27ea0718e1c92",
+      "bytes": 46051
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c7ae94a5dc45bd649c0390a64a366e062c561a9b39a4ca83e46da4012b7a0607",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "89e64838166e6d2640c2572b5e33f0dff7605455715cb82eefdd8873714a3f02",
+      "bytes": 1642
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "07046e56701d465bb3c092b1c3df62f7123be962ed295f0ba5db5beaa8bcc022",
+      "bytes": 2410
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "2175034b-96d7-417e-886f-ff5a4d8551ae",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "c521be99-14af-4d57-8f8f-34c76c9ade61",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "edf7f95d-da5f-42bf-94c5-b33ade0a2ba2",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

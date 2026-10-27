@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1359-narrow-column-and-add-site-pages",
+  "kind": "feat",
+  "title": "The 300px conversation column never scrolls sideways, and Add site's Customize and design system steps open as pages of their own",
+  "pr": 1359,
+  "area": "chat/column",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap --test-force-exit packages/ui/tracy-chat-input/test/e2e/column-no-side-scroll.test.mjs packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs packages/site/tracy-add-site/test/e2e/design-system-card.test.mjs",
+    "S2: Read the test lines named in run.tests."
+  ],
+  "expect": [
+    "dsh's own rules alone let a 300px conversation column scroll sideways, and with the tracy-chat-input plugin the column root cannot be scrolled sideways.",
+    "The input band's handles add nothing to the column's width, and the root clips in both axes instead of hiding.",
+    "Customize your site opens as a page in the tab, in place of the form, with the template's own questions, Recommended ones first.",
+    "The design systems open as a page in the tab, and the card sits right under Customize your site."
+  ],
+  "selectors": {
+    "code": "packages/ui/tracy-chat-input/src/client/column-styles.ts; packages/site/tracy-add-site/src/client/add-site-page.tsx"
+  },
+  "fence": "Built plugin bundles in a headless browser over dsh's real layout CSS; not a proof of the 300px default itself, which lives in the dsh fork (ui-layout tests, tracy.48).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "--test-timeout=60000",
+      "packages/ui/tracy-chat-input/test/e2e/column-no-side-scroll.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/design-system-card.test.mjs"
+    ],
+    "tests": [
+      "dsh's own rules alone let the 300px column scroll sideways",
+      "with the plugin the column root cannot be scrolled sideways",
+      "with the plugin the band's handles add nothing to the column's width",
+      "the root clips instead of hiding, in both axes",
+      "the page takes the form's place with the template's own questions",
+      "the systems open as a page in the tab",
+      "the card sits right under Customize your site"
+    ]
+  }
+}

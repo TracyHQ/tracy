@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-void: #010101;
+  --color-charcoal-control: #1f1f23;
+  --color-porcelain: #e0e0e0;
+  --color-machine-well: #16191b;
+  --color-hairline-ash: #252525;
+  --color-muted-steel: #828b8d;
+  --color-dormant-graphite: #444444;
+  --color-faint-steel: #646e71;
+
+  /* Typography */
+  --font-office-times-round: 'Office Times Round', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-messina-sans: 'Messina Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-laica-mono: 'ABC Laica Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

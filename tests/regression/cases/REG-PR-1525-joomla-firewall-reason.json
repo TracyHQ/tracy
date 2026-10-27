@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1525-joomla-firewall-reason",
+  "kind": "fix",
+  "title": "A Joomla import blocked by a named firewall (Cloudflare challenge, ModSecurity) is blocked_by_firewall with the firewall named, on any status and any step, not admin_gate or a generic failure",
+  "pr": 1525,
+  "area": "add-site/import",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run packages/site/tracy-add-site/test/import-gates.test.mjs: GET /administrator/ answers Cloudflare's managed challenge (403, cf-mitigated: challenge, <title>Just a moment...</title>, /cdn-cgi/challenge-platform/), then the same on a 200; the login POST and the landing answer a challenge or a ModSecurity page; the installer page, the install POST and the installer page read again answer the challenge; a plain 403 relayed with server: cloudflare. Also: the login POST answers a 200 challenge, the login page a 429 one, the landing a 200 one; the configure page answers the challenge after the install; the installer page a 200 challenge; both engine doors answer the challenge (installCowork and resolveDoor); controls: a 200 POST with no redirect, a 503 login page, a plain 403 configure page, doors answering a plain 404.",
+    "S2: Run packages/site/tracy-add-site/test/site-link-pacing.test.mjs: a whole Joomla run (startRun) against a site behind the challenge.",
+    "S3: Run packages/site/tracy-add-site/test/handover-recovery.test.mjs: a whole Joomla run with a pasted token whose doors answer Cloudflare's challenge."
+  ],
+  "expect": [
+    "S1: every named-firewall answer is {ok:false, reason:'blocked_by_firewall', firewall:'cloudflare'|'modsecurity'} with the step's diagnostic (login_page/forbidden, login_page/firewall on the 200, login_post/forbidden, login_landing/server_denied, install_page/server_denied, upload_install, upload_page); the plain 403 with only server: cloudflare stays admin_gate with no firewall; blocked_by_firewall maps to import_error_blocked_by_firewall. The non-403 challenges are blocked_by_firewall with check 'firewall' at login_post/login_page/login_landing/install_page/api_door; the configure page challenge is blocked_by_firewall, not configure_failed/no_token; the controls keep no_redirect, unreachable, a reason other than blocked_by_firewall, and cowork_not_answering.",
+    "S2: the run ends state error, error 'blocked_by_firewall', errorDetail {firewall:'cloudflare'}, diagnostic {at:'login_page', check:'forbidden', status:403}, and one log line 'blocked by cloudflare at signing_in'.",
+    "S3: the run ends state error, error 'blocked_by_firewall', errorDetail {firewall:'cloudflare'}, diagnostic at api_door check firewall, no credential registered."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/host/joomla.ts, packages/site/tracy-add-site/src/host/run.ts, packages/site/tracy-add-site/src/host/firewall.mjs"
+  },
+  "evidence": "Production alert 20/10/2026 on a Joomla site: Reason: admin_gate · Where: login_page/forbidden · HTTP 403 · /administrator, while the server's GET got Cloudflare's challenge (cf-mitigated: challenge) on /administrator/ and on /",
+  "fence": "forbiddenBy() in joomla.ts asks firewallOf (no generic) on every 403 Joomla did not render; run.ts carries firewall to errorDetail and the operator log; firewallOf is also asked on non-403 answers of the sign-in, the installer, the configure page and the engine doors (readSiteInfo.firewall, resolveDoor refusal blocked_by_firewall)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs",
+      "packages/site/tracy-add-site/test/site-link-pacing.test.mjs",
+      "packages/site/tracy-add-site/test/handover-recovery.test.mjs"
+    ],
+    "tests": [
+      "Cloudflare's challenge on /administrator is blocked_by_firewall, not admin_gate",
+      "a challenge Cloudflare marks on a 200 is blocked_by_firewall too, not admin_form_not_found",
+      "a plain 403 relayed by Cloudflare is still admin_gate",
+      "a firewall named on the login POST or the landing is blocked_by_firewall",
+      "a firewall named on the installer, its POST or the page read again is blocked_by_firewall",
+      "blocked_by_firewall has its own sentence on the Joomla path too",
+      "a Joomla run behind a Cloudflare challenge stops with blocked_by_firewall, the firewall named",
+      "a challenge on a non-403 answer of the sign-in is blocked_by_firewall, not a generic failure",
+      "a challenge on the configure page after the install is blocked_by_firewall, not no_token",
+      "a challenge Cloudflare marks on a 200 installer page is blocked_by_firewall, not unreachable",
+      "engine doors that answer a challenge are blocked_by_firewall, at install and when the run asks",
+      "a pasted token whose doors Cloudflare challenges stops as blocked_by_firewall, the firewall named"
+    ]
+  }
+}

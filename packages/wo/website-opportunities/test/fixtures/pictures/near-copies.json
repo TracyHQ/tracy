@@ -1,0 +1,619 @@
+{
+  "note": "Fingerprints (64-bit dHash of apps/tracy-web/src/lib/picture-cut.js) and measured features of real collected pictures, 26/10/2026. `harbourSportClub` (a fictional name for the business): the 23 photos research stored for one opportunity on dev; Instagram #14, #17, #19 are copies of Google #33, #27, #30 (`copies`), #1 is the Instagram profile picture chosen as the logo. `different`: pairs of different pictures from the website of opportunity 9c3d4e5f (267 images), judged by eye, the closest ones by fingerprint.",
+  "harbourSportClub": {
+    "copies": [[14, 33], [17, 27], [19, 30]],
+    "logo": 1,
+    "photos": [
+      {
+        "n": 1,
+        "id": "31cd7ba9-8304-4ce1-9109-88bb60e7d83a",
+        "source": "instagram",
+        "width": 1080,
+        "height": 1080,
+        "bytes": 105690,
+        "dhash": "93172b8e0c2a124c",
+        "features": {
+          "top2Share": 0.788,
+          "edgeDensity": 0.237
+        },
+        "sourceUrl": "https://scontent-hou1-1.cdninstagram.com/v/t51.82787-19/fixture-1.jpg"
+      },
+      {
+        "n": 2,
+        "id": "1d0c10dd-5931-42f0-869f-63c6e2d9bc24",
+        "source": "instagram",
+        "width": 360,
+        "height": 640,
+        "bytes": 22872,
+        "dhash": "d1f1e682ecf3334b",
+        "features": {
+          "top2Share": 0.414,
+          "edgeDensity": 0.211
+        }
+      },
+      {
+        "n": 4,
+        "id": "cd59aed1-c620-42a2-b114-5cea38e99d56",
+        "source": "instagram",
+        "width": 361,
+        "height": 640,
+        "bytes": 16653,
+        "dhash": "0d3d351e1f9f6000",
+        "features": {
+          "top2Share": 0.364,
+          "edgeDensity": 0.101
+        }
+      },
+      {
+        "n": 6,
+        "id": "aeb1b975-661f-4746-a3a9-fb6bfd41bd92",
+        "source": "instagram",
+        "width": 361,
+        "height": 640,
+        "bytes": 47991,
+        "dhash": "0000525c971cf980",
+        "features": {
+          "top2Share": 0.301,
+          "edgeDensity": 0.19
+        }
+      },
+      {
+        "n": 8,
+        "id": "e17eff57-93fc-4f34-829d-b4f2f1baefab",
+        "source": "instagram",
+        "width": 360,
+        "height": 640,
+        "bytes": 40327,
+        "dhash": "4040d97734d7ff61",
+        "features": {
+          "top2Share": 0.398,
+          "edgeDensity": 0.235
+        }
+      },
+      {
+        "n": 10,
+        "id": "d788f806-aa34-4a6a-a888-371c2d46ca0b",
+        "source": "instagram",
+        "width": 360,
+        "height": 640,
+        "bytes": 35787,
+        "dhash": "f8b0e4191b581832",
+        "features": {
+          "top2Share": 0.345,
+          "edgeDensity": 0.156
+        }
+      },
+      {
+        "n": 12,
+        "id": "17a5f060-29dc-4035-a2e3-d9fba5015ec8",
+        "source": "instagram",
+        "width": 361,
+        "height": 640,
+        "bytes": 50503,
+        "dhash": "cb6fcecec7d99012",
+        "features": {
+          "top2Share": 0.283,
+          "edgeDensity": 0.337
+        }
+      },
+      {
+        "n": 14,
+        "id": "25b8676a-1949-4250-9111-59abd59342bc",
+        "source": "instagram",
+        "width": 496,
+        "height": 640,
+        "bytes": 46881,
+        "dhash": "4f32b761655d6de9",
+        "features": {
+          "top2Share": 0.504,
+          "edgeDensity": 0.151
+        }
+      },
+      {
+        "n": 15,
+        "id": "d43b2fa4-8751-4bf7-8e33-e7d1d93ca3f7",
+        "source": "instagram",
+        "width": 361,
+        "height": 640,
+        "bytes": 22735,
+        "dhash": "679281e9e5f5cb17",
+        "features": {
+          "top2Share": 0.45,
+          "edgeDensity": 0.194
+        }
+      },
+      {
+        "n": 17,
+        "id": "7cca65d1-5606-4e62-8817-d02938a4aaf8",
+        "source": "instagram",
+        "width": 360,
+        "height": 640,
+        "bytes": 27790,
+        "dhash": "087411585c7c5ca0",
+        "features": {
+          "top2Share": 0.344,
+          "edgeDensity": 0.175
+        }
+      },
+      {
+        "n": 19,
+        "id": "bfa2f574-9f84-49b4-9156-8716d1e6292d",
+        "source": "instagram",
+        "width": 361,
+        "height": 640,
+        "bytes": 35701,
+        "dhash": "8c4cc9d930d1d0d8",
+        "features": {
+          "top2Share": 0.39,
+          "edgeDensity": 0.186
+        }
+      },
+      {
+        "n": 21,
+        "id": "ef5bce11-cdb8-40f7-a457-2e4d23710c1f",
+        "source": "instagram",
+        "width": 567,
+        "height": 640,
+        "bytes": 67058,
+        "dhash": "cfff534cc3834160",
+        "features": {
+          "top2Share": 0.354,
+          "edgeDensity": 0.265
+        }
+      },
+      {
+        "n": 22,
+        "id": "431b52fc-0bf6-4f17-9b9e-5f995777f0d2",
+        "source": "instagram",
+        "width": 360,
+        "height": 640,
+        "bytes": 47567,
+        "dhash": "32083b8706f0f433",
+        "features": {
+          "top2Share": 0.283,
+          "edgeDensity": 0.295
+        }
+      },
+      {
+        "n": 24,
+        "id": "89136fc6-cc73-4543-b09e-43cf1ee320f7",
+        "source": "google-places",
+        "width": 1600,
+        "height": 2133,
+        "bytes": 992827,
+        "dhash": "fcc8624c29686417",
+        "features": {
+          "top2Share": 0.304,
+          "edgeDensity": 0.242
+        }
+      },
+      {
+        "n": 25,
+        "id": "0d32cdcb-49c6-4ac8-8d54-e584bc9f175e",
+        "source": "google-places",
+        "width": 1152,
+        "height": 2048,
+        "bytes": 333946,
+        "dhash": "441b31310d8c0644",
+        "features": {
+          "top2Share": 0.36,
+          "edgeDensity": 0.137
+        }
+      },
+      {
+        "n": 26,
+        "id": "9bf16dc7-0ab7-4332-a178-a4aed9024a45",
+        "source": "google-places",
+        "width": 1242,
+        "height": 2208,
+        "bytes": 868000,
+        "dhash": "c414d65c50471798",
+        "features": {
+          "top2Share": 0.373,
+          "edgeDensity": 0.338
+        }
+      },
+      {
+        "n": 27,
+        "id": "3705de83-1c52-47d6-86fc-7e53b6f2267c",
+        "source": "google-places",
+        "width": 900,
+        "height": 1600,
+        "bytes": 198647,
+        "dhash": "0cb411085c7c5c20",
+        "features": {
+          "top2Share": 0.349,
+          "edgeDensity": 0.18
+        }
+      },
+      {
+        "n": 28,
+        "id": "0e5b245c-ae0f-4753-8530-981f9dec290b",
+        "source": "google-places",
+        "width": 1600,
+        "height": 2133,
+        "bytes": 1071510,
+        "dhash": "560dccca311c0d6c",
+        "features": {
+          "top2Share": 0.267,
+          "edgeDensity": 0.306
+        }
+      },
+      {
+        "n": 29,
+        "id": "2548b464-3292-4c47-acdb-fab295e7da8e",
+        "source": "google-places",
+        "width": 1320,
+        "height": 2325,
+        "bytes": 284051,
+        "dhash": "5c1c6d6f0cf13b80",
+        "features": {
+          "top2Share": 0.344,
+          "edgeDensity": 0.144
+        }
+      },
+      {
+        "n": 30,
+        "id": "92da592e-ced4-463f-88f8-18fa499b9725",
+        "source": "google-places",
+        "width": 1166,
+        "height": 2048,
+        "bytes": 304502,
+        "dhash": "8c4cc9d9b051d0c8",
+        "features": {
+          "top2Share": 0.389,
+          "edgeDensity": 0.189
+        }
+      },
+      {
+        "n": 31,
+        "id": "7ce51c97-0478-4b9b-8a79-e4f93e314a7c",
+        "source": "google-places",
+        "width": 1600,
+        "height": 2133,
+        "bytes": 779489,
+        "dhash": "9bf9b7a7b56376b8",
+        "features": {
+          "top2Share": 0.252,
+          "edgeDensity": 0.312
+        }
+      },
+      {
+        "n": 32,
+        "id": "ea7e650b-86a2-41e0-8954-075b7e3de502",
+        "source": "google-places",
+        "width": 1536,
+        "height": 2048,
+        "bytes": 449368,
+        "dhash": "677ba3bbcdcddb71",
+        "features": {
+          "top2Share": 0.245,
+          "edgeDensity": 0.271
+        }
+      },
+      {
+        "n": 33,
+        "id": "4c15a1e1-c80b-4f73-bd1c-22b467042f6d",
+        "source": "google-places",
+        "width": 1200,
+        "height": 1600,
+        "bytes": 276011,
+        "dhash": "9b35b5f1655d69e8",
+        "features": {
+          "top2Share": 0.517,
+          "edgeDensity": 0.15
+        }
+      }
+    ]
+  },
+  "different": [
+    {
+      "what": "buffet counter vs team photo",
+      "bits": 15,
+      "a": {
+        "width": 800,
+        "height": 600,
+        "dhash": "233bf3d395992525",
+        "features": {
+          "top2Share": 0.242,
+          "edgeDensity": 0.322
+        }
+      },
+      "b": {
+        "width": 800,
+        "height": 534,
+        "dhash": "b337737393816c27",
+        "features": {
+          "top2Share": 0.265,
+          "edgeDensity": 0.282
+        }
+      }
+    },
+    {
+      "what": "fruit platter vs fashion portrait",
+      "bits": 15,
+      "a": {
+        "width": 2048,
+        "height": 1536,
+        "dhash": "8ce6969ab3316060",
+        "features": {
+          "top2Share": 0.18,
+          "edgeDensity": 0.361
+        }
+      },
+      "b": {
+        "width": 720,
+        "height": 720,
+        "dhash": "9dcf9693b795e878",
+        "features": {
+          "top2Share": 0.316,
+          "edgeDensity": 0.237
+        }
+      }
+    },
+    {
+      "what": "tennis court vs food tray",
+      "bits": 16,
+      "a": {
+        "width": 361,
+        "height": 640,
+        "dhash": "0000525c971cf980",
+        "features": {
+          "top2Share": 0.301,
+          "edgeDensity": 0.19
+        }
+      },
+      "b": {
+        "width": 720,
+        "height": 1280,
+        "dhash": "4c125250761cd931",
+        "features": {
+          "top2Share": 0.193,
+          "edgeDensity": 0.326
+        }
+      }
+    },
+    {
+      "what": "cafe interior vs shopfront",
+      "bits": 16,
+      "a": {
+        "width": 750,
+        "height": 501,
+        "dhash": "0887cfc7f3e7999e",
+        "features": {
+          "top2Share": 0.286,
+          "edgeDensity": 0.278
+        }
+      },
+      "b": {
+        "width": 800,
+        "height": 600,
+        "dhash": "acaf4f47e6e68086",
+        "features": {
+          "top2Share": 0.323,
+          "edgeDensity": 0.246
+        }
+      }
+    },
+    {
+      "what": "toast on a plate vs city building",
+      "bits": 16,
+      "a": {
+        "width": 800,
+        "height": 1067,
+        "dhash": "79638f0d693389e0",
+        "features": {
+          "top2Share": 0.282,
+          "edgeDensity": 0.21
+        }
+      },
+      "b": {
+        "width": 800,
+        "height": 743,
+        "dhash": "9f43a78c233788e4",
+        "features": {
+          "top2Share": 0.192,
+          "edgeDensity": 0.358
+        }
+      }
+    },
+    {
+      "what": "catering tent vs logo",
+      "bits": 16,
+      "a": {
+        "width": 800,
+        "height": 600,
+        "dhash": "79e0c0442741e321",
+        "features": {
+          "top2Share": 0.213,
+          "edgeDensity": 0.33
+        }
+      },
+      "b": {
+        "width": 512,
+        "height": 512,
+        "dhash": "30f0c0c0e4c0e030",
+        "features": {
+          "top2Share": 0.851,
+          "edgeDensity": 0.139
+        }
+      }
+    },
+    {
+      "what": "shop entrance vs shop shelves",
+      "bits": 16,
+      "a": {
+        "width": 658,
+        "height": 543,
+        "dhash": "a3bb29a92929399b",
+        "features": {
+          "top2Share": 0.267,
+          "edgeDensity": 0.347
+        }
+      },
+      "b": {
+        "width": 720,
+        "height": 720,
+        "dhash": "b2ba6aa9ab913882",
+        "features": {
+          "top2Share": 0.242,
+          "edgeDensity": 0.466
+        }
+      }
+    },
+    {
+      "what": "two property posters, different houses",
+      "bits": 16,
+      "a": {
+        "width": 800,
+        "height": 1000,
+        "dhash": "36331d0c69272f61",
+        "features": {
+          "top2Share": 0.399,
+          "edgeDensity": 0.261
+        }
+      },
+      "b": {
+        "width": 800,
+        "height": 1000,
+        "dhash": "87c61e0e29232f63",
+        "features": {
+          "top2Share": 0.412,
+          "edgeDensity": 0.341
+        }
+      }
+    },
+    {
+      "what": "letter avatars S and S, other colours",
+      "bits": 2,
+      "a": {
+        "width": 120,
+        "height": 120,
+        "dhash": "0f334d5d054d3307",
+        "features": {
+          "top2Share": 0.809,
+          "edgeDensity": 0.177
+        }
+      },
+      "b": {
+        "width": 120,
+        "height": 120,
+        "dhash": "07334d5c054d3307",
+        "features": {
+          "top2Share": 0.848,
+          "edgeDensity": 0.176
+        }
+      }
+    },
+    {
+      "what": "letter avatars P and P, other colours",
+      "bits": 3,
+      "a": {
+        "width": 120,
+        "height": 120,
+        "dhash": "0f334d141d512317",
+        "features": {
+          "top2Share": 0.82,
+          "edgeDensity": 0.168
+        }
+      },
+      "b": {
+        "width": 120,
+        "height": 120,
+        "dhash": "0f334d141d59231b",
+        "features": {
+          "top2Share": 0.872,
+          "edgeDensity": 0.169
+        }
+      }
+    },
+    {
+      "what": "letter avatars n and A",
+      "bits": 4,
+      "a": {
+        "width": 120,
+        "height": 120,
+        "dhash": "0f334d4d55553317",
+        "features": {
+          "top2Share": 0.863,
+          "edgeDensity": 0.16
+        }
+      },
+      "b": {
+        "width": 120,
+        "height": 120,
+        "dhash": "0f334d4d4d552307",
+        "features": {
+          "top2Share": 0.816,
+          "edgeDensity": 0.17
+        }
+      }
+    },
+    {
+      "what": "letter avatars M and M, other colours",
+      "bits": 6,
+      "a": {
+        "width": 120,
+        "height": 120,
+        "dhash": "132b96968f813313",
+        "features": {
+          "top2Share": 0.685,
+          "edgeDensity": 0.226
+        }
+      },
+      "b": {
+        "width": 120,
+        "height": 120,
+        "dhash": "172b96968e8e3313",
+        "features": {
+          "top2Share": 0.784,
+          "edgeDensity": 0.2
+        }
+      }
+    },
+    {
+      "what": "letter avatars J and n",
+      "bits": 12,
+      "a": {
+        "width": 120,
+        "height": 120,
+        "dhash": "053b6525454d3307",
+        "features": {
+          "top2Share": 0.903,
+          "edgeDensity": 0.138
+        }
+      },
+      "b": {
+        "width": 120,
+        "height": 120,
+        "dhash": "0f334d4d55553317",
+        "features": {
+          "top2Share": 0.863,
+          "edgeDensity": 0.16
+        }
+      }
+    },
+    {
+      "what": "WhatsApp icon vs a logo",
+      "bits": 13,
+      "a": {
+        "width": 32,
+        "height": 32,
+        "dhash": "31f0d494d6c4f0b1",
+        "features": {
+          "top2Share": 0.692,
+          "edgeDensity": 0.062
+        }
+      },
+      "b": {
+        "width": 512,
+        "height": 512,
+        "dhash": "30f0c0c0e4c0e030",
+        "features": {
+          "top2Share": 0.851,
+          "edgeDensity": 0.139
+        }
+      }
+    }
+  ]
+}

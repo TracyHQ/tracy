@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1620-demo-qa-inline-css",
+  "kind": "fix",
+  "title": "Demo QA: a stylesheet WordPress prints inline with its sourceURL is still that stylesheet, and the business's copyright line is not template text",
+  "pr": 1620,
+  "area": "host/demo-qa",
+  "cms": ["wp"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: With a Chrome answering on CDP, from the TCH checkout run with DEMO_QA_CDP set to that endpoint: node --test apps/tracy-host/test/demo-qa.test.mjs apps/tracy-host/test/demo-qa-browser.test.mjs",
+    "S2: Read the pass/fail counts and the two tests named below."
+  ],
+  "expect": [
+    "0 failures; the browser test is not skipped.",
+    "A sheet read as <link> in the baseline and as an inline <style> ending in /*# sourceURL=<its url>?ver=… */ after passes css-intact and look-kept; the same block with a rule cut fails css-intact; a media=\"print\" block reads as no longer loaded.",
+    "'Copyright © 2026 <name>. All Rights Reserved.' passes no-demo-words when <name> is in the brief as whole words; a template holder, or a name only inside a longer word of the brief, fails."
+  ],
+  "selectors": {
+    "function": "apps/tracy-host/src/demo-qa-browser.js readInPage (sheets); apps/tracy-host/src/demo-qa.js fromBrief",
+    "test": "apps/tracy-host/test/demo-qa-browser.test.mjs; apps/tracy-host/test/demo-qa.test.mjs"
+  },
+  "evidence": "Dev WO build of a JA Restaurant WP site (22/10/2026): css-intact reported wp-includes/blocks/navigation/style.min.css 'no longer loaded' (inlined by WordPress after the agent's turn) and no-demo-words flagged the business's copyright line.",
+  "fence": "The page reader's stylesheet list and the judge's copyright-holder rule",
+  "run": {
+    "needs": ["chrome"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-host/test/demo-qa-browser.test.mjs"
+    ],
+    "tests": [
+      "no-demo-words: a copyright line is the brief’s when its holder is the brief’s name; the template’s holder still fails",
+      "css-intact and look-kept: a stylesheet WordPress moved from <link> to an inline <style> with its sourceURL is still that stylesheet; a print-only block is not"
+    ]
+  }
+}

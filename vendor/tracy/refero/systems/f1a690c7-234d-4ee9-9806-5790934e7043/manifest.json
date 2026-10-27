@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f1a690c7-234d-4ee9-9806-5790934e7043",
+  "status": "complete",
+  "name": "Graf Lantz",
+  "url": "https://styles.refero.design/style/f1a690c7-234d-4ee9-9806-5790934e7043",
+  "sourceWebsite": "https://glob.land",
+  "extractedAt": "2026-06-03T21:30:57.226Z",
+  "capturedAt": "2026-10-08T05:19:21.155810+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Scandinavian atelier on raw linen — one violet stroke of urgency inside an otherwise bone-white room.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2f718806-ac38-4d55-b271-5f5cccf66d75.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9024a6ac1fc2122119b211b8733fc3eb9ec6154e98582382ab0bde93ec626ea1",
+      "bytes": 18890
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4df31e93c6f04568d342ab2d7ed5acd94b46d514018450046c1e594951d3884f",
+      "bytes": 57008
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "711601a0d748f1e93776b24fd2a844b82216cff2da7ce98e9f6ad70769c1ac99",
+      "bytes": 16027
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "14c3b37075197668efb0a7f744eef23adb8a0261f6a2284f52423b82d25e99dd",
+      "bytes": 10134
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "19c42d67122690d81c1846179c17154e46b4e204977302782fb98440e2804c0a",
+      "bytes": 12535
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6c219b40ff37e3d4995fbd7b98aaafaf3a2dec63d590bd5e1312a8f797389ddd",
+      "bytes": 3406
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bfe405cd65268f1bfbb00cacc8c864473c22969cd9dd0cc4b2a76c7a775c3d60",
+      "bytes": 847
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ce9cd8821fe18df01c071f04f8afcc8ef40d318dbdf8ea265ceb6bb20ddf6f20",
+      "bytes": 864
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "65a58cf8c3463099db9473568c0096ea667f308a80b4448a272fea9ebcbf95f4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f6fbc736289d9b0c9140aeff719947c84a63418474a92b1748b4d66aa96a9d24",
+      "bytes": 42045
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "117dc36692b5aa40c63d6f3ed155faebe3fff74b372147d9e1253225fe69ce02",
+      "bytes": 21664
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1a9926d3be89ee1be0cd31991aa88c503fa107cb8fde40792861e4a28939cb04",
+      "bytes": 40325
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d7caabaebd02fb2af0f70762e5bd9b0e8ccdd40fbe65f1988136bcf945dae7d3",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d1b1c2b35c465c80f85723c4fbbc6ed09ded7bf017bce23c10a3391bc503c800",
+      "bytes": 1334
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2a094c926cc2d61c9e0f010e2e45f50f13fcf0de069a6e6c3ea44959cd80b4ae",
+      "bytes": 1927
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

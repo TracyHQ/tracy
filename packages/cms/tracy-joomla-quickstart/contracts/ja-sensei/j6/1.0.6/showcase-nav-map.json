@@ -1,0 +1,432 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-sensei/j6/1.0.6",
+  "baseHash": "45348628af8ee6ceef23f5b380db4e6e48a565f4d1ed596dcefaa117f88d5fd1",
+  "baseFiles": {
+    "manifest.json": "50099b91092d9fda78b64452e7a7e8326c8458b9a2f7567f4c12c46fed11e61b",
+    "content-map.json": "8fc94cf58a424c928040e7c8220c4279bc836083376e5d985f4e059537f8852a",
+    "presentation-lock.json": "35e7b7140101068c323d1f6306e15fc8e4b3b886c3e0d56a710e0de3de838fb2"
+  },
+  "inputs": {},
+  "decisionsHash": "3442618f41efb471ea048ad307e65b2f1560b979229cb7359f958890e72ee510",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-118",
+      "identity": {
+        "path": "joomla-content",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.empty-heading",
+      "reason": "a heading whose every entry leaves the navigation"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "joomla-content/featured-articles",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_content view=featured) in offcanvas, the drawer menu of module-117"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-120",
+      "identity": {
+        "path": "joomla-content/all-categories",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "All Categories",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_content view=categories) in offcanvas, the drawer menu of module-117"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-121",
+      "identity": {
+        "path": "joomla-content/tagged-items",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_tags view=tag) in offcanvas, the drawer menu of module-117"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-180",
+      "identity": {
+        "path": "joomla-content/typography",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-181",
+      "identity": {
+        "path": "other-pages/offline-page",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-182",
+      "identity": {
+        "path": "other-pages/error-page",
+        "menutype": "offcanvas",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "J! Pages",
+      "where": "offcanvas/j-pages",
+      "rule": "keep.holds-kept-entry",
+      "reason": "a sample-pages heading that holds menuItem-110, which stays"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Login",
+      "where": "offcanvas/j-pages/login",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-111",
+      "label": "Registration",
+      "where": "offcanvas/j-pages/registration",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "User Profile",
+      "where": "offcanvas/j-pages/user-profile",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Our Blog",
+      "where": "mainmenu/our-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Smart Search",
+      "where": "offcanvas/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-122",
+      "label": "Home",
+      "where": "useful-links/home-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "Services",
+      "where": "useful-links/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-124",
+      "label": "Courses",
+      "where": "useful-links/courses",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Pages",
+      "where": "useful-links/pages-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "News & Events.",
+      "where": "useful-links/news-events",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Contact Us",
+      "where": "useful-links/contact-us-ft",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Development",
+      "where": "classes/development",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Business",
+      "where": "classes/business",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "IT & Software",
+      "where": "classes/it-software",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Design",
+      "where": "classes/design",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Photography",
+      "where": "classes/photography",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Documentation",
+      "where": "support/documentation",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "F.A.Q",
+      "where": "support/f-a-q",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Media",
+      "where": "support/media-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "Support Policy",
+      "where": "support/support-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Privacy / Terms of use",
+      "where": "support/privacy-terms-of-use",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "Advertise",
+      "where": "support/advertise",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-139",
+      "label": "Get the Theme",
+      "where": "resources/get-the-theme",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-140",
+      "label": "Deals & Coupons",
+      "where": "resources/deals-coupons",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-141",
+      "label": "How It Works",
+      "where": "resources/how-it-works",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-142",
+      "label": "Tips & Tricks",
+      "where": "resources/tips-tricks",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-143",
+      "label": "Terms of Service",
+      "where": "resources/terms-of-service",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-177",
+      "label": "About Us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-109",
+      "label": "Useful Links",
+      "where": "mod_menu@footer-2",
+      "rule": "keep.default",
+      "reason": "renders useful-links: 6 entries stay"
+    },
+    {
+      "key": "module-110",
+      "label": "Classes",
+      "where": "mod_menu@footer-3",
+      "rule": "keep.default",
+      "reason": "renders classes: 5 entries stay"
+    },
+    {
+      "key": "module-111",
+      "label": "Supports",
+      "where": "mod_menu@footer-4",
+      "rule": "keep.default",
+      "reason": "renders support: 6 entries stay"
+    },
+    {
+      "key": "module-112",
+      "label": "Resources",
+      "where": "mod_menu@footer-5",
+      "rule": "keep.default",
+      "reason": "renders resources: 5 entries stay"
+    },
+    {
+      "key": "module-117",
+      "label": "Bonus Pages",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders offcanvas: 6 entries stay"
+    },
+    {
+      "key": "module-123",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 4 entries stay (class \"visible-xs visible-sm\")"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-196",
+      "label": "Other pages",
+      "where": "offcanvas/other-pages",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in offcanvas, the drawer menu of module-117"
+    }
+  ],
+  "counts": {
+    "menuItems": 7,
+    "modules": 0,
+    "kept": 42,
+    "unresolved": 1
+  }
+}

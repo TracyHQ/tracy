@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1715-plus-menu-design-system",
+  "kind": "feat",
+  "title": "Design system can be listed in the right column's + menu by the launch-design-system switch (off by default), only while the Design system feature is on",
+  "pr": 1715,
+  "area": "ui-switches/right-launcher",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/core/tracy-core/test/ui-switches.test.mjs and read the case 'Design system: a + menu entry of its own'.",
+    "S2: Run node --test packages/design/tracy-design-inspiration/test/design-system-launcher.test.mjs."
+  ],
+  "expect": [
+    "S1: launch-design-system is in group right-launcher, defaultOn false, tabs [tracy:design-system]; LAUNCHER_TABS lists tracy:design-system right after tracy:design-inspiration; isListed is false by default and true once /api/ui hides nothing.",
+    "S2: the plugin registers tracy:design-system without hidden; available() is true with toolbar-design-system on and false with it hidden; the side card's refreshAvailable is called once the switches land; opened with no site the tab says 'Open a site to choose its design system.'"
+  ],
+  "selectors": {
+    "switch": "packages/core/tracy-core/src/ui-switches/catalogue.json#launch-design-system",
+    "tab": "tracy:design-system"
+  },
+  "fence": "The tab policy (isListed) from the catalogue plus the descriptor's available predicate decide the + menu entry; no hard-coded list",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/core/tracy-core/test/ui-switches.test.mjs",
+      "packages/design/tracy-design-inspiration/test/design-system-launcher.test.mjs"
+    ]
+  }
+}

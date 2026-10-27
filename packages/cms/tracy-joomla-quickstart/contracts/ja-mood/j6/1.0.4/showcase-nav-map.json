@@ -1,0 +1,328 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-mood/j6/1.0.4",
+  "baseHash": "58a3532a51247a6dd13b0fc79a5236906cddbd196a96f63d0121a421f7651afa",
+  "baseFiles": {
+    "manifest.json": "a9cd13ff0299e2fd9fb457894b90cd90379b06b1d4a19b787c7ac11dd9e5ad8b",
+    "content-map.json": "5784f1bb4ad31c9f3dee9692d56e266cd06660d2bc932037cbc378844c14fa37",
+    "presentation-lock.json": "3401f1b0b50f9a42ee6d1241fc1db1a9a179ccd1001b5d8fdcb0837bd6aa0937"
+  },
+  "inputs": {},
+  "decisionsHash": "9ea6f61a9d2be70f2e9b0d56ec34dff0263acd3c932056f00be793ebaeab7372",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-166",
+      "identity": {
+        "path": "pages/others/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-167",
+      "identity": {
+        "path": "pages/others/404-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "404 Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"404 Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-168",
+      "identity": {
+        "path": "pages/others/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-177",
+      "identity": {
+        "path": "pages/joomla-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla!\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-179",
+      "identity": {
+        "path": "pages/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla!\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-191",
+      "identity": {
+        "path": "home/home-green",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Green",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-192",
+      "identity": {
+        "path": "home/home-red",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Red",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-193",
+      "identity": {
+        "path": "home/home-dark",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Dark",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Videos",
+      "where": "mainmenu/videos",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-105",
+      "label": "News",
+      "where": "mainmenu/pages/joomla-content/news",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:11: a branch hide may not take real content along"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Sign In",
+      "where": "user-menu/sign-in",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Creat Account",
+      "where": "user-menu/creat-account",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-158",
+      "label": "Login",
+      "where": "mainmenu/pages/j-page/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-159",
+      "label": "Registration",
+      "where": "mainmenu/pages/j-page/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "User Profile",
+      "where": "mainmenu/pages/j-page/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-161",
+      "label": "Username Reminder",
+      "where": "mainmenu/pages/j-page/username-reminder",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-162",
+      "label": "Others",
+      "where": "mainmenu/pages/others",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-164",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/others/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-170",
+      "label": "Get In Touch",
+      "where": "mainmenu/pages/j-page/get-in-touch",
+      "rule": "keep.decision",
+      "reason": "a contact form is a working feature of the business, not a sample screen; kept until the PO decides"
+    },
+    {
+      "key": "menuItem-171",
+      "label": "Blogs",
+      "where": "mainmenu/blogs",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-172",
+      "label": "Category Blog",
+      "where": "mainmenu/pages/joomla-content/category-blog",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:18: a branch hide may not take real content along"
+    },
+    {
+      "key": "menuItem-178",
+      "label": "Logout",
+      "where": "user-menu/logout",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "module-92",
+      "label": "User Menu",
+      "where": "mod_menu@head-right",
+      "rule": "keep.default",
+      "reason": "renders user-menu: 3 entries stay"
+    },
+    {
+      "key": "module-171",
+      "label": "Footer Menu",
+      "where": "mod_menu@footer",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 4 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-157",
+      "label": "J! Page",
+      "where": "mainmenu/pages/j-page",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-170, which stays"
+    },
+    {
+      "key": "menuItem-158",
+      "label": "Login",
+      "where": "mainmenu/pages/j-page/login",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=login) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-159",
+      "label": "Registration",
+      "where": "mainmenu/pages/j-page/registration",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=registration) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "User Profile",
+      "where": "mainmenu/pages/j-page/user-profile",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=profile) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-161",
+      "label": "Username Reminder",
+      "where": "mainmenu/pages/j-page/username-reminder",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=remind) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-169",
+      "label": "Joomla!",
+      "where": "mainmenu/pages/joomla-content",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-105, which stays"
+    },
+    {
+      "key": "module-170",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "unresolved.module-depends-on-page",
+      "reason": "renders mainmenu from base/start level 101: what it shows depends on the page"
+    },
+    {
+      "key": "module-177",
+      "label": "Mainnav",
+      "where": "mod_menu@mainnav",
+      "rule": "unresolved.module-depends-on-page",
+      "reason": "renders mainmenu from base/start level 101: what it shows depends on the page"
+    }
+  ],
+  "counts": {
+    "menuItems": 8,
+    "modules": 0,
+    "kept": 18,
+    "unresolved": 8
+  }
+}

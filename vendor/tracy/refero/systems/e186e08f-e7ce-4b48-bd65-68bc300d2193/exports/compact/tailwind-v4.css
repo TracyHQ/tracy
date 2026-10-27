@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-cream-paper: #fffcf0;
+  --color-midnight-ink: #000310;
+  --color-pure-press: #000000;
+
+  /* Typography */
+  --font-ldd: 'LDD', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neuemontreal: 'NeueMontreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

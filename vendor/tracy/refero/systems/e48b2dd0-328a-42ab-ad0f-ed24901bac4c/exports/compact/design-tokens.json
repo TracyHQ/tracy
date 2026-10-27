@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#191919",
+      "$type": "color",
+      "$description": "Ink Black — All text, headlines, borders, link colors — the sole foreground color in the entire system. Near-black rather than pure black adds warmth that harmonizes with the cream canvas"
+    },
+    "bone-canvas": {
+      "$value": "#efedea",
+      "$type": "color",
+      "$description": "Bone Canvas — Page background, card surfaces, nav bar — the warm off-white ground that makes the near-black ink read with high contrast (15.1:1 AAA) without feeling harsh or clinical"
+    },
+    "stone-veil": {
+      "$value": "#e3e1de",
+      "$type": "color",
+      "$description": "Stone Veil — Subtle surface variation against Bone Canvas — used sparingly for secondary panels or section backgrounds to create depth without introducing color"
+    }
+  },
+  "font": {
+    "nhm": {
+      "$value": "nhm",
+      "$type": "fontFamily",
+      "$description": "Primary type system spanning body (16-21px) to extreme display (173-185px). Weight 400 carries both the whisper-quiet metadata and the 185px display headlines — the system trusts the scale to create hierarchy rather than reaching for bold weights. Letter-spacing tightens aggressively to -0.05em at display sizes to prevent the large counters from feeling airy."
+    },
+    "psl": {
+      "$value": "psl",
+      "$type": "fontFamily",
+      "$description": "Mid-scale display for subheadings and section titles. Sits between body text and the extreme display tier, carrying -0.015em tracking for controlled density at smaller display sizes."
+    },
+    "psr": {
+      "$value": "psr",
+      "$type": "fontFamily",
+      "$description": "Body text alternative at 21px with normal tracking — used for longer-form passages where the tighter nhm spacing would feel constrained."
+    },
+    "kumbh-sans": {
+      "$value": "Kumbh Sans",
+      "$type": "fontFamily",
+      "$description": "Alternate display family at extreme sizes, sharing the same -0.05em tracking and tight 0.78-0.80 line-height as nhm. Provides a geometric counterpoint to nhm's neo-grotesque character for typographic variation within display lockups."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://adcker.com",
+      "siteName": "Adcker",
+      "extractedAt": "2026-06-03T19:41:03.010Z",
+      "variant": "compact"
+    }
+  }
+}

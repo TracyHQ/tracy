@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "wo-slot-roles/v1",
+  "note": "Where each sourced slot role of `pinned-copy.mjs` lands on an EmDash template, by the template id the engine knows it by (`emdashToolFor`). Read by apps/tracy-web `emdash-wo-copy.js`, which writes these fields in the seed's default locale after the personalize tool. Each role is a group: its fields are written together or not at all, and a group whose collection, entry or field the release's seed no longer has is skipped, never guessed. `from` names the part of the pinned value (`value` is the whole value); `fromRole` takes another role's pinned value into the group, and `else` is what the field holds when that role has none (an empty string clears a line that would otherwise mix the model's words with the restaurant's). A group with `list` writes the fields of that list's items in place, item i from the role's i-th pinned value; the items left over keep their place with those fields emptied. Contact facts (phone, email, address, hours) are NOT here: the tool's `identity` rules write them from the brief (plan B1).",
+  "themes": {
+    "tracy-base": {
+      "package": "tracy-emdash-theme-base",
+      "checked": {
+        "version": "0.5.6",
+        "seedSha256": "e4450591a62cbebab968faca7f816ccb663da3eb0e4f7747b8e62e6983b18330",
+        "personalizeSha256": "c9091f77b4ada862a129bcf4ddb6673b2fd95eb236b83d31477e375f5fbc4a9f",
+        "date": "2026-10-26"
+      },
+      "roles": {
+        "hero.title": {
+          "label": "Home hero title",
+          "collection": "home",
+          "slug": "home",
+          "fields": [{ "field": "hero_title", "from": "value", "kind": "text" }]
+        },
+        "hero.lead": {
+          "label": "Home hero lead",
+          "collection": "home",
+          "slug": "home",
+          "fields": [{ "field": "hero_lead", "from": "value", "kind": "text" }]
+        },
+        "hero.cta": {
+          "label": "Home hero button",
+          "collection": "home",
+          "slug": "home",
+          "fields": [
+            { "field": "hero_cta1_label", "from": "label", "kind": "text" },
+            { "field": "hero_cta1_url", "from": "href", "kind": "link" }
+          ]
+        },
+        "about.story": {
+          "label": "About page story",
+          "collection": "about",
+          "slug": "about",
+          "fields": [
+            { "field": "chapter1_statement", "from": "title", "kind": "text" },
+            { "field": "chapter1_support", "from": "text", "kind": "text" }
+          ]
+        },
+        "testimonial": {
+          "label": "Landing page testimonials",
+          "collection": "landing",
+          "slug": "landing",
+          "list": "testimonials_quotes",
+          "fields": [
+            { "field": "quote", "from": "text", "kind": "text" },
+            { "field": "name", "from": "author", "kind": "text" },
+            { "field": "role", "from": "provider", "kind": "text" }
+          ],
+          "note": "One review per card, word for word, its author and platform beside it. The cards the reviews do not reach keep their place with these three fields emptied, so no fictional client stays. No avatar: the card draws its author's initials from the name. `home.team_quotes` is the studio's own people, never a guest's words."
+        }
+      },
+      "cards": null,
+      "cardsNote": "No card group on Tracy Base can hold a dish: the home page's lists are problems (`problem_items`), what a client gets (`value_items`, with an icon), steps (`how_steps`) and lasting benefits (`features_items`); the services cards are on the one-page variant and the `services` entries are whole pages. Left to the agent."
+    },
+    "tracy-business": {
+      "package": "tracy-emdash-theme-business",
+      "checked": {
+        "version": "1.7.22",
+        "seedSha256": "f269c81281f22c5918ff298a0511b954c71813c0d44c61fcd19eabe37a20e7cf",
+        "personalizeSha256": "ffd519e338fdcc0a59c2096e7f9958448da7475c0326ccf0bcd7f159f653b762",
+        "date": "2026-10-19"
+      },
+      "roles": {
+        "hero.title": {
+          "label": "Home hero title",
+          "collection": "home",
+          "slug": "home",
+          "fields": [
+            { "field": "hero_title_a", "from": "value", "kind": "text" },
+            { "field": "hero_title_b", "fromRole": "hero.accent", "else": "", "kind": "text" }
+          ]
+        },
+        "hero.lead": {
+          "label": "Home hero text",
+          "collection": "home",
+          "slug": "home",
+          "fields": [{ "field": "hero_text", "from": "value", "kind": "text" }]
+        },
+        "hero.cta": {
+          "label": "Home hero button",
+          "collection": "home",
+          "slug": "home",
+          "fields": [
+            { "field": "hero_cta1_label", "from": "label", "kind": "text" },
+            { "field": "hero_cta1_url", "from": "href", "kind": "link" }
+          ]
+        },
+        "about.story": {
+          "label": "About page story",
+          "collection": "about",
+          "slug": "about",
+          "fields": [
+            { "field": "mission_title", "from": "title", "kind": "text" },
+            { "field": "mission_text", "from": "text", "kind": "text" }
+          ]
+        }
+      },
+      "cards": {
+        "label": "Home service cards",
+        "collection": "home",
+        "slug": "home",
+        "field": "services_items",
+        "kind": "repeater",
+        "item": { "title": "title", "text": "text" },
+        "minItems": "all",
+        "note": "The home page's offer cards (number, title, text; no picture, no link of their own). Written only when there are as many dishes as cards, so a dish never sits beside the model's service lines; the number of each card stays."
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "color": {
+    "vellum-sand": {
+      "$value": "#f4e6cd",
+      "$type": "color",
+      "$description": "Vellum Sand — Primary page canvas — the base warm-cream that fills every section, never competing with content"
+    },
+    "pressed-linen": {
+      "$value": "#edddc3",
+      "$type": "color",
+      "$description": "Pressed Linen — Secondary surface for subtle section breaks, link backgrounds, and content cards resting on Vellum Sand"
+    },
+    "aged-ink": {
+      "$value": "#1e211e",
+      "$type": "color",
+      "$description": "Aged Ink — Dominant text and hairline border color — near-black with a touch of warmth, used for 95% of all rules, headings, and body copy"
+    },
+    "charcoal-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal Black — Hard ink for display headings, icon fills, and the strongest contrast moments where absolute black reads better than warm"
+    },
+    "twilight-bronze": {
+      "$value": "#8f774b",
+      "$type": "color",
+      "$description": "Twilight Bronze — Gradient stop — the deepest tone in the vertical vellum wash, used only inside the hero gradient"
+    },
+    "hayfield": {
+      "$value": "#ba9d6a",
+      "$type": "color",
+      "$description": "Hayfield — Gradient midtone — the saturated middle of the vertical wash, gives the canvas its sun-warmed depth"
+    },
+    "wheat-sheaf": {
+      "$value": "#d6bd97",
+      "$type": "color",
+      "$description": "Wheat Sheaf — Gradient light tone — the transition stop between the warm mid and the Vellum base"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across every screen. Body text sits at 16–20px weight 400; subheadings lift to 24–26px weight 500; display headlines scale dramatically from 75px through 122px to 158–173px at weight 500. The signature move is this extreme display scaling — the same family at 14px captions and 173px hero headlines proves the typeface can carry both whispered body copy and shouted editorial moments without switching personality."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.leandra-isler.ch",
+      "siteName": "Leandra-isler",
+      "extractedAt": "2026-06-03T17:59:59.853Z",
+      "variant": "compact"
+    }
+  }
+}

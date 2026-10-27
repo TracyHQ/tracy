@@ -1,0 +1,13 @@
+{
+  "failed": "Không thể hiển thị hình ảnh này.",
+  "loading": "Đang hiển thị tài liệu...",
+  "preview": "Xem trước hình ảnh: {name}",
+  "title": "Hình ảnh",
+  "unsupported": "Xem trước hình ảnh cần toàn bộ nội dung tệp.",
+  "zoomControls": "Điều khiển thu phóng",
+  "zoomFitWidth": "Vừa chiều rộng",
+  "zoomIn": "Phóng to",
+  "zoomMenu": "Chọn mức thu phóng",
+  "zoomOut": "Thu nhỏ",
+  "zoomValue": "{percent}%"
+}

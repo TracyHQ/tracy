@@ -1,0 +1,35 @@
+{
+  "name": "@tracy/desktop",
+  "version": "0.6.1",
+  "private": true,
+  "description": "Tracy Cowork on the Dock: an Electron shell around the native profile",
+  "license": "MIT",
+  "main": "src/main.js",
+  "scripts": {
+    "build:shell": "node build/build-shell.mjs",
+    "dev": "node build/build-shell.mjs && electron .",
+    "debug": "node build/build-shell.mjs && electron --inspect=0 --remote-debugging-port=0 .",
+    "start": "pnpm run dev",
+    "icon": "bash build/make-icon.sh",
+    "package": "bash build/package.sh",
+    "preview": "TRACY_DESKTOP_VARIANT=preview bash build/package.sh",
+    "release:prepare": "node build/release.mjs prepare",
+    "release:publish": "node build/release.mjs publish",
+    "test": "node --test test/*.test.mjs",
+    "e2e:smoke": "node test/e2e/smoke.mjs",
+    "attach": "node test/e2e/attach.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/desktop/tracy-desktop"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.9"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-atomic-write": "workspace:*",
+    "@deepseek-ai/dsh-client-shortcuts": "workspace:*",
+    "@electron/fuses": "2.1.3",
+    "@electron/packager": "^19.0.0",
+    "@electron/universal": "3.0.6",
+    "electron": "44.7.0",
+    "esbuild": "0.25.12"
+  }
+}

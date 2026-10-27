@@ -1,0 +1,69 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, work-thumbnail backings"
+    },
+    "newsprint": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Newsprint — Primary text, dominant hairline borders, image outlines"
+    },
+    "faint-gray": {
+      "$value": "#a7a7a7",
+      "$type": "color",
+      "$description": "Faint Gray — Muted text, secondary borders, caption-scale copy"
+    },
+    "typesetter-gray": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Typesetter Gray — Display-weight text, large heading fills where contrast is intentionally reduced"
+    },
+    "rule-gray": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Rule Gray — Hairline dividers, icon strokes, light borders"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Nav text and nav borders, maximum-contrast moments"
+    },
+    "press-black": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Press Black — Nav foreground, slight off-black for body nav links"
+    },
+    "footnote": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Footnote — Outlined link borders, secondary link text — a quiet hover/focus state"
+    },
+    "hi-liter-wash": {
+      "$value": "#f5ffbe",
+      "$type": "color",
+      "$description": "Hi-Liter Wash — The single chromatic moment — a warm pale-yellow surface used as a full-bleed band, never as fill or text"
+    }
+  },
+  "font": {
+    "instrumentsans": {
+      "$value": "Instrumentsans",
+      "$type": "fontFamily",
+      "$description": "All display, heading, nav, and caption text. Condensed sans with very tight tracking. The 86px/0.83 line-height is the signature move — type runs together vertically, producing the broadsheet effect. Substitute with 'Archivo Narrow' (600, 700) or 'Roboto Condensed' (700)."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Body, metadata, link copy, and supporting micro-text. Tracked extremely tight (-0.214em ≈ -3px at 14px), which is a counter-intuitive choice for body — it reads as a typesetter pulling body to match the display weight. Substitute with system Arial or 'Helvetica Neue'."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.tparkes.com",
+      "siteName": "Tparkes",
+      "extractedAt": "2026-06-03T21:13:38.288Z",
+      "variant": "compact"
+    }
+  }
+}

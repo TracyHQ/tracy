@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-twilight-navy: #25385b;
+  --color-periwinkle-sky: #a2b0ff;
+  --color-dusk-indigo: #0a0a3a;
+  --color-cobalt-pop: #3252f4;
+  --color-coral-blush: #ff5a5a;
+  --color-cloud-white: #ffffff;
+  --color-cream-linen: #fffcef;
+  --color-slate-mist: #84849c;
+  --color-onyx: #000000;
+
+  /* Typography */
+  --font-sharp-grotesk-web: 'Sharp Grotesk Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-recess-script-logo: 'Recess Script (logo)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-adobe-blank: 'Adobe Blank', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,427 @@
+{
+  "color": {
+    "ledger-navy": {
+      "$value": "#09234f",
+      "$type": "color",
+      "$description": "Ledger Navy — Hero bands, dark navigation, footer fields, and filled conversion controls — a dense blue-black base makes the electric interface panels appear illuminated"
+    },
+    "registry-blue": {
+      "$value": "#384ce3",
+      "$type": "color",
+      "$description": "Registry Blue — Product-console fields, logo marks, data-grid illumination, and active visual accents — vivid blue reads as a live system signal against Ledger Navy"
+    },
+    "network-teal": {
+      "$value": "#1888a2",
+      "$type": "color",
+      "$description": "Network Teal — Large feature-panel backgrounds and linked capability blocks — teal separates a data domain from the navy-and-blue product environment"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page backgrounds, light header surfaces, cards, reversed type, logo rails, and hairline divisions"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Editorial headlines, body copy, black feature panels, customer marks, and dark interface text"
+    },
+    "carbon": {
+      "$value": "#121012",
+      "$type": "color",
+      "$description": "Carbon — Near-black feature surfaces and dark data-card backgrounds"
+    },
+    "mint-paper": {
+      "$value": "#eff5f0",
+      "$type": "color",
+      "$description": "Mint Paper — Pale alternate panels, metric-card surfaces, and subdued content blocks"
+    },
+    "sky-paper": {
+      "$value": "#c4f0ff",
+      "$type": "color",
+      "$description": "Sky Paper — Pale blue feature surfaces, interface outlines, and diagram highlights"
+    },
+    "rule-gray": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Rule Gray — 1px navigation separators, card divisions, and light-page rules"
+    },
+    "steel-rule": {
+      "$value": "#ced3dc",
+      "$type": "color",
+      "$description": "Steel Rule — Cool 1px borders around light navigation controls and structured interface fields"
+    },
+    "quiet-gray": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Quiet Gray — Muted interface text and secondary navigation copy"
+    }
+  },
+  "font": {
+    "season-vf": {
+      "$value": "Season VF",
+      "$type": "fontFamily",
+      "$description": "Editorial display and section headings. The 515 variable weight avoids the hard authority of a bold headline; its near-touching 1.02 leading lets multi-line statements behave like a single typographic object."
+    },
+    "uncut-sans": {
+      "$value": "Uncut Sans",
+      "$type": "fontFamily",
+      "$description": "Navigation, body copy, panel headings, cards, lists, and product-interface labels. Tight tracking at larger sans steps gives diagrams and capability panels a compressed technical cadence."
+    },
+    "modern-era-mono": {
+      "$value": "Modern Era Mono",
+      "$type": "fontFamily",
+      "$description": "Uppercase eyebrow labels, links, navigation utilities, status language, and button text. Mono labels make calls to action and field annotations feel like instructions from the verification system rather than promotional UI."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Modern Era Mono",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.15,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "13px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Modern Era Mono",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.15,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 0.8,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Modern Era Mono",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.15,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.009em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.009em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "xl-3": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "22px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-3 at 22px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.35,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "30px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.023em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 30px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Season VF",
+        "fontSize": "40px",
+        "fontWeight": 515,
+        "lineHeight": 1.15,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 40px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Season VF",
+        "fontSize": "48px",
+        "fontWeight": 515,
+        "lineHeight": 1.1,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Season VF",
+        "fontSize": "56px",
+        "fontWeight": 515,
+        "lineHeight": 1.02,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 56px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "60px",
+        "fontWeight": 500,
+        "lineHeight": 0.8,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 60px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "Uncut Sans",
+        "fontSize": "64px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 64px"
+    },
+    "5xl-5": {
+      "$value": {
+        "fontFamily": "Season VF",
+        "fontSize": "72px",
+        "fontWeight": 515,
+        "lineHeight": 1.02,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-5 at 72px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "28": {
+      "$value": "28px",
+      "$type": "dimension",
+      "$description": "Spacing 28px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "52": {
+      "$value": "52px",
+      "$type": "dimension",
+      "$description": "Spacing 52px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "164": {
+      "$value": "164px",
+      "$type": "dimension",
+      "$description": "Spacing 164px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    }
+  },
+  "surface": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Default page canvas, customer-story field, logo rail, and light header."
+    },
+    "mint-paper": {
+      "$value": "#eff5f0",
+      "$type": "color",
+      "$description": "Surface level 1: Alternate metric and capability panel."
+    },
+    "sky-paper": {
+      "$value": "#c4f0ff",
+      "$type": "color",
+      "$description": "Surface level 2: Pale technical panel and interface highlight."
+    },
+    "ledger-navy": {
+      "$value": "#09234f",
+      "$type": "color",
+      "$description": "Surface level 3: Hero, dark navigation, footer, and product-system field."
+    },
+    "carbon": {
+      "$value": "#121012",
+      "$type": "color",
+      "$description": "Surface level 4: Highest-contrast capability block and dark data-card surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://baselayer.com",
+      "siteName": "Baselayer",
+      "extractedAt": "2026-09-20T19:28:44.819Z",
+      "variant": "extended"
+    }
+  }
+}

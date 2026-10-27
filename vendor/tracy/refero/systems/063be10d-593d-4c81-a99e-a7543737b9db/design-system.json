@@ -1,0 +1,274 @@
+{
+  "dos": [
+    "Use #5f79ff filled pills with 100px radius for every primary action — never rectangular CTAs.",
+    "Pair the two typefaces deliberately: OS Chronik 300 for editorial moments (hero, section openers, large quotes), OS Studio Grotesk 400 for everything functional.",
+    "Keep cards flat with 1px hairline borders at #a6a6a6 or #f5f5f5 — no drop shadows on content surfaces.",
+    "Apply -0.020em letter-spacing at 72px display and -0.017em at 20–24px UI sizes; let the negative tracking do the tightening work.",
+    "Center editorial headlines on pure white with no decoration — the OS Chronik 300 weight is the visual event.",
+    "Use 16px radius for all cards, images, and nav containers — the 100px pill is reserved exclusively for buttons and badges.",
+    "Apply the mint-violet-black section stripe only as a closing band, not as inline decoration."
+  ],
+  "donts": [
+    "Don't use drop shadows on cards, buttons, or images — shadow is reserved for the floating nav.",
+    "Don't push the serif above weight 300 — heavier weights break the whisper-quiet editorial voice.",
+    "Don't introduce additional accent colors — the system is monochromatic with exactly two chromatic notes.",
+    "Don't use rectangular buttons with 4–8px radius; the pill shape is a system commitment.",
+    "Don't apply gradients to surfaces; the only gradient-adjacent element is the tri-color section stripe.",
+    "Don't set body text below 13px or above 18px — the 15px body / 13px small / 18px subhead range is the readable band.",
+    "Don't use #01fe93 as a CTA fill — mint is a status/accent role, not an action color."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#5f79ff",
+      "name": "Signal Violet",
+      "role": "Primary action fill, active nav state, icon accent strokes, focused border — the single chromatic anchor that makes buttons feel switched on against the white canvas",
+      "group": "brand"
+    },
+    {
+      "hex": "#01fe93",
+      "name": "Mint Pulse",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page background, card surface, button text on violet fill, inverted surface for nav float",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary text, heading text, hairline borders, icon strokes, footer ink",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Fog Gray",
+      "role": "Card surface lift, subtle background blocks, muted link backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a6a6a6",
+      "name": "Mist Gray",
+      "role": "Muted nav text, secondary borders, placeholder strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4d4d",
+      "name": "Ash Gray",
+      "role": "Body secondary text, subdued copy, supporting label color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9c9c9c",
+      "name": "Smoke Gray",
+      "role": "Tertiary borders, disabled or inactive outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#707070",
+      "name": "Slate Gray",
+      "role": "Helper text, metadata, fine print",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page uses a max-width 1200px centered container with generous outer white space. The hero is a vertically centered stack with decorative sparkles and a large display word, followed by a full-width editorial headline block. Content sections alternate between centered text blocks and 3-column card grids (docs, economics, whitepaper) with horizontal scroll capability. The floating nav is the only element that breaks the page rhythm — it sits elevated above the content with a soft 48px shadow halo. Section transitions use full-bleed colored stripes rather than whitespace gaps. Overall density is comfortable with 80px section gaps and 24px card padding, creating a gallery-like breathing rhythm.",
+  "imagery": "Imagery is sparse and deliberate. The hero uses abstract decorative elements only — small four-pointed sparkle shapes and circles in light violet at low opacity, plus a single italicized word 'Run' as a visual anchor. Content cards use two image modes: clean editorial photography on the left edge (portrait crops with hard cut, no rounded treatment on the photo itself beyond the 16px card radius) and dark network-graph illustrations with green/teal neural-network visualization on dark backgrounds. No lifestyle photography, no staged scenes, no 3D renders — imagery either documents (whitepaper covers, document photos) or diagrams (AI agent network topologies). The visual language treats imagery as informational, not emotional.",
+  "similar": [
+    {
+      "why": "Same white-canvas minimalism with a single vivid chromatic accent for actions, hairline-bordered flat cards, and tight geometric sans-serif UI typography",
+      "business": "Linear"
+    },
+    {
+      "why": "Near-identical floating pill nav bar, generous section whitespace, pure white surfaces with no decorative shadows, and rationed single-accent color usage",
+      "business": "Vercel"
+    },
+    {
+      "why": "Editorial serif headlines paired with clean grotesque body type, gradient-free flat surfaces, and the same gallery-like document-card grid rhythm",
+      "business": "Stripe"
+    },
+    {
+      "why": "Restrained typography with intentional weight contrast between display and body, off-white card surfaces, and minimal use of a single brand chromatic",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Pill-shaped primary CTAs, light-mode interface with floating elevated nav, and the same pattern of decorative atmospheric shapes (sparkles, dots) around display type",
+      "business": "Framer"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "16px",
+      "cards": "16px",
+      "badges": "100px",
+      "images": "16px",
+      "inputs": "12px",
+      "buttons": "100px"
+    },
+    "elementGap": "10-20px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — pure white, no texture"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Elevated content blocks and soft surface distinction"
+    },
+    {
+      "hex": "#d9defc",
+      "name": "Tint Wash",
+      "level": 2,
+      "purpose": "Subtle violet-tinted accent surface for highlighted panels"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 0px 48px 0px rgba(0, 0, 0, 0.1)",
+      "element": "Floating Nav Bar"
+    }
+  ],
+  "northStar": "Bright blueprint on frosted glass",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.18
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 0.9,
+      "letterSpacing": -1.44
+    }
+  ],
+  "components": [
+    {
+      "name": "Floating Nav Bar",
+      "role": "Primary site navigation",
+      "description": "Pill-shaped container with #ffffff background, 16px border radius, 48px soft shadow, containing logo lockup left, center nav links in OS Studio Grotesk 15px #000000, and a violet pill CTA on the right. The bar floats with generous top margin and does not span full width — it lives centered with white space on both sides."
+    },
+    {
+      "name": "Violet Pill CTA",
+      "role": "Primary action button",
+      "description": "Filled #5f79ff background, white text in OS Studio Grotesk 15px weight 400, 100px border radius (fully rounded), 10px vertical padding, 18–20px horizontal padding. Arrow glyph in white after label. Used for 'Open App', 'Read', 'See More' style actions."
+    },
+    {
+      "name": "Ghost Nav Link",
+      "role": "Secondary navigation",
+      "description": "Text-only, no background, OS Studio Grotesk 15px #000000, 8px horizontal padding. No underline, no hover fill — hover state only shifts color toward #5f79ff."
+    },
+    {
+      "name": "Content Card",
+      "role": "Categorical content tile (Docs, Economics, Whitepaper)",
+      "description": "White background with 1px #f5f5f5 or #a6a6a6 border, 16px border radius, 24px internal padding. Header label in violet (#5f79ff) caption weight, title in OS Studio Grotesk 20–24px #000000, body copy in 15px #4d4d4d. Footer row with violet pill button left and a circular plus/expand button right at 40px diameter."
+    },
+    {
+      "name": "Highlight Card",
+      "role": "Featured content with image",
+      "description": "Same structure as Content Card but with a 16px radius image block filling 40–50% of the card height. Images are full-bleed within the card with no internal padding; can be dark photographic or network-graph illustrations."
+    },
+    {
+      "name": "Editorial Headline Block",
+      "role": "Section title with editorial typography",
+      "description": "Centered stack on pure white. Display heading in OS Chronik 300 at 72px, color #000000, letter-spacing -1.44px, line-height 0.9. Supporting subtitle in OS Studio Grotesk 18–20px #4d4d4d below with 16–20px gap. No decorative elements — the typography does all the work."
+    },
+    {
+      "name": "Decorative Sparkle",
+      "role": "Atmospheric hero illustration",
+      "description": "Four-pointed star shapes and small circles in #d9defc or light violet at 10–20% opacity, scattered asymmetrically around display text. Acts as subtle atmosphere without competing with the headline."
+    },
+    {
+      "name": "Section Divider Stripe",
+      "role": "Visual break between content bands",
+      "description": "A thin 2–4px tall band running full-bleed at the page edge, split into segments of #01fe93, #5f79ff, and #000000. Functions as a section closer and brand recolor in a single line."
+    },
+    {
+      "name": "Logo Lockup",
+      "role": "Brand mark in nav and footer",
+      "description": "Circular concentric ring icon in #000000 paired with 'OpenServ' wordmark in OS Studio Grotesk 400 #000000, 15px. Icon sits flush-left of wordmark with 8px gap."
+    },
+    {
+      "name": "Expand Button",
+      "role": "Card action affordance",
+      "description": "Circular 40px diameter button with 1px #a6a6a6 border, white fill, containing a thin '+' glyph in #000000. Sits bottom-right of content cards to invite interaction."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary UI and body typeface — geometric grotesque used for nav, buttons, body copy, cards, and most interface text at sizes 12–24px. At 40–72px it serves as secondary display when paired with the serif. Slightly negative tracking (-0.017em to -0.020em) tightens dense UI labels.",
+      "sizes": "12px, 13px, 15px, 20px, 22px, 24px, 30px, 40px, 72px",
+      "family": "OS Studio Grotesk",
+      "weight": "400",
+      "lineHeight": "0.90, 1.00, 1.10, 1.14, 1.18, 1.25, 1.40",
+      "substitute": "Inter, Manrope, or DM Sans",
+      "letterSpacing": "-0.02em to -0.017em",
+      "fontFeatureSettings": "\"blwf\" on, \"cv03\" on, \"cv04\" on, \"cv09\" on, \"cv11\" on"
+    },
+    {
+      "role": "Display serif used for editorial headlines like 'Build • Launch • Run' and 'Join the Appcelerator' — the 300 weight is the signature: most product sites push serifs to 400–600, but this light cut lets headlines read as quiet announcements rather than shouts. Tighter tracking at 72px (-0.020em) keeps the long descenders visually anchored.",
+      "sizes": "18px, 24px, 34px, 72px",
+      "family": "OS Chronik",
+      "weight": "300",
+      "lineHeight": "0.90, 1.00, 1.10, 1.20",
+      "substitute": "Cormorant Garamond Light, Playfair Display Light, or EB Garamond Light",
+      "letterSpacing": "-0.020em at 72px, -0.015em at 24–34px",
+      "fontFeatureSettings": "\"blwf\" on, \"cv03\" on, \"cv04\" on, \"cv09\" on, \"cv11\" on"
+    }
+  ],
+  "description": "OpenServ operates in a bright, almost gallery-like visual register: pure white canvas, hairline-bordered surface cards, and two high-contrast typographic voices — a geometric grotesque for UI and a whisper-light transitional serif for headlines and section moments. Color is rationed: a single vivid violet (#5f79ff) carries every interactive moment, while a saturated mint (#01fe93) flashes only on success, highlights, and a thin gradient stripe at section boundaries. The interface is deliberately unweighted — no drop shadows on content, no decorative gradients, no emoji-grade illustration. Rounded geometry at 16px for surfaces and 100px for action buttons gives the whole product a soft, optimistic feel without sliding into the rounded-everything SaaS template.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #000000 (headings, body), #4d4d4d (secondary), #a6a6a6 (muted)\n- background: #ffffff (canvas), #f5f5f5 (card lift)\n- border: #a6a6a6 (hairline), #5f79ff (focused/action)\n- accent: #01fe93 (status, highlight)\n- primary action: #5f79ff (filled action)\n\nExample Component Prompts:\n\n1. Create a floating nav bar: white (#ffffff) pill background, 16px radius, centered horizontally with 24px top margin, 48px soft shadow (0px 0px 48px rgba(0,0,0,0.1)). Inside: logo lockup (concentric ring icon + 'OpenServ' in OS Studio Grotesk 15px #000000) on the left, nav links ('Builders', 'Research', 'Blog', 'Partners', 'Team') centered in 15px #000000 with 16px gaps, and a violet pill CTA ('Open App ↗') on the right with #5f79ff fill, white text, 100px radius, 10px/20px padding.\n\n2. Create an editorial hero headline: centered on pure white canvas, headline in OS Chronik 300 at 72px #000000 with letter-spacing -1.44px and line-height 0.9. Below at 20px gap, subtitle in OS Studio Grotesk 18px #4d4d4d. Decorate with three small four-pointed sparkle shapes in #d9defc at 15% opacity scattered asymmetrically around the headline.\n\n3. Create a content card grid: three equal-width cards in a row with 20px gaps. Each card: white background, 1px #f5f5f5 border, 16px radius, 24px padding. Card 1 header: 'Docs' in #5f79ff 12px caption, title 'Whitepaper' in OS Studio Grotesk 20px #000000, body in 15px #4d4d4d. Footer: violet pill button ('Read', #5f79ff fill, white text, 100px radius) on left, circular 40px '+' button with 1px #a6a6a6 border on right.\n\n4. Create a section divider: a 3px tall full-bleed band at the page bottom, split into three segments — left third #01fe93, middle third #5f79ff, right third #000000 — sitting flush against the next section with no padding above or below.\n\n5. Create a highlight card: white card with 1px #a6a6a6 border, 16px radius. Top half: 16px radius image area filled with a dark (#0a0a0a) background showing a green-teal neural network graph (thin lines connecting small nodes in #01fe93 and #5f79ff at 60% opacity). Bottom half: 24px padding with title in OS Studio Grotesk 24px #000000, body in 15px #4d4d4d, and a violet pill 'Read' button at the bottom-left."
+    },
+    {
+      "title": "Typography Pairing Logic",
+      "content": "The system uses exactly two typefaces with strict role separation. OS Studio Grotesk (geometric grotesque, weight 400 only) handles all functional UI: nav, buttons, labels, body copy, card titles, metadata. OS Chronik (transitional serif, weight 300 only) handles editorial moments: hero display text, section openers, large pull-quotes, the 'Build • Launch • Run' style statements. The 300 serif weight is anti-convention — most brands push serif headlines to 400–700 for authority; here the whisper weight creates authority through restraint, letting the violet action color carry the system's assertiveness. The grotesque stays at 400 throughout to avoid competing with the serif's lightness. Negative letter-spacing tightens both faces at larger sizes (-0.020em at 72px display, -0.017em at 20–24px subhead) and relaxes toward 0 at 12–15px body sizes."
+    }
+  ],
+  "elevationPhilosophy": "The design system intentionally avoids shadows on content surfaces — cards, buttons, and images sit flat on the canvas with only hairline borders for definition. The single shadow in the system is reserved for the floating nav bar, which detaches from the page to read as a distinct navigation layer. All other depth is communicated through color contrast and surface tinting rather than cast shadow."
+}

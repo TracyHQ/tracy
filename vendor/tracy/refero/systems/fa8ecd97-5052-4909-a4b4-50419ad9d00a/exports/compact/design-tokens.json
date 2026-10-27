@@ -1,0 +1,119 @@
+{
+  "color": {
+    "iris": {
+      "$value": "#624de3",
+      "$type": "color",
+      "$description": "Iris — Primary brand color — gradient headline text, icon strokes, accent borders, focal links. The only chromatic voice in the system; appears sparingly to make accents feel like punctuation rather than decoration"
+    },
+    "soft-iris": {
+      "$value": "#8d4af7",
+      "$type": "color",
+      "$description": "Soft Iris — Gradient tail for the brand violet — the lighter stop in hero headline gradients. Paired with #1d58c0 and #009639 only inside the carousel card color-blocks, not in chrome"
+    },
+    "studio-slate": {
+      "$value": "#1a1d1e",
+      "$type": "color",
+      "$description": "Studio Slate — Primary text, dark filled buttons, body borders, heading strokes. The working near-black that carries 90% of the interface's weight"
+    },
+    "obsidian": {
+      "$value": "#151718",
+      "$type": "color",
+      "$description": "Obsidian — Hero and section background fill — the deep dark behind the gradient headline and 3D illustration. Slightly cooler/lighter than pure black to keep the violet legible"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Light-theme canvas, card surfaces, button text on dark fills, hero overlay text"
+    },
+    "cloud": {
+      "$value": "#f6f7f9",
+      "$type": "color",
+      "$description": "Cloud — Soft alternate surface — sits beneath white cards for subtle banding between content sections"
+    },
+    "mist": {
+      "$value": "#ebedef",
+      "$type": "color",
+      "$description": "Mist — Hairline card and stroke surface, secondary card backgrounds in quiet zones"
+    },
+    "graphite": {
+      "$value": "#8d8e8f",
+      "$type": "color",
+      "$description": "Graphite — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "iron": {
+      "$value": "#5f6162",
+      "$type": "color",
+      "$description": "Iron — Secondary text and secondary borders — one step stronger than Graphite for body sub-copy that still needs to recede"
+    },
+    "noir": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Noir — Highest-contrast text and the dominant border color across all surfaces. Used where maximum legibility or definition is needed"
+    },
+    "cobalt-pop": {
+      "$value": "#1d58c0",
+      "$type": "color",
+      "$description": "Cobalt Pop — Carousel testimonial card accent background — appears as a solid color block beside the violet and green variants, not used in chrome"
+    },
+    "fern-pop": {
+      "$value": "#009639",
+      "$type": "color",
+      "$description": "Fern Pop — Carousel testimonial card accent background — third slot in the rotating brand color trio. Decorative only"
+    },
+    "lilac-wash": {
+      "$value": "#f1eefe",
+      "$type": "color",
+      "$description": "Lilac Wash — Soft purple-tinted card surface used in the testimonial carousel — echoes the brand violet at 8% saturation"
+    },
+    "mint-wash": {
+      "$value": "#e5fbeb",
+      "$type": "color",
+      "$description": "Mint Wash — Soft green-tinted card surface in the testimonial carousel — companion to the Fern Pop color block"
+    },
+    "apricot-wash": {
+      "$value": "#feeadd",
+      "$type": "color",
+      "$description": "Apricot Wash — Soft warm card surface in the testimonial carousel — third pastel slot matching the apricot color block"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "The single typeface for the entire system. Regular (400) for body and micro-copy, Medium (500) for emphasized inline, SemiBold (600) for subheadings and UI labels at -0.031em tracking, Bold (700) reserved for the two display headlines (48px and 64px) at -0.021em / -0.016em. The negative letter-spacing on large sizes is what gives the wordmark its tight, poster-like feel; smaller sizes stay at normal tracking."
+    },
+    "fira-code": {
+      "$value": "Fira Code",
+      "$type": "fontFamily",
+      "$description": "Inline code and token-name strings in the product mockup illustration. The only monospace voice; appears only inside the hero 3D scene, not in body copy."
+    },
+    "inter-medium": {
+      "$value": "Inter-Medium",
+      "$type": "fontFamily",
+      "$description": "Inter-Medium — detected in extracted data but not described by AI"
+    },
+    "inter-semibold": {
+      "$value": "Inter-SemiBold",
+      "$type": "fontFamily",
+      "$description": "Inter-SemiBold — detected in extracted data but not described by AI"
+    },
+    "inter-bold": {
+      "$value": "Inter-Bold",
+      "$type": "fontFamily",
+      "$description": "Inter-Bold — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://specifyapp.com",
+      "siteName": "Specify",
+      "extractedAt": "2026-06-03T18:41:53.827Z",
+      "variant": "compact"
+    }
+  }
+}

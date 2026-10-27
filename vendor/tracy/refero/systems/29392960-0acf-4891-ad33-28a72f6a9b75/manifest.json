@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "29392960-0acf-4891-ad33-28a72f6a9b75",
+  "status": "complete",
+  "name": "WalletConnect",
+  "url": "https://styles.refero.design/style/29392960-0acf-4891-ad33-28a72f6a9b75",
+  "sourceWebsite": "https://walletconnect.com",
+  "extractedAt": "2026-06-03T20:32:27.494Z",
+  "capturedAt": "2026-10-08T05:09:32.840313+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "Cobalt obelisks on parchment — saturated blue monoliths floating above a warm white desert, with rounded edges that soften the tech seriousness.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/829e4017-575c-4479-87d6-7c53b7dc0765.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f53289abf29b84daacc9b7c7062d809977c1c6014ce607a644adc169631019b7",
+      "bytes": 23029
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b895038bb0564decf995097962e83ce2041a4931decc9fb1c3b57ec4968cc6dd",
+      "bytes": 178762
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c8e5786d74d15a5736cd3903fe7f641f099ba95cb44aebf452355291deeab3ba",
+      "bytes": 20263
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "008cdfbd7921839e36e64dd1e1e17c9d79ebaaec65bb25bad40f936283977e48",
+      "bytes": 13126
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f1fe60aae850c2b2bc7495cd706d25ade52186c746548da8d2cb3c64caacae13",
+      "bytes": 14702
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e944ce11941a6fe260552fe9f8397316615d8695a1b30b88b78c67d63e77257f",
+      "bytes": 5056
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "56d35a46ef80ece71dbca4adcf5b7afae7c1e845bedee42c348e8d64ce801da8",
+      "bytes": 889
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8528f482f12db980a88c20795c02be5bcf4e7b96aa790f8b89b0007f64ffe929",
+      "bytes": 1027
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "fe83101c638fb30c6447800ef8bebabbacb9559e1b9019669c6f38f6d6198a01",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "49c0d75b7a5ea110c8a1851072fae8b53589dfe519b2eff3b73e15a6edf7d1fb",
+      "bytes": 48161
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "81c57214080b71b00ad4c10fd2557a7cf11c07dea8af8f62be75ffbc9acd9b1f",
+      "bytes": 24867
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "21abc485da1e2f2078e7b6900a50f583b02189f80dae1124a3864aa13ec61159",
+      "bytes": 55817
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2ccc160305997d286e9ca24b59e63adc884487d8e2acccc707dbc4b670e72212",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "84778aa6a93d4fef26ee4abfd2cd1dba18ac8f2a7b9f3fa5560ece64729382ee",
+      "bytes": 1626
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a117d5ed593f869df84b645d9b52ee4c4097469631fa57b452ecdefb5cc0c8f4",
+      "bytes": 2383
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "29392960-0acf-4891-ad33-28a72f6a9b75",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "46c16139-b0bb-49e6-95dc-74bef576e5ce",
+    "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+    "4d1d50ff-18b8-4acf-a356-48eb5c414711",
+    "530eb4cf-7e75-4833-95c9-746818050db7",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "88b02f2c-d82e-495a-8fb6-e750a0fb1211",
+    "a74d60e1-0a09-48a1-8721-13f1f45727f1",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "e5b95270-9148-417a-89c6-32138d83a251",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

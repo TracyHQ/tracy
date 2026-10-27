@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-forest-floor: #0b7443;
+  --color-deep-moss: #054f31;
+  --color-vivid-leaf: #61bc76;
+  --color-bright-sprout: #039855;
+  --color-mint-wash: #d1fadf;
+  --color-warm-putty: #715039;
+  --color-sandstone: #d1a883;
+  --color-apricot-cream: #fee9d1;
+  --color-paper-white: #ffffff;
+  --color-soft-mist: #eceff4;
+  --color-pale-stone: #f4f4f4;
+  --color-graphite-text: #5b616b;
+  --color-ink-black: #000000;
+
+  /* Typography */
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

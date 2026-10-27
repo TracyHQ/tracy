@@ -1,0 +1,16 @@
+{
+  "name": "joomlart-t4-template",
+  "license": "MIT",
+  "version": "1.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Build a customer Joomla website from a selected JoomlArt T4 quickstart and any design input; verify and package the finished site.",
+  "scripts": {
+    "test": "node --test scripts/test/*.test.mjs"
+  },
+  "dependencies": {
+    "jsdom": "^25.0.0",
+    "playwright": "^1.49.0",
+    "sass": "1.104.0"
+  }
+}

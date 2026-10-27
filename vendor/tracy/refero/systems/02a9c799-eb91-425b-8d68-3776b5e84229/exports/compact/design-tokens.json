@@ -1,0 +1,134 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#00063d",
+      "$type": "color",
+      "$description": "Midnight Ink — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "signal-coral": {
+      "$value": "#fa4028",
+      "$type": "color",
+      "$description": "Signal Coral — Accent links, inline emphasis, illustrative highlights — vivid warm coral that cuts through the pastel system"
+    },
+    "merlot": {
+      "$value": "#5a003c",
+      "$type": "color",
+      "$description": "Merlot — Decorative icon accent, tag text, secondary brand touch — deep wine magenta used sparingly for typographic and icon moments"
+    },
+    "forest-floor": {
+      "$value": "#103a00",
+      "$type": "color",
+      "$description": "Forest Floor — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "ember": {
+      "$value": "#fa7560",
+      "$type": "color",
+      "$description": "Ember — Card backgrounds, warm tag fills, soft section washes — pastel coral sibling of Signal Coral"
+    },
+    "coral-mist": {
+      "$value": "#ffe8e2",
+      "$type": "color",
+      "$description": "Coral Mist — Soft card surface, badge fill — near-white coral wash for warm category cards"
+    },
+    "sky": {
+      "$value": "#0095ff",
+      "$type": "color",
+      "$description": "Sky — Card accents, illustration strokes, icon highlights — vivid blue used as a cool counterpoint in the pastel palette"
+    },
+    "sky-mist": {
+      "$value": "#ceebff",
+      "$type": "color",
+      "$description": "Sky Mist — Gray supporting accent for decorative details and low-frequency emphasis"
+    },
+    "mint": {
+      "$value": "#45ff00",
+      "$type": "color",
+      "$description": "Mint — Card accents and illustration strokes — vivid electric green used as playful punctuation"
+    },
+    "mint-mist": {
+      "$value": "#e6ffd9",
+      "$type": "color",
+      "$description": "Mint Mist — Soft green card surface — pale mint wash for category cards"
+    },
+    "butter": {
+      "$value": "#fff67d",
+      "$type": "color",
+      "$description": "Butter — Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "buttercream": {
+      "$value": "#fffbb7",
+      "$type": "color",
+      "$description": "Buttercream — Pale card surface, subtle section wash — cream yellow"
+    },
+    "lilac": {
+      "$value": "#7c5ac4",
+      "$type": "color",
+      "$description": "Lilac — Decorative icon and illustration accent — vivid violet used in flat graphics"
+    },
+    "lilac-mist": {
+      "$value": "#e7e3f7",
+      "$type": "color",
+      "$description": "Lilac Mist — Pale lilac card surface — wash for cool category cards"
+    },
+    "blush": {
+      "$value": "#ffb3de",
+      "$type": "color",
+      "$description": "Blush — Decorative badge fill, soft pink wash — mid-saturation pink"
+    },
+    "blush-veil": {
+      "$value": "#ffe6f3",
+      "$type": "color",
+      "$description": "Blush Veil — Pale pink card surface and badge background"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, button text on dark fills"
+    },
+    "bone": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Bone — Alternate card surface, subtle section background"
+    },
+    "shell": {
+      "$value": "#fff7f5",
+      "$type": "color",
+      "$description": "Shell — Warm-tinted card surface, badge fill with coral undertones"
+    },
+    "graphite": {
+      "$value": "#5e5d5f",
+      "$type": "color",
+      "$description": "Graphite — Muted icon stroke, secondary text, illustration outline — neutral gray for graphic line work"
+    },
+    "cream": {
+      "$value": "#fffdd9",
+      "$type": "color",
+      "$description": "Cream — Warm section wash — pale cream surface for alternating bands"
+    }
+  },
+  "font": {
+    "feature": {
+      "$value": "Feature",
+      "$type": "fontFamily",
+      "$description": "Display and headline serif; used at 80px for hero statements, 54px for section openers, 38px for sub-sections, and 20–28px for editorial card titles. Custom high-contrast serif with extremely tight tracking (-0.030em at display) that gives headlines a magazine-cover confidence rather than a typical SaaS shout."
+    },
+    "abc-rom": {
+      "$value": "ABC ROM",
+      "$type": "fontFamily",
+      "$description": "Primary body and UI sans; weight 450 for body copy and buttons, 500 for subheads, 700 for emphasis. Tight tracking (-0.010em) gives it a compact, typeset quality — it sits close to the serif without competing."
+    },
+    "abc-rom-mono": {
+      "$value": "ABC ROM Mono",
+      "$type": "fontFamily",
+      "$description": "Code snippets, technical labels, and monospaced micro-copy. Same tracking as ABC ROM (-0.010em) so it aligns visually in mixed-type compositions."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://jasper.ai",
+      "siteName": "Jasper",
+      "extractedAt": "2026-06-03T18:39:22.582Z",
+      "variant": "compact"
+    }
+  }
+}

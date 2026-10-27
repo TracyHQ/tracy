@@ -1,0 +1,13 @@
+{
+  "candidate.noCwd": "(sin cwd)",
+  "crumb.root": "Espacio de trabajo",
+  "section.files": "Archivos y carpetas",
+  "section.sessions": "Sesiones",
+  "section.subagents": "Subagentes",
+  "time.days": "{n} d",
+  "time.hours": "{n} h",
+  "time.minutes": "{n} min",
+  "time.months": "{n} mes.",
+  "time.now": "ahora",
+  "time.years": "{n} a."
+}

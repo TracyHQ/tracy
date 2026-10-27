@@ -1,0 +1,44 @@
+{
+  "color": {
+    "marigold": {
+      "$value": "#fcd579",
+      "$type": "color",
+      "$description": "Marigold — Page canvas, full-bleed backgrounds, the base layer every other element sits on"
+    },
+    "sea-glass": {
+      "$value": "#81d6b9",
+      "$type": "color",
+      "$description": "Sea Glass — Decorative stroke accent — horizontal stripe pattern, top page divider, wordmark underline, gradient terminus"
+    },
+    "inkstone": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Inkstone — Primary text, nav labels, headings, logo wordmark, and all interface borders"
+    },
+    "marigold-gradient": {
+      "$value": "#efcb75",
+      "$type": "color",
+      "$description": "Marigold Gradient — Right terminus of the signature horizontal gradient (teal → warm gold) used for stripe fades and section dividers"
+    }
+  },
+  "font": {
+    "untitledsans": {
+      "$value": "untitledsans",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all contexts — body copy, nav, footer, links, and the colossal display wordmark. The 147px size at tight tracking (-0.025em) is the identity: the word 'Sing' becomes a spatial event, not a heading. Weight 400 carries body and nav; weight 700 anchors headings and footer emphasis. Kern feature is active throughout to manage the extreme size range."
+    },
+    "signifier": {
+      "$value": "signifier",
+      "$type": "fontFamily",
+      "$description": "Secondary editorial typeface — used for rotated/vertical captions beside photography and occasional body annotations. Its serif presence contrasts the grotesk wordmark to introduce a magazine-like voice. Normal letter-spacing; the small size keeps it as whisper copy, never a headline."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sing-sing.co",
+      "siteName": "Sing-sing",
+      "extractedAt": "2026-06-03T21:52:11.199Z",
+      "variant": "compact"
+    }
+  }
+}

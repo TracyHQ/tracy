@@ -1,0 +1,3071 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-base",
+    "label": "Tracy Base",
+    "version": "0.5.6"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "services",
+      "label": "Services",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "excerpt",
+          "label": "Summary",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "slug": "listed",
+          "label": "Show in the services list",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "faq_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "faq_items",
+          "label": "Questions",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 7
+    },
+    {
+      "slug": "people",
+      "label": "People",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "name",
+          "label": "Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "role",
+          "label": "Role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Summary",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Portrait",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_alt",
+          "label": "Portrait alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image_caption",
+          "label": "Portrait caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 4
+    },
+    {
+      "slug": "posts",
+      "label": "Blog",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "excerpt",
+          "label": "Summary",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image_caption",
+          "label": "Image caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order (ties on the same date)",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 42
+    },
+    {
+      "slug": "site",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_tagline",
+          "label": "Brand tagline",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_label",
+          "label": "Header button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_url",
+          "label": "Header button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_dark_label",
+          "label": "Theme toggle: dark",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_light_label",
+          "label": "Theme toggle: light",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Mobile menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_service_title",
+          "label": "Mega Service: column title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_service_eyebrow",
+          "label": "Mega Service: feature eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_service_heading",
+          "label": "Mega Service: feature title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_service_text",
+          "label": "Mega Service: feature text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "mega_service_action",
+          "label": "Mega Service: feature link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_service_url",
+          "label": "Mega Service: feature link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_service_image",
+          "label": "Mega Service: feature image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "mega_service_image_alt",
+          "label": "Mega Service: feature image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_read_title",
+          "label": "Mega Resources: Read & learn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_design_title",
+          "label": "Mega Resources: Design & inspiration title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_help_title",
+          "label": "Mega Resources: Help & support title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_eyebrow",
+          "label": "Mega Resources: feature eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_heading",
+          "label": "Mega Resources: feature title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_text",
+          "label": "Mega Resources: feature text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_action",
+          "label": "Mega Resources: feature link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_url",
+          "label": "Mega Resources: feature link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_image",
+          "label": "Mega Resources: feature image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "mega_resources_image_alt",
+          "label": "Mega Resources: feature image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_latest_title",
+          "label": "Mega Resources: latest posts title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_search_label",
+          "label": "Mega Resources: search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_company_title",
+          "label": "Mega Company: column title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_team_heading",
+          "label": "Mega Company: team heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mega_team_all_label",
+          "label": "Mega Company: view all label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_product_title",
+          "label": "Footer column 1 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_resources_title",
+          "label": "Footer column 2 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_company_title",
+          "label": "Footer column 3 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_heading",
+          "label": "Social heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_handle",
+          "label": "Social handle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social",
+          "label": "Social profiles",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "notice",
+          "label": "Demo notice (footer)",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_home",
+          "label": "Breadcrumb: home label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_code",
+          "label": "404: code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "404: title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back_label",
+          "label": "404: back link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_title",
+          "label": "Search: page title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search: placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search: button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_results_line",
+          "label": "Search: results line ({count}, {query})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_empty",
+          "label": "Search: no results line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "count_label",
+          "label": "List count label ({count})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_meta",
+          "label": "Pagination label ({page}, {pages})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Previous label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_title",
+          "label": "Related posts title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "latest_title",
+          "label": "Latest posts title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sections_title",
+          "label": "Blog sections title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sitemap_title",
+          "label": "Sitemap title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip to content label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "back_to_top",
+          "label": "Back to top label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "home",
+      "label": "Home page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "hero_eyebrow",
+          "label": "Hero eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title",
+          "label": "Hero title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_lead",
+          "label": "Hero lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_label",
+          "label": "Primary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_url",
+          "label": "Primary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_label",
+          "label": "Secondary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_url",
+          "label": "Secondary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_note",
+          "label": "Hero note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_mock_caption",
+          "label": "Toolkit mock caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "proof_kicker",
+          "label": "Proof kicker",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "proof_title",
+          "label": "Proof title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "proof_line",
+          "label": "Proof line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "proof_items",
+          "label": "Proof items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "problem_eyebrow",
+          "label": "Problem eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "problem_title",
+          "label": "Problem title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "problem_lead",
+          "label": "Problem lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "problem_items",
+          "label": "Problem items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "value_eyebrow",
+          "label": "Value eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "value_title",
+          "label": "Value title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "value_lead",
+          "label": "Value lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "value_items",
+          "label": "Value items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "how_eyebrow",
+          "label": "How eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "how_title",
+          "label": "How title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "how_lead",
+          "label": "How lead",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "how_steps",
+          "label": "How steps",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "inline_cta_title",
+          "label": "Inline CTA title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inline_cta_text",
+          "label": "Inline CTA text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inline_cta_label",
+          "label": "Inline CTA button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inline_cta_url",
+          "label": "Inline CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_eyebrow",
+          "label": "Features eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_title",
+          "label": "Features title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_lead",
+          "label": "Features lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "features_items",
+          "label": "Feature rows",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "stats",
+          "label": "Statistics",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "team_eyebrow",
+          "label": "Team eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_title",
+          "label": "Team title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_lead",
+          "label": "Team lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "team_quotes",
+          "label": "Team quotes",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "team_note",
+          "label": "Team note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_eyebrow",
+          "label": "FAQ eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_title",
+          "label": "FAQ title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_items",
+          "label": "FAQ items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "pricing_eyebrow",
+          "label": "Pricing eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_title",
+          "label": "Pricing title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_lead",
+          "label": "Pricing lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "pricing_tiers",
+          "label": "Plans",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "pricing_note",
+          "label": "Pricing note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_disclaimer",
+          "label": "Pricing disclaimer",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "final_title",
+          "label": "Final CTA title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "final_text",
+          "label": "Final CTA text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "final_cta_label",
+          "label": "Final CTA button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "final_cta_url",
+          "label": "Final CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "final_link_label",
+          "label": "Final CTA link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "final_link_url",
+          "label": "Final CTA link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "final_tail",
+          "label": "Final CTA tail line",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "onepage",
+      "label": "Home - Onepage",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "nav_brand",
+          "label": "Brand",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "nav_sub",
+          "label": "Brand subline",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "nav_items",
+          "label": "Anchored navigation",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "nav_toggle_label",
+          "label": "Theme toggle label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_eyebrow",
+          "label": "Hero eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title_a",
+          "label": "Hero title (line 1)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title_b",
+          "label": "Hero title (line 2)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_lead",
+          "label": "Hero lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_label",
+          "label": "Primary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_url",
+          "label": "Primary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_label",
+          "label": "Secondary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_url",
+          "label": "Secondary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hero_image_alt",
+          "label": "Hero image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "about_eyebrow",
+          "label": "About eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "about_title",
+          "label": "About title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "about_text_1",
+          "label": "About paragraph 1",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "about_text_2",
+          "label": "About paragraph 2",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "about_chips",
+          "label": "About chips",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "services_eyebrow",
+          "label": "Services eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_title",
+          "label": "Services title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_lead",
+          "label": "Services lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "services_items",
+          "label": "Services",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "product_eyebrow",
+          "label": "Product eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "product_title",
+          "label": "Product title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "product_lead",
+          "label": "Product lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "product_parts",
+          "label": "Product parts",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "process_eyebrow",
+          "label": "Process eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "process_title",
+          "label": "Process title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "process_lead",
+          "label": "Process lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "process_steps",
+          "label": "Process steps",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "team_eyebrow",
+          "label": "Team eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_title",
+          "label": "Team title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_lead",
+          "label": "Team lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "team_members",
+          "label": "Team members",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "faq_eyebrow",
+          "label": "FAQ eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_title",
+          "label": "FAQ title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_items",
+          "label": "FAQ items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "contact_kicker",
+          "label": "Contact kicker",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_title",
+          "label": "Contact title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_text",
+          "label": "Contact text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "contact_cta_label",
+          "label": "Contact button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_cta_url",
+          "label": "Contact button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_back_label",
+          "label": "Back link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_back_url",
+          "label": "Back link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_brand",
+          "label": "Footer brand",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_links",
+          "label": "Footer links",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "footer_note",
+          "label": "Footer note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_credit",
+          "label": "Footer credit",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "landing",
+      "label": "Home variation",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "hero_eyebrow",
+          "label": "Hero eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title",
+          "label": "Hero title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_lead",
+          "label": "Hero lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_label",
+          "label": "Primary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_url",
+          "label": "Primary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_label",
+          "label": "Secondary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_url",
+          "label": "Secondary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hero_image_alt",
+          "label": "Hero image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_label",
+          "label": "Aside label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_badge",
+          "label": "Aside badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_state",
+          "label": "Aside badge state",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "hero_notes",
+          "label": "Aside notes",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "chapter1_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter1_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter1_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "features_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_lead",
+          "label": "Lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "features_spotlight_label",
+          "label": "Spotlight label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_cards",
+          "label": "Cards",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "stats_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_figures",
+          "label": "Figures",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "chapter2_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter2_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter2_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "pricing_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "pricing_tiers",
+          "label": "Plans",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "testimonials_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "testimonials_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "testimonials_quotes",
+          "label": "Quotes",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "clients_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "clients_marks",
+          "label": "Client marks",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "home_2",
+      "label": "Home — variant",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "hero_eyebrow",
+          "label": "Hero eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title",
+          "label": "Hero title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_lead",
+          "label": "Hero lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_label",
+          "label": "Primary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_url",
+          "label": "Primary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_label",
+          "label": "Secondary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_url",
+          "label": "Secondary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hero_image_alt",
+          "label": "Hero image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_label",
+          "label": "Aside label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_badge",
+          "label": "Aside badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_state",
+          "label": "Aside badge state",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "hero_notes",
+          "label": "Aside notes",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "chapter_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "team_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_members",
+          "label": "Members",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "faq_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "faq_items",
+          "label": "Questions",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "stats_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_figures",
+          "label": "Figures",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "product",
+      "label": "Product page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_eyebrow",
+          "label": "Hero eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title",
+          "label": "Hero title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_lead",
+          "label": "Hero lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_label",
+          "label": "Primary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_url",
+          "label": "Primary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_label",
+          "label": "Secondary button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_url",
+          "label": "Secondary button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hero_image_alt",
+          "label": "Hero image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_label",
+          "label": "Aside label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_badge",
+          "label": "Aside badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_aside_state",
+          "label": "Aside badge state",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "hero_notes",
+          "label": "Aside notes",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "carousel_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "carousel_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "carousel_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "carousel_slides",
+          "label": "Slides",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "tabs_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tabs_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tabs_tabs",
+          "label": "Tabs",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "stats_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_figures",
+          "label": "Figures",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "services_page",
+      "label": "Services page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "pricing",
+      "label": "Pricing page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "pricing_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "pricing_tiers",
+          "label": "Plans",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "faq_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "faq_items",
+          "label": "Questions",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "blog",
+      "label": "Blog page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "topics_title",
+          "label": "Topics page title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topics_intro",
+          "label": "Topics intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "all_label",
+          "label": "All articles label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "team",
+      "label": "Team page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "notes_title",
+          "label": "Notes section title",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "about",
+      "label": "About page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "chapter1_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter1_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter1_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter1_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "stats_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats_figures",
+          "label": "Figures",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "chapter2_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "chapter2_image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "chapter2_image_alt",
+          "label": "Image alt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chapter2_link_style",
+          "label": "Link style",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "team_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team_members",
+          "label": "Members",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "careers",
+      "label": "Careers page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "timeline_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "timeline_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "timeline_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "timeline_entries",
+          "label": "Milestones",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_statement",
+          "label": "Statement",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_support",
+          "label": "Supporting text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_btn_url",
+          "label": "Button URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_label",
+          "label": "Link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_url",
+          "label": "Link URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "help",
+      "label": "Help centre page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "faq_eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "faq_intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "faq_items",
+          "label": "Questions",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "contact",
+      "label": "Contact page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form (Forms plugin id)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_title",
+          "label": "Form heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "required_note",
+          "label": "Required-field legend",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_heading",
+          "label": "Information heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email",
+          "label": "Email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_label",
+          "label": "Email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "notice",
+          "label": "Notice",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "social_heading",
+          "label": "Social heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "unavailable_label",
+          "label": "Unavailable label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social",
+          "label": "Social links",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "design_system",
+      "label": "Design system",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "typography_title",
+          "label": "Typography title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "typography_intro",
+          "label": "Typography intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "colour_title",
+          "label": "Colour title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "colour_intro",
+          "label": "Colour intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "spacing_title",
+          "label": "Spacing title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "spacing_intro",
+          "label": "Spacing intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "specimen_eyebrow",
+          "label": "Specimen eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "specimen_heading",
+          "label": "Specimen heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "specimen_lede",
+          "label": "Specimen lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "specimen_body",
+          "label": "Specimen body",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "marketing",
+      "label": "Marketing samples",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Page title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lead",
+          "label": "Lead",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "note",
+          "label": "Note",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "appearance_label",
+          "label": "Appearance label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "light_label",
+          "label": "Light label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "dark_label",
+          "label": "Dark label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "open_label",
+          "label": "Open label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "download_label",
+          "label": "Download label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "samples",
+          "label": "Samples",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary navigation",
+      "locale": "en",
+      "items": 6
+    },
+    {
+      "name": "service",
+      "label": "Service menu",
+      "locale": "en",
+      "items": 5
+    },
+    {
+      "name": "resources_read",
+      "label": "Resources: Read & learn",
+      "locale": "en",
+      "items": 5
+    },
+    {
+      "name": "resources_design",
+      "label": "Resources: Design & inspiration",
+      "locale": "en",
+      "items": 8
+    },
+    {
+      "name": "resources_help",
+      "label": "Resources: Help & support",
+      "locale": "en",
+      "items": 3
+    },
+    {
+      "name": "company",
+      "label": "Company menu",
+      "locale": "en",
+      "items": 3
+    },
+    {
+      "name": "footer_product",
+      "label": "Footer: Product",
+      "locale": "en",
+      "items": 4
+    },
+    {
+      "name": "footer_resources",
+      "label": "Footer: Resources",
+      "locale": "en",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Footer: Company",
+      "locale": "en",
+      "items": 4
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 8
+    },
+    {
+      "name": "tag",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.3",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.2.8",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/islands/Carousel.tsx",
+    "src/components/islands/MegaMenu.tsx",
+    "src/components/islands/MobileNav.tsx",
+    "src/components/islands/Tabs.tsx",
+    "src/components/sections/CardList.astro",
+    "src/components/sections/Chapter.astro",
+    "src/components/sections/Clients.astro",
+    "src/components/sections/CtaBand.astro",
+    "src/components/sections/FaqList.astro",
+    "src/components/sections/FeatureRows.astro",
+    "src/components/sections/FeaturesIntro.astro",
+    "src/components/sections/HeroAcm.astro",
+    "src/components/sections/HeroOd.astro",
+    "src/components/sections/InlineCta.astro",
+    "src/components/sections/PricingTiers.astro",
+    "src/components/sections/ProofStrip.astro",
+    "src/components/sections/Quotes.astro",
+    "src/components/sections/SectionHead.astro",
+    "src/components/sections/StatsBand.astro",
+    "src/components/sections/Steps.astro",
+    "src/components/sections/TeamCards.astro",
+    "src/components/sections/TeamGrid.astro",
+    "src/components/sections/Timeline.astro",
+    "src/components/site/AppearanceSwitch.astro",
+    "src/components/site/ArticleH2.astro",
+    "src/components/site/BlogSidebar.astro",
+    "src/components/site/BodyImage.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Breadcrumb.astro",
+    "src/components/site/Figures.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/Icon.astro",
+    "src/components/site/Logo.astro",
+    "src/components/site/OnepageFooter.astro",
+    "src/components/site/OnepageHeader.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/Pagination.astro",
+    "src/components/site/PersonCard.astro",
+    "src/components/site/Photo.astro",
+    "src/components/site/PostCard.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/SampleFrame.astro",
+    "src/components/site/SocialIcon.astro",
+    "src/components/site/SpacingScale.astro",
+    "src/components/site/Swatches.astro",
+    "src/components/site/TypeSpecimen.astro",
+    "src/components/ui/button.tsx",
+    "src/components/ui/checkbox.tsx",
+    "src/components/ui/dropdown-menu.tsx",
+    "src/components/ui/input.tsx",
+    "src/components/ui/label.tsx",
+    "src/components/ui/popover.tsx",
+    "src/components/ui/textarea.tsx",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/brand.ts",
+    "src/lib/chrome-labels.ts",
+    "src/lib/chrome.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/i18n.ts",
+    "src/lib/icons.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/page-records.ts",
+    "src/lib/posts.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/stamps.ts",
+    "src/lib/toc.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/forms.css",
+    "src/styles/global.css",
+    "src/styles/tokens.css",
+    "src/views/About.astro",
+    "src/views/Article.astro",
+    "src/views/Blog.astro",
+    "src/views/Careers.astro",
+    "src/views/Contact.astro",
+    "src/views/DesignSystem.astro",
+    "src/views/Help.astro",
+    "src/views/Home.astro",
+    "src/views/Home2.astro",
+    "src/views/Landing.astro",
+    "src/views/Marketing.astro",
+    "src/views/NotFound.astro",
+    "src/views/Onepage.astro",
+    "src/views/Person.astro",
+    "src/views/Pricing.astro",
+    "src/views/Product.astro",
+    "src/views/Search.astro",
+    "src/views/Service.astro",
+    "src/views/Services.astro",
+    "src/views/Sitemap.astro",
+    "src/views/Team.astro",
+    "src/views/Topics.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:81b84d0f0e6516da5f3e30c7b604a4459c1e61955d41199cacac48b5b56b57bf",
+    "package.json": "sha256:ec16249df20343b52b93df2d26ba9f4a48ccd17685d82f4c011fdac28f829798",
+    "pnpm-lock.yaml": "sha256:44492a3082560e8c25b4ae27cd923fd8afbd9e0e4989ad07ef3ef6fa0e6bb832",
+    "seed/field-map.json": "sha256:1f6871b8028eda81b8400a7cb9982aa6259be060d556730edb45e2f25587ec46",
+    "seed/media-map.json": "sha256:f06f5537626627d4e71f82535fe660846d353fffc79b7113d62302fa3a9f085f",
+    "seed/seed.json": "sha256:e4450591a62cbebab968faca7f816ccb663da3eb0e4f7747b8e62e6983b18330",
+    "src/components/islands/Carousel.tsx": "sha256:cdac7118c4005b8909823031a8e6f409003639a09454bd3e4a2104ac09656dcf",
+    "src/components/islands/MegaMenu.tsx": "sha256:d2a0c53c8c6bae840bb5dea5b636058b36748dd36879acf7a6c6af7b640e07e5",
+    "src/components/islands/MobileNav.tsx": "sha256:f981932ee61527dec7f6f0a743eb7f3dbf4505f6e5e863468d253f394938bcda",
+    "src/components/islands/Tabs.tsx": "sha256:d8ac20c60392f785e59f8baa7a419eef2753e646deef8724d77db948e970465d",
+    "src/components/sections/CardList.astro": "sha256:244d1ce8c29460901f91664603dbbdc8cdfadaa2276569edc6d321007c07dac0",
+    "src/components/sections/Chapter.astro": "sha256:573f62443b90b44ef89a165f889e1f056c5c7869adfa0c00afe006280d2bd4a1",
+    "src/components/sections/Clients.astro": "sha256:8fe62a152858055d267be8dad00aeadf516f9219406963f2a7d63df59ff8535f",
+    "src/components/sections/CtaBand.astro": "sha256:faa46fe8cd81191879f8c6b7ba4e649791675b02e1298d33b60f49740c5bc34e",
+    "src/components/sections/FaqList.astro": "sha256:8b546091a8cad34a960c6ca72f1ddb0cccf5c67e71a7694ce41602abbf1735c3",
+    "src/components/sections/FeatureRows.astro": "sha256:1e037c6a342aaaf7bfcfec1c0e029100bd7df81f8db631c92e13405907a1df31",
+    "src/components/sections/FeaturesIntro.astro": "sha256:a2e0915fddea089127896bc45554bbc61b208ca2c6e855165bc533bbd607bc6d",
+    "src/components/sections/HeroAcm.astro": "sha256:d15abc7eb410507e837c2f73e5c20f3ad577006c4ea2b34dc723bb4feed32df3",
+    "src/components/sections/HeroOd.astro": "sha256:4a57de85421fb54877d4acdb765b0efb99d759df36fca7529b8dfeaf6be9b603",
+    "src/components/sections/InlineCta.astro": "sha256:4a600c2e4af232463150cd087d437055967d2a80a94df632a2d82d308964d8fc",
+    "src/components/sections/PricingTiers.astro": "sha256:29a47a496b067c488128fa34c700ccdde635fb60ccd43d4819d7593e2d9b6494",
+    "src/components/sections/ProofStrip.astro": "sha256:350d00da8ad22a601e5053328e0816b49c14a46643bd203a6164219c1927e610",
+    "src/components/sections/Quotes.astro": "sha256:eb207a151715467c312d2eaf97fb2aa3303db1a763ee94e0b90a8550b1145cd0",
+    "src/components/sections/SectionHead.astro": "sha256:bcc425d35aa9f38bb9ddcf77a98f374fb217f0ffcec91334980946097ec9e392",
+    "src/components/sections/StatsBand.astro": "sha256:fa477dbc1c3aed81c0907417f7bcaa6c929ad0f92bb775ef4dfd24c522bbea90",
+    "src/components/sections/Steps.astro": "sha256:59535e877c69711b6987181a40eb63a0c7da5645d4e77a1a84b3f773d2f25cc4",
+    "src/components/sections/TeamCards.astro": "sha256:e2bf6164e2360be7bdd7dada9cb844267b26941bebd51cd6ba5de7bc6892d32f",
+    "src/components/sections/TeamGrid.astro": "sha256:1a48a193b955f91b56fc6b1d35f3a2321642316d41b26642bc439f639585f459",
+    "src/components/sections/Timeline.astro": "sha256:aa52a3c491428de7bbee57bb7f4145aa54e5c48387544ace87b28603b97c7abc",
+    "src/components/site/AppearanceSwitch.astro": "sha256:f9c8e4d64b1816fea97a0acabc14e5c9c2f3868f2555c6e351355f0cf5cfa60d",
+    "src/components/site/ArticleH2.astro": "sha256:307628c34e08c9805a52608f433d6401f26f3f8ba2fbf68fdc249bfe57c010e3",
+    "src/components/site/BlogSidebar.astro": "sha256:86f7bb3d64b3308f0d41b113ca42e39ac89fc96d84c13007497f466be0f45c31",
+    "src/components/site/BodyImage.astro": "sha256:d1a76f480031903ae90af699afb4e5fbfbc5598f878e0df358b5e89faa45142b",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Breadcrumb.astro": "sha256:8c33e50d922da39117e37eb96c4fb8ff489b5aac25720ca267ad8b5cdca41aeb",
+    "src/components/site/Figures.astro": "sha256:77b0849dabc72f3d4b2a49e9540c17bf028289af4555db9e49d200ee3e203f52",
+    "src/components/site/Footer.astro": "sha256:7553519e5e7163f4144b85f9d7a3231978342d8b2131f0821971e4aa397ea408",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:68139995270cbaa6a1b6f8d74f45b8d10cc954a5e60b23c859697127ed7328b9",
+    "src/components/site/Icon.astro": "sha256:4b46e06e056fcd76362c96af94530f841d51d927d8fc7f7c35b8adb289624968",
+    "src/components/site/Logo.astro": "sha256:0381d04ad0809eeadcfbcc04194b6a65012dc373af1ba04ff87d11306c6b9d36",
+    "src/components/site/OnepageFooter.astro": "sha256:7efa3842fa0d0510327970daf3eee37cb7644352654ae7365f4eba7820cb3c24",
+    "src/components/site/OnepageHeader.astro": "sha256:468b0e152f27967972ec9a1a4516b2543b800bb9ae18e951704bb4bd4528cdb5",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/Pagination.astro": "sha256:71a76c9033e2fca6c1541ae7d5c1c8756cff6f9d67ba17b63558431d122aa366",
+    "src/components/site/PersonCard.astro": "sha256:aab6dc559aee5962486d4855d1a9999147a0b3bbdf303c4fe1d557755b92a9ef",
+    "src/components/site/Photo.astro": "sha256:0b3aa8e86f3d1e722c079d22f1dc92735c0f1c20a764c9bb85ee107733bbce23",
+    "src/components/site/PostCard.astro": "sha256:db7358c7393136ccfff9358e4e8a22b675cb7937eb85a9da1064b07c3033bd9c",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/SampleFrame.astro": "sha256:bdb8515d67cf6b34175b57a2b5940a6e50d33d6184766571e94a68f3d038f709",
+    "src/components/site/SocialIcon.astro": "sha256:86c7a3d048b2b70b4fc17677e4f1409eab1483a761f2e30f5e43386c56a0f51c",
+    "src/components/site/SpacingScale.astro": "sha256:aebc2acb0543ae80019bfd054b4c6f171b2d2372709a48bae89591d23fc6936c",
+    "src/components/site/Swatches.astro": "sha256:87c2e85102b0c77c9d1979519d6313fa59121b84eb98bb70ea5870727afb7b0e",
+    "src/components/site/TypeSpecimen.astro": "sha256:4cf407311b222a72c0c33d0b623640ca5e71992d7f964416f5a5627bd8554b53",
+    "src/components/ui/button.tsx": "sha256:a821d025ec909b9929e354e82e06742b8712d236dd57f1a3e79cdea63a21adea",
+    "src/components/ui/checkbox.tsx": "sha256:33f41bfe203269e2eff8bdb10fb8590240bdfe94aa08e0a35ce290ac9c9edeff",
+    "src/components/ui/dropdown-menu.tsx": "sha256:95f5fe1f94cb6d0c99828e94c9b752543edd8215ebee8c203069e195c6ad53f7",
+    "src/components/ui/input.tsx": "sha256:974e14fe41822c7962386661366496dd93ed889f07f68d79467e4d3f92c8550e",
+    "src/components/ui/label.tsx": "sha256:5428d0bddf31ce3d91c753c0f7a7a9c78054a680218d109ee2b0b6dc967044aa",
+    "src/components/ui/popover.tsx": "sha256:96d6d819e474ad38bb2fa11816bb20ea60f8c7370b102b64d5d0876e4043ddd3",
+    "src/components/ui/textarea.tsx": "sha256:bb82c0c5cc75e1bd9a50c47e56667bd60848f6a6c73f9e9f84a35a4e77850a6f",
+    "src/fonts.json": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "src/layouts/Base.astro": "sha256:9acf5ade803813469a7ca02b04393f774b14b5d079c1ef4fc33a7878b0669e65",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
+    "src/lib/chrome.ts": "sha256:b514bf5ca566b0d74c83fad8a9421191a37048aea0e9d4e9d15135d65acfac10",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
+    "src/lib/form-embed-words.ts": "sha256:3e4125c2c21dda7ce8dabf9cced439e70112c498014904da07a6266708d372c5",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/i18n.ts": "sha256:7f12d110d5f47a1467b30d8b37185bdd4db9470e46911412aefb9b1f12ad372f",
+    "src/lib/icons.ts": "sha256:8f1ff4efd2068aa7e972cdddfdcebd62c6ba03ed956022578d6b4be2d99797a1",
+    "src/lib/link-gate.ts": "sha256:b8b2d1e2da3b214c538df4af9be3540faa170df53bba6adfe711415a6aac3da9",
+    "src/lib/listed-children.ts": "sha256:bc7fbbef5e19ad1e002a8b71817a6dac64b0658b67bb08e297a484f802d6e636",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/posts.ts": "sha256:eace954287ef1f8525087e318146e9c85c7d67d301d7026c29f58c4a43675c7f",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/toc.ts": "sha256:93cf47c5aaa7e3b7170fb944012e93dd0f58a7fedc9fd517721c4f6a884439ba",
+    "src/lib/ui-words.ts": "sha256:64b2407fc88e7f64370c5cf84737c725521608338c2da0f8a259fd64a2d8ef68",
+    "src/lib/ui.ts": "sha256:19959ee7c4a5e6b70385beea93fc26d7046bd36a695765808134e093c23cc680",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:4fe8e53deaf479f787a384b532f0eb6e4faa960643fdd31cd98ff67e1f04113d",
+    "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
+    "src/styles/forms.css": "sha256:0b1073af281798b7dcb4257b4f1f388043ca63862f6fa0d5dcb90db2b0066078",
+    "src/styles/global.css": "sha256:f9c1453971bcc4f4a217a8d55c9efc54598400193be15fef8c83525991072150",
+    "src/styles/tokens.css": "sha256:cda74a40a215415baf1f922e799c2bed28074952db9381262506cbb045d67e39",
+    "src/views/About.astro": "sha256:b559a0c6b016f2f43f1d541e3455c21ea2ada22c17b076e6079120e8246a5d48",
+    "src/views/Article.astro": "sha256:8c06063252a93ef9c7ae4b0d7f228e0879a261256944f9a447ece9e0cb37bad5",
+    "src/views/Blog.astro": "sha256:f54c1440ff014069d76278d66815afe3c295ed89578ebe49c216f8a62921af19",
+    "src/views/Careers.astro": "sha256:18608b5a91b81f5d44cf4d928c174b9df21ae4e0e660bcd73e52d91406888e26",
+    "src/views/Contact.astro": "sha256:9accc3a681590b78e089b894264beea82d8991442f85b8973d66b01d5869bed1",
+    "src/views/DesignSystem.astro": "sha256:a3fb9dbfcedebf3c2d1b32be1af9b392ed9ec487f19e2e760f9ff60429c8ca25",
+    "src/views/Help.astro": "sha256:3eedf2e64d30d3fbe870323c36a1bd44bb0c10080791872970907028dedefa72",
+    "src/views/Home.astro": "sha256:761a3366cabea237a46246f33cf332a1172757393ffc2e70963ca8ab09ee429d",
+    "src/views/Home2.astro": "sha256:9032c6e30461f1ffa6548205924bfdbdf266b73ac5e8c1457f3aa63c5d1ca3d8",
+    "src/views/Landing.astro": "sha256:e7ecd1d8d2e9db2dbd8e64433a32b544d4b84f0e7e830624b4dec349865841e1",
+    "src/views/Marketing.astro": "sha256:f1677554262f70d1df388d04f16d2959b9a97060f76f2973d9b999b4c171d664",
+    "src/views/NotFound.astro": "sha256:545f3486ddc63458fd97201bfa5dd650ba8dabc1a3af6effffa45400e5acd9f5",
+    "src/views/Onepage.astro": "sha256:84b2c0ead5ba6d9f1f129823f032d5a3bc66c3295b3c9613f5285aecd12b26f4",
+    "src/views/Person.astro": "sha256:eb9f0af0841152623defa892abeca51dc13613bf5dda98ea9e167c2ba7f08de4",
+    "src/views/Pricing.astro": "sha256:7204a9a832898aa623be2fa0e8541ffa9f1c329839ee2e836494906be790e7e0",
+    "src/views/Product.astro": "sha256:ad9a8d75ddd86e84dee0ea3c22735bfd5ffa9f6b27ad25016d428697672192fa",
+    "src/views/Search.astro": "sha256:2a27714913f31f670ba6b11784e94781bdbf438aaae192ba82ae6165d59d69db",
+    "src/views/Service.astro": "sha256:f20633999aedb0d14739ef2e56107c56e18a7243a105bc2a89dabd1bdbd253b4",
+    "src/views/Services.astro": "sha256:5b238e061fee24f98bc2413f04130cda28613956fb7d40274ae006566890e9a1",
+    "src/views/Sitemap.astro": "sha256:48092cdfc87db7d4e81edbf1a509f907eee1fc7204b66387c4e826c61b612407",
+    "src/views/Team.astro": "sha256:77de9eb369cc3385ee27015d119b0330aa3a97621397e8e12d7390b745306f25",
+    "src/views/Topics.astro": "sha256:4ca937075a139c3c32e546573a12ac3f64aa7bf7217021cc4516bcf67a78f26c",
+    "template.config.json": "sha256:719706b8be5dced05e6e628ae2c09a8399a302952f1ba770e045faf4d74387f5",
+    "tools/forms.json": "sha256:a9c78a8909278efb02bf7b690dd1460d9ed94fa2602df9a9fb2964c6cb9d983f",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

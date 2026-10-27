@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-forest-depths: #072724;
+  --color-midnight-tide: #0f3933;
+  --color-shadow-teal: #23524c;
+  --color-charcoal-hairline: #2c2e33;
+  --color-abyss-green: #122d28;
+  --color-deep-lagoon: #1c3f38;
+  --color-mist-gray: #b0c5c1;
+  --color-pure-light: #ffffff;
+  --color-mint-glow: #97fcd7;
+  --color-teal-pulse: #33998c;
+
+  /* Typography — Font Families */
+  --font-teodor: 'Teodor', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

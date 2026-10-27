@@ -1,0 +1,212 @@
+{
+  "dos": [
+    "Keep the canvas at #000000. The black is a stage, not a background color.",
+    "Set all type in Enreal weight 300 for titles and weight 400 for body. The thinness is the signature.",
+    "Maintain 0.042em letter-spacing on all Enreal usage — do not tighten it for body sizes.",
+    "Center the primary composition vertically and horizontally in the viewport.",
+    "Use the filled white button for the single most important action and the dark outlined button for secondary.",
+    "Keep corner utility controls icon-only and monochrome. No labels, no backgrounds, no tooltips.",
+    "Let the illustration occupy the full viewport. Never crop it, never overlay a surface on top of it."
+  ],
+  "donts": [
+    "Do not introduce shadows, glows, or elevation effects on any element.",
+    "Do not add gradients, brand accent colors, or chromatic highlights — the palette is intentionally achromatic.",
+    "Do not use border-radius on any component. Everything is sharp-edged and architectural.",
+    "Do not switch the title to a bold or heavy weight. Weight 300 on Enreal is the defining voice.",
+    "Do not add card containers, backgrounds, or frosted-glass panels behind the type or buttons.",
+    "Do not use any color from the illustration (ochre, terracotta, moss) as a UI token — those belong to the artwork.",
+    "Do not build dense layouts. This is a one-screen-at-a-time experience; whitespace is the layout."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Page canvas, primary borders, icon strokes — the literal theater curtain everything sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0b0502",
+      "name": "Smolder Earth",
+      "role": "Secondary surface tone — picks up a warm cast from the illustration overlay, used as a slightly lifted dark",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Charcoal",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone White",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e3e3e2",
+      "name": "Ash",
+      "role": "Hairline borders on the dark button, subtle separators, muted off-white dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c0bfbe",
+      "name": "Driftwood",
+      "role": "Muted surface for low-emphasis background panels and body containers",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Single-screen, full-bleed layout with no scrolling content sections. The page model is 100vw × 100vh, center-aligned. The hero is the entire page: a centered title block, a two-line subtitle, and a vertical button stack, all overlaid on the full-bleed animated illustration. Top-left holds a 3-icon scene control cluster; top-right holds a 3-icon utility cluster (language, audio, fullscreen). There is no navigation bar, no sidebar, no footer. Section rhythm does not apply — there is only one section, and it loops between scenes controlled by the top-left filmstrip icon.",
+  "imagery": "The visual language is hand-illustrated 2D animation — flat shapes with a slight painterly texture, no outlines on most forms, warm earth palette (terracotta, ochre, olive, cream, sienna). Trees are rendered as triangular canopies with horizontal striping; mushrooms and wildflowers are scattered as small graphic accents. The illustration occupies the entire viewport at all times and is animated (parallax or character movement). There is no photography, no product imagery, no 3D. Icons in the UI are thin, monochrome, line-based and sit at roughly 1px stroke weight. The art style evokes mid-century children's book illustration crossed with a Studio Ghibli background plate — cozy, handcrafted, slightly nostalgic.",
+  "similar": [
+    {
+      "why": "Same NFB interactive-film lineage — full-bleed illustrated/photographic canvas with minimal monochrome UI overlaid, no shadows, no card layers, type floating directly on imagery",
+      "business": "Bear 71 (NFB Interactive)"
+    },
+    {
+      "why": "Cinematic full-viewport narrative with centered light-weight display type and an almost invisible interface — the art carries the page, the chrome stays out of the way",
+      "business": "The Boat (SBS Interactive)"
+    },
+    {
+      "why": "Pure black canvas with thin, airy type and a single primary action button — the generative artwork is the entire visual system",
+      "business": "Silk – Interactive Generative Art"
+    },
+    {
+      "why": "Full-bleed illustrated scenes with centered whisper-light display type and a single white-on-dark action button — the same title-card, cinema-screen discipline",
+      "business": "Everyone Has a Story (Google)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "4px",
+    "sectionGap": "40px",
+    "cardPadding": "16px",
+    "pageMaxWidth": null
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "level": 1,
+      "purpose": "Underlying page canvas — the theater-dark base layer"
+    },
+    {
+      "hex": "#0b0502",
+      "name": "Smolder Earth",
+      "level": 2,
+      "purpose": "Warm dark surface that absorbs the illustration's color cast"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Charcoal",
+      "level": 3,
+      "purpose": "Secondary button fill and border — the only stepped dark"
+    }
+  ],
+  "northStar": "A black cinema screen with one whispered title floating over a living illustration. The interface is a dimmer switch, not a dashboard.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.67
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.01
+    }
+  ],
+  "components": [
+    {
+      "name": "Centered Title Block",
+      "role": "Hero typography composition",
+      "description": "Vertically and horizontally centered in the viewport. Title at ~48-64px in Enreal weight 300, #ffffff, letter-spacing 0.042em, all-caps. Subtitle in Ciutadella-Medium weight 300, 14px, #ffffff at reduced opacity, two short lines separated by a hard line break. No drop shadow, no background — type floats directly on the illustration."
+    },
+    {
+      "name": "Start Button (Filled White)",
+      "role": "Primary user action",
+      "description": "White (#ffffff) solid fill, #000000 text, no border, 0px radius. Inline arrow icon (→) left of the label 'start' in Enreal or Arial 13px. Padding ~8px 16px. The only visually loud element on the page besides the title."
+    },
+    {
+      "name": "Info Button (Outlined Dark)",
+      "role": "Secondary action",
+      "description": "Charcoal (#1a1a1a) fill with Ash (#e3e3e2) 1px hairline border, 0px radius, white text 'info' at 13px. Sits 30px below the primary action. Quiet but clearly interactive — the border is the affordance."
+    },
+    {
+      "name": "Corner Utility Cluster (Top-Left)",
+      "role": "Scene control toggles",
+      "description": "Three small icon-only controls aligned top-left at ~8-10px padding: a filmstrip/scene-selector icon, a pause/play toggle, and an info dot. Monochrome white on black, no background, no labels. The film-strip icon implies a chapter/segment picker."
+    },
+    {
+      "name": "Corner Utility Cluster (Top-Right)",
+      "role": "Global controls",
+      "description": "Three icon-only controls top-right: language toggle 'FR', speaker/audio icon, and fullscreen expand icon. Same monochrome treatment as the left cluster. Equal padding from the edge as the left cluster to create visual balance."
+    },
+    {
+      "name": "Immersive Illustration Layer",
+      "role": "Full-bleed visual content",
+      "description": "The page background is not a color — it is a full-viewport animated illustration. Warm earth palette (ochre, terracotta, moss green, cream) rendered in a flat, slightly textured style with stylized trees, mushrooms, wildflowers, and landscape motifs. Edges are not masked; the illustration bleeds into every corner. This layer is content, not chrome, and carries the entire emotional weight of the experience."
+    },
+    {
+      "name": "Button Stack",
+      "role": "Action container",
+      "description": "Two buttons stacked vertically with 30px gap between them. Center-aligned. No background container — the buttons exist directly on the illustration."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and UI type. Weight 300 carries the title — a thin geometric sans that whispers against the dark canvas. The 0.042em tracking (roughly 0.67px at 16px) is wide for a sans, giving every word a cinematic, breathing quality. Body and labels step up to 400, reserved to 700 for the rare emphasis.",
+      "sizes": "14px, 16px, 24px",
+      "family": "Enreal",
+      "weight": "300, 400, 700",
+      "lineHeight": "1.20, 1.75",
+      "substitute": "Jost Light, DM Sans Light, or Outfit Light",
+      "letterSpacing": "0.0420em"
+    },
+    {
+      "role": "Secondary support face at weight 300 — used for small labels, links, and metadata. Tight line-height (1.0) and normal tracking make it a quiet, textural companion to the wider Enreal.",
+      "sizes": "14px",
+      "family": "Ciutadella-Medium",
+      "weight": "300",
+      "lineHeight": "1.00",
+      "substitute": "Karla Light, Inter Light, or Manrope Light"
+    },
+    {
+      "role": "System fallback for button text and small body contexts where the custom faces are not loaded.",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "system-ui, -apple-system, Helvetica"
+    }
+  ],
+  "description": "Wayfinder is an immersive interactive film that treats the entire viewport as a stage for animated illustration. The UI is deliberately vestigial: a pure black canvas, a single light-weight display title, two compact action buttons, and a few icon-only controls in the corners. Almost everything visual is illustration content — stylized trees, mushrooms, flowers, earth textures — while the interface stays flat, borderless, and silent. The design discipline is subtraction: no shadows, no gradients, no card layers, no decorative color. The wide letter-spacing on the display type and the centered composition give every screen a cinematic, title-card quality.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (display): #ffffff\n- text (body/label): #ffffff at reduced opacity\n- background (page canvas): #000000\n- background (secondary button fill): #1a1a1a\n- border (subtle separator): #e3e3e2\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n1. *Full-bleed title screen*: Set body and html background to #000000, 100vw × 100vh. Center a display headline at 48px in Enreal weight 300, #ffffff, letter-spacing 0.042em, all caps. Beneath it, a two-line subtitle in Ciutadella-Medium weight 300, 14px, #ffffff at 70% opacity, line-height 1.0, hard line break between lines. No background container.\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n4. *Corner utility cluster (top-left)*: Three icon-only buttons in a horizontal row, 8-10px padding from viewport edge. Each icon is white line-art at ~16px, no background, no border, no label. Spacing between icons ~8px.\n5. *Immersive illustration background*: A full-viewport absolutely-positioned layer behind all UI at z-index 0, rendering a warm earth-toned illustrated landscape. The UI lives at z-index 1 or above and does not dim or tint the artwork."
+    },
+    {
+      "title": "Scene Structure",
+      "content": "Wayfinder is a sequence of illustrated scenes rather than a multi-page site. The top-left filmstrip icon implies the user can scrub between segments; the play/pause icon controls auto-progression. When generating new 'pages' for this system, treat each one as a new scene: a single full-viewport illustration, the same centered title block pattern, the same two-button stack, and the same corner clusters. Do not invent navigation menus, breadcrumbs, footers, or multi-column content — they would break the cinematic contract."
+    },
+    {
+      "title": "Type Atmosphere",
+      "content": "The display title uses weight 300 specifically because a heavier weight would overpower the quiet, hand-drawn world behind it. A bold sans here would feel like a billboard stapled onto a watercolor. The wide 0.042em tracking ensures the letters don't crowd when the type is large, preserving the title-card pacing. Any new page generated in this system should keep the same restraint: thin weights, wide tracking, generous vertical space, and a single, generous moment of type centered in the frame."
+    }
+  ],
+  "elevationPhilosophy": "The design uses no shadows whatsoever. Depth is implied only through the illustrated background and the slight contrast step from #000000 to #1a1a1a. Components float on the illustration as flat shapes — any shadow would compete with the artwork and break the cinematic illusion."
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "inkwell": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Inkwell — Page background, card surface, image masking — the entire site lives on this near-black canvas. True black, not charcoal; the void is the design"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#a9a9a9",
+      "$type": "color",
+      "$description": "Ash — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "ember": {
+      "$value": "#302f2d",
+      "$type": "color",
+      "$description": "Ember — List separators with a barely-perceptible warm cast — gives the hairline rules a paper-like tone against the cold black background"
+    },
+    "meadow": {
+      "$value": "#34a847",
+      "$type": "color",
+      "$description": "Meadow — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "coral-blush": {
+      "$value": "#fbcbcb",
+      "$type": "color",
+      "$description": "Coral Blush — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "apricot": {
+      "$value": "#f27851",
+      "$type": "color",
+      "$description": "Apricot — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    }
+  },
+  "font": {
+    "canela-web": {
+      "$value": "Canela Web",
+      "$type": "fontFamily",
+      "$description": "Hero and section headlines. A high-contrast didone-influenced display serif used at hairline weight 100 — the choice of a thin serif rather than a bold sans is the single most distinctive typographic decision: it makes 'everyday' and 'ideas' feel like printed editorial cover type, not a product headline. Free substitute: Playfair Display weight 400 italic does not match; use DM Serif Display at weight 100 or Fraunces at optical-size 144 weight 100 for the closest available stand-in."
+    },
+    "polysans": {
+      "$value": "PolySans",
+      "$type": "fontFamily",
+      "$description": "All UI text, tag labels, pill copy, and the ultra-large display variant. The geometric sans at weight 100 is anti-conventional for UI (most systems use 400–600 here) — it makes tags and buttons feel like printed specimen labels rather than app controls. The wide 0.2em tracking is the signature: it turns every label into a wide-set, posterised caption. Free substitute: Inter weight 100 or Space Grotesk weight 100, with letter-spacing manually opened to 0.2em to match."
+    },
+    "sans-serif-system": {
+      "$value": "sans-serif (system)",
+      "$type": "fontFamily",
+      "$description": "Body copy fallback — a plain system sans at 16px, used for the long-form paragraph text describing work history. Its neutrality lets the serif headings carry the visual identity."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wandelmaier.com",
+      "siteName": "Michael Wandelmaier",
+      "extractedAt": "2026-06-03T19:19:52.610Z",
+      "variant": "compact"
+    }
+  }
+}

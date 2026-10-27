@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1658-sync-wordpress-merge-failed",
+  "kind": "fix",
+  "title": "A WordPress sync whose id map grew over many syncs neither crashes the database server nor stops: links in text are renumbered in bounded statements; references outside the adapter are counted in grouped calls; a stopped merge says why",
+  "pr": 1658,
+  "area": "sync/live",
+  "cms": ["wp", "jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs && python3 packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"
+  ],
+  "expect": [
+    "S1: five chained WordPress syncs (both sides creating posts, occupied numbers, a three-deep chain, a media upload, nothing new, edits at each depth) all apply with every live post at its copy number; nest depth stays ≤ TEXT_NEST; grouped reference counts equal the one-per-number answer; a refused statement's detail names the error without row values"
+  ],
+  "selectors": {
+    "host": "live_sync.py IdMap.renumber TEXT_NEST, IdMap.unhandled_refs ref_columns REF_CHUNK, SqlError, main MERGE_FAILED detail; webroot-sync.sh engine_said"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-wordpress-merge-failed.md",
+  "fence": "No sync statement grows with the history of the site past what the database server can evaluate",
+  "run": {
+    "cmd": [
+      "bash",
+      "-c",
+      "node --test packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs && python3 packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"
+    ]
+  }
+}

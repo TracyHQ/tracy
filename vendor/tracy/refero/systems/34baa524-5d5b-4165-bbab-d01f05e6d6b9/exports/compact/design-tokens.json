@@ -1,0 +1,89 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#fefffc",
+      "$type": "color",
+      "$description": "Parchment — Page canvas — warm off-white slightly creamier than pure white, gives the whole site its book-page atmosphere"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, section backgrounds, footer — the slightly cooler clean white used for elevated content areas"
+    },
+    "linen": {
+      "$value": "#f9faf7",
+      "$type": "color",
+      "$description": "Linen — Input fields, subtle surface wash, nav fill — barely-perceptible off-white that reads as neutral"
+    },
+    "ink-black": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink Black — Primary foreground token, strong body text where maximum contrast is needed"
+    },
+    "graphite": {
+      "$value": "#2c2c2c",
+      "$type": "color",
+      "$description": "Graphite — Headlines and key body text — softer than pure black, pairs with the warm canvas"
+    },
+    "charcoal": {
+      "$value": "#444141",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text, button text — the workhorse text tone for body copy and UI labels"
+    },
+    "ash": {
+      "$value": "#646464",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, descriptive copy, subdued UI"
+    },
+    "fog": {
+      "$value": "#b4b8b4",
+      "$type": "color",
+      "$description": "Fog — Tertiary borders, disabled states, lightest neutral in the scale"
+    },
+    "mist": {
+      "$value": "#dee2de",
+      "$type": "color",
+      "$description": "Mist — Hairline borders on cards, buttons, and section dividers — green-tinted to harmonize with illustrations"
+    },
+    "twilight": {
+      "$value": "#282834",
+      "$type": "color",
+      "$description": "Twilight — Near-black with a cool blue undertone — used for nav borders, icon strokes, and outlined actions; reads darker than its lightness suggests"
+    },
+    "dusk": {
+      "$value": "#1f1f29",
+      "$type": "color",
+      "$description": "Dusk — Filled button background — a near-black with cool violet undertone, the only non-white filled surface in the system"
+    },
+    "signal-blue": {
+      "$value": "#41a1cf",
+      "$type": "color",
+      "$description": "Signal Blue — Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "cerulean": {
+      "$value": "#0081c0",
+      "$type": "color",
+      "$description": "Cerulean — Vivid blue used for a singular saturated card surface — the lone moment of pure color intensity, used sparingly as atmospheric punctuation"
+    }
+  },
+  "font": {
+    "ppmondwest": {
+      "$value": "ppmondwest",
+      "$type": "fontFamily",
+      "$description": "Custom display serif for headlines and editorial copy — the voice of the brand. Tight -0.04em tracking at large sizes makes it feel set rather than typed; weight 400 even at 54px creates a confident, literary register rather than the 700-weight shouts common in tech. Liga features disabled."
+    },
+    "af": {
+      "$value": "af",
+      "$type": "fontFamily",
+      "$description": "Custom sans for all UI, body copy, navigation, buttons, and small headings — a quiet, neutral workhorse. Weight 500 is the default for interactive and label text; weight 400 for body. Slight negative tracking (-0.01em) keeps dense UI from feeling airy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.generalintelligencecompany.com",
+      "siteName": "General Intelligence Company",
+      "extractedAt": "2026-07-03T02:53:17.405Z",
+      "variant": "compact"
+    }
+  }
+}

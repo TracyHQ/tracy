@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6120469b-a1c8-46d3-b7fd-8aa6dc22c0d9",
+  "status": "complete",
+  "name": "Franco Maria Ricci Editore",
+  "url": "https://styles.refero.design/style/6120469b-a1c8-46d3-b7fd-8aa6dc22c0d9",
+  "sourceWebsite": "https://www.francomariaricci.com/en",
+  "extractedAt": "2026-06-03T20:54:46.097Z",
+  "capturedAt": "2026-10-08T05:12:22.556935+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Art Déco gallery catalogue — burnished gold hairlines on bone-white vellum",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/385c788a-2194-49aa-9581-8ab4147b0dbd.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ec848569-79e7-44f4-8685-271990673893.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/25185fbb-7f9a-4c96-9cc3-cb7cb1385261.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/96868b16-b049-49c9-ab72-71faa8bdbe4f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/fc9da25d-2101-4c9f-ad18-08ca0ffae11f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "13cdcc99a930b75264b6c12c5105e05d78ff5bb12d60967618639eb234aa3408",
+      "bytes": 21754
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2585718a76965d915b3f804e5937a45edfaa09e8e9ca95c4aee7b8a2b9b7cdce",
+      "bytes": 96214
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e954f9898cbdcf42b1e1ebf1a192d234634779e1c66a63febc7642e36d8c2e7b",
+      "bytes": 18493
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5dcc40693b89d8657ce36568fa4022a929d56d5a64eee71909b10a4f4ac629be",
+      "bytes": 9688
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "433df8361f4e6d0167e9ab6caf7189e90d3e6fe6b029470a3a8d0906cd9b6dbb",
+      "bytes": 14005
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e45d80c78cf51b7b8a39d00b9e6a66d81d99f52783b72cc3fed7cb9e574006d4",
+      "bytes": 3235
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "fa9545d63922f35b2377a101c6572b84552c5c0640c5f0817727724a36463a9f",
+      "bytes": 679
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "89b74f3d576469686a8f50e29c9fa25c3c79af51e1de16a7c1f5570fef50134c",
+      "bytes": 696
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "05dbd08b7a81c8bb57bf7ac5d6de5053fc52c7aad11fd2ff4b7699e3a598963b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "54a7eef4de12f682548e80467faef626457f0d4e7db772c6367012ceec4d79fb",
+      "bytes": 41983
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c9180e6ac9658f151b7bdfec3740c169a77f956078cc3d6485d79271657c187a",
+      "bytes": 21430
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "67d0b6ee5ecfc871221577a4ee5c7c94662035dc344a6e8a59323c6c7d1e7406",
+      "bytes": 37015
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a8f38218f6eb0f3eda6057759d544ed1d45e324530fccd36b3c653adf31bfc00",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b32db4bff2a080774d6fb7ce2176ac6195a7acd6b48515e5f988bd2706aa6413",
+      "bytes": 1179
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c42cde87738658444481bef762c34ef5834cf9a2eb752aea0dbd587af17458ac",
+      "bytes": 1720
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "2b9e90ad-51d9-4f29-8f7e-a343dc741eab",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "44a6d2a5-16ef-42cd-a69c-33a7af16638d",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "597355de-6167-4f37-8f14-b3897919a94c",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6120469b-a1c8-46d3-b7fd-8aa6dc22c0d9",
+    "887f0c74-c696-4589-82ae-85705ecda919",
+    "8a3d3f72-9ef0-466d-adde-77189ddff797",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "blue-cornflower": {
+      "$value": "#6798ff",
+      "$type": "color",
+      "$description": "Blue Cornflower — Accent for announcement bar, feature icons, active states, and data highlight strokes"
+    },
+    "page-ink": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Page Ink — Primary page background — the dark canvas that everything sits on"
+    },
+    "card-carbon": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Card Carbon — Card surfaces, button backgrounds, and key borders that delineate panels"
+    },
+    "deep-coal": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Deep Coal — Alternate surface level for nested cards and section backgrounds"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Pure black used in SVG illustration fills and contrast anchors"
+    },
+    "steel-border": {
+      "$value": "#313131",
+      "$type": "color",
+      "$description": "Steel Border — Hairline borders on image frames and subtle dividers"
+    },
+    "graphite": {
+      "$value": "#454545",
+      "$type": "color",
+      "$description": "Graphite — Mid-tone borders on outline buttons and input frames"
+    },
+    "fog": {
+      "$value": "#7c7c7c",
+      "$type": "color",
+      "$description": "Fog — Disabled or de-emphasized button text"
+    },
+    "ash": {
+      "$value": "#a7a7a7",
+      "$type": "color",
+      "$description": "Ash — Secondary body text, borders on muted elements, icon strokes"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Primary text, primary filled button background, icon fills, nav links"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI and editorial text. Weight 400 for body and meta, 500 for nav and button labels, 600 for headings. Display sizes (56–64px) carry heavy negative tracking to feel engineered and compact."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced labels for section eyebrows (e.g. \"HOW IT WORKS\"), BETA tags, and small data codes. Wide positive tracking (0.071–0.083em) gives these labels a technical, instrument-panel feel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dovetailapp.com",
+      "siteName": "Dovetail",
+      "extractedAt": "2026-06-03T16:59:46.670Z",
+      "variant": "compact"
+    }
+  }
+}

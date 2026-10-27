@@ -1,0 +1,87 @@
+@theme {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-air-wash: #effbff;
+  --color-mist-border: #e8eff2;
+  --color-steel-inset: #d0d6d7;
+  --color-ash-copy: #7e8486;
+  --color-graphite-copy: #434647;
+  --color-editorial-ink: #2a2c2d;
+  --color-charcoal: #1d1f20;
+  --color-prism-cyan: #00d0ff;
+  --color-sky-fade: #a6ecff;
+  --color-cyan-halo: #ccf6ff;
+
+  /* Typography */
+  --font-exposure-09cb373df0d2138c: 'Exposure-09cb373df0d2138c', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-denimink-fc4757ccf169d42a: 'DenimINK-fc4757ccf169d42a', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-utility: 11px;
+  --leading-utility: 1.45;
+  --tracking-utility: 0.22px;
+  --text-caption: 13px;
+  --leading-caption: 1.38;
+  --tracking-caption: 0.299px;
+  --text-editor-label: 14px;
+  --leading-editor-label: 1.71;
+  --tracking-editor-label: 0.14px;
+  --text-nav: 16px;
+  --leading-nav: 1.2;
+  --tracking-nav: 0px;
+  --text-body: 16px;
+  --leading-body: 1.33;
+  --tracking-body: 0px;
+  --text-feature-label: 18px;
+  --leading-feature-label: 1.3;
+  --tracking-feature-label: 0px;
+  --text-card-heading: 24px;
+  --leading-card-heading: 1;
+  --tracking-card-heading: -0.24px;
+  --text-feature-heading: 32px;
+  --leading-feature-heading: 1;
+  --tracking-feature-heading: 0px;
+  --text-hero-display: 48px;
+  --leading-hero-display: 1.41;
+  --tracking-hero-display: -0.48px;
+  --text-section-display: 48px;
+  --leading-section-display: 1;
+  --tracking-section-display: -0.48px;
+  --text-display-xl: 72px;
+  --leading-display-xl: 1.1;
+  --tracking-display-xl: 0px;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-36: 36px;
+  --spacing-40: 40px;
+  --spacing-44: 44px;
+  --spacing-52: 52px;
+  --spacing-60: 60px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-100: 100px;
+  --spacing-160: 160px;
+
+  /* Border Radius */
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-xl-2: 15px;
+  --radius-2xl: 20px;
+  --radius-3xl: 30px;
+  --radius-3xl-2: 40px;
+  --radius-full: 58px;
+  --radius-full-2: 9999px;
+
+  /* Shadows */
+  --shadow-subtle: rgb(208, 214, 215) 0px 0px 0px 0.5px inset;
+  --shadow-md: rgba(0, 0, 0, 0.05) 0px 4px 10px 0px;
+  --shadow-xl: rgba(190, 210, 235, 0.45) 0px 0px 80px 0px;
+  --shadow-subtle-2: color(srgb 0 0.815686 1 / 0.2) 0px 0px 0px 0.5px inset;
+}

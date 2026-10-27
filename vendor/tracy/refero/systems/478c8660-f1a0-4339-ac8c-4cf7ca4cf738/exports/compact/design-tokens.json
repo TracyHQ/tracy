@@ -1,0 +1,84 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, hairline borders, icon strokes"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, text on dark"
+    },
+    "ink": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink — Filled button background, dark card surfaces, hero base"
+    },
+    "charcoal": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Charcoal — Dark feature card surfaces, elevated dark panels"
+    },
+    "graphite": {
+      "$value": "#515151",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, muted labels"
+    },
+    "slate": {
+      "$value": "#979797",
+      "$type": "color",
+      "$description": "Slate — Muted helper text, disabled labels, logo grayscale"
+    },
+    "ash": {
+      "$value": "#b9b9b9",
+      "$type": "color",
+      "$description": "Ash — Soft surface tint, placeholder backgrounds"
+    },
+    "fog": {
+      "$value": "#cfcfcf",
+      "$type": "color",
+      "$description": "Fog — Dividers, input borders, ghost button fills"
+    },
+    "mist": {
+      "$value": "#c5c5c5",
+      "$type": "color",
+      "$description": "Mist — Light borders on muted backgrounds"
+    }
+  },
+  "font": {
+    "switzer-variable": {
+      "$value": "Switzer Variable",
+      "$type": "fontFamily",
+      "$description": "Switzer Variable — detected in extracted data but not described by AI"
+    },
+    "kibitz-pro-light": {
+      "$value": "Kibitz Pro Light",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — used at all H1–H4 sizes. Weight 300 is anti-convention: most SaaS uses 600–700 for authority, this whisper-weight conveys authority through restraint. Tight line-heights (0.98–1.06) let large sizes feel carved from a single block rather than stacked lines."
+    },
+    "switzer": {
+      "$value": "Switzer",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body sans-serif. Weight 400 for body and 500 for nav labels and emphasis. Geometric humanist construction keeps it neutral so the serif can lead."
+    },
+    "space-mono": {
+      "$value": "Space Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace for labels, tags, metadata, and code-adjacent micro-copy. Adds technical credibility to the editorial voice."
+    },
+    "system-sans-serif": {
+      "$value": "System sans-serif",
+      "$type": "fontFamily",
+      "$description": "Fallback utility text — secondary nav micro-copy and fallbacks. Lowest in the hierarchy; should not appear on hero or feature content."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ankar.ai",
+      "siteName": "Ankar AI",
+      "extractedAt": "2026-06-03T15:45:45.699Z",
+      "variant": "compact"
+    }
+  }
+}

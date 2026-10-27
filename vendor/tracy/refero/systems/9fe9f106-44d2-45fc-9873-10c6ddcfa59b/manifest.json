@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9fe9f106-44d2-45fc-9873-10c6ddcfa59b",
+  "status": "complete",
+  "name": "Pika",
+  "url": "https://styles.refero.design/style/9fe9f106-44d2-45fc-9873-10c6ddcfa59b",
+  "sourceWebsite": "https://pika.art",
+  "extractedAt": "2026-06-03T17:12:25.763Z",
+  "capturedAt": "2026-10-08T05:15:26.787943+00:00",
+  "theme": "mixed",
+  "industry": "ai",
+  "description": "Cream diptych meets cinema void",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4b2224ee-1200-4972-bcfd-a7406ff148b8.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4a21e7d1-3590-4076-b149-5ad1aad95ea8.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c08a240d-ed63-41bc-a670-ca947cd09ba3.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ae801cea-fdaa-4b0e-bc50-8dd32d2baf6f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e9be7db9-4b69-44bb-bc54-114be725c944.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e4f3e7c7eb7103a150ebb25ccc2084b2dd065f388ff844f05542a2c1ac475352",
+      "bytes": 19930
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7a942b2f2b85b4afa50926262f19e3e6ac0119317fc7e336758fe975f8be20dd",
+      "bytes": 109726
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cd006a3af21c5eeb880b3f96c981330bcd27383581a87b95d22e20c20d99920a",
+      "bytes": 17590
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6f9473c9e98f73d021a90ab86b6617e6a815f0546d30ab06bcb7a2bae7af7d84",
+      "bytes": 6367
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a8e43bb619188241454e61724859d716302b21f36484c3a19aa38932c8c8a035",
+      "bytes": 12543
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8e41be45c5e78d97ebca7d748ad14b203eb86fc3ac9cd6c33099dfe0c7b3aeb9",
+      "bytes": 2214
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3fc1a7c67630b0ae3648522e35b335bec6bb93621763834e72e03acc144cc98c",
+      "bytes": 496
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f45398c1cd7e40c842fe14f7b2ccab5544d4b205916d866064820bd61519bb22",
+      "bytes": 513
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "30403aec27a0f2a3de693165434001a8a9e7866bda5b17f20590eab6b0c1d307",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c2c0cd0359a15272610cad95e1580f7a7a35a8822b996706685a748ffe155ba2",
+      "bytes": 43591
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f12a0b9a19691654591641196a35e6abfc4a8080d091d1b42dced73f8d84e3ea",
+      "bytes": 22478
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c9b600e158e3cf8bded073f1fa6b09ab6649455036444400cead7e1091da6079",
+      "bytes": 32399
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2e78ad968edb78b96751240b0b2bcf5351c64b9081e0b8832c2771fb5e221838",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "779508a849a011e850f387914975cd3286df29cfd47f38c641863ddb0b1b2026",
+      "bytes": 1119
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5acab2e828981900868865febade08c894879f95c1285cb9d92a16113b3da525",
+      "bytes": 1645
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "14cc44e6-41bf-4178-b834-fc61bfeed4ae",
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "36a7e1ed-8d14-456b-b828-ff4f47797a74",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8f623d19-51f6-4da2-bc45-05573cc98283",
+    "9fe9f106-44d2-45fc-9873-10c6ddcfa59b",
+    "9ff62d34-e48d-4fcb-9fd9-c018e2747542",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "f532c703-1179-465d-9933-7736df44d0ae"
+  ]
+}

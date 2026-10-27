@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c1534c74-f7b8-44de-a913-586d0f78fb08",
+  "status": "complete",
+  "name": "Agence Foudre",
+  "url": "https://styles.refero.design/style/c1534c74-f7b8-44de-a913-586d0f78fb08",
+  "sourceWebsite": "https://www.agencefoudre.com",
+  "extractedAt": "2026-06-03T15:10:07.512Z",
+  "capturedAt": "2026-10-08T05:17:05.001538+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Magazine splash page in lipstick pink.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/bfbb150c-5eab-46ae-9318-9ee9789a255a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/091837f8-250c-4e7b-97d2-10be35073a93.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0f6d6ee1-4079-4d85-9aa8-3d3a5c3169ad.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/97dbdf08-1fe6-479d-a3a7-dd7aedcfbd1d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b25defa9-0caf-4348-8a87-8682b1725363.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1d52f0e468ce8fadac57e78b40f6d7834bc1f61d001c4e1abbe47fa6c5c4fccd",
+      "bytes": 16360
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1e53696ebec941c058f14692a1479b33e3f0bee4d134c39541ca234a14ed75f6",
+      "bytes": 22354
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "682b0e13ac62e4fe7096abbb800fa256b98103987b31385957704be0bf25d56c",
+      "bytes": 13420
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0ec2d3d858c8d0ef1a0632881fdb787998b76d5440000d6c1f8df47fe920ca44",
+      "bytes": 9263
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dc64e1bd3616e1355c82df9b478d87607c8542fa2b7a44b9b7ebc2e99d6b63b7",
+      "bytes": 10531
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "16194699e3f60b8bea7593f3c131cbdf2b0ec0dc14f6031255910715e665f100",
+      "bytes": 2800
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0a6b91118ca84874f850a5f093ffe7073ae08fa98383405a89cadaa25e6714be",
+      "bytes": 554
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a9fd02750f0d66f8bb42190d27782a40bd5c90c9923c7f1ae62d5aecefb7ec7c",
+      "bytes": 571
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3e38558df9eb7e7263079b61d52a64872dd586c4891a0aefc8abc175131374ba",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "175f018dc4e3bff2f5fb5d27d59e894603e36446e4709a424d7c8237d8684d87",
+      "bytes": 40159
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ea2ba470c36fa7149b72058ddca4f2da1f304a5bdf17571e73d884cce464ee2b",
+      "bytes": 20463
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b09899c2a8ea24535baf165a0f5407646cfd091296f53289a40fe4d7b2ec31d4",
+      "bytes": 34219
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "da1d4818ba571958cfaeca30e67df67429ef9fef9ccf040ffc8961970d3f8104",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2c85647235abfd9ef54344c64c8c0d6e7e85f0ca9df37706d909f06b6d0be4c0",
+      "bytes": 1320
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dd71e4ca54770bc53cd1161824016293f0d6a5a747bd89e3d7de36ea00044265",
+      "bytes": 1923
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4406799b-1586-4d84-aac9-e6acdee0f679",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9ff03bd9-2ce0-474c-8c73-1905dbacc23b",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "c1534c74-f7b8-44de-a913-586d0f78fb08",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "ef73c742-1c3b-48b9-a174-de365ecc4691",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

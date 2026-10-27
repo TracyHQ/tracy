@@ -1,0 +1,18 @@
+/*
+Theme Name: WP Kinetic
+Theme URI: https://tracy.ai
+Update URI: https://github.com/TracyHQ/claude-cowork
+Description: JA Kinetic: the JoomlArt Kinetic design as a WordPress block theme — the dark Terminal site style, carried from its Joomla 6 quickstart.
+Version: 1.0.0
+Author: JoomlArt
+Author URI: https://www.joomlart.com
+Requires at least: 7.0
+Tested up to: 7.1
+Requires PHP: 8.1
+Text Domain: wp-ja-kinetic
+License: GNU General Public License v3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+/* The look is carried by theme.json and the token set named in theme.config.json, not by this
+   file. It exists because WordPress identifies a theme by its style.css header. */

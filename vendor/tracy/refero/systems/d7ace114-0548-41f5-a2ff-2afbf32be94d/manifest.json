@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d7ace114-0548-41f5-a2ff-2afbf32be94d",
+  "status": "complete",
+  "name": "Nike.com",
+  "url": "https://styles.refero.design/style/d7ace114-0548-41f5-a2ff-2afbf32be94d",
+  "sourceWebsite": "https://nike.com",
+  "extractedAt": "2026-06-03T15:44:37.448Z",
+  "capturedAt": "2026-10-08T05:18:06.244529+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "monochrome gallery of athletic performance — white walls, product as art, chrome dissolved into the background.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0b830461-3938-425e-ad1d-4560d056ea7c.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9f751be9-7252-4bf7-8fac-acd43616da29.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b6d59082-584d-40c5-8178-d591837e7282.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/374228ec-917a-49cb-8acb-7dd97aa5ad8a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/beac7e78-27d8-4a53-9534-168b2e229bd4.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9d3cd348c60474b5bdae1e54c385ed6ef19e7c8da3fcd02e389a6f310e3bcf62",
+      "bytes": 20990
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9485fe43bc988a1676d4b41a415306d1c973d692a04a549af89aa2f47cf090d2",
+      "bytes": 130071
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b7430fc85337292b3afaae15a50f72d3cc148ab4cc66d5bf7743112bf7fa64a7",
+      "bytes": 16783
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b463f67cb69105002b3516d46721accab39733faee7017ccbbebb6a8a6bb5885",
+      "bytes": 9252
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "09527d5ad884f91dc498a0a1c0c6696638691bba31609dc9e00732c1c418de80",
+      "bytes": 12647
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6ebb3b5db266c97c39e4249e3e415894e6ce491de4ed8a68d89633a2985892ff",
+      "bytes": 2956
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "55f7625bd2d30a69cc7ab5ede6057afcd766c7706f4ec129b8a785d7d1472c1b",
+      "bytes": 1083
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5332ed3e3ad413d09b507375f73e06538ec797974c3f8f2849b15ed59fced52d",
+      "bytes": 1100
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4b87919f10babce5ccca743277467d4c1a7154b43f21b37c23598b4bcae6be71",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b5b8d476fdfb9af1b8a455c3b50b9ea518e3bb787eb00c812ed8ad5b7145d255",
+      "bytes": 40324
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a3b81ca5508dcda374837892dc40b2b19b771dec8e4e69fae837e17fdea443ad",
+      "bytes": 20721
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5fc93e92aad20694e992fca89584cad719b50e916fb6820b6f17259bc5130b46",
+      "bytes": 35880
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e0b68767a9571b87a48f522c451395bfbbb696605664ed2103b55df4b9a40e54",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "45080f43b1e6ef25b1d2167b676733b0f00fb7d2f74ce1d9a8ca411f443ab387",
+      "bytes": 1862
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "924cfeaa1d3a9aac1f50e1833d86903a31aa6bdf3f0601b8b0992dda73d885cb",
+      "bytes": 2392
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "355e8465-df7d-486a-9d76-2ace37d076a2",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "79d83fce-84bf-4e12-8039-5d283c98917c",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "a6efcd16-dcd8-435b-9bd6-8c590589b424",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d7ace114-0548-41f5-a2ff-2afbf32be94d",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "f401f04f-c45b-4261-9441-f502c6569a29",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

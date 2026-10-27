@@ -1,0 +1,1938 @@
+{
+  "kind": "muted-highlight",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs PREVIEW_DATA=1, the detector's own probe on the plain and the worn page, scripts off as in the preview frame). Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-nova/j6@1.0.6 (https://ja-nova-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#1a1a1a",
+        "#858273",
+        "#b7b39f",
+        "#868474",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#f4efd4",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:1",
+            "at": "span.text-green",
+            "text": "We make",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:2",
+            "at": "span.text-purple",
+            "text": "grow faster",
+            "fg": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-cyan.text-icon-1.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2",
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red",
+            "text": "Start building",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-yellow.text-icon-2",
+            "text": "Share",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:2",
+            "at": "span.text-purple.text-icon-3.align-icon-right",
+            "text": "greatest works,",
+            "fg": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-black.align-icon-right.text-icon-1",
+            "text": "so famous!",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.teams-desc.h2",
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-purple.align-icon-right.text-icon-3",
+            "text": "IT services",
+            "fg": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-green",
+            "text": "1200+",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "great assessing",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Lucy Reid",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Hubert Santos",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Admin",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-red",
+            "text": "questions",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.accordion-title.h2",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1/span:1",
+            "at": "span.text-cyan",
+            "text": "We are here",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h4.cta-desc.h2",
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:1",
+            "at": "span.text-green",
+            "text": "We make",
+            "fg": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:2",
+            "at": "span.text-purple",
+            "text": "grow faster",
+            "fg": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-cyan.text-icon-1.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 45,
+              "g": 195,
+              "b": 245,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2",
+            "ground": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red",
+            "text": "Start building",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-yellow.text-icon-2",
+            "text": "Share",
+            "fg": {
+              "r": 248,
+              "g": 171,
+              "b": 17,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 239,
+              "g": 237,
+              "b": 252,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:2",
+            "at": "span.text-purple.text-icon-3.align-icon-right",
+            "text": "greatest works,",
+            "fg": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 239,
+              "g": 237,
+              "b": 252,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-black.align-icon-right.text-icon-1",
+            "text": "so famous!",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.teams-desc.h2",
+            "ground": {
+              "r": 248,
+              "g": 171,
+              "b": 17,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-purple.align-icon-right.text-icon-3",
+            "text": "IT services",
+            "fg": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-green",
+            "text": "1200+",
+            "fg": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 230,
+              "g": 246,
+              "b": 240,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "great assessing",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Lucy Reid",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Hubert Santos",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Admin",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-red",
+            "text": "questions",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.accordion-title.h2",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1/span:1",
+            "at": "span.text-cyan",
+            "text": "We are here",
+            "fg": {
+              "r": 45,
+              "g": 195,
+              "b": 245,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h4.cta-desc.h2",
+            "ground": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-nova/j6@1.0.6 (https://ja-nova-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#1a1a1a",
+        "#858273",
+        "#b7b39f",
+        "#868474",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#f4efd4",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:1",
+            "at": "span.text-green",
+            "text": "We make",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:2",
+            "at": "span.text-purple",
+            "text": "grow faster",
+            "fg": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-cyan.text-icon-1.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2",
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red",
+            "text": "Start building",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-yellow.text-icon-2",
+            "text": "Share",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:2",
+            "at": "span.text-purple.text-icon-3.align-icon-right",
+            "text": "greatest works,",
+            "fg": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-black.align-icon-right.text-icon-1",
+            "text": "so famous!",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.teams-desc.h2",
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-purple.align-icon-right.text-icon-3",
+            "text": "IT services",
+            "fg": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h2",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-green",
+            "text": "1200+",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "great assessing",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Lucy Reid",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Hubert Santos",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Admin",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-red",
+            "text": "questions",
+            "fg": {
+              "r": 134,
+              "g": 132,
+              "b": 116,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.accordion-title.h2",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1/span:1",
+            "at": "span.text-cyan",
+            "text": "We are here",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h4.cta-desc.h2",
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:1",
+            "at": "span.text-green",
+            "text": "We make",
+            "fg": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:2",
+            "at": "span.text-purple",
+            "text": "grow faster",
+            "fg": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h1.hero-title",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-cyan.text-icon-1.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 45,
+              "g": 195,
+              "b": 245,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2",
+            "ground": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red",
+            "text": "Start building",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-yellow.text-icon-2",
+            "text": "Share",
+            "fg": {
+              "r": 248,
+              "g": 171,
+              "b": 17,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 239,
+              "g": 237,
+              "b": 252,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:2",
+            "at": "span.text-purple.text-icon-3.align-icon-right",
+            "text": "greatest works,",
+            "fg": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2.cta-title.h1",
+            "ground": {
+              "r": 239,
+              "g": 237,
+              "b": 252,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "investigation",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-black.align-icon-right.text-icon-1",
+            "text": "so famous!",
+            "fg": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.teams-desc.h2",
+            "ground": {
+              "r": 248,
+              "g": 171,
+              "b": 17,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+            "at": "span.text-purple.align-icon-right.text-icon-3",
+            "text": "IT services",
+            "fg": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h2",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-green",
+            "text": "1200+",
+            "fg": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 230,
+              "g": 246,
+              "b": 240,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+            "at": "span.text-red.text-icon-4.align-icon-right",
+            "text": "great assessing",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "span.h2.main-title.my-0",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Lucy Reid",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Hubert Santos",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:2/dl:1/dd:1/span:1/strong:1",
+            "at": "strong",
+            "text": "Admin",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 0.75
+            },
+            "aroundWeight": 500,
+            "block": "dd.item-author.createdby",
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+            "at": "span.text-red",
+            "text": "questions",
+            "fg": {
+              "r": 239,
+              "g": 56,
+              "b": 103,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "div.accordion-title.h2",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1/span:1",
+            "at": "span.text-cyan",
+            "text": "We are here",
+            "fg": {
+              "r": 45,
+              "g": 195,
+              "b": 245,
+              "a": 1
+            },
+            "weight": 700,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 700,
+            "block": "h4.cta-desc.h2",
+            "ground": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-podcast/j6@1.0.4 (https://ja-podcast-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#868474",
+        "#000000",
+        "#858273",
+        "#f4efd4",
+        "#060605",
+        "#1a1a1a",
+        "#84acfb",
+        "#b7b39f",
+        "#93b6fb",
+        "#9fbefc",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/h1:1/span:1",
+            "at": "span",
+            "text": "Everyone",
+            "fg": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "weight": 300,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 300,
+            "block": "h1",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/h1:1/span:1",
+            "at": "span",
+            "text": "Everyone",
+            "fg": {
+              "r": 254,
+              "g": 217,
+              "b": 15,
+              "a": 1
+            },
+            "weight": 800,
+            "around": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "aroundWeight": 800,
+            "block": "h1",
+            "ground": {
+              "r": 24,
+              "g": 29,
+              "b": 36,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-phio/j6@1.0.5 (https://ja-phio-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#858273",
+        "#b7b39f",
+        "#1a1a1a",
+        "#f4efd4",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1/span:1",
+            "at": "span.text-highlight",
+            "text": "client",
+            "fg": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "weight": 500,
+            "around": {
+              "r": 183,
+              "g": 179,
+              "b": 159,
+              "a": 1
+            },
+            "aroundWeight": 500,
+            "block": "h3.module-title",
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1/span:1",
+            "at": "span.text-highlight",
+            "text": "client",
+            "fg": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "weight": 500,
+            "around": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "aroundWeight": 500,
+            "block": "h3.module-title",
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 (https://ja-voyara-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-morgan/j6@1.0.5 (https://ja-morgan-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#1a1a1a",
+        "#868474",
+        "#858273",
+        "#7a786a",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-prodex/j6@1.0.2 (https://ja-prodex-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#b7b39f",
+        "#060605",
+        "#84acfb",
+        "#9fbefc",
+        "#000000",
+        "#868474",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    }
+  ]
+}

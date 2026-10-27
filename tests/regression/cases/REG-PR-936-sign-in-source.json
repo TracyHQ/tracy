@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-936-sign-in-source",
+  "kind": "feat",
+  "title": "A first sign-in records the utm_* of the link it came from, through /, /login, the form, the script, the beta queue, Google and the JoomlArt demo banner, and nothing when there is none",
+  "pr": 936,
+  "area": "web/sign-in",
+  "cms": ["any"],
+  "needs": ["postgres:TEST_DATABASE_URL", "browser:chrome", "playwright"],
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-936-sign-in-source.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  },
+  "flaky_model": false,
+  "steps": [
+    "S0: From the repo root at the commit under test, with TEST_DATABASE_URL set to a Postgres the script may create a scratch schema on: node tasks/evidence/sign-in-source/verify.mjs. It builds the real buildApp on 127.0.0.1 (gate off, then on with an aMember stub), captures mail in memory, and drives the installed Google Chrome headless through Playwright.",
+    "S1 (script on, gate off): open /?utm_source=joomlart&utm_medium=email&utm_campaign=tracy-beta-2026-10&utm_content=members-cta, type an address, Continue, type the code from the captured mail.",
+    "S2 (script off, gate off): open /?utm_medium=blog&…&utm_content=launch-post-cta, submit the email form, then the six code boxes, as plain form posts.",
+    "S3 (gate on): open /new/?inspiration=ja-vega&platform=joomla&utm_medium=demo&…&utm_content=ja-vega, sign in with the code the queue mails.",
+    "S4: open / with no utm and sign in.",
+    "S5: open /?utm_source=%3Cscript%3Ealert(1)%3C%2Fscript%3E&utm_medium=Newsletter&ref=x&next=%2F%2Fevil.invalid and read the address and the hidden fields.",
+    "S6 (demo banner, gate off): a page on https://demo.joomlart.com/ja-vega/ (served by Chrome via page.route) carries the banner script as buildWithTracyScript(DEFAULT_SETTING.advert, null) writes it, with data-template=ja-vega and data-origin=<stand>; read the href of the card's Build this site with Tracy button, pass its query to buildUrl from packages/web/tracy-design-page/src/templates.mjs (the Design inspiration Build press), open that /new/ address on the stand and sign in.",
+    "Also: node --test apps/tracy-web/test/sign-in-source.test.mjs (22 tests) and apps/tracy-web/test/build-with-tracy-demo.test.mjs with the same TEST_DATABASE_URL; node --test packages/web/tracy-design-page/test/templates.test.mjs."
+  ],
+  "expect": [
+    "The script prints verdict PASS checks 25 and writes checks.json beside it.",
+    "S1: / lands on /login?<the four utm>; #email-form holds four hidden utm_* inputs; ops_signal has one account.first_sign_in whose data.source is {source:joomlart, medium:email, campaign:tracy-beta-2026-10, content:members-cta}; account.beta_admission->'source' is the same; signalText ends with 'Source: joomlart · email · tracy-beta-2026-10 · members-cta'.",
+    "S2: #resend-form on the code step keeps utm_medium=blog; the signal's source.medium is blog and content launch-post-cta.",
+    "S3: /login?next= contains the utm; the form reads them out of next; the signal has badge 'JoomlArt member' and source.medium demo.",
+    "S4: / goes to a bare /login; no utm_* inputs; the signal has no source key and the message no Source line.",
+    "S5: the address after / is exactly ?utm_source=scriptalert1script&utm_medium=other (no ref, no next); the hidden fields hold those values; no dialog opens.",
+    "S6: the button href is <stand>/design-inspiration?open=ja-vega&provider=JoomlArt&utm_source=joomlart&utm_medium=demo&utm_campaign=tracy-beta-2026-10&utm_content=ja-vega; buildUrl gives /new/?inspiration=ja-vega&platform=joomla plus the same four utm and no open/provider; /login?next= carries utm_content=ja-vega; #email-form holds utm_medium=demo; the signal's data.source is {source:joomlart, medium:demo, campaign:tracy-beta-2026-10, content:ja-vega}.",
+    "node --test: sign-in-source 22/22, build-with-tracy-demo all pass, tracy-design-page templates all pass."
+  ],
+  "selectors": {
+    "emailForm": "#email-form input[type=hidden][name^=\"utm_\"]",
+    "resendForm": "#resend-form input[type=hidden][name^=\"utm_\"]",
+    "signal": "select data from ops_signal where kind = 'account.first_sign_in'",
+    "account": "select beta_admission->'source' from account where email = $1"
+  },
+  "evidence": "05/10/2026 on cowork.tracy.ai: a signed-out GET /?utm_source=joomlart&utm_medium=email answered 302 to a bare /login, dropping the utm the JoomlArt mail and blog links carry. Branch run: tasks/evidence/sign-in-source/checks.json, s1-login.png, s1-code-step.png, s1-telegram.txt. S6 screenshot: s6-demo-banner.png.",
+  "fence": "apps/tracy-web/src/lib/sign-in-source.js is the only reader and cleaner of utm_* (64 chars, a-z0-9-_., medium in email|blog|demo|site|forum else other); apps/tracy-web/src/workspace/route.js echoes only cleaned utm_* from / to /login; the source rides otp_code.admission, beta_login_job.source and oauth_state.source into account.beta_admission and the account.first_sign_in signal; no cookie is written. The demo banner link (lib/build-with-tracy-demo.js: buildWithTracyHref and the client script, same keys from DEMO_UTM) adds utm_source=joomlart, utm_medium=demo, utm_campaign=tracy-beta-2026-10 and utm_content=<template id>; Design inspiration's buildUrl copies only the four utm_* of its own address onto /new/."
+}

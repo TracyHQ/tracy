@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1203-narrow-load-keeps-composer",
+  "kind": "fix",
+  "title": "At 360 px a plain load of /<site>/ keeps the composer in sight: the site preview is placed behind the toggle; a ?tab= link still opens the column",
+  "pr": 1203,
+  "area": "site/add-site",
+  "cms": ["any"],
+  "needs": ["stand", "viewport:360"],
+  "flaky_model": false,
+  "steps": [
+    "S1: As A (owner) open $O/<site>/ in a fresh 360x800 mobile context; wait for [data-composer-input=\"true\"] plus 8 s (a Playwright wait grants the page a transient user activation, which is the condition that used to let the load's open through). Read whether [data-sidebar-right-panel] carries data-sidebar-right-open, and document.elementFromPoint at the composer's centre.",
+    "S2: Same at 1440x900 in a fresh context.",
+    "S3: In a fresh 360x800 context open $O/<site>/?tab=tracy:my-sites and wait 14 s; read [data-sidebar-right-panel][data-sidebar-right-open]."
+  ],
+  "expect": [
+    "S1: no [data-sidebar-right-panel][data-sidebar-right-open]; the point lands inside [data-composer-card] (or in the Getting started dialog when it is up), never inside [data-rightbar-session]; openTabsOf('tracy:browser') still lists the site's preview.",
+    "S2: [data-sidebar-right-panel][data-sidebar-right-open] present (the preview opens beside the chat as before).",
+    "S3: [data-sidebar-right-panel][data-sidebar-right-open] present."
+  ],
+  "selectors": {
+    "panelOpen": "[data-sidebar-right-panel][data-sidebar-right-open]",
+    "composer": "[data-composer-input=\"true\"]",
+    "card": "[data-composer-card]"
+  },
+  "evidence": "Dev acceptance 12/10/2026 (develop 245be29854, fork tracy.42) at 360 px: the Browser tab covered the composer although [data-rightbar-collapsed] was set (that attribute stays set while the fullscreen panel slides in; read the panel's own data-sidebar-right-open). Opener: tracy-add-site ensure() -> show(own) -> revealTab (explicit expand) or openSite after the credentials await, passing the fork's userActivation check.",
+  "fence": "@tracy/core/tab-link openUnasked/focusUnasked + tracy-add-site bringPreview: on a narrow frame the page's own load never expands a collapsed column; presses and ?tab= still do",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/bring-preview.test.mjs",
+      "packages/core/tracy-core/test/tab-link.test.mjs"
+    ],
+    "tests": [
+      "on load at 360px",
+      "on load at 1440px",
+      "a press",
+      "openUnasked",
+      "focusUnasked",
+      "isNarrowFrame"
+    ],
+    "timeout_s": 120
+  }
+}

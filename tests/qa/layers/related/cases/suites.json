@@ -1,0 +1,242 @@
+[
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "docs-scripts-tests",
+      "variant": "docs-scripts-tests"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-docs-scripts-tests-happy",
+    "itemIds": ["suite:tracy-docs/scripts/tests"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-docs"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "emdash-template",
+      "variant": "emdash-template"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-emdash-template-happy",
+    "itemIds": ["suite:tracy-emdash-template/skills/tracy-emdash-template/scripts/tests"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-emdash-template"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "fleet-joomla-access",
+      "variant": "fleet-joomla-access"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-fleet-joomla-access-happy",
+    "itemIds": ["suite:tracy-fleet/provision/access/joomla/tests/run.php"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-fleet"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "fleet-tests",
+      "variant": "fleet-tests"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-fleet-tests-happy",
+    "itemIds": ["suite:tracy-fleet/tests"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-fleet"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "infra-fleet-tests",
+      "variant": "infra-fleet-tests"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-infra-fleet-tests-happy",
+    "itemIds": ["suite:tracy-infra/fleet/tests"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-infra"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "infra-mail",
+      "variant": "infra-mail"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-infra-mail-happy",
+    "itemIds": ["suite:tracy-infra/mail/test/emails.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-infra"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "joomla-template",
+      "variant": "joomla-template"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-joomla-template-happy",
+    "itemIds": ["suite:tracy-joomla-template/skills/joomlart-t4-template/scripts/test"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-joomla-template"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  },
+  {
+    "area": "suites",
+    "assertionIds": ["sibling.suite-runs-with-provenance"],
+    "dimensions": {
+      "assertion": "sibling.suite-runs-with-provenance",
+      "suite": "wordpress-theme",
+      "variant": "wordpress-theme"
+    },
+    "edgeTags": ["happy", "dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["${QA_RELATED_ROOT}/<repo> (read-only)"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-RELATED-suite-wordpress-theme-happy",
+    "itemIds": ["suite:tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; clone HEAD and working tree identical before and after",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the sibling repository)"
+    },
+    "prerequisites": ["config:related-root", "clone:tracy-wordpress-theme"],
+    "redProof": null,
+    "requirement": "The sibling repository's own suite runs against a recorded commit without failing, without touching the clone and with temporary files kept in the run scratch folder.",
+    "targets": ["local"]
+  }
+]

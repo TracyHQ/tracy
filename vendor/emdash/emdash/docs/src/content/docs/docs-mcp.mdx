@@ -1,0 +1,164 @@
+---
+title: EmDash Docs MCP
+description: Connect your AI coding assistant to the EmDash documentation so it can answer questions and find the right pattern from real docs.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+The EmDash documentation site exposes a public [Model Context Protocol](https://modelcontextprotocol.io) server at `https://docs.emdashcms.com/mcp`. Connect a coding assistant to search the published docs while you work.
+
+This is **separate from your site's MCP server** (covered in the [AI Tools guide](/guides/ai-tools)). The docs MCP only knows about EmDash's documentation -- it cannot read or modify your content. Connect the docs MCP for documentation lookup, the site MCP for content management, or both when the assistant needs both kinds of access.
+
+## What it does
+
+The docs MCP exposes a single tool:
+
+| Tool          | Purpose                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| `search_docs` | Search the EmDash documentation. Returns relevant chunks with source URLs and match scores. |
+
+The server uses [Cloudflare AI Search](https://developers.cloudflare.com/ai-search/) over an index of `docs.emdashcms.com`. Results contain source URLs and matching passages; the AI client decides how to use them in its answer.
+
+## Connect it
+
+The server is reachable at the following endpoint, with no authentication or API key. It is public and read-only.
+
+```
+https://docs.emdashcms.com/mcp
+```
+
+### Auto-discovery in EmDash templates
+
+If you started your project from an EmDash template (`npm create emdash`), three config files are already in place and will be picked up automatically:
+
+| File                | Used by      |
+| ------------------- | ------------ |
+| `.mcp.json`         | Claude Code  |
+| `.cursor/mcp.json`  | Cursor       |
+| `.vscode/mcp.json`  | VS Code      |
+
+Open the project and accept the workspace-trust prompt the tool shows on first run. No further setup is required.
+
+### Manual setup
+
+If you're not using a template, or you use a different tool, add it once with the snippet for your client:
+
+<Tabs>
+<TabItem label="Codex">
+
+Add the public remote server with the Codex CLI:
+
+```bash
+codex mcp add emdash-docs --url https://docs.emdashcms.com/mcp
+```
+
+The ChatGPT desktop app, Codex CLI, and IDE extension share MCP configuration for the same Codex host. The [official Codex MCP documentation](https://learn.chatgpt.com/docs/extend/mcp) covers the CLI, `config.toml`, and current transport support.
+
+</TabItem>
+<TabItem label="ChatGPT">
+
+ChatGPT developer mode can create an app from a remote MCP server with no authentication. Use the docs MCP endpoint when creating the app. Follow the [official ChatGPT developer mode guide](https://developers.openai.com/api/docs/guides/developer-mode) for current eligibility and controls instead of relying on a copied settings path.
+
+</TabItem>
+<TabItem label="Claude Code">
+
+The following command adds the server with the Claude Code CLI:
+
+```bash
+claude mcp add --transport http emdash-docs https://docs.emdashcms.com/mcp
+```
+
+Alternatively, commit the same `.mcp.json` file that EmDash templates provide:
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "emdash-docs": {
+      "type": "http",
+      "url": "https://docs.emdashcms.com/mcp"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem label="OpenCode">
+
+Add the following entry to `opencode.jsonc`:
+
+```jsonc title="opencode.jsonc"
+{
+  "mcp": {
+    "emdash-docs": {
+      "type": "remote",
+      "url": "https://docs.emdashcms.com/mcp"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem label="Cursor">
+
+Commit a `.cursor/mcp.json` file at the project root with the following contents. For user-level or interface setup, follow [Cursor's MCP documentation](https://docs.cursor.com/context/model-context-protocol):
+
+```json title=".cursor/mcp.json"
+{
+  "mcpServers": {
+    "emdash-docs": {
+      "type": "http",
+      "url": "https://docs.emdashcms.com/mcp"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem label="VS Code">
+
+Add the following entry to `.vscode/mcp.json` in the project. For user-level configuration and trust controls, follow [Visual Studio Code's MCP documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers):
+
+```json title=".vscode/mcp.json"
+{
+  "servers": {
+    "emdash-docs": {
+      "type": "http",
+      "url": "https://docs.emdashcms.com/mcp"
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem label="Claude">
+
+Add the endpoint as a remote custom connector. Connector screens and plan requirements are controlled by Anthropic, so follow its [current remote MCP connector instructions](https://support.claude.com/en/articles/11175166-getting-started-with-custom-connectors-using-remote-mcp).
+
+</TabItem>
+</Tabs>
+
+## When to use it
+
+- You're building an EmDash site and want your AI assistant to look up the correct API, hook name, or config option from current docs rather than half-remembered training data.
+- You're writing a plugin and want to find which hooks fire in what order.
+- You're porting a WordPress theme and want examples of seed file patterns.
+- You're stuck on an error and want to search release notes and concepts.
+
+## Recommend it in `AGENTS.md`
+
+If your project uses `AGENTS.md` (or `CLAUDE.md`, `.cursorrules`, etc.) to instruct AI tools, point them at the docs MCP so they prefer real documentation over assumptions:
+
+```markdown title="AGENTS.md"
+## Documentation
+
+Look up EmDash documentation via the `emdash-docs` MCP server when you need to
+verify an API, hook, config option, or pattern. Prefer the docs MCP over
+assumptions from training data -- the docs reflect the current published
+behaviour.
+```
+
+The EmDash starter templates ship with this snippet pre-included.
+
+<Aside title="Privacy">
+	The docs MCP is hosted by the EmDash project. Queries are sent to `docs.emdashcms.com` and processed by Cloudflare AI Search. Don't include private code, secrets, or user data in queries -- the tool is designed for documentation lookup, not code analysis.
+</Aside>

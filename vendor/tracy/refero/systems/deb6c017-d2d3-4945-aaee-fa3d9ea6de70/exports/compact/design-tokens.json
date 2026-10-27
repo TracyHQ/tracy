@@ -1,0 +1,64 @@
+{
+  "color": {
+    "paper-cream": {
+      "$value": "#ead7b8",
+      "$type": "color",
+      "$description": "Paper Cream — Page canvas, the continuous warm background behind every section — the paper the whole product sits on"
+    },
+    "sand-border": {
+      "$value": "#e5dfd5",
+      "$type": "color",
+      "$description": "Sand Border — Hairline borders, soft card surfaces that float just barely above the cream canvas, subtle dividers"
+    },
+    "ink-black": {
+      "$value": "#2e2d2b",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, masthead headlines, and the near-black ink that gives the editorial type its printed authority"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Body copy, secondary text, and any UI text that needs to stay just slightly softer than pure ink"
+    },
+    "stone": {
+      "$value": "#73706b",
+      "$type": "color",
+      "$description": "Stone — Muted helper text, inactive icons, and the soft gray that recedes behind primary content"
+    },
+    "slate-border": {
+      "$value": "#676460",
+      "$type": "color",
+      "$description": "Slate Border — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "deep-stone": {
+      "$value": "#5c5955",
+      "$type": "color",
+      "$description": "Deep Stone — Pressed/hover states for borders and link underlines — a half-step darker than Slate Border"
+    },
+    "amber-honey": {
+      "$value": "#ffb546",
+      "$type": "color",
+      "$description": "Amber Honey — Decorative brand accent — brand mark, active workspace icon stroke, highlight tag dots. Rationed: never fills a button, never carries body text"
+    }
+  },
+  "font": {
+    "gt-pressura-standard": {
+      "$value": "GT Pressura Standard",
+      "$type": "fontFamily",
+      "$description": "Display and headline voice — masthead, section titles, oversized declarations. Its geometric, slightly industrial forms at 104–136px are the brand's signature, replacing the typical bold sans headline with something that reads more like editorial typography set by hand."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI, navigation, badges, and supporting headlines. Quiet, high-legibility workhorse that stays out of GT Pressura's way; the 0.214em tracking on 10–14px uppercase labels is the second signature — small editorial micro-labels that read as typeset marginalia."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://strut.so",
+      "siteName": "Strut",
+      "extractedAt": "2026-06-03T21:00:52.971Z",
+      "variant": "compact"
+    }
+  }
+}

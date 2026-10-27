@@ -1,0 +1,61 @@
+{
+  "id": "REG-PR-1255-listing-pages-cover-release",
+  "kind": "fix",
+  "title": "Ops Templates: Create listing drafts the release top-level pages, Road to live Listing asks a listing to cover them without system pages, and the Design Inspiration tab draws on first open",
+  "pr": 1255,
+  "area": "ops/templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the tracy-web listing-pages and road-to-live tests on the real tracy_site_pages.json and tracy_design_inspiration.json files of tracy-base emdash, tracy-business j6, ja-social-ii j6, ja-impact wp7 and ja-phio j6.",
+    "Run the harness ops-templates-feedback test that holds the first sheet read and bumps readKey."
+  ],
+  "expect": [
+    "Create listing on Tracy Base EmDash drafts Home, Product, Service /services, Pricing, Resources /blog and Company /about though the demo menu read Home alone.",
+    "The draft never carries a system page, a not found page, a language root or a legal page, and breaks no rule of its own.",
+    "tracy-business j6 is flagged for Terms · Privacy, Русский and Not found; ja-social-ii j6 misses News and Contact Us; ja-impact wp7 misses Events and Blog and carries Authors and Login; ja-phio j6 is clean.",
+    "A hidden listing that breaks the rule is to do and Publish refuses LISTING_INCOMPLETE naming the pages; a published one only warns, stays published and nothing is refused.",
+    "Opening a template whose page re-read lands first draws the Listing form, not Reading…."
+  ],
+  "selectors": {
+    "generate": "POST /api/ops/templates/:id/generate",
+    "publish": "POST /api/ops/quickstart/inspiration/publish",
+    "sheet": "GET /api/ops/quickstart/inspiration"
+  },
+  "fence": "listingPagesOf + listingProblems in apps/tracy-web/src/lib/listing-pages.js are the one rule the drafter and the road read; the road warns, never holds, a published listing.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/listing-pages.test.mjs",
+      "apps/tracy-web/test/road-to-live.test.mjs",
+      "packages/web/tracy-harness/test/ops-templates-feedback.test.mjs"
+    ],
+    "tests": [
+      "EmDash: every page of the primary menu, its record slug mapped to the path it answers at",
+      "WordPress and Joomla: a page id is its path, so nested pages stay off the listing",
+      "at most six pages, in file order, with the home page first wherever the file lists it",
+      "no pages file: no page list to cover",
+      "Create listing on Tracy Base EmDash drafts its six pages, though the demo menu read Home alone",
+      "the demo menu fills the slots the pages leave, and its address and count are kept",
+      "a Joomla page the demo menu did not read takes the demo’s /index.php prefix",
+      "no pages file: the draft is the demo menu, as before",
+      "the demo menu never fills a slot with a system page or a language switch",
+      "Tracy Business Joomla: every page there, but Not found, Русский and Terms · Privacy may not be",
+      "JA Social II Joomla: a Home-only listing misses News and Contact Us",
+      "JA Impact WordPress: misses Events and Blog, and carries Authors and Login",
+      "JA Phio Joomla: its six top-level pages, nothing else, is clean",
+      "Tracy Base EmDash on dev (Home, Product, Service, Pricing) misses Resources and Company",
+      "no pages file: nothing is required, and system pages are still not allowed",
+      "the drafter’s own draft breaks no rule",
+      "polish without a listing still names the pages file, and never waits",
+      "a hidden listing that misses a page of the release is to do, names it, and holds Publish",
+      "a page without a desktop picture keeps the listing to do",
+      "a published listing that misses a page only warns: it stays published and nothing is held",
+      "a hidden listing carrying a system page is to do, and the refusal names it",
+      "7: a page re-read that answers before the first sheet read still draws the sheet, not \"Reading…\""
+    ]
+  }
+}

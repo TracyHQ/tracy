@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-netflix-red: #e50914;
+  --color-feature-card-gradient: #1d153f;
+  --color-deep-space: #000000;
+  --color-graphite: #2d2d2d;
+  --color-charcoal: #414141;
+  --color-slate: #5a5a5a;
+  --color-ash: #808080;
+  --color-silver: #b3b3b3;
+  --color-chalk-white: #ffffff;
+
+  /* Typography */
+  --font-netflix-sans: 'Netflix Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

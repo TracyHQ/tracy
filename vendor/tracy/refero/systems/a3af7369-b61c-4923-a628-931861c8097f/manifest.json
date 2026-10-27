@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a3af7369-b61c-4923-a628-931861c8097f",
+  "status": "complete",
+  "name": "Sanity.io",
+  "url": "https://styles.refero.design/style/a3af7369-b61c-4923-a628-931861c8097f",
+  "sourceWebsite": "https://sanity.io",
+  "extractedAt": "2026-06-03T18:00:47.206Z",
+  "capturedAt": "2026-10-08T05:15:34.651763+00:00",
+  "theme": "mixed",
+  "industry": "devtools",
+  "description": "Geological monolith with orange ignition. Dark agate slabs punctured by a single ember-orange CTA, surrounded by white editorial whitespace.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/de55c14e-cae4-47d9-9a97-872a9c960d0a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/14336b86-f0aa-4296-99d1-fca540d9ca8e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e09ad338-4fcf-4a70-9ac2-0358654d503e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0caf7f5a-1e77-4626-9811-bf0f378aa8b7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c9e3ef41-3786-4162-90a9-a8f5051cb895.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a3e8f78dc08f96c88533f0403a7dbf27924b90c53a6cdf6ef02aff8c0ca01347",
+      "bytes": 22336
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1332003e5c11277d58b8581c6092f53cff2d8999bf2733611623684cb40b1720",
+      "bytes": 183361
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3c4d9d9988138217c331a2663051ff5b3a4cf8591affc597e1500314271757f5",
+      "bytes": 19132
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4fab0b6fc997e806cdcc028e17c959244dc5f3e545bfc54e26cfa6d53fac9258",
+      "bytes": 17238
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "90d7d9dad5fc4d917fa26681a591032fe3e60e35e3769a6f4ff442544bf72af7",
+      "bytes": 14190
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "cf0fbaa3791344c9b54b10177ec7864cf87ecbb30f16e879eb2f319ab297c4b9",
+      "bytes": 4116
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1c65d0f829923d82eceb5117ac5c7ae62f7d9d286d40e38f7e2c21bf81b68e22",
+      "bytes": 717
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "735c248fdde9336c3a81f84df57fd82e21ed5c63d6567241b424d85d66aee8cc",
+      "bytes": 734
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "00aa1456e5312702071e86588724f924bc13abd327c681625a330d1d1fd5aab4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d1c2da153dcfd0ddde416fe957c9b459fc8cdf977df631674e609f2db35ef99d",
+      "bytes": 46964
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9f278073c5b176e1f0ebcc7300029fcbae36a84ab8a91bf7de9372ec667ce316",
+      "bytes": 24542
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fc4e04784d6f85719797b182477d3c5b9d9f79f40bb716e6ccdccea771608181",
+      "bytes": 54631
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5329eba16a65e1ed5091c21c491ff18030e8fa09d3c80141f90d5dda0bb1a927",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e7d6c2d0961de6c148f576ccd5cc34e93022e11293bfe234c85358c3cc69c56c",
+      "bytes": 1824
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "05cebcd1709338902f76884a834cff58c034a15bbcc8a9c016f9e8c0ed169012",
+      "bytes": 2464
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "45c4f990-e6b4-472d-89a4-06870ac17b9f",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a3af7369-b61c-4923-a628-931861c8097f",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

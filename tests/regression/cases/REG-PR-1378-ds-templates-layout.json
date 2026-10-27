@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1378-ds-templates-layout",
+  "kind": "fix",
+  "title": "A design system changes colours, faces, radii and shadows only: the slot writes no container width or section rhythm, button sizes stop at forms; the preview detectors catch moved rows, kept status hues and unworn pages; Tracy Business EmDash is open to customers",
+  "pr": 1378,
+  "area": "design-system/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/layout.test.mjs packages/design/tracy-ds-slot/test/cms.test.mjs packages/design/tracy-ds-slot/test/two-modes.test.mjs packages/design/tracy-ds-slot/test/matrix.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/preview-detectors-layout.test.mjs apps/tracy-web/test/preview-detectors-status-hue.test.mjs apps/tracy-web/test/preview-detectors-unworn-page.test.mjs apps/tracy-web/test/preview-pages.test.mjs.",
+    "S3: Run node --test apps/tracy-web/test/design-system-customer-lock.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes: no contract makes the slot write a content width; button padding selectors all carry :where(:not(form *)); every contract fits its Joomla module under every library system (Tracy Business Joomla with modesAuto false).",
+    "S2: every test passes: LAYOUT-3 sees a row that moved, status-hue a kept status hue, unworn-page a page whose system vars resolve to the template palette; every declared page is sampled.",
+    "S3: every test passes: emdash/tracy-business and joomla/tracy-business are open to customers, every other template locked, staff pass."
+  ],
+  "selectors": {
+    "slot": "packages/design/tracy-ds-slot/src/tokens56.mjs layoutRules outsideForms",
+    "lock": "apps/tracy-web/src/lib/design-system-customer-lock.js CUSTOMER_DESIGN_SYSTEM_TEMPLATES",
+    "probe": "packages/design/tracy-ds-slot/src/preview-probe-version.mjs PREVIEW_PROBE_VERSION"
+  },
+  "evidence": "Under Moxie and Figma the five templates changed layout (JA Kinetic footer newsletter row wrapped, inner-page columns off their left edge) and the home-page-only probe saw nothing",
+  "fence": "the template's layout never changes under a system; a locked template stays locked for customers",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/layout.test.mjs",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "packages/design/tracy-ds-slot/test/two-modes.test.mjs",
+      "packages/design/tracy-ds-slot/test/matrix.test.mjs",
+      "apps/tracy-web/test/preview-detectors-layout.test.mjs",
+      "apps/tracy-web/test/preview-detectors-status-hue.test.mjs",
+      "apps/tracy-web/test/preview-detectors-unworn-page.test.mjs",
+      "apps/tracy-web/test/preview-pages.test.mjs",
+      "apps/tracy-web/test/design-system-customer-lock.test.mjs"
+    ]
+  }
+}

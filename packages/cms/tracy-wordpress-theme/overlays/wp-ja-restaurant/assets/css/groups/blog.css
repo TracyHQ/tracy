@@ -1,0 +1,378 @@
+/* Blog group: article lists, sidebar, single article, 404. The Joomla rules for the markup drawn in inc/groups/blog.php are carried in source/template.css; this sheet holds only what WordPress wrappers need undone. */
+
+/* The seeder's list is a core Post Template (ul > li): its list look and block gap give way to the source's rows. */
+.t3-content .wp-block-post-template.blog,
+.t3-content .wp-block-post-template.tags-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.t3-content .wp-block-post-template.blog > li.wp-block-post,
+.t3-content .wp-block-post-template.tags-list > li.wp-block-post {
+	margin: 0;
+	padding: 0;
+}
+.t3-content .wp-block-query.tracy-query {
+	margin: 0;
+}
+.t3-content .wp-block-query.tracy-query > .wp-block-post-template.blog + .items-more {
+	margin-top: 0;
+}
+/* The theme's heading rhythm (30px above, tall line) is for running text; the source's article and "More Articles" headings sit flush. */
+.t3-content h2.article-title,
+.t3-content h1.article-title {
+	margin-top: 0;
+	line-height: 1.3;
+}
+/* The article's own h1 keeps the source's heading line (1.1 x 36px = 39.6px); the 1.3 above is for the listing h2. */
+.t3-content h1.article-title {
+	line-height: 1.1;
+}
+.t3-content .items-more h3 {
+	margin-top: 0;
+	line-height: 1.3;
+}
+
+/* Gallery: the album tiles are four to a row; the Post Template's list items take the source's `.col-sm-3` slots. */
+.t3-content .wp-block-post-template.blog-gallery {
+	display: flex;
+	flex-wrap: wrap;
+	list-style: none;
+	margin: 0 -25px;
+	max-width: none;
+	padding: 0;
+	width: calc(100% + 50px);
+}
+.t3-content .wp-block-post-template.blog-gallery > li.wp-block-post {
+	box-sizing: border-box;
+	flex: 0 0 25%;
+	margin: 0;
+	padding: 0;
+	max-width: 25%;
+}
+.blog-gallery li.wp-block-post .item {
+	float: none;
+	padding-left: 25px;
+	padding-right: 25px;
+	width: 100%;
+}
+.blog-gallery h4.article-title {
+	line-height: 1.3;
+}
+.blog-gallery .jr-album-link {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 20;
+}
+.blog-gallery .item-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+@media (max-width: 767px) {
+	.t3-content .wp-block-post-template.blog-gallery > li.wp-block-post {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+}
+
+/* The 404 screen is a page of its own (the source's error.php draws no header or footer). */
+.jr-error {
+	background: var(--wp--preset--color--bg);
+	color: var(--wp--preset--color--fg);
+	font-size: 16px;
+	line-height: 1.625;
+	min-height: 100vh;
+	position: relative;
+}
+.jr-error .error {
+	left: 0;
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 100%;
+}
+.jr-error .error-code {
+	color: var(--wp--preset--color--fg-2);
+	font-family: var(--ds-font-body, 'Teko', serif);
+	font-size: 220px;
+	line-height: 1;
+}
+.jr-error #errorboxbody {
+	color: color-mix(in srgb, var(--wp--preset--color--fg) 65%, var(--wp--preset--color--bg));
+	font-family: var(--ds-font-display, 'Noticia Text', serif);
+	font-size: 14px;
+	margin: 0;
+}
+.jr-error #errorboxbody p {
+	margin: 14px 0;
+}
+.jr-error .wrap-text {
+	margin: 0;
+}
+.jr-error .error-message h2 {
+	display: inline-block;
+	font-family: var(--ds-font-display, 'Noticia Text', serif);
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 39px;
+	margin: 0 0 0.83em;
+}
+.jr-error .button-home {
+	background: var(--wp--preset--color--surface);
+	border-radius: var(--ds-btn-radius, 0);
+	border: 2px solid var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent);
+	display: inline-block;
+	font-family: 'Roboto Mono', sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	height: 60px;
+	line-height: 56px;
+	margin: 0;
+	padding-left: 30px;
+	padding-right: 90px;
+	position: relative;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+.jr-error .button-home::after {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-on);
+	content: '\f178';
+	font-family: FontAwesome;
+	font-weight: 400;
+	height: 60px;
+	line-height: 60px;
+	position: absolute;
+	right: -2px;
+	top: -2px;
+	width: 60px;
+	border-radius: 0 var(--ds-btn-radius, 0) var(--ds-btn-radius, 0) 0;
+}
+.jr-error .button-home:hover,
+.jr-error .button-home:focus {
+	border-color: var(--wp--preset--color--accent-hover);
+	color: var(--wp--preset--color--accent-hover);
+}
+.jr-error .button-home:focus-visible {
+	outline: 1px solid var(--wp--preset--color--accent-hover);
+}
+
+/* Search results: Joomla's finder sheet is not part of the template, so its few rules are written here. */
+.com-finder__results {
+	margin-top: 24px;
+}
+.com-finder__results-list {
+	list-style: none;
+	margin: 24px 0 0;
+	padding: 0;
+}
+.result__title {
+	margin: 0;
+}
+.result__title-link {
+	display: flex;
+	flex-direction: column;
+}
+.result__title-text {
+	font-size: 13px;
+	line-height: 1.875;
+}
+.result__title-url {
+	color: var(--wp--preset--color--muted);
+	display: block;
+	font-style: normal;
+	margin-bottom: 4px;
+	overflow-wrap: anywhere;
+}
+.result__description {
+	margin: 4px 0 0;
+}
+.result__date {
+	color: var(--wp--preset--color--muted);
+}
+.result__taxonomy {
+	list-style: none;
+	margin: 4px 0 24px;
+	padding: 0;
+}
+.result__taxonomy-item {
+	display: inline-block;
+	margin-right: 15px;
+}
+.result__taxonomy-item span {
+	font-weight: 700;
+}
+
+/* The tag route lists articles only; the seeder's tag cloud above the list has no counterpart in the source. */
+.t3-content > .wp-block-tag-cloud {
+	display: none;
+}
+
+/* The advanced-search tips open from the button beside Search (blog.js toggles `.in`, as the source's collapse does). */
+.com-finder__advanced.collapse:not(.in) {
+	display: none;
+}
+.com-finder__advanced {
+	border: 0;
+	margin: 0;
+	min-width: 0;
+	padding: 0;
+}
+
+/* The search form's fields as the source draws them: a mono bold field, the Search and Advanced Search buttons on
+   one row, each with its icon (the source's Joomla icon font; the theme's Font Awesome has the glyphs). */
+.com-finder__search.mb-3 {
+	margin-bottom: 0;
+}
+.com-finder__search .form-control {
+	background: transparent;
+	box-sizing: border-box;
+	color: var(--ds-c-fg, var(--wp--preset--color--fg));
+	display: inline-block;
+	float: none;
+	font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+	font-size: 14px;
+	font-weight: 700;
+	height: 50px;
+	line-height: 30px;
+	width: 100%;
+}
+.com-finder__search .input-group > .btn {
+	margin: 0;
+}
+.com-finder__search .input-group > .btn + .btn {
+	margin-left: 15px;
+}
+.com-finder__search .btn-secondary {
+	background-color: var(--ds-c-surface-warm, light-dark(#efefef, #3a352f)); /* the source button: #efefef */
+	color: var(--ds-c-fg, var(--wp--preset--color--fg));
+}
+.com-finder [class^='icon-search']::before {
+	display: inline-block;
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 14px;
+}
+.com-finder .icon-search::before {
+	content: '\f002';
+}
+.com-finder .icon-search-plus::before {
+	content: '\f00e';
+}
+.com-finder__explained p,
+.com-finder__empty h2,
+.com-finder__empty p {
+	margin-bottom: 0;
+}
+
+/* The source's `figure` rule (background + 1px border) frames each picture; the Gallery block's own <figure> is only the wrapper of the pictures, so it takes no frame (it doubled every edge of the first and last picture). */
+figure.wp-block-gallery {
+	background: none;
+	border: 0;
+}
+
+/* WordPress puts `search` on <body>; the source's `.search` rule (padding around the com_search component) must not pad the page. */
+body.search {
+	background-color: var(--wp--preset--color--bg);
+	padding: 0;
+}
+
+/* Album slider: the owl carousel's own base rules (the source loads them from the plugin, not from the template
+   sheet). The frame, the arrow boxes and the dots are the source's `.ja-gallery-detail-slide` rules. */
+.ja-gallery-detail-slide .owl-carousel {
+	display: block;
+	padding: 0 40px;
+	position: relative;
+}
+.ja-gallery-detail-slide .owl-wrapper-outer {
+	overflow: hidden;
+	position: relative;
+}
+.ja-gallery-detail-slide .owl-wrapper {
+	display: flex;
+	transition: transform 400ms;
+}
+.ja-gallery-detail-slide .owl-item {
+	flex: 0 0 100%;
+	min-width: 0;
+}
+.ja-gallery-detail-slide .item-image img {
+	display: block;
+	height: auto;
+	width: 100%;
+}
+.ja-gallery-detail-slide .owl-page {
+	/* owl.theme's inactive number: slate grey with white text (the fallback is the same one the home group names).
+	   The box is the page control itself and the number an inline run inside it, so the label reads as one line. */
+	background: var(--ds-c-disabled-bg, #869791);
+	color: var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+	cursor: pointer;
+	display: inline-block;
+	font-family: var(--ds-font-display, 'Noticia Text', serif);
+	font-size: 12px;
+	line-height: 22.5px;
+	padding: 2px 10px;
+}
+.ja-gallery-detail-slide .owl-carousel .owl-controls .owl-pagination .owl-page {
+	margin: 15px 7.5px; /* the source's span.owl-numbers margin, on the box that now carries the number */
+	vertical-align: top;
+}
+.ja-gallery-detail-slide .owl-carousel .owl-controls .owl-pagination .owl-page.active {
+	background: var(--ds-c-accent, var(--wp--preset--color--accent));
+	color: var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+}
+.ja-gallery-detail-slide .owl-carousel .owl-controls .owl-pagination .owl-page span.owl-numbers {
+	background: none;
+	display: inline;
+	margin: 0;
+}
+.ja-gallery-detail-slide .owl-buttons > div {
+	cursor: pointer;
+	display: block;
+}
+/* The page's own focus rule: a one-pixel outline that changes colour. */
+.ja-gallery-detail-slide :is(.owl-page, .owl-prev, .owl-next):focus-visible {
+	outline: 1px solid var(--ds-c-accent, var(--wp--preset--color--accent));
+	outline-offset: 0;
+}
+
+/* The page navigation's chevrons: the source's Joomla icon font draws them; the theme's Font Awesome has the same glyphs. */
+.pagenavigation .icon-chevron-right::before,
+.pagenavigation .icon-chevron-left::before {
+	display: inline-block;
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: 400;
+}
+.pagenavigation .icon-chevron-right::before {
+	content: '\f105';
+}
+.pagenavigation .icon-chevron-left::before {
+	content: '\f104';
+}
+/* The theme's block layout zeroes the margin above a flow child; the source's slider card keeps its 30px. */
+.t3-content .item-page .ja-gallery-detail-slide {
+	margin-top: 30px;
+}
+
+/* The tag list's filter fields: the same mono bold field as the finder's. */
+.com-tags-tag .filters :is(.inputbox, .form-select) {
+	background: transparent;
+	box-sizing: border-box;
+	color: var(--ds-c-fg, var(--wp--preset--color--fg));
+	font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+	font-size: 14px;
+	font-weight: 700;
+	height: 50px;
+	padding: 8px 15px;
+}
+.com-tags-tag .filters .inputbox {
+	line-height: 30px;
+}

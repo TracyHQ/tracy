@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-kinetic/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_kinetic",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-kinetic",
+    "id": "quickstart/ja-kinetic/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.3"
+    },
+    "template": "ja_kinetic",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-kinetic-j6-webroot-1.0.8.tar.gz",
+        "bytes": 69437880,
+        "sha256": "1f3ef83d97303fb8930ce29cafea6ab516d0aff848481db2b9849692f54c621a"
+      },
+      "database": {
+        "file": "ja-kinetic-j6-database-1.0.8.sql.gz",
+        "bytes": 1020266,
+        "sha256": "b350db659eda371a17066518ced10d26649ffec15e23c0f8ff876643b6305128"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T22:14:07.374Z",
+    "builtFrom": {
+      "from": "quickstart/ja-kinetic/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 105 files replaced (templates/ja_kinetic/css, templates/ja_kinetic/html, templates/ja_kinetic/scss, templates/ja_kinetic/acm); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-kinetic/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

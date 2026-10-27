@@ -1,0 +1,134 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#f4efea",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas and section backgrounds — the entire site sits on this warm off-white like a notebook page"
+    },
+    "frost-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Frost White — Card surfaces, nav bar, input fields, and overlay panels — clean white layered on the cream canvas"
+    },
+    "chalk-gray": {
+      "$value": "#f8f8f7",
+      "$type": "color",
+      "$description": "Chalk Gray — Secondary surface for body backgrounds and subtle borders — barely-there differentiation from white"
+    },
+    "ice-wash": {
+      "$value": "#ebf9ff",
+      "$type": "color",
+      "$description": "Ice Wash — Tinted blue-white for soft button hovers and highlight washes adjacent to the primary blue"
+    },
+    "notebook-pale": {
+      "$value": "#f9fbe7",
+      "$type": "color",
+      "$description": "Notebook Pale — Faint yellow-green tint used on selected/tagged surfaces for the play accent"
+    },
+    "charcoal-ink": {
+      "$value": "#383838",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, all borders, icon strokes, and the offset shadow color — the universal line color, never pure black"
+    },
+    "pencil-gray": {
+      "$value": "#a1a1a1",
+      "$type": "color",
+      "$description": "Pencil Gray — Muted helper text, secondary borders, and disabled-state outlines"
+    },
+    "graphite": {
+      "$value": "#818181",
+      "$type": "color",
+      "$description": "Graphite — Tertiary borders and dividers, low-emphasis UI rules"
+    },
+    "soft-silver": {
+      "$value": "#c0c0c0",
+      "$type": "color",
+      "$description": "Soft Silver — Icon strokes and low-contrast border accents on illustration-adjacent elements"
+    },
+    "sky-crayon": {
+      "$value": "#6fc2ff",
+      "$type": "color",
+      "$description": "Sky Crayon — Primary action fills, nav accents, and the dominant chromatic surface — the only color loud enough to carry CTAs"
+    },
+    "canary-banner": {
+      "$value": "#ffde00",
+      "$type": "color",
+      "$description": "Canary Banner — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "duck-bill-orange": {
+      "$value": "#ff9538",
+      "$type": "color",
+      "$description": "Duck Bill Orange — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "coral-sketch": {
+      "$value": "#f38e84",
+      "$type": "color",
+      "$description": "Coral Sketch — Outlined button border variant — one slot in the rotating rainbow button-border system"
+    },
+    "peach-sketch": {
+      "$value": "#f5b161",
+      "$type": "color",
+      "$description": "Peach Sketch — Outlined button border variant"
+    },
+    "mint-sketch": {
+      "$value": "#38c1b0",
+      "$type": "color",
+      "$description": "Mint Sketch — Outlined button border variant"
+    },
+    "lilac-sketch": {
+      "$value": "#b291de",
+      "$type": "color",
+      "$description": "Lilac Sketch — Outlined button border variant"
+    },
+    "lime-sketch": {
+      "$value": "#b3c419",
+      "$type": "color",
+      "$description": "Lime Sketch — Outlined button border variant"
+    },
+    "periwinkle-sketch": {
+      "$value": "#7597ee",
+      "$type": "color",
+      "$description": "Periwinkle Sketch — Outlined button border variant"
+    },
+    "slate-sketch": {
+      "$value": "#84a6bc",
+      "$type": "color",
+      "$description": "Slate Sketch — Outlined button border variant"
+    },
+    "marigold-sketch": {
+      "$value": "#e1c427",
+      "$type": "color",
+      "$description": "Marigold Sketch — Outlined button border variant"
+    },
+    "wet-cement": {
+      "$value": "#54b4de",
+      "$type": "color",
+      "$description": "Wet Cement — Decorative illustration stroke — water/sky blue outlines in duck and cloud drawings"
+    },
+    "peach-blush": {
+      "$value": "#fdedda",
+      "$type": "color",
+      "$description": "Peach Blush — Soft warm tint for illustrated section backgrounds, never a UI control fill"
+    }
+  },
+  "font": {
+    "aeonik-mono": {
+      "$value": "Aeonik Mono",
+      "$type": "fontFamily",
+      "$description": "Universal brand face — headlines, body, nav, buttons, inputs, cards, footers. Used everywhere as the primary voice. The monospace geometry signals developer-tool credibility while the wide weight range (300–600) allows it to whisper (hero at 300) or command (nav at 600)."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary face for supplementary UI text, third-party embeds, and contexts where proportional letterforms read more naturally than monospace. Letter-spacing 0.0200em–0.0230em."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://motherduck.com",
+      "siteName": "MotherDuck",
+      "extractedAt": "2026-06-03T16:48:03.858Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c1f7749f-319b-491b-8243-22050e85994f",
+  "status": "complete",
+  "name": "Stocketa",
+  "url": "https://styles.refero.design/style/c1f7749f-319b-491b-8243-22050e85994f",
+  "sourceWebsite": "https://stocketa.com",
+  "extractedAt": "2026-06-03T17:43:29.910Z",
+  "capturedAt": "2026-10-08T05:17:05.112949+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Neon aurora on frosted glass — a light, weightless interface floating beneath a prism-washed sky.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3efe18c9-7702-491f-a9f1-978ac36da033.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/45c3d30f-137a-4e97-a2a1-2f4d2afcdf01.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/097c0310-8481-4c9f-9f28-bbd597dd1200.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/56a39707-93e0-4175-bfad-6f3a3a044456.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4d8bb6b1-746d-4b5a-8707-3dce7a9edb23.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f4a5a7a9192086124413e31153b073438dcd6008eb57812bac7a27ac818e43ee",
+      "bytes": 21894
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4618463ecac333d61afd4f31fb1238b05ba0b3a396d004418bec4e6b88675ac8",
+      "bytes": 107404
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6f28870c121dde7720248fddadca2074501cc15ffa1ac6efe9dc46873bfb5006",
+      "bytes": 19230
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4a6b8b377b7466207fc62a1665a63b567224ff0d897f8c5bf15a036008427f90",
+      "bytes": 10210
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "354b6fcf213876d161eec062ec47c34a585d734e6281732e946c160020093695",
+      "bytes": 13331
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f74e4ff5817780248b43e801830d3050fbc83122f0c314f033491a53ab488900",
+      "bytes": 3503
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a12e6d3d21ca396582fdeb99a201e20bcbdddd0e0cc3becdec891d0dc3540c6f",
+      "bytes": 569
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "30feba21553f32836f2fd1ceb3195c1ed31a09182d44575547a177c59ff5a39a",
+      "bytes": 820
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "33c527f2bce38caaf40050c5e7ba30f275fae68ce6a10a66d6e362a456898352",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4bbddb0e0776947ff53e92f940044baf12ae847e2c4aa1122f2ceeaead5f5d1d",
+      "bytes": 46875
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a7ee60c60311213d1e82d2837c92b947ab5316d227955a4f48a9398e9c09ad8d",
+      "bytes": 24150
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "bfae379246a87c5dea1ffc424b350131497376025e8688b693c25b82139b4d3e",
+      "bytes": 44368
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "29a826c88f6608c2a7451e4d46bc0bedf7df47d665774d9e58c463d5c9bfa624",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "81be5d425db537b5e8d5838aba798554088574abd548ac5117b8cec56facec44",
+      "bytes": 1449
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7cfae88f0f363fa6a7fec8d312dfe6d8454684af45570404435062fbd080fcd2",
+      "bytes": 2253
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1680693c-aed8-47e8-917a-04eb89497b09",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "REG-006",
+  "kind": "fix",
+  "title": "A history read during EmDash provision builds no early v1",
+  "pr": 747,
+  "area": "fleet/provision-history",
+  "cms": ["em"],
+  "needs": ["stand", "seat:owner", "site:create:em"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (tests/regression/README.md § Common setup): O, seat A's cookie, api, pq, HOST; PRIV=$(docker inspect $HOST --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -n 's/^TRACY_PRIVATE_ROOT=//p').",
+    "S2: Choose L = 'reg6em' + two digits such that pq \"select count(*) from site where label='<L>'\" returns 0.",
+    "S3: Run api a POST /api/sites '{\"label\":\"<L>\",\"platform\":\"emdash\"}'; require HTTP 202 and record S = body.siteKey, J = body.jobId (any other answer → BLOCKED).",
+    "S4: Every 5 s until done (≤15 min): (a) api a GET /api/sites/<S>/jobs/<J> → append {t, http, state, step}; state 'failed' → BLOCKED; state 'done' → record T_done and stop. (b) Only when docker exec $HOST test -e /var/lock/tracy-provision-<L>.lock exits 0 (existence check only, never flock it): api a GET /api/sites/<S>/backups → append {t, http, latest, backupRows: rows with kind 'backup' as {version, database.state}}; api a GET /api/sites/<S>/changes → append {t, http, since, moments: moments.length, files: files.length}; test -d $PRIV/<L>/webroot-baseline.git → append {t, repo: present|absent}.",
+    "S5: After done run api a GET /api/sites/<S>/backups; ls -lA $PRIV/<L>/backups/; git --git-dir=$PRIV/<L>/webroot-baseline.git tag -l --format='%(contents)' tracy-release/v1.",
+    "S6: Set C = T_done − 90 s and judge only S4 records with t < C by the during-build expectations; leave the site in place (do not delete it)."
+  ],
+  "expect": [
+    "At least 5 S4 /backups answers with HTTP 200 and t < C (fewer → BLOCKED: the early-read window was not exercised).",
+    "Every S4 /backups answer with HTTP 200 and t < C: latest == null and zero rows with kind 'backup' (pre-fix: the first poll, ~15 s into the build, already returned v1 with database.state 'none').",
+    "Every S4 /changes answer with HTTP 200 and t < C: since == null, moments == 0, files == 0.",
+    "Every S4 repo check with t < C: 'absent' (the reader built no webroot repo).",
+    "S5 /backups: HTTP 200 and exactly one row with kind 'backup': version 1, database.state 'full', engine 'sqlite', size > 0.",
+    "S5 tag contents: a line matching ^Tracy-Database: sha256:[0-9a-f]{64} size:[0-9]+ kind:sqlite tables:[0-9]+$ and a line starting 'Tracy-Uploads: sha256:'.",
+    "S5 backups/: exactly v1.sqlite.gz and v1.uploads.tar.gz, both -rw-------, nothing else (no .v1.sqlite.tmp, -wal, -shm)."
+  ],
+  "selectors": {},
+  "evidence": "tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I01-em-r2.md (fix d131ca337); the QA note is Studio-local (not in git), the fix commit is on develop",
+  "fence": "read_op in packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-git.sh answers {building:true, rows:[]} and builds nothing while the repo is unbuilt and provision_running() finds tracy-provision-<label>.lock held, so only provision's Initial backup (webroot-backup.sh initial_backup) creates v1, with its database."
+}

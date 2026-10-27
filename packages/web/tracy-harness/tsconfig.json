@@ -1,0 +1,39 @@
+{
+  // Self-contained, no `extends` outside the package — a general TCH rule: no path points out of
+  // this tree. Vite scans dependencies before building, so a broken `extends` dies right there
+  // with TSConfckParseError, before any error line about TypeScript.
+  //
+  // `types` is deliberately left at its empty default: this package runs only in the browser, and
+  // pulling in @types/node makes `process` a valid type — exactly what the `define` block in
+  // vite.config replaces with constants. Letting TypeScript flag that spot is deliberate.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+
+    // The Customize question tab imports the Add site plugin's questions sheet from its source
+    // (`src/cms/CustomerQuestionsPreview.tsx`), and that sheet reads plain `.mjs` modules typed with
+    // JSDoc (`site-brief.mjs`, the ask form's `languages.mjs`). Same setting as the design bench.
+    "allowJs": true,
+
+    // `@tracy/wo-views` (the Places tab of /ops/wo) is read from source and names its files with
+    // their extension (`./types.ts`), as Node's type stripping needs.
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src", "vite.config.ts"]
+}

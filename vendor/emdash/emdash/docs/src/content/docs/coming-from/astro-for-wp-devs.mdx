@@ -1,0 +1,242 @@
+---
+title: Astro for WordPress Developers
+description: Learn the Astro concepts used by EmDash sites through familiar WordPress patterns.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Astro provides the pages, layouts, components, and server rendering for an EmDash site. This guide covers the Astro concepts used by the current EmDash templates. It assumes that you already understand WordPress themes and PHP templates.
+
+For framework features that are not specific to EmDash, use the [Astro documentation](https://docs.astro.build/).
+
+## Project structure
+
+An Astro site gives each kind of file an explicit directory. The current EmDash templates use this structure:
+
+| WordPress | Astro | Purpose |
+| --- | --- | --- |
+| `index.php`, `single.php`, `page.php` | `src/pages/` | URL routes |
+| `template-parts/` | `src/components/` | Reusable markup |
+| `header.php` and `footer.php` | `src/layouts/` | Shared page shells |
+| `style.css` | `src/styles/` | Site styles |
+| Plugin and database setup | `astro.config.mjs` | Integrations and server adapter |
+| Theme setup data | `seed/seed.json` | Collections, menus, and sample content |
+
+The blog template uses route directories that match its public URLs:
+
+```text title="Project structure"
+src/
+├── components/
+│   └── PostCard.astro
+├── layouts/
+│   └── Base.astro
+├── pages/
+│   ├── index.astro
+│   ├── pages/
+│   │   └── [slug].astro
+│   └── posts/
+│       ├── index.astro
+│       └── [slug].astro
+└── live.config.ts
+```
+
+## Astro components
+
+An `.astro` component combines server-side TypeScript and an HTML template. Code between the `---` fences runs on the server. The markup below the second fence becomes the response HTML.
+
+The following component declares props in its frontmatter and renders them in its template:
+
+```astro title="src/components/PostCard.astro"
+---
+interface Props {
+  title: string;
+  excerpt?: string;
+  href: string;
+}
+
+const { title, excerpt, href } = Astro.props;
+---
+
+<article>
+  <h2><a href={href}>{title}</a></h2>
+  {excerpt && <p>{excerpt}</p>}
+</article>
+```
+
+Astro escapes values rendered with `{value}`. Imports, database queries, and other server work belong in the frontmatter.
+
+## Template expressions
+
+Astro templates use curly braces where a PHP template would switch into `<?php ?>`. The most common patterns in EmDash templates are values, conditions, and array mapping:
+
+| Goal | Astro syntax |
+| --- | --- |
+| Print a value | `{post.data.title}` |
+| Render when a value exists | `{post.data.excerpt && <p>{post.data.excerpt}</p>}` |
+| Choose between two results | `{posts.length === 0 ? <p>No posts yet.</p> : <PostList />}` |
+| Render a list | `{posts.map((post) => <PostCard title={post.data.title} excerpt={post.data.excerpt} href={"/posts/" + post.id} />)}` |
+
+The expression can use variables prepared in frontmatter, values from `Astro.props`, or data returned by an EmDash query. Astro escapes string values by default; use a renderer such as `<PortableText />` for structured rich text instead of injecting HTML.
+
+## Props and slots
+
+Props are comparable to the `$args` passed to `get_template_part()`. They make each input explicit and can be checked by TypeScript.
+
+Slots let a parent pass markup into a component. A default slot is useful for page content, while named slots provide additional insertion points:
+
+```astro title="src/components/Card.astro"
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<article>
+  <h2>{title}</h2>
+  <slot />
+  <footer><slot name="footer" /></footer>
+</article>
+```
+
+The following page fills both slots:
+
+```astro title="src/pages/index.astro"
+---
+import Card from "../components/Card.astro";
+---
+
+<Card title="Latest post">
+  <p>The main card content.</p>
+  <a slot="footer" href="/posts/latest">Read the post</a>
+</Card>
+```
+
+Slots are local to the component call. They do not behave like WordPress actions, which can receive callbacks registered elsewhere.
+
+## Layouts
+
+A layout owns the shared document structure that a WordPress theme often splits between `header.php` and `footer.php`. Pages import the layout and pass their content through its slot.
+
+The following layout provides a document shell:
+
+```astro title="src/layouts/Base.astro"
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header><a href="/">My site</a></header>
+    <main><slot /></main>
+  </body>
+</html>
+```
+
+The following page supplies the layout's title and main content:
+
+```astro title="src/pages/index.astro"
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Home">
+  <h1>Latest posts</h1>
+</Base>
+```
+
+## File-based routing
+
+Files in `src/pages/` define routes. Bracketed filenames create dynamic segments.
+
+| File | URL |
+| --- | --- |
+| `src/pages/index.astro` | `/` |
+| `src/pages/posts/index.astro` | `/posts` |
+| `src/pages/posts/[slug].astro` | `/posts/hello-world` |
+| `src/pages/pages/[slug].astro` | `/pages/about` |
+
+Inside `src/pages/posts/[slug].astro`, `Astro.params.slug` contains the value from the URL. Read [Astro routing](https://docs.astro.build/en/guides/routing/) for rest parameters, redirects, and other routing features.
+
+## Server rendering
+
+Current EmDash templates use `output: "server"` in `astro.config.mjs`. A page can therefore query the database for each request, so published content does not depend on a new static build.
+
+Do not add `getStaticPaths()` to an EmDash theme route unless the site deliberately treats EmDash as a build-time data source. The supplied themes are server-rendered.
+
+Read [Astro on-demand rendering](https://docs.astro.build/en/guides/on-demand-rendering/) for the framework-level behavior.
+
+## Query EmDash content
+
+EmDash wraps Astro live content collections with `getEmDashCollection()` and `getEmDashEntry()`. Collection results contain an `entries` array. Single-entry results contain `entry`, which is `null` when no published entry matches.
+
+The following archive uses the same ordering and identifiers as the current blog template:
+
+```astro title="src/pages/posts/index.astro"
+---
+import { getEmDashCollection } from "emdash";
+import Base from "../../layouts/Base.astro";
+
+const { entries: posts, error } = await getEmDashCollection("posts", {
+  orderBy: { published_at: "desc" },
+});
+
+if (error) {
+  return new Response("Could not load posts", { status: 500 });
+}
+---
+
+<Base title="Posts">
+  {posts.map((post) => (
+    <article>
+      <h2><a href={`/posts/${post.id}`}>{post.data.title}</a></h2>
+      {post.data.excerpt && <p>{post.data.excerpt}</p>}
+    </article>
+  ))}
+</Base>
+```
+
+`post.id` is the route identifier exposed by Astro and is normally the entry slug. `post.data.id` is the database identifier. Use `data.id` when an API expects the stored content ID, such as taxonomy or comment helpers.
+
+The following dynamic route looks up a post by the slug in the URL and renders its Portable Text field:
+
+```astro title="src/pages/posts/[slug].astro"
+---
+import { decodeSlug, getEmDashEntry } from "emdash";
+import { PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) return Astro.rewrite("/404");
+
+const { entry: post, error } = await getEmDashEntry("posts", slug);
+if (error) return new Response("Could not load the post", { status: 500 });
+if (!post) return Astro.rewrite("/404");
+---
+
+<Base title={post.data.title}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <PortableText value={post.data.content} />
+  </article>
+</Base>
+```
+
+<Aside type="tip">
+  The [query guide](/guides/querying-content/) covers filters, pagination, locales, preview data, and cache hints. The [Astro template syntax reference](https://docs.astro.build/en/reference/astro-syntax/) covers expressions and directives that are not specific to EmDash.
+</Aside>
+
+## Continue with Astro
+
+EmDash templates also use component styles and small browser scripts, but those are ordinary Astro features rather than EmDash concepts. Read [Styles and CSS](https://docs.astro.build/en/guides/styling/) for scoped and global styles, and [Scripts and event handling](https://docs.astro.build/en/guides/client-side-scripts/) when a component needs browser-side behavior.

@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-009-pending",
+  "itemIds": ["regression:REG-009"],
+  "requirement": "Open chat marks the message only after it has scrolled into the viewport",
+  "oracle": {
+    "source": "tests/regression/cases/REG-009-open-chat-highlight-in-viewport.json",
+    "ref": "PR #772 (fix); fix evidence: packages/site/tracy-site-tabs/test/conversation-scroll.test.mjs",
+    "invariant": "The build check prints a count >= 1. Each run: qa.samples is non-empty when read (else BLOCKED note fixture-session-missing). Each run: at least one pre sample has top < 0 or top >= vh, i.e. the message started outside the viewport (else BLOCKED note weak-fixture). Each run: marked has at least 1 sample. Each run: every marked sample has 0 <= top < vh, first included (before #772 the first marked sample sat at top -1780 with vh 1000 on 3/3 cold opens, QA-B03 r1; after: top 94, 49/49 samples in view, QA-B03 r2). Runs 1-3: qa.sawCover = true, qa.cover is set, first.t >= qa.cover and first.t - qa.cover <= 4000 ms. Each run: last.t - first.t <= 3000 ms (FLASH_MS 2400) and no element carries data-tracy-msg-flash when read. Runs 1-3: the final page.url() has no tracy-msg parameter and its path contains '/s/' + SESSION; run 4: the measured page's path contains '/s/' + SESSION.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer flows, needs stand, site:any, seat:owner, fixture:chat-session-with-3-later-turns"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [
+    "need:stand",
+    "need:site:any",
+    "need:seat:owner",
+    "need:fixture:chat-session-with-3-later-turns"
+  ],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-009"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:flows"],
+  "regression": {
+    "id": "REG-009",
+    "pr": 772,
+    "kind": "fix",
+    "area": "site-changes/open-chat",
+    "file": "tests/regression/cases/REG-009-open-chat-highlight-in-viewport.json"
+  },
+  "ownerLayer": "flows",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:any", "seat:owner", "fixture:chat-session-with-3-later-turns"]
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "da0bfca3-df1d-49d9-ae25-61d8f348426f",
+  "status": "complete",
+  "name": "Passwords",
+  "url": "https://styles.refero.design/style/da0bfca3-df1d-49d9-ae25-61d8f348426f",
+  "sourceWebsite": "https://1password.com",
+  "extractedAt": "2026-04-11T17:49:18.534Z",
+  "capturedAt": "2026-10-08T05:18:13.168895+00:00",
+  "theme": "mixed",
+  "industry": null,
+  "description": "Secure Airlock Behind Glass. A system that moves from the protective dark of an airlock to the bright clarity of a control room.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3322eb18-6eb4-4f34-90a7-094229a0f5fb.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/fa227362-0a58-4c6e-81a7-395d5fedc8ee.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d2179cf1-1db0-4d91-8473-21f3225e8f42.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/5bcfc11b-17ac-419f-92d6-1b31b77ccfb0.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e6e49bea-894c-4cb0-999d-c7bfab866797.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6c5e0f050574c786c9f4d0db2d5aeb4d493f5ba737aa639404e4d33ee083f1f2",
+      "bytes": 14522
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "69181d42b7d44fd6d58db76fe1c8ba5a4a67ae1b086ec8859443f2b6a27ba368",
+      "bytes": 90066
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "81e7b729573c8b8f078f5fabb7eb413ff4b873508593308bc477aa64ebd1e7fa",
+      "bytes": 24103
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7a111306574b726ebe2e459239e9e2ccf9623677644ef341490ecda0516039c9",
+      "bytes": 9870
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e074e1161ce1b5ba1b3ba9156355c37b941b6bd50ba59e634732443483331175",
+      "bytes": 7917
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "cad96067ae56dab94b2d554187773a7226c4978f89ed0cdac725f64bb6115076",
+      "bytes": 2460
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e0ac096eb394d2ebcac649d18e92b98cf2f136ab0d40c3be8ead9c44576a97b0",
+      "bytes": 557
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "17a7caf65ba126dbced70a3a3b646b7be2c60d7cf0fd7ef766f465a3c4f1c99a",
+      "bytes": 663
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8d50ad8e8b988754276d91659e5b68eaf08897ef32f313193c9386b035907c57",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4e3c359db51b831faca348e9efcbff0261cefae82ef3ea322966c6c213a2e81d",
+      "bytes": 44736
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4440471435c0e69856bd33bdc03a989323c552c4c87b10d5ea101aabb9a17255",
+      "bytes": 22968
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3ce0eb5e4b5e4575a6c7b6878b02bb2040f21c7396eea740a4811dbdb66ce9d0",
+      "bytes": 44020
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "09382be0f95691206ab55117567c0db606321a383ca6ef0d77c6442c407306c7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2553c1082cc39b481a3e090ff37ae0c04ebab9cbdc87cf2acd132203fa352a03",
+      "bytes": 1499
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "69e52dbe1fffe945b08af683685edd6d9c3d8e004424f6f708cb45930cd25d19",
+      "bytes": 1991
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "77b723ca-9583-4349-9b5e-2ef8b4fde002",
+    "802bdc0e-ec2e-4d2d-bf5d-de98c0899f66",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "da0bfca3-df1d-49d9-ae25-61d8f348426f",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

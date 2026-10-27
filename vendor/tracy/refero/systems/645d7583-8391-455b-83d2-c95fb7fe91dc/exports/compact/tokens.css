@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-warm-cream: #f6f3f0;
+  --color-pure-white: #ffffff;
+  --color-ink-charcoal: #3c3c3c;
+  --color-carbon-black: #000000;
+  --color-stone-border: #dedfdb;
+  --color-ash-gray: #939393;
+  --color-graphite: #434343;
+
+  /* Typography — Font Families */
+  --font-neue-haas-grotesk-text: 'Neue Haas Grotesk Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martina-plant: 'Martina Plant', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

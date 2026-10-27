@@ -1,0 +1,1567 @@
+{
+  "origin": "http://127.0.0.1:8212",
+  "contractHash": "b54fc5f3117b836fbdb1bbe0ada8bf0fd885827f261729a33048681954874a10",
+  "surfaces": [
+    {
+      "id": "/",
+      "requestedUrl": "http://127.0.0.1:8212/",
+      "finalUrl": "http://127.0.0.1:8212/",
+      "documentTitle": "Home",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice",
+        "brand.name": "svg title",
+        "hero.cta.href": {
+          "selector": "[data-od-block=\"hero\"] a",
+          "attribute": "href"
+        },
+        "contact.email": "#t4-footnav .tracy-contact-info__email"
+      },
+      "capturedAt": "2026-09-12T12:26:48.565Z"
+    },
+    {
+      "id": "/product",
+      "requestedUrl": "http://127.0.0.1:8212/product",
+      "finalUrl": "http://127.0.0.1:8212/product",
+      "documentTitle": "Product",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:26:50.202Z"
+    },
+    {
+      "id": "/services",
+      "requestedUrl": "http://127.0.0.1:8212/services",
+      "finalUrl": "http://127.0.0.1:8212/services",
+      "documentTitle": "Service",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice",
+        "service1.name": "#t4-main-body .tracy-postcard__body h2 a[href$=\"/services/website-strategy\"]",
+        "service2.name": "#t4-main-body .tracy-postcard__body h2 a[href$=\"/services/brand-and-interface-design\"]",
+        "service3.name": "#t4-main-body .tracy-postcard__body h2 a[href$=\"/services/website-development\"]",
+        "service4.name": "#t4-main-body .tracy-postcard__body h2 a[href$=\"/services/content-and-photography\"]",
+        "service5.name": "#t4-main-body .tracy-postcard__body h2 a[href$=\"/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal\"]",
+        "service6.name": "#t4-main-body .tracy-postcard__body h2 a[href$=\"/services/43-22-sure-fire-headline-formulas-that-work\"]"
+      },
+      "capturedAt": "2026-09-12T12:26:51.920Z"
+    },
+    {
+      "id": "/services/service-detail",
+      "requestedUrl": "http://127.0.0.1:8212/services/service-detail",
+      "finalUrl": "http://127.0.0.1:8212/services/service-detail",
+      "documentTitle": "Website design and build",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:26:54.789Z"
+    },
+    {
+      "id": "/services/website-strategy",
+      "requestedUrl": "http://127.0.0.1:8212/services/website-strategy",
+      "finalUrl": "http://127.0.0.1:8212/services/website-strategy",
+      "documentTitle": "Website strategy",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:26:56.814Z"
+    },
+    {
+      "id": "/services/brand-and-interface-design",
+      "requestedUrl": "http://127.0.0.1:8212/services/brand-and-interface-design",
+      "finalUrl": "http://127.0.0.1:8212/services/brand-and-interface-design",
+      "documentTitle": "Brand and interface design",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:00.377Z"
+    },
+    {
+      "id": "/services/website-development",
+      "requestedUrl": "http://127.0.0.1:8212/services/website-development",
+      "finalUrl": "http://127.0.0.1:8212/services/website-development",
+      "documentTitle": "Website development",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:01.065Z"
+    },
+    {
+      "id": "/services/content-and-photography",
+      "requestedUrl": "http://127.0.0.1:8212/services/content-and-photography",
+      "finalUrl": "http://127.0.0.1:8212/services/content-and-photography",
+      "documentTitle": "Content and photography",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:01.640Z"
+    },
+    {
+      "id": "/pricing",
+      "requestedUrl": "http://127.0.0.1:8212/pricing",
+      "finalUrl": "http://127.0.0.1:8212/pricing",
+      "documentTitle": "Pricing",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice",
+        "plan1.name": ".tracy-pricing__grid article:nth-of-type(1) .tracy-plan__name",
+        "plan1.amount": ".tracy-pricing__grid article:nth-of-type(1) .tracy-plan__amount",
+        "plan1.period": ".tracy-pricing__grid article:nth-of-type(1) .tracy-plan__period",
+        "plan2.name": ".tracy-pricing__grid article:nth-of-type(2) .tracy-plan__name",
+        "plan2.amount": ".tracy-pricing__grid article:nth-of-type(2) .tracy-plan__amount",
+        "plan2.period": ".tracy-pricing__grid article:nth-of-type(2) .tracy-plan__period",
+        "plan3.name": ".tracy-pricing__grid article:nth-of-type(3) .tracy-plan__name",
+        "plan3.amount": ".tracy-pricing__grid article:nth-of-type(3) .tracy-plan__amount",
+        "plan3.period": ".tracy-pricing__grid article:nth-of-type(3) .tracy-plan__period",
+        "pricing.notice": ".tracy-pricing__intro"
+      },
+      "capturedAt": "2026-09-12T12:27:02.318Z"
+    },
+    {
+      "id": "/resources/blog",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog",
+      "documentTitle": "Blog",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:03.155Z"
+    },
+    {
+      "id": "/resources/category-list",
+      "requestedUrl": "http://127.0.0.1:8212/resources/category-list",
+      "finalUrl": "http://127.0.0.1:8212/resources/category-list",
+      "documentTitle": "All articles",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:04.092Z"
+    },
+    {
+      "id": "/resources/archive",
+      "requestedUrl": "http://127.0.0.1:8212/resources/archive",
+      "finalUrl": "http://127.0.0.1:8212/resources/archive",
+      "documentTitle": "Archive",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:05.288Z"
+    },
+    {
+      "id": "/resources/all-categories",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories",
+      "documentTitle": "Topics",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:07.678Z"
+    },
+    {
+      "id": "/resources/mag-procurement",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-procurement",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-procurement",
+      "documentTitle": "Website planning",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:09.040Z"
+    },
+    {
+      "id": "/resources/mag-datacenter",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-datacenter",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-datacenter",
+      "documentTitle": "Website operations",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:10.014Z"
+    },
+    {
+      "id": "/resources/mag-world",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-world",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-world",
+      "documentTitle": "Studio notes",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:11.035Z"
+    },
+    {
+      "id": "/resources/style-guide",
+      "requestedUrl": "http://127.0.0.1:8212/resources/style-guide",
+      "finalUrl": "http://127.0.0.1:8212/resources/style-guide",
+      "documentTitle": "Style guide",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:13.815Z"
+    },
+    {
+      "id": "/resources/typography",
+      "requestedUrl": "http://127.0.0.1:8212/resources/typography",
+      "finalUrl": "http://127.0.0.1:8212/resources/typography",
+      "documentTitle": "Typography",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:18.765Z"
+    },
+    {
+      "id": "/resources/colors",
+      "requestedUrl": "http://127.0.0.1:8212/resources/colors",
+      "finalUrl": "http://127.0.0.1:8212/resources/colors",
+      "documentTitle": "Color roles",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:20.370Z"
+    },
+    {
+      "id": "/resources/spacing",
+      "requestedUrl": "http://127.0.0.1:8212/resources/spacing",
+      "finalUrl": "http://127.0.0.1:8212/resources/spacing",
+      "documentTitle": "Spacing and radius",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:20.956Z"
+    },
+    {
+      "id": "/resources/faq",
+      "requestedUrl": "http://127.0.0.1:8212/resources/faq",
+      "finalUrl": "http://127.0.0.1:8212/resources/faq",
+      "documentTitle": "Questions",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:22.995Z"
+    },
+    {
+      "id": "/resources/contact",
+      "requestedUrl": "http://127.0.0.1:8212/resources/contact",
+      "finalUrl": "http://127.0.0.1:8212/resources/contact",
+      "documentTitle": "Contact us",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice",
+        "contact.title": ".tracy-view-head__title span",
+        "contact.notice": ".tracy-contact__aside .tracy-contact-info__notice",
+        "contact.email": ".tracy-contact__aside .tracy-contact-info__email"
+      },
+      "capturedAt": "2026-09-12T12:27:26.919Z"
+    },
+    {
+      "id": "/resources/search",
+      "requestedUrl": "http://127.0.0.1:8212/resources/search",
+      "finalUrl": "http://127.0.0.1:8212/resources/search",
+      "documentTitle": "Search",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:33.372Z"
+    },
+    {
+      "id": "/resources/tags",
+      "requestedUrl": "http://127.0.0.1:8212/resources/tags",
+      "finalUrl": "http://127.0.0.1:8212/resources/tags",
+      "documentTitle": "Tags",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:34.460Z"
+    },
+    {
+      "id": "/resources/sign-in",
+      "requestedUrl": "http://127.0.0.1:8212/resources/sign-in",
+      "finalUrl": "http://127.0.0.1:8212/resources/sign-in",
+      "documentTitle": "Sign in",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:36.066Z"
+    },
+    {
+      "id": "/resources/home-2",
+      "requestedUrl": "http://127.0.0.1:8212/resources/home-2",
+      "finalUrl": "http://127.0.0.1:8212/resources/home-2",
+      "documentTitle": "Home — variant",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:37.789Z"
+    },
+    {
+      "id": "/resources/single-contact",
+      "requestedUrl": "http://127.0.0.1:8212/resources/single-contact",
+      "finalUrl": "http://127.0.0.1:8212/resources/single-contact",
+      "documentTitle": "Talk to sales",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:38.690Z"
+    },
+    {
+      "id": "/resources/single-tag",
+      "requestedUrl": "http://127.0.0.1:8212/resources/single-tag",
+      "finalUrl": "http://127.0.0.1:8212/resources/single-tag",
+      "documentTitle": "Joomla",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:39.304Z"
+    },
+    {
+      "id": "/resources/marketing-samples",
+      "requestedUrl": "http://127.0.0.1:8212/resources/marketing-samples",
+      "finalUrl": "http://127.0.0.1:8212/resources/marketing-samples",
+      "documentTitle": "Marketing samples",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:39.700Z"
+    },
+    {
+      "id": "/resources/home-variation",
+      "requestedUrl": "http://127.0.0.1:8212/resources/home-variation",
+      "finalUrl": "http://127.0.0.1:8212/resources/home-variation",
+      "documentTitle": "Home variation",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:40.366Z"
+    },
+    {
+      "id": "/resources/home-onepage",
+      "requestedUrl": "http://127.0.0.1:8212/resources/home-onepage",
+      "finalUrl": "http://127.0.0.1:8212/resources/home-onepage",
+      "documentTitle": "Home - Onepage",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice",
+        "brand.name": "svg title",
+        "member1.name": {
+          "selector": "[data-od-block=\"team\"] article h3",
+          "index": 0
+        },
+        "member2.name": {
+          "selector": "[data-od-block=\"team\"] article h3",
+          "index": 1
+        },
+        "member3.name": {
+          "selector": "[data-od-block=\"team\"] article h3",
+          "index": 2
+        },
+        "member4.name": {
+          "selector": "[data-od-block=\"team\"] article h3",
+          "index": 3
+        }
+      },
+      "capturedAt": "2026-09-12T12:27:41.004Z"
+    },
+    {
+      "id": "/company/about",
+      "requestedUrl": "http://127.0.0.1:8212/company/about",
+      "finalUrl": "http://127.0.0.1:8212/company/about",
+      "documentTitle": "About",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:41.445Z"
+    },
+    {
+      "id": "/company/team",
+      "requestedUrl": "http://127.0.0.1:8212/company/team",
+      "finalUrl": "http://127.0.0.1:8212/company/team",
+      "documentTitle": "Team",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice",
+        "member1": {
+          "selector": "#t4-main-body h2[itemprop=\"headline\"]",
+          "index": 0
+        },
+        "member2": {
+          "selector": "#t4-main-body h2[itemprop=\"headline\"]",
+          "index": 1
+        },
+        "member3": {
+          "selector": "#t4-main-body h2[itemprop=\"headline\"]",
+          "index": 2
+        },
+        "member4": {
+          "selector": "#t4-main-body h2[itemprop=\"headline\"]",
+          "index": 3
+        }
+      },
+      "capturedAt": "2026-09-12T12:27:41.881Z"
+    },
+    {
+      "id": "/company/careers",
+      "requestedUrl": "http://127.0.0.1:8212/company/careers",
+      "finalUrl": "http://127.0.0.1:8212/company/careers",
+      "documentTitle": "Careers",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:42.326Z"
+    },
+    {
+      "id": "/pages/contact-category",
+      "requestedUrl": "http://127.0.0.1:8212/pages/contact-category",
+      "finalUrl": "http://127.0.0.1:8212/pages/contact-category",
+      "documentTitle": "Contact category",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:42.693Z"
+    },
+    {
+      "id": "/pages/featured-contacts",
+      "requestedUrl": "http://127.0.0.1:8212/pages/featured-contacts",
+      "finalUrl": "http://127.0.0.1:8212/pages/featured-contacts",
+      "documentTitle": "Featured contacts",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:42.959Z"
+    },
+    {
+      "id": "/pages/news-feeds",
+      "requestedUrl": "http://127.0.0.1:8212/pages/news-feeds",
+      "finalUrl": "http://127.0.0.1:8212/pages/news-feeds",
+      "documentTitle": "News feeds",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:43.216Z"
+    },
+    {
+      "id": "/pages/wrapper",
+      "requestedUrl": "http://127.0.0.1:8212/pages/wrapper",
+      "finalUrl": "http://127.0.0.1:8212/pages/wrapper",
+      "documentTitle": "Wrapper",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:43.658Z"
+    },
+    {
+      "id": "/pages/authors",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:44.098Z"
+    },
+    {
+      "id": "/account/create-account",
+      "requestedUrl": "http://127.0.0.1:8212/account/create-account",
+      "finalUrl": "http://127.0.0.1:8212/account/create-account",
+      "documentTitle": "Create account",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:44.665Z"
+    },
+    {
+      "id": "/account/profile",
+      "requestedUrl": "http://127.0.0.1:8212/account/profile",
+      "finalUrl": "http://127.0.0.1:8212/resources/sign-in",
+      "documentTitle": "Sign in",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:45.083Z"
+    },
+    {
+      "id": "/account/reset-password",
+      "requestedUrl": "http://127.0.0.1:8212/account/reset-password",
+      "finalUrl": "http://127.0.0.1:8212/account/reset-password",
+      "documentTitle": "Reset password",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:45.529Z"
+    },
+    {
+      "id": "/account/forgot-username",
+      "requestedUrl": "http://127.0.0.1:8212/account/forgot-username",
+      "finalUrl": "http://127.0.0.1:8212/account/forgot-username",
+      "documentTitle": "Forgot username",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:46.253Z"
+    },
+    {
+      "id": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "requestedUrl": "http://127.0.0.1:8212/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "finalUrl": "http://127.0.0.1:8212/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "documentTitle": "Website care",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:47.066Z"
+    },
+    {
+      "id": "/services/43-22-sure-fire-headline-formulas-that-work",
+      "requestedUrl": "http://127.0.0.1:8212/services/43-22-sure-fire-headline-formulas-that-work",
+      "finalUrl": "http://127.0.0.1:8212/services/43-22-sure-fire-headline-formulas-that-work",
+      "documentTitle": "Planning a focused campaign page",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:47.643Z"
+    },
+    {
+      "id": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "documentTitle": "Writing a useful website brief",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:48.108Z"
+    },
+    {
+      "id": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "documentTitle": "Designing a contact page people can use",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:48.698Z"
+    },
+    {
+      "id": "/resources/blog/36-how-to-write-like-hemingway",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/36-how-to-write-like-hemingway",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/36-how-to-write-like-hemingway",
+      "documentTitle": "Editing website copy for clarity",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:49.378Z"
+    },
+    {
+      "id": "/resources/blog/37-how-much-money-do-youtubers-make",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/37-how-much-money-do-youtubers-make",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/37-how-much-money-do-youtubers-make",
+      "documentTitle": "Choosing what belongs on the homepage",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:49.824Z"
+    },
+    {
+      "id": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "documentTitle": "Building an editorial calendar",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:50.260Z"
+    },
+    {
+      "id": "/pages/authors/author/tracyagent",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:50.646Z"
+    },
+    {
+      "id": "/resources/tags/t4-framework",
+      "requestedUrl": "http://127.0.0.1:8212/resources/tags/t4-framework",
+      "finalUrl": "http://127.0.0.1:8212/resources/tags/t4-framework",
+      "documentTitle": "T4 Framework",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:51.038Z"
+    },
+    {
+      "id": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "documentTitle": "Making service pages more specific",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:51.446Z"
+    },
+    {
+      "id": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "documentTitle": "Writing headings that guide a reader",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:51.907Z"
+    },
+    {
+      "id": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "documentTitle": "Using customer stories responsibly",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:52.286Z"
+    },
+    {
+      "id": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "requestedUrl": "http://127.0.0.1:8212/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "finalUrl": "http://127.0.0.1:8212/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "documentTitle": "A simple content review workflow",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:52.750Z"
+    },
+    {
+      "id": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "requestedUrl": "http://127.0.0.1:8212/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "finalUrl": "http://127.0.0.1:8212/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "documentTitle": "Lessons from a website discovery workshop",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:53.130Z"
+    },
+    {
+      "id": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "requestedUrl": "http://127.0.0.1:8212/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "finalUrl": "http://127.0.0.1:8212/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "documentTitle": "Keeping project communication clear",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:53.530Z"
+    },
+    {
+      "id": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "requestedUrl": "http://127.0.0.1:8212/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "finalUrl": "http://127.0.0.1:8212/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "documentTitle": "A thoughtful follow-up after launch",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:53.906Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised",
+      "documentTitle": "Studio resources",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:54.281Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories",
+      "documentTitle": "Explore the studio",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:54.629Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical",
+      "documentTitle": "Practical guides",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:55.014Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "documentTitle": "Inside the studio",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:55.422Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "documentTitle": "Studio life",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:56.091Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages",
+      "documentTitle": "Website pages",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:56.766Z"
+    },
+    {
+      "id": "/resources/all-categories/17-magazine",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/17-magazine",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/17-magazine",
+      "documentTitle": "Insights",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:57.406Z"
+    },
+    {
+      "id": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "documentTitle": "Choosing a CMS your team can use",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:57.897Z"
+    },
+    {
+      "id": "/pages/authors/author/demo",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/demo",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/demo",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:58.269Z"
+    },
+    {
+      "id": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "documentTitle": "Asking better questions about hosting",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:58.678Z"
+    },
+    {
+      "id": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "documentTitle": "Preparing an asset inventory",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:59.130Z"
+    },
+    {
+      "id": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "documentTitle": "Reviewing third-party integrations",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:27:59.492Z"
+    },
+    {
+      "id": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "documentTitle": "Comparing proposals on the same basis",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:00.168Z"
+    },
+    {
+      "id": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "documentTitle": "Studio notes: making time for improvements",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:00.450Z"
+    },
+    {
+      "id": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "documentTitle": "Studio notes: welcoming a new perspective",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:00.985Z"
+    },
+    {
+      "id": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "documentTitle": "Studio notes: reviewing work together",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:01.423Z"
+    },
+    {
+      "id": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "documentTitle": "Studio notes: a better project kickoff",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:01.924Z"
+    },
+    {
+      "id": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "documentTitle": "Studio notes: starting with the customer",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:02.552Z"
+    },
+    {
+      "id": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "documentTitle": "Reducing unnecessary page weight",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:02.992Z"
+    },
+    {
+      "id": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "documentTitle": "Making recovery part of launch planning",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:03.425Z"
+    },
+    {
+      "id": "/pages/authors/author/Lawrence",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/Lawrence",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/Lawrence",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:03.693Z"
+    },
+    {
+      "id": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "documentTitle": "A routine for website updates",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:04.096Z"
+    },
+    {
+      "id": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "documentTitle": "Keeping forms connected to your team",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:04.650Z"
+    },
+    {
+      "id": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "requestedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "finalUrl": "http://127.0.0.1:8212/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "documentTitle": "Reading website analytics with a purpose",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:09.177Z"
+    },
+    {
+      "id": "/pages/authors/author/DamonZ",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/DamonZ",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/DamonZ",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:10.121Z"
+    },
+    {
+      "id": "/resources/tags/jooma-4-x",
+      "requestedUrl": "http://127.0.0.1:8212/resources/tags/jooma-4-x",
+      "finalUrl": "http://127.0.0.1:8212/resources/tags/jooma-4-x",
+      "documentTitle": "Jooma 4.x",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:10.852Z"
+    },
+    {
+      "id": "/resources/tags/joomla-3-9",
+      "requestedUrl": "http://127.0.0.1:8212/resources/tags/joomla-3-9",
+      "finalUrl": "http://127.0.0.1:8212/resources/tags/joomla-3-9",
+      "documentTitle": "Joomla 3.9",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:11.570Z"
+    },
+    {
+      "id": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "requestedUrl": "http://127.0.0.1:8212/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "finalUrl": "http://127.0.0.1:8212/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "documentTitle": "Adam Hale — Design Director",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:12.023Z"
+    },
+    {
+      "id": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "requestedUrl": "http://127.0.0.1:8212/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "finalUrl": "http://127.0.0.1:8212/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "documentTitle": "Peter Lang — Development Lead",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:13.094Z"
+    },
+    {
+      "id": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "requestedUrl": "http://127.0.0.1:8212/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "finalUrl": "http://127.0.0.1:8212/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "documentTitle": "Sofia Lindqvist — Brand Designer",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:14.369Z"
+    },
+    {
+      "id": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "requestedUrl": "http://127.0.0.1:8212/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "finalUrl": "http://127.0.0.1:8212/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "documentTitle": "Lucas Meyer — Research Lead",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:14.923Z"
+    },
+    {
+      "id": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "requestedUrl": "http://127.0.0.1:8212/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "finalUrl": "http://127.0.0.1:8212/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "documentTitle": "How the demo team works together",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:15.444Z"
+    },
+    {
+      "id": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "requestedUrl": "http://127.0.0.1:8212/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "finalUrl": "http://127.0.0.1:8212/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "documentTitle": "Meet the people behind a project",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:15.959Z"
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised",
+      "requestedUrl": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised",
+      "finalUrl": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised",
+      "documentTitle": "News feeds",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:16.414Z"
+    },
+    {
+      "id": "/pages/authors/author/margarete69",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/margarete69",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/margarete69",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:17.126Z"
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:17.828Z"
+    },
+    {
+      "id": "/pages/authors/author/dion.parker",
+      "requestedUrl": "http://127.0.0.1:8212/pages/authors/author/dion.parker",
+      "finalUrl": "http://127.0.0.1:8212/pages/authors/author/dion.parker",
+      "documentTitle": "Authors",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:18.594Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/1-about-us",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/1-about-us",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/1-about-us",
+      "documentTitle": "About us",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:19.102Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/13-full-width",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/13-full-width",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/13-full-width",
+      "documentTitle": "Full width",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:20.118Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "documentTitle": "Sidebar Left + Content",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:21.448Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "documentTitle": "Content + Sidebar Right",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:22.940Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "documentTitle": "Testing a website before launch",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:27.749Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "documentTitle": "Planning a website migration",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:29.984Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "documentTitle": "Keeping images sharp on smaller screens",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:30.864Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "documentTitle": "Making a website easy to maintain",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:31.700Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "documentTitle": "A practical handover checklist",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:32.913Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "documentTitle": "Testing keyboard navigation",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:33.590Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "documentTitle": "Inside a collaborative design review",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:34.050Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "documentTitle": "Preparing for a team photo session",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:34.462Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "documentTitle": "A workspace that supports creative work",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:35.188Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "documentTitle": "From workshop notes to a page plan",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:35.860Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "documentTitle": "Organising a useful inspiration library",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:37.236Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "documentTitle": "Keeping project decisions findable",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:40.255Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "documentTitle": "Making room for informal conversations",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:41.833Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "documentTitle": "A team lunch with a purpose",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:42.802Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "documentTitle": "Collecting inspiration outside the studio",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:44.502Z"
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "documentTitle": "Sharing knowledge in small sessions",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:45.447Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/32-header-1",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/32-header-1",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/32-header-1",
+      "documentTitle": "Header 1",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:51.400Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/33-header-2",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/33-header-2",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/33-header-2",
+      "documentTitle": "Header 2",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:52.485Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/34-header-3",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/34-header-3",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/34-header-3",
+      "documentTitle": "Header 3",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:53.683Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/35-header-4",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/35-header-4",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/35-header-4",
+      "documentTitle": "Header 4 (Main menu - Logo - Topbar right)",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:54.205Z"
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "requestedUrl": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "finalUrl": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "documentTitle": "Joomla! announcements",
+      "selectors": {
+        "page.title": "head title",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:56.402Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/16-3-columns",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/16-3-columns",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/16-3-columns",
+      "documentTitle": "3 Columns",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:56.992Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/17-layouts",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/17-layouts",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/17-layouts",
+      "documentTitle": "Layouts",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:57.645Z"
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/31-home-dark",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/31-home-dark",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/31-home-dark",
+      "documentTitle": "Home Dark",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:58.397Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/65-offline-page",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/65-offline-page",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/65-offline-page",
+      "documentTitle": "Offline page",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:58.885Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/46-features-page",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/46-features-page",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/46-features-page",
+      "documentTitle": "Features page",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:59.330Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/48-faqs",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/48-faqs",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/48-faqs",
+      "documentTitle": "FAQs",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:28:59.969Z"
+    },
+    {
+      "id": "/resources/all-categories/14-pages/64-error-page",
+      "requestedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/64-error-page",
+      "finalUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/64-error-page",
+      "documentTitle": "Error page",
+      "selectors": {
+        "page.title": "head title",
+        "page.heading": "#t4-main-body h1",
+        "disclosure": ".tracy-site-notice"
+      },
+      "capturedAt": "2026-09-12T12:29:00.503Z"
+    }
+  ]
+}

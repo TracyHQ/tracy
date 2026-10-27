@@ -1,0 +1,47 @@
+---
+title: Connect Claude
+description: Add Tracy as a hosted Claude connector and choose the website it can access.
+---
+
+import { Aside, CardGrid, LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+This guide covers hosted Claude at **claude.ai**. [Claude Code](/mcp/clients/claude-code/) has its own connection requirements.
+
+## Add the connector
+
+Complete the [prerequisites](/mcp/getting-started/#what-you-need), then:
+
+<Steps>
+
+1. Open **Settings → Connectors** in Claude. Choose the option to add a custom connector, where available in your account.
+2. Enter **Tracy** as the name and the MCP server URL below.
+3. Start connecting and sign in to Tracy. The hosted Claude flow uses client metadata; you do not need to create or paste a client secret.
+4. Check that the consent page identifies **claude.ai**, select the website, and choose **Connect**.
+5. Return to Claude and enable Tracy's connector for the conversation.
+
+</Steps>
+
+```text wrap title="MCP server URL"
+https://cowork.tracy.ai/mcp
+```
+
+## Verify a tool call
+
+```text wrap title="First prompt"
+Use Tracy to read the connected website's details and list its pages.
+Do not make changes.
+```
+
+Confirm the result names your selected website. If the app asks you to authorize tool use, review the request there. For your next step, follow [Working with your site](/mcp/working-with-your-site/).
+
+## Connection problems
+
+- A missing custom-connector option can depend on account or workspace settings.
+- A missing website usually means the wrong Tracy account or an invitation that has not been accepted.
+- `invalid_client` can indicate an incompatible client identity or metadata. Do not enter the ChatGPT client ID into Claude.
+
+See [Troubleshooting](/mcp/troubleshooting/) and [Claude's authentication documentation](https://claude.com/docs/connectors/building/authentication).
+
+## Disconnect
+
+Remove Tracy from Claude's connectors and revoke the corresponding **claude.ai · Tracy** key in Tracy. [Revocation steps](/mcp/permissions/#disconnect-and-revoke).

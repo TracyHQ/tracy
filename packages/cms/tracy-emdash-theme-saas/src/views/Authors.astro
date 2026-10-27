@@ -1,0 +1,130 @@
+---
+/**
+ * Writers. A page whose filter names one author (`author:<username>`) is that writer's page and
+ * shares the Blog view's author layout; otherwise it is the directory of writers.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor } from '@/lib/stamps'
+import Blog from '@/views/Blog.astro'
+import Masthead from '@/components/blog/Masthead.astro'
+import Avatar from '@/components/blog/Avatar.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import type { ComposedPage } from '@/lib/sections'
+import { authorPath, loadAuthors, loadPageFields, loadPosts, parseFilter } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  page: ComposedPage & { filter?: string }
+}
+const { chrome, locale, path, page } = Astro.props
+const filter = parseFilter(page.filter ?? (await loadPageFields(locale, page.path))?.filter)
+const single = filter?.kind === 'author' ? filter.value : null
+// The directory is the writers collection, most articles first (loadAuthors' order). The collection
+// has no order field, and its entries share creation timestamps, so any other order would be an
+// accident. Bylines without an entry stay reachable from their posts.
+const writers = single
+  ? []
+  : (await loadAuthors(locale, await loadPosts(locale))).filter((a) => a.order !== null)
+
+// Provenance stamps (`src/lib/stamps.ts`): the page entry owns the page and stamps its head. Empty on
+// an ordinary request.
+const $page = stampFor(Astro.request, 'pages', { slug: page.slug, data: { id: page.id } })
+const headMarks = { title: $page(page.heading ? 'heading' : 'title'), sub: $page('sub') }
+const $ = (w: { entry: { id: string; slug: string } | null }) => stampFor(Astro.request, 'writers', w.entry)
+---
+
+{
+	single ? (
+		<Blog chrome={chrome} locale={locale} path={path} page={page} author={single} />
+	) : (
+		<Base chrome={chrome} title={page.title} currentPath={path} style={page.style}>
+			<PageOwner stamp={$page} />
+			<Masthead title={page.heading || page.title} sub={page.sub} eyebrow={ui(locale).w.authors} size="writers" marks={headMarks} />
+			<section class="body">
+				<div class="k-container grid">
+					{writers.map((w) => (
+						<a class="card" href={href(locale, authorPath(w.slug))} {...$(w)()}>
+							<Avatar name={w.name} src={w.avatar} size={72} />
+							<span class="name" {...$(w)('name')}>{w.name}</span>
+							{w.role && <span class="role" {...$(w)('role')}>{w.role}</span>}
+							<span class="count">
+								{w.count} {w.count === 1 ? 'article' : 'articles'}
+							</span>
+						</a>
+					))}
+				</div>
+			</section>
+		</Base>
+	)
+}
+
+<style>
+	.body {
+		padding: 64px 0 80px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 18px;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 28px 24px;
+		text-align: center;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+		transition: border-color 0.15s;
+	}
+	.card:hover {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.name {
+		margin-top: 14px;
+		font-family: var(--font-heading);
+		font-size: 16px;
+		line-height: 1.55;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	.card:hover .name {
+		color: var(--k-primary);
+	}
+	.role {
+		margin-top: 4px;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.55;
+		color: var(--k-muted);
+	}
+	.count {
+		margin-top: 8px;
+		font-size: 13px;
+		color: var(--k-text);
+	}
+	@media (max-width: 1199px) {
+		.grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 767px) {
+		.body {
+			padding: 40px 0 56px;
+		}
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 480px) {
+		.grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

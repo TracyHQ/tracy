@@ -1,0 +1,272 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-gamex",
+  "release": "quickstart/ja-gamex/j6@1.0.0",
+  "minVersion": {
+    "quickstart/ja-gamex/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-gamex/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.slide-title.text-white",
+    "heading": "h2.section-title",
+    "body": "p.mb-3.mb-lg-5",
+    "button-primary": "a.btn.btn-primary",
+    "container": ".t4-section .container",
+    "input": "#email_field_545"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 56px",
+    "displayFace": "Archivo 800, tracking 0em",
+    "heading": "first section heading: 48px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(100, 100, 255)",
+    "container": "first content container, max-width 1692px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 24px"
+  },
+  "keepScopes": [".acym_module", ".link-store", ".slider-content", ".cta-wrap"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#4f4f4f",
+    "--fg-2": "#212529",
+    "--accent": "#6464ff",
+    "--accent-hover": "#3939f3",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212529",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#828282",
+    "--font-display": "\"Archivo\", sans-serif",
+    "--font-body": "\"Nunito\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#212529",
+      "accent": "#6464ff",
+      "accent-hover": "#3939f3",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#828282"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#333333",
+      "accent": "#6464ff",
+      "accent-on": "#ffffff"
+    },
+    {
+      "accent": "#6464ff"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "border": "#ced4da",
+      "surface": "#eaedf1",
+      "warn": "#fdce03",
+      "surface-warm": "#1d2124"
+    },
+    {
+      "surface": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (82 line colours, 115 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "#t4-sideshow"],
+    "bodyFace": ["body"],
+    "groundPicture": [".t4-content", ".t4-content::before", ".t4-content::after", ".features-item"],
+    "inkImages": [
+      ".navbar-brand img.logo-img",
+      ".t4-off-canvas-header img.logo-img",
+      ".clients-wrap .client-img img"
+    ],
+    "cardLike": [".testimonial-right"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 14 tried (byte 6452); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ced4da",
+      "uses": 7,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 18
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    },
+    {
+      "hex": "#1d2124",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 8
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the published release 1.0.1 (quickstart/ja-gamex/j6, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-gamex-j6 — 10/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 93% or more of the page follows, checked by eye on the four systems' screenshots; the two verdicts that miss are Toggl Track's, on the body's font weight (400 where the system wants 500), not on reading; with the earlier contract the hiring card's title and the testimonial score, in the system's second text colour on a picture lighter than the page, read 3.6–4.2:1 under Toggl Track — fixed by followRules (.contact-info h4 and .testimonial-rating .rating-score take the system text); the hero's white title on its cyan picture (1.9:1) is the template's own pair. Earlier: measured 11/10/2026 on the 1.0.1 build (stylesheets tokenized; tasks/evidence/ds-contracts-r2c-2026-10-11/templates/ja-gamex-j6/final-1.0.1): default unchanged (0 differences, before and after the systems, desktop and phone), no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple — text on a picture now judged against the picture it sits on — 93% or more of the page follows, and the dark and light screenshots read by eye",
+  "keepText": [".acym_module", ".link-store"],
+  "groundNote": "the page ground is a light gradient picture (.t4-content, its ::before/::after decor) and the feature cards are light gradients: under a worn system they give way to the system page (selectors.groundPicture), or a dark system put light text on a light picture (round 1, 11/10/2026). The wordmark and client logos are dark-ink images: inverted, hues kept, under a dark system only (selectors.inkImages). The newsletter band (.acym_module, white text on its own blue gradient) and the store badge chips (.link-store, white chips under dark badge art) are kept whole, their text too (keepText)",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-muted)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#4f4f4f",
+    "--body-link-color": "#6464ff",
+    "--body-link-hover-color": "#3939f3",
+    "--color-primary": "#6464ff",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#4f4f4f",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#6464ff",
+    "--mainnav-link-active-color": "#0404f6",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#ffffff"
+  },
+  "keepColors": {
+    ".acym_module": "rgb(79, 79, 79)",
+    ".link-store": "rgb(79, 79, 79)"
+  },
+  "contrastNote": "block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026; heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples) — added at the re-measure of 11/10/2026, the contract was ready on the four first-match probes only",
+  "followRules": {
+    ".contact-info h4": {
+      "color": "fg"
+    },
+    ".testimonial-rating .rating-score": {
+      "color": "fg"
+    }
+  },
+  "followNote": "the hiring card (.contact-info, a patterned picture over the page ground) and the testimonial score sit on a picture lighter than the page: in the system's second text colour (fg-2) they read 3.6–4.2:1 under Toggl Track (dark) — they take the system text (fg), the strongest text colour",
+  "bands": {
+    ".acym_module": {
+      "ground": "#5881ff",
+      "texts": ["#cdd9ff", "#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".link-store": {
+      "ground": "#ffffff",
+      "texts": [],
+      "root": false,
+      "paint": {
+        ".t4-content": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".slider-content": {
+      "ground": "#03c3fc",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "gradient": true,
+      "important": true,
+      "repaint": true,
+      "paint": {
+        ".slide-title": {
+          "color": "text"
+        },
+        ".slide-title span": {
+          "color": "text"
+        },
+        ".description": {
+          "color": "text"
+        }
+      }
+    },
+    ".cta-wrap": {
+      "ground": "#ff3d8c",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "gradient": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the hero slides’ caption card (.slider-content, a cyan-to-teal gradient at 95% over the slide picture) and the \"Ready to fly?\" call band (.cta-wrap, a pink-to-orange gradient) are gradient blocks of the template’s own palette under white words (.text-white): they kept the template gradients beside every system (Mailchimp, Spotify, Linear, visual review 14/10/2026). Both are kept bands whose white words stay and whose ground is a gradient of the system (its accent where white reads at least as well as on the template’s own gradient, else its ink); 14/10/2026 (visual review, round 3): the hero caption card’s words (.slide-title, .description, white with .text-white) stayed white on the worn accent at 2.2–2.3:1 under Moxie (light blue) and Mailchimp (the olive step of its yellow): the band asked no more than the template’s own white-on-cyan, 2.1:1. The card now repaints its words (repaint: true, words painted text): it takes the accent only where the system’s own words for the accent (accent-on) read on it at 4.5:1, else a deeper step or the system’s ink, and its words are those",
+  "rolesNote": "container: the first .t4-section .container (13/10/2026) — the slideshow measured before (#t4-sideshow) sits in a 1296px parent and never shows a wider system width"
+}

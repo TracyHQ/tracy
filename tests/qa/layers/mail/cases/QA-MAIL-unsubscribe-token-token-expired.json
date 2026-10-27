@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-unsubscribe-token-token-expired",
+  "itemIds": ["flow:unsubscribe-token"],
+  "requirement": "a token older than ninety days is refused",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "lifetimes.unsubscribeSeconds",
+    "invariant": "90 days"
+  },
+  "edgeTags": ["token-expired"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.unsubscribe.token#refused-after-lifetime"],
+  "redProof": null,
+  "legacyIds": []
+}

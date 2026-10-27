@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1263-tdsr-design-system-readiness",
+  "kind": "feat",
+  "title": "Design system is a Road to live step: the Template Design System Readiness check runs per release version, must-fix rules hold Publish of a template not yet live (DESIGN_SYSTEM_NOT_READY), a live one only warns",
+  "pr": 1263,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/road-to-live.test.mjs apps/tracy-web/test/design-system-readiness.test.mjs (the Postgres parts run when TEST_DATABASE_URL is set).",
+    "S3: Run node --test packages/web/tracy-harness/test/problem-guides.test.mjs packages/web/tracy-harness/test/template-presses.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including a release rebuilt from untokenized source failing CSS-1, a version past maxVersion failing SLOT-2, a nested EmDash fallback passing DEF-1, and a tokenizer swap that changes no byte counting no CSS-2 leftover.",
+    "S2: every test that runs passes: step design-system sits after customize, waits for the install file alone, ds-must-fix holds Publish with DESIGN_SYSTEM_NOT_READY, a published release only warns; rule-severity.json names every rule.",
+    "S3: every test passes, including the 'Design system · 5/7 passed' title, both groups and one prompt naming the tdsr skill and the local command."
+  ],
+  "selectors": {
+    "road": "apps/tracy-web/src/lib/road-to-live.js designSystemStep",
+    "check": "apps/tracy-web/src/lib/template-design-system-readiness/index.js RULES",
+    "severity": "apps/tracy-web/src/lib/template-design-system-readiness/rule-severity.json",
+    "door": "POST /api/ops/quickstart/inspiration/publish -> DESIGN_SYSTEM_NOT_READY; POST /api/ops/quickstart/design-system/check",
+    "panel": "[data-road-step=design-system] [data-road-check-again]"
+  },
+  "evidence": "Before this change nothing judged whether a release still declared the design-system slot: an untokenized rebuild, an unchecked version or bands kept whole were found by hand",
+  "fence": "The road, the publish door and the local command read one check and one severity file; a published release is never taken off",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "apps/tracy-web/test/road-to-live.test.mjs",
+      "apps/tracy-web/test/design-system-readiness.test.mjs",
+      "packages/web/tracy-harness/test/problem-guides.test.mjs",
+      "packages/web/tracy-harness/test/template-presses.test.mjs"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-microsoft-blue: #0067b8;
+  --color-deep-azure: #004a7f;
+  --color-fluent-icon-blue: #0078d4;
+  --color-amber-badge: #ffb900;
+  --color-void: #000000;
+  --color-graphite: #171717;
+  --color-charcoal: #262626;
+  --color-iron: #333333;
+  --color-slate: #616161;
+  --color-fog: #f2f2f2;
+  --color-white: #ffffff;
+
+  /* Typography */
+  --font-segoe-ui: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

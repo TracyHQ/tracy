@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-sidebar-mist: #f9f9f9;
+  --color-pure-white: #ffffff;
+  --color-graphite-ink: #0d0d0d;
+  --color-mid-ash: #5d5d5d;
+  --color-hollow: #8f8f8f;
+  --color-hairline: #0000001a;
+  --color-hover-veil: #0000000d;
+  --color-ink-press: #000000;
+  --color-deep-charcoal: #00000080;
+  --color-edge-gray: #e6e6e6;
+
+  /* Typography */
+  --font-apple-system-body: '-apple-system-body', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

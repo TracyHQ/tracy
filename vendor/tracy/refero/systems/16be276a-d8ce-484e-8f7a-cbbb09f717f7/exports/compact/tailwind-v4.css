@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-indigo-strike: #1925aa;
+  --color-bone: #e8e6e0;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-deep-indigo: #0d1355;
+
+  /* Typography */
+  --font-gt-america-mono: 'GT America Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1041-lane-door-live-seat-only",
+  "kind": "fix",
+  "title": "A site's own sign-in door gives an agent session only to a live seat (accepted, not declined or revoked), and the session carries the role's fixed toolsets so a viewer is read-only",
+  "pr": 1041,
+  "area": "seats/sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From vendor/tracy/dsh-passwords run the command in `run.cmd`.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures.",
+    "Every test named in run.tests reports ok: an invited, declined, revoked or status-less roster row signs nobody in; a live row decides the role; a live viewer gets a read-only sandbox with no upload, git, workspace creation or visitor cap; retired admin/developer roles sign in as editor."
+  ],
+  "selectors": {
+    "function": "vendor/tracy/dsh-passwords/src/tracy/tracy-door.ts grantLaneSession; src/tracy/seat-context.ts seatRoleOf, toolsetsForRole, permissionsFor",
+    "test": "vendor/tracy/dsh-passwords/test/tracy/tracy-door.test.ts, test/tracy/seat-context.test.ts"
+  },
+  "fence": "grantLaneSession takes only a roster row with status 'active' and a seat-book role, and passes toolsetsForRole(role) to upsertSeatUser; permissionsFor makes a seat with no content/code/site toolset read-only. Local gateway with a fake seat book, no network.",
+  "run": {
+    "cwd": "vendor/tracy/dsh-passwords",
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "test/tracy/tracy-door.test.ts",
+      "test/tracy/seat-context.test.ts"
+    ],
+    "tests": [
+      "T1: a seat whose status is invited gets NO lane session",
+      "T1: a seat whose status is declined gets NO lane session",
+      "T1: a seat whose status is revoked gets NO lane session",
+      "T1: a seat whose status is undefined gets NO lane session",
+      "T1: a declined row and a live row for one address: the LIVE row decides the role",
+      "T1: a live viewer seat signs in READ-ONLY",
+      "T1/ADR 0028: a retired role from an old seat book (admin, developer) signs in as an editor",
+      "S14: ANY seat holding no content/code/site toolset runs read-only",
+      "S14/ADR 0028: retired roles map to editor"
+    ]
+  }
+}

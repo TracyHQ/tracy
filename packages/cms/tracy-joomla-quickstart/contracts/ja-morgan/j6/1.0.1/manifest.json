@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-morgan/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_morgan",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-morgan",
+    "id": "quickstart/ja-morgan/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_morgan",
+    "parts": {
+      "installer": {
+        "file": "ja-morgan-j6-quickstart-1.0.1.zip",
+        "bytes": 57725025,
+        "sha256": "a6e3de177cbf6145e1f9cb44891b356f1a1436d1e09c9dc633b579ac6f61870d"
+      }
+    },
+    "release": "quickstart/ja-morgan/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

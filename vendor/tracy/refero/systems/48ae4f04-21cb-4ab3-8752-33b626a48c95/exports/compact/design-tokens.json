@@ -1,0 +1,69 @@
+{
+  "color": {
+    "acid-highlight": {
+      "$value": "#f1f252",
+      "$type": "color",
+      "$description": "Acid Highlight — Primary action buttons, decorative accent shapes, heading highlights, nav emphasis — the single chromatic color in an otherwise achromatic system, used sparingly to draw the eye to CTAs and break visual monotony"
+    },
+    "charcoal-ink": {
+      "$value": "#1c1b18",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, dark hero/section backgrounds, icon strokes, nav borders, high-contrast surfaces — the structural black of the system, warmer than pure black"
+    },
+    "warm-graphite": {
+      "$value": "#545048",
+      "$type": "color",
+      "$description": "Warm Graphite — Secondary body text, muted labels, image borders, card borders, icon outlines — the mid-tone that bridges ink and paper"
+    },
+    "cream-paper": {
+      "$value": "#efece7",
+      "$type": "color",
+      "$description": "Cream Paper — Dominant page canvas, card backgrounds on dark sections, nav borders, link borders — the warm off-white that defines the brand's lighter surfaces"
+    },
+    "soft-stone": {
+      "$value": "#d4d1cd",
+      "$type": "color",
+      "$description": "Soft Stone — Hairline dividers, subtle borders, image outlines, secondary structural lines — the lightest warm gray for quiet separation"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Elevated card surfaces, modal backgrounds, light-theme cards, inset border glows — the brightest surface for content containers that sit on cream"
+    },
+    "espresso": {
+      "$value": "#3c3428",
+      "$type": "color",
+      "$description": "Espresso — Footer accents, deep warm browns for grounding the bottom of pages — a desaturated warm dark that complements charcoal without competing"
+    }
+  },
+  "font": {
+    "haffer": {
+      "$value": "Haffer",
+      "$type": "fontFamily",
+      "$description": "Primary interface and heading typeface — the workhorse sans-serif used for nav, body, buttons, links, and most headings. Weight 400 for body and nav, 600 for subheadings and button labels, 700 for primary headlines. Substitute: Inter or General Sans"
+    },
+    "para": {
+      "$value": "Para",
+      "$type": "fontFamily",
+      "$description": "Display serif for editorial-style headings — the weight-300 italic-feeling serif introduces contrast against the bold sans-serif headlines, giving select sections a magazine-cover quality. Used sparingly. Substitute: Source Serif Pro Light or Playfair Display Light"
+    },
+    "nudge": {
+      "$value": "Nudge",
+      "$type": "fontFamily",
+      "$description": "Massive display sans for hero statements — ultra-bold, ultra-tight, single-line hero words that dominate the viewport. The weight-700 weight at 84px with 1.0 line-height makes headlines feel carved rather than written. Substitute: Haffer 700 at 84px or Druk Wide"
+    },
+    "dm-mono": {
+      "$value": "DM Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace accent for code snippets, technical labels, or numbered annotations. Rare but present for moments needing a technical voice. Substitute: JetBrains Mono or IBM Plex Mono"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://gocardless.com",
+      "siteName": "Gocardless",
+      "extractedAt": "2026-06-03T20:41:57.330Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+/* CSS source of the settings page. Tailwind reads this file at build time; the result goes into
+   lib/client.js as a STRING and is injected with a <style> tag. There is no Tailwind step on the
+   host — dsh serves exactly one `lib/client.js` per plugin.
+
+   🔒 NO `@import "tailwindcss"`. That line pulls in preflight — Tailwind's GLOBAL reset.
+   This plugin lives INSIDE the dsh interface, so a global reset would spill out of the settings page
+   and break screens dsh draws. The lines below take exactly the two layers needed: `theme` (variables)
+   and `utilities` (classes), leaving `preflight.css` out.
+
+   Same recipe as `packages/site/tracy-site-tabs/src/client/site-tabs.css`. Keep the two files in step:
+   they build the same set of components, and if they drift the gallery is no longer a faithful
+   reference of what the customer sees. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+
+/* Tracy's tokens: CSS variables plus the `@theme inline` block that maps them onto Tailwind's colour
+   and radius scales. Imported by package name because `@tracy/ui` declares `./tokens.css` in `exports`. */
+@import '@tracy/ui/tokens.css';
+
+/* 🔒 `source(none)` above TURNS OFF auto-detection, and the lines below are the WHOLE source list.
+
+   With auto-detection the result depends on where the command is typed — running from the package
+   folder and from the repo root gives two different bundles, and `--check` compares verbatim, so it
+   goes red by folder rather than by content. The same trap `absWorkingDir` fixed for esbuild.
+
+   Auto-detection also pulls in `node_modules`: `@tracy/ui` there is a symlink to `packages/ui/tracy-ui`,
+   so the library would be scanned twice through two paths. */
+@source './';
+@source '../../../tracy-ui/src';
+/* The self-placing menu the Language row opens (shared with Site changes). */
+@source '../../../../core/tracy-core/src/site-tabs/Popover.tsx';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. Every Tracy sheet
+   shares one page and the same class names, so one sheet left on the OS default repaints the others'
+   elements too (measured 30/09: this sheet's dark:hidden hid My Sites' light CMS logo). */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA paints buttons grey with black text. Scoped to Tracy's OWN
+   controls only — the library Button (data-slot="button") and the nav items — never to the dsh
+   rows mounted inside this page: a blanket `button` / `*` reset here re-laid dsh's selectors and
+   theme cubes (03/09/2026). Placed in `base`, so every utility class still wins. */
+@layer base {
+  .ts-overlay [data-slot="button"], .ts-overlay nav button { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  /* The Language menu is portalled to the body, outside .ts-overlay, so it carries its own scope. */
+  .ts-menu button { background-color: transparent; color: inherit; font: inherit; border-width: 0; }
+}

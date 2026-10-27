@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1100-p1-help-knows-queue-stop-and-lasting-wishes",
+  "kind": "fix",
+  "title": "Help knows that Stop stays beside the queued next message while Tracy works, that Esc twice in the chat box stops the work too, and that a lasting wish said in the chat is kept per site",
+  "pr": 1100,
+  "area": "assistant",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/assistant.test.mjs",
+    "S2: Record the exit code and the result of the cases named: \"Help prompt: knows the Stop square of the chat box and never claims to see whether a task is running\"; \"Help prompt: knows that Stop stays beside the queued next message while Tracy works\"; \"Help prompt: knows that a lasting wish said in the chat is kept per site, in words the host keeps\"; \"Help prompt: knows that Esc twice in the chat box stops the work, and only there\"."
+  ],
+  "expect": [
+    "S1 exits 0 and the four named cases are 'ok' (the database cases of the file may be skipped without TEST_DATABASE_URL; none of the named ones touches the database).",
+    "The Help prompt still says the send arrow turns into a red Stop square while Tracy works and still forbids saying whether a task is running.",
+    "The Stop fact (one line) also says that pressing Esc twice quickly while the cursor is in the chat box does the same, keeping what was typed, that Esc does nothing for this with the focus elsewhere on the page, and still ends 'Nothing else stops it from here.' Measured on the stand 10/10/2026 on dsh built from #1100 (tracy/dsh:dev 10:43 UTC), site uiweekwp, long no-tool turn, Escape pressed twice 150 ms apart: focus in the empty chat box -> session/cancel 174-199 ms after the first press, turn/end aborted/user; focus in the chat box with a draft -> session/cancel 156-171 ms, turn/end aborted/user, draft kept; focus on the page body or on the sidebar's 'Expand sidebar' button -> no session call, Stop still shown (two runs each).",
+    "The Help prompt says the person can type their next message while Tracy works, that the send button then queues it (sent when the current work ends) and that the red Stop square stays beside it (#1049, fork tracy.26).",
+    "The Help prompt has a 'Lasting wishes' fact: said as a normal message in the chat (without /help), kept by Tracy for that site, for that site only, a request in the current chat that disagrees wins (the same rule as the host's own NOTES_HEADER), and no setting or screen lists them; every phrase it tells the person to type passes the host's own gate mayHoldWish (packages/tools/tracy-site-tools/src/host/site-notes.mjs), so the advice keeps something."
+  ],
+  "selectors": {
+    "prompt": "PRODUCT in apps/tracy-web/src/assistant/prompt.js",
+    "gate": "mayHoldWish and NOTES_HEADER in packages/tools/tracy-site-tools/src/host/site-notes.mjs"
+  },
+  "evidence": "Found while verifying the merges of 09-10/10/2026: asked \"can I make answers shorter?\" with /help, Help answered that there was no setting it knew of, although #1026 (08/10/2026) keeps a lasting wish such as \"from now on, always answer in one short sentence\" for the site; the prompt's product facts were written 07/10, before #1026 and before #1049 kept a Stop button beside Queue message while a draft is typed. The Stop fact said 'Nothing else stops it from here' while dsh's double Escape (response.stop) also stops a turn from inside the conversation; checked on the stand 10/10/2026, pictures tasks/evidence/followups-2026-10-10/p1-help/stand-esc-*.png.",
+  "fence": "The prompt text only: what Help is told before every turn. Whether a model then answers with these facts is not judged here (no model runs); the wish gate is the host's real function, so the advice cannot drift away from what the host keeps.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/assistant.test.mjs"],
+    "needs": [],
+    "tests": [
+      "Help prompt: knows the Stop square of the chat box and never claims to see whether a task is running",
+      "Help prompt: knows that Stop stays beside the queued next message while Tracy works",
+      "Help prompt: knows that a lasting wish said in the chat is kept per site, in words the host keeps",
+      "Help prompt: knows that Esc twice in the chat box stops the work, and only there"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-olive-ink: #3c422e;
+  --color-linen-cream: #fff4ec;
+  --color-buttery-peach: #f6e6d9;
+  --color-squeeze-bottle-green: #9eef80;
+  --color-evoo-yellow-green: #d1e030;
+  --color-mustard-sun: #fbd535;
+
+  /* Typography */
+  --font-gt-alpina-typewriter: 'GT Alpina Typewriter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-itc-garamond-condensed: 'ITC Garamond Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apercu: 'Apercu', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

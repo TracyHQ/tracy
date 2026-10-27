@@ -1,0 +1,53 @@
+{
+  "id": "QA-UNIT-REG-PR-1267-help-link-whitespace-happy",
+  "itemIds": ["regression:REG-PR-1267-help-link-whitespace"],
+  "requirement": "A /help answer whose link has a space inside the parentheses still renders as a link when the address is listed",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1267-help-link-whitespace.json",
+    "ref": "PR #1267 (fix); fix evidence: Issue #1260: answers to /help showed `[Publish]( /mysite.tracy.site/?tab=tracy:site-publish&site=mysite.tracy.site)` as raw text",
+    "invariant": "S1: exit code 0. S2: `[Publish]( /site/?tab=tracy:site-publish&site=site)` is a link when listed; an unlisted padded address keeps only its label; wrapped and shortened addresses still resolve only through the allowlist.",
+    "productSources": ["packages/ui/tracy-assistant/src/client/chat.ts:115"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a model that pads the parentheses still gets its listed link; an unlisted one keeps its label",
+    "a link is clickable only when the server listed its exact address"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1267-help-link-whitespace"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-assistant", "tracy-assistant"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1267-help-link-whitespace",
+    "pr": 1267,
+    "kind": "fix",
+    "area": "assistant/help-links",
+    "file": "tests/regression/cases/REG-PR-1267-help-link-whitespace.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-force-exit",
+    "packages/ui/tracy-assistant/test/chat.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a model that pads the parentheses still gets its listed link; an unlisted one keeps its label",
+    "a link is clickable only when the server listed its exact address"
+  ],
+  "timeoutS": 600
+}

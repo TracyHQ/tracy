@@ -1,0 +1,290 @@
+{
+  "dos": [
+    "Use `regola-light` with tight negative letter-spacing for all headlines above 30px.",
+    "Set the primary page background to #fdfdf7 (Parchment), never pure #ffffff.",
+    "Reserve the vibrant #0096f7 (Sky Blue) for primary interactive elements like CTAs and links.",
+    "Apply a consistent 12px border-radius to almost all buttons, inputs, and cards.",
+    "Employ generous whitespace (96px-120px) between major content sections.",
+    "Use subtle, short shadows like `rgba(0, 0, 0, 0.12) 0px 0.5px 2px 0px` to gently lift elements.",
+    "Mix large, airy typography with high-quality product photography and clean 3D renders."
+  ],
+  "tags": [
+    "architectural",
+    "light",
+    "spacious",
+    "warm neutrals",
+    "geometric sans",
+    "minimalist",
+    "premium",
+    "calm",
+    "typographic",
+    "airy"
+  ],
+  "donts": [
+    "Don't use pure white (#ffffff) for large background areas.",
+    "Don't use bold or heavy font weights for headlines; use size and light weight instead.",
+    "Don't use sharp 0px corners on primary UI components like buttons and cards.",
+    "Don't use a busy color palette; stick to the core Parchment/Ink/Sky Blue system.",
+    "Don't use strong, deep, or colored shadows.",
+    "Don't neglect typography details; specific letter-spacing and line-height values are critical.",
+    "Don't place elements close together; the design relies on spaciousness."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#0096f7",
+      "name": "Sky Blue",
+      "role": "Primary CTAs, interactive links, iconography — a single point of vivid color signifying action.",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff4000",
+      "name": "Signal Orange",
+      "role": "Secondary high-visibility CTAs, often used in dark contexts for urgent calls to action.",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Headlines, body text, UI labels.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Text on dark or colored backgrounds, button text.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fdfdf7",
+      "name": "Parchment",
+      "role": "Primary page background, giving a warm, tactile feel.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f2de",
+      "name": "Warm Sand",
+      "role": "Card backgrounds.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e7e3e1",
+      "name": "Driftwood",
+      "role": "Button surfaces for secondary or tertiary actions.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d3d3d3",
+      "name": "Ash",
+      "role": "Decorative elements, disabled states.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Stone",
+      "role": "Subtle borders, placeholder text.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Graphite",
+      "role": "Secondary text, metadata.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#375033",
+      "name": "Evergreen",
+      "role": "Product visualization accents within text blocks.",
+      "group": "accent"
+    }
+  ],
+  "layout": "The layout is built on a centered, max-width container of approximately 1280px, creating generous white space on either side. The page begins with a full-bleed hero image or a dark banner with overlaid text, transitioning to a vertical stack of content sections on the warm Parchment background. Section breaks are defined by large vertical gaps (96-120px) rather than visual dividers, creating a calm, unhurried rhythm. Content is arranged in simple, centered 1-column stacks for narrative and 2- or 3-column grids for feature breakdowns.",
+  "imagery": "The visual language is a dichotomy of warm aspiration and clean objectivity. Product photography is dominant, featuring the homes in bright, natural, sunlit environments, often surrounded by nature to evoke a feeling of peaceful, premium living. This is contrasted with clean, isolated 3D product renders embedded directly within text blocks, which serve to explain features with technical clarity. All imagery is contained within sharp-edged containers or cards with a soft 12px radius; there are no abstract or decorative graphics.",
+  "similar": [
+    {
+      "why": "Similar use of a custom geometric sans-serif, spacious light UI, and a focus on premium hardware.",
+      "business": "Oura"
+    },
+    {
+      "why": "Combines high-end hardware with a clean, tech-forward aesthetic and typographic precision.",
+      "business": "Tonal"
+    },
+    {
+      "why": "Shares the architectural, minimalist aesthetic with an emphasis on structure and form.",
+      "business": "Anyone"
+    },
+    {
+      "why": "Mixes hardware innovation with a clean, adventurous, and nature-adjacent visual language.",
+      "business": "Rivian"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "pills": "24px",
+      "inputs": "12px",
+      "buttons": "12px",
+      "specialtyCards": "18px"
+    },
+    "elementGap": "",
+    "sectionGap": "",
+    "cardPadding": "",
+    "pageMaxWidth": "1280px"
+  },
+  "category": "technology",
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.12) 0px 0.5px 2px 0px",
+      "element": "Subtle Card/Button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.2) 0px 2px 4px 0px",
+      "element": "Elevated Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.08) 0px 2px 10px 0px",
+      "element": "Hover/Active Interaction"
+    }
+  ],
+  "northStar": "Sunlit architectural model. The design combines the precision of a blueprint with the warmth and airiness of natural light.",
+  "typeScale": [
+    {
+      "role": "caption-sm",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.56
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.49,
+      "letterSpacing": -0.22
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "body-lg",
+      "size": 23,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.46
+    },
+    {
+      "role": "subheading",
+      "size": 30,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.9
+    },
+    {
+      "role": "heading-sm",
+      "size": 36,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.5
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1,
+      "letterSpacing": -1.3
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 0.96,
+      "letterSpacing": -2.46
+    },
+    {
+      "role": "display",
+      "size": 96,
+      "lineHeight": 0.9,
+      "letterSpacing": -4.51
+    }
+  ],
+  "components": [
+    {
+      "html": "<div style=\"--color-sky-blue:#0096f7;--color-signal-orange:#ff4000;--color-ink:#000000;--color-pure-white:#ffffff;--color-parchment:#fdfdf7;--color-warm-sand:#f5f2de;--color-driftwood:#e7e3e1;--color-ash:#d3d3d3;--color-stone:#999999;--color-graphite:#666666;--font-regola:'Plus Jakarta Sans',Manrope,sans-serif;box-sizing:border-box;width:600px;background:var(--color-ink);padding:20px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;font-family:var(--font-regola);\"><p style=\"font-family:var(--font-regola);font-size:16px;line-height:1.49;letter-spacing:-0.22px;color:var(--color-pure-white);margin:0;font-weight:400;\">Support for homeowners in fire-affected Southern California communities</p><a href=\"#\" style=\"display:inline-block;background:var(--color-signal-orange);color:var(--color-pure-white);font-family:var(--font-regola);font-size:14px;font-weight:400;letter-spacing:-0.56px;padding:10px 20px;border-radius:12px;text-decoration:none;white-space:nowrap;\">Find out more</a></div>",
+      "name": "Alert Banner",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<div style=\"--color-sky-blue:#0096f7;--color-signal-orange:#ff4000;--color-ink:#000000;--color-pure-white:#ffffff;--color-parchment:#fdfdf7;--color-warm-sand:#f5f2de;--color-driftwood:#e7e3e1;--color-ash:#d3d3d3;--color-stone:#999999;--color-graphite:#666666;--font-regola:'Plus Jakarta Sans',Manrope,sans-serif;box-sizing:border-box;width:600px;background:var(--color-parchment);padding:48px 40px;display:flex;flex-direction:column;gap:32px;align-items:flex-start;font-family:var(--font-regola);\"><p style=\"font-family:var(--font-regola);font-size:13px;font-weight:400;letter-spacing:-0.48px;color:var(--color-graphite);margin:0;text-transform:uppercase;\">Actions</p><div style=\"display:flex;flex-wrap:wrap;gap:12px;align-items:center;\"><a href=\"#\" style=\"display:inline-block;background:var(--color-sky-blue);color:var(--color-pure-white);font-family:var(--font-regola);font-size:15px;font-weight:400;letter-spacing:-0.56px;padding:14px 24px;border-radius:12px;text-decoration:none;box-shadow:rgba(0,0,0,0.12) 0px 0.5px 2px 0px;\">Design yours</a><a href=\"#\" style=\"display:inline-block;background:var(--color-driftwood);color:var(--color-ink);font-family:var(--font-regola);font-size:15px;font-weight:400;letter-spacing:-0.56px;padding:14px 24px;border-radius:12px;text-decoration:none;box-shadow:rgba(0,0,0,0.12) 0px 0.5px 2px 0px;\">View models</a><a href=\"#\" style=\"display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.04);color:var(--color-ink);font-family:var(--font-regola);font-size:15px;font-weight:400;letter-spacing:-0.56px;padding:14px 24px;border-radius:24px;text-decoration:none;\">Learn more <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M3 7h8M7.5 3.5L11 7l-3.5 3.5\" stroke=\"#000\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a><a href=\"#\" style=\"display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--color-graphite);font-family:var(--font-regola);font-size:15px;font-weight:400;letter-spacing:-0.56px;padding:14px 0;border-radius:0;text-decoration:none;\">Tell us where to build next <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M3 7h8M7.5 3.5L11 7l-3.5 3.5\" stroke=\"#666\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a></div></div>",
+      "name": "Button Group",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<div style=\"--color-sky-blue:#0096f7;--color-signal-orange:#ff4000;--color-ink:#000000;--color-pure-white:#ffffff;--color-parchment:#fdfdf7;--color-warm-sand:#f5f2de;--color-driftwood:#e7e3e1;--color-ash:#d3d3d3;--color-stone:#999999;--color-graphite:#666666;--font-regola:'Plus Jakarta Sans',Manrope,sans-serif;box-sizing:border-box;width:600px;background:var(--color-parchment);padding:40px;font-family:var(--font-regola);\"><div style=\"background:var(--color-warm-sand);border-radius:18px;padding:36px;box-shadow:rgba(0,0,0,0.12) 0px 0.5px 2px 0px;display:flex;flex-direction:column;gap:24px;\"><div style=\"width:100%;height:200px;background:linear-gradient(135deg,#e2ddc8 0%,#ccc8b0 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;\"><div style=\"display:flex;flex-direction:column;align-items:center;gap:6px;\"><div style=\"width:100px;height:48px;background:#4a5240;border-radius:6px 6px 0 0;position:relative;\"><div style=\"position:absolute;bottom:0;left:10px;width:18px;height:28px;background:#2a3020;border-radius:3px 3px 0 0;\"></div><div style=\"position:absolute;top:12px;right:12px;width:20px;height:14px;background:rgba(255,255,255,0.3);border-radius:2px;\"></div></div><div style=\"width:116px;height:8px;background:#3a3a3a;border-radius:0 0 3px 3px;\"></div></div></div><div style=\"display:flex;flex-direction:column;gap:8px;\"><div style=\"display:flex;align-items:baseline;justify-content:space-between;gap:12px;\"><h2 style=\"font-family:var(--font-regola);font-size:48px;line-height:1;letter-spacing:-1.3px;color:var(--color-ink);margin:0;font-weight:400;\">XL 10</h2><span style=\"font-family:var(--font-regola);font-size:14px;line-height:1.5;letter-spacing:-0.56px;color:var(--color-graphite);font-weight:400;\">New model</span></div><p style=\"font-family:var(--font-regola);font-size:18px;line-height:1.33;letter-spacing:-0.18px;color:var(--color-ink);margin:0;font-weight:400;\">Introducing Backyard XL 10: Two bedrooms, two baths. 950 square feet.</p></div><div style=\"display:flex;flex-wrap:wrap;gap:10px;\"><div style=\"background:rgba(0,0,0,0.06);border-radius:24px;padding:8px 16px;font-family:var(--font-regola);font-size:13px;letter-spacing:-0.48px;color:var(--color-ink);\">2 bed</div><div style=\"background:rgba(0,0,0,0.06);border-radius:24px;padding:8px 16px;font-family:var(--font-regola);font-size:13px;letter-spacing:-0.48px;color:var(--color-ink);\">2 bath</div><div style=\"background:rgba(0,0,0,0.06);border-radius:24px;padding:8px 16px;font-family:var(--font-regola);font-size:13px;letter-spacing:-0.48px;color:var(--color-ink);\">950 sq ft</div><div style=\"background:rgba(0,0,0,0.06);border-radius:24px;padding:8px 16px;font-family:var(--font-regola);font-size:13px;letter-spacing:-0.48px;color:var(--color-ink);\">Solar-ready</div></div><a href=\"#\" style=\"display:inline-flex;align-items:center;gap:6px;background:var(--color-pure-white);color:var(--color-ink);font-family:var(--font-regola);font-size:15px;font-weight:400;letter-spacing:-0.56px;padding:14px 22px;border-radius:12px;text-decoration:none;box-shadow:rgba(0,0,0,0.2) 0px 2px 4px 0px;align-self:flex-start;\">Learn more <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M3 7h8M7.5 3.5L11 7l-3.5 3.5\" stroke=\"#000\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a></div></div>",
+      "name": "Model Feature Card",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Primary Button",
+      "role": "The main call-to-action button.",
+      "description": "Background: #0096f7 (Sky Blue). Text: #ffffff (Pure White). Padding: 14px. Radius: 12px. Font: regola, 14-15px."
+    },
+    {
+      "name": "Urgent CTA Button",
+      "role": "A high-contrast call-to-action for dark headers.",
+      "description": "Background: #ff4000 (Signal Orange). Text: #ffffff (Pure White). Padding: ~8px 18px. Radius: 12px."
+    },
+    {
+      "name": "Pill Ghost Button",
+      "role": "A subtle, secondary action link styled as a button.",
+      "description": "Background: rgba(0, 0, 0, 0.04). Text: #000000 (Ink). Radius: 24px. Padding may vary, often used for text links."
+    },
+    {
+      "name": "Standard Card",
+      "role": "Default content container for features or testimonials.",
+      "description": "Background: #f7f7f0 (darker Parchment). Radius: 12px. Shadow: `rgba(0, 0, 0, 0.2) 0px 2px 4px 0px`. Contains its own padded content."
+    },
+    {
+      "name": "Warm Sand Card",
+      "role": "A warmer, more prominent card variant.",
+      "description": "Background: #f5f2de (Warm Sand). Radius: 18px. Shadow: `rgba(0, 0, 0, 0.12) 0px 0.5px 2px 0px`. Padding: 36px."
+    },
+    {
+      "name": "Text Input Field",
+      "role": "Standard user input field.",
+      "description": "Background: rgba(0, 0, 0, 0.03). Border: 1px solid rgba(0, 0, 0, 0.1). Radius: 12px. Padding: 15px. Text: #000000 (Ink)."
+    },
+    {
+      "name": "Hero Banner",
+      "role": "The top-of-page introduction, transitioning on scroll.",
+      "description": "Initial state: Black (#000000) background with white text and a Sky Blue or Signal Orange CTA. Scrolls to a transparent or white background integrated with the main page content."
+    },
+    {
+      "name": "Inline-Render Headline",
+      "role": "A signature component mixing large text with small 3D product renders.",
+      "description": "Uses `display` or `heading-lg` typography with small, floating product models (e.g., houses) interspersed within the text flow, creating a dynamic, informational headline."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The signature font for the entire system. The 'light' variant is used for large, airy headlines, creating a distinctive look of understated confidence. 'Book' and 'regular' weights are for body copy and UI text. Tight negative letter-spacing is applied at larger sizes, enhancing its geometric precision.",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 18px, 21px, 23px, 29px, 30px, 36px, 43px, 48px, 60px, 96px",
+      "family": "regola",
+      "weight": "400 (aliased as 'light', 'book', 'regular')",
+      "lineHeight": "0.90, 0.96, 1.00, 1.10, 1.12, 1.14, 1.16, 1.20, 1.25, 1.28, 1.33, 1.49, 1.50, 1.60",
+      "substitute": "Plus Jakarta Sans, Manrope",
+      "fontFeatureSettings": "\"lnum\", \"tnum\""
+    }
+  ],
+  "description": "The design feels like an architectural plan rendered on warm, premium paper. It establishes authority through restraint, using vast negative space and a whisper-thin display font (Regola Light) for headlines, making them feel expansive and considered rather than loud. The palette is strictly controlled: a warm off-white (#fdfdf7) background, black ink for text, and a single, vibrant Sky Blue (#0096f7) for all primary actions. This creates a calm, focused environment where the product—modern, livable spaces—is the hero. Soft 12px radii on cards and buttons provide a touch of organic friendliness to the otherwise precise, geometric typography.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "### Quick Color Reference\n- **Background**: `#fdfdf7` (Parchment)\n- **Text**: `#000000` (Ink)\n- **Primary CTA**: `#0096f7` (Sky Blue)\n- **Card Background**: `#f5f2de` (Warm Sand)\n- **Border**: `rgba(0, 0, 0, 0.1)` (Black 10%)\n\n### Example Component Prompts\n1. **Primary Button:** \"Create a button with text 'Design yours'. Use background color #0096f7, white text, 12px border radius, and 14px padding all around. Use a 15px regola font.\"\n2. **Display Headline:** \"Create a headline 'Small living, supersized.' using the regola font at 96px size, weight 400 (light), color #000000, line-height 0.9, and letter-spacing -4.51px.\"\n3. **Content Card:** \"Create a card with a background color of #f5f2de, a 18px border radius, and a subtle shadow of `rgba(0, 0, 0, 0.12) 0px 0.5px 2px 0px`. Add 36px of padding inside the card.\"\n4. **Hero Section:** \"Generate a hero section. Full width dark banner with background #000000. It contains a centered headline 'Support for homeowners' in white text, 36px regola font, and a call-to-action button next to it. The button text is 'Find out more' on a #ff4000 background with white text and a 12px radius.\""
+    }
+  ]
+}

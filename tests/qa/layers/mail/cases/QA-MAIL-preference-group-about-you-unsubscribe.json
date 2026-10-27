@@ -1,0 +1,30 @@
+{
+  "id": "QA-MAIL-preference-group-about-you-unsubscribe",
+  "itemIds": ["preference-group:about-you"],
+  "requirement": "letters of group about-you carry a working unsubscribe header",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "mail.notify.unsubscribe-header#team.invited:|team.approved:|team.declined:|team.invite_accepted:|team.invite_declined:|team.removed:|team.role_changed:|team.invite_cancelled:|team.site_deleted:|team.edit_access_approved:|team.edit_access_declined:"
+  ],
+  "redProof": null,
+  "legacyIds": []
+}

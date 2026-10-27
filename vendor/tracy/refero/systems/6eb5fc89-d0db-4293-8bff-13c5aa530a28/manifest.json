@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6eb5fc89-d0db-4293-8bff-13c5aa530a28",
+  "status": "complete",
+  "name": "Motto®",
+  "url": "https://styles.refero.design/style/6eb5fc89-d0db-4293-8bff-13c5aa530a28",
+  "sourceWebsite": "https://wearemotto.com",
+  "extractedAt": "2026-06-03T16:17:14.466Z",
+  "capturedAt": "2026-10-08T05:13:04.158295+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Typographic monolith on paper — a single confident voice announcing itself on bone-white stock.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/aafb4670-9baf-44db-880f-5e502674f675.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4a8fb74b-a078-4a51-86a9-c1e3a51d698f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fd74b138-4544-44dd-9f2e-3df2b4fbe082.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6eb6e6d2-ba89-4af5-9c07-e79050b17a4e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/1946e18b-fdb0-43af-baba-17c39a31c45b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6480d40ef9dde2c3a05dec4f81f6af7b6b9f108c4158b299330b925a4d55a844",
+      "bytes": 19328
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b44b10afef5c458c137f994ece293a6066e3d08cc869828e1e052ec89ffd6178",
+      "bytes": 77400
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "72630410bd0081dc504c7710f0c3b73f09ba28ef49c5e6fad63060cac13a07f7",
+      "bytes": 16002
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c44a2761e1e855cfaba2bd74fdf23895d113432f32c09100fa7e77b4fdf44237",
+      "bytes": 11706
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6f6bc97f4a9e845f10b241e46aa809dfd6c22538ebb313a0bfe9f51c3852a647",
+      "bytes": 11671
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e06e5c997ee9e2045da7bda6a40e50e6ff94203228dc61c5c47fe5b8338c3b66",
+      "bytes": 3068
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "541d3d0cf249d087eb5c66b0c034b01cf35c7e77a2537c6616852bf0dd9843d8",
+      "bytes": 646
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "43f172f20bc580ff31bd7300b62a5badc95bfc67c697bedf7cd789678f4dc012",
+      "bytes": 663
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "36375edf5576886312e267a02fd126d5200e0bb98ff274f5c0469c154bc203c5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e57f0d4386b97b416503a007aa2a315fb83ecd8ddfb42208458cf289a7326c5c",
+      "bytes": 41478
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0411a70e1fa421bee69ea10a34a7e8c939296b373bfebee0049c6618940aa140",
+      "bytes": 21467
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e03b97a8fa848da32913775c575b8b31a9aac074d43cf9d1bd5b1bbdca24fb3e",
+      "bytes": 37997
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "25e0a8183c7dee4cf0f9a5466caa941ce30f5331cfa966492e0f2cec39ed7d62",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d1cf1b5e96e1d9cd5b0fdfcab2931ed5be30b4dad0cafe5bf52dffce9aeef6dc",
+      "bytes": 1573
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "28fbe4f88f61307bf14b251fc35f1ac7ea4167595767b5fffe9c6fbbdd8cc52e",
+      "bytes": 2088
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "5af60925-9c29-48fe-a19b-0f8cf12505ab",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "626ae2de-c402-4805-b859-2c6adca41022",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "6eb5fc89-d0db-4293-8bff-13c5aa530a28",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "be5cf0d7-fc29-4b7f-bf86-f87185b122fc",
+    "c6e55968-fa2d-47c9-b833-2c4ad1e74906",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f40e6a6c-1704-407a-b21b-6141fb90adfe",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

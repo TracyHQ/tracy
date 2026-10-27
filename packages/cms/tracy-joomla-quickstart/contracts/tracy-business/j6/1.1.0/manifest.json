@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-business/j6/1.1.0",
+  "platform": "joomla",
+  "template": "tracy_business",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-business/j6",
+    "version": "1.1.0",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy_business",
+    "parts": {
+      "webroot": {
+        "file": "tracy-business-j6-webroot-1.1.0.tar.gz",
+        "bytes": 85219608,
+        "sha256": "7152e67686ac7dbedb7a82b75ae8883a205284b42a0ab5a45fe8c25df3405717",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-webroot-1.1.0.tar.gz"
+      },
+      "database": {
+        "file": "tracy-business-j6-database-1.1.0.sql.gz",
+        "bytes": 1225316,
+        "sha256": "dc647b2377576ec2764af08f7279cd5284fe205983f2bb01446791b0bd9f8e6c",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-database-1.1.0.sql.gz"
+      }
+    }
+  },
+  "receiverVersion": "0.15.0",
+  "mode": "content-only"
+}

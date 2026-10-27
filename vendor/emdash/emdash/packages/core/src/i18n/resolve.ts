@@ -1,0 +1,272 @@
+/**
+ * Shared locale-resolution helpers.
+ *
+ * Matches the pattern used by `query.ts` for content: an explicit locale wins,
+ * otherwise we fall back to the request-context locale, otherwise to
+ * `defaultLocale` when i18n is enabled, otherwise to `undefined` (meaning "do
+ * not filter by locale" — legacy single-locale behaviour).
+ */
+
+import { getRequestContext } from "../request-context.js";
+import { getFallbackChain, getI18nConfig, isI18nEnabled } from "./config.js";
+
+/**
+ * Resolve the locale to use for a query given an optional explicit value.
+ * Returns `undefined` when no locale information is available; callers should
+ * treat that as "do not filter by locale".
+ */
+export function resolveLocale(explicit?: string): string | undefined {
+	if (explicit !== undefined) return explicit;
+	const ctxLocale = getRequestContext()?.locale;
+	if (ctxLocale !== undefined) return ctxLocale;
+	const cfg = getI18nConfig();
+	if (cfg && isI18nEnabled()) return cfg.defaultLocale;
+	return undefined;
+}
+
+/**
+ * Fallback chain to try when looking up a single item. When i18n is disabled
+ * or the locale is unspecified, returns a single-element array (or empty when
+ * no locale resolves) so callers can iterate uniformly.
+ */
+export function resolveLocaleChain(explicit?: string): string[] {
+	const locale = resolveLocale(explicit);
+	if (locale === undefined) return [];
+	if (!isI18nEnabled()) return [locale];
+	return getFallbackChain(locale);
+}
+
+const REPEATED_SLASHES = /\/{2,}/g;
+const TRAILING_SLASH = /\/$/;
+const DATE_TOKEN = /\{(year|month|day|hour|minute|second)\}/g;
+// SQLite-style datetime without timezone info ("2023-05-08 10:00:00").
+// Stored values are UTC; without this, `new Date()` would parse them in the
+// server's local zone and the same row could yield different URLs per host.
+const OFFSETLESS_DATETIME = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?)$/;
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+function parseUtcDate(date: string | Date): Date {
+	if (date instanceof Date) return date;
+	const offsetless = OFFSETLESS_DATETIME.exec(date);
+	return new Date(offsetless ? `${offsetless[1]}T${offsetless[2]}Z` : date);
+}
+
+/**
+ * Substitute WordPress-style date tokens (`{year}`, `{month}`, `{day}`,
+ * `{hour}`, `{minute}`, `{second}`) from a publish date. Month/day/time parts
+ * are zero-padded, mirroring WordPress (`%monthnum%`, `%day%`, ...). Tokens are
+ * left untouched when no valid date is available, so callers without a date
+ * (or unpublished entries) never produce a half-resolved URL.
+ */
+function applyDateTokens(path: string, date: string | Date | null | undefined): string {
+	const d = date == null ? null : parseUtcDate(date);
+	if (!d || Number.isNaN(d.getTime())) return path;
+	const parts: Record<string, string> = {
+		year: String(d.getUTCFullYear()),
+		month: pad2(d.getUTCMonth() + 1),
+		day: pad2(d.getUTCDate()),
+		hour: pad2(d.getUTCHours()),
+		minute: pad2(d.getUTCMinutes()),
+		second: pad2(d.getUTCSeconds()),
+	};
+	return path.replace(DATE_TOKEN, (match, key: string) => parts[key] ?? match);
+}
+
+/**
+ * Interpolate a collection `url_pattern` with a row's slug, id and publish date.
+ *
+ * Supported tokens: `{slug}`, `{id}`, and the date tokens `{year}`,
+ * `{month}`, `{day}`, `{hour}`, `{minute}`, `{second}` (resolved from `date`,
+ * for WordPress-style permalinks like `/{year}/{month}/{day}/{slug}.html`).
+ *
+ * Falls back to `/{collection}/{slug}` when no pattern is configured.
+ * Does NOT apply any locale prefix — pass the result through
+ * Astro's `getRelativeLocaleUrl` / `getAbsoluteLocaleUrl` (or the
+ * `localizePath` helper below) to add the locale segment.
+ */
+export function interpolateUrlPattern(options: {
+	pattern: string | null;
+	collection: string;
+	slug: string;
+	id: string;
+	/** Publish date used for date tokens; tokens stay literal when absent. */
+	date?: string | Date | null;
+}): string {
+	const { pattern, collection, slug, id, date } = options;
+	const basePattern = pattern ?? `/${encodeURIComponent(collection)}/{slug}`;
+	let path = basePattern
+		.replaceAll("{slug}", encodeURIComponent(slug))
+		.replaceAll("{id}", encodeURIComponent(id));
+	path = applyDateTokens(path, date);
+	path = path.replace(REPEATED_SLASHES, "/");
+	if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
+	if (!path.startsWith("/")) path = `/${path}`;
+	return path;
+}
+
+export interface ContentRoutePathOptions {
+	pattern: string | null;
+	collection: string;
+	slug: string;
+	id: string;
+	date?: string | Date | null;
+	trailingSlash?: "always" | "never" | "ignore";
+}
+
+/** Resolve a content row to the route path shared by menus and public URL surfaces. */
+export function resolveContentRoutePath(options: ContentRoutePathOptions): string {
+	const path = interpolateUrlPattern(options);
+	if (options.trailingSlash === "always" && path !== "/") return `${path}/`;
+	if (options.trailingSlash === "never" && path !== "/") return path.replace(TRAILING_SLASH, "");
+	return path;
+}
+
+/** Resolve a content row to its locale-aware route path. */
+export async function resolveLocalizedContentRoutePath(
+	options: ContentRoutePathOptions & { locale: string },
+): Promise<string | null> {
+	const path = interpolateUrlPattern(options);
+	const localized = await localizePath(path, options.locale);
+	if (localized === null) return null;
+	if (options.trailingSlash === "always" && localized !== "/") return `${localized}/`;
+	if (options.trailingSlash === "never" && localized !== "/") {
+		return localized.replace(TRAILING_SLASH, "");
+	}
+	return localized;
+}
+
+/**
+ * Apply a locale prefix to a path, honouring the user's Astro `i18n`
+ * routing config (`prefixDefaultLocale`, custom `path`/`codes` mappings).
+ *
+ * Reads the resolved config from `astro:config/server`, which is always
+ * available regardless of whether i18n is enabled -- so this function
+ * works in both i18n and non-i18n builds without tripping Astro's
+ * `i18nNotEnabled` resolver (the case with importing `astro:i18n`).
+ *
+ * Returns:
+ *   - The original `path` when i18n is not configured.
+ *   - The original `path` for the default locale when
+ *     `prefixDefaultLocale` is false.
+ *   - `/{segment}{path}` for any other configured locale, where
+ *     `{segment}` is the locale's custom `path` if one is set,
+ *     otherwise the locale code.
+ *   - `null` when the row's locale isn't in the configured list.
+ *     Callers should drop the entry: a sitemap link to a route the
+ *     site can't serve is worse than no link at all (search engines
+ *     get a 404 / soft-404 and downrank the page).
+ *
+ * Falls back to `getI18nConfig()` (EmDash's mirror of the same config,
+ * populated at runtime startup) when `astro:config/server` is
+ * unavailable -- e.g. running outside an Astro build context, such as
+ * in vitest.
+ */
+export async function localizePath(path: string, locale: string): Promise<string | null> {
+	const segment = await resolveLocaleSegment(locale);
+	if (segment === undefined) return null;
+	if (segment === null || segment === "") return normalizePath(path);
+	return normalizePath(`/${segment}${path}`);
+}
+
+/**
+ * Resolve the URL segment to use for a locale.
+ *
+ * Returns:
+ *   - `null` when i18n isn't configured (caller should not prefix).
+ *   - `""` when the locale is the default locale and
+ *     `prefixDefaultLocale` is false (caller should not prefix).
+ *   - The locale's custom `path` value, or the locale string itself.
+ *   - `undefined` when the locale isn't in the configured list --
+ *     the row points at a route the site can't serve.
+ */
+async function resolveLocaleSegment(locale: string): Promise<string | null | undefined> {
+	const i18n = await readAstroI18nConfig();
+	return resolveLocaleSegmentFromConfig(i18n, locale);
+}
+
+/** @internal Exported for testing Astro object-locale routing without a virtual module. */
+export function resolveLocaleSegmentFromConfig(
+	i18n: AstroI18nConfig | null,
+	locale: string,
+): string | null | undefined {
+	if (!i18n || !i18n.locales || i18n.locales.length <= 1) return null;
+
+	let segment: string | undefined;
+	let isDefault = locale === i18n.defaultLocale;
+	for (const entry of i18n.locales) {
+		if (typeof entry === "string") {
+			if (entry === locale) {
+				segment = entry;
+				break;
+			}
+		} else if (entry.path === locale || entry.codes.includes(locale)) {
+			segment = entry.path;
+			isDefault ||= entry.path === i18n.defaultLocale || entry.codes.includes(i18n.defaultLocale);
+			break;
+		}
+	}
+	if (segment === undefined) return undefined;
+	if (isDefault && !i18n.prefixDefaultLocale) return "";
+	return segment;
+}
+
+export interface AstroI18nConfig {
+	defaultLocale: string;
+	locales: Array<string | { codes: readonly string[]; path: string }>;
+	prefixDefaultLocale?: boolean;
+}
+
+let astroI18nCache: AstroI18nConfig | null | undefined;
+
+async function readAstroI18nConfig(): Promise<AstroI18nConfig | null> {
+	if (astroI18nCache !== undefined) return astroI18nCache;
+
+	try {
+		const mod = (await import("astro:config/server")) as {
+			i18n?: {
+				defaultLocale: string;
+				locales: Array<string | { codes: readonly string[]; path: string }>;
+				routing?: { prefixDefaultLocale?: boolean } | string;
+			};
+		};
+		if (!mod.i18n) {
+			astroI18nCache = null;
+			return null;
+		}
+		const routing = mod.i18n.routing;
+		astroI18nCache = {
+			defaultLocale: mod.i18n.defaultLocale,
+			locales: mod.i18n.locales,
+			prefixDefaultLocale:
+				typeof routing === "object" ? (routing.prefixDefaultLocale ?? false) : false,
+		};
+		return astroI18nCache;
+	} catch {
+		// `astro:config/server` isn't resolvable (e.g. running under vitest
+		// outside an Astro build). Fall back to EmDash's runtime config,
+		// which is populated at startup via the same astroConfig object.
+		const cfg = getI18nConfig();
+		if (!cfg || !isI18nEnabled()) {
+			astroI18nCache = null;
+			return null;
+		}
+		astroI18nCache = {
+			defaultLocale: cfg.defaultLocale,
+			locales: cfg.locales,
+			prefixDefaultLocale: cfg.prefixDefaultLocale,
+		};
+		return astroI18nCache;
+	}
+}
+
+/** @internal -- exposed for tests to reset the module-level cache. */
+export function _resetAstroI18nCacheForTests(): void {
+	astroI18nCache = undefined;
+}
+
+function normalizePath(path: string): string {
+	let p = path.replace(REPEATED_SLASHES, "/");
+	if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+	if (!p.startsWith("/")) p = `/${p}`;
+	return p;
+}

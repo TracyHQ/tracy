@@ -1,0 +1,85 @@
+---
+/**
+ * /home-2 — the "Home — variant": centred hero on the gray band, a chapter on the scene, the
+ * team on warm, the FAQ as a gray field inside a canvas band, figures on gray, the CTA on the scene.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import HeroAcm from '@/components/sections/HeroAcm.astro'
+import Chapter from '@/components/sections/Chapter.astro'
+import TeamGrid from '@/components/sections/TeamGrid.astro'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import FaqList from '@/components/sections/FaqList.astro'
+import StatsBand from '@/components/sections/StatsBand.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('home_2', 'home_2', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'home_2', entry)
+---
+
+<Base chrome={chrome} title={d.title} description={d.hero_lead} currentPath="/home-2" content={{ collection: "home_2", id: entry.data.id, slug: "home_2", toPath: () => "/home-2" }}>
+	<main id="main" class="home-two">
+		<PageOwner stamp={$page} />
+		<div class="bg-surface">
+			<HeroAcm align="center" eyebrow={d.hero_eyebrow} title={d.hero_title} lead={d.hero_lead} cta1Label={d.hero_cta1_label} cta1Url={d.hero_cta1_url} cta2Label={d.hero_cta2_label} cta2Url={d.hero_cta2_url} image={d.hero_image} imageAlt={d.hero_image_alt} asideLabel={d.hero_aside_label} asideBadge={d.hero_aside_badge} asideState={d.hero_aside_state} notes={d.hero_notes ?? []} stamp={$page} fields={{ eyebrow: "hero_eyebrow", title: "hero_title", lead: "hero_lead", cta1Label: "hero_cta1_label", cta2Label: "hero_cta2_label", image: "hero_image", asideLabel: "hero_aside_label", asideBadge: "hero_aside_badge", notes: "hero_notes" }} />
+		</div>
+		<section class="band bg-scene-bg text-scene-fg">
+			<Chapter statement={d.chapter_statement} support={d.chapter_support} image={d.chapter_image} imageAlt={d.chapter_image_alt} linkLabel={d.chapter_link_label} linkUrl={d.chapter_link_url} linkStyle={d.chapter_link_style} scene stamp={$page} fields={{ statement: "chapter_statement", support: "chapter_support", image: "chapter_image", linkLabel: "chapter_link_label" }} />
+		</section>
+		{(d.team_members ?? []).length > 0 && (
+		<section class="band bg-surface">
+			<TeamGrid eyebrow={d.team_eyebrow} heading={d.team_heading} linkLabel={d.team_link_label} members={d.team_members ?? []} stamp={$page} fields={{ eyebrow: "team_eyebrow", heading: "team_heading", linkLabel: "team_link_label", members: "team_members" }} />
+		</section>
+		)}
+		<section class="band">
+			<div class="band bg-surface">
+				<div class="wrap">
+					<SectionHead eyebrow={d.faq_eyebrow} title={d.faq_heading} lead={d.faq_intro} class="section-head--acm [&>.eyebrow]:text-fg-meta" stamp={$page} fields={{ eyebrow: "faq_eyebrow", title: "faq_heading", lead: "faq_intro" }} />
+					<FaqList items={d.faq_items ?? []} width="wide" stamp={$page} field="faq_items" />
+				</div>
+			</div>
+		</section>
+		{(d.stats_figures ?? []).length > 0 && (
+		<section class="band bg-surface">
+			<div class="wrap"><StatsBand variant="plain" align="center" eyebrow={d.stats_eyebrow} heading={d.stats_heading} items={d.stats_figures ?? []} stamp={$page} fields={{ eyebrow: "stats_eyebrow", heading: "stats_heading", items: "stats_figures" }} /></div>
+		</section>
+		)}
+		<section class="band bg-scene-bg">
+			<CtaBand variant="capsule" title={d.cta_statement} text={d.cta_support} btnLabel={d.cta_btn_label} btnUrl={d.cta_btn_url} linkLabel={d.cta_link_label} linkUrl={d.cta_link_url} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+		</section>
+	</main>
+</Base>
+
+<style>
+	@media (max-width: 1023px) {
+		.home-two :global([data-block="statistics"] > .grid) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 639px) {
+		.home-two :global([data-block="cta-capsule"] > div > div:last-child) {
+			width: 100%;
+			flex-direction: column;
+			align-items: stretch;
+			text-align: center;
+		}
+		.home-two :global([data-block="cta-capsule"] > div > div:last-child > a) {
+			width: 100%;
+		}
+	}
+</style>

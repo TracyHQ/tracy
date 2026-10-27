@@ -1,0 +1,59 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, headings, filled CTA buttons, nav items, icon strokes — the single chromatic workhorse of an achromatic system"
+    },
+    "pure-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Canvas — Page background, card surfaces, button text on dark fills"
+    },
+    "graphite": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Graphite — Body copy, secondary links, descriptive text"
+    },
+    "ash": {
+      "$value": "#adadad",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, disabled/muted button borders, placeholder icons"
+    },
+    "fog": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Fog — Dividers, subtle borders, card outlines"
+    },
+    "mist": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Mist — Nav background tint, input fields, inner surface elevation"
+    },
+    "silver": {
+      "$value": "#c2c2c2",
+      "$type": "color",
+      "$description": "Silver — Skeleton loaders, inactive UI fills"
+    },
+    "slate-shadow": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Slate Shadow — Inset button shadow ring (rgba(64,64,64,0.16) 0px 0px 0px 1px)"
+    }
+  },
+  "font": {
+    "saans": {
+      "$value": "saans",
+      "$type": "fontFamily",
+      "$description": "Every text element on the site. Fractional weights (440, 456, 652) are the signature — they occupy visual mass between Regular and Semibold that no variable-axis font exposes as named stops. Display headlines at 80px/56px run weight 600–652 at lineHeight 1.00–1.13 with negative letter-spacing (-0.011em at large sizes). Body runs 14–16px at weight 400 with tracking +0.013–0.017em for small-size legibility."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mobbin.com",
+      "siteName": "Mobbin",
+      "extractedAt": "2026-04-11T20:15:52.900Z",
+      "variant": "compact"
+    }
+  }
+}

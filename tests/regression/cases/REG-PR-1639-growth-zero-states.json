@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1639-growth-zero-states",
+  "kind": "fix",
+  "title": "Growth zero values retain denominators, counts agree, and the current page stays legible",
+  "pr": 1639,
+  "area": "ops/growth",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the statistics count tests and inspect the current pagination page contrast rule."],
+  "expect": [
+    "Zero values render with their measured denominator and unit, including an empty cohort.",
+    "Counts use the singular or plural noun that agrees with each count.",
+    "The current pagination page and its hover state use foreground fill with background text."
+  ],
+  "selectors": {
+    "counts": "packages/web/tracy-harness/src/beta/statistics-count.ts",
+    "pagination": ".signals-pagination button[aria-current=\"page\"]"
+  },
+  "fence": "The tests fail if a zero loses its denominator, a count uses the wrong noun, or the active page loses its contrasting colors.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/web/tracy-harness/test/statistics-count.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "zero counts retain their measured denominator, including an empty cohort",
+      "count nouns agree with their own count and support irregular plurals",
+      "current pagination page uses foreground fill and background text for contrast"
+    ]
+  }
+}

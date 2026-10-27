@@ -1,0 +1,279 @@
+{
+  "dos": [
+    "Use 100px border-radius on all buttons, tags, badges, and language selectors — pill shape is the signature component geometry",
+    "Use TildaSans weight 300 for all headlines 48px and above; let the large size and light weight carry the editorial calm",
+    "Use #fa8669 sparingly — reserve for primary CTAs, illustration accents, and key icons; never for body text or borders",
+    "Default to #ffffff canvas; use #efefef only for distinct card surfaces or section breaks",
+    "Use 1px solid #efefef or #000000 borders for component separation instead of box-shadows",
+    "Keep illustrations flat with 1.5-2px black line work and selective coral fills — no gradients, no dimension",
+    "Maintain 96-120px section gaps to preserve the breathing, magazine-like vertical rhythm"
+  ],
+  "donts": [
+    "Don't add box-shadows to any component — flat surfaces and hairline borders are the elevation language",
+    "Don't use #fa8669 for non-CTA elements: no coral borders, no coral body text, no coral card backgrounds",
+    "Don't set border-radius below 100px on buttons or tags — sharp or moderately rounded buttons break the pill system",
+    "Don't use weight 600+ for headlines — the whisper-weight contrast at 300-400 is the typographic signature",
+    "Don't introduce additional accent colors; the monochrome + coral binary is the entire palette",
+    "Don't apply heavy backgrounds to body sections — keep the dominant experience white/achromatic",
+    "Don't use gradient fills on illustrations or backgrounds — flat color is mandatory"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fa8669",
+      "name": "Coral Signal",
+      "role": "Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary text, button strokes, dark mode contrast pairs, icon outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Carbon",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Graphite Deep",
+      "role": "Dark surface blocks, footer regions, inverted section backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2a2a2a",
+      "name": "Plum Ink",
+      "role": "Secondary dark surface, hover states on dark backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7f7f7f",
+      "name": "Smoke",
+      "role": "Muted helper text, placeholder text, disabled icon outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Silver",
+      "role": "Button hover backgrounds, disabled controls, subtle surface tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Bone",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card elevation, button text on dark fills, content surface",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with 24-32px horizontal padding. Hero follows a split pattern: 50/50 illustration-left + text-right, with the coral CTA and ghost button stacked horizontally. Subsequent sections alternate between centered editorial stacks (eyebrow → headline → paragraph) and split feature blocks (illustration-left, text-right). Sections are separated by 96-120px vertical gaps on a continuous white canvas. No alternating dark/light bands — the page stays achromatic throughout, with #efefef reserved for card surfaces and #171717 only in the footer. Navigation is a minimal top bar: brand left, links right, no mega-menu.",
+  "imagery": "Hand-drawn flat illustrations dominate the visual language: black line art at 1.5-2px stroke weight with selective coral (#fa8669) fills on focal elements (hearts, character clothing, key objects). The illustration style is editorial and slightly whimsical — characters with simplified proportions, floating UI elements, dotted halftone textures. Illustrations are always contained, never full-bleed, and sit on the left side of hero/feature splits. No photography. No 3D renders. No gradients. The visual hierarchy relies on the contrast between the minimal coral-and-white UI and the busier illustrated moments.",
+  "similar": [
+    {
+      "why": "Same no-code builder category, similar split-hero layout with illustration left + text right, pill-shaped CTAs, and light-weight display headlines",
+      "business": "Webflow"
+    },
+    {
+      "why": "Editorial typography-first approach with extra-large light-weight headlines on white canvas, single accent color rationed for CTAs",
+      "business": "Squarespace"
+    },
+    {
+      "why": "Near-monochrome interface with one bold accent color, large display type, and illustration-driven hero sections",
+      "business": "Framer"
+    },
+    {
+      "why": "Flat surfaces, no shadows, hairline dividers as the primary separation mechanism, generous whitespace",
+      "business": "Notion"
+    },
+    {
+      "why": "Pill-shaped buttons with high border-radius, flat card surfaces, editorial weight contrast between display and body text",
+      "business": "Figma"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "100px",
+      "cards": "0px",
+      "images": "0px",
+      "inputs": "100px",
+      "buttons": "100px"
+    },
+    "elementGap": "16-24px",
+    "sectionGap": "96-120px",
+    "cardPadding": "32-48px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Page canvas, content backdrop"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Bone",
+      "level": 1,
+      "purpose": "Card surface, secondary section backgrounds, ghost button fill"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Silver",
+      "level": 2,
+      "purpose": "Hover state, disabled surface"
+    },
+    {
+      "hex": "#222222",
+      "name": "Carbon",
+      "level": -1,
+      "purpose": "Inverted section, dark surface block"
+    }
+  ],
+  "elevation": [],
+  "northStar": "Paper sketchbook with coral crayon",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.071
+    },
+    {
+      "role": "body-sm",
+      "size": 15,
+      "lineHeight": 1.45
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.45
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading",
+      "size": 34,
+      "lineHeight": 1.35,
+      "letterSpacing": 0.038
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.23
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1.17,
+      "letterSpacing": 0.063
+    }
+  ],
+  "components": [
+    {
+      "name": "Coral Primary Button",
+      "role": "The single most important interactive element — the only chromatic button in the system",
+      "description": "Filled pill button, #fa8669 background, #ffffff text, 100px border-radius, 14-16px vertical padding, 28-32px horizontal padding, TildaSans weight 500-600 at 14-16px. Used for 'Create a website for free' and all primary conversion actions."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action paired with the coral CTA",
+      "description": "Transparent or #ffffff background, 1px #000000 border, #000000 text, 100px radius, 14px 28px padding, TildaSans weight 500 at 14-16px. Pairs alongside the coral CTA as the lower-commitment option ('Overview')."
+    },
+    {
+      "name": "Inverted Dark Button",
+      "role": "Account/auth actions in navigation",
+      "description": "Solid #000000 or #222222 background, #ffffff text, 100px radius, 10px 20px padding, TildaSans weight 500 at 14px. Used for 'Sign Up' and 'Log In' in the top nav to contrast against ghost/primary buttons."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site navigation",
+      "description": "White background, #ffffff, 1px #efefef or transparent bottom border, horizontally aligned with brand wordmark left and nav links right. Nav links in TildaSans 14px weight 500, #000000. Height ~60px, max-width 1200px centered with 24-32px horizontal padding."
+    },
+    {
+      "name": "Hero Split Section",
+      "role": "Above-the-fold introduction",
+      "description": "Two-column layout at 1200px max-width: left column holds flat illustration (black line art with coral fills), right column holds TildaSans 48-60px weight 300 headline, 16-18px weight 400 subtext in #222222, and CTA pair. Section gap 96-120px from nav and from next section."
+    },
+    {
+      "name": "Centered Editorial Section",
+      "role": "Narrative content between features",
+      "description": "Centered stack within 1200px max-width: eyebrow label in TildaSans 13px weight 500 with 0.071em tracking, 48-60px weight 300 headline, 18-20px body paragraph in #222222 at max-width ~600px. No background change — pure white."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Product feature presentation",
+      "description": "Flat #ffffff or #efefef surface, no border, no shadow, 32-48px padding. Contains illustration left and copy right. Corner radius is 0 — cards are sharp-edged to contrast with pill buttons. Often uses a thin black rule beneath."
+    },
+    {
+      "name": "Brand Illustration Block",
+      "role": "Atmospheric visual identity",
+      "description": "Full-height illustration on white or #efefef background. Black line art at 1.5-2px stroke weight, with selective coral (#fa8669) fills on key objects (hearts, characters' clothing, icons). No gradients, no shadows — pure flat graphic style."
+    },
+    {
+      "name": "Pill Badge / Tag",
+      "role": "Category labels, section eyebrows, metadata",
+      "description": "100px radius, 4px 12px padding, TildaSans 13px weight 500 with 0.071em tracking. Background #efefef with #000000 text, or #000000 with #ffffff text. All-caps or sentence case."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section separation without visual weight",
+      "description": "1px #efefef or #cccccc horizontal line spanning the content width. Used instead of background color changes to separate sections while maintaining the all-white feel."
+    },
+    {
+      "name": "Footer Region",
+      "role": "Site footer with links and legal",
+      "description": "#ffffff or #171717 background, TildaSans 14-16px weight 400 text. Links at weight 500, #000000 or #ffffff depending on background. 96px top padding, generous link spacing via 20-24px row gap."
+    },
+    {
+      "name": "Language Selector",
+      "role": "Locale picker, bottom-right floating",
+      "description": "Fixed-position pill in bottom-right, 100px radius, white background with 1px #efefef border, TildaSans 13px weight 500. Globe icon + language code."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Times — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "Times",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary brand typeface for all interface text — display headlines at 60-78px use weight 300 (whisper-weight creates editorial calm), section headings at 34-48px use weight 400, body sits at 16-20px weight 400, micro-labels and nav use weight 500-600. The wide weight range (100-700) and tracking ladder allow the same family to serve everything from super-light hero whispers to crisp button labels.",
+      "sizes": "13, 14, 15, 16, 18, 19, 20, 22, 24, 26, 28, 34, 36, 42, 44, 46, 48, 60, 72, 78",
+      "family": "TildaSans",
+      "weight": "100, 300, 400, 500, 600, 700",
+      "lineHeight": "1.13-2.00",
+      "substitute": "Inter, Manrope, or DM Sans",
+      "letterSpacing": "0.0380em, 0.0630em, 0.0710em, 0.1790em"
+    },
+    {
+      "role": "System fallback for small UI metadata, icon labels, and micro-text where TildaSans might not load",
+      "sizes": "11, 13, 14",
+      "family": "Arial",
+      "weight": "100, 300, 400, 500",
+      "lineHeight": "1.20, 2.00",
+      "substitute": "system-ui"
+    }
+  ],
+  "description": "Tilda operates on a near-monochrome canvas with a single vivid coral accent doing all the emotional work. The aesthetic is editorial-illustration-meets-builder-tool: flat, hand-drawn line art fills the left side of heroes, generous whitespace breathes around light-weight headlines, and one orange-coral button is the only spot of color in an otherwise achromatic interface. Typography carries the personality — TildaSans at weight 300 whispers across 60-78px hero headlines, while the coral accent is rationed for primary actions, illustration fills, and icon highlights. Components are confident and pill-shaped: 100px radius buttons, flat surfaces with no shadows, thin black borders instead of elevation. The system should feel like a design magazine that accidentally became a product page.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000\n- background: #ffffff\n- card surface: #efefef\n- border: #efefef / #000000\n- accent: #fa8669\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Create a feature card: #efefef background, 0px border-radius, 40px padding. TildaSans 24px weight 400 heading in #000000, body at 16px weight 400 in #222222. No shadow, no border. Flat coral (#fa8669) icon accent at 32px.\n\n3. Create a pill badge/tag: #efefef background, 100px radius, 6px 14px padding, TildaSans 13px weight 500 with 0.071em letter-spacing, #000000 text, all-caps.\n\n4. Create a navigation bar: #ffffff background, 1200px max-width, 60px height. Brand wordmark left in TildaSans 16px weight 600. Nav links right in TildaSans 14px weight 500, #000000, 24px gap. Inverted dark button ('Sign Up') at far right: #000000 fill, #ffffff text, 100px radius, 10px 20px padding.\n\n5. Create a centered editorial section: #ffffff background, max-width 600px for text block. Eyebrow at 13px TildaSans weight 500 with 0.071em tracking, #000000, all-caps. Headline at 48px TildaSans weight 300, #000000. Body at 18px TildaSans weight 400, #222222, 1.5 line-height."
+    }
+  ],
+  "elevationPhilosophy": "No shadows. The design system uses flat surfaces distinguished only by background color (white vs #efefef vs #cccccc) and 1px hairline borders. Elevation is communicated through spatial separation and surface tone, not shadow. This is a deliberate editorial choice — shadows would feel too 'SaaS dashboard' and undermine the magazine-like, hand-drawn aesthetic."
+}

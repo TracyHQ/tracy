@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-workspace-added-empty",
+  "itemIds": [
+    "direct:workspace-added:en",
+    "direct:workspace-added:vi",
+    "direct:workspace-added:de",
+    "direct:workspace-added:it",
+    "direct:workspace-added:fr",
+    "direct:workspace-added:nl",
+    "direct:workspace-added:zh",
+    "direct:workspace-added:es"
+  ],
+  "requirement": "the workspace invitation to a person with an account with names, sites or a website missing steps down to a plainer sentence",
+  "oracle": {
+    "source": "emails.js docblocks (steps down through what is known)",
+    "ref": "emails.js docblocks (steps down through what is known)",
+    "invariant": "no hole, no \"undefined\""
+  },
+  "edgeTags": ["empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.empty:workspace-added"],
+  "redProof": null,
+  "legacyIds": []
+}

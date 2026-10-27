@@ -1,0 +1,235 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-business",
+  "minVersion": {
+    "tracy-business/emdash-0.x": "1.7.6"
+  },
+  "maxVersion": {
+    "tracy-business/emdash-0.x": "1.7.19"
+  },
+  "maxVersionNote": "1.7.7 to 1.7.13 checked 11/10/2026 (ds-minversion-audit): the same src/lib/ds-slot.ts reader (sha256 93aa4e92…) and the same set of var(--ds-*) reads in their stylesheets as 1.7.6; their changes are words and languages, no colour class; 1.7.14 (published during this audit, 11/10/2026 ~19:30) changes no file under src/ (seed/personalize tooling only), same reader and the same 30 var(--ds-*) reads; 1.7.15 (TCH #1180, 11/10/2026: 1.7.14 + the slot-pin fix of #1134, rebuilt after 1.7.13 was published without it) has the same reader (sha256 93aa4e92…) and the same stylesheets; its five changed class lines read the slot's own --ds-card-radius / --ds-input-radius with the values they pinned as fallbacks; 1.7.16 (TCH #1196, 12/10/2026) is 1.7.15 plus sharp as a direct dependency (TCH #1182): src/ byte-identical, the same reader; 1.7.17 (TCH #1297, 13/10/2026) is 1.7.16 with only tools/personalize.mjs changed (Name left blank, a contact page unticked): src/ byte-identical, the same reader; 1.7.18 (TCH #1321, 13/10/2026) is 1.7.17 plus the two-mode slot of #1315: lib/ds-slot.ts reads the sheet's mode line and Base.astro opens on the system's side with the switch kept, the ink role of #1309 — the first release whose src/ differs from 1.7.6 under the slot; 1.7.19 (TCH #1318, 14/10/2026) is 1.7.18 with the theme toggle fixed for UNDO-1: opening on the worn system's mode stores nothing and a visitor's choice made while a system is worn is kept under ngi-theme@<id>, so taking the system off opens the template again; lib/ds-slot.ts and every stylesheet byte-identical to 1.7.18 (only Base.astro and Topbar.astro change), re-measured on the release build (contracts/1.7.19)",
+  "applies": "the same data/ds-slot.css as tracy-base, read per request by the theme's lib/ds-slot.ts; the theme's colours are its own Tailwind variables (styles/tokens.css), each pointed at the worn colour of the role it plays",
+  "omit": [
+    "--color-accent",
+    "--color-accent-on",
+    "--color-accent-hover",
+    "--color-accent-active",
+    "--color-accent-tint",
+    "--color-surface",
+    "--color-surface-warm",
+    "--color-bg"
+  ],
+  "omitNote": "names tracy-base's emitter writes that this theme does not read or reads differently: its --color-accent is shadcn's accent, a TINT behind hovers (var(--color-signal-tint))",
+  "templateVars": {
+    "--color-page-bg": "var(--ds-c-bg)",
+    "--color-paper": "var(--ds-c-bg)",
+    "--color-card": "var(--ds-c-bg)",
+    "--color-paper-2": "var(--ds-c-surface)",
+    "--color-ink": "var(--ds-c-ink)",
+    "--color-fg-body": "var(--ds-c-fg)",
+    "--color-fg-faint": "var(--ds-c-meta)",
+    "--color-fg-fainter": "var(--ds-c-meta)",
+    "--color-on-ink": "var(--ds-c-on-ink)",
+    "--color-on-ink-soft": "color-mix(in srgb, var(--ds-c-on-ink) 88%, var(--ds-c-ink))",
+    "--color-on-ink-muted": "color-mix(in srgb, var(--ds-c-on-ink) 84%, var(--ds-c-ink))",
+    "--color-on-ink-meta": "color-mix(in srgb, var(--ds-c-on-ink) 70%, var(--ds-c-ink))",
+    "--color-on-ink-line": "color-mix(in srgb, var(--ds-c-on-ink) 12%, var(--ds-c-ink))",
+    "--color-on-ink-line-2": "color-mix(in srgb, var(--ds-c-on-ink) 18%, var(--ds-c-ink))",
+    "--color-on-ink-line-3": "color-mix(in srgb, var(--ds-c-on-ink) 26%, var(--ds-c-ink))",
+    "--color-forest": "var(--ds-c-accent-band)",
+    "--color-forest-deep": "color-mix(in srgb, var(--ds-c-accent-band) 82%, #000)",
+    "--color-forest-line": "color-mix(in srgb, var(--ds-c-on-accent-band) 35%, var(--ds-c-accent-band))",
+    "--color-on-forest": "var(--ds-c-on-accent-band)",
+    "--color-on-forest-muted": "var(--ds-c-on-accent-band)",
+    "--color-on-forest-faint": "color-mix(in srgb, var(--ds-c-on-accent-band) 80%, var(--ds-c-accent-band))",
+    "--color-on-forest-line": "color-mix(in srgb, var(--ds-c-on-accent-band) 45%, var(--ds-c-accent-band))",
+    "--color-signal": "var(--ds-c-accent)",
+    "--color-signal-tint": "color-mix(in srgb, var(--ds-c-accent) 10%, transparent)",
+    "--color-link": "var(--ds-c-accent-text)",
+    "--color-link-hover": "var(--ds-c-accent-text-hover)",
+    "--color-primary-foreground": "var(--ds-c-accent-on)",
+    "--color-secondary-foreground": "var(--ds-c-accent-on)",
+    "--color-line-strong": "var(--ds-c-border)",
+    "--color-line-faint": "var(--ds-c-meta)",
+    "--color-avatar": "var(--ds-c-border-soft)",
+    "--color-chip-disabled": "var(--ds-c-surface)",
+    "--color-focus-ring": "color-mix(in srgb, var(--ds-c-accent) 35%, var(--ds-c-bg))",
+    "--color-white": "var(--ds-c-on-ink)"
+  },
+  "readsComponents": true,
+  "modes": true,
+  "modesNote": "the theme has a light/dark switch (.ng-theme-toggle, data-theme on html): the slot emits the system's own side under the side the system is, and the other side derived from it (src/derive.mjs), and does not hide the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2). The theme opens on the system's side (lib/ds-slot.ts reads the sheet's mode line, from 1.7.18; 1.7.17 of TCH #1297 is 1.7.16 with the personalize tool only and keeps the one-look page)",
+  "readsComponentsNote": "this theme reads the slot's type and shape tokens (global.css: --ds-weight-*, --ds-size-*, --ds-card-radius, --ds-input-radius), so the emitter reads them off the reference page (components.html) as Joomla and WordPress do; tracy-base keeps its measured look (#1309)",
+  "templateNote": "bands keep their pairs: an ink band (dark in the template) takes the system's ink role (--ds-c-ink: the text colour on a light system, the surface or deepened page on a dark one, bands.mjs groundCandidates) and its on-ink text the words that read on it (--ds-c-on-ink), so a dark system keeps a dark hero (Moxie painted it cream before, 13/10/2026, #1309); a forest band takes the readable accent and its text the accent's own; the orange call to action (signal) is the accent itself; bands keep their pairs: an ink band (dark in the template) takes the ink role and its on-ink text the on-ink role (src/emit.mjs inkPair: under a light system the system's text colour and its page colour; under a dark system a ground lifted off the page and the system's text, so the band stays dark as the system is, 13/10/2026); a forest band takes the readable accent and its text the accent's own; the orange call to action (signal) is the accent itself",
+  "bandButtons": {
+    ".band-ink": {
+      "ground": "ink",
+      "buttons": [".btn-primary"]
+    },
+    ".bg-forest": {
+      "ground": "accent-band",
+      "buttons": [".btn-primary", ".ng-newsletter button[type=\"submit\"]"]
+    }
+  },
+  "bandButtonsNote": "the calls to action on the template's two painted bands — the hero and every ink band (`.band-ink`: --color-ink, the system's text colour) and the closing call (`.bg-forest`: --color-forest, the readable accent) — wear the system's button pair checked against that band (src/emit.mjs bandButtonRules): the accent fill with its text where it stands out 3:1, turned over where only its text colour does. Before, the accent button sat on the accent band under every system whose accent reads as text (1.00:1 under Stripe, Spotify, Editorial, Runway; 11/10/2026). Measured after on dsbtnem01 (tasks/evidence/ds-kept-buttons-2026-10-11): every button >= 3.05:1 on its band, text >= 4.7:1. Found the same day and NOT fixed here: the closing band's muted text (text-on-forest-muted) reads 2.71–4.19:1 under Apple, Linear, Binance.US, Superhuman, Mintlify and Ferrari (the band is the readable accent, its text a mix toward the accent's own text colour, which is proven only on the accent fill)",
+  "bandText": {
+    ".band-ink": {
+      "ground": "ink",
+      "text": [".text-signal", ".eyebrow", ".eyebrow-sm"]
+    }
+  },
+  "bandTextNote": "the hero's second line (`em.text-signal`) and the kicker of the ink cards are the accent on the ink band (the system's text colour): re-measured 11/10/2026 with the per-element probe, Toggl Track's pink accent on its pink ink hero read 1:1 and Moxie's light blue on its cream ink hero about 2:1 (the line vanished in the screenshot). They take the accent moved toward black or white until it reads 4.5:1 on the band (src/emit.mjs bandTextRules)",
+  "selectors": {
+    "themeToggle": ".ng-theme-toggle"
+  },
+  "baseSystem": "od:apple",
+  "roles": {
+    "page": "body",
+    "display": "h1.h-hero",
+    "heading": "main h2.h-section-lg, main h2.h-section",
+    "body": "main .band-paper2 p, main section p",
+    "button-primary": "main a.btn-primary",
+    "container": "main .container-site"
+  },
+  "followRules": {
+    ".bg-forest h2, .bg-forest .text-on-forest-muted, .bg-forest .text-on-forest-faint, .bg-forest .text-on-forest-line, .btn-forest, .chip-active[class*=bg-forest]": {
+      "color": "on-accent-band"
+    },
+    ":is(.bg-ink, .band-ink) .text-on-ink-meta": {
+      "color": "on-ink"
+    },
+    ":is(.eyebrow, .eyebrow-sm):not(:is(.band-ink, .bg-ink, .bg-forest) *)": {
+      "color": "accent-text"
+    },
+    ".bg-ink .bg-signal": {
+      "color": "accent-on"
+    },
+    ".bg-forest.text-white, .bg-forest .text-white": {
+      "color": "on-accent-band"
+    },
+    ".bg-forest .ng-theme-toggle": {
+      "color": "on-accent-band"
+    },
+    ".text-signal:not(:is(.band-ink, .bg-ink, .bg-forest) *)": {
+      "color": "accent-text"
+    },
+    ".grid-cols-3 > .border-line.text-on-ink-meta": {
+      "color": "meta"
+    },
+    ".bg-forest a:not([class*=\"text-\"], [class*=\"btn\"], [class*=\"link\"]), .bg-forest.text-on-ink, .bg-forest a.text-on-forest:hover, .bg-forest .ng-theme-toggle:hover": {
+      "color": "bg"
+    },
+    ":is(.bg-forest, .band-ink) .bg-ink.text-white": {
+      "color": "on-ink"
+    },
+    ".bg-signal.text-white, .bg-signal .text-white, .ec-form .ec-form-submit, .ec-form button[type=\"submit\"]": {
+      "color": "accent-on"
+    },
+    ".link-underline": {
+      "border-color": "accent-text"
+    },
+    ".link-underline:hover": {
+      "color": "accent-text"
+    },
+    ".aspect-video.bg-line": {
+      "background-color": "bg"
+    },
+    ".btn-outline-ink": {
+      "border-color": "on-ink"
+    },
+    ".text-forest:not(:is(.band-ink, .bg-ink, .bg-forest) *)": {
+      "color": "accent-text"
+    },
+    "[class~=\"hover:text-forest\"]:hover:not(:is(.band-ink, .bg-ink, .bg-forest) *)": {
+      "color": "accent-text-hover"
+    }
+  },
+  "followNote": "Words the template paints forest on the page (.text-forest: the services’ 20px serif figures; hover:text-forest on the footer and card links) take the readable accent, the band keeps the bright one (15/10/2026: 1.32–4.19:1 otherwise). 15/10/2026: the forest band, its words and its button take the accent-band pair (src/emit.mjs): the accent itself with its own words where it stands off the page by lightness or hue, else the readable accent with the page colour as before — under Mailchimp and Linear (light) the readable accent was a muddy olive beside the bright buttons (look review v8). re-measured 12/10/2026 with every heading and text judged: the forest fill is the system's readable accent (--color-forest), and what the template sets on it as literals or faint mixes - the band title (#F5F3EE), the active chip and the forest button (#fff, the accent's own text), the faint caption and the top bar's separators - read 2.04-3.79:1 under Moxie, MotherDuck, Toggl Track and Apple: they take the page colour, which reads on the readable accent by its making. On the ink footer the meta link (Toggl Track 3.75:1) takes the page colour and the brand mark on the signal fill the accent's own text (MotherDuck 1.7:1); the project cards' signal kicker on their paper (article.bg-paper: the hero's accent line on the ink band, also inside a paper wrapper, keeps its bandText colour) (MotherDuck's light blue, 1.7:1) takes the readable accent The hero's stat labels sit on the ink band (.band-ink, the system's text colour as a fill) in on-ink-meta, a mix that held 70% of the page colour: on Toggl Track's pink fill it read 3.75:1 (the template's own 5.3): they take the page colour as on .bg-ink. The section eyebrows (.eyebrow, .eyebrow-sm) paint --color-signal, the accent as a fill, as text: MotherDuck's light blue read 1.70:1 on its cream (re-measured 12/10/2026 with every block of text judged): on the page they take the readable accent The services' item numbers (.text-signal on the page) read 1.70:1 the same way: every .text-signal outside the ink and forest bands takes the readable accent (the rule first named the article cards' only) re-measured 12/10/2026 with every heading and text judged: the forest fill is the system's readable accent (--color-forest), and what the template sets on it as literals or faint mixes - the band title (#F5F3EE), the active chip and the forest button (#fff, the accent's own text), the faint caption and the top bar's separators - read 2.04-3.79:1 under Moxie, MotherDuck, Toggl Track and Apple: they take the page colour, which reads on the readable accent by its making. On the ink footer the meta link (Toggl Track 3.75:1) takes the page colour and the brand mark on the signal fill the accent's own text (MotherDuck 1.7:1); the project cards' signal kicker on their paper (article.bg-paper: the hero's accent line on the ink band, also inside a paper wrapper, keeps its bandText colour) (MotherDuck's light blue, 1.7:1) takes the readable accent The hero's stat labels sit on the ink band (.band-ink, the system's text colour as a fill) in on-ink-meta, a mix that held 70% of the page colour: on Toggl Track's pink fill it read 3.75:1 (the template's own 5.3): they take the page colour as on .bg-ink. The section eyebrows (.eyebrow, .eyebrow-sm) paint --color-signal, the accent as a fill, as text: MotherDuck's light blue read 1.70:1 on its cream (re-measured 12/10/2026 with every block of text judged): on the page they take the readable accent The services' item numbers (.text-signal on the page) read 1.70:1 the same way: every .text-signal outside the ink and forest bands takes the readable accent (the rule first named the article cards' only) Measured on every declared page 15/10/2026 (light and dark, Moxie, Figma, Toggl Track): a plain link on the top bar's forest fill (Cloudflare turns the bar's e-mail into a.__cf_email__, which took the link colour, the forest itself: 1:1 on the dark side), the forest newsletter cards' title (text-on-ink on the forest, 1.96:1 under Moxie dark, 1:1 Toggl) and the top bar links' hover (hover:text-white, the on-ink colour on the forest) take the page colour; the slide number on its ink badge inside a forest slide (.bg-forest .text-white took the page colour: black on Moxie's dark ink, 1.21:1) keeps the on-ink words; text-white on the accent fill (the style guide's banner, the slides' quote label) and the contact form's submit (#fff in forms.css, 2.26:1 on Moxie's dark accent) take the accent's own text; the underlined links' rule and hover (#7fbfa6 / #8fccb2 on the dark side) take the readable accent; the kit form's inactive steps (text-on-ink-meta on the page, 2.09:1) take the meta colour The kit's facts slide frame (.aspect-video.bg-line, under a ruled grid that covers it whole) takes the page colour: the line colour as a fill read as a cream slab under Moxie's dark side (TPL-1 glare) though its grid covers it. The hero's outline button (.btn-outline-ink) drew its edge in on-ink-line-3, a 26% mix no system names (BTN-1 on the dark side: #53514a under Moxie): it takes the on-ink words' colour, as its hover already does.",
+  "shapeRules": {
+    ".ec-form .ec-form-submit, .ec-form button[type=\"submit\"], .ng-newsletter > button[type=\"submit\"]": {
+      "border-radius": "btn"
+    },
+    ".ng-newsletter > input[type=\"email\"]": {
+      "border-radius": "input"
+    },
+    "form[role=\"search\"] > input[type=\"search\"]": {
+      "border-radius": "btn 0 0 btn"
+    },
+    "form[role=\"search\"] > button[type=\"submit\"]": {
+      "border-radius": "0 btn btn 0"
+    },
+    ".btn-outline-ink": {
+      "border-radius": "btn"
+    },
+    ".chip, .chip-active": {
+      "border-radius": "btn"
+    }
+  },
+  "shapeNote": "the four submit buttons the template draws with Tailwind classes and no .btn-* class (contact form .ec-form-submit, the search page's joined button, the investors' and the kit's newsletter) stayed square under every system while its other buttons wore the system's corner (BTN-1, button-role, 15/10/2026): they take --ds-btn-radius (src/emit.mjs shapeRulesEmdash); the search field and its button are one control and take the outer corners only. The kit newsletter's button sits on the forest card (.bg-forest) and wears that band's button pair (Figma: accent on the accent band read 1:1, BTN-1 lost). The hero's outline button (.btn-outline-ink, no radius in the theme) stood square next to the system's pill (eye-check on the local stand, Moxie, 15/10/2026; the detector's button list did not reach a.btn-* anchors): it takes --ds-btn-radius too. The filter chips (.chip, .chip-active; the home page's accent-filled All chip reads as a button) take the button corner as one row (BTN-1 under Moxie's dark side, 15/10/2026)",
+  "status": {
+    "success": {
+      "colour": "#2e7d32",
+      "text": "#1f4a22",
+      "vars": {
+        "colour": "--color-success",
+        "ground": "--color-success-bg",
+        "text": "--color-success-fg"
+      },
+      "role": "success"
+    },
+    "warning": {
+      "colour": "#c8891b",
+      "text": "#6b4a0e",
+      "vars": {
+        "colour": "--color-warning",
+        "ground": "--color-warning-bg",
+        "text": "--color-warning-fg"
+      },
+      "role": "warn"
+    },
+    "error": {
+      "colour": "#c0392b",
+      "text": "#7a2016",
+      "vars": {
+        "colour": "--color-error",
+        "ground": "--color-error-bg",
+        "text": "--color-error-fg"
+      },
+      "role": "danger"
+    },
+    "info": {
+      "colour": "#22453a",
+      "text": "#22453a",
+      "vars": {
+        "ground": "--color-info-bg",
+        "text": "--color-info-fg"
+      }
+    }
+  },
+  "statusNote": "the template's status colours (styles/tokens.css: success, warning, error with their tinted grounds and texts) stayed its own literals under every system: the kit's red field error, the style guide's alert borders and texts (TPL-1 keptText and border-colour, 15/10/2026). Each is tuned to the worn system as on Joomla and WordPress (src/emit.mjs statusVarsEmdash); --color-chip-disabled took the system's soft border, a mid grey under Figma under the disabled chip's meta text (1.2:1) and the disabled field: it takes the surface",
+  "contrast": {
+    "accent-text": "main a.link, main .text-forest",
+    "muted": "main .text-fg-muted, main .text-fg-meta",
+    "body": "main p",
+    "on-ink": ".band-ink p",
+    "accent-on-ink": ".band-ink .text-signal",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "whiteNote": "the template writes `text-white` (43 places, never a fill) for text on its dark bands: the ink bands' own text (--ds-c-on-ink; it was the page colour until the ink role of #1309, which under Moxie and Spotify put black on the near-black ink, 1.06:1 on the footer titles, 13/10/2026); on the forest band it takes the page colour (followRules)",
+  "fontVars": {
+    "body": ["--font-archivo"],
+    "display": ["--font-newsreader"]
+  },
+  "fontNote": "Astro's font variables the template reads directly (html: var(--font-archivo); --font-serif: var(--font-newsreader)): set to the system's faces when it states them",
+  "ready": true,
+  "readyNote": "re-measured 12/10/2026 on the published 1.7.15 (the release run on Node from ~/tracy-bench-work/release/ds-rebuild/biz-1.7.15, tasks/evidence/ds-remeasure-integration-2026-10-12/emdash-tracy-business-1.7.15) with the unified probe of #1179: 12/12 under Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, no text worse than the template’s own, 97% or more of the page follows; the closing band’s muted lead (text-on-forest-muted, 3.52:1 under MotherDuck before) takes the page colour with its title (followRules). Before that: re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/emdash-tracy-business): 12/12 on every release measured, controls 0 differences, lowest text 4.60:1, 98% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on a local install of the released Tracy Business EmDash 1.7.6 (tasks/evidence/ds-remeasure-6-2026-10-11/emdash-tracy-business): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, 97% or more of the page follows, lowest text 4.60:1, no text under 4.5:1 worse than the template's own. Fixed on the way: the closing forest band's text (on-forest, on-forest-muted) now takes the page colour, which reads on the readable accent by construction (MotherDuck 3.52, Apple 4.19 before), and the hero's accent line on the ink band takes bandText (Toggl Track 1:1, Moxie about 2:1 before). Published 1.7.6 to 1.7.13 all carry the reader (src/lib/ds-slot.ts)",
+  "discovered": {
+    "display": "the hero heading at 1440 on the published release: 64px",
+    "displayPhone": "the same heading at 390 on the published release: 38px",
+    "displayFace": "Newsreader 400, tracking -0.025em",
+    "heading": "first section heading at 1440: 40px"
+  },
+  "discoveredNote": "read 14/10/2026 off the published release with no system worn (the v6 measure's baseline/default.json): the hero line's size on a desktop and a phone, its first family (an Astro font family name without its hash suffix), weight and letter spacing, and the first section heading. Until then emdashCss gave the slot no template sizes, so Eddie's 80px Inter 600 stood a five-line tower in tracy-base's centred hero column and six lines in Tracy Business's half-width one (look review v6)"
+}

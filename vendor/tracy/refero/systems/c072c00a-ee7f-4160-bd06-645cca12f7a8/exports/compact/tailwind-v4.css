@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-hairline-mist: #e5e7eb;
+  --color-obsidian: #000000;
+  --color-ash: #a3a3a3;
+
+  /* Typography */
+  --font-neue-haas-unica-pro: 'Neue Haas Unica Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

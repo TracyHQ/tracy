@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+  "status": "complete",
+  "name": "Circle",
+  "url": "https://styles.refero.design/style/ab8450d9-1b42-4395-aa24-9e277f021aa1",
+  "sourceWebsite": "https://www.circle.so",
+  "extractedAt": "2026-06-03T18:02:03.287Z",
+  "capturedAt": "2026-10-08T05:16:04.650839+00:00",
+  "theme": "dark",
+  "industry": "saas",
+  "description": "Aurora-lit mission control in deep midnight. A near-black indigo page glows from the center outward, cradling a single white product panel like a lit window in a planetarium.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4c88fe60-c3bf-4dd5-b65f-a533d0b038aa.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0e7addda-3aeb-4f17-be70-cf7bf67da787.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e27174d8-87ce-4f88-a183-b9ca976fb256.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8d9c1a5b-8fa9-4e54-b4cf-bd36d75cd1f5.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/370b74b3-a7c5-466c-b7eb-36b3a82ceaf1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1bc7705f50d77820eb54da03be9f86cb0f70188a2df234d3ce9ca03639ba145b",
+      "bytes": 24012
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "eb7176036d5b109cd0749bb8d4e7b14114fe8c7cd4f645d8633918d9a6e68a85",
+      "bytes": 86315
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e4b3eb9a335e14c0956091c7d4189a5fa6126c73dd9f15a246c8ce3daeb402e5",
+      "bytes": 20283
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8f1ce3f425545a15326768e714f74ae95d9e6cb7fa5945ec0c1ec7b107e3425c",
+      "bytes": 19743
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4afeacdac2a56143e9e22102f691a6d8fb5140f0b8288e2748de1dd61014e4c2",
+      "bytes": 15129
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7c5b966d7b318d6e313fcc1c27b26ecce2569c3a908a7406e01cc34ed61d09ac",
+      "bytes": 4944
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c4f43f5c2c066c10d1ba10acb93487900d41480cecc1bc23793a96ac397d977c",
+      "bytes": 755
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "04408a500a89b8bfaf68e825d8e48ee76a7af1b609f7316d39935a7751b430d2",
+      "bytes": 874
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "530c53c742b9d3d7fc51cfa585a01f6ad36e09636ded46b4d82c19ce75ecb0bb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "68baf09895971d5725d555c037ddd57c1e3878de549ab7964381defe150e8e30",
+      "bytes": 48746
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8441fd6b8d1f4989c5ac594b5d0124fd3270714626e36742429de20ffc64cc3a",
+      "bytes": 25805
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fea244e9b66b8229dcf5135f2e55cdd044a50444942c69a540cb49b177acfbe7",
+      "bytes": 73349
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8365b55aafd5cc9081e61937f6228af1b36e90d88394f7bea6bd91935a00f5b0",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0ccf6cbf530da8fb27169be403fec042045e756e0d9c5f74d9588047efd5a54f",
+      "bytes": 2224
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "010589157391b087d6ced1e241224b0d972abde150935544d032b78016548399",
+      "bytes": 2975
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "029d3ce0-0fe5-4a8c-99c4-4f9d704f1c60",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "98a1ad40-90e2-4665-b49f-e5ffd4d4b90b",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "b8a8976c-52d9-4ebb-95ea-4c40f4a9acab",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d5ed8712-0e42-4c6c-83b1-b3d7f27d1d10",
+    "dd89ce6c-f0aa-4ca8-bd63-19dcd81920a7",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

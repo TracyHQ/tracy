@@ -1,0 +1,46 @@
+---
+/**
+ * Brand glyph for a social network name ("github", "linkedin", "x" …). lucide dropped brand logos,
+ * so these come from Phosphor (already a dependency), rendered server-side like Icon.astro.
+ * An unknown network gets a neutral link glyph rather than another brand's logo.
+ */
+import { createElement } from 'react'
+import * as Phosphor from '@phosphor-icons/react/dist/ssr'
+
+interface Props {
+  network?: string | null
+  size?: number
+}
+const { network, size = 15 } = Astro.props
+
+const BY_NETWORK: Record<string, string> = {
+  github: 'GithubLogo',
+  linkedin: 'LinkedinLogo',
+  x: 'XLogo',
+  twitter: 'XLogo',
+  youtube: 'YoutubeLogo',
+  instagram: 'InstagramLogo',
+  facebook: 'FacebookLogo',
+  discord: 'DiscordLogo',
+  mastodon: 'MastodonLogo',
+  dribbble: 'DribbbleLogo',
+  email: 'Envelope',
+  mail: 'Envelope',
+  website: 'Globe',
+  web: 'Globe'
+}
+const key = String(network ?? '')
+  .trim()
+  .toLowerCase()
+const glyphName = BY_NETWORK[key] ?? 'LinkSimple'
+const Glyph = (Phosphor as Record<string, any>)[glyphName]
+// At 15px the filled GitHub mark collapses into a blob; the bold outline stays legible (measured).
+const weight = glyphName === 'GithubLogo' ? 'bold' : 'fill'
+const svg = Glyph
+  ? (await import('react-dom/server')).renderToStaticMarkup(
+      createElement(Glyph, { size, weight, 'aria-hidden': true })
+    )
+  : ''
+---
+
+{svg && <Fragment set:html={svg} />}

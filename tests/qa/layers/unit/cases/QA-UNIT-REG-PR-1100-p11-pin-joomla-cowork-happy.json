@@ -1,0 +1,65 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p11-pin-joomla-cowork-happy",
+  "itemIds": ["regression:REG-PR-1100-p11-pin-joomla-cowork"],
+  "requirement": "scripts/pin-joomla-cowork.mjs moves the Joomla quickstarts' Claude Cowork pins onto a published release — five values per older pin, the same text in both quickstarts.json copies, nothing else — and refuses, writing nothing, when the release does not carry the profiles a pin records byte for byte or the download is not what GitHub states",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p11-pin-joomla-cowork.json",
+    "ref": "PR #1100 (fix); fix evidence: The same move made by hand: 7ccf04fd5 (#1013, 0.24.5), 10633e467 (#1091, 0.24.7), 8644e8e2b (#1098, 0.24.8). Replaying #1013 on its parent with --tag joomla-v0.24.5 writes both files byte for byte as that commit, but for one sentence of prose in a note.",
+    "invariant": "S1 exits 0 with '# fail 0'. A release carrying the recorded profiles moves every older Joomla pin: only file, version, bytes, sha256 and url change (ten lines for two pins), both catalogues stay one text, a newer pin and a WordPress pin are untouched, inline arrays and notes keep their bytes. --dry-run prints a git-style diff for both catalogues and writes nothing. A pin already on the release is verified and left alone (empty diff, 'nothing to move'); the same tag with other bytes is refused as a re-cut; --quickstart moves only the named pin and refuses a non-Joomla one. A release missing a recorded profile, a recorded file, or carrying a changed or unrecorded file in a recorded profile is refused with that file named, exit 1, nothing written. A size or digest that disagrees with GitHub, a package declaring another version, a draft, a pre-release, an asset served elsewhere or not uploaded is refused; a release-candidate tag exits 2. Two catalogues that already differ, and a pin fetched by githubAssetId, are refused. On the committed catalogues and this tree's own profile files, every Joomla pin moves with five lines each and nothing else changes.",
+    "productSources": ["apps/tracy-web/src/lib/contracts.js:244", "scripts/pin-joomla-cowork.mjs:46"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "scripts/test/pin-joomla-cowork.test.mjs:115 readFileSync() with a computed path",
+      "scripts/test/pin-joomla-cowork.test.mjs:251 readFileSync() with a computed path",
+      "scripts/test/pin-joomla-cowork.test.mjs:366 readFileSync() with a computed path",
+      "scripts/test/pin-joomla-cowork.test.mjs:385 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a release carrying the recorded profiles moves every older Joomla pin",
+    "--dry-run prints the diff and writes nothing",
+    "a pin already on the release is verified and left alone",
+    "a release that does not carry a recorded profile byte for byte is refused",
+    "a download or a release that is not what it claims is refused",
+    "two catalogues that already differ, or a pin fetched by githubAssetId, are refused",
+    "the committed catalogues move whole"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p11-pin-joomla-cowork"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p11-pin-joomla-cowork",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "quickstart/pins",
+    "file": "tests/regression/cases/REG-PR-1100-p11-pin-joomla-cowork.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "scripts/test/pin-joomla-cowork.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a release carrying the recorded profiles moves every older Joomla pin",
+    "--dry-run prints the diff and writes nothing",
+    "a pin already on the release is verified and left alone",
+    "a release that does not carry a recorded profile byte for byte is refused",
+    "a download or a release that is not what it claims is refused",
+    "two catalogues that already differ, or a pin fetched by githubAssetId, are refused",
+    "the committed catalogues move whole"
+  ],
+  "timeoutS": 600
+}

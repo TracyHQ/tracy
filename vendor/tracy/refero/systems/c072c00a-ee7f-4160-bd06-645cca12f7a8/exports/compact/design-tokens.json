@@ -1,0 +1,39 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, primary surface for content blocks, card bases"
+    },
+    "hairline-mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline Mist — Hairline borders, dividers, subtle surface wash, filter chip backgrounds, image placeholder fill"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, brand wordmark fill, dark hero background, link text, heading color"
+    },
+    "ash": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Ash — Muted secondary text, captions, inactive filter labels, helper text"
+    }
+  },
+  "font": {
+    "neue-haas-unica-pro": {
+      "$value": "Neue Haas Unica Pro",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all UI — navigation, body, headlines, and brand wordmark. Weight 400 only, no bold or light variants; hierarchy is built purely through size and tracking rather than weight contrast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dnco.com",
+      "siteName": "DNCO",
+      "extractedAt": "2026-06-03T20:17:25.554Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "color": {
+    "cobalt-action": {
+      "$value": "#0075ff",
+      "$type": "color",
+      "$description": "Cobalt Action — Primary CTA buttons, the only chromatic accent in the entire interface — one vivid blue against monochrome neutrals, used sparingly so it signals action without competing with content"
+    },
+    "ink-black": {
+      "$value": "#090707",
+      "$type": "color",
+      "$description": "Ink Black — Headline color, image borders, large display text — near-black with the slightest warmth, chosen over pure black to feel printed rather than digital"
+    },
+    "graphite": {
+      "$value": "#212529",
+      "$type": "color",
+      "$description": "Graphite — Body text, nav links, icon strokes, card borders — the working neutral for interface chrome and readable paragraph copy"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, text on dark hero and dark logo backgrounds — establishes the light-mode base and all content surfaces"
+    },
+    "hairline-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Hairline Gray — Subtle dividers and secondary borders — thin separator lines on light surfaces where #212529 would be too heavy"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Dark borders and separators for elevated surfaces and inverted UI."
+    },
+    "shadow-whisper": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Shadow Whisper — Near-invisible ambient shadow tint for button states — a 1px 1px wash so faint it barely registers, used instead of full drop-shadows"
+    }
+  },
+  "font": {
+    "favoritpro-light": {
+      "$value": "FavoritPro-Light",
+      "$type": "fontFamily",
+      "$description": "Single-family type system used for every interface element — nav, body, buttons, headlines, and 80px display. Weight 400 throughout is a signature choice: the system relies on scale jumps (14px body → 50px subhead → 80px display) rather than bold weights to establish hierarchy, giving the entire site an understated, editorial cadence"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://techbarcelona.com/en",
+      "siteName": "Tech Barcelona",
+      "extractedAt": "2026-06-03T20:22:07.660Z",
+      "variant": "compact"
+    }
+  }
+}

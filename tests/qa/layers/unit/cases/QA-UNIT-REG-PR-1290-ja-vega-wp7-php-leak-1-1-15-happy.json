@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-1290-ja-vega-wp7-php-leak-1-1-15-happy",
+  "itemIds": ["regression:REG-PR-1290-ja-vega-wp7-php-leak-1-1-15"],
+  "requirement": "JA Vega wp7 1.1.15: a new WordPress site no longer prints four lines of PHP above every page (theme 1.1.17 in the webroot instead of 1.1.16)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1290-ja-vega-wp7-php-leak-1-1-15.json",
+    "ref": "PR #1290 (fix); fix evidence: 13/10/2026 clean restores of the 1.1.14 and 1.1.15 packs on a local stand, 60 pages crawled each: 1.1.14 60 pages print PHP and 43 load the theme stylesheet; 1.1.15 0 and 60",
+    "invariant": "Every locked PHP file equals the theme source at Version 1.1.17, and none holding PHP has text before its <?php. 1.1.15: 60/60 pages answer 200, 0 print PHP, theme stylesheet on all 60; 1.1.14 printed PHP on its pages.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1290-ja-vega-wp7-php-leak-1-1-15.mjs:21 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1290-ja-vega-wp7-php-leak-1-1-15.mjs:39 packages/cms/tracy-wordpress-theme/src/wp-ja-vega/style.css has no code line to point at"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1290-ja-vega-wp7-php-leak-1-1-15.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1290-ja-vega-wp7-php-leak-1-1-15"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1290-ja-vega-wp7-php-leak-1-1-15",
+    "pr": 1290,
+    "kind": "fix",
+    "area": "wordpress-quickstart/ja-vega",
+    "file": "tests/regression/cases/REG-PR-1290-ja-vega-wp7-php-leak-1-1-15.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1290-ja-vega-wp7-php-leak-1-1-15.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-yellix-yellow: #fff65d;
+  --color-bone-white: #ffffff;
+  --color-warm-parchment: #f8f6f3;
+  --color-fog-gray: #d9d7d5;
+  --color-ash-gray: #8f8e8d;
+  --color-stone-gray: #727272;
+  --color-ink-black: #262626;
+  --color-charcoal: #2d2d2d;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-yellix: 'Yellix', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

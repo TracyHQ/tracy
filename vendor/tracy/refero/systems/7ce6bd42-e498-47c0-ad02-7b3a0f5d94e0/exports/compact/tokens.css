@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-espresso-ink: #1a0000;
+  --color-prism-spectrum: #a6b4f7;
+  --gradient-prism-spectrum: linear-gradient(90deg, rgb(130, 190, 255), rgb(166, 180, 247) 47.21%, rgb(91, 184, 154) 73.75%, rgb(33, 186, 76) 91.26%);
+  --color-canvas-white: #ffffff;
+  --color-linen-mist: #f2f2f2;
+  --color-bone: #ededec;
+  --color-taupe-slate: #514f4c;
+  --color-ash-gray: #aeaea6;
+  --color-charcoal-bronze: #3a3a3a;
+  --color-obsidian-roast: #221919;
+  --color-iris-blue: #98bbf4;
+
+  /* Typography — Font Families */
+  --font-greed-semibold: 'Greed-SemiBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-greed-condensed: 'Greed Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-area: 'Area', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

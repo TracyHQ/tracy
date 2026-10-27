@@ -1,0 +1,74 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#006aff",
+      "$type": "color",
+      "$description": "Signal Blue — Primary CTAs, link text, active nav, submit buttons, icon accents — the sole chromatic voice in an otherwise achromatic system"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Primary text, heading fills, dark icon strokes, nav labels — near-black that reads softer than pure black on white"
+    },
+    "slate-gray": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Slate Gray — Secondary text, helper copy, muted nav, input placeholder tone"
+    },
+    "platinum": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Platinum — Hairline borders, input outlines, subtle dividers between sections"
+    },
+    "ash": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash — Disabled text, tertiary metadata, very subtle structural lines"
+    },
+    "cloud": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Cloud — Page canvas beneath white cards, soft section background, muted surface"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "obsidian": {
+      "$value": "#030303",
+      "$type": "color",
+      "$description": "Obsidian — Dark footer section background, inverted surfaces — the only break from white"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Icon fills, monochrome graphic elements, SVG illustration strokes"
+    }
+  },
+  "font": {
+    "square-sans-display-vf": {
+      "$value": "Square Sans Display VF",
+      "$type": "fontFamily",
+      "$description": "Headlines and large display copy at 32–86px; the display weight (regular 400) at display sizes is a signature choice — most fintechs push 600–700 at this scale, Square uses the lighter weight with negative tracking to feel architectural rather than aggressive. System substitute: Inter Tight or Manrope at matching tracking."
+    },
+    "square-sans-text-vf": {
+      "$value": "Square Sans Text VF",
+      "$type": "fontFamily",
+      "$description": "Body copy, nav labels, footer text, card descriptions at 12–16px with relaxed 1.5–1.75 line-height for legibility. The same family as the display face keeps the text voice continuous — the only difference is size and tracking. System substitute: Inter or Söhne."
+    },
+    "cash-sans": {
+      "$value": "Cash Sans",
+      "$type": "fontFamily",
+      "$description": "Button labels and in-line CTA microcopy at 18px medium — a distinct text face for actions so they read as tappable artifacts separate from body copy. Substitute: same family as text at 500 weight, or DM Sans Medium."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://squareup.com",
+      "siteName": "Square",
+      "extractedAt": "2026-06-03T18:30:24.831Z",
+      "variant": "compact"
+    }
+  }
+}

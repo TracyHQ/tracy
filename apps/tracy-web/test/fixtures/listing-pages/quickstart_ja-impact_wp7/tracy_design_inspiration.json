@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "tracy-design-inspiration/v1",
+  "template": "ja-impact",
+  "provider": "JoomlArt",
+  "category": "Professional & Corporate",
+  "blurb": "A charity and non-profit site with pages for donations, events, blog and user accounts, demoing a helpline and donor-retention organisation.",
+  "image": "ja-impact-home-1440.png",
+  "dark": true,
+  "layouts": [
+    {
+      "key": "home",
+      "label": "Home",
+      "path": "/",
+      "shots": {
+        "desktop": "ja-impact-home-1440.png",
+        "mobile": "ja-impact-home-390.png"
+      }
+    },
+    {
+      "key": "about",
+      "label": "About",
+      "path": "/about",
+      "shots": {
+        "desktop": "ja-impact-about-1440.png",
+        "mobile": "ja-impact-about-390.png"
+      }
+    },
+    {
+      "key": "donations",
+      "label": "Donations",
+      "path": "/donations",
+      "shots": {
+        "desktop": "ja-impact-donations-1440.png",
+        "mobile": "ja-impact-donations-390.png"
+      }
+    },
+    {
+      "key": "author-listting",
+      "label": "Authors",
+      "path": "/pages/j-content/author-listting",
+      "shots": {
+        "desktop": "ja-impact-author-listting-1440.png",
+        "mobile": "ja-impact-author-listting-390.png"
+      }
+    },
+    {
+      "key": "contact",
+      "label": "Contact",
+      "path": "/contact",
+      "shots": {
+        "desktop": "ja-impact-contact-1440.png",
+        "mobile": "ja-impact-contact-390.png"
+      }
+    },
+    {
+      "key": "login-form",
+      "label": "Login",
+      "path": "/pages/user/login-form",
+      "shots": {
+        "desktop": "ja-impact-login-form-1440.png",
+        "mobile": "ja-impact-login-form-390.png"
+      }
+    }
+  ]
+}

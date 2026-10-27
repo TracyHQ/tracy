@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1557-morgan-remind-rate-limit",
+  "kind": "fix",
+  "title": "wp-ja-morgan's username reminder mails a known address at most once per window and one client at most five addresses per window, and registration creates at most five accounts per client per hour; every reminder answers ok whether or not mail was sent",
+  "pr": 1557,
+  "area": "wordpress/theme",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From this checkout run: node --test --test-reporter=tap --test-force-exit packages/cms/tracy-wordpress-theme/test/wp-ja-morgan-forms.test.mjs",
+    "The test loads overlays/wp-ja-morgan and src/wp-ja-morgan account.php under a PHP stub of WordPress and posts the reminder and registration forms repeatedly from one client."
+  ],
+  "expect": [
+    "The run exits 0 with 8 tests passing and 0 failing.",
+    "A known address is mailed once per window; later requests in the window answer ok and send nothing.",
+    "An unknown address gets the same ok answer and no mail.",
+    "One client cannot mail more than five addresses per window.",
+    "Registration creates at most five accounts per client per hour, then redirects with error-limit."
+  ],
+  "selectors": {
+    "handler": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan/inc/groups/account.php",
+    "test": "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan-forms.test.mjs"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-21-ja-morgan-remind-rate-limit.md. On develop the same test fails 6/8: the reminder mailed a known address on every request and registration created 7 accounts.",
+  "fence": "The theme's PHP under a WordPress stub. Not covered: a real WordPress, database and mail server, and a republished JA Morgan release.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan-forms.test.mjs"
+    ],
+    "timeout_s": 300
+  }
+}

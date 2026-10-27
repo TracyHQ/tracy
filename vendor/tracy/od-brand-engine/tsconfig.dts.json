@@ -1,0 +1,24 @@
+{
+  // Tracy's file (NOTICE). Declaration-only emit for dist/types/: the plugin that consumes
+  // dist/index.js type-checks against these. `strict` is off and two upstream type errors are
+  // tolerated (undici `dispatcher` on RequestInit; a contracts import Tracy does not carry) —
+  // tsc still emits declarations for them.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "strict": false,
+    "baseUrl": ".",
+    "paths": {
+      "@open-design/contracts": ["./contracts/api/brands.ts"],
+      "@open-design/contracts/api/connectionTest": ["./contracts/api/connectionTest.ts"],
+      "@open-design/contracts/runtime/html-injection-points": ["./contracts/runtime/html-injection-points.ts"]
+    }
+  },
+  "files": ["index.ts"]
+}

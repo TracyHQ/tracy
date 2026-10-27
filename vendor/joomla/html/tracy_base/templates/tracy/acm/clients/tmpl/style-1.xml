@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Clients Style 1</title>
+  <fields name="clients">
+    <fieldset name="band" label="TPL_TRACY_BASE_ACM_CLIENTS_BAND_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CLIENTS_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_CLIENTS_EYEBROW_DESC"
+      />
+    </fieldset>
+    <fieldset name="marks" label="TPL_TRACY_BASE_ACM_CLIENTS_MARKS_LABEL" multiple="1">
+      <field
+        name="mark-image"
+        type="media"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CLIENTS_MARK_IMAGE_LABEL"
+        description="TPL_TRACY_BASE_ACM_CLIENTS_MARK_IMAGE_DESC"
+      />
+      <field
+        name="mark-name"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CLIENTS_MARK_NAME_LABEL"
+        description="TPL_TRACY_BASE_ACM_CLIENTS_MARK_NAME_DESC"
+      />
+      <field
+        name="mark-link"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_CLIENTS_MARK_LINK_LABEL"
+        description="TPL_TRACY_BASE_ACM_CLIENTS_MARK_LINK_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

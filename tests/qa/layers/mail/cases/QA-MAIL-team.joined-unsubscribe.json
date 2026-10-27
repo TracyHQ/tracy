@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.joined-unsubscribe",
+  "itemIds": [
+    "letter:team.joined:en",
+    "letter:team.joined:vi",
+    "letter:team.joined:de",
+    "letter:team.joined:it",
+    "letter:team.joined:fr",
+    "letter:team.joined:nl",
+    "letter:team.joined:zh",
+    "letter:team.joined:es"
+  ],
+  "requirement": "team.joined: carries a working one-click unsubscribe for its own group, none in the locked group",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#team.joined:"],
+  "redProof": null,
+  "legacyIds": []
+}

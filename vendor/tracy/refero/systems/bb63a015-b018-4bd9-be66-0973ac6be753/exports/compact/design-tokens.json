@@ -1,0 +1,69 @@
+{
+  "color": {
+    "persimmon-wash": {
+      "$value": "#fd9b65",
+      "$type": "color",
+      "$description": "Persimmon Wash — Hero full-bleed section background — warm terracotta field that carries the massive name lockup"
+    },
+    "blush-linen": {
+      "$value": "#e9d1c7",
+      "$type": "color",
+      "$description": "Blush Linen — Section background, split-screen left or right panel — dusty rose that softens adjacent fields"
+    },
+    "candlelight": {
+      "$value": "#f8f5d1",
+      "$type": "color",
+      "$description": "Candlelight — Section background, split-screen panel — off-white cream that recedes behind type"
+    },
+    "sage-whisper": {
+      "$value": "#9ac8ae",
+      "$type": "color",
+      "$description": "Sage Whisper — Accent full-bleed background for occasional sections — desaturated eucalyptus that cools the warm system"
+    },
+    "inkwell-blue": {
+      "$value": "#004b82",
+      "$type": "color",
+      "$description": "Inkwell Blue — Solid circle action button, link underlines and text — the only dark saturated mark against the chalky fields, dense and editorial"
+    },
+    "slate-moss": {
+      "$value": "#4c564b",
+      "$type": "color",
+      "$description": "Slate Moss — Alternate muted button or surface fill — warm-leaning gray-green for secondary controls"
+    },
+    "fossil": {
+      "$value": "#a4b1b3",
+      "$type": "color",
+      "$description": "Fossil — Muted section background, quiet tonal step between cream and white"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — All typography, hairline borders, icon strokes, arrow marks — the sole ink color across every surface"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Canvas background, inverse text on dark button, rotated Contact badge fill"
+    }
+  },
+  "font": {
+    "mlrstandard": {
+      "$value": "MlrStandard",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all text — 331px for the hero name with lineHeight 0.80 and -0.02em tracking, 32px for section labels at lineHeight 1.20, 16px for pagination and UI chrome at lineHeight 1.30 with +0.01em to +0.02em tracking. The custom face has near-zero terminals and uniform stroke weight that holds up at 331px without distortion — a system font would look brittle at that size."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Ultralight fallback reserved only for the secondary button label — used at 32px weight 200 to contrast with MlrStandard's heavier editorial presence"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://patrickmiller.se",
+      "siteName": "Patrick Miller",
+      "extractedAt": "2026-06-03T17:31:27.274Z",
+      "variant": "compact"
+    }
+  }
+}

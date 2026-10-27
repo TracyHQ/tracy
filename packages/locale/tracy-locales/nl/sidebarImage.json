@@ -1,0 +1,13 @@
+{
+  "failed": "Deze afbeelding kan niet worden weergegeven.",
+  "loading": "Document renderen...",
+  "preview": "Afbeeldingsvoorbeeld: {name}",
+  "title": "Afbeelding",
+  "unsupported": "Voor een afbeeldingsvoorbeeld is de volledige bestandsinhoud nodig.",
+  "zoomControls": "Zoomknoppen",
+  "zoomFitWidth": "Aanpassen aan breedte",
+  "zoomIn": "Inzoomen",
+  "zoomMenu": "Zoomniveau kiezen",
+  "zoomOut": "Uitzoomen",
+  "zoomValue": "{percent}%"
+}

@@ -1,0 +1,186 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-blockk",
+  "release": "quickstart/ja-blockk/j6@1.0.0",
+  "measuredPage": "/index.php/home-freebie",
+  "roles": {
+    "page": "body.site-freebie-1.navigation-freebie",
+    "display": "h2.jacl-item__title",
+    "heading": "h2.heading-title",
+    "body": "p",
+    "card": "div.jacl-item.item-style-2 div.jacl-item__inner",
+    "container": "div.t4-section-inner.container",
+    "input": "#email_field_633"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 30px",
+    "displayFace": "Rubik 400, tracking 0em",
+    "heading": "first section heading: 22.5px",
+    "body": "first body paragraph",
+    "card": "repeated rounded box ×30",
+    "container": "first content container, max-width 1152px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 16px"
+  },
+  "keepScopes": [],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-blockk/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3c-2026-10-11/templates/ja-blockk-j6) on /index.php/home-freebie (Freebie Layout 1, the first real content layout; the home page is a showcase of the 16 demo layouts): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 84% or more of the page follows; round 1's 18 worse texts were the greys #616161/#212121/#9e9e9e of the JA Content Listing module, painted from variables the module's own stylesheet declares (outside any release) and the template's grey scale: the module's variables through templateVars, the template's through varRoles; the visitor dark mode (.ja-dark-mode, body.dark-active) is hidden under a system and the slot writes on body.dark-active too; text on the overlay cards' photos (.item-style-1) judged by eye. The showcase home page on the same build: no text worse, 97% or more follows (its role probes find only the showcase's few elements); checked by eye on the Moxie and Toggl Track (dark) and MotherDuck (light) screenshots. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 84% or more of the page follows, every contrast kind sampled at 1440 and 390; the closed header search (its only paint a dark magnifier) is inverted under a dark system (sideRules.dark); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-blockk-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-blockk 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 84-90% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-blockk-j6",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#212529",
+    "--fg-2": "#212529",
+    "--accent": "#e45e4d",
+    "--accent-hover": "#eb2a11",
+    "--surface": "#ffffff",
+    "--surface-warm": "#ffffff",
+    "--meta": "#616161",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#eeeeee",
+    "--muted": "#545b62",
+    "--font-display": "\"Source Serif Pro\", sans-serif",
+    "--font-body": "\"Barlow\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#e45e4d",
+      "accent-hover": "#eb2a11",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "meta": "#616161",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#eeeeee",
+      "muted": "#545b62"
+    },
+    {
+      "bg": "#f7f8f9",
+      "surface": "#ffffff",
+      "fg": "#616161",
+      "fg-2": "#212121",
+      "border": "#eeeeee"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "danger": "#db3334",
+      "border-soft": "#dddddd",
+      "bg": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (79 line colours, 108 text colours seen)",
+  "selectors": {
+    "displaySize": "h2.jacl-item__title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "card": ["div.jacl-item__inner", ".card"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "bodyFace": ["body"],
+    "themeToggle": ".ja-dark-mode"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img)):not(.item-style-1 *)",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide]):not(.item-style-1 *)",
+    "body": "main p:not(.item-style-1 *), .t4-section p:not(.item-style-1 *), .t4-section li:not(.item-style-1 *)",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4):not(.item-style-1 *)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption):not(.item-style-1 *)",
+    "footer": ".t4-footer a:not(.item-style-1 *), .t4-footnav a:not(.item-style-1 *)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on /index.php/home-freebie and its home page, of 29 tried (byte 8225); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#db3334",
+      "uses": 17,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#dc3545",
+      "distance": 17
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 7,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 23
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg-2)",
+    "--heading-color": "var(--ds-c-fg-2)",
+    "--footer-title-color": "var(--ds-c-fg-2)",
+    "--heading-text-color": "var(--ds-c-fg-2)",
+    "--color-desc": "var(--ds-c-muted)",
+    "--heading-border-color": "var(--ds-c-border)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; and the variables the JA Content Listing module declares on :root in its own stylesheet (modules/mod_jacontentlisting/assets/style.css, outside any template release): --heading-text-color (section titles and their rules), --color-desc (excerpts), --heading-border-color",
+  "alphaVars": ["fg-30", "fg-40", "fg-50", "fg-70", "fg-80", "fg-90"],
+  "varRoles": {
+    "--heading-text-color": "fg-2",
+    "--meta-color": "meta",
+    "--gray-500": "meta",
+    "--gray-700": "muted",
+    "--gray-800": "fg",
+    "--gray-900": "fg-2",
+    "--gray-100": "surface",
+    "--gray-200": "surface"
+  },
+  "varRolesNote": "the template's own grey scale and text variables (css/template.css :root, again in .dark-active) paint the JA Content Listing module's stylesheets (modules/mod_jacontentlisting/…, which no template release carries): each takes the role the template uses it in — --gray-700 the excerpts, --gray-900 and --heading-text-color the headings, --meta-color/--gray-500 the meta lines, --gray-100/200 the light fills",
+  "contrastNote": "text on the overlay cards (.item-style-1: titles and meta laid over the card's photo, an <img> the probe cannot see) is judged by eye, not measured against the page",
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"], body.dark-active",
+  "sideRules": {
+    "dark": {
+      ".head-search:not(.search-expanded) :is(.form-control, .inputbox, .search-query):not(:focus)": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "sideRulesNote": "its header search is a closed input whose only paint is a dark magnifier (background-image search.svg; the template swaps to search-light.svg only under its own .dark-active mode): under a dark system the closed input is inverted so the magnifier stays visible; an open or focused input is left alone",
+  "minVersion": {
+    "quickstart/ja-blockk/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-blockk/j6": "1.0.1"
+  }
+}

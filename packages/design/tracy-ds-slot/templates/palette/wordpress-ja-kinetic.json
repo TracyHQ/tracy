@@ -1,0 +1,103 @@
+{
+  "source": "quickstart/ja-kinetic/wp7@1.0.9",
+  "pages": ["/", "/home-menu/home-blueprint", "/home-menu/home-signal", "/product/features"],
+  "page": "#0a0d0c",
+  "rules": [
+    [
+      ".wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container",
+      "color",
+      "muted",
+      0
+    ],
+    [".screen-reader-text:focus", "color", "muted", 0],
+    [".screen-reader-text:focus", "background-color", "band", 0],
+    [".skip-link.screen-reader-text:focus", "color", "muted", 0],
+    [".skip-link.screen-reader-text:focus", "background-color", "band", 0],
+    [".tracy-header", "background-color", "bg", 0],
+    [
+      ".tracy-header__menu .tracy-nav .wp-block-navigation-item__content[aria-current=\"page\"], .tracy-header__menu .tracy-nav .wp-block-navigation-item.has-child:has(.wp-block-navigation__submenu-container [aria-current=\"page\"]) > .wp-block-navigation-item__content",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-elevated"
+    ],
+    [".tracy-back-to-top", "color", "on-accent", 0],
+    [
+      ".tracy-back-to-top:hover, .tracy-back-to-top:focus, .tracy-back-to-top:active",
+      "color",
+      "on-accent",
+      0
+    ],
+    [".acm-clients-ticker", "background-color", "bg", 0],
+    [".acm-clients-ticker", "border-top-color", "border", 0],
+    [".acm-clients-ticker", "border-bottom-color", "border", 0],
+    [".acm-clients-ticker .acm-tick-dot", "background-color", "accent", 0],
+    [".acm-clients-ticker .acm-tick-item.is-bright", "color", "fg", 0],
+    [".acm-clients-ticker .acm-tick-item.is-dim", "color", "muted", 0],
+    [".acm-features-ledger .hx-metrics-head", "background-color", "surface", 0, "--chrome-elevated"],
+    [
+      ".acm-features-ledger.layout-metrics .hx-section",
+      "background-color",
+      "surface",
+      0,
+      "--chrome-elevated"
+    ],
+    [".acm-cta .hx-cta-chip", "color", "fg", 0],
+    [".acm-cta .hx-cta-chip", "background-color", "surface", 0],
+    [".acm-cta .hx-cta-chip", "border-top-color", "border", 0],
+    [".acm-cta .hx-cta-chip", "border-right-color", "border", 0],
+    [".acm-cta .hx-cta-chip", "border-bottom-color", "border", 0],
+    [".acm-cta .hx-cta-chip", "border-left-color", "border", 0],
+    ["html[data-style=\"blueprint\"] .acm-cta .hx-cta-chip .hx-cta-chip-sigil", "color", "accent-text", 0],
+    ["html[data-style=\"signal\"] .acm-cta .hx-cta-chip .hx-cta-chip-sigil", "color", "accent-text", 0]
+  ],
+  "vars": [
+    ["--wp-block-synced-color", "accent"],
+    ["--wp-admin-theme-color", "accent"],
+    ["--wp-admin-theme-color-darker-10", "accent"],
+    ["--wp-admin-theme-color-darker-20", "accent"],
+    ["--wp--preset--color--pale-pink", "accent"],
+    ["--wp--preset--color--vivid-red", "accent"],
+    ["--wp--preset--color--luminous-vivid-orange", "accent"],
+    ["--wp--preset--color--luminous-vivid-amber", "accent"],
+    ["--wp--preset--color--light-green-cyan", "accent"],
+    ["--wp--preset--color--vivid-green-cyan", "accent"],
+    ["--wp--preset--color--pale-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-purple", "accent"],
+    ["--wp--preset--color--accent", "accent"],
+    ["--wp--preset--color--accent-hover", "accent"],
+    ["--wp--preset--color--accent-active", "accent"],
+    ["--wp--preset--color--success", "accent"],
+    ["--wp--preset--color--warn", "accent"],
+    ["--wp--preset--color--danger", "accent"],
+    ["--accent", "accent"],
+    ["--up", "accent"]
+  ],
+  "inline": [],
+  "colours": {
+    "#ffffff": "band",
+    "#000000": "muted",
+    "#444444": "muted",
+    "#dddddd": "band",
+    "#eeeeee": "band",
+    "#0a0d0c": "bg",
+    "#161b18": "surface",
+    "#0d1110": "bg",
+    "#1b211e": "border",
+    "#a3e635": "accent",
+    "#c9d1ce": "fg",
+    "#7e8a85": "muted",
+    "#9aa6a1": "fg",
+    "#121614": "surface",
+    "#232a27": "border",
+    "#818cf8": "accent-text",
+    "#22d3ee": "accent-text"
+  }
+}

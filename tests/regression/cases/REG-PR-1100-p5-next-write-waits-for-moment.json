@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-1100-p5-next-write-waits-for-moment",
+  "kind": "fix",
+  "title": "A turn's first write waits until the earlier turn's moment, still being committed after a 202, has ended; at 120 s it goes and both turns are marked",
+  "pr": 1100,
+  "area": "site-changes/turn-ledger",
+  "cms": ["any"],
+  "needs": ["checkout", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set to a Postgres the run may use, run: node --test --test-concurrency=1 --test-reporter=tap '--test-name-pattern=option A|momentsPendingOf' apps/tracy-web/test/sites-route.test.mjs packages/site/tracy-site-tabs/test/turn-open-hold.test.mjs",
+    "S2: Record the exit code, the result of each test named in run.tests, and the '# p5-timing', '# p5-records' and '# p5-no-wait' diagnostic lines."
+  ],
+  "expect": [
+    "S1 exits 0 and every test in run.tests reports ok, none skipped (the database was really used).",
+    "The stand's sequence through the dsh's own turn book: turn 1's /moment answers 202 with its moment running, turn 2 opens, turn 2's first write is still held 150 ms later and is let go only after turn 1's moment ended on the host (p5-timing writeReleased >= moment1Ended).",
+    "Records after it: turn 1 closed_at (the host's end of its moment) <= turn 2's first write; turn 1 head is turn 1's commit, turn 2 head is turn 2's commit; turn 1 concurrent = false and turn 2 unsealed_start = false.",
+    "When turn 1's moment ended inside its own door's wait, POST /turn names no momentsPending, tracy-web is not asked, and turn 2's first write waits under 5 ms (p5-no-wait).",
+    "POST /api/sites/:key/moment/wait answers {ended:false} while the host commits and {ended:true} once it has, with turn 1 closed under its commit by the wait itself; a malformed turn id is 400.",
+    "At the bound: release answers {released:true}; if the moment then commits, turn 1 is marked concurrent and turn 2 unsealed_start; if it commits nothing, nothing is marked. The dsh's own bound test lets the write go after ~60 ms and sends exactly one release.",
+    "The open carries waitsForMoments: true; a dsh that does not send it hears the moment named but its seal does not take that moment as harmless."
+  ],
+  "selectors": {
+    "door": "POST /api/sites/:key/moment/wait, POST /api/sites/:key/turn (momentsPending, waitsForMoments)",
+    "dsh": "createTurnBook writeReady / holdBehind in packages/site/tracy-site-tabs/src/host/turn-record.mjs",
+    "ledger": "waitForMoment, releaseHold, markHeldTooLong, sealProvesStart heldBehind in apps/tracy-web/src/sites/door-follow-up.js"
+  },
+  "evidence": "Local stand 09/10/2026, uiweekwp.tracy.test: turn session-5e3bc0e7…:1 closed_at 18:22:21.223 (= the host's end of moment job 32a6ced4ff6d) while turn :2 opened at 18:22:00.995; same pattern for session-2c77b352… (tasks/evidence/followups-2026-10-10/p5-turns/overlap-uiweekwp.txt).",
+  "fence": "a conversation's next first write never runs while an earlier moment of it is still being committed, unless the 120 s bound ran out — and then the turns that moment may mix are marked",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=option A|momentsPendingOf",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "packages/site/tracy-site-tabs/test/turn-open-hold.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "🔒 option A, the stand's sequence through the dsh's own turn book",
+      "option A: when the earlier moment ended in its door's wait, the next turn's first write waits not at all",
+      "option A: /moment/wait says not yet while the host commits",
+      "option A: let go at the bound, a moment that then commits marks both turns",
+      "option A: let go at the bound, a moment that commits nothing marks nothing",
+      "option A: the next open names the earlier moments still committing",
+      "option A: an older dsh that does not hold still hears the moment named",
+      "🔒 option A: the next turn's first write waits until tracy-web says the earlier moment ended",
+      "option A: no added wait at all when no earlier moment is still committing",
+      "option A: at the bound the write goes, and tracy-web is told first",
+      "momentsPendingOf: only this conversation"
+    ]
+  }
+}

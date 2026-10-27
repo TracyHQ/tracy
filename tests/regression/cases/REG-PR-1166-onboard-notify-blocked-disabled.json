@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1166-onboard-notify-blocked-disabled",
+  "kind": "feat",
+  "title": "Desktop first-run: macOS blocking notifications greys out the sound and the test with the reason, and the step is not done until allowed",
+  "pr": 1166,
+  "area": "desktop/onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the desktop notify-bridge/notify-permission tests and the tracy-onboard flow/mount/render tests (node:test, fake addon and fake bridge).",
+    "S2: the end-to-end form of this case is ST-8 in tests/acceptance/desktop-onboard-v2 (app from source, the addon faked through NODE_OPTIONS=--require, denied then allowed + focus)."
+  ],
+  "expect": [
+    "The bridge passes the system's answer (allowed/denied, else unknown) and reads it again when a window gains focus, pushing only a change.",
+    "denied: the amber card with Open System Settings; the sound picker and Send a test disabled with the reason, not hidden; the step not done.",
+    "Back allowed after System Settings: the step turns Done; unknown: the on-card says the permission cannot be read."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/notify-bridge.test.mjs",
+      "packages/desktop/tracy-desktop/test/notify-permission.test.mjs",
+      "packages/ui/tracy-onboard/test/flow.test.mjs",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/steps-render.test.mjs"
+    ],
+    "tests": [
+      "macOS: status carries the permission the system reports",
+      "a window gaining focus reads the permission again",
+      "macOS: the addon answer is passed on, for each of its four values",
+      "stepsDone: signed in always",
+      "macOS blocks notifications: amber card, test and sound disabled, step not done",
+      "notifications, macOS blocks them: the amber card with Open System Settings",
+      "notifications, permission unknown: the on-card says the permission cannot be read"
+    ],
+    "timeout_s": 180
+  },
+  "fence": "a denied permission disables (never hides) the sound and the test and keeps the step undone",
+  "selectors": {
+    "blocked": "[data-notify='blocked']",
+    "sound": "[data-action='sound']",
+    "test": "[data-action='send-test']"
+  }
+}

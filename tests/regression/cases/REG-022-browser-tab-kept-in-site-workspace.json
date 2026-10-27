@@ -1,0 +1,41 @@
+{
+  "id": "REG-022",
+  "kind": "feat",
+  "title": "Site workspace keeps its Browser tab: no close route on the last one, one per conversation, and a comment pressed with no Browser tab opens it on its thread",
+  "pr": 814,
+  "area": "browser/pinned-tab",
+  "cms": ["jo", "em"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup. Site S = the stand's Joomla site (scv2jo), then repeat with its EmDash site (scv2em). Seat A.",
+    "S1: Create a whole-page comment: api a POST /api/sites/<S>/comments '{\"url\":\"http://<S>:<port>/\",\"text\":\"REG-022\"}'; keep its comment.id as C.",
+    "S2: New browser context with A's cookie. goto $O/<S>/; wait (<=120 s) for the URL to hold /s/session- and for .tracy-boot-cover to be gone; wait (<=60 s) for a visible [data-dockkit-tab] that contains [data-site-icon] (the Browser chip).",
+    "S3: Read that chip: whether it contains [data-dockkit-tab-close]. Right-click it, wait 500 ms, count [data-dockkit-menu-close]; press Escape.",
+    "S4: Click [data-sidebar-right-toggle]; check button[aria-label=\"Open right sidebar\"] is visible; click it; count the visible Browser chips again.",
+    "S5: Fill [data-composer-input='true'] with 'REG-022 first', press Enter, wait 3 s; click button[aria-label=\"New session\"]; wait for the /s/session-… part of the URL to change; wait (<=30 s) for a visible Browser chip; read its aria-selected and whether [data-browser-tab] has a client rect.",
+    "S6: New browser context (empty localStorage) with A's cookie. goto $O/<S>/?tab=tracy:changes&site=<S>; wait for the boot cover to go and 6 s more; record whether [data-browser-tab] exists (expected: not yet, the Browser tab sits behind Site changes unvisited). Listen on window for 'tracy:comment-list' details. Click the first button with text 'Comments' (the chat column's Comments view), click 'All pages', wait for [data-comment=\"C\"], click it.",
+    "S7: Wait (<=45 s) for a tracy:comment-list detail whose thread === C; then read whether [data-browser-tab] exists."
+  ],
+  "expect": [
+    "S3: the Browser chip has no [data-dockkit-tab-close]; its menu has 0 [data-dockkit-menu-close].",
+    "S4: after the toggle the 'Open right sidebar' button is visible (column collapsed); after reopening exactly one visible Browser chip.",
+    "S5: the session id changed; the new conversation has exactly one visible Browser chip, aria-selected=\"true\", no close button, and [data-browser-tab] is on screen (not 'Click + to start').",
+    "S6: [data-browser-tab] absent before the press.",
+    "S7: a list names thread C, and [data-browser-tab] exists (the Browser tab opened on the comment's page and its thread card is open)."
+  ],
+  "selectors": {
+    "browserChip": "[data-dockkit-tab]:has([data-site-icon])",
+    "close": "[data-dockkit-tab-close]",
+    "menuClose": "[data-dockkit-menu-close]",
+    "collapse": "[data-sidebar-right-toggle]",
+    "reopen": "button[aria-label=\"Open right sidebar\"]",
+    "newSession": "button[aria-label=\"New session\"]",
+    "browserBody": "[data-browser-tab]",
+    "commentRow": "[data-comment=\"<id>\"]",
+    "listEvent": "tracy:comment-list (detail.thread)",
+    "bootCover": ".tracy-boot-cover"
+  },
+  "evidence": "Screenshots 03/10/2026: the Browser tab had a close button, and with it closed a Comments row press did nothing ('Click + to start'). Stand bpin 03/10: 5/5 on Joomla and EmDash, tasks/evidence/browser-tab-ghim/",
+  "fence": "dsh keepLast (canCloseTab), dsh-better-sidebar tracy:browser keepLast, tracy-my-sites everySeat + openBehind, tracy-chat-input revealOf + tracy-site-tabs tracy:comment-open"
+}

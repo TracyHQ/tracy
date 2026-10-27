@@ -1,0 +1,57 @@
+{
+  "name": "@tracy/dsh-brand-engine",
+  "version": "0.2.16",
+  "description": "A site URL becomes a design inspiration of its own: OpenDesign's brand pipeline run on the lane, its result written to the site folder's Brand/<host>/ in the shape of the 152 systems, and one agent tool, tracy_brand, to run or read it",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs && node scripts/build-host.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/design/tracy-brand-engine"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "dsh-better-sidebar"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "dsh-better-sidebar": ">=0.24.1-tracy.40 <0.24.1"
+  },
+  "peerDependenciesMeta": {
+    "dsh-better-sidebar": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@tracy/od-brand-engine": "0.1.5-tracy.1",
+    "linkedom": "0.18.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@types/react": "^19.2.0",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT"
+}

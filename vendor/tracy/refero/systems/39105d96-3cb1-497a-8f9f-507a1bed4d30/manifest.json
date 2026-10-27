@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+  "status": "complete",
+  "name": "Baggu",
+  "url": "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+  "sourceWebsite": "https://baggu.com",
+  "extractedAt": "2026-06-03T20:06:53.266Z",
+  "capturedAt": "2026-10-08T05:10:24.399194+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunlit print catalog on cream paper — a single warm off-white surface where black type and product photography do all the work, and a single green whisper says 'new'.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6d6de8f9-6975-4b0d-9559-2adabf37e861.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a1b9763a3993fb3813fb101e1d49df2fd088ebb29a2cb46c63f87d31f87065fe",
+      "bytes": 17082
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ea849272bba8af65a98b0c3ef144039d2c63a88370f968361efafdc55c371ac3",
+      "bytes": 136981
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bc30e96831d4dbcd7e897a8e98a27e68f85c7a2baf63c7c655c226adc7c8f0f0",
+      "bytes": 14122
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4473dce922c379f95095f5a757bbd6bf0e459a115cb0b4b2e377ab0598ff09dc",
+      "bytes": 10778
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "78bdb4f8ab42e1eaf1fe8c40dcca4949334bf95befcdcad2e5b5d0537488c0d4",
+      "bytes": 10852
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ec97e8753a1c7fda92d9893b119ec1fd5c13b7d8d999e84265a9265166cbbddd",
+      "bytes": 2237
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "16ae6d8806f4498fedb10fdef1744fb2649ae06b3f5a520d9f96f6a4d6ea9573",
+      "bytes": 658
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2b71a7d6cb15e2201634330f6ccf8c5f6c5f9edec98a8818cb9350b0e219c772",
+      "bytes": 675
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6f2a496315524cd77c93a473f423b32505258c208e9642b9fb9a201efc972fa7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "33df89d3c014c8a164662abffed891ecc34fcd1f41230cdae4d0df522b9607cc",
+      "bytes": 38724
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b5e272bb7b11da252240cba49a5199c4f968469ed68086ad7254fca45ecc0b65",
+      "bytes": 19727
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9f28e35ae4cca328a456b5c889315036de5e057a54006f1c8b5126e858121ad9",
+      "bytes": 32774
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7db4d11a93b445a01f7bafb9eac6a60fe8e0b45b0b709d251c402e050c6c7427",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f3411227b376d556b708ef36a053f94deec6ef1a1060b84f7e27e9d823204a05",
+      "bytes": 1293
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7192863206b21b90b932ba96aa444cba6971b8203e99acff6dab756f9acae34e",
+      "bytes": 1726
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "79d83fce-84bf-4e12-8039-5d283c98917c",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

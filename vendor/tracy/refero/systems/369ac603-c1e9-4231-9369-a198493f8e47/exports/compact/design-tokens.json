@@ -1,0 +1,74 @@
+{
+  "color": {
+    "forest-depths": {
+      "$value": "#072724",
+      "$type": "color",
+      "$description": "Forest Depths — Page canvas, hero background, deep surface layer — the dominant dark field that everything else floats on"
+    },
+    "midnight-tide": {
+      "$value": "#0f3933",
+      "$type": "color",
+      "$description": "Midnight Tide — Primary text on canvas, strong borders, secondary surface tint — readable white-space-equivalent for dark mode"
+    },
+    "shadow-teal": {
+      "$value": "#23524c",
+      "$type": "color",
+      "$description": "Shadow Teal — Elevated surface, card fills, subtle borders — one step lighter than the canvas for layer separation"
+    },
+    "charcoal-hairline": {
+      "$value": "#2c2e33",
+      "$type": "color",
+      "$description": "Charcoal Hairline — Subtle dividers and default 1px borders across cards, images, and icons — almost invisible on the dark canvas, used for structural quietness"
+    },
+    "abyss-green": {
+      "$value": "#122d28",
+      "$type": "color",
+      "$description": "Abyss Green — Decorative background blob — deepest atmospheric tint behind organic hero shapes"
+    },
+    "deep-lagoon": {
+      "$value": "#1c3f38",
+      "$type": "color",
+      "$description": "Deep Lagoon — Decorative mid-tone blob in the hero atmosphere, sits between canvas and surface"
+    },
+    "mist-gray": {
+      "$value": "#b0c5c1",
+      "$type": "color",
+      "$description": "Mist Gray — Muted body text, secondary descriptions, captions — desaturated enough to recede behind the mint accent"
+    },
+    "pure-light": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Light — Headline text on dark canvas, high-contrast text inside mint-filled buttons"
+    },
+    "mint-glow": {
+      "$value": "#97fcd7",
+      "$type": "color",
+      "$description": "Mint Glow — Green text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "teal-pulse": {
+      "$value": "#33998c",
+      "$type": "color",
+      "$description": "Teal Pulse — Mid-saturation teal for SVG strokes, secondary decorative accents, hover/transition states between dark surface and mint highlight"
+    }
+  },
+  "font": {
+    "teodor": {
+      "$value": "Teodor",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines, brand statements, section titles. Custom serif with sharp contrast between thick and thin strokes; at 90px with 0.75 leading it creates a magazine-cover authority that is the signature typographic gesture of the site. Subheading scale at 24px carries the same character into smaller contexts."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body copy, UI labels, navigation, buttons, captions. The weight 300 default across most sizes keeps the interface quiet against the display serif — the contrast between Teodor's editorial presence and Inter's whisper-light functional text is a defining rhythm of the system."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://hyperliquid.xyz",
+      "siteName": "Hyper Foundation",
+      "extractedAt": "2026-06-03T19:20:38.025Z",
+      "variant": "compact"
+    }
+  }
+}

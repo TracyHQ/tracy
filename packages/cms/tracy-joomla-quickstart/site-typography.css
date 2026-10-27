@@ -1,0 +1,98 @@
+/* Typography contract measured from /resources/style-guide.
+   Display 80/84 bold; section 40/42 bold; lead 21/30.87; body 17/24.99.
+   Compact cards retain the 21px token. Listing cards use the 28px token. */
+:root {
+  --tracy-type-display: var(--text-4xl);
+  --tracy-type-page: var(--text-3xl);
+  --tracy-type-section: var(--text-2xl);
+  --tracy-type-card: var(--text-xl);
+}
+body {
+  font-family: var(--font-body), var(--font-substitute-stack);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracy-body-tracking);
+}
+body :is(h1,h2,h3,h4,h5,h6):not(header *,footer *,#t4-footnav *,.t4-offcanvas *,.modal *) {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  line-height: var(--leading-tight) !important;
+  letter-spacing: var(--tracking-display) !important;
+}
+body .tracy-hero :is(h1,.tracy-hero__title),
+body .acm-hero :is(h1,.tracy-hero__title) {
+  font-size: var(--tracy-type-display) !important;
+}
+body :is(.page-header h1,.page-subtitle,h1.tracy-chapter__statement,h1.tracy-pricing__heading,.tracy-view-head__title) {
+  font-size: var(--tracy-type-page) !important;
+}
+body :is(h2.tracy-chapter__statement,.tracy-features-intro__title,.tracy-carousel__heading,.tracy-figures__heading,.tracy-team__heading,.tracy-contact__heading,.tracy-pricing__heading:not(h1)) {
+  font-size: var(--tracy-type-section) !important;
+}
+body :is(.item-title h2,.page-header h2,.blog-item h2,.tracy-features-intro__card-title) {
+  font-size: var(--tracy-type-card) !important;
+}
+body :is(.tracy-hero__lead,.tracy-chapter__support,.tracy-features-intro__lead) {
+  font-family: var(--font-body), var(--font-substitute-stack);
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  letter-spacing: normal;
+}
+.tracy-native-landing.tracy-native-landing.tracy-native-landing {
+  --native-title-size: var(--tracy-type-display);
+  --native-section-size: var(--tracy-type-section);
+  --brand-font-family: var(--font-body), var(--font-substitute-stack);
+  --brand-font-size-heading-1: var(--text-3xl);
+  --brand-font-size-heading-2: var(--text-2xl);
+  --brand-font-size-heading-3: var(--text-xl);
+  --brand-font-size-heading-4: var(--text-lg);
+  --brand-font-size-heading-5: var(--text-base);
+  h1 { max-width: 20ch !important; }
+  .op-team h3 { font-size: var(--text-lg) !important; }
+  .op-team p, .pillars p, .problem-grid p { font-size: var(--text-base) !important; line-height: var(--leading-body) !important; }
+  p { line-height: var(--leading-body) !important; letter-spacing: normal; }
+  .section-head p, .op-lead { font-size: var(--text-lg) !important; line-height: var(--leading-body) !important; }
+  .op-team .op-role { font-size: var(--text-xs) !important; }
+}
+@media (max-width:639px) {
+  :root {
+    --tracy-type-display: var(--text-4xl-phone);
+    --tracy-type-page: var(--text-4xl-phone);
+    --tracy-type-section: var(--text-3xl-phone);
+    --tracy-type-card: var(--text-2xl-phone);
+  }
+  .com-content-category-blog__pagination,
+  .pagination-toolbar {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .pagination-toolbar ul.pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-2, 8px);
+  }
+}
+
+/* Less frequently visited Joomla views must use the same discrete type scale. */
+body :is(.cat-children h3,.categories-list h3,.tracy-cattree__title) {
+  font-size: var(--tracy-type-card) !important;
+}
+body :is(p[class*="__eyebrow"],p.eyebrow,.tracy-timeline__marker) {
+  font-family: var(--font-body), var(--font-substitute-stack) !important;
+  font-size: var(--text-xs) !important;
+  font-weight: 400;
+  line-height: var(--leading-body);
+}
+body .tracy-cta__statement {
+  font-family: var(--font-display) !important;
+  font-size: var(--tracy-type-section) !important;
+  font-weight: 700 !important;
+  line-height: var(--leading-tight) !important;
+  letter-spacing: var(--tracking-display) !important;
+}
+body :is(.tracy-postcard__intro h2,h3.feed-link) {
+  font-size: var(--tracy-type-card) !important;
+}
+body .t4-masthead-title {
+  font-size: var(--tracy-type-page) !important;
+}

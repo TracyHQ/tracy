@@ -1,0 +1,79 @@
+[
+  {
+    "assertionIds": ["legacy:J7#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["notification"]
+    },
+    "id": "QA-FLOWS-inbox-happy-two-people",
+    "itemIds": ["flow:inbox", "capability:inbox-email", "journey:J7"],
+    "kind": "legacy",
+    "legacyIds": ["J7"],
+    "oracle": {
+      "invariant": "a row for the other person only; none for the actor and none for Tracy",
+      "ref": "ADR 0026",
+      "source": "docs/adr/0026-inbox-and-email-notifications.md"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J7",
+    "requirement": "Inbox between two people — two people (happy) [journey J7: inbox of two people]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["empty"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["notification"]
+    },
+    "id": "QA-FLOWS-inbox-empty-no-rows",
+    "itemIds": ["flow:inbox", "capability:inbox-email"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a row for the other person only; none for the actor and none for Tracy",
+      "ref": "ADR 0026",
+      "source": "docs/adr/0026-inbox-and-email-notifications.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Inbox between two people — no rows (empty)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["concurrent-seat"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["notification"]
+    },
+    "id": "QA-FLOWS-inbox-concurrent-seat-two-tabs",
+    "itemIds": ["flow:inbox", "capability:inbox-email"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a row for the other person only; none for the actor and none for Tracy",
+      "ref": "ADR 0026",
+      "source": "docs/adr/0026-inbox-and-email-notifications.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Inbox between two people — two tabs (concurrent-seat)",
+    "targets": ["local"]
+  }
+]

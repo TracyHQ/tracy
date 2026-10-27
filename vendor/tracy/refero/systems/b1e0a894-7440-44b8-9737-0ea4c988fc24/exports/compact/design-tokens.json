@@ -1,0 +1,54 @@
+{
+  "color": {
+    "iris-voltage": {
+      "$value": "#6360d8",
+      "$type": "color",
+      "$description": "Iris Voltage — Brand accent for primary CTAs, link color, accent words inside serif headlines, and the thin violet underlines/arrows on navigation and article links"
+    },
+    "midnight-vault": {
+      "$value": "#060b25",
+      "$type": "color",
+      "$description": "Midnight Vault — Hero and footer canvas — the deep navy that frames the largest serif headlines and the top of the page"
+    },
+    "pure-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Ink — Primary text, default hairlines, and the 1px borders that separate every card, section, and image"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on violet, and inverse text on the dark hero"
+    },
+    "graphite-slate": {
+      "$value": "#383c51",
+      "$type": "color",
+      "$description": "Graphite Slate — Cool desaturated border and secondary text — sits between Pure Ink and Midnight Vault when a softer line or muted label is needed"
+    },
+    "lavender-mist": {
+      "$value": "#dad9ed",
+      "$type": "color",
+      "$description": "Lavender Mist — Light neutral action fill for buttons on dark surfaces."
+    }
+  },
+  "font": {
+    "tiempos-headline": {
+      "$value": "Tiempos Headline",
+      "$type": "fontFamily",
+      "$description": "Serif used exclusively for headlines and section titles. The single weight (400) plus aggressive negative tracking gives headings a literary, almost newspaper-editorial quality that contrasts with the cyber-security subject matter. Letter-spacing tightens to -0.02em at every size, pulling the serifs into a dense, confident block."
+    },
+    "matter": {
+      "$value": "Matter",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for body copy, navigation, buttons, captions, and card meta. Weight 400 is default; 500 is used sparingly for emphasis in labels and small UI text. Generous line-heights (1.4–1.6) keep body copy breathable on a spacious canvas. Letter-spacing -0.01em at body sizes gives it a tighter, more engineered feel than a typical system sans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://prevalent.ai",
+      "siteName": "Prevalent",
+      "extractedAt": "2026-06-03T21:39:59.568Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1531-sync-dialog-states-happy",
+  "itemIds": ["regression:REG-PR-1531-sync-dialog-states"],
+  "requirement": "The Sync from live dialog always says what is going on (checking, couldn't check, not available and why, not synced, syncing with its steps, up to date, needs a decision, couldn't sync and why) and draws no button that cannot act",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1531-sync-dialog-states.json",
+    "ref": "PR #1531 (fix); fix evidence: tasks/evidence/sync-dialog/",
+    "invariant": "S1: every test passes: one status per phase, the footer button worded from it, absent where it could not act, a refused press said in words",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs:140 require() with a computed specifier",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs:42 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1531-sync-dialog-states.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1531-sync-dialog-states"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/core/tracy-core", "tracy-core"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1531-sync-dialog-states",
+    "pr": 1531,
+    "kind": "fix",
+    "area": "import/live-sync",
+    "file": "tests/regression/cases/REG-PR-1531-sync-dialog-states.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

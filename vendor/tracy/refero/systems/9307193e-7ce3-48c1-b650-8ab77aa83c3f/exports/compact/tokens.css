@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-brick-red: #e82c2a;
+  --color-press-black: #212529;
+  --color-cream-white: #ffffff;
+  --color-soft-grey: #f2f2f2;
+  --color-carbon: #121212;
+
+  /* Typography — Font Families */
+  --font-surt: 'Surt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-editorial-old: 'Editorial Old', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui: 'system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

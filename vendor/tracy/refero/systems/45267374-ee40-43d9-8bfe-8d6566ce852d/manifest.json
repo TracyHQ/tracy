@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "45267374-ee40-43d9-8bfe-8d6566ce852d",
+  "status": "complete",
+  "name": "LE CAMP",
+  "url": "https://styles.refero.design/style/45267374-ee40-43d9-8bfe-8d6566ce852d",
+  "sourceWebsite": "https://lecampquebec.com",
+  "extractedAt": "2026-06-03T20:27:44.624Z",
+  "capturedAt": "2026-10-08T05:11:01.887563+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Alpine summit base camp at dusk — a field command post where one red signal flare cuts through mountain twilight, and everything else is topo-line restraint.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1123faec-dada-41c3-b776-af42f0a550f3.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ea6727d7-14b5-40d0-812a-b9378dc38aba.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0c9e89ba-6061-4253-b528-be6f80b7e870.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/68769882-4f0d-42b0-8187-0c994d037e02.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c231ecf9-325a-4ab2-8b08-c6e4cb38fa3c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "84119bdbabe3b8eb2d42b914d2a7f99e7a163c206e3a2eddb8ef563339375106",
+      "bytes": 17460
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7be3bc3bbeff0b95ab1fd60a8390cb5790c3db6cccd086a8b40e7a60ca8c548a",
+      "bytes": 173866
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6181bad8d594a45e28e40aeb87c991e87a5e58c278a0253a8d8f0c0dcad0bb1c",
+      "bytes": 15276
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "34518098e61dc0dff7239cd58857e3e3f36c10ef96de6c8a2494cd36015ae081",
+      "bytes": 7138
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f9c3dcdef113970562df23c74bfe6fb041545f408c5f1969c0eebd144dc524a5",
+      "bytes": 11641
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9ee590f9910c89cd7cd5a5a105ceb431369bf63a9e92cce38394399e400d3dfc",
+      "bytes": 2293
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "61319ad16b118a3f8cfdfbb410b76ea0d6637c24613398cab5a73c9b54272128",
+      "bytes": 512
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "024fb7f6549b00d1a689b8f228c5b1c344bca650d6980fbc7d42a58d0ac368eb",
+      "bytes": 529
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1edf87c195a4324de91a8cc910a49d7f92285efb31554ae6c138f4d2e7422139",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2184b4c5b99f18a67f2cd66f60392b075eb31d0d2bf7b5f1d3a37c62d0f70cfc",
+      "bytes": 42156
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3aece7a7890d6c61aa62b837d4e1e2460dd37f9ab5f179ea0871b0b4df664dc0",
+      "bytes": 21851
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a1cb1eda1714d5c12286416fd064dcc9422b0794fe51aa7314e9d3b1383f112c",
+      "bytes": 30144
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "411dd10931e3f2d6cd6d949c78e7ae98c61dc994564ba93281511b4f4911a68c",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "003976d3626c9f0537c3f06e8d5f01af604c16a2f0241b453accc413968517ad",
+      "bytes": 1026
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e2670b5b3204b52df13681d7e6fa9f1785e796c5ebaf339ae931d6786f05e989",
+      "bytes": 1552
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "45267374-ee40-43d9-8bfe-8d6566ce852d",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5ec4eb4f-a37c-4787-b4c1-de49e01770e7",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b3f7b44d-6564-4015-902a-259b4790b9de",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "e8589e7c-5ba9-4923-aa7f-0f1bf0d679be",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f6b396e6-0ad6-402e-9ab9-0034df0d204d",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

@@ -1,0 +1,101 @@
+---
+// mika-template-version: 0.1.1
+import { Badge, Empty, Link, Table, Text } from "@cloudflare/kumo";
+import type { OrderSummaryDTO } from "@bnomei/emdash-mika/types";
+import { formatMikaMoney } from "@bnomei/emdash-mika/astro";
+import {
+  mikaTemplateDateLabel,
+  mikaTemplateStatusLabel,
+  mikaTemplateStatusVariant
+} from "../lib/display";
+
+interface Props {
+  orders: readonly OrderSummaryDTO[];
+  orderHref?: (order: OrderSummaryDTO) => string | undefined;
+  headingLabel?: string;
+  emptyLabel?: string;
+  invoiceLabel?: string;
+  noInvoiceLabel?: string;
+  orderLabel?: string;
+  dateLabel?: string;
+  statusLabel?: string;
+  totalLabel?: string;
+  actionsLabel?: string;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const {
+  orders,
+  orderHref,
+  headingLabel = "Orders",
+  emptyLabel = "No orders yet.",
+  invoiceLabel = "Invoice",
+  noInvoiceLabel = "No invoice",
+  orderLabel = "Order",
+  dateLabel = "Date",
+  statusLabel = "Status",
+  totalLabel = "Total",
+  actionsLabel = "Actions",
+  class: className,
+  ...attrs
+} = Astro.props;
+const hasEmptySlot = Astro.slots.has("empty");
+---
+
+<section {...attrs} data-mika-account-orders class:list={["mika-kumo-stack", className]}>
+  <Text as="h2" variant="heading2"><slot name="heading">{headingLabel}</slot></Text>
+  {orders.length ? (
+    <div class="mika-kumo-table-scroll">
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>{orderLabel}</Table.Head>
+            <Table.Head>{dateLabel}</Table.Head>
+            <Table.Head>{statusLabel}</Table.Head>
+            <Table.Head>{totalLabel}</Table.Head>
+            <Table.Head>{actionsLabel}</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {orders.map((order) => {
+            const href = orderHref?.(order);
+            return (
+              <Table.Row id={`order-${order.id}`}>
+                <Table.Cell>
+                  {href ? (
+                    <Link href={href}>{order.orderNumber}</Link>
+                  ) : (
+                    <span>{order.orderNumber}</span>
+                  )}
+                </Table.Cell>
+                <Table.Cell>
+                  <time datetime={order.createdAt}>{mikaTemplateDateLabel(order.createdAt)}</time>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge appearance="dot" variant={mikaTemplateStatusVariant(order.status)}>
+                    {mikaTemplateStatusLabel(order.status)}
+                  </Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <span class="mika-kumo-strong">{formatMikaMoney(order.total)}</span>
+                </Table.Cell>
+                <Table.Cell>
+                  {order.invoiceHref ? (
+                    <Link href={order.invoiceHref}>{invoiceLabel}</Link>
+                  ) : (
+                    <span class="mika-kumo-muted" aria-label={noInvoiceLabel}>{noInvoiceLabel}</span>
+                  )}
+                </Table.Cell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
+    </div>
+  ) : hasEmptySlot ? (
+    <slot name="empty" />
+  ) : (
+    <Empty size="sm" title={emptyLabel} description="Completed purchases will appear here." />
+  )}
+</section>

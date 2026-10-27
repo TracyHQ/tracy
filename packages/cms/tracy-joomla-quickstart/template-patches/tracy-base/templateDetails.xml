@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.0" type="template" method="upgrade" group="template" client="site">
+  <name>tracy</name>
+  <version>1.0.0</version>
+  <creationDate>Sep 09, 2026</creationDate>
+  <author>JoomlArt</author>
+  <authorEmail>admin@joomlart.com</authorEmail>
+  <authorUrl>www.joomlart.com</authorUrl>
+  <copyright>Copyright (C), J.O.O.M Solutions Co., Ltd. All Rights Reserved.</copyright>
+  <license>license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
+  <description>TPL_TRACY_BASE_XML_DESCRIPTION</description>
+
+  <files>
+    <filename>component.php</filename>
+    <filename>error.php</filename>
+    <filename>error-t4.php</filename>
+    <filename>favicon.ico</filename>
+    <filename>index.php</filename>
+    <filename>offline.php</filename>
+    <filename>templateDetails.xml</filename>
+    <filename>template_preview.png</filename>
+    <filename>template_thumbnail.png</filename>
+    <filename>templateInfo.php</filename>
+    <filename>theme-resolve.php</filename>
+    <folder>acm</folder>
+    <folder>css</folder>
+    <folder>etc</folder>
+    <folder>fonts</folder>
+    <folder>html</folder>
+    <folder>images</folder>
+    <folder>js</folder>
+    <folder>language</folder>
+    <folder>params</folder>
+    <folder>scss</folder>
+  </files>
+  <positions>
+    <position>menu</position>
+    <position>header-r</position>
+    <position>off-canvas</position>
+    <position>search</position>
+    <position>banner</position>
+    <position>topbar</position>
+    <position>topbar-l</position>
+    <position>topbar-r</position>
+    <position>masthead</position>
+    <position>main-top-1</position>
+    <position>main-top-2</position>
+    <position>main-bottom-1</position>
+    <position>mega-1</position>
+    <position>mega-2</position>
+    <position>mega-3</position>
+    <position>mega-4</position>
+    <position>main-bottom-2</position>
+    <position>breadcrumbs</position>
+    <position>slideshow</position>
+    <position>sidebar-l</position>
+    <position>sidebar-r</position>
+    <position>section-1</position>
+    <position>section-2</position>
+    <position>section-3</position>
+    <position>section-4</position>
+    <position>section-5</position>
+		<position>section-6</position>
+		<position>section-7</position>
+		<position>section-8</position>
+		<position>about-page</position>
+		<position>pricing-page</position>
+		<position>faq-page</position>
+		<position>service-detail</position>
+    <position>bottom-a</position>
+    <position>bottom-b</position>
+    <position>bottom-c</position>
+    <position>bottom-d</position>
+    <position>position-2</position>
+    <position>footnav-1</position>
+    <position>footnav-2</position>
+    <position>footnav-3</position>
+    <position>footnav-4</position>
+    <position>footnav-5</position>
+    <position>footer</position>
+    <position>footer-logo</position>
+    <position>debug</position>
+  <position>contact-information</position></positions>
+  <languages folder="language">
+    <language tag="en-GB">en-GB/en-GB.tpl_tracy.ini</language>
+    <language tag="en-GB">en-GB/en-GB.tpl_tracy.sys.ini</language>
+  </languages>
+  <t4>
+    <basetheme>base</basetheme>
+    <bootstrap>bs5</bootstrap>
+  </t4>
+	<!-- T4 merges subgroup="1" fieldsets into the matching base group of the Site settings -->
+	<site>
+		<fields name="typelist-site">
+			<!-- Dark-mode logos (appended to the "Logo" settings group; printed by html/layouts/t4/element/logo.php) -->
+			<fieldset name="site-logo" subgroup="1">
+				<field name="site_logo_dark" type="media" class="t4-input-media" default="" label="TPL_T4_SITE_DARK_LOGO" description="TPL_T4_SITE_LOGO_DARK_DESC" />
+				<field name="site_logo_dark_small" type="media" class="t4-input-media" default="" label="TPL_T4_SITE_LOGO_DARK_SMALL" description="TPL_T4_SITE_LOGO_DARK_SMALL_DESC" />
+			</fieldset>
+		</fields>
+	</site>
+</extension>

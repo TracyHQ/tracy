@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1426-widget-startup-recovery",
+  "kind": "fix",
+  "title": "Transient widget startup reads recover without replaying messages, authentication or site operations",
+  "pr": 1426,
+  "area": "widget/startup",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the deterministic Hono and browser-script bootstrap suites; no real provider, microphone or site operations."
+  ],
+  "expect": [
+    "Temporary DNS, connection and database readiness failures return sanitized HTTP503 retryable true; unknown or unreadable context returns retryable false.",
+    "Only state and catalogue GET reads may retry twice, with a ten-second timeout per attempt; POST adoption, message, authentication and creation requests are not automatically retried.",
+    "Exhaustion provides an explicit single-flight retry action without clearing saved state, drafts or visitor cookies.",
+    "Unreadable saved context is refused without cookie replacement or store writes; diagnostics contain fixed categories only."
+  ],
+  "selectors": {
+    "retry": "#retry-connection",
+    "routes": "/widget/api/state, /widget/api/catalogue"
+  },
+  "fence": "Read-only retry allowlist, bounded attempts/timeouts, server retry hints and existing owner/context fences.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget-startup-errors.test.mjs",
+      "apps/tracy-web/test/widget-bootstrap.test.mjs"
+    ],
+    "tests": [
+      "only transient bootstrap GET reads retry twice and retain draft/history while connecting",
+      "network GET failure retries but native adoption POST failure is not automatically retried",
+      "an unreadable saved visitor is refused without replacing its cookie or overwriting its context"
+    ]
+  }
+}

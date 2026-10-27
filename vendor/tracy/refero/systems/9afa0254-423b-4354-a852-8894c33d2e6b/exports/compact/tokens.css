@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-ink-black: #222222;
+  --color-pure-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-risograph-lime: #e1ea99;
+
+  /* Typography — Font Families */
+  --font-suisse-regular: 'Suisse Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-romana: 'Romana', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

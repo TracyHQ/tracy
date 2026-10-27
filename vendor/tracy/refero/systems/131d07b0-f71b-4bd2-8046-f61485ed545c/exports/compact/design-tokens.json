@@ -1,0 +1,34 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Body text, headings, footer text, inverted section backgrounds, cards, borders, nav — the universal structural color"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces on dark sections, text on inverted black backgrounds"
+    }
+  },
+  "font": {
+    "helveticanowdisplay": {
+      "$value": "HelveticaNowDisplay",
+      "$type": "fontFamily",
+      "$description": "Workhorse for everything non-display: body copy at 15px, section sub-headings and card titles at 26px. The choice to stay at a single weight 400 — no bold, no light — forces hierarchy through size and space rather than stroke contrast. Substitute: Neue Haas Grotesk Display Pro or Inter at 400."
+    },
+    "locomotivenew": {
+      "$value": "LocomotiveNew",
+      "$type": "fontFamily",
+      "$description": "Signature display face for hero headlines and feature titles. At 110px it commands the viewport; the tight 1.0–1.1 line-height and zero tracking make the letterforms feel architectural and monolithic. Custom and ownable — no direct substitute, but Migra or Söhne Breit at 400 come close in feel. Do not substitute with a bold weight; the whisper-thin strokes at scale are the point."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://locomotive.ca",
+      "siteName": "Locomotive",
+      "extractedAt": "2026-06-03T19:14:07.711Z",
+      "variant": "compact"
+    }
+  }
+}

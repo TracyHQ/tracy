@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-electric-cobalt: #0004eb;
+  --color-abyssal-ink: #050516;
+  --color-bone-white: #ffffff;
+  --color-concrete-mist: #e6e6e6;
+  --color-fog-gray: #979797;
+
+  /* Typography */
+  --font-haas-grotesk: 'Haas Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-trjndavinci: 'TRJNDaVinci', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+  "status": "complete",
+  "name": "Whop",
+  "url": "https://styles.refero.design/style/9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+  "sourceWebsite": "https://whop.com",
+  "extractedAt": "2026-06-03T21:10:46.376Z",
+  "capturedAt": "2026-10-08T05:15:24.379419+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Bold sticker on cream paper — a minimal light canvas with a single orange button that casts a hard burnt-orange shadow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/eb15637a-806d-4e89-ac0c-e41e056f87ea.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ccfa948b-a7f4-4ce5-8ff6-b58613d75249.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a0f13dd6-d25c-446b-8953-58dc435f926e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/75d782ed-e66a-47c8-873c-b16fa786bd47.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/613d30dc-a53a-4a13-995f-518062a6437b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ea36ae0ec8c3804d30d073a71a3c952157593c1b3a233b5200dbfc7c9cdb5dcf",
+      "bytes": 18028
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "030269cb80976a990e35c7d8f2c41beebe6c47409e5ae4a0db52e2f3cb4cc0ed",
+      "bytes": 37431
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1d90addc38d0d957f5f3a4ff0811d249a802dda01013b75e045bc0e9a4c71b4e",
+      "bytes": 15011
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6e7087ebffca783153a23d7869657bc5e629c51c7eef01790687a201e389fb53",
+      "bytes": 10740
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4d0cd1444dbc6ce431b0ea6a2a8f3c491f26c796184f3a9c38cee4ef5c4cc589",
+      "bytes": 11115
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1b52c3c476e4ee0d4e7395a0aedecd312c1fb9e721fc972f418b3fa647d799ec",
+      "bytes": 3120
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4549862b8bee2f818034d9537a6da85f4fc0fe10f93fc1d4c86ca66adcebf055",
+      "bytes": 669
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0e69f50fd7e5660538d944a69bd1195a04fdc4d94ffc1a5bcd4921a0596b7a10",
+      "bytes": 686
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "857d088a0efe063cfe70edfc6f1e8600786a0aa65e3b466cf3a65471fd79ac22",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fb55bfb21f6cdd25ad4f38fc43b29ee55c02cded40bef4f71f1d01eca9806110",
+      "bytes": 42796
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "bf57fbf007cf448c67c231f72eebcc1e3c4609d942fdf1f71f8f3adf26c7eef8",
+      "bytes": 22408
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "876574c252dc77e71e1314e542ffc56da01f7413c7ee28a4336c9e338636f798",
+      "bytes": 43749
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c74ed14eb2ba738748da77c0bcad40986c65ea135a4e8712295472a38350d585",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7329bbda7f1dfb792fdc31c26546c13fbb95530728e8d8267fe40a8e3aa85e33",
+      "bytes": 1509
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "215966fb6f537392403049603b643e9d1371783d926652c68cd5d50b1b3c372e",
+      "bytes": 2096
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "2cfb738d-6c44-4628-a2f5-e9c9fc92a0ca",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "a0244aab-0dba-45fe-a595-416c1f0715be",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "e869e214-f672-4ac3-bfc2-bd25de7b003b",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

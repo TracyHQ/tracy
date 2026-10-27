@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #f9f5f1;
+  --color-ink-black: #222222;
+  --color-golden-olive: #bfb33b;
+  --color-dusty-lavender: #e8d1eb;
+  --color-deep-teal: #025050;
+
+  /* Typography — Font Families */
+  --font-chromatica: 'Chromatica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hellenictypewriter: 'Hellenictypewriter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

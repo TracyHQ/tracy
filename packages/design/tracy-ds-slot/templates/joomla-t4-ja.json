@@ -1,0 +1,80 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "joomla/t4-ja",
+  "applies": "the JA Joomla T4 quickstarts: one site module like tracy-base (Claude Cowork content.update kind module + moduleAssignment, every page), first in header-r unless a template names another early position. A released template whose stylesheets read their own palette through `var(--ds-c-<role>, <hex>)` (scripts/tokenize.mjs) follows the system across the page; one that does not still takes T4's runtime colours, fonts and headings",
+  "module": {
+    "title": "Tracy design system",
+    "position": "header-r",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "header-r is in the header block every JA T4 layout renders; the flow fails a template whose page never carries the slot marker, so a missing position cannot pass silently"
+  },
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"]",
+  "runtime": {
+    "--body-bg-color": "var(--ds-c-bg)",
+    "--body-text-color": "var(--ds-c-fg)",
+    "--body-link-color": "var(--ds-c-accent-text)",
+    "--body-link-hover-color": "var(--ds-c-accent-text-hover)",
+    "--color-primary": "var(--ds-c-accent)",
+    "--color-secondary": "var(--ds-c-surface)",
+    "--color-success": "var(--ds-c-success)",
+    "--color-info": "var(--ds-c-accent)",
+    "--color-warning": "var(--ds-c-warn)",
+    "--color-danger": "var(--ds-c-danger)",
+    "--color-light": "var(--ds-c-surface)",
+    "--color-dark": "var(--ds-c-fg)",
+    "--mainnav-text-color": "var(--ds-c-fg)",
+    "--mainnav-link-color": "var(--ds-c-fg)",
+    "--mainnav-link-hover-color": "var(--ds-c-accent-text)",
+    "--mainnav-link-active-color": "var(--ds-c-accent-text)",
+    "--footer-bg-color": "var(--ds-c-surface)",
+    "--footer-text-color": "var(--ds-c-meta)",
+    "--footer-link-color": "var(--ds-c-muted)",
+    "--footer-link-hover-color": "var(--ds-c-fg)"
+  },
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]"
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "extraNote": "Bootstrap 5 as T4 ships it under every JA template (forms, pagination, tables, alerts): its colours take the roles they play there; #e9ecef is both a fill (surface-warm order puts surface first) and a line",
+  "accentVars": ["--color-primary", "--t4-primary", "--body-link-color", "--body-link-hover-color"],
+  "accentNote": "T4's link colours are TEXT: they take the accent made readable on the page (--ds-c-accent-text), not the fill; a stylesheet painting text with T4's primary reads the same (tokenize.mjs accentVars)",
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here: a JA template may define them itself; everything reads --ds-c-*",
+  "runtimeRgb": {
+    "--t4-link-color-rgb": "accent-text",
+    "--t4-link-hover-color-rgb": "accent-text-hover",
+    "--bs-link-color-rgb": "accent-text",
+    "--bs-link-hover-color-rgb": "accent-text-hover",
+    "--t4-primary-rgb": "accent-text",
+    "--bs-primary-rgb": "accent-text",
+    "--t4-body-color-rgb": "fg",
+    "--bs-body-color-rgb": "fg",
+    "--t4-body-bg-rgb": "bg",
+    "--bs-body-bg-rgb": "bg"
+  },
+  "runtimeRgbNote": "Bootstrap 5 inside T4 paints links, primary and the page through RGB triplets: each takes the triplet of its role's worn colour; the primary triplet takes the READABLE accent: Bootstrap's .link-primary paints text with it (JA Trip), and a fill a shade deeper still reads",
+  "classifyText": true,
+  "classifyNote": "a text colour no palette names, on the page side of light, follows as body, muted or meta text by its contrast with the page"
+}

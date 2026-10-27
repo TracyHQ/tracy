@@ -1,0 +1,271 @@
+{
+  "dos": [
+    "Use the system sans-serif stack exclusively — never load a web font; the page's restraint depends on it",
+    "Reserve #2576eb for interactive moments: links, the play button, icon accents. Never paint a large surface in brand blue",
+    "Use #f2f5f7 as the full-bleed canvas and #ffffff only for lifted card surfaces — this two-tone surface language is the page's structural backbone",
+    "Set body copy at 17-18px weight 400 in #838b96 with 1.6 line-height and ~540px max-width for comfortable measure",
+    "Apply 18px border-radius to all elevated cards and product mockups; 6px to buttons and inputs; 9999px to the circular play control",
+    "Use the paired shadow stack (0 2px 8px + 0 0 2px at 10% black) for any elevated surface — ambient lift plus a hairline contact shadow",
+    "Separate sections with 80px of vertical whitespace or a full-width color band shift, never with a visible divider line"
+  ],
+  "donts": [
+    "Don't introduce filled CTA buttons — the design language uses text links and the circular play control, not rectangular action buttons",
+    "Don't use pure black (#000000) for body text — #303336 is the Ink, and pure black would break the page's cool, soft cast",
+    "Don't add decorative gradients, textures, or background imagery to the hero or sections — the canvas is the design",
+    "Don't use the category icon hues (yellow, pink, green, teal) as UI accent colors — they are product content from the app, not brand tokens",
+    "Don't apply shadows to text, icons, or small UI elements — shadows are reserved for elevated cards and product mockups",
+    "Don't add a border-bottom or background fill to the navigation — it should float invisibly on the canvas",
+    "Don't tighten body line-height below 1.5 — the airy vertical rhythm is as important as the type size itself"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#303336",
+      "name": "Ink",
+      "role": "Primary text, body copy, heading text — near-black with a faint cool cast, never pure #000, keeping the page from feeling harsh",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, elevated product mockups, input fields — pure white against the cooler canvas reads as lifted, not flat",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f5f7",
+      "name": "Mist",
+      "role": "Page canvas, full-width background bands — a cool-tinted off-white that feels softer than pure white but still reads as light",
+      "group": "neutral"
+    },
+    {
+      "hex": "#838b96",
+      "name": "Fog",
+      "role": "Secondary body text, helper copy, muted descriptions — the most-used neutral after Ink, creates the dominant mid-tone of the page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#55606e",
+      "name": "Ash",
+      "role": "Tertiary text, icon strokes, decorative dividers — a cool gray that still carries enough chroma to read as designed, not default",
+      "group": "neutral"
+    },
+    {
+      "hex": "#44474b",
+      "name": "Smoke",
+      "role": "Deep body text alternative, emphasized inline text — sits between Ink and Fog for mid-emphasis passages",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9299a4",
+      "name": "Silver",
+      "role": "Disabled or de-emphasized text, tertiary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8e9196",
+      "name": "Pebble",
+      "role": "Muted link text, breadcrumb-style secondary navigation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dfe3e8",
+      "name": "Hairline",
+      "role": "Input borders, subtle dividers, card edges — cool and barely-there, defines boundaries without darkening the surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2576eb",
+      "name": "Signal Blue",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#5c9cf5",
+      "name": "Sky Blue",
+      "role": "Secondary blue for heading accents, lighter link states, decorative icon highlights — a softer companion to Signal Blue used when the primary blue would feel too loud",
+      "group": "brand"
+    }
+  ],
+  "layout": "Page is max-width ~960px centered on a full-bleed #f2f5f7 canvas. The hero is a centered vertical stack (icon → heading → description → play link) with no background image. Below the fold, sections alternate between white product showcase bands and Mist canvas bands, each separated by 80px of whitespace. Product mockups are displayed at slight rotations (-4° to +3°) for editorial energy, often overlapping each other in pairs. Text blocks are centered or left-aligned at max-width 540px. There is no sidebar, no multi-column grid in the body — the layout is single-column with generous lateral margins. The top nav is a single horizontal bar floating on the canvas with no background fill, no border, and no shadow. Grid usage is minimal: feature headings are single-column, product showcases are 2-card compositions, and the only multi-column content is the app's own UI shown within mockups.",
+  "imagery": "Imagery is almost entirely product mockups — real screenshots of the Things app interface presented as tilted editorial cards. No lifestyle photography, no abstract illustrations, no decorative graphics beyond the app icon itself. When icons appear, they are the app's own category glyphs (Inbox, Today, Upcoming, Anytime, Someday) rendered at 3px radius in their distinct category hues. The play control icon is a simple white triangle on a Signal Blue circle. Treatment is raw: screenshots have no border, no frame, no device chrome — they sit as floating rectangles on the cool canvas, their tilt and shadow doing all the visual work. Icon style is filled, not outlined, with rounded corners. Density is low: text and product visuals alternate in generous breathing room, never crowded.",
+  "similar": [
+    {
+      "why": "Same system-font typography, tilted product hero shots, single accent color restraint, and 18px rounded card surfaces with ambient shadow",
+      "business": "Apple product pages (apple.com/mac, apple.com/iphone)"
+    },
+    {
+      "why": "Shared product-showcase aesthetic with tilted UI screenshots on a clean canvas, but Linear adds a dark theme where Things stays firmly light",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar minimal product marketing pages with generous whitespace, but Notion uses warmer neutrals and decorative illustration where Things stays cool and product-only",
+      "business": "Notion"
+    },
+    {
+      "why": "Fellow Apple-ecosystem product with a near-identical system-font + light-canvas + single-accent approach, same audience expectation of editorial restraint",
+      "business": "Bear (notes app)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "18px",
+      "icons": "3px",
+      "inputs": "6px",
+      "buttons": "6px",
+      "headings": "12.8px",
+      "playButton": "9999px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "960px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#f2f5f7",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Full-bleed page background, section bands"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Product mockup surfaces, elevated content cards, input fields"
+    },
+    {
+      "hex": "#4f91fb",
+      "name": "Accent Surface",
+      "level": 3,
+      "purpose": "Saturated blue fill for the circular play control — only place a chromatic color fills a surface"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 2px 8px rgba(0,0,0,0.1), 0 0 2px rgba(0,0,0,0.1)",
+      "element": "Product mockup card"
+    },
+    {
+      "style": "0 2px 8px rgba(0,0,0,0.1), 0 0 2px rgba(0,0,0,0.1)",
+      "element": "Elevated content card"
+    }
+  ],
+  "northStar": "Apple keynote at half volume — a gallery wall of tilted product frames floating on a quiet cool-gray canvas, with one vivid blue spark pulling the eye to every interactive moment.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 36,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "App Icon Badge",
+      "role": "Brand mark displayed in the hero",
+      "description": "Rounded square app icon (Things logo: blue gradient field with white checkmark) rendered at ~120px. Functions as a visual anchor at the top of the hero. No border, no shadow — the icon's own internal gradient provides all visual weight."
+    },
+    {
+      "name": "Circular Play Button",
+      "role": "Primary interactive control for the introduction video",
+      "description": "36-40px circle, background #4f91fb (or #2576eb), white triangle play glyph centered, border-radius 9999px. Functions as the only filled chromatic control on the page. Pairs with adjacent text link in Signal Blue (#2576eb). The circle is the brand's signature interactive moment."
+    },
+    {
+      "name": "Inline Text Link",
+      "role": "Navigational and contextual links throughout the page",
+      "description": "No underline by default; color #2576eb at 15-17px weight 400. Hover state deepens to #1a5fb8. Often paired with a small ▸ chevron (3px radius, 12-14px) indicating further navigation. Never a filled button — this design favors quiet text links over button-style CTAs."
+    },
+    {
+      "name": "Product Mockup Card",
+      "role": "Showcases the Things app interface in context",
+      "description": "White (#ffffff) surface with 18px border-radius and the layered ambient + contact shadow (0 2px 8px rgba(0,0,0,0.1) + 0 0 2px rgba(0,0,0,0.1)). Often displayed at a 3-5° rotation for editorial energy. Contains the app's native UI: category sidebar with colored icons, main content area with task rows. No border, no outline — shadow defines the edge."
+    },
+    {
+      "name": "Hero Section Stack",
+      "role": "First-screen introduction to the product",
+      "description": "Centered vertically and horizontally on the Mist canvas. Stack order: app icon (~120px), display heading 'Things' at 36px weight 700 in Ink, body description at 17-18px weight 400 in Fog (1.6 line-height for breathing room), then play button + text link. No background image, no gradient — the hero is pure typography on canvas."
+    },
+    {
+      "name": "Feature Heading Row",
+      "role": "Introduces a new content block",
+      "description": "Icon (24-32px, rounded 3px radius, often Signal Blue) left-aligned with heading text at 24px weight 700 in Ink. Examples: play-circle icon before 'Prepare Presentation', Things app icon before 'Simply Powerful'. Icon-text gap: 10-12px."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Separates distinct content bands",
+      "description": "Implemented as full-width horizontal color shifts between Mist and white bands, or as generous vertical whitespace (80px) without any visible line. Never a 1px hairline rule — dividers are spatial, not linear."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Minimal site navigation",
+      "description": "Wordmark 'Things' with small icon (3px radius) on the far left, three text links (Features, Support, Blog) right-aligned. All text at 15px weight 400 in Ash (#55606e) or Ink. No background fill, no border-bottom, no shadow — the nav floats on the canvas."
+    },
+    {
+      "name": "Product Category Icon",
+      "role": "Decorative icons representing app's built-in task categories",
+      "description": "Rounded square (3px radius), ~16-18px, each in a distinct hue: Inbox (Signal Blue), Today (yellow), Upcoming (pink/red), Anytime (green), Someday (teal). These are product content, not design system tokens, but they define the page's secondary color moments alongside the brand blue."
+    },
+    {
+      "name": "Body Description Block",
+      "role": "Supporting paragraph copy under headings",
+      "description": "Centered or left-aligned, 17-18px weight 400 in Fog (#838b96), max-width ~540px for comfortable measure, line-height 1.6. Never in Ink — the lighter gray signals supporting copy without hierarchy collision."
+    },
+    {
+      "name": "Tilted Product Showcase",
+      "role": "Editorial layout device for app screenshots",
+      "description": "Two product mockup cards overlapping at slight angles (one rotated -4°, one +3°), creating depth without 3D. Cards have 18px radius and the standard layered shadow. The tilt is signature — it breaks the otherwise rigid centered grid and gives the page editorial rhythm."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI and editorial text. The system stack is deliberate — on Apple devices this resolves to SF Pro, matching the Things app itself. Weight 600-800 carries headings; weight 400 carries body. No custom or web-loaded font; the restraint IS the brand.",
+      "sizes": "13, 14, 15, 16, 17, 18, 20, 24, 36",
+      "family": "ui-sans-serif (system stack: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display')",
+      "weight": "400, 600, 700, 800",
+      "lineHeight": "1.00–1.60",
+      "substitute": "Inter, Helvetica Neue, system-ui",
+      "letterSpacing": "normal across all sizes; no display tracking"
+    }
+  ],
+  "description": "Things presents a gallery-like product page where the app speaks through generous white space, tilted product mockups, and a single confident blue accent. The aesthetic borrows from Apple's editorial restraint — system fonts, near-grayscale neutrals, subtle layered elevation, and rounded cards with 18px radii feel premium without ever feeling cold. Color appears sparingly and functionally: a vivid blue for links, icons, and the circular play control; a slightly lighter blue for secondary headings; and a near-black (#303336) for body text against a faintly cool canvas (#f2f5f7). Sections breathe with 40-80px vertical gaps, and hierarchy is carried by type weight (600-800 for headings) and generous line-height rather than decorative flourishes.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #303336 (primary), #838b96 (body), #55606e (tertiary)\n- background: #f2f5f7 (canvas), #ffffff (card)\n- border: #dfe3e8\n- accent: #2576eb (links, icons, play button), #5c9cf5 (secondary blue)\n- primary action: no distinct CTA color\n\nExample Component Prompts:\n1. Build a hero section on a #f2f5f7 canvas. Center a 120px Things app icon, then a 36px display heading in #303336 weight 700. Below it, a 17px body paragraph in #838b96 weight 400, line-height 1.6, max-width 540px. Finish with a 40px circular play button (background #4f91fb, white play triangle, 9999px radius) beside a 15px Signal Blue text link 'Watch Introduction Video' in #2576eb.\n\n2. Build a product mockup card: 18px border-radius, white (#ffffff) surface, shadow 0 2px 8px rgba(0,0,0,0.1) + 0 0 2px rgba(0,0,0,0.1). Rotate the card -4° for editorial tilt. Inside, show the app UI with a sidebar of category icons (each 3px radius, distinct hues) and a main content area with task rows in #303336 text.\n\n3. Build a feature heading row: 28px Signal Blue icon (#2576eb, 3px radius) left-aligned, then 24px weight 700 text in #303336. 10-12px gap between icon and text. Below, a 17px description paragraph in #838b96 with 1.6 line-height and 540px max-width.\n\n4. Build the top navigation: no background, no border. Left: a 20px Things wordmark in #303336 weight 700 with a small 3px-radius icon. Right: three text links (Features, Support, Blog) in 15px #55606e weight 400, each separated by 24px of horizontal space.\n\n5. Build a two-card product showcase: two white cards with 18px radius and the standard layered shadow, one rotated -4° and one +3°, overlapping slightly in the center. Section background is #f2f5f7, with 80px padding above and below."
+    },
+    {
+      "title": "Visual Language",
+      "content": "Imagery is almost entirely product mockups — real screenshots of the Things app interface presented as tilted editorial cards. No lifestyle photography, no abstract illustrations, no decorative graphics beyond the app icon itself. When icons appear, they are the app's own category glyphs (Inbox, Today, Upcoming, Anytime, Someday) rendered at 3px radius in their distinct category hues. The play control icon is a simple white triangle on a Signal Blue circle. Treatment is raw: screenshots have no border, no frame, no device chrome — they sit as floating rectangles on the cool canvas, their tilt and shadow doing all the visual work. Icon style is filled, not outlined, with rounded corners. Density is low: text and product visuals alternate in generous breathing room, never crowded."
+    },
+    {
+      "title": "Layout",
+      "content": "Page is max-width ~960px centered on a full-bleed #f2f5f7 canvas. The hero is a centered vertical stack (icon → heading → description → play link) with no background image. Below the fold, sections alternate between white product showcase bands and Mist canvas bands, each separated by 80px of whitespace. Product mockups are displayed at slight rotations (-4° to +3°) for editorial energy, often overlapping each other in pairs. Text blocks are centered or left-aligned at max-width 540px. There is no sidebar, no multi-column grid in the body — the layout is single-column with generous lateral margins. The top nav is a single horizontal bar floating on the canvas with no background fill, no border, and no shadow. Grid usage is minimal: feature headings are single-column, product showcases are 2-card compositions, and the only multi-column content is the app's own UI shown within mockups."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is minimal and always layered: a soft 8px ambient shadow paired with a 1-2px contact shadow. The intent is lift, not drama — products appear to hover slightly above the canvas, never to float or pop. No drop shadows on text, icons, or buttons."
+}

@@ -1,0 +1,131 @@
+{
+ "about": "Measured on the JA Vega Joomla source (compose project javsrc, http://127.0.0.1:8261), read-only GETs, 27/09/2026. Per page: the blog cards (.items-leading / .items-row titles), the .items-more heading and link titles, the pager counter and the pager links. The source has no category blog with a third page, so no middle page could be measured: the rule it shows is that a page starts at start = (page - 1) x (leading + intro) and its More Articles titles are the ones that open the next page.",
+ "archives": [
+  {
+   "path": "/category-blog",
+   "paging": {
+    "leading": 1,
+    "intro": 6,
+    "links": 4
+   },
+   "pages": [
+    {
+     "url": "/category-blog",
+     "cards": [
+      "Cybersecurity Takeaways from China’s Largest Data Breach",
+      "Navigating the Risks of AI in Autonomous Vehicle Development",
+      "Decoding the Impact of Blockchain on Financial Services",
+      "The Future of Work: How Robotics is Shaping Industries",
+      "The Rise of Smart Cities: Technology and Sustainability",
+      "The Role of Machine Learning in Personalizing Consumer Experiences",
+      "Biometrics in Security: Trends and Ethical Considerations 2024"
+     ],
+     "moreHeading": "More Articles …",
+     "more": [
+      "The Digital Divide: Bridging the Gap in Internet Access Worldwide",
+      "The Impact of Cloud Computing on Small Business Efficiency"
+     ],
+     "counter": "Page 1 of 2",
+     "links": [
+      {
+       "label": "Go to page 2",
+       "href": "/category-blog?start=7"
+      },
+      {
+       "label": "Go to next page",
+       "href": "/category-blog?start=7"
+      },
+      {
+       "label": "Go to end page",
+       "href": "/category-blog?start=7"
+      }
+     ]
+    },
+    {
+     "url": "/category-blog?start=7",
+     "cards": [
+      "The Digital Divide: Bridging the Gap in Internet Access Worldwide",
+      "The Impact of Cloud Computing on Small Business Efficiency"
+     ],
+     "moreHeading": null,
+     "more": [],
+     "counter": "Page 2 of 2",
+     "links": [
+      {
+       "label": "Go to start page",
+       "href": "/category-blog"
+      },
+      {
+       "label": "Go to previous page",
+       "href": "/category-blog"
+      },
+      {
+       "label": "Go to page 1",
+       "href": "/category-blog"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "path": "/portfolio/database-security",
+   "paging": null,
+   "pages": [
+    {
+     "url": "/portfolio/database-security",
+     "cards": [
+      "Project Sentinel: Advanced Database Encryption",
+      "The Future of Artificial Intelligence: Trends and Innovations",
+      "Exploring Quantum Computing: Beyond Classical Limits",
+      "Cybersecurity in the Digital Age: Protecting Your Data",
+      "Renewable Energy Technologies: Powering the Future",
+      "The Evolution of Cloud Computing: Benefits and Challenges",
+      "Augmented Reality: Enhancing Real-World Experiences"
+     ],
+     "moreHeading": "More Articles …",
+     "more": [
+      "Blockchain Revolution: Applications Beyond Cryptocurrency"
+     ],
+     "counter": "Page 1 of 2",
+     "links": [
+      {
+       "label": "Go to page 2",
+       "href": "/portfolio/database-security?start=7"
+      },
+      {
+       "label": "Go to next page",
+       "href": "/portfolio/database-security?start=7"
+      },
+      {
+       "label": "Go to end page",
+       "href": "/portfolio/database-security?start=7"
+      }
+     ]
+    },
+    {
+     "url": "/portfolio/database-security?start=7",
+     "cards": [
+      "Blockchain Revolution: Applications Beyond Cryptocurrency"
+     ],
+     "moreHeading": null,
+     "more": [],
+     "counter": "Page 2 of 2",
+     "links": [
+      {
+       "label": "Go to start page",
+       "href": "/portfolio/database-security"
+      },
+      {
+       "label": "Go to previous page",
+       "href": "/portfolio/database-security"
+      },
+      {
+       "label": "Go to page 1",
+       "href": "/portfolio/database-security"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,2974 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-nova pattern that renders it, field by field, for the seeder (seed.mjs renderAcm, `${type}:${style}`). Field names are the Joomla ACM field names VERBATIM, plus the fields tasks/ja-nova-wp7/tools/fix-spec.mjs writes around seeder limits (RUN.md skill issues): the T4 module chrome (S-07: main-section, bottom-desc, title-btn, link-btn), an accent split into parts <f>, <f>-accent, <f>-mid, <f>-accent-2, <f>-end (S-08: the accent's colour and decor icon are jn-a1-*/jn-a2-* classes on the section root), per-row style keys as `variant` (class cta-<value>) and a button style as `link-style` (S-10), `align` for the picture side, `number` for a numbered row and `video` for the play link (S-11). metadata.name is <type>.<field>[.<n>]; the wrapper of a repeated row is <type>.item.<n>; a repeated field drawn outside the wrapper (the pricing tab labels) repeats on its own. A block is located by name, never by position.",
+  "schemaVersion": "wp-ja-nova-patterns-map/v1",
+  "namespace": "wp-ja-nova",
+  "anchorConvention": "acm-<type>-<module id>",
+  "views": {
+    "$comment": "search is com_finder at /smart-search on the source; the theme answers that path with its search view (inc/extra.php wp_ja_nova_search_request), so the seeder adds no redirect for it. single is not declared: the two single-view routes (/blog-detail, /project/project-detail) open a post the seeder keeps in its category and reaches through its single-view redirect (301); an article at its listing path (/category-blog/<alias>) is answered by the theme (inc/extra.php wp_ja_nova_listing_post_request). page-account: a guest at /user-profile is sent to the login page with a 303, as Joomla's profile view does (inc/extra.php wp_ja_nova_account_redirect).",
+    "search": {
+      "servedAtPath": true
+    },
+    "page-account": {
+      "expect": {
+        "status": 303,
+        "to": "/login-form"
+      }
+    }
+  },
+  "types": {
+    "111": {
+      "pattern": "wp-ja-nova/section-hero",
+      "fields": {
+        "image-decor": {
+          "block": "core/image",
+          "path": "hero.image-decor",
+          "attr": "src"
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 1
+        },
+        "title-accent": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "title-mid": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 3
+        },
+        "title-accent-2": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "title-end": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 5
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "hero.desc",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "className"
+        },
+        "button-2": {
+          "block": "core/button",
+          "path": "hero.button-2",
+          "attr": "text"
+        },
+        "btn-link-2": {
+          "block": "core/button",
+          "path": "hero.button-2",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "btn-type-2": "the second button is empty on the one instance; drawn as the light button"
+      },
+      "$comment": "module 111: alias of hero:style-1 for the visual contract"
+    },
+    "112": {
+      "pattern": "wp-ja-nova/section-feature",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "align": {
+          "block": "core/group",
+          "path": "features-intro.row",
+          "attr": "className"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "info-icon": {
+          "block": "core/image",
+          "path": "features-intro.info-icon",
+          "attr": "src"
+        },
+        "info-cta": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-cta",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "1 on every instance; the points are drawn one to a row"
+      },
+      "$comment": "module 112: alias of features-intro:style-1 for the visual contract"
+    },
+    "113": {
+      "pattern": "wp-ja-nova/section-related",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "the query perPage of the pattern (3 for the default layout, 2 for the project layout)"
+      },
+      "$comment": "module 113: alias of related-items:default for the visual contract"
+    },
+    "114": {
+      "pattern": "wp-ja-nova/section-text-slider",
+      "item": "text-slider.item.<n>",
+      "fields": {
+        "variant": {
+          "block": "core/group",
+          "path": "text-slider.root",
+          "attr": "className"
+        },
+        "logo": {
+          "block": "core/image",
+          "path": "text-slider.logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "text-slider.title.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "autoplay": "true on both instances; the row always moves",
+        "auto-time": "the drift speed is the stylesheet animation, measured on the source (15 s a slide)"
+      },
+      "$comment": "module 114: alias of text-slider:style-1 for the visual contract"
+    },
+    "115": {
+      "pattern": "wp-ja-nova/section-text-slider",
+      "item": "text-slider.item.<n>",
+      "fields": {
+        "variant": {
+          "block": "core/group",
+          "path": "text-slider.root",
+          "attr": "className"
+        },
+        "logo": {
+          "block": "core/image",
+          "path": "text-slider.logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "text-slider.title.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "autoplay": "true on both instances; the row always moves",
+        "auto-time": "the drift speed is the stylesheet animation, measured on the source (15 s a slide)"
+      },
+      "$comment": "module 115: alias of text-slider:style-1 for the visual contract"
+    },
+    "116": {
+      "pattern": "wp-ja-nova/section-cards",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "features-intro.item.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.bottom-desc",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "align": "left on every instance; the cards are drawn left-aligned",
+        "image-type": "normal on every instance"
+      },
+      "$comment": "module 116: alias of features-intro:style-2 for the visual contract"
+    },
+    "117": {
+      "pattern": "wp-ja-nova/section-latest",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-latest.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names the blog category by slug in the pattern (wpJaNovaCategory: blog), resolved at render time (inc/extra.php)",
+        "count": "4 posts, the query perPage",
+        "ordering": "newest first (p_dsc), the query order"
+      },
+      "$comment": "module 117: alias of articles-latest:type-1 for the visual contract"
+    },
+    "118": {
+      "pattern": "wp-ja-nova/section-search-band",
+      "fields": {
+        "search-title": {
+          "block": "core/heading",
+          "path": "search-band.search-title",
+          "attr": "content"
+        },
+        "tags-title": {
+          "block": "core/heading",
+          "path": "search-band.tags-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "social": "the three links of Joomla custom module 119 (facebook, twitter, youtube to https://www.joomlart.com/) are the pattern's social-links block, edited in the page",
+        "maximum": "12 tags, the tag cloud's numberOfTags"
+      },
+      "$comment": "module 118: alias of search-band:default for the visual contract"
+    },
+    "119": {
+      "pattern": "wp-ja-nova/section-search-band",
+      "fields": {
+        "search-title": {
+          "block": "core/heading",
+          "path": "search-band.search-title",
+          "attr": "content"
+        },
+        "tags-title": {
+          "block": "core/heading",
+          "path": "search-band.tags-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "social": "the three links of Joomla custom module 119 (facebook, twitter, youtube to https://www.joomlart.com/) are the pattern's social-links block, edited in the page",
+        "maximum": "12 tags, the tag cloud's numberOfTags"
+      },
+      "$comment": "module 119: alias of search-band:default for the visual contract"
+    },
+    "120": {
+      "pattern": "wp-ja-nova/section-search-band",
+      "fields": {
+        "search-title": {
+          "block": "core/heading",
+          "path": "search-band.search-title",
+          "attr": "content"
+        },
+        "tags-title": {
+          "block": "core/heading",
+          "path": "search-band.tags-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "social": "the three links of Joomla custom module 119 (facebook, twitter, youtube to https://www.joomlart.com/) are the pattern's social-links block, edited in the page",
+        "maximum": "12 tags, the tag cloud's numberOfTags"
+      },
+      "$comment": "module 120: alias of search-band:default for the visual contract"
+    },
+    "121": {
+      "pattern": "wp-ja-nova/section-cta",
+      "item": "cta.item.<n>",
+      "fields": {
+        "cta-title": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 1
+        },
+        "cta-title-accent": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "cta-title-mid": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 3
+        },
+        "cta-title-accent-2": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "cta-title-end": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 5
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "className",
+          "repeat": true
+        }
+      },
+      "$comment": "module 121: alias of cta:style-1 for the visual contract"
+    },
+    "122": {
+      "pattern": "wp-ja-nova/section-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "logo": {
+          "block": "core/image",
+          "path": "clients.logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/image",
+          "path": "clients.logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/image",
+          "path": "clients.logo.<n>",
+          "attr": "href",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "col-lg": "6 to a view at 1440 (stylesheet)",
+        "col-md": "4 to a view at 768 (stylesheet)",
+        "col-xs": "2 to a view at 390 (stylesheet)",
+        "slide-direct": "left to right",
+        "autoplay": "the row moves by itself (motion library carousel)",
+        "auto-time": "the step interval of the motion library"
+      },
+      "$comment": "module 122: alias of clients:style-1 for the visual contract"
+    },
+    "123": {
+      "pattern": "wp-ja-nova/section-feature",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "align": {
+          "block": "core/group",
+          "path": "features-intro.row",
+          "attr": "className"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "info-icon": {
+          "block": "core/image",
+          "path": "features-intro.info-icon",
+          "attr": "src"
+        },
+        "info-cta": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-cta",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "1 on every instance; the points are drawn one to a row"
+      },
+      "$comment": "module 123: alias of features-intro:style-1 for the visual contract"
+    },
+    "124": {
+      "pattern": "wp-ja-nova/section-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "team-desc": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 1
+        },
+        "team-desc-accent": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "team-desc-mid": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 3
+        },
+        "team-desc-accent-2": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "team-desc-end": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 5
+        },
+        "img": {
+          "block": "core/image",
+          "path": "teams.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "team-position": {
+          "block": "core/paragraph",
+          "path": "teams.team-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "teams.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "teams.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "teams.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "3 to a view at 1440 (stylesheet)"
+      },
+      "$comment": "module 124: alias of teams:style-1 for the visual contract"
+    },
+    "125": {
+      "pattern": "wp-ja-nova/section-feature",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "align": {
+          "block": "core/group",
+          "path": "features-intro.row",
+          "attr": "className"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "info-icon": {
+          "block": "core/image",
+          "path": "features-intro.info-icon",
+          "attr": "src"
+        },
+        "info-cta": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-cta",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "1 on every instance; the points are drawn one to a row"
+      },
+      "$comment": "module 125: alias of features-intro:style-1 for the visual contract"
+    },
+    "126": {
+      "pattern": "wp-ja-nova/section-stats",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "$comment": "module 126: alias of features-intro:style-3 for the visual contract"
+    },
+    "127": {
+      "pattern": "wp-ja-nova/section-pricing",
+      "item": "pricing.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "pricing.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "price": {
+          "block": "core/paragraph",
+          "path": "pricing.price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "pricing.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "pricing.btn.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "pricing.btn.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "pricing.btn.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "plan-list": {
+          "block": "core/list",
+          "path": "pricing.plan-list.<n>",
+          "attr": "innerBlocks",
+          "repeat": true
+        }
+      },
+      "$comment": "module 127: alias of pricing:style-1 for the visual contract"
+    },
+    "128": {
+      "pattern": "wp-ja-nova/section-news",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "category": "the query names the blog category by slug in the pattern (wpJaNovaCategory: blog), resolved at render time (inc/extra.php)",
+        "count": "3 posts, the query perPage",
+        "ordering": "by title, ascending, the query order (a.title)"
+      },
+      "$comment": "module 128: alias of articles-category:grid for the visual contract"
+    },
+    "129": {
+      "pattern": "wp-ja-nova/section-project-tabs",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-categories.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the four queries name Project and its child categories by slug in the pattern (wpJaNovaCategory), resolved at render time (inc/extra.php); the tab labels are the pattern's buttons, renamed in the editor"
+      },
+      "$comment": "module 129: alias of articles-categories:tabs for the visual contract"
+    },
+    "130": {
+      "pattern": "wp-ja-nova/section-faq",
+      "item": "accordion.item.<n>",
+      "fields": {
+        "info-title": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.info-desc",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "accordion.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "accordion.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "accordion.button",
+          "attr": "className"
+        },
+        "accordion-name": {
+          "block": "core/heading",
+          "path": "accordion.accordion-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "$comment": "module 130: alias of accordion:style-1 for the visual contract"
+    },
+    "131": {
+      "pattern": "wp-ja-nova/section-cta-bar",
+      "fields": {
+        "cta-desc": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 1
+        },
+        "cta-desc-accent": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "cta-desc-mid": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 3
+        },
+        "cta-desc-accent-2": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "cta-desc-end": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 5
+        },
+        "cta-title": {
+          "block": "core/button",
+          "path": "cta.cta-title",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-title",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "cta.cta-title",
+          "attr": "className"
+        }
+      },
+      "$comment": "module 131: alias of cta:style-2 for the visual contract"
+    },
+    "137": {
+      "pattern": "wp-ja-nova/section-values",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "ft-title": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 1
+        },
+        "ft-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "ft-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 3
+        },
+        "ft-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "ft-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 5
+        },
+        "content-featured": {
+          "block": "core/paragraph",
+          "path": "features-intro.content-featured",
+          "attr": "content"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "$comment": "module 137: alias of features-intro:style-4 for the visual contract"
+    },
+    "138": {
+      "pattern": "wp-ja-nova/section-related-projects",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "the query perPage of the pattern (3 for the default layout, 2 for the project layout)"
+      },
+      "$comment": "module 138: alias of related-items:project for the visual contract"
+    },
+    "139": {
+      "pattern": "wp-ja-nova/section-video",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "features-intro.image",
+          "attr": "src"
+        },
+        "video": {
+          "block": "core/paragraph",
+          "path": "features-intro.video",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "id-video": "written as the play link `video` (fix-spec S-11)",
+        "description": "the source layout prints no description (\"123\" on the one instance)"
+      },
+      "$comment": "module 139: alias of features-intro:style-5 for the visual contract"
+    },
+    "140": {
+      "pattern": "wp-ja-nova/section-feature",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "align": {
+          "block": "core/group",
+          "path": "features-intro.row",
+          "attr": "className"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "info-icon": {
+          "block": "core/image",
+          "path": "features-intro.info-icon",
+          "attr": "src"
+        },
+        "info-cta": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-cta",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "1 on every instance; the points are drawn one to a row"
+      },
+      "$comment": "module 140: alias of features-intro:style-1 for the visual contract"
+    },
+    "141": {
+      "pattern": "wp-ja-nova/section-expertise",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.item.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-title.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "sub-title": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "list-features": {
+          "block": "core/list",
+          "path": "features-intro.list-features.<n>",
+          "attr": "innerBlocks",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "align": "left on the one instance"
+      },
+      "$comment": "module 141: alias of features-intro:style-6 for the visual contract"
+    },
+    "142": {
+      "pattern": "wp-ja-nova/section-stats",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "$comment": "module 142: alias of features-intro:style-3 for the visual contract"
+    },
+    "143": {
+      "pattern": "wp-ja-nova/section-feature",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "align": {
+          "block": "core/group",
+          "path": "features-intro.row",
+          "attr": "className"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "info-icon": {
+          "block": "core/image",
+          "path": "features-intro.info-icon",
+          "attr": "src"
+        },
+        "info-cta": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-cta",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "1 on every instance; the points are drawn one to a row"
+      },
+      "$comment": "module 143: alias of features-intro:style-1 for the visual contract"
+    },
+    "144": {
+      "pattern": "wp-ja-nova/section-cards",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "features-intro.item.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.bottom-desc",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "align": "left on every instance; the cards are drawn left-aligned",
+        "image-type": "normal on every instance"
+      },
+      "$comment": "module 144: alias of features-intro:style-2 for the visual contract"
+    },
+    "145": {
+      "pattern": "wp-ja-nova/section-positions",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "apply-position": {
+          "block": "core/paragraph",
+          "path": "features-intro.apply-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "apply-time": {
+          "block": "core/paragraph",
+          "path": "features-intro.apply-time.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "tab-body": {
+          "block": "core/paragraph",
+          "path": "features-intro.tab-body.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.btn.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.btn.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.btn.<n>",
+          "attr": "className",
+          "repeat": true
+        }
+      },
+      "$comment": "module 145: alias of features-intro:style-7 for the visual contract"
+    },
+    "hero:style-1": {
+      "pattern": "wp-ja-nova/section-hero",
+      "fields": {
+        "image-decor": {
+          "block": "core/image",
+          "path": "hero.image-decor",
+          "attr": "src"
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 1
+        },
+        "title-accent": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "title-mid": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 3
+        },
+        "title-accent-2": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "title-end": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "part": 5
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "hero.desc",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "className"
+        },
+        "button-2": {
+          "block": "core/button",
+          "path": "hero.button-2",
+          "attr": "text"
+        },
+        "btn-link-2": {
+          "block": "core/button",
+          "path": "hero.button-2",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "btn-type-2": "the second button is empty on the one instance; drawn as the light button"
+      }
+    },
+    "features-intro:style-1": {
+      "pattern": "wp-ja-nova/section-feature",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "align": {
+          "block": "core/group",
+          "path": "features-intro.row",
+          "attr": "className"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "info-icon": {
+          "block": "core/image",
+          "path": "features-intro.info-icon",
+          "attr": "src"
+        },
+        "info-cta": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-cta",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "1 on every instance; the points are drawn one to a row"
+      }
+    },
+    "text-slider:style-1": {
+      "pattern": "wp-ja-nova/section-text-slider",
+      "item": "text-slider.item.<n>",
+      "fields": {
+        "variant": {
+          "block": "core/group",
+          "path": "text-slider.root",
+          "attr": "className"
+        },
+        "logo": {
+          "block": "core/image",
+          "path": "text-slider.logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "text-slider.title.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "autoplay": "true on both instances; the row always moves",
+        "auto-time": "the drift speed is the stylesheet animation, measured on the source (15 s a slide)"
+      }
+    },
+    "features-intro:style-2": {
+      "pattern": "wp-ja-nova/section-cards",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "features-intro.item.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.bottom-desc",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "align": "left on every instance; the cards are drawn left-aligned",
+        "image-type": "normal on every instance"
+      }
+    },
+    "features-intro:style-2-inline": {
+      "pattern": "wp-ja-nova/section-cards-inline",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "features-intro.item.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "align": "left on every instance; the cards are drawn left-aligned",
+        "image-type": "normal on every instance"
+      }
+    },
+    "cta:style-1": {
+      "pattern": "wp-ja-nova/section-cta",
+      "item": "cta.item.<n>",
+      "fields": {
+        "cta-title": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 1
+        },
+        "cta-title-accent": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "cta-title-mid": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 3
+        },
+        "cta-title-accent-2": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "cta-title-end": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content",
+          "part": 5
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "className",
+          "repeat": true
+        }
+      }
+    },
+    "cta:style-2": {
+      "pattern": "wp-ja-nova/section-cta-bar",
+      "fields": {
+        "cta-desc": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 1
+        },
+        "cta-desc-accent": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "cta-desc-mid": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 3
+        },
+        "cta-desc-accent-2": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "cta-desc-end": {
+          "block": "core/heading",
+          "path": "cta.cta-desc",
+          "attr": "content",
+          "part": 5
+        },
+        "cta-title": {
+          "block": "core/button",
+          "path": "cta.cta-title",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-title",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "cta.cta-title",
+          "attr": "className"
+        }
+      }
+    },
+    "clients:style-1": {
+      "pattern": "wp-ja-nova/section-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "logo": {
+          "block": "core/image",
+          "path": "clients.logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/image",
+          "path": "clients.logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/image",
+          "path": "clients.logo.<n>",
+          "attr": "href",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "col-lg": "6 to a view at 1440 (stylesheet)",
+        "col-md": "4 to a view at 768 (stylesheet)",
+        "col-xs": "2 to a view at 390 (stylesheet)",
+        "slide-direct": "left to right",
+        "autoplay": "the row moves by itself (motion library carousel)",
+        "auto-time": "the step interval of the motion library"
+      }
+    },
+    "teams:style-1": {
+      "pattern": "wp-ja-nova/section-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "team-desc": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 1
+        },
+        "team-desc-accent": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "team-desc-mid": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 3
+        },
+        "team-desc-accent-2": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "team-desc-end": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content",
+          "part": 5
+        },
+        "img": {
+          "block": "core/image",
+          "path": "teams.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "team-position": {
+          "block": "core/paragraph",
+          "path": "teams.team-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "teams.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "teams.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "teams.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "columns": "3 to a view at 1440 (stylesheet)"
+      }
+    },
+    "features-intro:style-3": {
+      "pattern": "wp-ja-nova/section-stats",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      }
+    },
+    "pricing:style-1": {
+      "pattern": "wp-ja-nova/section-pricing",
+      "item": "pricing.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "pricing.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "pricing.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "price": {
+          "block": "core/paragraph",
+          "path": "pricing.price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "pricing.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "pricing.btn.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "pricing.btn.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "pricing.btn.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "plan-list": {
+          "block": "core/list",
+          "path": "pricing.plan-list.<n>",
+          "attr": "innerBlocks",
+          "repeat": true
+        }
+      }
+    },
+    "accordion:style-1": {
+      "pattern": "wp-ja-nova/section-faq",
+      "item": "accordion.item.<n>",
+      "fields": {
+        "info-title": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 1
+        },
+        "info-title-accent": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "info-title-mid": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 3
+        },
+        "info-title-accent-2": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "info-title-end": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content",
+          "part": 5
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.info-desc",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "accordion.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "accordion.button",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "accordion.button",
+          "attr": "className"
+        },
+        "accordion-name": {
+          "block": "core/heading",
+          "path": "accordion.accordion-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      }
+    },
+    "features-intro:style-4": {
+      "pattern": "wp-ja-nova/section-values",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "ft-title": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 1
+        },
+        "ft-title-accent": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "ft-title-mid": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 3
+        },
+        "ft-title-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "ft-title-end": {
+          "block": "core/heading",
+          "path": "features-intro.ft-title",
+          "attr": "content",
+          "part": 5
+        },
+        "content-featured": {
+          "block": "core/paragraph",
+          "path": "features-intro.content-featured",
+          "attr": "content"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-intro.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      }
+    },
+    "features-intro:style-5": {
+      "pattern": "wp-ja-nova/section-video",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "features-intro.image",
+          "attr": "src"
+        },
+        "video": {
+          "block": "core/paragraph",
+          "path": "features-intro.video",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "id-video": "written as the play link `video` (fix-spec S-11)",
+        "description": "the source layout prints no description (\"123\" on the one instance)"
+      }
+    },
+    "features-intro:style-6": {
+      "pattern": "wp-ja-nova/section-expertise",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.item.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "variant": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-title.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "sub-title": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "list-features": {
+          "block": "core/list",
+          "path": "features-intro.list-features.<n>",
+          "attr": "innerBlocks",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "align": "left on the one instance"
+      }
+    },
+    "features-intro:style-7": {
+      "pattern": "wp-ja-nova/section-positions",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 1
+        },
+        "main-section-accent": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--1"
+        },
+        "main-section-mid": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 3
+        },
+        "main-section-accent-2": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 4,
+          "wrap": "span",
+          "wrapClass": "jn-accent jn-accent--2"
+        },
+        "main-section-end": {
+          "block": "core/heading",
+          "path": "features-intro.main-section",
+          "attr": "content",
+          "part": 5
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "apply-position": {
+          "block": "core/paragraph",
+          "path": "features-intro.apply-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "apply-time": {
+          "block": "core/paragraph",
+          "path": "features-intro.apply-time.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "tab-body": {
+          "block": "core/paragraph",
+          "path": "features-intro.tab-body.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.btn.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.btn.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "features-intro.btn.<n>",
+          "attr": "className",
+          "repeat": true
+        }
+      }
+    },
+    "articles-categories:tabs": {
+      "pattern": "wp-ja-nova/section-project-tabs",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-categories.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the four queries name Project and its child categories by slug in the pattern (wpJaNovaCategory), resolved at render time (inc/extra.php); the tab labels are the pattern's buttons, renamed in the editor"
+      }
+    },
+    "articles-category:grid": {
+      "pattern": "wp-ja-nova/section-news",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "href"
+        },
+        "link-style": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "className"
+        }
+      },
+      "dropped": {
+        "category": "the query names the blog category by slug in the pattern (wpJaNovaCategory: blog), resolved at render time (inc/extra.php)",
+        "count": "3 posts, the query perPage",
+        "ordering": "by title, ascending, the query order (a.title)"
+      }
+    },
+    "related-items:default": {
+      "pattern": "wp-ja-nova/section-related",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "the query perPage of the pattern (3 for the default layout, 2 for the project layout)"
+      }
+    },
+    "related-items:project": {
+      "pattern": "wp-ja-nova/section-related-projects",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "the query perPage of the pattern (3 for the default layout, 2 for the project layout)"
+      }
+    },
+    "articles-latest:type-1": {
+      "pattern": "wp-ja-nova/section-latest",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-latest.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names the blog category by slug in the pattern (wpJaNovaCategory: blog), resolved at render time (inc/extra.php)",
+        "count": "4 posts, the query perPage",
+        "ordering": "newest first (p_dsc), the query order"
+      }
+    },
+    "search-band:default": {
+      "pattern": "wp-ja-nova/section-search-band",
+      "fields": {
+        "search-title": {
+          "block": "core/heading",
+          "path": "search-band.search-title",
+          "attr": "content"
+        },
+        "tags-title": {
+          "block": "core/heading",
+          "path": "search-band.tags-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "social": "the three links of Joomla custom module 119 (facebook, twitter, youtube to https://www.joomlart.com/) are the pattern's social-links block, edited in the page",
+        "maximum": "12 tags, the tag cloud's numberOfTags"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1273-fork-keeps-every-line",
+  "kind": "fix",
+  "title": "The dsh fork pin carries every Tracy line at once: tracy.41 narrow frame, tracy.42 answer action row, the Thinking label and tracy.45 feedback categories",
+  "pr": 1273,
+  "area": "dsh/fork",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the pinned fork's sources (vendor/tracy/deepseek-harness): ui-chat chat/AnswerActions.tsx, chat-local.ts, chat/CommandNodeView.tsx, chat/MessageIconActions.module.css; ui-sidebar-right service.ts; ui-chat locale.ts; feedback/command-feedback index.ts; ui-commands locales.ts.",
+    "S2: Read TCH packages/ui/tracy-assistant/src/client/HelpNode.tsx.",
+    "S3: Read the fork package.json version and test it against TRACY_DSH_RE in vendor/tracy/dsh-passwords/src/tracy/dsh-runtime.ts."
+  ],
+  "expect": [
+    "S1: AnswerActions.tsx exists; chat-local.ts declares AnswerActions: ComponentType<LocalAnswerActionsProps>; CommandNodeView.tsx uses AnswerActions; the CSS names [data-chat-exchange]; service.ts declares readonly userGesture?: () => boolean; chat.deepDiving is 'Thinking'; command-feedback stores categories: [...entry.categories]; description.feedback is 'Help us to improve Tracy'.",
+    "S2: HelpNode.tsx calls ctx.chatLocal.AnswerActions.",
+    "S3: the version passes the gate and is -tracy.46 or later. On the old pin 1a87f60aba (tracy.45) six checks fail."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/deepseek-harness/packages/client/ui-chat/src/client/{chat-local.ts,chat/AnswerActions.tsx,chat/CommandNodeView.tsx,chat/MessageIconActions.module.css}, vendor/tracy/deepseek-harness/packages/client/ui-sidebar-right/src/client/service.ts, vendor/tracy/deepseek-harness/packages/feedback/command-feedback/src/index.ts"
+  },
+  "fence": "Which fork commit TCH pins: a hotfix cut on an older tracy.N must not replace the integration line on develop.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1273-fork-keeps-every-line.mjs"]
+  }
+}

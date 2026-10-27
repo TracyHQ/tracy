@@ -1,0 +1,45 @@
+{
+  "name": "@tracy/dsh-assistant",
+  "version": "0.1.0",
+  "description": "Tracy Help: /help <question> in the agent's chat, about the product and the asker's own sites, answered by tracy-web's /api/assistant/turns without the agent",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "check": "node scripts/build-client.mjs --check",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/ui/tracy-assistant"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@tracy/core": "workspace:^",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.5",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT"
+}

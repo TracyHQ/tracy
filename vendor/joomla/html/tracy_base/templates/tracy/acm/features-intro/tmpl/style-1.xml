@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Features Intro Style 1</title>
+  <fields name="features-intro">
+    <fieldset name="head" label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_HEAD_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_EYEBROW_DESC"
+      />
+      <field
+        name="title"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_TITLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_TITLE_DESC"
+      />
+      <field
+        name="lead"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_LEAD_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_LEAD_DESC"
+      />
+      <field
+        name="spotlight-label"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_SPOTLIGHT_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_SPOTLIGHT_DESC"
+      />
+    </fieldset>
+    <fieldset name="cards" label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARDS_LABEL" multiple="1">
+      <field
+        name="card-icon"
+        type="media"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_ICON_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_ICON_DESC"
+      />
+      <field
+        name="card-icon-alt"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_ICON_ALT_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_ICON_ALT_DESC"
+      />
+      <field
+        name="card-title"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_TITLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_TITLE_DESC"
+      />
+      <field
+        name="card-text"
+        type="textarea"
+        rows="4"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_TEXT_DESC"
+      />
+      <field
+        name="card-link-text"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_LINK_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_LINK_TEXT_DESC"
+      />
+      <field
+        name="card-link-url"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_LINK_URL_LABEL"
+        description="TPL_TRACY_BASE_ACM_FEATURES_INTRO_CARD_LINK_URL_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

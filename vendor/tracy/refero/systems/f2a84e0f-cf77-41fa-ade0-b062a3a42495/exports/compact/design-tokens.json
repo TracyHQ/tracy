@@ -1,0 +1,59 @@
+{
+  "color": {
+    "olive-ink": {
+      "$value": "#3c422e",
+      "$type": "color",
+      "$description": "Olive Ink — Primary text, nav links, borders, button outlines, icon strokes — near-black with an olive undertone that keeps the page from feeling clinical"
+    },
+    "linen-cream": {
+      "$value": "#fff4ec",
+      "$type": "color",
+      "$description": "Linen Cream — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "buttery-peach": {
+      "$value": "#f6e6d9",
+      "$type": "color",
+      "$description": "Buttery Peach — Secondary surface and warm contrast bands — slightly deeper than Linen Cream, used to break long pages and nest cards"
+    },
+    "squeeze-bottle-green": {
+      "$value": "#9eef80",
+      "$type": "color",
+      "$description": "Squeeze Bottle Green — Full-bleed section bands, highlighted text treatments — bright produce-shelf green that carries entire pages"
+    },
+    "evoo-yellow-green": {
+      "$value": "#d1e030",
+      "$type": "color",
+      "$description": "EVOO Yellow-Green — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "mustard-sun": {
+      "$value": "#fbd535",
+      "$type": "color",
+      "$description": "Mustard Sun — Full-bleed editorial section bands, large decorative type wash — warmer sibling to EVOO Yellow-Green, carries hero-level moments"
+    }
+  },
+  "font": {
+    "gt-alpina-typewriter": {
+      "$value": "GT Alpina Typewriter",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse for body copy, nav, buttons, links, captions, input fields, and small editorial labels. The typewriter serif gives the brand its hand-set, kitchen-counter voice — slightly imperfect letterforms make utility text feel editorial rather than transactional."
+    },
+    "itc-garamond-condensed": {
+      "$value": "ITC Garamond Condensed",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines only — the tall, narrow Garamond contrasts sharply with the typewriter body, creating a magazine-cover hierarchy. The 120px size with -0.031em tracking is the brand's signature mark: editorial confidence that swallows the page."
+    },
+    "apercu": {
+      "$value": "Apercu",
+      "$type": "fontFamily",
+      "$description": "Badge and status micro-labels — a neutral geometric sans used in tight all-caps tags like 'BACK IN STOCK'. Appears only in badge contexts to avoid competing with the serif system."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://graza.co",
+      "siteName": "GRAZA",
+      "extractedAt": "2026-06-03T17:58:09.573Z",
+      "variant": "compact"
+    }
+  }
+}

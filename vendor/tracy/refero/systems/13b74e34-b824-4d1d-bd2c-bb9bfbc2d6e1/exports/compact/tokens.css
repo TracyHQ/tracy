@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-star-white: #f0f0fa;
+  --color-dim-steel: #545457;
+  --color-dark-gunmetal: #404040;
+
+  /* Typography — Font Families */
+  --font-d-din: 'D-DIN', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-d-din-bold: 'D-DIN-Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

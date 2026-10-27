@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1770-wo-links-one-business",
+  "kind": "feat",
+  "title": "Three links to one business (Google Maps, a listing page, a website) resolve to one business with one Google place",
+  "pr": 1770,
+  "area": "website-opportunities/links",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the link-kind domain tests: judgeLinks on a Google link, a listing page link and a website link.",
+    "S2: Run the Google link tests: parse and match of the three real links of the test case.",
+    "S3: Run the listing page tests: the business node of a listing page and its name hint."
+  ],
+  "expect": [
+    "S1: social, listing, website and Google links are told apart; duplicates and a second Google link are judged, not merged.",
+    "S2: the three real links of the test case give one place; match never guesses.",
+    "S3: the listing page gives the business name, address, phone and geo, never the Organization."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/test/domain-{link-kinds,google-link,listing-page}.test.mjs"
+  },
+  "fence": "Pure domain functions, no network and no Postgres",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-link-kinds.test.mjs",
+      "packages/wo/website-opportunities/test/domain-google-link.test.mjs",
+      "packages/wo/website-opportunities/test/domain-listing-page.test.mjs"
+    ],
+    "tests": [
+      "parse: place id",
+      "match: a place id or cid is exact",
+      "match: never guesses",
+      "the three real links of the test case",
+      "judgeLinks: invalid, duplicate",
+      "the business node of a listing page",
+      "readListingPage: one limited read"
+    ]
+  }
+}

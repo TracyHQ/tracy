@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resort/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_resort",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resort",
+    "id": "quickstart/ja-resort/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_resort",
+    "parts": {
+      "installer": {
+        "file": "ja-resort-j6-quickstart-1.0.1.zip",
+        "bytes": 122311909,
+        "sha256": "b19afc2eb5577f0a187dc793d15710559871eb85578948b62250cfb63deca105"
+      }
+    },
+    "release": "quickstart/ja-resort/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

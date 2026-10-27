@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1686-wo-hub-wiring",
+  "kind": "feat",
+  "title": "A standalone server serves the shared hub behind HUB_SERVE, and another reads it before paying Google; a removal reaches the reader's cache through the revocation feed even with no read quota",
+  "pr": 1686,
+  "area": "website-opportunities/hub",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Three standalone apps on scratch databases: a hub (HUB_SERVE=1), client one (HUB_URL, HUB_TOKEN, HUB_CONTRIBUTE=1), client two (HUB_URL, HUB_TOKEN). Client one researches place A with a fake Google, then its hub tick sends the contribution; the hub runs its verify and publish ticks.",
+    "S2: Client two researches the same place A.",
+    "S3: The hub removes the business (suppressBusiness); client two's read quota is set past its limit; client two runs its hub tick and builds the brief research of A.",
+    "S4: A client's feed cursor is older than the hub keeps (410 cursor_expired).",
+    "S5: The hub CLI blocks an account, withdraws a contribution, revokes and removes a place and revokes a picture."
+  ],
+  "expect": [
+    "S1: client one pays Place Details once; the hub reads Google once to verify and publishes 1 snapshot; only identity, name, phone, address and location observations reach the hub.",
+    "S2: client two makes 0 Place Details calls; its google-places source has coverage.provenance = hub and the hub's name and address.",
+    "S3: the cached hub copy has dto null and revoked_at set; the brief research has no googlePlace, no google-places source and hubRevoked of length 1.",
+    "S4: every cached place is checked again; one the hub no longer serves is revoked, one it cannot check now is not used, the cursor moves to the head.",
+    "S5: each command exits 0 and the account, observation, place and picture change state; a revocation without --reason exits 2."
+  ],
+  "selectors": {
+    "server": "packages/wo/website-opportunities/src/standalone/server.js (HUB_SERVE, HUB_URL)",
+    "client": "packages/wo/website-opportunities/src/hub/local-cache.js, src/hub/client.js",
+    "hub": "packages/wo/website-opportunities/src/hub/serve.js",
+    "schema": "packages/wo/website-opportunities/src/schema/0005-hub-client.sql"
+  },
+  "evidence": "Before: the hub modules existed and were tested, but no server mounted their doors or ran their ticks, and no client read them",
+  "fence": "createStandaloneApp mounts createHubService under HUB_SERVE and passes createHubLink to the place runner under HUB_URL; briefResearchOf leaves out facts of revoked hub copies",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/hub-wiring.test.mjs",
+      "packages/wo/website-opportunities/test/hub-local-cache.test.mjs",
+      "packages/wo/website-opportunities/test/hub-cli.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "without HUB_SERVE the hub doors are not mounted",
+      "a place researched once is shared",
+      "only the closed field list leaves a client",
+      "HUB_URL and HUB_TOKEN go together",
+      "a business removed on the hub leaves the client cache",
+      "an expired cursor re-checks the cache",
+      "hub facts carry only fields the hub chose",
+      "an operator blocks and unblocks an account",
+      "an operator withdraws a contribution"
+    ]
+  }
+}

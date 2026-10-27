@@ -1,0 +1,94 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#f3f4ee",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas, card surfaces — the warm off-white that makes every ink color feel like print"
+    },
+    "bone-white": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Bone White — Alternate surface wash, subtle section differentiation from the cream canvas"
+    },
+    "press-black": {
+      "$value": "#231f20",
+      "$type": "color",
+      "$description": "Press Black — Primary text, borders, dividers, icon strokes — the near-black ink that anchors every screen"
+    },
+    "charcoal-headline": {
+      "$value": "#383435",
+      "$type": "color",
+      "$description": "Charcoal Headline — Display heading text — slightly lifted from press black for softer masthead weight"
+    },
+    "mid-gray": {
+      "$value": "#9a9a9a",
+      "$type": "color",
+      "$description": "Mid Gray — Muted helper text, hairline borders, secondary metadata"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon fills, maximum-contrast borders, nav accent"
+    },
+    "cobalt-ink": {
+      "$value": "#245dc5",
+      "$type": "color",
+      "$description": "Cobalt Ink — Primary brand color — illustrated duotone wash, outlined action borders, interactive text — saturated blue against cream creates the risograph-print signature"
+    },
+    "peach-wash": {
+      "$value": "#ffc6a6",
+      "$type": "color",
+      "$description": "Peach Wash — Secondary illustration accent, decorative borders, warm tonal fill — the cheek-pink of risograph layering"
+    },
+    "fire-red": {
+      "$value": "#f04736",
+      "$type": "color",
+      "$description": "Fire Red — Outlined action borders, emphasis strokes, error-like accent — used as editorial red rather than as a functional error state"
+    },
+    "vermillion": {
+      "$value": "#f52302",
+      "$type": "color",
+      "$description": "Vermillion — Deep red-orange accent for borders and fills — the warmest ink in the riso palette"
+    },
+    "crimson": {
+      "$value": "#d42121",
+      "$type": "color",
+      "$description": "Crimson — Deep red accent — used sparingly in illustration washes and emphasis borders"
+    },
+    "marigold": {
+      "$value": "#feee71",
+      "$type": "color",
+      "$description": "Marigold — Yellow accent fill, spot-color highlights, decorative emphasis — the third riso plate"
+    },
+    "terracotta": {
+      "$value": "#b45e42",
+      "$type": "color",
+      "$description": "Terracotta — Warm brown accent for body and heading borders — the earthiest ink in the editorial palette"
+    }
+  },
+  "font": {
+    "foundersgrotesk": {
+      "$value": "FoundersGrotesk",
+      "$type": "fontFamily",
+      "$description": "Workhorse type for everything from body to display — single weight 400 with no bold variants means hierarchy is created purely through size, line-height, and letter-spacing, not weight contrast. The aggressive negative line-heights (0.80 at 130px) create magazine-cover masthead pressure. Substitute: Neue Haas Grotesk, Inter, Söhne."
+    },
+    "timesnow-semilight": {
+      "$value": "TimesNow SemiLight",
+      "$type": "fontFamily",
+      "$description": "Editorial serif contrast for select headings and navigation — a humanist serif breaks the grotesque monotony at key moments, creating the magazine-section-divider effect. Substitute: Times Now, Tiempos, Source Serif."
+    },
+    "sackville-script-hand-drawn-wordmark": {
+      "$value": "Sackville Script (hand-drawn wordmark)",
+      "$type": "fontFamily",
+      "$description": "Custom hand-inked cursive used only for the brand wordmark — overlaid on illustrations and hero compositions. Not a UI font. No substitute; this is the signature mark."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sackville.co",
+      "siteName": "Sackville & Co.",
+      "extractedAt": "2026-06-03T20:19:42.245Z",
+      "variant": "compact"
+    }
+  }
+}

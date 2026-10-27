@@ -1,0 +1,1384 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "ja-impact/wp7/1.0.11",
+  "database": {
+    "file": "ja-impact-wp7-database-1.0.11.sql.gz",
+    "sha256": "43b61b158f5c3f03c41b7e991e2455672ab585aea72c9f813052d66d4e82761f"
+  },
+  "stylesheet": "wp-ja-impact",
+  "frontPage": 154,
+  "navigations": [
+    {
+      "id": 182,
+      "slug": "mainmenu",
+      "title": "mainmenu",
+      "language": "en",
+      "sha256": "b4f7860a464feeb6feb61e2cf86534c400c9cb55a2650a086b603d9b29775120",
+      "content": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":154,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"About\",\"type\":\"page\",\"id\":155,\"url\":\"https://quickstart.invalid/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Donations\",\"type\":\"page\",\"id\":161,\"url\":\"https://quickstart.invalid/donations/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Events\",\"type\":\"page\",\"id\":162,\"url\":\"https://quickstart.invalid/events/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-submenu {\"label\":\"Pages\"} -->\n<!-- wp:navigation-submenu {\"label\":\"Articles\"} -->\n<!-- wp:navigation-link {\"label\":\"Featured Articles\",\"type\":\"page\",\"id\":176,\"url\":\"https://quickstart.invalid/pages/j-content/featured-articles/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Author listting\",\"type\":\"page\",\"id\":178,\"url\":\"https://quickstart.invalid/pages/j-content/author-listting/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Blog Detail\",\"type\":\"post\",\"id\":114,\"url\":\"/charity-of-the-month-plan-international-uk/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Category Blog\",\"type\":\"page\",\"id\":177,\"url\":\"https://quickstart.invalid/pages/j-content/category-blog/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Pages\"} -->\n<!-- wp:navigation-link {\"label\":\"Offline Page\",\"type\":\"page\",\"id\":173,\"url\":\"https://quickstart.invalid/pages/j-page/offline-page/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Error Page\",\"type\":\"page\",\"id\":174,\"url\":\"https://quickstart.invalid/pages/j-page/error-page/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Smart Search\",\"type\":\"page\",\"id\":179,\"url\":\"https://quickstart.invalid/?page_id=179\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Typography\",\"type\":\"page\",\"id\":175,\"url\":\"https://quickstart.invalid/pages/j-page/typography/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"User pages\"} -->\n<!-- wp:navigation-link {\"label\":\"Login Form\",\"type\":\"page\",\"id\":170,\"url\":\"https://quickstart.invalid/pages/user/login-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Registration Form\",\"type\":\"page\",\"id\":171,\"url\":\"https://quickstart.invalid/pages/user/registration-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"User Profile\",\"type\":\"page\",\"id\":172,\"url\":\"https://quickstart.invalid/pages/user/user-profile/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"Blog\",\"type\":\"page\",\"id\":164,\"url\":\"https://quickstart.invalid/category-blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":156,\"url\":\"https://quickstart.invalid/contact/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 183,
+      "slug": "need-help",
+      "title": "need-help",
+      "language": "en",
+      "sha256": "ce07fac42b719c45b33d544eac01121b7c0a247177914ce74794d7dd4a7db2fb",
+      "content": "<!-- wp:navigation-link {\"label\":\"Help & FAQs\",\"type\":\"page\",\"id\":157,\"url\":\"https://quickstart.invalid/help-faqs/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Your account\",\"type\":\"page\",\"id\":170,\"url\":\"https://quickstart.invalid/pages/user/login-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Track your order\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact info\",\"type\":\"page\",\"id\":156,\"url\":\"https://quickstart.invalid/contact/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 184,
+      "slug": "guide",
+      "title": "guide",
+      "language": "en",
+      "sha256": "374bd10c66589816fee5a32ac5f65eed63769e80e9568fef0f7443a45fb94c18",
+      "content": "<!-- wp:navigation-link {\"label\":\"Store Locations\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Registry\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Blog\",\"type\":\"page\",\"id\":163,\"url\":\"https://quickstart.invalid/blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Shipping info\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 185,
+      "slug": "get-to-know-us",
+      "title": "get-to-know-us",
+      "language": "en",
+      "sha256": "8d54b5228ef1621c34b87d1aed0a78460d6bcca65fb7ac0d3d30f6e9bc66497f",
+      "content": "<!-- wp:navigation-link {\"label\":\"About us\",\"type\":\"page\",\"id\":155,\"url\":\"https://quickstart.invalid/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Term of service\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Careers\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Affiliates\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 186,
+      "slug": "follow-us",
+      "title": "follow-us",
+      "language": "en",
+      "sha256": "f6cc4b7735503901fe200fdd7dc01e5a4ca82fc61566448b8039f52cb3ba1b2a",
+      "content": "<!-- wp:navigation-link {\"label\":\"Twitter\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Facebook\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Instagram\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Threads\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 187,
+      "slug": "tracy-footer-1",
+      "title": "Footer — footnav-1",
+      "language": "en",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content": ""
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 188,
+      "slug": "header",
+      "theme": "wp-ja-impact",
+      "area": "header",
+      "sha256": "46d6ebd64bc6c554d448f4fcdda8f5334e1ca475a7634af03b7155ef2e1f784e",
+      "content": "<!-- wp:group {\"className\":\"jim-header__top\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-header__top\">\n<!-- wp:group {\"className\":\"jim-container jim-header__row\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-container jim-header__row\">\n<!-- wp:site-logo {\"width\":210,\"shouldSyncIcon\":false,\"className\":\"jim-logo tracy-logo-dark\"} /-->\n<!-- wp:group {\"className\":\"jim-contact\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-contact\">\n<!-- wp:group {\"className\":\"jim-contact__item jim-contact__item\\u002d\\u002daddress\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-contact__item jim-contact__item--address\">\n<!-- wp:paragraph {\"className\":\"jim-contact__sub\"} -->\n<p class=\"jim-contact__sub\">Our address:</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-contact__title\"} -->\n<p class=\"jim-contact__title\">Melbourne, Australia</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-contact__item jim-contact__item\\u002d\\u002dmail\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-contact__item jim-contact__item--mail\">\n<!-- wp:paragraph {\"className\":\"jim-contact__sub\"} -->\n<p class=\"jim-contact__sub\">You may send an email</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-contact__title\"} -->\n<p class=\"jim-contact__title\"><a href=\"mailto:helpus24@gmail.com\">helpus24@gmail.com</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-contact__item jim-contact__item\\u002d\\u002dphone\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-contact__item jim-contact__item--phone\">\n<!-- wp:paragraph {\"className\":\"jim-contact__sub\"} -->\n<p class=\"jim-contact__sub\">Helpline and support</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-contact__title\"} -->\n<p class=\"jim-contact__title\">1 800 458 56 97</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:html -->\n<span class=\"jim-header__tools\"><button type=\"button\" class=\"jim-theme-toggle jim-theme-toggle--phone\" data-tracy-theme-toggle aria-pressed=\"false\" aria-label=\"Theme: light. Switch to dark\"><svg class=\"jim-theme-toggle__moon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg><svg class=\"jim-theme-toggle__sun\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"5\"/><path d=\"M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42\"/></svg></button><button type=\"button\" class=\"jim-drawer-toggle\" aria-controls=\"jim-header-menu\" aria-expanded=\"false\" aria-label=\"Open the menu\"><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span></button></span>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-header__bar\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-header__bar\">\n<!-- wp:group {\"className\":\"jim-container jim-header__row\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-container jim-header__row\">\n<!-- wp:group {\"anchor\":\"jim-header-menu\",\"className\":\"jim-header__menu\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-header__menu\" id=\"jim-header-menu\">\n<!-- wp:group {\"className\":\"jim-drawer__head\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-drawer__head\">\n<!-- wp:site-logo {\"width\":111,\"shouldSyncIcon\":false,\"className\":\"jim-drawer__logo tracy-logo-dark\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:navigation {\"ref\":182,\"overlayMenu\":\"never\",\"className\":\"jim-nav\",\"metadata\":{\"name\":\"nav.mainmenu\"},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-header__actions\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-header__actions\">\n<!-- wp:html -->\n<button type=\"button\" class=\"jim-theme-toggle\" data-tracy-theme-toggle aria-pressed=\"false\" aria-label=\"Theme: light. Switch to dark\"><svg class=\"jim-theme-toggle__moon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg><svg class=\"jim-theme-toggle__sun\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"5\"/><path d=\"M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42\"/></svg></button>\n<!-- /wp:html -->\n<!-- wp:buttons {\"className\":\"jim-donate\"} -->\n<div class=\"wp-block-buttons jim-donate\">\n<!-- wp:button {\"className\":\"jim-btn jim-btn\\u002d\\u002dsuccess\"} -->\n<div class=\"wp-block-button jim-btn jim-btn--success\"><a class=\"wp-block-button__link wp-element-button\" href=\"/donations/\">Donate now</a></div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n\n"
+    },
+    {
+      "id": 189,
+      "slug": "footer",
+      "theme": "wp-ja-impact",
+      "area": "footer",
+      "sha256": "c603f1eeb76166d0c689cd91e6e440fd076b3b2f3c9111b9bddf46941d088a78",
+      "content": "<!-- wp:group {\"className\":\"jim-footer__contact jim-band jim-band--primary\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__contact jim-band jim-band--primary\">\n<!-- wp:group {\"className\":\"jim-container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-container\">\n<!-- wp:group {\"className\":\"jim-fcontact\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-fcontact\">\n<!-- wp:heading {\"level\":2,\"className\":\"jim-fcontact__heading\"} -->\n<h2 class=\"wp-block-heading jim-fcontact__heading\">Our team of qualified plumbers is ready and always available, anytime, anywhere.</h2>\n<!-- /wp:heading -->\n<!-- wp:group {\"className\":\"jim-fcontact__items\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-fcontact__items\">\n<!-- wp:group {\"className\":\"jim-fcontact__item\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-fcontact__item\">\n<!-- wp:paragraph {\"className\":\"jim-fcontact__sub\"} -->\n<p class=\"jim-fcontact__sub\">Email us</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-fcontact__title\"} -->\n<p class=\"jim-fcontact__title\"><a href=\"mailto:helpus24@gmail.com\">helpus24@gmail.com</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-fcontact__item\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-fcontact__item\">\n<!-- wp:paragraph {\"className\":\"jim-fcontact__sub\"} -->\n<p class=\"jim-fcontact__sub\">Our address</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-fcontact__title\"} -->\n<p class=\"jim-fcontact__title\">Melbourne, Australia</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-fcontact__item\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-fcontact__item\">\n<!-- wp:paragraph {\"className\":\"jim-fcontact__sub\"} -->\n<p class=\"jim-fcontact__sub\">Support 24/7</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-fcontact__title\"} -->\n<p class=\"jim-fcontact__title\">1 800 458 56 97</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-footer__nav jim-band jim-band\\u002d\\u002dprimary\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__nav jim-band jim-band--primary\">\n<!-- wp:group {\"className\":\"jim-container jim-footer__cols\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-container jim-footer__cols\">\n<!-- wp:group {\"className\":\"jim-footer__col jim-footer__col\\u002d\\u002dabout\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__col jim-footer__col--about\">\n<!-- wp:site-logo {\"width\":210,\"shouldSyncIcon\":false,\"className\":\"jim-footer__logo tracy-logo-dark\"} /-->\n<!-- wp:paragraph {\"className\":\"jim-footer__about\"} -->\n<p class=\"jim-footer__about\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jim-footer__title\"} -->\n<h3 class=\"wp-block-heading jim-footer__title\">Get to know us</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":185,\"overlayMenu\":\"never\",\"className\":\"jim-footnav\",\"metadata\":{\"name\":\"nav.get-to-know-us\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jim-footer__title\"} -->\n<h3 class=\"wp-block-heading jim-footer__title\">Guide</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":184,\"overlayMenu\":\"never\",\"className\":\"jim-footnav\",\"metadata\":{\"name\":\"nav.guide\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jim-footer__title\"} -->\n<h3 class=\"wp-block-heading jim-footer__title\">Need help</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":183,\"overlayMenu\":\"never\",\"className\":\"jim-footnav\",\"metadata\":{\"name\":\"nav.need-help\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jim-footer__title\"} -->\n<h3 class=\"wp-block-heading jim-footer__title\">Follow us</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":186,\"overlayMenu\":\"never\",\"className\":\"jim-footnav\",\"metadata\":{\"name\":\"nav.follow-us\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jim-footer__bar jim-band jim-band\\u002d\\u002dprimary\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__bar jim-band jim-band--primary\">\n<!-- wp:group {\"className\":\"jim-container jim-footer__row\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-container jim-footer__row\">\n<!-- wp:group {\"className\":\"jim-footer__copy\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jim-footer__copy\">\n<!-- wp:paragraph {\"className\":\"jim-footer__copy1\"} -->\n<p class=\"jim-footer__copy1\">Copyright © {year} {site.title}. All Rights Reserved.</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jim-footer__copy2\"} -->\n<p class=\"jim-footer__copy2\"><a href=\"https://wordpress.org\">WordPress</a> is free software released under the <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GNU General Public License.</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:social-links {\"className\":\"jim-social is-style-logos-only\"} -->\n<ul class=\"wp-block-social-links jim-social is-style-logos-only\"><!-- wp:social-link {\"url\":\"#\",\"service\":\"facebook\",\"label\":\"Facebook\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"x\",\"label\":\"X\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"tiktok\",\"label\":\"TikTok\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"pinterest\",\"label\":\"Pinterest\"} /--></ul>\n<!-- /wp:social-links -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n\n"
+    }
+  ],
+  "themeParts": [],
+  "linkedPosts": [
+    {
+      "id": 114,
+      "type": "post",
+      "status": "publish",
+      "slug": "charity-of-the-month-plan-international-uk",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 154,
+      "type": "page",
+      "status": "publish",
+      "slug": "home",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 155,
+      "type": "page",
+      "status": "publish",
+      "slug": "about",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 156,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/shortcode",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 157,
+      "type": "page",
+      "status": "publish",
+      "slug": "help-faqs",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 161,
+      "type": "page",
+      "status": "publish",
+      "slug": "donations",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 162,
+      "type": "page",
+      "status": "publish",
+      "slug": "events",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 163,
+      "type": "page",
+      "status": "publish",
+      "slug": "blog",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 164,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-blog",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 170,
+      "type": "page",
+      "status": "publish",
+      "slug": "login-form",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 171,
+      "type": "page",
+      "status": "publish",
+      "slug": "registration-form",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 172,
+      "type": "page",
+      "status": "publish",
+      "slug": "user-profile",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 173,
+      "type": "page",
+      "status": "publish",
+      "slug": "offline-page",
+      "blocks": [
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 174,
+      "type": "page",
+      "status": "publish",
+      "slug": "error-page",
+      "blocks": [
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 175,
+      "type": "page",
+      "status": "publish",
+      "slug": "typography",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 176,
+      "type": "page",
+      "status": "publish",
+      "slug": "featured-articles",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 177,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-blog",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 178,
+      "type": "page",
+      "status": "publish",
+      "slug": "author-listting",
+      "blocks": [
+        "core/group",
+        "wp-ja-impact/gb-authors"
+      ]
+    },
+    {
+      "id": 179,
+      "type": "page",
+      "status": "draft",
+      "slug": "smart-search",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/search"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 154,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "title",
+          "termLinks": [
+            "post_tag"
+          ],
+          "unsupported": [
+            "wpJaImpactCategory"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "only",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 0,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactCategory"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactCategory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 161,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "post_tag"
+          ],
+          "unsupported": [
+            "wpJaImpactCategory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 162,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 5,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactCategory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 163,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactCategory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 164,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactCategory",
+            "wpJaImpactOrder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 166,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 20,
+          "pages": 0,
+          "paginated": true,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactTagged"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 176,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "only",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactOrder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 177,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaImpactCategory",
+            "wpJaImpactOrder"
+          ]
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 112,
+      "type": "post",
+      "slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+      "author": 3,
+      "date": "2023-07-17 09:38:31",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ]
+      }
+    },
+    {
+      "id": 113,
+      "type": "post",
+      "slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+      "author": 3,
+      "date": "2023-07-26 09:40:46",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ]
+      }
+    },
+    {
+      "id": 114,
+      "type": "post",
+      "slug": "charity-of-the-month-plan-international-uk",
+      "author": 3,
+      "date": "2023-07-17 09:41:16",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 115,
+      "type": "post",
+      "slug": "we-ve-reached-1-million-indonations-and-counting",
+      "author": 3,
+      "date": "2023-07-17 10:04:10",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 116,
+      "type": "post",
+      "slug": "building-empathy-throughremote-user-research",
+      "author": 3,
+      "date": "2023-08-26 10:06:49",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 117,
+      "type": "post",
+      "slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+      "author": 4,
+      "date": "2023-08-26 10:07:19",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 118,
+      "type": "post",
+      "slug": "i-m-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+      "author": 5,
+      "date": "2023-08-01 10:09:33",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ]
+      }
+    },
+    {
+      "id": 119,
+      "type": "post",
+      "slug": "charity-branding-is-yourbrand-digital-ready",
+      "author": 5,
+      "date": "2023-08-27 10:11:27",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 120,
+      "type": "post",
+      "slug": "donation-and-cleaning-program-foundation",
+      "author": 5,
+      "date": "2023-07-17 10:12:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 121,
+      "type": "post",
+      "slug": "charity-of-the-month-plan-international-uk-2",
+      "author": 5,
+      "date": "2023-08-02 10:12:26",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "id": 122,
+      "type": "post",
+      "slug": "water-treatment-projects",
+      "author": 5,
+      "date": "2023-07-18 03:27:45",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 123,
+      "type": "post",
+      "slug": "saving-ensdangered-species",
+      "author": 4,
+      "date": "2023-07-18 03:27:44",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 124,
+      "type": "post",
+      "slug": "sea-pollution",
+      "author": 4,
+      "date": "2023-07-18 03:27:43",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 125,
+      "type": "post",
+      "slug": "community-center",
+      "author": 4,
+      "date": "2023-07-18 03:27:42",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 126,
+      "type": "post",
+      "slug": "endangered-species",
+      "author": 4,
+      "date": "2023-07-18 03:27:41",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 127,
+      "type": "post",
+      "slug": "oil-pollution",
+      "author": 4,
+      "date": "2023-07-18 03:27:40",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 128,
+      "type": "post",
+      "slug": "save-rainforests",
+      "author": 6,
+      "date": "2023-07-18 03:27:39",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 129,
+      "type": "post",
+      "slug": "indigenous-people",
+      "author": 6,
+      "date": "2023-07-18 03:27:38",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 130,
+      "type": "post",
+      "slug": "saving-animal-preserve",
+      "author": 6,
+      "date": "2023-07-18 03:27:37",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 131,
+      "type": "post",
+      "slug": "the-mysteries-of-the-jungle-creatures",
+      "author": 6,
+      "date": "2023-07-18 03:27:36",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 132,
+      "type": "post",
+      "slug": "exploring-the-world-of-feline-friends",
+      "author": 6,
+      "date": "2023-07-18 03:27:35",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 133,
+      "type": "post",
+      "slug": "surviving-the-harsh-polar-realms",
+      "author": 7,
+      "date": "2023-07-18 03:27:34",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 134,
+      "type": "post",
+      "slug": "the-african-wildlife-chronicles",
+      "author": 7,
+      "date": "2023-07-18 03:27:33",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 135,
+      "type": "post",
+      "slug": "afforestation-program",
+      "author": 7,
+      "date": "2023-07-26 08:12:35",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          9,
+          11
+        ]
+      }
+    },
+    {
+      "id": 136,
+      "type": "post",
+      "slug": "feed-the-world",
+      "author": 7,
+      "date": "2023-07-26 08:12:34",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          9
+        ]
+      }
+    },
+    {
+      "id": 137,
+      "type": "post",
+      "slug": "charity-journey-to-africa",
+      "author": 7,
+      "date": "2023-07-26 08:12:33",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": 138,
+      "type": "post",
+      "slug": "the-day-of-the-african-child",
+      "author": 8,
+      "date": "2023-07-26 08:12:32",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 139,
+      "type": "post",
+      "slug": "saving-nature",
+      "author": 8,
+      "date": "2023-07-26 08:12:31",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          11
+        ]
+      }
+    },
+    {
+      "id": 140,
+      "type": "post",
+      "slug": "a-microscopic-marvel",
+      "author": 8,
+      "date": "2023-07-26 08:12:30",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          9,
+          12
+        ]
+      }
+    },
+    {
+      "id": 141,
+      "type": "post",
+      "slug": "unveiling-nature-s-best",
+      "author": 8,
+      "date": "2023-07-26 08:12:29",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          9,
+          11
+        ]
+      }
+    },
+    {
+      "id": 142,
+      "type": "post",
+      "slug": "an-adventure-with-animals",
+      "author": 8,
+      "date": "2023-07-26 08:12:28",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": 143,
+      "type": "post",
+      "slug": "nature-s-hidden-gems",
+      "author": 2,
+      "date": "2023-07-26 08:12:27",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          8,
+          9,
+          11
+        ]
+      }
+    },
+    {
+      "id": 144,
+      "type": "post",
+      "slug": "how-many-people-in-africa-don-t-have-food",
+      "author": 9,
+      "date": "2023-08-10 06:28:08",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 145,
+      "type": "post",
+      "slug": "a-journey-through-enchanted-lands",
+      "author": 9,
+      "date": "2023-08-10 06:29:39",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 146,
+      "type": "post",
+      "slug": "exploring-magical-worlds",
+      "author": 9,
+      "date": "2023-08-10 09:31:56",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 147,
+      "type": "post",
+      "slug": "a-journey-of-discovery-and-learning",
+      "author": 5,
+      "date": "2023-08-10 09:33:03",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 148,
+      "type": "post",
+      "slug": "silly-stories-and-jokes-for-young-readers",
+      "author": 10,
+      "date": "2023-08-10 09:35:10",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 149,
+      "type": "post",
+      "slug": "exploring-the-beauty-of-the-animal-kingdom",
+      "author": 10,
+      "date": "2023-08-10 09:36:24",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 150,
+      "type": "post",
+      "slug": "legends-and-folktales-from-around-the-world",
+      "author": 10,
+      "date": "2023-08-10 09:37:41",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 151,
+      "type": "post",
+      "slug": "heartwarming-tales-of-kindness-and-togetherness",
+      "author": 10,
+      "date": "2023-08-10 09:37:40",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 152,
+      "type": "post",
+      "slug": "exciting-adventures-to-the-past-and-future",
+      "author": 10,
+      "date": "2023-08-10 09:37:39",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": 1,
+      "taxonomy": "category",
+      "slug": "uncategorized",
+      "parent": 0
+    },
+    {
+      "id": 2,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 3,
+      "taxonomy": "category",
+      "slug": "blog",
+      "parent": 0
+    },
+    {
+      "id": 4,
+      "taxonomy": "category",
+      "slug": "events",
+      "parent": 3
+    },
+    {
+      "id": 5,
+      "taxonomy": "category",
+      "slug": "animals",
+      "parent": 3
+    },
+    {
+      "id": 6,
+      "taxonomy": "category",
+      "slug": "children",
+      "parent": 3
+    },
+    {
+      "id": 7,
+      "taxonomy": "category",
+      "slug": "donations",
+      "parent": 3
+    },
+    {
+      "id": 8,
+      "taxonomy": "post_tag",
+      "slug": "animals",
+      "parent": 0
+    },
+    {
+      "id": 9,
+      "taxonomy": "post_tag",
+      "slug": "charity",
+      "parent": 0
+    },
+    {
+      "id": 10,
+      "taxonomy": "post_tag",
+      "slug": "media",
+      "parent": 0
+    },
+    {
+      "id": 11,
+      "taxonomy": "post_tag",
+      "slug": "nature",
+      "parent": 0
+    },
+    {
+      "id": 12,
+      "taxonomy": "post_tag",
+      "slug": "activism",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    141,
+    142,
+    143
+  ]
+}

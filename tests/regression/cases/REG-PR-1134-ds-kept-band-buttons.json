@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1134-ds-kept-band-buttons",
+  "kind": "fix",
+  "title": "Tracy Business: the call to action inside a band the template keeps (WordPress, Joomla) and on a band painted with a worn colour (EmDash) wears the system's button pair, checked against that band's ground",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/cms.test.mjs packages/design/tracy-ds-slot/test/slot.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'Tracy Business: the call to action inside a kept band wears the system, judged on the band's ground' passes: on wordpress-tracy-business and joomla-tracy-business, under Spotify and Stripe, every keptButtons band has a rule painting its buttons with the system's accent and accent-on (fill on the band >= 3:1, text on the fill >= 4.5:1) and a hover rule, judged on the ground the band shows: the system's own where bands.mjs makes the band wear it (#1258, 12/10/2026), else the band's kept ground.",
+    "'kept-band buttons: the pair turns over or stays the template's when the accent cannot stand out on the band' passes: a black accent on an ink band turns over (white fill, black text); a pair neither colour of which stands out keeps the template's button; a band outside keepScopes, or a selector that could leave its rule, writes nothing.",
+    "'EmDash Tracy Business: the call to action on a painted band stands out from that band under every system' passes for Apple, Stripe, Spotify, Linear, Binance, Superhuman, Editorial, Mintlify, Ferrari and Runway: .band-ink (ground fg) and .bg-forest (ground accent-text) buttons stand >= 3:1 on their band with text >= 4.5:1; Apple's forest-band button is white with blue text.",
+    "'a band selector or button selector that could leave its rule is never written' passes."
+  ],
+  "selectors": {
+    "contractKeys": "templates/wordpress-tracy-business.json + joomla-tracy-business.json keptButtons {<band>: {ground: <hex>, buttons}}; templates/emdash-tracy-business.json bandButtons {<band>: {ground: <role>, buttons}}",
+    "emitters": "src/tokens56.mjs keptButtonRules / keptButtonPair; src/emit.mjs bandButtonRules; src/colour.mjs buttonPair",
+    "measure": "scripts/flow.mjs keptButtonProbe (column 'Kept bands changed · buttons n/n follow')"
+  },
+  "evidence": "tasks/evidence/ds-kept-buttons-2026-10-11/README.md (flow.mjs on a local WordPress and Joomla Tracy Business stand and on the stand's EmDash site dsbtnem01, 10 systems each); tasks/evidence/ds-walkthrough-2026-10-11/README.md note 12.",
+  "fence": "The emitted CSS of the three Tracy Business contracts, no stand: the pages themselves are measured in the evidence.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "packages/design/tracy-ds-slot/test/slot.test.mjs"
+    ],
+    "tests": [
+      "Tracy Business: the call to action inside a kept band wears the system, judged on the band's ground",
+      "kept-band buttons: the pair turns over or stays the template's when the accent cannot stand out on the band",
+      "EmDash Tracy Business: the call to action on a painted band stands out from that band under every system",
+      "a band selector or button selector that could leave its rule is never written"
+    ],
+    "needs": [],
+    "timeout_s": 300
+  }
+}

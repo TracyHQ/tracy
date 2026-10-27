@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-bone: #e5e7eb;
+  --color-charcoal: #0a0a0a;
+  --color-paper: #ffffff;
+  --color-obsidian: #000000;
+  --color-deep-current: #031e25;
+  --color-slate-depth: #1d1d1e;
+
+  /* Typography */
+  --font-soehne: 'Soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

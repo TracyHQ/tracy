@@ -1,0 +1,72 @@
+{
+  "id": "QA-UNIT-REG-PR-1234-subscription-images-host-happy",
+  "itemIds": ["regression:REG-PR-1234-subscription-images-host"],
+  "requirement": "The dsh host sends a Model Subscription request's pictures inline, within one request budget, and declares what the pinned model reads",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1234-subscription-images-host.json",
+    "ref": "PR #1234 (feat); fix evidence: Review 09/10/2026: a pasted screenshot or page picture never reached a subscription model; the host posted store references tracy-web cannot read.",
+    "invariant": "0 failures. The run request carries {type:'image', source:{type:'base64'}} after a text handle, and no 'attachment' reference; the caller's messages are not mutated. 25 pictures of 512 KiB base64 each fail with IMAGE_OFFLOAD_REQUIRED and failure.offloadImages = 9; the retry with 9 offloaded reads 16 pictures, sends 16 images and 9 placeholders. The same reference twice is read once and counted twice; 21 occurrences need 1 offload. A picture above 1 MiB is asked again at 1536 then 1024, and kept at 1024. A fallback to the deployment default streams the original reference messages. A pin with route.inputModalities ['text','image'] makes seat-plan-claude declare image before the route reaches dsh; glm, a silent or malformed pin, and a cold host declare ['text']. view.mjs agentReadsImages and look.mjs readsImages are true on a Claude route and false on GLM.",
+    "productSources": [
+      "apps/tracy-web/src/lib/desktop-setting.js:6",
+      "packages/tools/tracy-site-tools/src/host/look.mjs:246",
+      "packages/tools/tracy-site-tools/src/host/view.mjs:690",
+      "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs:122"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a pasted picture reaches tracy-web as base64 bytes, never as a store reference",
+    "a tool result picture (page.look) is sent inline too, in its place",
+    "25 pictures over 8 MiB of base64 ask dsh to offload the oldest; the retry sends the rest without reading the offloaded",
+    "the same picture twice is read once and counted twice",
+    "a picture still above 1 MiB after compression is asked again smaller: 1536, then 1024",
+    "a fallback to the deployment default re-sends the original store references, not the inline copy",
+    "a pinned vendor model declares what tracy-web says it reads: Claude pictures, GLM text",
+    "after a host restart a model reads pictures again from its first pin",
+    "Tracy's own picture checks (page picture, page.look) see a Claude route read pictures, and a GLM route not"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1234-subscription-images-host"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-mode-picker", "tracy-mode-picker"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1234-subscription-images-host",
+    "pr": 1234,
+    "kind": "feat",
+    "area": "seat-plan/images",
+    "file": "tests/regression/cases/REG-PR-1234-subscription-images-host.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-mode-picker/test/account-subscriptions-images.test.mjs",
+    "packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a pasted picture reaches tracy-web as base64 bytes, never as a store reference",
+    "a tool result picture (page.look) is sent inline too, in its place",
+    "25 pictures over 8 MiB of base64 ask dsh to offload the oldest; the retry sends the rest without reading the offloaded",
+    "the same picture twice is read once and counted twice",
+    "a picture still above 1 MiB after compression is asked again smaller: 1536, then 1024",
+    "a fallback to the deployment default re-sends the original store references, not the inline copy",
+    "a pinned vendor model declares what tracy-web says it reads: Claude pictures, GLM text",
+    "after a host restart a model reads pictures again from its first pin",
+    "Tracy's own picture checks (page picture, page.look) see a Claude route read pictures, and a GLM route not"
+  ],
+  "timeoutS": 600
+}

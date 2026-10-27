@@ -1,0 +1,74 @@
+{
+  "color": {
+    "deep-iris": {
+      "$value": "#5c16c5",
+      "$type": "color",
+      "$description": "Deep Iris — Primary brand color — logo wordmark, link text, active nav icons, decorative accent fills. Unusually dark violet gives the wordmark the weight of a jersey number rather than a SaaS accent"
+    },
+    "twitch-purple": {
+      "$value": "#9147ff",
+      "$type": "color",
+      "$description": "Twitch Purple — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "broadcast-red": {
+      "$value": "#eb0400",
+      "$type": "color",
+      "$description": "Broadcast Red — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "dark-matter": {
+      "$value": "#0e0e10",
+      "$type": "color",
+      "$description": "Dark Matter — Primary text, icon strokes, dark UI surfaces, featured stream overlays, footer text. Near-black with a faint warm cast"
+    },
+    "charcoal": {
+      "$value": "#3b3b44",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text, muted nav items, helper labels, inactive controls. The readable-but-quiet middle ground between Dark Matter and the canvas"
+    },
+    "soft-mist": {
+      "$value": "#efeff1",
+      "$type": "color",
+      "$description": "Soft Mist — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, thumbnail frames, button text, input fields, nav bar background. The elevated surface token"
+    },
+    "hairline": {
+      "$value": "#dddde2",
+      "$type": "color",
+      "$description": "Hairline — Dividers, card borders, input outlines, table separators. Visible but never structural"
+    },
+    "steel-gray": {
+      "$value": "#b2b2b3",
+      "$type": "color",
+      "$description": "Steel Gray — Subtle border accents, low-emphasis separators where Hairline would be too prominent"
+    },
+    "shadow-smoke": {
+      "$value": "#c1c1c1",
+      "$type": "color",
+      "$description": "Shadow Smoke — Box-shadow tint on elevated cards and popovers — a cool neutral gray rather than pure black"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary UI typeface for the entire interface — nav labels, body text, buttons, badges, metadata, tags. Stays at 11–14px everywhere; the 600 weight is reserved for nav items, button text, and emphasis labels while 400 carries body and helper text. The narrow size range is intentional: Twitch compresses information rather than scaling type to create hierarchy."
+    },
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "Brand display font for the wordmark and section headings. The slight negative tracking (-0.01em) tightens the geometric forms into a custom-feeling logotype. Substituted by Inter when unavailable — the brand relies on the wordmark image for identity, not the typeface alone."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://twitch.tv",
+      "siteName": "Twitch",
+      "extractedAt": "2026-06-03T19:25:43.413Z",
+      "variant": "compact"
+    }
+  }
+}

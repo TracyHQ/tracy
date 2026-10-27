@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-kinetic/wp7/1.0.10",
+  "platform": "wordpress",
+  "theme": "wp-ja-kinetic",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-kinetic/wp7",
+    "version": "1.0.10",
+    "platform": "wordpress",
+    "platformVersion": "7.1.3",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-kinetic",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-kinetic-wp7-webroot-1.0.10.tar.gz",
+        "bytes": 56296508,
+        "sha256": "f3f99f63c70167b5d6d5f0739e6fe7a6e006403ba26162c3ba3e59bb842ad60f",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-kinetic%2Fwp7/ja-kinetic-wp7-webroot-1.0.10.tar.gz"
+      },
+      "database": {
+        "file": "ja-kinetic-wp7-database-1.0.10.sql.gz",
+        "bytes": 351000,
+        "sha256": "19d5b116b5fc39907145f4475b865b8a32c83bd832d8df1bb9c69577e0302e6b",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-kinetic%2Fwp7/ja-kinetic-wp7-database-1.0.10.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.0",
+  "mode": "content-recommendation"
+}

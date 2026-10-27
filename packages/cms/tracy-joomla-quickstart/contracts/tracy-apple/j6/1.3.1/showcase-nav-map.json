@@ -1,0 +1,274 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "tracy-apple/j6/1.3.1",
+  "baseHash": "6fb87a0f516ea27c5d2e0bfb9b7b7d676a7684c7da4f3e3e6e1d702bf66d0773",
+  "baseFiles": {
+    "manifest.json": "8c67ed945a7370ee8d6933fcb93a31822443ecc58150b2f86f4a14a868400d7c",
+    "content-map.json": "ace00671b7c1256c5517624c111cb6bee471697a7227ed20ffd8d85909050fbd",
+    "presentation-lock.json": "cd14634ce213667f0c4ea24be1c3aaba814666a250fc108287af567a0f3a3ee9"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-241",
+      "identity": {
+        "path": "resources/typography",
+        "menutype": "tracy",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-242",
+      "identity": {
+        "path": "resources/colors",
+        "menutype": "tracy",
+        "language": "*"
+      },
+      "label": "Colour",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Colour\" reads as a home or colour demo and opens only sample content or what the home page opens (article:75)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-244",
+      "identity": {
+        "path": "resources/style-guide",
+        "menutype": "tracy",
+        "language": "*"
+      },
+      "label": "Design system",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Design system\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-246",
+      "identity": {
+        "path": "resources/home-2",
+        "menutype": "tracy",
+        "language": "*"
+      },
+      "label": "Home — variant",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Home — variant\" reads as a home or colour demo and opens only sample content or what the home page opens (featured, article:1, article:3 (+15))"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-239",
+      "label": "Home",
+      "where": "tracy/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-243",
+      "label": "Spacing & grid",
+      "where": "tracy/resources/spacing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-247",
+      "label": "Spring campaign",
+      "where": "tracy/resources/landing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-248",
+      "label": "About",
+      "where": "tracy/company/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-249",
+      "label": "Service",
+      "where": "tracy/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-250",
+      "label": "Pricing",
+      "where": "tracy/pricing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-251",
+      "label": "Team",
+      "where": "tracy/company/team",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-252",
+      "label": "Topics",
+      "where": "tracy/resources/all-categories",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-253",
+      "label": "Archive",
+      "where": "tracy/resources/archive",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-254",
+      "label": "Blog",
+      "where": "tracy/resources/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-256",
+      "label": "Sign in",
+      "where": "tracy/resources/sign-in",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-261",
+      "label": "Search",
+      "where": "tracy/resources/search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-262",
+      "label": "Tags",
+      "where": "tracy/resources/tags",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tags): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-263",
+      "label": "Contact us",
+      "where": "tracy/resources/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=categories): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-264",
+      "label": "All articles",
+      "where": "tracy/resources/category-list",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-265",
+      "label": "Talk to sales",
+      "where": "tracy/resources/single-contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-268",
+      "label": "Browse by tag",
+      "where": "tracy/resources/single-tag",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-271",
+      "label": "Help centre",
+      "where": "tracy/resources/faq",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-273",
+      "label": "Service detail",
+      "where": "tracy/services/service-detail",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-318",
+      "label": "Product",
+      "where": "tracy/product",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-319",
+      "label": "Resources",
+      "where": "tracy/resources",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-320",
+      "label": "IT Procurement",
+      "where": "tracy/resources/mag-procurement",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-321",
+      "label": "Data Center",
+      "where": "tracy/resources/mag-datacenter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-322",
+      "label": "World News",
+      "where": "tracy/resources/mag-world",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-323",
+      "label": "Company",
+      "where": "tracy/company",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-324",
+      "label": "Careers",
+      "where": "tracy/company/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-169",
+      "label": "[Tracy Apple] Chrome - Mobile menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders tracy: 26 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 4,
+    "modules": 0,
+    "kept": 27,
+    "unresolved": 0
+  }
+}

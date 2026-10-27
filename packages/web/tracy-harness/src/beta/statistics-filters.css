@@ -1,0 +1,107 @@
+/* Templates Management control geometry, with a clear action on an active value. */
+.signals-screen .signals-filter-bottom {
+  align-items: center;
+  gap: 8px;
+}
+.statistics-filter {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--muted) 50%, var(--background));
+  color: var(--foreground);
+}
+.statistics-filter[data-active="true"] {
+  background: var(--muted);
+  border-color: var(--foreground);
+  font-weight: 600;
+}
+.statistics-filter-trigger {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  height: 34px;
+  gap: 8px;
+  padding: 0 10px 0 12px;
+  cursor: pointer;
+  border-radius: inherit;
+  color: inherit;
+}
+.statistics-filter-trigger:focus-visible,
+.statistics-filter-clear:focus-visible {
+  outline: 1px solid var(--ring);
+  outline-offset: -1px;
+}
+.statistics-filter-name {
+  color: var(--muted-foreground);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.statistics-filter-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 230px;
+}
+.statistics-filter-trigger svg {
+  flex-shrink: 0;
+}
+.statistics-filter-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 26px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  cursor: pointer;
+  color: var(--foreground);
+}
+.statistics-filter-clear:hover,
+.statistics-filter-trigger:hover {
+  background: var(--accent);
+}
+.statistics-filter-count {
+  margin-left: auto;
+  padding-left: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+}
+.statistics-filter-menu [role="menuitemcheckbox"] {
+  min-height: 36px;
+  font-size: 14px;
+}
+.signals-screen .signals-filter-help {
+  font-size: 13px;
+}
+@media (max-width: 600px) {
+  .statistics-filter-value {
+    max-width: 185px;
+  }
+  .statistics-filter-trigger {
+    max-width: calc(100vw - 90px);
+  }
+}
+.statistics-filter-menu {
+  min-width: 230px;
+  max-width: calc(100vw - 32px);
+}
+.statistics-filter-menu [role="menuitemcheckbox"] > span:first-of-type {
+  overflow-wrap: anywhere;
+}
+.signals-screen .signals-filter-top .signals-segment button {
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .signals-screen .signals-filter-top .signals-segment {
+    max-width: 100%;
+    gap: 0;
+  }
+  .signals-screen .signals-filter-top .signals-segment button {
+    padding-inline: 8px;
+    font-size: 13px;
+  }
+}

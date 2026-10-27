@@ -1,0 +1,442 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page backgrounds, footer backgrounds, dark card interiors"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Deep media backdrops, product-preview fades, black overlays"
+    },
+    "charcoal-surface": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Charcoal Surface — Announcement strips, compact icon controls, elevated dark surfaces"
+    },
+    "graphite-edge": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Graphite Edge — Secondary filled controls, card borders, navigation shell borders, dividers"
+    },
+    "steel-border": {
+      "$value": "#464646",
+      "$type": "color",
+      "$description": "Steel Border — Emphasized borders around selected controls and media frames"
+    },
+    "cloud-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Cloud White — Primary headings, high-emphasis text, icons, strokes, and dark-surface foregrounds"
+    },
+    "paper-white": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Paper White — Filled conversion buttons and pale partner-card surfaces"
+    },
+    "fog": {
+      "$value": "#a1a1a1",
+      "$type": "color",
+      "$description": "Fog — Navigation labels, secondary body text, subdued interface icons"
+    },
+    "ash": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Ash — Tertiary labels, inactive icon strokes, focus-ring details"
+    },
+    "signal-orange": {
+      "$value": "#ff8833",
+      "$type": "color",
+      "$description": "Signal Orange — Inline text links and small directional-arrow accents — the sole warm reading cue within the monochrome interface"
+    },
+    "solar-spectrum": {
+      "$value": "#ffb931",
+      "$type": "color",
+      "$description": "Solar Spectrum — Decorative technical linework and animated graphic borders — yellow-to-white-to-blue light turns abstract geometry into an active code signal"
+    }
+  },
+  "font": {
+    "matterfont": {
+      "$value": "matterFont",
+      "$type": "fontFamily",
+      "$description": "Single-family UI and marketing typography. Use 14px/500 for navigation and controls, 16px/400 for links and product copy, 24px/600 for feature-card headings, 36px/500 for section headings, and 60px/500 for the hero. The 60px display treatment uses -1.5px tracking and a 60px line height, making the headline read as a compact block rather than a loose marketing statement."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "10px",
+        "fontWeight": 700,
+        "lineHeight": 2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.56,
+        "letterSpacing": "-0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "24px",
+        "fontWeight": 600,
+        "lineHeight": 1.17,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "36px",
+        "fontWeight": 500,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 36px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "matterFont",
+        "fontSize": "60px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 60px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "72": {
+      "$value": "72px",
+      "$type": "dimension",
+      "$description": "Spacing 72px"
+    },
+    "128": {
+      "$value": "128px",
+      "$type": "dimension",
+      "$description": "Spacing 128px"
+    },
+    "224": {
+      "$value": "224px",
+      "$type": "dimension",
+      "$description": "Spacing 224px"
+    },
+    "unit": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "lg": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "2xl-2": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl-2"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "27px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "300px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$value": "rgba(0, 0, 0, 0.25) 0px 4px 4px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm"
+    },
+    "subtle": {
+      "$value": "rgba(101, 129, 128, 0.15) 0px 0px 2px 2px inset, rgba(32, 47, 46, 0.15) 0px 0px 4px 4px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "subtle-2": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-2"
+    },
+    "md": {
+      "$value": "rgba(0, 0, 0, 0.3) 0px 8px 10px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md"
+    },
+    "subtle-3": {
+      "$value": "rgb(255, 255, 255) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.1) 0px -2px 6px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-3"
+    },
+    "sm-2": {
+      "$value": "rgb(0, 0, 0) 0px 0px 8px 8px",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm-2"
+    },
+    "sm-3": {
+      "$value": "rgba(0, 0, 0, 0.5) 0px 0px 8px 8px",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm-3"
+    },
+    "sm-4": {
+      "$value": "oklab(0.268999 -0.00000260025 0.00000627339) 0px 2px 4px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm-4"
+    },
+    "md-2": {
+      "$value": "lab(15.204 0 -0.00000596046) 0px 0px 12px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation md-2"
+    }
+  },
+  "surface": {
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 0: Media fades, deepest visual recesses, and black overlays"
+    },
+    "obsidian-canvas": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Surface level 1: Main page canvas, footer, and card interiors"
+    },
+    "charcoal-surface": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Surface level 2: Announcement strips, compact control surfaces, and elevated utility elements"
+    },
+    "graphite-edge": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Surface level 3: Secondary control fills, borders, and structural separators"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://graphite.dev",
+      "siteName": "Graphite",
+      "extractedAt": "2026-09-24T17:37:54.849Z",
+      "variant": "extended"
+    }
+  }
+}

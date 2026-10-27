@@ -1,0 +1,18 @@
+{
+  "release.blurb": "Alles om te controleren voor en na het uitbrengen van een nieuwe versie. Regels met {ok}, {fix}, {check} of {note} meet deze server bij elke keer laden; vink de rest met de hand af. Vinkjes blijven in deze browser, alleen voor deze release.",
+  "release.checkAgain": "Opnieuw controleren",
+  "release.done": "{done} / {total} klaar",
+  "release.footer": "Gemeten op {when} op {origin}. De omgeving van tracy-host en tracy-dsh is voor deze server niet zichtbaar: die regels geven de opdracht om uit te voeren.",
+  "release.local": "Dit is een lokale stand: hier hoeft niets te worden opgelost. De checklist is voor dev, staging en productie, waar een ontbrekende variabele echt ontbreekt.",
+  "release.onlyOpen": "Alleen wat nog niet klaar is",
+  "release.readFailed": "De checklist kon niet worden gelezen.",
+  "release.state.fail": "Oplossen",
+  "release.state.info": "Opmerking",
+  "release.state.pass": "OK",
+  "release.state.warn": "Controleren",
+  "release.title": "Release-checklist",
+  "release.toCheck_one": "{count} te controleren",
+  "release.toCheck_other": "{count} te controleren",
+  "release.toFix_one": "{count} op te lossen",
+  "release.toFix_other": "{count} op te lossen"
+}

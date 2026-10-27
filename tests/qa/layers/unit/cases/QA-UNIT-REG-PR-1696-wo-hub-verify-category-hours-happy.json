@@ -1,0 +1,71 @@
+{
+  "id": "QA-UNIT-REG-PR-1696-wo-hub-verify-category-hours-happy",
+  "itemIds": ["regression:REG-PR-1696-wo-hub-verify-category-hours"],
+  "requirement": "The hub's Google verifier checks a contribution's category against the primary type and its opening hours against the normalized weekly periods; email, social profiles and photo references stay unsupported",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1696-wo-hub-verify-category-hours.json",
+    "ref": "PR #1696 (feat); fix evidence: Before: category and opening_hours had no Google check, so every such observation was rejected as unsupported_source",
+    "invariant": "S1: one Google read; 'Cafe' accepted, 'bar' differs_from_source; reordered periods accepted, subset and changed time differs_from_source; matching text accepted, other text differs_from_source. S2: both rejected as unsupported_source with no Google read. S3: the mask asks for primaryType and regularOpeningHours; the answer carries category and openingHours with only day/hour/minute per period.",
+    "productSources": [
+      "packages/wo/website-opportunities/domain/gplaces-details.mjs:37",
+      "packages/wo/website-opportunities/domain/index.mjs:1",
+      "packages/wo/website-opportunities/src/cost-ledger.js:97",
+      "packages/wo/website-opportunities/src/hub/contributions.js:22",
+      "packages/wo/website-opportunities/src/hub/observations.js:110",
+      "packages/wo/website-opportunities/src/hub/quota.js:34",
+      "packages/wo/website-opportunities/src/hub/tokens.js:26",
+      "packages/wo/website-opportunities/src/hub/verify-queue.js:73",
+      "packages/wo/website-opportunities/src/schema/index.js:67"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/wo/website-opportunities/src/schema/index.js:28 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "category is judged against the primary type",
+    "email, social profiles and photo references stay unsupported",
+    "the field list is closed and every field has a value check",
+    "fetchPlaceVerification asks for the facts the hub checks"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1696-wo-hub-verify-category-hours"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1696-wo-hub-verify-category-hours",
+    "pr": 1696,
+    "kind": "feat",
+    "area": "website-opportunities/hub",
+    "file": "tests/regression/cases/REG-PR-1696-wo-hub-verify-category-hours.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/hub-verify.test.mjs",
+    "packages/wo/website-opportunities/test/hub-observations.test.mjs",
+    "packages/wo/website-opportunities/test/domain-gplaces-details.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "category is judged against the primary type",
+    "email, social profiles and photo references stay unsupported",
+    "the field list is closed and every field has a value check",
+    "fetchPlaceVerification asks for the facts the hub checks"
+  ],
+  "timeoutS": 600
+}

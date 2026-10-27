@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1356-ds-wear-auto-palette",
+  "kind": "fix",
+  "title": "A worn design system maps every template colour by its role, and the preview rules judge what a visitor sees",
+  "pr": 1356,
+  "area": "design-system/slot",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the tracy-ds-slot tests for the auto palette (classification, emitted rules, presets never repointed, contract bands left alone, Joomla slot size).",
+    "S2: Run the measurement test for the four preview rules TPL-1, CON-2, BTN-1, PREV-1.",
+    "S3: Run the preview door and asset door tests (error page after </html> cut, fonts through the asset door, scroll-revealed content shown)."
+  ],
+  "expect": [
+    "S1: every auto palette test passes; every Joomla slot with a palette is under 60 KB under Moxie.",
+    "S2: the rules are unmeasurable without a preview block and fail per system and scheme with one.",
+    "S3: every door test passes."
+  ],
+  "selectors": {
+    "files": "packages/design/tracy-ds-slot/{src/auto-palette.mjs,test/auto-palette.test.mjs,test/measurement.test.mjs}, apps/tracy-web/test/design-system-preview-{door,assets}.test.mjs"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/auto-palette.test.mjs",
+      "packages/design/tracy-ds-slot/test/measurement.test.mjs",
+      "apps/tracy-web/test/design-system-preview-door.test.mjs",
+      "apps/tracy-web/test/design-system-preview-assets.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 300
+  },
+  "evidence": "14/10/2026: under Moxie the Add site preview of JA Resort showed a khaki band with black text and JA Impact kept its orange and navy blocks while every built-site rule passed",
+  "fence": "packages/design/tracy-ds-slot: auto-palette.mjs, library.mjs paletteOf, joomla.mjs and wordpress.mjs (auto palette, ink band roleValues, color-scheme), measurement.mjs judgePreview; apps/tracy-web: design-system-preview-page.js (previewDocOf cut, REVEALED), design-system-preview-assets.js, design-system-preview-probe.js, scripts/preview-check.mjs, readiness rules TPL-1 CON-2 BTN-1 PREV-1."
+}

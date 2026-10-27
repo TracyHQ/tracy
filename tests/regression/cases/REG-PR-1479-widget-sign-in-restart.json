@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1479-widget-sign-in-restart",
+  "kind": "fix",
+  "title": "A widget visitor stays signed in across a tracy-web restart, and only that visitor",
+  "pr": 1479,
+  "area": "widget/sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: sign in, new process on the same database.",
+    "S2: another visitor cookie.",
+    "S3: expired, revoked or cleared binding."
+  ],
+  "expect": ["S1: still signed in.", "S2: nothing restored.", "S3: not restored."],
+  "selectors": {
+    "test": "apps/tracy-web/test/widget-sign-in-restart.test.mjs",
+    "code": "widget/store.js bindSignIn/readSignIn, context.js"
+  },
+  "evidence": "Review 19/10/2026: embedded widget sign-in lived only in process memory; every deploy signed visitors out",
+  "fence": "Server-side binding keyed by the widget's random cookie",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/widget-sign-in-restart.test.mjs"],
+    "tests": [
+      "signed in, then a restart: the same visitor is still signed in",
+      "another visitor cookie, or none, restores nothing",
+      "an expired binding is not restored",
+      "signed out elsewhere: not restored, and the binding is forgotten"
+    ],
+    "needs": ["postgres"]
+  }
+}

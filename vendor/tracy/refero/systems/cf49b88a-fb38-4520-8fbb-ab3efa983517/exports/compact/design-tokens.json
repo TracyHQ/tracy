@@ -1,0 +1,59 @@
+{
+  "color": {
+    "voltage-green": {
+      "$value": "#00fb34",
+      "$type": "color",
+      "$description": "Voltage Green — Green action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "alarm-red": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Alarm Red — Frame borders, decorative strokes, section dividers — the most-used border color in the system. Borders total 44 instances vs only 12 backgrounds, meaning red reads as a hard rectangular frame or alert outline rather than a surface fill"
+    },
+    "caution-yellow": {
+      "$value": "#fff500",
+      "$type": "color",
+      "$description": "Caution Yellow — Yellow outline accent for tags, dividers, and focused UI edges"
+    },
+    "absolute-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Black — Page canvas, photo tile borders (104 image borders), all text colors. The most frequent single color in the system (3357 occurrences) — everything else floats on it"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Hairline borders, dividers, input outlines, and card edges on light surfaces."
+    },
+    "ashen-gray": {
+      "$value": "#aba4a4",
+      "$type": "color",
+      "$description": "Ashen Gray — Medium-contrast borders, control outlines, and structural separators."
+    }
+  },
+  "font": {
+    "offwhite": {
+      "$value": "Offwhite",
+      "$type": "fontFamily",
+      "$description": "Sole display and heading face, also used for buttons and links. The blocky pixel-inspired geometry of this custom face is the brand's most important asset — at 180–500px each letter becomes a sculptural object that photographs nest into. Weights 600/700 are reserved for display-scale usage; 400 carries inline link and button use."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Sole body face. The deliberate collision of a conventional serif against the radical blocky display face is a core editorial gesture — Times reads as quiet annotation, the opposite of Offwhite's shout. Body text is always 16px, always Times, always 1.20 leading."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Rare utility use for small button labels and meta text where Times would feel too 'editorial.' Used sparingly (freq=6) — only when functional UI needs a neutral voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://off-white.valeriafrancis.com",
+      "siteName": "OFF WHITE",
+      "extractedAt": "2026-06-03T21:19:15.455Z",
+      "variant": "compact"
+    }
+  }
+}

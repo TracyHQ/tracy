@@ -1,0 +1,59 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, card surfaces, nav backgrounds"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All text, hairline borders, dividers, list separators"
+    },
+    "mist-gray": {
+      "$value": "#d4d6dd",
+      "$type": "color",
+      "$description": "Mist Gray — Secondary borders, card outlines, inactive dividers"
+    },
+    "violet-ink": {
+      "$value": "#3502ff",
+      "$type": "color",
+      "$description": "Violet Ink — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "lavender-wash": {
+      "$value": "#c2b3ff",
+      "$type": "color",
+      "$description": "Lavender Wash — Accent card surfaces, large decorative blocks, soft section backgrounds"
+    },
+    "lavender-whisper": {
+      "$value": "#d7ccff",
+      "$type": "color",
+      "$description": "Lavender Whisper — Outlined nav pill border, ghost button border — violet at a quarter saturation so inactive actions whisper rather than shout"
+    },
+    "deep-iris": {
+      "$value": "#5d35ff",
+      "$type": "color",
+      "$description": "Deep Iris — Violet text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "scope": {
+      "$value": "Scope",
+      "$type": "fontFamily",
+      "$description": "Display, headings, nav, buttons — carries the entire structural and interactive voice. Only weight 400 exists; the font does not push louder, it stays calm even at 42px because letter-spacing opens up around it. Nav and buttons stay at 13–14px; the hero display reaches 42px."
+    },
+    "signifier": {
+      "$value": "Signifier",
+      "$type": "fontFamily",
+      "$description": "Body copy, links, list items, footer, long-form paragraphs — the reading voice. Slightly larger minimum (15px) than Scope at 13px, and the only font that appears in the hero italic (the headline mixes roman Scope with italic Signifier). Rationed at 400; weight 400 at 42px is an editorial choice, not a limitation."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://jonaspelzer.com",
+      "siteName": "Jonas Pelzer",
+      "extractedAt": "2026-06-03T22:05:42.926Z",
+      "variant": "compact"
+    }
+  }
+}

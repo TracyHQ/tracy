@@ -1,0 +1,74 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page background, footer base — the void everything else is measured against"
+    },
+    "carbon-lift": {
+      "$value": "#1d1a18",
+      "$type": "color",
+      "$description": "Carbon Lift — Raised dark surfaces, nav wells, button fills — one step up from canvas for interactive depth"
+    },
+    "ash-stroke": {
+      "$value": "#3d3a39",
+      "$type": "color",
+      "$description": "Ash Stroke — Hairline borders, ghost button outlines, separator lines"
+    },
+    "graphite-mid": {
+      "$value": "#4d4947",
+      "$type": "color",
+      "$description": "Graphite Mid — Mid-tone fills for chart bodies, secondary surfaces, neutral data visualization"
+    },
+    "warm-granite": {
+      "$value": "#8a8380",
+      "$type": "color",
+      "$description": "Warm Granite — Muted body text, secondary copy, inactive labels — warm gray to soften the black"
+    },
+    "pale-stone": {
+      "$value": "#b8b3b0",
+      "$type": "color",
+      "$description": "Pale Stone — Tertiary text, section eyebrows, subdued supporting copy"
+    },
+    "bone": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Bone — Primary text, light card surfaces, the single bright figure on dark ground"
+    },
+    "chalk": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Chalk — High-emphasis light button fill, log-in button, elevated neutral surface"
+    },
+    "signal-orange": {
+      "$value": "#ee6018",
+      "$type": "color",
+      "$description": "Signal Orange — Orange decorative accent for icons, marks, and small graphic details"
+    },
+    "metric-green": {
+      "$value": "#a0ca92",
+      "$type": "color",
+      "$description": "Metric Green — Green decorative accent for icons, marks, and small graphic details"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "All interface text — body, headings, buttons, nav, hero. Used at weight 400 almost universally; weight 500 is reserved for emphasis (e.g. footer heading). The flat 400-only treatment is a signature: authority is implied by size and tracking, not by bold weight."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Captions, labels, status tags, metric units — always uppercase 12px with tight tracking. Carries the 'terminal' voice that distinguishes engineering surfaces from marketing surfaces."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://factory.ai",
+      "siteName": "Factory",
+      "extractedAt": "2026-07-03T03:18:23.580Z",
+      "variant": "compact"
+    }
+  }
+}

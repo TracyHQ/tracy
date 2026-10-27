@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+  "status": "complete",
+  "name": "BEHAVE Candy",
+  "url": "https://styles.refero.design/style/5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+  "sourceWebsite": "https://www.eatbehave.com",
+  "extractedAt": "2026-06-03T19:13:33.506Z",
+  "capturedAt": "2026-10-08T05:12:05.200314+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "neon candy-aisle pop. A single electric cobalt carries every word, chartreuse lime stabs through as the only accent, and pale lavender makes the whole thing feel lit from within rather than printed.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5b20efc5-6f44-4524-b21b-25bc552be348.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a834d093-dbd4-4ea1-8a85-4578be6e519f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/97d62ce4-8615-428d-bd0d-e9985695e27d.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/77eee493-80c2-4b4d-9105-bff0e4f9c2a1.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/bf77e4f1-c722-4269-99d0-af4ba5b1b3bc.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ae2ceb3bdab0906ce43400612aa049b2f4a99633d3643fabcd2d009f9ccfd249",
+      "bytes": 19807
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a882a7ca97bdfdadc69735ab3f1103e914ff4416e3a23db93fecbc226491fae9",
+      "bytes": 181161
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c413de8c949d17e6817eb9a44d0f9a1037a7980675841b61bfd5574a098ca9d7",
+      "bytes": 16477
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e926d7a9f282ad1e1f97b757bba35125c0ac0715a421d33c7c23bbdf0a709e82",
+      "bytes": 11110
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2cb1f50faf726240b52b1484a72d83c9a05559e31127e13fb261c63d26d24da3",
+      "bytes": 12969
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8826617df58b2ae39bccf009a87a7b1eead03818df90d833f9d85437a5c4f2d5",
+      "bytes": 2809
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6b58a7d8784b2ba3989831f624925149224293757a805dd42d18515084bf0b3f",
+      "bytes": 394
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a583c7d6b42b9be759765d49141c5e6befa65227a9ab3e8f5cb00f14cf979f39",
+      "bytes": 411
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c3ecfeeb2a697008d250c711de293e4c47a54828487cf89efa37c5dddc5a8969",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5e884359ba2b6e0957eb3649427009c58df512bbfa4b21263247dd4396f9c813",
+      "bytes": 43486
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "45203190ed09eb67a23737a09abf7431995925ee49a1ad5339e24523d5bf8034",
+      "bytes": 22937
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "005f0df6e4c208b2d305507261d4028be931c599b91519c626546c27f431c715",
+      "bytes": 39228
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7b984c9b17f4c900022f3a1e7a8216a36eb91b6ebaad01a07a2862a1240ca6f3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4e752191f94b163bab488356a9c6353faedca092731acfda99e67bcf3d6368aa",
+      "bytes": 1610
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a87aa371cf969116fe1b3415032beb9a3cde40741a5f649d214fbe58671067a4",
+      "bytes": 2129
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1680693c-aed8-47e8-917a-04eb89497b09",
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f"
+  ]
+}

@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-page-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-hairline-gray: #e4e4e4;
+  --color-input-border: #b4b4b4;
+  --color-glitch-magenta: #ff00bc;
+
+  /* Typography — Font Families */
+  --font-intervariable: 'InterVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

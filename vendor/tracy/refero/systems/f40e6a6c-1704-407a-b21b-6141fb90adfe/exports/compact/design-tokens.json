@@ -1,0 +1,54 @@
+{
+  "color": {
+    "newsprint": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Newsprint — Soft section background, alternate surface, and quiet card fill."
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Navigation background, card surfaces, button fills, inverted text — pushes forward off the gray canvas"
+    },
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — Neutral form states, badge text, and quiet UI feedback where color should stay understated."
+    },
+    "foil-gray": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Foil Gray — Secondary text, subdued link borders, metadata — sits behind Press Black as quiet annotation"
+    },
+    "ink-green": {
+      "$value": "#306f09",
+      "$type": "color",
+      "$description": "Ink Green — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    }
+  },
+  "font": {
+    "basis": {
+      "$value": "Basis",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI. Weight 400 for body, links, and most running text; weight 600 used sparingly for the small uppercase-ish labels and the navigation tabs. The 226px size at 1.0 line-height is the signature — display type behaves like a poster headline, not a web heading. Negative tracking tightens as size grows: -0.04em at display, -0.02em at mid, -0.01em at body."
+    },
+    "basis-mono": {
+      "$value": "Basis Mono",
+      "$type": "fontFamily",
+      "$description": "Used for technical labels, metadata, timestamps, and small annotations. The +0.06em letter-spacing gives it the feel of a printed caption set in a typewriter face — a deliberate counterpoint to Basis's tight grotesque."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "System serif used as a rare editorial accent — appears in icon and small body contexts where a note of 'newspaper' or 'footnotes' is wanted. Its presence is felt more than seen; the choice signals print lineage rather than decoration."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.motherdesign.com",
+      "siteName": "Mother Design",
+      "extractedAt": "2026-06-03T21:10:35.261Z",
+      "variant": "compact"
+    }
+  }
+}

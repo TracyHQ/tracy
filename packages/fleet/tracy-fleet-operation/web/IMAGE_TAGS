@@ -1,0 +1,80 @@
+# Which web image a site runs — the source of WEB_IMAGE, read by scripts/lib/web-image.sh.
+#
+# One line per key, `key=image`, and there are two kinds of key:
+#
+#   <platform>                  the image a NEW site of that platform gets
+#   <platform>:<upstream tag>   the image built FROM that upstream tag
+#
+# 🔒 THE SECOND KIND IS AN EXACT MATCH, AND NOTHING ELSE MAY ANSWER FOR IT. The base tag is the
+# site's PHP. A site on `wordpress:php8.2-apache` may only become the image built from
+# `wordpress:php8.2-apache` — never the platform's default line, which is a different PHP. A tag
+# missing from this file means the resolver keeps the upstream image (a new site) or refuses
+# outright (a site that is already running); it never substitutes. So ADDING a line here is how a
+# base becomes supported, and every line below has to be built before it means anything.
+#
+# The tag carries the build date and never floats: `latest` would make "which image is this site
+# on" unanswerable, which is the first question asked when a site misbehaves. Building a new one
+# is adding a line here, not editing one — a site keeps the image it was provisioned with until
+# something moves it deliberately.
+#
+# BUILD THEM BEFORE SHIPPING THIS FILE. `bash web/build.sh` builds every line below (and reports
+# the ones it could not: an upstream tag Docker Hub has dropped has to leave this file too).
+#
+# EmDash has no line: its version is whatever `emdash/build-image.sh` last built on that host, so
+# platform/emdash.sh derives `tracy/web-emdash:<version>` and says so when it is not there. See
+# web/emdash.Dockerfile.
+
+# 20260923-r1: every image gains the site-mail shim (tracy-sendmail + sendmail_path, label
+# tracy.site-mail=v1). An older tag has no mail path at all; scripts/provision/enable-site-mail.sh
+# moves a running site from its old tag to the line below for the same base.
+# 20261027-r1: refresh all buildable bases for the 21 October PHP security releases
+# (8.2.35 / 8.3.36 / 8.4.27). PHP 8.1 has no patch: its lines are removed and the resolver refuses it
+# in both stances, including explicit overrides (Vincent, 27 October 2026).
+# joomla:4-apache and joomla:php8.2-apache still return PHP 8.2.29 after a fresh pull:
+# they are removed and refused too, until upstream provides patched images for them.
+wordpress=tracy/web-wordpress:php8.3-apache-20261027-r1
+joomla=tracy/web-joomla:5-apache-20261027-r1
+
+# 🔒 NO php8.0 LINE, ON EITHER PLATFORM — AND IT IS A GAP, NOT AN OVERSIGHT. Removed 08/09/2026.
+#
+# `wordpress:php8.0-apache` and `joomla:php8.0-apache` are the only two bases still on Debian 11
+# (bullseye); every other base here is trixie. Bullseye has reached end of life, and the failure is
+# not the signature — it is the pool. Measured on a fresh host that day:
+#
+#   apt-get update  -> E: Release file for .../bullseye-security/InRelease is expired (16h)
+#   with -o Acquire::Check-Valid-Until=false, the update passes and the FETCH 404s:
+#                      E: Failed to fetch .../debian-security/pool/updates/main/s/setuptools/... 404
+#
+# So this Dockerfile's very first layer cannot be built from those two bases on any machine, and no
+# retry, mirror or flag short of repointing apt at archive.debian.org changes that.
+#
+# THE LINES WERE NEVER KEPT ANYWAY, which is what decided it: counted the same day, `tracy/web-*`
+# php8.0 exists on ZERO hosts — not the dev host, and not contabo, which carries none of these
+# images at all. Two lines promising an image nobody has ever built is exactly the shape build.sh's
+# header refuses ("a promise the resolver keeps making"), and keeping them costs a `web/build.sh`
+# that exits non-zero on every host forever — which is how an exit code stops being read.
+#
+# ⚠ WHAT THIS GIVES UP, so it is a known gap rather than a surprise: the Joomla **3.10 -> 4.4** hop.
+# php_matrix.py has one PHP for it ({7.3,7.4,8.0} n {8.0,8.1,8.2} = 8.0), so `set-php.sh` — which
+# runs STRICT — now refuses that hop by name and leaves the compose file untouched. That is the
+# true statement. Before this it said "not built on this host, run build.sh", advice that could
+# never work. A real 3.10 customer is the moment to spend the archive.debian.org plumbing, and the
+# refusal will say so out loud.
+
+# WordPress: the tag a clone is provisioned on (php8.3), the rolling tag a fleet-born site gets,
+# and the PHP a captured site may already have been pinned to before it reached us.
+wordpress:apache=tracy/web-wordpress:apache-20261027-r1
+wordpress:php8.2-apache=tracy/web-wordpress:php8.2-apache-20261027-r1
+wordpress:php8.3-apache=tracy/web-wordpress:php8.3-apache-20261027-r1
+wordpress:php8.4-apache=tracy/web-wordpress:php8.4-apache-20261027-r1
+
+# Joomla: the major tags a clone and a fleet-born site run, plus every PHP an upgrade hop can
+# choose. php_matrix.py picks the NEWEST PHP both ends of a hop support, and it also answers for a
+# point update inside one line (`--from 6.1.0 --to 6.1.5` -> php8.4-apache), so the reachable set
+# includes 8.2 · 8.3 · 8.4, but the upstream 8.2 alias is unpatched and refused here.
+# PHP 8.1 is refused even for an existing pin (see above). **8.0 is
+# reachable in php_matrix and NOT here**; the block above says why, and which hop it costs.
+joomla:5-apache=tracy/web-joomla:5-apache-20261027-r1
+joomla:6-apache=tracy/web-joomla:6-apache-20261027-r1
+joomla:php8.3-apache=tracy/web-joomla:php8.3-apache-20261027-r1
+joomla:php8.4-apache=tracy/web-joomla:php8.4-apache-20261027-r1

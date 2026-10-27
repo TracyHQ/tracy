@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1104-deleted-site-name-reusable",
+  "kind": "fix",
+  "title": "A deleted site's name can be built again, and a press refused TAKEN leaves no site row or seat behind",
+  "pr": 1104,
+  "area": "sites/create",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set to a scratch PostgreSQL, run: node --test --test-reporter=tap apps/tracy-web/test/site-creation.test.mjs",
+    "S2: Record the exit code and the cases named under expect."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "A site built, then deleted through DELETE /api/sites/:key (its provision job stays on record), is built again under the same name by the same owner and by another account, with a buildId and without one: 202, a new job id (never the deleted site's job handed back as reused), one site row, one owner seat.",
+    "A press refused 409 TAKEN on a live site (by its owner with a new build, and by a stranger) changes neither the site nor the seat count and calls no provision.",
+    "An imported domain deleted and imported again gets a new provision, not the deleted copy's job."
+  ],
+  "selectors": {
+    "door": "POST /api/sites, POST /api/sites/:key/provision",
+    "store": "provisionedInPlace, restartDeletedCreation (apps/tracy-web/src/sites/store.js)"
+  },
+  "evidence": "Measured on dev 09/10/2026 21:18 UTC: POST /api/sites for e2e-em (deleted earlier) answered 409 TAKEN and left a site row and owner seat with no job and no container; cms-log-pull failed every minute.",
+  "fence": "Jobs outlive their site; only jobs filed since the standing row was written count, and the TAKEN test runs before the claim under the provision lock.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/site-creation.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "a deleted site's name can be built again by the same owner (keyed press)",
+      "a deleted site's name can be built again by the same owner (legacy press)",
+      "a deleted site's name can be built again by another account (keyed press)",
+      "a deleted site's name can be built again by another account (legacy press)",
+      "a press refused TAKEN on a live site writes nothing: no site row, no seat, no provision",
+      "an imported domain whose site was deleted is imported again, not handed the deleted site's job"
+    ]
+  }
+}

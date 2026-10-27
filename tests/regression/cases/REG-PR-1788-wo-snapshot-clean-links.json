@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1788-wo-snapshot-clean-links",
+  "kind": "fix",
+  "title": "The demo agent's frozen source snapshot carries links without share tracking",
+  "pr": 1788,
+  "area": "website-opportunities/snapshot",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Freeze research whose source ref is an instagram.com profile link carrying igsh and utm_source, with freezeAgentResearch, and read sources[0].data.ref.",
+    "S2: Read a snapshot stored before the clean-up (tracked ref, hash over that data) with checkedResearch."
+  ],
+  "expect": [
+    "S1: the ref is https://www.instagram.com/harbour.sportclub/ and the bundle text holds neither igsh nor utm_.",
+    "S2: the ref reads clean, a link without tracking is byte-identical, and the hash is the stored one."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/wo-agent-demo-clean-links.test.mjs"
+  },
+  "evidence": "Dev opportunity 5a1e2b3c: revision.brief.agentDemoSnapshot.sources[0].data.ref kept ?igsh=...&utm_source=qr",
+  "fence": "evidenceData and checkedResearch read every http(s) string with untrackedUrl; no database needed",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/wo-agent-demo-clean-links.test.mjs"]
+  }
+}

@@ -1,0 +1,401 @@
+# One compose file for a laptop and a server. What differs is .env and --profile (Plan 5 adds server).
+name: tracy
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: tracy
+      # No default: a public file must not name a working password. Only read when the volume is first created.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in deploy/.env (see deploy/.env.example)}
+      POSTGRES_DB: tracy
+    volumes: [tracy-pg:/var/lib/postgresql/data]
+    ports: ["127.0.0.1:${POSTGRES_PORT:-51730}:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracy"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  tracy-web:
+    build: { context: .., dockerfile: apps/tracy-web/Dockerfile }
+    # Same shape as `tracy-dsh` below, and for the same reason: on a laptop the name IS the build
+    # output (`docker compose build` tags exactly this), while a server never builds and instead
+    # pulls a registry image at a tag CI chose. Defaults keep the laptop path byte-identical to
+    # what it was; `deploy/scripts/deploy-tracy-stack.sh` exports the two names on a server.
+    # APP_IMAGE_TAG is ONE variable for BOTH app images on purpose — they are built from one
+    # commit by one job, so "which build is dev running" has one answer, not two.
+    image: ${WEB_IMAGE:-tracy/web}:${APP_IMAGE_TAG:-dev}
+    env_file: [.env]
+    environment:
+      DATABASE_URL: postgres://tracy:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in deploy/.env (see deploy/.env.example)}@postgres:5432/tracy
+      TRACY_CI_GITHUB_TOKEN: ${TRACY_CI_GITHUB_TOKEN:-}
+      TRACY_SOURCE_REPO: ${TRACY_SOURCE_REPO:-}
+      # The vision model that labels a Website Opportunities build's photographs (`lib/picture-vision.js`): the agent's
+      # DeepSeek key unless one of its own is set; empty = photographs are placed from their words alone.
+      TRACY_VISION_API_KEY: ${TRACY_VISION_API_KEY:-${MODEL_API_KEY:-}}
+      # Local only; the server override removes this default and uses its explicit env_file.
+      INVITATIONS_REAL_KEY_DIR: /var/lib/tracy/invitations-real-keys
+    volumes:
+      - invitations-real-keys:/var/lib/tracy/invitations-real-keys
+      # Each co-located site's access key (`bar/site-access.js`), written by
+      # `tools/issue-site-access-key.sh`; read-only — tracy-web signs with them, never writes them.
+      - ${TRACY_PRIVATE_ROOT}/.site-access:/var/lib/tracy/site-access:ro
+    depends_on:
+      postgres: { condition: service_healthy }
+    ports: ["127.0.0.1:${WEB_PORT:-51710}:8080"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:8080/").then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    # `default` kept explicitly — once a service names `networks:` at all, compose stops
+    # attaching it to `default` for free, and tracy-web still needs `default` to reach `postgres`.
+    # The static address on `tracy` is what dnsmasq's `dns` service (below, local-profile only)
+    # answers every `*.tracy.test` lookup with — the address a CONTAINER resolves a site at; a
+    # browser instead uses `<label>.localhost`, which resolves to loopback with no DNS entry at
+    # all (Node's `dns.lookup` and every container can't do that trick — see compose header note
+    # on `dns:`/`tracy` below).
+    networks:
+      default: {}
+      # 🔒 THE QUOTES ARE LOAD-BEARING. In YAML flow style the `}` inside `${VAR:-default}`
+      # closes the flow mapping, and compose stops at `did not find expected ',' or '}'` naming
+      # this line — measured 11/09, on a production deploy, because nothing local parses these
+      # files as YAML. `scripts/check-compose-yaml.ts` does now.
+      tracy: { ipv4_address: "${TRACY_NETWORK_PREFIX:-172.30.0}.10" }
+
+  # ── MinIO — the local stand-in for R2 (readArtifactStore in apps/tracy-web/src/config.js) ──
+  # `profiles: [local]` on both: a server has real R2 and never starts these.
+  minio:
+    # pgsty/*, not minio/* or quay.io/minio/* — the upstream images are gone from BOTH registries.
+    # Measured 14/09 (#70): Docker Hub answers "repository does not exist" for the whole
+    # `minio/minio` and `minio/mc` repositories, and `docker login` changes nothing, so this moved
+    # to quay.io. Measured 25/09 (#349): quay.io now answers `no such manifest` for every tag,
+    # `latest` included; Docker Hub `minio/*` answers `denied`. `pgsty/minio` and `pgsty/mc` are
+    # the community builds of the same MinIO source (Pigsty), same layout as upstream: entrypoint
+    # `docker-entrypoint.sh`, `curl` and `/bin/sh` present, and the server reads a `/data` volume
+    # written by the old quay.io image (measured 25/09). Pinned by tag AND multi-arch index digest
+    # (amd64 + arm64), so a re-pushed tag cannot change what boots. The next disappearance is
+    # caught by `scripts/check-local.sh --images-only`, not on a fresh machine's first `up`.
+    # Local only: a server has R2 and never starts this service (`profiles: [local]` below).
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: tracy
+      # No default, as for POSTGRES_PASSWORD. Required on servers too: compose interpolates every service, profile or not.
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:?set MINIO_PASSWORD in deploy/.env (see deploy/.env.example)}
+    volumes: [tracy-minio:/data]
+    # Published port is a VARIABLE, container port is not. Measured 10/09: an unrelated
+    # container on this laptop already held 0.0.0.0:9000, and a loopback bind on the same port
+    # conflicts with it too — so `up` died with "port is already allocated" after every other
+    # service had already started. The INSIDE stays 9000 so `minio:9000` on the compose network
+    # (minio-init, tracy-web) keeps resolving; only what the host publishes moves. Anything
+    # dialling MinIO from OUTSIDE the network — `ARTIFACT_S3_ENDPOINT`, which reaches it through
+    # `host.docker.internal` — must use the same value.
+    ports: ["127.0.0.1:${MINIO_PORT:-51740}:9000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    profiles: [local]
+  # Creates the buckets once and exits — `tracy-artifacts` (Migrate) and `tracy-releases` (the
+  # desktop app's update feed, which tracy-web streams on UPDATE_ORIGIN); `|| true` because a second `compose up` re-runs this
+  # against a bucket that already exists, and that is success, not a failure to report.
+  #
+  # The `until` loop is NOT in the brief's snippet — added after measuring the race it leaves
+  # open: `depends_on: [minio]` (no `condition:`) only waits for the CONTAINER to start, not for
+  # its server to accept connections, and `minio/minio` takes longer than that gap to bind 9000.
+  # On a cold `docker compose up`, `mc alias set` reached `minio:9000` before anything was
+  # listening there and died with `connect: connection refused` — the bucket then never gets
+  # created and every artifact-store call fails later with no hint this container ever ran.
+  minio-init:
+    # Same source and pinning as `minio` above; `pgsty/mc` ships `mc` and `/bin/sh`.
+    image: pgsty/mc:RELEASE.2026-09-16T00-00-00Z@sha256:cfc83108c3abb371f8fb84d99c1fdc88f8c237e022409b0081fb7c0a3be634dd
+    depends_on:
+      minio: { condition: service_healthy }
+    entrypoint:
+      - /bin/sh
+      - -c
+      - until mc alias set m http://minio:9000 tracy ${MINIO_PASSWORD:?set MINIO_PASSWORD in deploy/.env (see deploy/.env.example)}; do sleep 1; done && mc mb -p m/tracy-artifacts m/tracy-releases || true
+    profiles: [local]
+
+  # ── tracy-host — the per-host service `apps/tracy-web` opens its signed channel to ────────
+  # (ADR 0014's "one dsh per host", the other half of `workspace/host/client.js`). Runs on every
+  # deployment shape, laptop or server — unlike `minio`/`dns` below, it carries no `profiles:`.
+  tracy-host:
+    build: { context: .., dockerfile: apps/tracy-host/Dockerfile }
+    image: ${HOST_IMAGE:-tracy/host}:${APP_IMAGE_TAG:-dev}
+    env_file: [.env]
+    environment:
+      HOST_NAME: ${HOST_NAME:-local}
+      # ⚠ THE `local` IN THIS NAME IS LITERAL, AND COMPOSE CANNOT MAKE IT FOLLOW `HOST_NAME`.
+      # `.env` names a host's secret per host (`HOST_<name>_SECRET`), but interpolation does not
+      # nest — `${HOST_${HOST_NAME}_SECRET}` is not a thing compose evaluates — so this line is
+      # correct only while the host is called `local`. On a host named anything else the variable
+      # is simply unset, `config.js` reads it with `need()`, and tracy-host does not boot.
+      # `compose.server.yml` overrides this with a plain `${HOST_SECRET}` that the deploy script
+      # resolves from `HOST_<HOST_NAME>_SECRET` before it calls compose.
+      HOST_SECRET: ${HOST_local_SECRET}
+      TRACY_SITES_ROOT: ${TRACY_SITES_ROOT}
+      TRACY_PRIVATE_ROOT: ${TRACY_PRIVATE_ROOT}
+      # NOT `http://tracy-web:8080` — that was a real bug, not a comment that aged badly.
+      # `tracy-host` runs `network_mode: host` (right below), so it is NOT on compose's `default`
+      # bridge network and gets NO DNS entry for a sibling service name; `sync.js`'s two timers
+      # (hourly site-folder push, ten-minute brand sync) shell into `relay-git-token.sh`, which
+      # curls `${TRACY_WEB_ORIGIN}/fleet/git-token` — with the service name, that curl fails
+      # forever and nothing reports it, since a cron-style timer error is logged and swallowed by
+      # design (`sync.js`'s own comment: "one bad run must not take the next hour's attempt
+      # down"). Use the SAME loopback `tracy-web` is published on
+      # (`ports: ["127.0.0.1:${WEB_PORT:-51710}:8080"]`, above) — a host-network container shares
+      # the VM's real network namespace, and Docker's own port-forwarding for a published
+      # container port lands on that same loopback (exactly how `check-local.sh`'s own
+      # `--network host` probe already reaches `tracy-host`'s port from outside every container).
+      # Verified 10/09: `docker exec <tracy-host> node -e "fetch('http://127.0.0.1:8080/')"` →
+      # tracy-web's real response, not a DNS failure.
+      TRACY_WEB_ORIGIN: http://127.0.0.1:${WEB_PORT:-51710}
+      # 🔒 NOT 8090, AND THE REASON IS THIS SCRIPT'S OWN ALLOCATOR. `provision.sh` hands every new
+      # site a port out of a pool, and 8090 sat INSIDE the pool it hands out — so the control
+      # plane's own door was one of the doors it could give away. It never bit on the laptop
+      # (empty pool) and it was already taken on production the first time anyone looked:
+      # a customer site's container held 127.0.0.1:8090, so `tracy-host` — `network_mode: host`, binding
+      # 0.0.0.0 — would have died on EADDRINUSE before its first health probe.
+      #
+      # Tracy's own ports now live in one block, 517xx, the family dsh's 51700 already started,
+      # and the site pool moved to 52000-52999 so the two cannot overlap by accident again.
+      # `provision.sh` also refuses to hand out anything in 517xx, belt and braces: a reserved
+      # list that is checked is worth more than a range that merely happens not to collide.
+      PORT: ${TRACY_HOST_PORT:-51720}
+    volumes:
+      # The docker socket, unproxied — this process (provision.sh/webroot scripts) needs the
+      # full API, unlike dsh below which only ever gets the narrowed docker-proxy.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Same host path on both sides of the bind, on purpose: `provision.js`/the scripts it
+      # shells out to write paths like `${TRACY_SITES_ROOT}/<label>` into job output and compose
+      # files that `docker compose` (run from THIS container, against the HOST's daemon) then
+      # reads back — a translated path would be correct in here and wrong on the daemon's side.
+      - ${TRACY_SITES_ROOT}:${TRACY_SITES_ROOT}
+      - ${TRACY_PRIVATE_ROOT}:${TRACY_PRIVATE_ROOT}
+      - tracy-host-jobs:/var/lib/tracy-host
+    # go-live's iptables rules and the loopback ports sites publish on both live on the HOST'S
+    # network namespace — a bridged tracy-host could not see either.
+    # Docker Desktop (macOS): host networking exists from 4.34 and must be ENABLED (Settings →
+    # Resources → Network → "Enable host networking"); off, this is silently ignored and every
+    # `docker run --network host` probe below reads as unreachable instead of refused.
+    # deploy/scripts/check-local.sh (Step 4) probes it and refuses to go on.
+    network_mode: host
+    # 🔒 `network_mode: host` PUTS IT IN THE HOST'S NETWORK NAMESPACE; IT DOES NOT LET IT PROGRAM
+    # THE HOST'S NETFILTER. `provision.sh` hangs the egress fence for every new site
+    # (`iptables -I DOCKER-USER -s <site subnet> -j TRACY-FLEET-EGRESS`) — that is the whole of
+    # fence #1, the thing standing between a full copy of a customer's site and the open internet.
+    # In the previous architecture the same script ran as `tracy-hooks.py` under systemd, i.e. real
+    # root on the machine, and never needed to ask. Containerised, it does.
+    #
+    # Measured 11/09: without these, `iptables -L` fails on PERMISSION, `provision.sh` read that as
+    # "the chain is missing" and told the operator to run `bootstrap.sh` on a machine where the
+    # chain already existed — after both of the site's containers were already up.
+    #
+    # This is not a real widening of what this container can do: it already binds
+    # `/var/run/docker.sock`, which is root on the machine by a shorter path. NET_RAW comes with
+    # NET_ADMIN because iptables opens a raw socket to talk to netfilter.
+    cap_add: [NET_ADMIN, NET_RAW]
+    healthcheck:
+      # `network_mode: host` means 127.0.0.1 here IS the loopback `check-local.sh` also probes
+      # from outside the container — this is the same door, asked from the other side.
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:${TRACY_HOST_PORT:-51720}/health").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── docker-proxy + tracy-dsh — carried from
+  # packages/fleet/tracy-fleet-operation/dsh/host-dsh.yml AS THEY ARE (ADR 0014 §2's boundary
+  # between the agent's shell and the host's docker daemon does not change here); only the
+  # config path and the local-only DNS wiring below are new to THIS file.
+  docker-proxy:
+    image: haproxy:3.0-alpine@sha256:34cc7d1f6142464d7d2b73e2a1eef7392556dbf304160aef543e513cfd9e5162
+    container_name: tracy-docker-proxy
+    restart: unless-stopped
+    user: "0:0"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: [/run]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Relative to THIS FILE (deploy/compose.yml), one level up from host-dsh.yml's own copy —
+      # the config itself is unchanged, only the path that reaches it moved.
+      - ../packages/fleet/tracy-fleet-operation/dsh/docker-proxy.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2375/_ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks: [docker-api]
+
+  tracy-dsh:
+    image: ${DSH_IMAGE:-tracy/dsh}:${DSH_IMAGE_TAG:-dev}
+    container_name: tracy-dsh
+    restart: unless-stopped
+    # What the one dsh may take from the machine: the same caps, names and defaults as
+    # packages/fleet/tracy-fleet-operation/dsh/host-dsh.yml, whose comment carries the measurements.
+    # The cores default stays at 2 because a value above the machine's cores stops dsh from starting
+    # at all; raise TRACY_DSH_CPUS in .env on a laptop with cores to spare.
+    mem_limit: ${TRACY_DSH_MEMORY:-4g}
+    memswap_limit: ${TRACY_DSH_MEMORY:-4g}
+    cpus: ${TRACY_DSH_CPUS:-2}
+    pids_limit: ${TRACY_DSH_PIDS:-4096}
+    depends_on:
+      docker-proxy: { condition: service_healthy }
+    environment:
+      DSH_PORT: "51700"
+      DSH_PASSWORDS_ENV_FILE: /desk-home/dsh-passwords.env
+      TRACY_DOCKER_HOST: tcp://docker-proxy:2375
+      DSH_TRUSTED_HOSTS: "${HOST_NAME:-local}-agent.${SITE_DOMAIN:-localhost},127.0.0.1:51700,127.0.0.1:${WEB_PORT:-51710},host.docker.internal:51700"
+      # THE HALF OF THIS PAIR TRACY-WEB HOLDS TOO (`SEAT_local_SECRET`, apps/tracy-web/src/config.js's
+      # `readHosts`) — `entrypoint.sh` (packages/fleet/tracy-fleet-operation/dsh/entrypoint.sh) reads
+      # this env var ONLY WHEN IT FIRST WRITES `/desk-home/dsh-passwords.env` (never rewritten once
+      # that file exists) and bakes it in as `MCP_SEAT_SECRET`, dsh-passwords' seat door. Leave it
+      # unset and the entrypoint writes an EMPTY `MCP_SEAT_SECRET=` instead — its own documented
+      # local default ("the seat door stays open") — which is a silent downgrade, not a crash: the
+      # door still answers, it just never checks a signature. Verified 10/09 (ephemeral container,
+      # no volume): the value that reaches this env var is exactly what lands in the file.
+      MCP_SEAT_SECRET: ${SEAT_local_SECRET}
+      # The component Apply door verifies the identity signed by dsh against this same key.
+      MCP_TRACY_ORIGIN: ${TRACY_ORIGIN}
+      # Empty by default: the seat doors are tracy-web's own since 16/09/2026, on TRACY_ORIGIN.
+      MCP_TRACY_SEATS_ORIGIN: ${MCP_TRACY_SEATS_ORIGIN:-}
+      # Where this deployment serves its sites (`https://<label>.<SITE_DOMAIN>`). `page.text` and
+      # `page.look` (tracy-site-tools) accept a site's redirect to exactly that origin as the site
+      # itself and read the page over the container's loopback; without it every https WordPress
+      # redirects its own home page and reads as REDIRECTED_OFF_SITE. Taken from here, not from the
+      # site folder, because the site and the agent can both rewrite that folder.
+      TRACY_SITE_DOMAIN: ${SITE_DOMAIN:-tracy.test}
+      # The scheme and port every site address shares with this deployment (`bornSiteAddress`): a
+      # local stand serves `http://<label>.tracy.test:51710`, which `https://<label>.<SITE_DOMAIN>`
+      # cannot say, so WordPress (`301 → http://<label>.tracy.test:51710/`) and Joomla (`301 → …/en/`)
+      # read as REDIRECTED_OFF_SITE for their own home page (measured 24/09/2026 on wp-dmlj6g and
+      # j-1ibzqi). `page.text` follows a redirect to exactly `<scheme>//<label>.<SITE_DOMAIN>[:<port>]`
+      # and reads the page AS it, still over the site container's loopback. A server's TRACY_ORIGIN is
+      # https with no port, which is also what an empty value means; a malformed one is ignored with
+      # one boot warning. ⚠ The stand needs `tracy-dsh` RECREATED to see it: a restart keeps the old env.
+      TRACY_DEPLOYMENT_ORIGIN: ${TRACY_ORIGIN}
+      MCP_TRACY_ACTOR_SECRET: ${MCP_TRACY_ACTOR_SECRET}
+      # The model key, and until 10/09 NOTHING read `MODEL_API_KEY` at all — `.env.example` said
+      # "pass to dsh" beside it and no service consumed it, so filling it in changed nothing and
+      # every agent turn died with `MISSING_CREDENTIAL: llm-deepseek: no API key for provider
+      # route "deepseek-official"`.
+      #
+      # dsh takes it two ways and the error message names both: through its credentials service
+      # (what the web Models page writes, which is how production stores it — a per-user record in
+      # `/desk-home/.credentials.yaml`), or from the launching environment. This is the second,
+      # because a value in `deploy/.env` is reproducible: a fresh machine gets a working agent from
+      # `up -d` instead of from remembering to open a settings page. Empty is a legitimate state —
+      # chat sends and never answers, and `/design-inspiration`'s brand half answers 503.
+      DEEPSEEK_API_KEY: ${MODEL_API_KEY:-}
+      # The door that answers with PICTURES. The EmDash personalize stage draws a site's photographs
+      # for the customer's own trade, and only OpenRouter's image models answer that way; with a
+      # DeepSeek key alone the words are written and the pictures are skipped, said out loud.
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      # Read-only access to the private, pinned Joomla release assets. Never copied into a site.
+      TRACY_RELEASES_GITHUB_TOKEN: ${TRACY_RELEASES_GITHUB_TOKEN:-}
+    volumes:
+      # NOT rshared here, unlike host-dsh.yml's fleet mount: a laptop's `TRACY_SITES_ROOT` is a
+      # bind the compose project itself owns end to end (created before `up`, never attached to
+      # after the fact by a separate `attach-site.sh` run against a live container) — there is no
+      # late mount to propagate. The path INSIDE the container is still `/site`, unchanged —
+      # ADR 0014's "the path the agent sees never changes" — only the HOST side is a variable
+      # here instead of the fleet's fixed `/srv/tracy-sites`.
+      - ${TRACY_SITES_ROOT}:/site
+      - ${TRACY_DSH_HOME}:/desk-home
+    ports: ["127.0.0.1:51700:8080"]
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:8080/").then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    # `dns: [172.30.0.53]` is LOCAL ONLY — it is how this container resolves a site's
+    # `<label>.tracy.test` address (dnsmasq below); a server has no such suffix and no `dns`
+    # service, and Plan 5 is where that line stops being unconditional.
+    dns: ["${TRACY_NETWORK_PREFIX:-172.30.0}.53"]
+    networks: [docker-api, egress, tracy]
+
+  # ── dnsmasq — the only way a CONTAINER resolves `<label>.tracy.test` ────────────────────────
+  # `<label>.localhost` resolves in Chrome and in curl on the host (both special-case the
+  # `.localhost` TLD to loopback per RFC 6761) but NOT in Node's `dns.lookup` and NOT inside any
+  # container (measured 09/09 on macOS — neither does that special-casing). So a browser uses
+  # `*.localhost`; `tracy-dsh` and every site container use `*.tracy.test`, answered here with the
+  # ONE static address `tracy-web` also holds on this network — three different resolution paths,
+  # one destination. `profiles: [local]`: production has real DNS and no need for this at all.
+  dns:
+    image: 4km3/dnsmasq:2.90-r3
+    command:
+      [
+        '-k',
+        '--log-facility=-',
+        '--address=/${SITE_DOMAIN:-tracy.test}/${TRACY_NETWORK_PREFIX:-172.30.0}.10',
+        '--server=1.1.1.1'
+      ]
+    networks:
+      tracy: { ipv4_address: "${TRACY_NETWORK_PREFIX:-172.30.0}.53" }
+    healthcheck:
+      # `pgrep dnsmasq` (the first draft) proves the process exists, not that it answers a
+      # query — a healthcheck that cannot fail for the reason anyone cares about turns
+      # "unhealthy" into "healthy" on every future run, forever. Actually resolve a name against
+      # the wildcard `--address` rule above (verified 10/09: `nslookup healthcheck.tracy.test
+      # 127.0.0.1` inside this image → `Address: 172.30.0.10`, exit 0).
+      test: ["CMD", "nslookup", "healthcheck.${SITE_DOMAIN:-tracy.test}", "127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    profiles: [local]
+volumes:
+  tracy-pg: {}
+  tracy-minio: {}
+  tracy-host-jobs: {}
+  invitations-real-keys: {}
+
+networks:
+  # dsh and the proxy, and nothing else — `internal: true` gives this network no gateway, so the
+  # one container here holding a docker socket cannot reach the internet at all. Carried from
+  # host-dsh.yml unchanged.
+  docker-api:
+    internal: true
+  # dsh's way out: model providers, the git remotes an agent clones from. Carried from
+  # host-dsh.yml unchanged.
+  egress: {}
+  # NEW in this file: a fixed subnet so `tracy-web` and the `dns` service can hold static
+  # addresses dnsmasq answers with — a site container joins this network too (`render-compose.sh`,
+  # `TRACY_SITE_NETWORK`-gated) to reach both by IP, not by a compose service-name lookup that
+  # only works for containers inside the SAME compose project.
+  #
+  # 🔒 THE PREFIX IS A VARIABLE BECAUSE A REAL FLEET HOST RUNS OUT OF ADDRESS SPACE. Docker hands
+  # each compose project a /16 out of 172.16/12 by default, and a fleet host has one project per
+  # site. Measured on prod1 (11/09, fourteen sites): 172.17 through 172.31 were ALL taken, the
+  # 192.168 /20 blocks were filling behind them, and 172.30.0.0/16 in particular belonged to a
+  # customer's site — so `up` died with `invalid pool request: Pool overlaps with other one on this
+  # address space` before a single container was created.
+  #
+  # The literal 172.30.0 was never wrong, only unlucky: it was free on the laptop this file was
+  # written on and on the dev box. A hardcoded subnet on a host that hands subnets out is the same
+  # mistake as the hardcoded port that lived inside the port pool — fixed above, in this same file.
+  #
+  # Set `TRACY_NETWORK_PREFIX` (first three octets, no trailing dot) in the host's env file. prod1
+  # uses 10.90.0: the whole 10/8 is untouched there, and a /24 is far more than the three addresses
+  # this network ever pins.
+  tracy:
+    ipam:
+      config: [{ subnet: "${TRACY_NETWORK_PREFIX:-172.30.0}.0/24" }]

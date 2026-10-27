@@ -1,0 +1,127 @@
+//
+// Tracy Base — ACM block `story-chapter` (THE SIGNATURE BLOCK)
+// ------------------------------------------------------------------------------------------------
+// Source for css/style.css. Self-contained and block-scoped to `.acm-story-chapter`; it is NOT
+// @imported into scss/_all.scss, because mod_ja_acm loads an ACM block's own css/style.css
+// (modules/mod_ja_acm/helper.php::addAssets).
+//
+// This file is DELIBERATELY SHORT. The chapter's geometry — the two-column grid, the statement
+// type, the muted support colour, the media radius and its containment ring, the `--flip` — already
+// ships in scss/_base.scss under `.tracy-chapter`. Re-declaring any of it here would create a
+// second source of truth that drifts the first time someone tunes the template layer. What follows
+// is only what the component layer does NOT cover: the stack rhythm inside the text column, the
+// no-media fallback, the arrow, and the standalone-context padding.
+//
+// Not one literal colour, size, space or radius appears below: every value reads a design-spec
+// token from scss/_tokens-base.scss (:root, light), which scss/darkmode.scss remaps under the dark
+// hook. That is why this file needs no dark block of its own — dark mirrors light for free, and the
+// one thing that could break that (a surface fill) is deliberately absent: a chapter paints no
+// background, it sits on whichever band the layout row paints.
+//
+// Compile: lessc less/style.less css/style.css
+//
+
+.acm-story-chapter {
+  // A chapter carries no surface of its own. design-spec §4: section separation is CONTRAST-LED —
+  // the band change between chapters does the separating, and a border-top/bottom here would be
+  // the single easiest way to get this design wrong.
+  background: transparent;
+  border: 0;
+  color: var(--fg);
+
+  // Section rhythm for the STANDALONE case only — a chapter published into an article via
+  // {loadposition about-page}, where no `.tracy-band` row wraps it. Inside a band row the
+  // rhythm is already the row's (scss/_base.scss `.tracy-band { padding-block }`), so it is
+  // zeroed below; without that, a chapter in section-1 would render 200px of padding, not 100px.
+  padding-block: var(--tracy-band-y);
+}
+
+.tracy-band .acm-story-chapter {
+  padding-block: 0;
+}
+
+// ── The text column ─────────────────────────────────────────────────────────────────────────────
+// One statement, one supporting line, one capsule. The rhythm between them is the only spacing
+// decision this block makes.
+.acm-story-chapter .tracy-chapter__text > * {
+  margin-block: 0;
+}
+
+.acm-story-chapter .tracy-chapter__support {
+  margin-block-start: var(--space-6);
+}
+
+.acm-story-chapter .tracy-chapter__action {
+  margin-block-start: var(--space-8);
+}
+
+// The capsule itself is `.tracy-btn--secondary` from the component layer: foreground text in a
+// 1px ring, NO accent fill. design-spec §2 caps the screen at two visible accent uses and the home
+// page already spends both; a chapter is narrative, not a decision point. An owner who wants to
+// spend one here switches the block's `link-style` field to Primary.
+.acm-story-chapter .tracy-chapter__link {
+  text-decoration: none;
+}
+
+.acm-story-chapter .tracy-chapter__arrow {
+  width: var(--space-4);
+  height: var(--space-4);
+  flex: none;
+  transition: transform var(--motion-fast) var(--ease-standard);
+}
+
+.acm-story-chapter .tracy-chapter__link:hover .tracy-chapter__arrow {
+  transform: translateX(var(--space-1));
+}
+
+// Respect a reader who has asked the OS for less movement.
+@media (prefers-reduced-motion: reduce) {
+  .acm-story-chapter .tracy-chapter__arrow {
+    transition: none;
+  }
+
+  .acm-story-chapter .tracy-chapter__link:hover .tracy-chapter__arrow {
+    transform: none;
+  }
+}
+
+// ── The media column ────────────────────────────────────────────────────────────────────────────
+// `.tracy-chapter__media` already carries the 18px radius, the overflow clip and the 1px
+// containment ring (never a shadow — design-spec §4). A <figure> only needs its UA margin removed.
+.acm-story-chapter .tracy-chapter__media {
+  margin: 0;
+}
+
+// Before the owner picks an image the chapter is one full-width column rather than a half-empty
+// grid. Specificity (0,2,0) beats the component layer's `.tracy-chapter` (0,1,0), so this
+// holds at every width including the >=992px two-column rule.
+// The statement keeps the component layer's 20ch measure and the support line its 52ch even here:
+// the chapter is meant to read as a short editorial line, and widening it in the fallback state
+// would make the no-image case look like a different design.
+.acm-story-chapter--no-media .tracy-chapter {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+// ── Responsive ──────────────────────────────────────────────────────────────────────────────────
+// Below 992px the component layer's grid is already a single column, statement first (the `--flip`
+// only applies from 992px up, so a phone reader always meets the words before the picture). All
+// that is left is closing the 48px column gap to a stack gap that does not read as a page break.
+@media (max-width: 991px) {
+  .acm-story-chapter .tracy-chapter {
+    gap: var(--space-8);
+  }
+}
+
+@media (max-width: 639px) {
+  .acm-story-chapter .tracy-chapter {
+    gap: var(--space-6);
+  }
+
+  .acm-story-chapter .tracy-chapter__support {
+    margin-block-start: var(--space-4);
+  }
+
+  .acm-story-chapter .tracy-chapter__action {
+    margin-block-start: var(--space-6);
+  }
+}

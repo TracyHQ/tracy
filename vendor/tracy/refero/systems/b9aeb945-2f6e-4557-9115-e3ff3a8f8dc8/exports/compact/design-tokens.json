@@ -1,0 +1,64 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#007aff",
+      "$type": "color",
+      "$description": "Signal Blue — Primary action buttons, active states, brand icon highlights, inline links — the only chromatic accent in an otherwise achromatic system. iOS-native vivid blue that makes functional elements feel switched on"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Headings, primary borders, button text — maximum-contrast structural color"
+    },
+    "graphite": {
+      "$value": "#3e3e3e",
+      "$type": "color",
+      "$description": "Graphite — Body text, secondary borders — softer than black for sustained reading on white"
+    },
+    "smoke": {
+      "$value": "#636363",
+      "$type": "color",
+      "$description": "Smoke — Muted helper text, metadata labels, subtle borders"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "ash-mist": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Ash Mist — Page canvas background, soft glow rings around cards and images, pale elevation halos"
+    },
+    "dusk-gradient": {
+      "$value": "#7a7fd4",
+      "$type": "color",
+      "$description": "Dusk Gradient — Hero background — sky-blue descending through violet to warm coral sunset with landscape silhouettes at the base. Defines the system's only atmospheric moment"
+    }
+  },
+  "font": {
+    "perfectly-nineties-regular": {
+      "$value": "Perfectly Nineties Regular",
+      "$type": "fontFamily",
+      "$description": "Display and heading — the signature editorial voice. Used exclusively for H1/H2 at 36-48px. The retro serif is the system's personality anchor, deliberately contrasting with Inter body to feel like a magazine, not a dashboard"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, nav, links, labels — the workhorse UI font. Weight 400 for body, 500 for nav/medium emphasis, 600 for button text. Tighter tracking gives it a refined iOS-native feel"
+    },
+    "system-sans-serif": {
+      "$value": "System sans-serif",
+      "$type": "fontFamily",
+      "$description": "Utility/microcopy fallback — small inline metadata, secondary labels"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://useportal.net",
+      "siteName": "Portal",
+      "extractedAt": "2026-06-03T17:26:39.402Z",
+      "variant": "compact"
+    }
+  }
+}

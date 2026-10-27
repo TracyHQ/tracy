@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#0a1217",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dark card surfaces, sign-up panel, filled primary buttons on light backgrounds"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "frost-wash": {
+      "$value": "#e4eff7",
+      "$type": "color",
+      "$description": "Frost Wash — Soft tinted surface for light product cards and secondary panels — the only chromatic step between paper white and ink black"
+    },
+    "stone-gray": {
+      "$value": "#85898b",
+      "$type": "color",
+      "$description": "Stone Gray — Muted helper text, footer labels, and desaturated secondary copy"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Hairline borders, nav text, and input outlines where the sharpest contrast edge is required"
+    },
+    "electric-lime": {
+      "$value": "#cdfe00",
+      "$type": "color",
+      "$description": "Electric Lime — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "sana-serif": {
+      "$value": "Sana Serif",
+      "$type": "fontFamily",
+      "$description": "Hero display headline only. A weight-400 serif at 72px is the system's signature move: most AI brands shout with bold sans, Sana whispers with editorial type and lets the scale carry authority. The serif counterforms and bracket serifs give the wordmark a literary, humanist quality absent from typical product UI."
+    },
+    "sana-sans": {
+      "$value": "Sana Sans",
+      "$type": "fontFamily",
+      "$description": "All UI, body, navigation, buttons, and subheadings. The 450 weight is a distinctive mid-step between regular and medium — used for button labels and nav links instead of jumping to 500, producing quieter emphasis. Tabular numerals (tnum) and lining figures (lnum) are always on, giving all numeric data a consistent grid."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sana.ai",
+      "siteName": "Sana Agents",
+      "extractedAt": "2026-06-03T15:26:40.726Z",
+      "variant": "compact"
+    }
+  }
+}

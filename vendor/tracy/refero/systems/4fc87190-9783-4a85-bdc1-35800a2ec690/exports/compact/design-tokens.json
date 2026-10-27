@@ -1,0 +1,39 @@
+{
+  "color": {
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Gallery White — Page canvas, card surfaces, and heading backgrounds — the dominant surface across all sections"
+    },
+    "plaster-gray": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Plaster Gray — Subtle surface variation against white — used at near-imperceptible contrast for stacked layers"
+    }
+  },
+  "font": {
+    "esallianz": {
+      "$value": "ESAllianz",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface for navigation links, body copy, and display headlines. The custom face is a neo-grotesque with restrained geometry — its near-monolinear strokes and generous counters give the editorial feel. At 45px it functions as display; at 27px as section headings; at 18px as body and nav. Two weights (Light, Regular) both used at 400 — the visual difference is in the eye, not the number."
+    },
+    "open-sans": {
+      "$value": "Open Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary face for general body text and link rendering — serves as a web-safe fallback and the default for text blocks where the custom face is unavailable"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wearewouq.com",
+      "siteName": "WOUQ",
+      "extractedAt": "2026-06-03T21:32:24.334Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r3c",
+  "kind": "feat",
+  "title": "Round 3 batch C of the slot contracts: JA Beauty, JA Blockk, JA Boxing and JA Campaign (Joomla j6, T4), measured not ready in round 1, wear a design system from their tokenized 1.0.1 releases",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/contracts.test.mjs test/tokenize.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-{ja-beauty,ja-blockk,ja-boxing,ja-campaign}.json through loadContract.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor('joomla/<slug>', {key: 'quickstart/<slug>/j6', version}) at 1.0.0 and 1.0.1.",
+    "S4: tokenizeCss with JA Beauty's t4Placeholders and JA Boxing's varRoles on a one-rule sheet; joomlaSlot for JA Campaign under Moxie, JA Boxing and JA Blockk under Toggl Track.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r3c.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all four ready, minVersion {'quickstart/<slug>/j6': '1.0.1'}, readyNote naming tasks/evidence/ds-contracts-r3c-2026-10-11/templates/<slug>-j6.",
+    "S3: 1.0.0 → reason TEMPLATE_NEEDS_UPDATE; 1.0.1 → contract joomla-<slug>.",
+    "S4: '.section-title{color:__color_primary}' becomes var(--ds-c-accent-text, __color_primary); '--headings-color: #fff' becomes var(--ds-c-fg-2, #fff); JA Campaign's sheet has font-weight …!important and the mainnav rule '.t4-palette-mainnav .nav li a:not(.nav-link-signin)'; JA Boxing's sets --color-dark:var(--ds-c-surface) and hides .ja-dark-mode; JA Blockk's sets --color-desc:var(--ds-c-muted) and writes on body.dark-active."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-{ja-beauty,ja-blockk,ja-boxing,ja-campaign}.json ready, minVersion, t4Placeholders, varRoles, templateVars, followRules, weightImportant, tokenScope",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor",
+    "slot": "packages/design/tracy-ds-slot/src/joomla.mjs joomlaSlot (weightImportant), src/tokenize.mjs tokenizeCss"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r3c-2026-10-11/README.md — per-template table, screenshots, flow.json of the measure on each 1.0.1 build, VERIFICATION.json of each pack (11/10/2026).",
+  "fence": "The measures on Docker stands (each 20–40 min on the shared VM) are in the evidence, not re-run here; the release builds are verified in their VERIFICATION.json; nothing is uploaded. Judging by eye is in the evidence.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r3c.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

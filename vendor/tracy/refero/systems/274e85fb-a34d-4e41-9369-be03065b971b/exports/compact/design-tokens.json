@@ -1,0 +1,174 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff3d00",
+      "$type": "color",
+      "$description": "Ember Orange — Orange supporting accent for decorative details and low-frequency emphasis"
+    },
+    "pulse-violet": {
+      "$value": "#5900cc",
+      "$type": "color",
+      "$description": "Pulse Violet — Violet supporting accent for decorative details and low-frequency emphasis."
+    },
+    "cobalt-blue": {
+      "$value": "#2835f8",
+      "$type": "color",
+      "$description": "Cobalt Blue — Violet supporting accent for decorative details and low-frequency emphasis."
+    },
+    "crimson": {
+      "$value": "#ff003d",
+      "$type": "color",
+      "$description": "Crimson — Red supporting accent for decorative details and low-frequency emphasis"
+    },
+    "caution-yellow": {
+      "$value": "#ffff00",
+      "$type": "color",
+      "$description": "Caution Yellow — Yellow supporting accent for decorative details and low-frequency emphasis."
+    },
+    "voltage-green": {
+      "$value": "#05ff00",
+      "$type": "color",
+      "$description": "Voltage Green — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "electric-blue": {
+      "$value": "#1b73e6",
+      "$type": "color",
+      "$description": "Electric Blue — Headings and body text on cream, mid-saturation blue used in content"
+    },
+    "sky-cyan": {
+      "$value": "#00c2ff",
+      "$type": "color",
+      "$description": "Sky Cyan — Headings and accent text, cool counterpoint to warm cream"
+    },
+    "forest": {
+      "$value": "#008163",
+      "$type": "color",
+      "$description": "Forest — Card fills, moderate green for body-level content blocks"
+    },
+    "lime-pulse": {
+      "$value": "#3eea5a",
+      "$type": "color",
+      "$description": "Lime Pulse — Headings and body, brighter green counterpart to Voltage; Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "tangerine": {
+      "$value": "#ff5c00",
+      "$type": "color",
+      "$description": "Tangerine — Card fills, warm orange variant for content blocks"
+    },
+    "signal-red": {
+      "$value": "#ee2526",
+      "$type": "color",
+      "$description": "Signal Red — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "ink": {
+      "$value": "#0e0e0e",
+      "$type": "color",
+      "$description": "Ink — Dark supporting neutral for text, icons, and strong contrast."
+    },
+    "bone-cream": {
+      "$value": "#f4e9e1",
+      "$type": "color",
+      "$description": "Bone Cream — Primary page canvas, nav text on color blocks, card surface"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Active nav card, elevated card surface, input fields"
+    },
+    "charcoal": {
+      "$value": "#242320",
+      "$type": "color",
+      "$description": "Charcoal — Dark surface fill, image overlays, secondary text on light"
+    },
+    "sage": {
+      "$value": "#cee4cd",
+      "$type": "color",
+      "$description": "Sage — Tinted section background, warm green wash"
+    },
+    "blush": {
+      "$value": "#e4d0cd",
+      "$type": "color",
+      "$description": "Blush — Tinted section background, warm pink wash"
+    },
+    "sand": {
+      "$value": "#e7e4d0",
+      "$type": "color",
+      "$description": "Sand — Tinted section background, warm yellow wash, card fill"
+    },
+    "sky-tint": {
+      "$value": "#cddae4",
+      "$type": "color",
+      "$description": "Sky Tint — Tinted section background, cool blue wash, image-related surfaces"
+    },
+    "celadon": {
+      "$value": "#ddded3",
+      "$type": "color",
+      "$description": "Celadon — Tinted section background, muted green wash"
+    },
+    "olive-slate": {
+      "$value": "#444639",
+      "$type": "color",
+      "$description": "Olive Slate — Dark olive section background, secondary text"
+    },
+    "forest-slate": {
+      "$value": "#374936",
+      "$type": "color",
+      "$description": "Forest Slate — Dark green section background, heading text on light"
+    },
+    "cocoa-slate": {
+      "$value": "#4a3937",
+      "$type": "color",
+      "$description": "Cocoa Slate — Dark warm section background, heading text on light"
+    },
+    "plum-slate": {
+      "$value": "#493648",
+      "$type": "color",
+      "$description": "Plum Slate — Dark purple section background, heading text on light"
+    }
+  },
+  "font": {
+    "stabilgrotesk": {
+      "$value": "StabilGrotesk",
+      "$type": "fontFamily",
+      "$description": "Workhorse — every nav label, body text, button, badge, card label, and sub-heading up to 46px. The only font that touches interactive UI"
+    },
+    "optimistic-text": {
+      "$value": "Optimistic Text",
+      "$type": "fontFamily",
+      "$description": "Large display headlines at 80-193px, sometimes body pull-quote at 23px"
+    },
+    "klarheitkurrent": {
+      "$value": "KlarheitKurrent",
+      "$type": "fontFamily",
+      "$description": "The largest display voice — 200-259px hero type, also mid-size editorial headings at 79-107px"
+    },
+    "htq-waldenburg-fettschmal": {
+      "$value": "HTQ-Waldenburg-FettSchmal",
+      "$type": "fontFamily",
+      "$description": "Narrow bold display for compressed-impact headlines, the only font using \"case\" feature"
+    },
+    "rightgrotesk": {
+      "$value": "RightGrotesk",
+      "$type": "fontFamily",
+      "$description": "Bold geometric display for 199px poster-scale headlines"
+    },
+    "moderat": {
+      "$value": "Moderat",
+      "$type": "fontFamily",
+      "$description": "Wide-tracked display — the +0.084em tracking is a signature, used for all-caps subhead labels"
+    },
+    "courier-new": {
+      "$value": "Courier New",
+      "$type": "fontFamily",
+      "$description": "Monospaced system fallback for data tables, tiny index numbers"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://therawmaterials.com",
+      "siteName": "Raw Materials",
+      "extractedAt": "2026-06-03T19:01:21.444Z",
+      "variant": "compact"
+    }
+  }
+}

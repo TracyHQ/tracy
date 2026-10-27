@@ -1,0 +1,17 @@
+# Skills that BELONG TO THIS REPO — one name per line, kebab-case.
+#
+# Names in this list are mirrored by `skills:sync` into `.claude/skills/<name>` as a SYMLINK and
+# tracked by git. Every other folder in `.agents/skills/` belongs to one machine — a skill being tried,
+# a private skill — and is excluded by an auto-generated `.gitignore`, so playing with skills inside the repo
+# carries no risk of committing them by mistake.
+#
+# Don't write end-of-line comments: they would leak into the folder name.
+
+run-dev
+tch-dev
+pr-merge
+modify-site
+quickstart-contract
+staging-check
+desktop-release
+tdsr

@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1286-design-system-probe-capability",
+  "kind": "fix",
+  "title": "Design system probe respects CMS component capability and keeps negative controls",
+  "pr": 1286,
+  "area": "site-editing/design-system-probe",
+  "cms": ["em", "wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Load the actual Apple and Moxie profiles and build role expectations with and without reference component adoption.",
+    "Score an Apple button retaining the measured EmDash capsule and a deliberately wrong page colour; compare the default adopting expectation and a Refero control."
+  ],
+  "expect": [
+    "EmDash excludes only unadopted reference-derived values, retaining palette and stated-font expectations.",
+    "The same wrong button remains a mismatch for adopting CMSs; the wrong page colour fails for EmDash; Refero expectations remain unchanged."
+  ],
+  "selectors": {},
+  "fence": "Tests the declared CMS capability boundary; does not change emitted styles or relax colour or geometry tolerances. The old function fails the new regression.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=the probe respects EmDash",
+      "packages/design/tracy-ds-slot/test/components.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 60
+  }
+}

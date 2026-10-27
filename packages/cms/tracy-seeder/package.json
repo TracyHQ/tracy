@@ -1,0 +1,29 @@
+{
+  "name": "@tracy/seeder",
+  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The seeder: what tracy-site-build's seed stage runs on a lane \u2014 the approved design preview, with the customer's words, written into the WordPress theme `tracy` or the Joomla template `tpl_tracy`, plus a blog and a sections page written by one model turn each.",
+  "type": "module",
+  "bin": {
+    "tracy-seed": "bin/seed.mjs"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/cms/tracy-seeder"
+  },
+  "dependencies": {
+    "jpeg-js": "0.4.4",
+    "linkedom": "0.18.13"
+  },
+  "exports": {
+    ".": "./src/cli.mjs",
+    "./locales": "./src/locales.mjs",
+    "./language-catalog": "./src/language-catalog.mjs",
+    "./plan-joomla-language": "./src/plan-joomla-language.mjs",
+    "./apply-joomla-language": "./src/apply-joomla-language.mjs",
+    "./package.json": "./package.json",
+    "./wordpress-language-catalog": "./src/wordpress-language-catalog.mjs"
+  }
+}

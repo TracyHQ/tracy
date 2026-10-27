@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "48fa5bef-d910-40e1-b9b0-c0fcad055c6f",
+  "status": "complete",
+  "name": "Holiday 100",
+  "url": "https://styles.refero.design/style/48fa5bef-d910-40e1-b9b0-c0fcad055c6f",
+  "sourceWebsite": "https://shopping.google.com/m/bestthings",
+  "extractedAt": "2026-06-03T21:55:00.077Z",
+  "capturedAt": "2026-10-08T05:11:14.090887+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "midnight gift gallery — the serif headline acts as the spotlight, the dark canvas is the velvet wall, and each product image hangs like a curated frame.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/50442238-19f5-4918-a5ff-8c9b9447fce5.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/cd3e6450-98a0-4dcc-8dcd-d30048b14412.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fd997431-09fa-4c83-b36d-b43a3fb3ef7d.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a8b615ab-e141-4b06-968e-afba97df65da.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c7f2dcc5-09df-4893-b6d3-032b51917b90.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "820bd399b8b3fa03a1a4723f3cd24bcb0d438b24fe200630385476e1023144cf",
+      "bytes": 21886
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "95ed9a61062f3af45e79d882f53cecbcb700bf94ca3b14f001f5942879153ae6",
+      "bytes": 130180
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "30edf9a5e08795c11b9ccd58d5cf9c94a224e348f81692ab9807d77cf8eb7710",
+      "bytes": 17831
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ee51a62073ba8bf858301b8c34f8fa7761c1f3016ace29033baa84098bd469d3",
+      "bytes": 11235
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5267e5f39b05101808fdb021e89f6f481051da958ddd586bc17fa99bcdf4c33b",
+      "bytes": 13479
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bb8b7c1f2244e0d6a8785560a2dc688de6e2a543d1305f4dc0d7936ffa912698",
+      "bytes": 4763
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0f6c0c8928b37ff02a50c66bfb84432b2482df5fd35bcf18995a9e390fb148f7",
+      "bytes": 878
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3d007f03f17a1ac330d88f9c6e298a5ed9ba1d5b2dd7df71b0e34e5cd5de7c30",
+      "bytes": 895
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "54a109e8476d51430560c67f8ebee2323737e3717c7a1667eda3ce35bd5fda94",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "17b876f3f295debf4536f10562eb1c5f1980c7fd7b09498c50e4f8575cd46d59",
+      "bytes": 44793
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5f03c6b0ffd966e2ee88c9429bc80a474b911800e16f666dd4e25e320f6f1ed9",
+      "bytes": 22879
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c3bb29b6184dc387cfeba857c8e1f5ee9d370322dbb408da251cb2a6cc85dadd",
+      "bytes": 44946
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "bf2aa74bf3f258b65fb99f5105327a5bac68f15cd22b932acbf7f3953fa83482",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8910cc7383edaa419a2c117a4bf3bdb0ef45a28ab6d1b8177fdf7cd21133ddde",
+      "bytes": 1950
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "252f695359a99ed5909c679159b18e62f9d36d9d5485f330930f1097d449393c",
+      "bytes": 2544
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "48fa5bef-d910-40e1-b9b0-c0fcad055c6f",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b458ca1a-70f0-4f85-b745-f879a4d08457",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

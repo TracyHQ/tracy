@@ -1,0 +1,19 @@
+/*
+Theme Name: WP Diner
+Theme URI: https://tracy.ai
+Update URI: https://github.com/TracyHQ/claude-cowork
+Description: JA Diner: the JoomlArt Diner design as a WordPress block theme, carried from its Joomla 6 (T3) quickstart 1.0.4. Its look is measured from the running source, not a catalogue design system.
+Version: 1.0.0
+Author: JoomlArt
+Author URI: https://www.joomlart.com
+Requires at least: 7.0
+Tested up to: 7.1
+Requires PHP: 8.1
+Text Domain: wp-ja-diner
+License: GNU General Public License v3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+*/
+
+/* The look is carried by theme.json, generated from the measured tokens.css named in
+   theme.config.json, and by assets/css/wp-ja-diner.css, not by this file. It exists because
+   WordPress identifies a theme by its style.css header. */

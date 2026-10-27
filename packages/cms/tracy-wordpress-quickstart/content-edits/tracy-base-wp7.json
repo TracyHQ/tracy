@@ -1,0 +1,33 @@
+{
+  "note": "Tracy Base wp7 after 1.1.5: demo copy that names Joomla on a WordPress site (ported verbatim from the Joomla source), the one-page headline whose line break the port lost (the Joomla source has <br> there), and the one-page ghost links \"Discuss your website\" whose inline colour was the accent fill (unreadable as text under a design system with a light accent; now the accent-text role with the same default). scripts/apply-tracy-base-changes.mjs applies these on the restored stand before packing, with its other content changes (counts are those of tracy-base-wp7-database-1.1.5.sql; an edit already made is skipped), so do not also run editDump on the dump. Then capture the new contract: the presentation lock hashes these pages. The theme pattern section-accordion.php carries the new FAQ answer already.",
+  "edits": [
+    {
+      "entity": "page-94",
+      "pages": ["page-94 home (2)", "page-95 pricing", "page-107 home-2", "page-117 faq"],
+      "from": "editable Joomla articles and modules",
+      "to": "editable WordPress pages and blocks",
+      "count": 5
+    },
+    {
+      "entity": "page-125",
+      "pages": ["page-125 home-onepage"],
+      "from": "The demo uses native Joomla content and modules.",
+      "to": "The demo uses native WordPress pages and blocks.",
+      "count": 1
+    },
+    {
+      "entity": "page-125",
+      "pages": ["page-125 home-onepage"],
+      "from": "A thoughtful studio.A stronger digital presence.",
+      "to": "A thoughtful studio.<br>A stronger digital presence.",
+      "count": 1
+    },
+    {
+      "entity": "page-125",
+      "pages": ["page-125 home-onepage"],
+      "from": "background:transparent;color:var(--wp--preset--color--accent);border-color:transparent",
+      "to": "background:transparent;color:var(--ds-c-accent-text, var(--wp--preset--color--accent));border-color:transparent",
+      "count": 3
+    }
+  ]
+}

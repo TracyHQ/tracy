@@ -1,0 +1,374 @@
+{
+  "dos": [
+    "Set display headlines in Monument Grotesk weight 800 at line-height 0.90 — type compression is the brand's identity, not a typographic mistake to fix.",
+    "Default to Cream Parchment (#f8f9eb) as the canvas for all new screens; reserve Forest Depths (#003d21) for one feature band per page so it lands as a deliberate shift, not a competing background.",
+    "Use Charcoal (#202020) as the only filled button color — there is no chromatic CTA. Accent colors belong to icons, card surfaces, and decorative strokes, never to action backgrounds.",
+    "Border everything instead of shadowing: 1.5px Obsidian (#000000) or Sage Mist (#c0c2a9) outlines on cream surfaces. Elevation comes from outline and fill, not from box-shadow.",
+    "Use the pastel palette (Mint Sprout, Lilac Wash, Sky Wash, Rose Wash) as full-card backgrounds — one color per card, no borders, no gradients inside.",
+    "Apply 13px radius to buttons and 22px radius to cards consistently. Reserve 9999px for pill badges and tags only.",
+    "Keep monospace (JetBrains Mono) restricted to 10–14px status tags, badges, and small caps labels — never use it for body sentences."
+  ],
+  "donts": [
+    "Do not set headlines with comfortable or airy line-height (1.3+) at display sizes — the brand's monumental effect collapses if display type breathes.",
+    "Do not introduce a chromatic filled button (blue, green, purple) — the only CTA fill is Charcoal. Adding color to CTAs dilutes the monochrome discipline.",
+    "Do not use #ffffff as the page background — Coda's warmth depends on Cream Parchment. Pure white makes the design feel like a generic SaaS page.",
+    "Do not apply drop shadows or multi-layer box-shadows to cards or buttons — the border system replaces elevation. A shadow here breaks the blueprint metaphor.",
+    "Do not mix the pastel colors inside a single card or use gradients to blend them — each pastel card is a single solid wash.",
+    "Do not use rounded fonts (Inter, Nunito) or humanist serifs as substitutes for Monument Grotesk — the geometric grotesque compression is the signature.",
+    "Do not add chromatic borders to dark cards. Dark sections use Mint Sprout or pastel fills internally; their outlines stay monochrome or none."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f8f9eb",
+      "name": "Cream Parchment",
+      "role": "Page canvas, primary background, nav and body surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Elevated card surfaces, icon fills inside outlined containers, text on dark buttons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Hairline borders, primary text, outline strokes, dark surface dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#202020",
+      "name": "Charcoal",
+      "role": "Filled button background, dark elevated surfaces, secondary text on cream",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c0c2a9",
+      "name": "Sage Mist",
+      "role": "Muted borders, icon strokes, secondary text, soft dividers between sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5a5a4f",
+      "name": "Olive Slate",
+      "role": "Secondary and meta text, subdued captions, lower-emphasis copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7c7d76",
+      "name": "Pebble",
+      "role": "Tertiary text, caption labels, subdued helper copy on cream",
+      "group": "neutral"
+    },
+    {
+      "hex": "#edeee1",
+      "name": "Bone",
+      "role": "Subtle button border, faint hover surface, near-canvas divider",
+      "group": "neutral"
+    },
+    {
+      "hex": "#003d21",
+      "name": "Forest Depths",
+      "role": "Hero feature section background, brand-defining dark band, bold UI surface",
+      "group": "brand"
+    },
+    {
+      "hex": "#aafdc0",
+      "name": "Mint Sprout",
+      "role": "Light green card surface, heading accent stroke, lively pastel fill",
+      "group": "brand"
+    },
+    {
+      "hex": "#041668",
+      "name": "Cobalt Ink",
+      "role": "Decorative icon fill, deep accent stroke, secondary brand hue",
+      "group": "accent"
+    },
+    {
+      "hex": "#2d0078",
+      "name": "Plum Depth",
+      "role": "Decorative icon fill, deep accent stroke, tertiary brand hue",
+      "group": "accent"
+    },
+    {
+      "hex": "#3f0929",
+      "name": "Wine Shadow",
+      "role": "Decorative icon fill, deep accent stroke, warm accent hue",
+      "group": "accent"
+    },
+    {
+      "hex": "#d3beff",
+      "name": "Lilac Wash",
+      "role": "Soft purple card surface, pastel feature tile",
+      "group": "accent"
+    },
+    {
+      "hex": "#b0f4ff",
+      "name": "Sky Wash",
+      "role": "Soft teal card surface, pastel feature tile",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffc0e6",
+      "name": "Rose Wash",
+      "role": "Soft pink card surface, pastel feature tile",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered, max-width ~1200px contained layout with full-bleed feature bands. Top of page: announcement bar → nav → centered hero with a pill status badge, then a two-line monumental display headline with inline icon glyphs, then a short subheadline. Below the hero, a full-bleed Forest Depths band with organic blob decoration and a single feature card (icon + headline + CTA) sits inside. Sections are vertically separated by 63–72px gaps, with the Forest band connecting to cream via a ~45px radius mound rather than a hard edge. The rest of the page alternates cream canvas with isolated pastel card surfaces. Navigation is a single top bar with logo left, four text links center, language flag and CTA right. No sidebar, no sticky patterns beyond the announcement bar.",
+  "imagery": "Imagery is minimal and text-driven. The site uses abstract 3D-rendered organic blob clusters (overlapping soft circular forms in Mint Sprout and Forest Depths) as decorative atmosphere inside the dark feature band — these are the only major visuals and feel sculptural, not photographic. Black-outlined icon glyphs (smiley faces, arrows, spirals, chip patterns) function as pictographic ornaments, set inline with display type at headline scale. There is no photography, no lifestyle imagery, and no product screenshots; the brand is expressed through monumental typography and the cream-and-forest color contrast alone. Icons are monoline geometric, matched to Monument Grotesk's character widths.",
+  "similar": [
+    {
+      "why": "Same monumental gradient display typography and single-action-color discipline; Coda's cream parchment and bordered system echo Stripe's editorial restraint but with a warmer, more boutique canvas",
+      "business": "Stripe"
+    },
+    {
+      "why": "Shared tight line-heights on display type and a calm neutral canvas, though Coda replaces Linear's dark mode with a warm cream and uses outline-based elevation instead of dark cards",
+      "business": "Linear"
+    },
+    {
+      "why": "Same creator/marketplace DNA, but Coda swaps Gumroad's saturated pink for a forest-green section, and uses Monument Grotesk weight 800 at monumental sizes where Gumroad leans on rounded display fonts",
+      "business": "Gumroad"
+    },
+    {
+      "why": "Both pair a single deep brand color (forest green vs Cash App green) with monumental display type, though Coda's monochrome cream system is far more restrained and editorial",
+      "business": "Cash App"
+    },
+    {
+      "why": "Same hairline-bordered component language and confidence in negative space, but Coda builds on a warm cream instead of Vercel's near-black, and lets display type dominate instead of code",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "22px",
+      "badges": "9999px",
+      "buttons": "13px",
+      "heroCards": "45px",
+      "largeCards": "27px",
+      "smallButtons": "9px"
+    },
+    "elementGap": "13px",
+    "sectionGap": "72px",
+    "cardPadding": "27px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#f8f9eb",
+      "name": "Cream Parchment",
+      "level": 1,
+      "purpose": "Primary page canvas, nav background, hero surface"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "level": 2,
+      "purpose": "Elevated card surface inside dark sections, icon fills"
+    },
+    {
+      "hex": "#aafdc0",
+      "name": "Pastel Mint",
+      "level": 2,
+      "purpose": "Light feature card surface, text accent on dark sections"
+    },
+    {
+      "hex": "#d3beff",
+      "name": "Pastel Lilac",
+      "level": 2,
+      "purpose": "Pastel card surface variant"
+    },
+    {
+      "hex": "#b0f4ff",
+      "name": "Pastel Sky",
+      "level": 2,
+      "purpose": "Pastel card surface variant"
+    },
+    {
+      "hex": "#ffc0e6",
+      "name": "Pastel Rose",
+      "level": 2,
+      "purpose": "Pastel card surface variant"
+    },
+    {
+      "hex": "#202020",
+      "name": "Charcoal",
+      "level": 3,
+      "purpose": "Filled button surface, dark elevated card"
+    },
+    {
+      "hex": "#003d21",
+      "name": "Forest Depths",
+      "level": 3,
+      "purpose": "Full-bleed feature band, brand-defining dark surface"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "level": 4,
+      "purpose": "Outlined and bordered containers, text, inline graphic glyphs"
+    }
+  ],
+  "northStar": "Monumental letters on warm cream parchment — Coda reads like a hand-set marketplace poster, not a SaaS dashboard.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.37,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "subheading",
+      "size": 21,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-sm",
+      "size": 25,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading",
+      "size": 34,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-lg",
+      "size": 45,
+      "lineHeight": 1.02,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 0.9,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "display-xl",
+      "size": 134,
+      "lineHeight": 0.9,
+      "letterSpacing": -0.01
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Slim full-width strip above the navigation",
+      "description": "Charcoal (#202020) background spanning edge-to-edge, 4–9px row gap inside, tracking-wide monospace caption in #f8f9eb at 12px, optional right-aligned close (×) in cream. Height is compact — one line of text with comfortable vertical padding."
+    },
+    {
+      "name": "Top Navigation",
+      "role": "Primary site header with logo, links, language switcher, and CTA",
+      "description": "Transparent or Cream Parchment (#f8f9eb) background, no bottom border. CODA wordmark in Monument Grotesk weight 800 at ~25px on the left. Center: four nav links in 16px weight 500, #202020. Right: language flag dropdown, 'Contact us' text link, and a filled dark Charcoal CTA button (13px radius, 13px 18px padding, white text). Nav links separated by ~27px horizontal gap."
+    },
+    {
+      "name": "Filled Primary Button",
+      "role": "Primary call-to-action ('Get Started', 'Learn more')",
+      "description": "Charcoal (#202020) fill, white text, Monument Grotesk weight 500 at 16px, 13px border-radius, padding 13px 18px, no border. Sits as the only filled button variant — there is no chromatic CTA. Hover slightly lightens to #2e2e2e."
+    },
+    {
+      "name": "Outlined Ghost Button",
+      "role": "Secondary action on cream backgrounds",
+      "description": "Transparent fill, 1.5px #c0c2a9 (Sage Mist) border, Charcoal text, 9px radius, 13px 18px padding. Used for low-emphasis actions that should not compete with the primary CTA."
+    },
+    {
+      "name": "Pill Status Badge",
+      "role": "Small contextual label above section headlines ('READY TO GROW? WE'RE READY TO GO')",
+      "description": "Full 9999px radius, 1.5px #c0c2a9 Sage Mist border, transparent fill, JetBrains Mono 12px uppercase in #202020. Padding 9px 13px. The pill shape and monospace text are a deliberate 'system tag' signal."
+    },
+    {
+      "name": "Monumental Display Headline",
+      "role": "Hero and section-headline typography",
+      "description": "Monument Grotesk weight 800 at 72–134px, line-height 0.90, letter-spacing -0.01em, color #000000. Icon glyphs (circular logos, smiley, arrow chips) are set inline as black outlined marks, aligned to the baseline — type and pictogram sit on the same line. Two-line stack: top line long, second line short and centered beneath."
+    },
+    {
+      "name": "Subheadline",
+      "role": "Supporting paragraph under hero or section headlines",
+      "description": "Monument Grotesk weight 400 at 18–21px, line-height 1.30, Charcoal (#202020), centered under the display headline. Acts as the 'quiet voice' after the monumental shout."
+    },
+    {
+      "name": "Full-Bleed Forest Section",
+      "role": "Feature showcase band breaking the cream rhythm",
+      "description": "Forest Depths (#003d21) background, full-bleed, ~45px corner radius on its top edge so it bleeds into the cream canvas as a soft mound. Inside: organic circular blob clusters in Mint Sprout at 60–80% opacity, layered like a 3D coin stack. Section padding 63–72px top/bottom."
+    },
+    {
+      "name": "Feature Card with Outlined Icon",
+      "role": "Feature explanation card (e.g. 'Your web store, your way')",
+      "description": "Forest Depths (#003d21) background continues behind, card itself is the Forest surface. Left side: Mint Sprout text headline in Monument Grotesk 800 at 45–54px, weight 800, line-height 1.02. Right side: a Mint Sprout (#aafdc0) rounded square card (~22px radius, 27px padding) containing a bold black icon (smiley face, etc.) in Monument Grotesk style, a short description in 14px Charcoal, and a Filled Primary Button (dark on the mint)."
+    },
+    {
+      "name": "Pastel Surface Card",
+      "role": "Tonal card highlighting a specific feature or content tile",
+      "description": "Single full-bleed pastel surface in one of Lilac Wash (#d3beff), Sky Wash (#b0f4ff), Rose Wash (#ffc0e6), or Mint Sprout (#aafdc0). 22–27px radius, 27px padding. The color is the entire background — no border, no shadow. Headline in Monument Grotesk 800 in matching dark accent (Cobalt Ink, Plum Depth, Wine Shadow, or Charcoal)."
+    },
+    {
+      "name": "Icon-in-Rounded-Square",
+      "role": "Small icon container used in lists and feature callouts",
+      "description": "22px radius, ~45×45px, filled with a chromatic accent (Mint Sprout, Cobalt Ink, etc.), 2px black outline. Icon is a single Monument Grotesk-styled pictogram (face, arrow, coin) in black, centered."
+    },
+    {
+      "name": "Inline Graphic Glyph",
+      "role": "Decorative icon set inline with display headlines",
+      "description": "Black-outlined geometric mark (circle with face, chip with arrow, spiral, double chevron) sized to match the cap-height of the display headline, set on the same baseline. Functions as a typographic ornament, not a separator."
+    }
+  ],
+  "typography": [
+    {
+      "role": "ui-sans-serif — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "ui-sans-serif",
+      "weight": "400",
+      "lineHeight": "1.5"
+    },
+    {
+      "role": "The single voice of the brand — headlines, body, buttons, nav, and tags all use this custom geometric grotesque. Weight 800 for monumental display, 500 for medium emphasis, 400 for body and UI. The tight 0.90 leading on large sizes is a signature: type compresses into architectural blocks instead of airy editorial columns.",
+      "sizes": "10, 12, 14, 16, 18, 21, 22, 25, 34, 45, 54, 63, 72, 134",
+      "family": "Monument Grotesk (custom)",
+      "weight": "400, 500, 800",
+      "lineHeight": "0.90–1.50 depending on size",
+      "substitute": "Archivo, Space Grotesk, or Inter Tight at 700/800 weights",
+      "letterSpacing": "Near-zero: -0.01em at all sizes for optical tightening on bold weights"
+    },
+    {
+      "role": "Code-like monospace used for pill tags, small status badges, and technical microcopy. The mono voice deliberately contrasts the rounded geometric grotesque, signaling 'system' or 'label' rather than 'message'.",
+      "sizes": "10, 12, 14, 16",
+      "family": "JetBrains Mono",
+      "weight": "400",
+      "lineHeight": "1.20–1.37",
+      "substitute": "IBM Plex Mono or JetBrains Mono"
+    },
+    {
+      "role": "Fallback and accessibility text where Monument Grotesk is unavailable; also used for non-brand secondary text and link rendering in card surfaces",
+      "sizes": "16",
+      "family": "System UI Sans",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "System default sans-serif stack"
+    }
+  ],
+  "description": "Coda's visual language is a confident, almost architectural marketplace identity built on a warm cream canvas (#f8f9eb) rather than stark white. The defining signature is monumental display type — a custom geometric grotesque (Monument Grotesk) set extremely tight (line-height 0.90) at sizes up to 134px, making headlines feel like carved signage rather than web copy. Every surface is bordered, not shadowed: hairline charcoal outlines on cream create a blueprint-like precision that pairs with pill-shaped tags, small rounded buttons (~13px radius), and one deep forest-green section that breaks the monochrome rhythm with organic blob shapes. Color is used as deliberate, sparse punctuation — a mint card here, a lilac or rose card there — while the structural palette stays earthy and achromatic. The effect is half editorial brutalism, half boutique storefront: warm, tactile, and emphatically physical rather than digital-glass.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #000000 (Obsidian) for primary copy, #202020 (Charcoal) for secondary\n- background: #f8f9eb (Cream Parchment) for canvas, #003d21 (Forest Depths) for one full-bleed feature band\n- border: #c0c2a9 (Sage Mist) 1.5px on cream, #000000 (Obsidian) 1.5px for stronger outlines\n- accent: #aafdc0 (Mint Sprout) for the primary accent surface and headline color on dark sections\n- pastel cards: #d3beff, #b0f4ff, #ffc0e6 — each used as a single solid wash on a card\n- primary action: #202020 (filled action)\n\nExample Component Prompts:\n\n1. Hero Section — Centered on Cream Parchment (#f8f9eb). Pill badge at top: 9999px radius, 1.5px #c0c2a9 border, transparent fill, JetBrains Mono 12px uppercase in #202020 reading the section label, padding 9px 13px. Monumental headline below: Monument Grotesk weight 800, 72–96px, line-height 0.90, letter-spacing -0.01em, color #000000, centered. Two black inline icon glyphs (rounded square smiley, chip-arrow) sized to the cap-height and set on the headline baseline. Subheadline: Monument Grotesk weight 400, 18–21px, line-height 1.30, #202020, centered, max-width ~640px.\n\n2. Filled Primary Button — Charcoal (#202020) fill, white text, Monument Grotesk weight 500, 16px, padding 13px 18px, 13px border-radius, no border. Used for 'Get Started' and 'Learn more' CTAs.\n\n3. Outlined Ghost Button — Transparent fill, 1.5px #c0c2a9 (Sage Mist) border, #202020 text in Monument Grotesk weight 500, 16px, padding 13px 18px, 9px border-radius. Used for secondary actions on cream.\n\n4. Full-Bleed Forest Feature Section — Forest Depths (#003d21) background spanning edge-to-edge with a ~45px top-corner radius so it meets cream as a soft mound. Inside: a cluster of overlapping Mint Sprout (#aafdc0) circular blob shapes at 60–80% opacity on the right half. Feature card on the left: Mint Sprout headline in Monument Grotesk weight 800, 45–54px, line-height 1.02. To the right of the card, a small Mint Sprout rounded card (22px radius, 27px padding) with a black smiley icon, 14px description in #202020, and a Charcoal filled CTA inside.\n\n5. Pastel Feature Card — One solid pastel wash (use #aafdc0, #d3beff, #b0f4ff, or #ffc0e6) as the entire card background, 22–27px border-radius, 27px padding, no border, no shadow. Headline in Monument Grotesk weight 800 at 34–45px in the matching dark accent (#003d21, #2d0078, #041668, or #3f0929)."
+    }
+  ]
+}

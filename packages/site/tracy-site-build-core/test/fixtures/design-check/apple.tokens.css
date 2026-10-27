@@ -1,0 +1,17 @@
+/* Apple — the 56 tokens, trimmed to what the check reads */
+:root {
+  --bg: #ffffff;
+  --surface: #f5f5f7;
+  --fg: #1d1d1f;
+  --fg-2: #424245;
+  --muted: #6e6e73;
+  --border: #d2d2d7;
+  --accent: #0071e3;
+  --accent-on: #ffffff;
+  --success: #1d9a4a;
+  --danger: #e30000;
+  --font-display: "SF Pro Display", system-ui, sans-serif;
+  --font-body: "SF Pro Text", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", monospace;
+  --space-4: 16px;
+}

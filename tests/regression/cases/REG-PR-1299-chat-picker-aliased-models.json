@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1299-chat-picker-aliased-models",
+  "kind": "fix",
+  "title": "Chat model picker exposes only operator-aliased models; a non-aliased deployment model cannot be selected",
+  "pr": 1299,
+  "area": "settings/model-picker",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the workspace model policy test against the branch source with the TAP reporter.",
+    "Require the named assertion below to pass; this case does not call a paid LLM or mutate a user session."
+  ],
+  "expect": [
+    "Enabling a deployment route for the backend does not expose it in the picker while its model_aliases is empty: routableProviders stays without that route.",
+    "Once one model under the route is aliased, only that model appears under the route, renamed to its alias.",
+    "selectModel of a non-aliased deployment model is refused with session/model-unavailable, including a wire-encoded tp_/tm_ id resolved against the host catalogue.",
+    "modelLabels still resolves a now-hidden historical pick to its label."
+  ],
+  "selectors": {
+    "catalog": "/api/session/modelCatalog",
+    "select": "/api/session/selectModel"
+  },
+  "fence": "apps/tracy-web/src/workspace/model-policy.js and lib/model-providers.js (restrictToAliasedModels / isApprovedDeploymentModel): deployment routes expose only aliased models and selectModel enforces the same, independent of the backend-enabled flag.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "apps/tracy-web/test/workspace-model-policy.test.mjs"
+    ],
+    "tests": ["proxy reads current ops state and rejects stale picks before reaching dsh"]
+  }
+}

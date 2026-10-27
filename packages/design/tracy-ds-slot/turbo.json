@@ -1,0 +1,51 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test:ci": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/check-tests.ts",
+        "$TURBO_ROOT$/scripts/test-timing-reporter.mjs",
+        "$TURBO_ROOT$/scripts/test-database.ts",
+        "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
+        "$TURBO_ROOT$/apps/tracy-web/**",
+        "$TURBO_ROOT$/packages/cms/tracy-joomla-quickstart/**",
+        "$TURBO_ROOT$/packages/cms/tracy-wordpress-theme/**",
+        "$TURBO_ROOT$/vendor/tracy/od-design-system/**",
+        "$TURBO_ROOT$/vendor/tracy/refero/**",
+        "$TURBO_ROOT$/packages/design/tracy-ds-slot/test/fixtures/ds-sweep-2026-10-13-moxie/**",
+        "$TURBO_ROOT$/apps/tracy-web/src/config.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/asset-cache.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/design-assets.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/shard-shapes.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/ds-slot.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/refero-names.js",
+        "$TURBO_ROOT$/apps/tracy-web/scripts/preview-check/host-named.mjs",
+        "$TURBO_ROOT$/apps/tracy-web/scripts/preview-detectors/hover-same.mjs",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/local-releases.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/questions-schema.mjs",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/site-pages-schema.mjs",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/template-shots.js",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/tracy-setting.mjs",
+        "$TURBO_ROOT$/apps/tracy-web/src/lib/template-design-system-readiness/rules/measure-command.js",
+        "!$TURBO_ROOT$/**/.turbo/**",
+        "!$TURBO_ROOT$/**/node_modules/**",
+        "!$TURBO_ROOT$/**/__pycache__/**",
+        "!$TURBO_ROOT$/**/.DS_Store",
+        "!$TURBO_ROOT$/tests/regression/.runs/**",
+        "!$TURBO_ROOT$/packages/cms/tracy-seeder/dist/**",
+        "!$TURBO_ROOT$/vendor/tracy/dsh-better-sidebar/lib/**",
+        "!$TURBO_ROOT$/vendor/tracy/dsh-passwords/dist/**",
+        "!$TURBO_ROOT$/apps/tracy-docs/src/content/docs/changelog.md",
+        "!$TURBO_ROOT$/apps/tracy-docs/src/content/docs/reference/compatibility.md",
+        "!$TURBO_ROOT$/apps/tracy-docs/src/content/docs/reference/errors.md",
+        "!$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/scripts/lib/__pycache__/**",
+        "!$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/scripts/provision/__pycache__/**",
+        "!$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/scripts/webroot/__pycache__/**",
+        "!$TURBO_ROOT$/vendor/tracy/dsh-passwords/.env",
+        "!$TURBO_ROOT$/packages/cms/tracy-seeder/src/data/**"
+      ]
+    }
+  }
+}

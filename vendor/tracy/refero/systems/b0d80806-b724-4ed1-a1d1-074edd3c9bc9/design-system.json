@@ -1,0 +1,393 @@
+{
+  "dos": [
+    "Use #e5e5e5 for all container borders — 1px solid is the default structural line, not shadows",
+    "Reserve #1e40af (Deep Sapphire) for exactly one primary action per surface — never use it decoratively",
+    "Use Satoshi weight 500 at 36–48px for display headlines; switch to Inter for everything 30px and below",
+    "Use 9999px radius for all tags, badges, and pill-shaped indicators; 8px for buttons; 12px for cards; 16px for large feature cards",
+    "Use 16px as the canonical body text size with lineHeight 1.5; drop to 14px for dense data and 11–12px for micro-labels",
+    "Apply the soft tint palette (#dcfce7 mint, #dbeaff blue, light yellow) to small badge backgrounds and feature highlights — not to large surfaces",
+    "Keep imagery as product UI mockups and desaturated logos; avoid stock photography and decorative illustrations"
+  ],
+  "donts": [
+    "Don't use heavy drop shadows for card elevation — the system relies on 1px borders, not depth, to define containers",
+    "Don't use pure black (#000000) for body text — use #171717 or #0a0a0a for slightly softer contrast",
+    "Don't apply the Electric Blue (#2563eb) to large background fills — it's a highlight color, not a surface color",
+    "Don't use multiple chromatic colors on a single component — each pill or feature tag gets exactly one accent",
+    "Don't use Satoshi at body sizes — Satoshi is display-only (36px+); Inter handles everything below 30px",
+    "Don't use radii outside the defined vocabulary (9999px, 16px, 12px, 8px, 6px) — ad-hoc rounding breaks the system's rhythm",
+    "Don't use color for decorative gradients on UI elements — the conic spectrum gradient is reserved for the logo and brand visuals only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas White",
+      "role": "Page background, card surfaces, popover panels — the absolute base of every screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Paper Mist",
+      "role": "Subtle alt-surface for nested cards, secondary panels, and hover fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e5e5",
+      "name": "Ash",
+      "role": "Hairline borders on cards, inputs, and dividers — the structural line that holds the system together",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d4d4",
+      "name": "Smoke",
+      "role": "Stronger borders for emphasis containers and secondary button outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c8c8c8",
+      "name": "Pebble",
+      "role": "Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Midnight Ink",
+      "role": "Primary button text, high-emphasis buttons, nav text — near-black for maximum contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Charcoal",
+      "role": "Body text, button text, default heading color — slightly softer than pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#262626",
+      "name": "Graphite",
+      "role": "Secondary text, icon strokes, subtle UI elements",
+      "group": "neutral"
+    },
+    {
+      "hex": "#404040",
+      "name": "Slate",
+      "role": "Tertiary text, nav hover states, subdued iconography",
+      "group": "neutral"
+    },
+    {
+      "hex": "#525252",
+      "name": "Steel",
+      "role": "Muted body text, helper text, less-prominent labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Fog",
+      "role": "Placeholder text, disabled states, link text in rest state",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a3a3a3",
+      "name": "Silver",
+      "role": "Disabled iconography, decorative strokes, very light dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2563eb",
+      "name": "Electric Blue",
+      "role": "Primary brand color — logo, links, key metric highlights, active states, icon accents. Saturated blue against white gives the system its one moment of visual voltage",
+      "group": "brand"
+    },
+    {
+      "hex": "#1e40af",
+      "name": "Deep Sapphire",
+      "role": "Primary action button background, high-emphasis CTA fill — the single committed action color, used sparingly so it earns attention",
+      "group": "brand"
+    },
+    {
+      "hex": "#dcfce7",
+      "name": "Soft Mint",
+      "role": "Gray outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#16a34a",
+      "name": "Vivid Green",
+      "role": "Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#ea580c",
+      "name": "Tangerine",
+      "role": "Orange text accent for links, tags, and emphasized short phrases.",
+      "group": "accent"
+    },
+    {
+      "hex": "#7c3aed",
+      "name": "Lavender",
+      "role": "Violet text accent for links, tags, and emphasized short phrases.",
+      "group": "accent"
+    },
+    {
+      "hex": "#8b5cf6",
+      "name": "Conic Spectrum",
+      "role": "Decorative gradient — used as full-spectrum conic gradient on brand visuals and logo, never on UI elements",
+      "group": "accent",
+      "gradient": "conic-gradient(from -81deg, #ff0000, #eab308 99deg, #5cff80 162deg, #00fff9 216deg, #3a8bfd 288deg, #855afc)"
+    },
+    {
+      "hex": "#000000",
+      "name": "Primary Action Fill",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces. Use as the primary filled action background",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page follows a centered, max-width contained model at approximately 1200px. The hero is a centered text stack with three floating feature pills (Affiliate Programs, Conversion Analytics, Short Links) arranged horizontally above a large product mockup. Sections stack vertically with consistent 64px gaps, alternating between white canvas and the #f5f5f5 paper mist for tonal separation. The lower section uses a z-pattern: editorial text centered in the middle third, with floating UI cards anchored at the left and right margins, creating an asymmetric, magazine-like rhythm. The logo cloud is a simple 5×2 grid centered on the page. Navigation is a minimal top bar — logo left, nav center, two-button cluster (ghost Log in + filled Sign up) right — with no sticky or mega-menu behavior. The dashboard mockup in the hero shows a classic 2-column app shell: fixed sidebar (240px-ish) + content area, establishing the product's information density for visitors before they scroll.",
+  "imagery": "Imagery is product-first, not lifestyle. The hero centers a large dashboard screenshot — a real product mockup with sidebar nav, data table, and floating UI elements — presented as a flat panel on the white canvas. Customer logos appear in a desaturated grayscale grid (beehiv, superpower, Chatbase, etc.) for social proof, stripped of color so the page's single blue accent stays dominant. Floating partner cards (small profile + revenue/payout tiles) drift around editorial text blocks in the lower section, giving a sense of depth without using shadows on the text itself. The dotted grid background pattern is a signature: a fine array of small dots at very low opacity creates texture and a sense of a design system / blueprint surface, reinforcing the 'modern link attribution platform' positioning. Iconography is small, outlined-to-filled, and uses the accent palette (orange tangerine, violet lavender, green mint) for feature tags. No photography, no illustrations, no 3D — the product UI IS the visual language.",
+  "similar": [
+    {
+      "why": "Same light-canvas + monochrome + single-accent approach, with similar compact density and 1px-border container treatment over heavy shadows",
+      "business": "Linear"
+    },
+    {
+      "why": "Geometric sans-serif headlines at weight 500 (not bold), hairline borders, white-on-white card surfaces with 12px radius, and a restrained color palette that lets the product UI do the visual work",
+      "business": "Vercel"
+    },
+    {
+      "why": "Open-source SaaS with the same pill-button + flat card aesthetic, similar use of small colored feature tags floating above monochrome layouts, and Inter as the primary workhorse font",
+      "business": "Cal.com"
+    },
+    {
+      "why": "Editorial-meets-dashboard layout with centered text stacks, floating UI cards, dotted grid background texture, and a near-monochrome palette with a single accent color for emphasis",
+      "business": "Plausible Analytics"
+    },
+    {
+      "why": "Compact information density, border-defined containers instead of shadows, pill-shaped status indicators, and a confident use of one saturated accent (blue) against near-black text",
+      "business": "Raycast"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "12px",
+      "inputs": "6px",
+      "buttons": "8px",
+      "largeCards": "16px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the base layer, always pure white"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Alt-section backgrounds, nested panel surfaces, subtle hover fills"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Product cards, dashboard surfaces, popovers — white-on-white separated by 1px #e5e5e5 border"
+    },
+    {
+      "hex": "#dcfce7",
+      "name": "Tinted Accent",
+      "level": 3,
+      "purpose": "Decorative wash for feature highlights and 'new' badges"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "element": "Primary buttons"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 0px 0px 4px",
+      "element": "Elevated cards"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "element": "Feature showcase cards"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 0px 0px 4px",
+      "element": "Product mockup frames"
+    }
+  ],
+  "northStar": "frosted link dashboard on rice paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-xl",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.38
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.11
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Ghost Nav Button",
+      "role": "Navigation bar item",
+      "description": "Transparent background, #171717 text, 9999px radius, no border, 16px horizontal padding. Used for top-level nav items like Product, Solutions, Resources, Enterprise. No visible border until hover."
+    },
+    {
+      "name": "Outlined Nav Button",
+      "role": "Secondary nav action (Log in)",
+      "description": "White background (#ffffff), #171717 text, 1px #e5e5e5 border, 8px radius, 16px horizontal padding. Compact and quiet — the 'I'm here but I don't need to be seen' variant."
+    },
+    {
+      "name": "Filled Dark CTA",
+      "role": "Primary action button (Sign up)",
+      "description": "Near-black background (#0a0a0a or #171717), white text, 8px radius, 16px horizontal padding. The committed action — used once per surface for the primary conversion goal."
+    },
+    {
+      "name": "Outlined Action Button",
+      "role": "Secondary or utility action (Learn more, View invoices)",
+      "description": "White background, #171717 text, 1px #e5e5e5 border, 8px radius, 12px vertical / 16px horizontal padding. The workhorse button — used for most non-primary actions throughout the UI."
+    },
+    {
+      "name": "Pill Feature Tag",
+      "role": "Feature category indicator in hero and nav",
+      "description": "Transparent or white background, small colored icon (orange/violet/green emoji-style glyph), #171717 label text, 9999px radius, 12px vertical / 16px horizontal padding. These floating pills (Affiliate Programs, Conversion Analytics, Short Links) are the system's signature decorative element."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Status, count, or label indicator",
+      "description": "Transparent or white background, #0a0a0a text, 9999px radius, minimal padding. Used for small notification dots, version labels, and category markers."
+    },
+    {
+      "name": "Dashboard Card",
+      "role": "Primary product surface container",
+      "description": "White background (#ffffff), 1px #e5e5e5 border, 12px radius, 8px internal padding. The most frequent component (57 variants) — flat, border-defined, no shadow. Rely on borders and spacing for visual structure, not elevation."
+    },
+    {
+      "name": "Elevated Feature Card",
+      "role": "Showcase or feature card with depth",
+      "description": "White background, 16px radius, 16px padding, subtle box-shadow: rgba(0,0,0,0.1) 0px 0px 0px 4px ring effect. Used sparingly to lift hero product mockups and featured content above surrounding flat cards."
+    },
+    {
+      "name": "Muted Alt Card",
+      "role": "Secondary panel or grouped content surface",
+      "description": "Light gray background (#fafafa), 16px radius, 16px padding, no border. Provides tonal contrast when nesting content inside a white card or on the white canvas."
+    },
+    {
+      "name": "Dashboard Table Row",
+      "role": "Data table body row",
+      "description": "Transparent or white background, 1px #e5e5e5 bottom border, 16px row height, 14–16px text. Minimal vertical density — rows breathe with generous padding for scannability."
+    },
+    {
+      "name": "Status Badge (Pending/Completed)",
+      "role": "Row-level state indicator in tables",
+      "description": "Tinted background (soft mint #dcfce7 for completed, light yellow/orange wash for pending), small colored dot icon, dark text, pill radius (9999px), 6px vertical / 10px horizontal padding. Compact inline state communication."
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "role": "Dashboard sidebar navigation",
+      "description": "Transparent or light blue (#dbeaff) active background, 8px radius, #171717 text, 12px vertical / 8px horizontal padding. Active state uses a soft chromatic fill rather than a bold left-border indicator."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form input, search, URL field",
+      "description": "White background, #111827 text, 1px #000000 border (distinctive — inputs use near-black border instead of #e5e5e5 for emphasis), 6px radius, 8px vertical / 12px horizontal padding. The black border is a signature: inputs feel important, not optional."
+    },
+    {
+      "name": "Logo Cloud Item",
+      "role": "Customer/social proof logo display",
+      "description": "Transparent background, grayscale (#262626 to #737373) wordmark, no border, centered in grid cell. Logos desaturated to harmonize with monochrome palette — color appears only in active or interactive states."
+    },
+    {
+      "name": "Product Mockup Container",
+      "role": "Hero screenshot or dashboard preview frame",
+      "description": "White background, 16px top-left/top-right radius (asymmetric — bottom is flush), subtle 4px outer ring shadow for depth. Container is a window into the product, not a framed picture — it sits on the canvas like a floating panel."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headings — used only at 36–48px for hero and section titles. Weight 500 (medium, not bold) is the signature: headings feel confident and modern but never shout. Satoshi's geometric proportions give the type a slightly editorial, contemporary feel that Inter body text can't replicate.",
+      "sizes": "36px, 40px, 48px",
+      "family": "Satoshi",
+      "weight": "500",
+      "lineHeight": "1.0–1.11",
+      "substitute": "Inter (weight 500, letter-spacing -0.02em) or General Sans",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Body, UI labels, navigation, subheadings, small headings. Inter is the workhorse — handles everything from 11px micro-labels to 30px secondary headlines. Weight 400 is default body, 500 for emphasis and button labels, 600 reserved for important UI labels. The 16px size at lineHeight 1.5 is the most frequent single step (1220 occurrences), confirming 16px as the canonical body size.",
+      "sizes": "8px, 10px, 11px, 12px, 13px, 14px, 16px, 18px, 20px, 24px, 30px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.33–1.56",
+      "substitute": "Inter (native)"
+    },
+    {
+      "role": "Code snippets, technical metadata, inline monospace tokens. Used at 12–14px in code blocks and 24px for large code display elements. Provides the developer-tool credibility that matches Dub's product positioning.",
+      "sizes": "12px, 14px, 24px",
+      "family": "Geist Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.0–1.43",
+      "substitute": "JetBrains Mono or IBM Plex Mono"
+    }
+  ],
+  "description": "Dub's visual system is a quiet, almost editorial SaaS aesthetic — a near-white canvas held together by hairline borders rather than elevation, with dense monochrome typography doing the structural work and one electric blue (#2563eb) doing the talking. Surfaces stay flat and borderless-looking at a glance, but every container carries a 1px #e5e5e5 edge that creates a printed-document feel. The personality comes from a small vocabulary of colored 'feature pill' accents (orange, green, violet) that float above the otherwise neutral palette, and from Satoshi-weight-500 display headlines that read as confident and contemporary without being loud. Components are compact and dense: 8px gaps, 12px card radius, pill-shaped tags at 9999px, and ghost controls instead of heavy filled buttons.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text primary: #171717\n- Text muted: #737373\n- Background: #ffffff\n- Surface alt: #f5f5f5\n- Border: #e5e5e5\n- Accent: #2563eb\n- primary action: #000000 (filled action)\n\n## Example Component Prompts\n1. **Hero Feature Pill**: Transparent background, 9999px radius, 8px vertical / 16px horizontal padding. Small colored emoji-style icon (orange tangerine #ea580c for 'Short Links', violet #7c3aed for 'Conversion Analytics', green #16a34a for 'Affiliate Programs') + 14px Inter weight 500 #171717 label. No border.\n\n2. **Dashboard Card**: White (#ffffff) background, 1px #e5e5e5 border, 12px radius, 16px padding. Content inside uses 14–16px Inter weight 400 #171717. No shadow — borders define the container.\n\n3. Create a Primary Action Button: #000000 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n4. **Outlined Action Button**: White (#ffffff) background, #171717 text, 1px #e5e5e5 border, 8px radius, 6px vertical / 12px horizontal padding. 14px Inter weight 500. Use for secondary actions like 'Learn more' or 'View invoices'.\n\n5. **Display Headline**: Satoshi weight 500, 48px, lineHeight 1.0, color #171717. No letter-spacing adjustment. Use only for the largest hero and section titles — switch to Inter for anything 30px or below."
+    },
+    {
+      "title": "Border-First Elevation Philosophy",
+      "content": "Dub deliberately uses 1px borders over shadows as the primary container-defining mechanism. The base border color is #e5e5e5 at 1px solid — used 1942 times across the system, making it the most deployed visual element. Shadows are reserved for three specific cases: (1) a barely-there 1px lift on primary buttons (rgba(0,0,0,0.05) 0px 1px 2px), (2) a 4px outer ring on elevated feature cards and product mockups to create a 'floating panel' effect, and (3) the layered 10px/4px shadow stack on hero showcase elements. The philosophy: borders create a printed-document clarity that's better for information-dense SaaS UIs, while shadows are saved for moments that need to truly pop off the page. This is the opposite of Material Design's shadow-heavy approach."
+    },
+    {
+      "title": "Pill Architecture",
+      "content": "The 9999px radius is deployed 367 times — the second most common radius token. It's used for: feature category tags, status badges, notification dots, partner avatars, and pill-shaped nav elements. Combined with the 8px and 12px radii for buttons and cards, the system has a clear three-tier radius vocabulary: pills (9999px) for tags and badges, medium (8–12px) for buttons and cards, large (16px) for feature surfaces. This tight radius discipline is a key part of what makes the design feel intentional and cohesive."
+    }
+  ]
+}

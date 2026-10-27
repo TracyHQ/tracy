@@ -1,0 +1,874 @@
+{
+  "meta": {
+    "url": "https://axelarigato.com",
+    "siteName": "AXEL ARIGATO",
+    "extractedAt": "2026-09-20T19:24:28.599Z",
+    "durationMs": 58826,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 436,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 18,
+          "confidence": 1,
+          "prominence": 24882205.674503207,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 18
+          }
+        },
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "body",
+            "nav",
+            "button",
+            "heading",
+            "other",
+            "link"
+          ],
+          "frequency": 94,
+          "confidence": 1,
+          "prominence": 1792690.2204228325,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/fill": 4,
+            "body/color": 36,
+            "link/color": 20,
+            "other/fill": 18,
+            "other/color": 4,
+            "button/color": 11,
+            "heading/color": 1
+          }
+        },
+        {
+          "hex": "#faedbc",
+          "oklch": {
+            "c": 0.06471851263283837,
+            "h": 94.95328500919952,
+            "l": 0.9444561478498902
+          },
+          "contexts": [
+            "other",
+            "footer"
+          ],
+          "frequency": 3,
+          "confidence": 1,
+          "prominence": 1484056,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 2,
+            "footer/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#e9e9e9",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9340252444454716
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 1059158.8649938928,
+          "properties": [
+            "borderColor"
+          ],
+          "usageCounts": {
+            "other/borderColor": 6
+          }
+        },
+        {
+          "hex": "#f3f3f3",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9641535001508271
+          },
+          "contexts": [
+            "image",
+            "input"
+          ],
+          "frequency": 23,
+          "confidence": 1,
+          "prominence": 831895.5961308465,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "image/backgroundColor": 22,
+            "input/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#090909",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.13979123394671675
+          },
+          "contexts": [
+            "body",
+            "link",
+            "nav",
+            "input",
+            "other"
+          ],
+          "frequency": 32,
+          "confidence": 1,
+          "prominence": 258575.6425583143,
+          "properties": [
+            "borderColor",
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/fill": 3,
+            "nav/color": 5,
+            "body/color": 11,
+            "link/color": 3,
+            "other/fill": 5,
+            "input/color": 1,
+            "body/borderColor": 4
+          }
+        },
+        {
+          "hex": "#aaaaaa",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.7380186709485949
+          },
+          "contexts": [
+            "button"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 1043,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "button/color": 1
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.0029646593052147677,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#ffffff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 19.91,
+          "background": "#ffffff",
+          "foreground": "#090909"
+        },
+        {
+          "level": "AAA",
+          "ratio": 18.93,
+          "background": "#f3f3f3",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.94,
+          "background": "#f3f3f3",
+          "foreground": "#090909"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.9,
+          "background": "#faedbc",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.3,
+          "background": "#e9e9e9",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.98,
+          "background": "#faedbc",
+          "foreground": "#090909"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.4,
+          "background": "#e9e9e9",
+          "foreground": "#090909"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.04,
+          "background": "#aaaaaa",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.57,
+          "background": "#aaaaaa",
+          "foreground": "#090909"
+        },
+        {
+          "level": "fail",
+          "ratio": 2.32,
+          "background": "#ffffff",
+          "foreground": "#aaaaaa"
+        },
+        {
+          "level": "fail",
+          "ratio": 2.09,
+          "background": "#f3f3f3",
+          "foreground": "#aaaaaa"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.98,
+          "background": "#faedbc",
+          "foreground": "#aaaaaa"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [
+        {
+          "value": 9999,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1
+        }
+      ],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 1,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 1,
+          "properties": [
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|nav"
+          ]
+        },
+        {
+          "value": 4,
+          "contexts": [
+            "body",
+            "icon",
+            "list",
+            "link",
+            "button"
+          ],
+          "frequency": 50,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "marginRight",
+            "marginTop",
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|body",
+            "paddingBottom|body",
+            "marginRight|icon",
+            "marginTop|list",
+            "marginBottom|list",
+            "marginBottom|link",
+            "marginBottom|button"
+          ]
+        },
+        {
+          "value": 6,
+          "contexts": [
+            "icon",
+            "button"
+          ],
+          "frequency": 9,
+          "properties": [
+            "marginRight",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "marginRight|icon",
+            "rowGap|button",
+            "columnGap|button"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "nav",
+            "other",
+            "list",
+            "input"
+          ],
+          "frequency": 34,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|nav",
+            "paddingBottom|nav",
+            "rowGap|nav",
+            "columnGap|nav",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "rowGap|list",
+            "columnGap|list",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|input",
+            "paddingBottom|input"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "nav",
+            "other",
+            "body",
+            "input"
+          ],
+          "frequency": 26,
+          "properties": [
+            "paddingRight",
+            "paddingTop",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|nav",
+            "paddingTop|nav",
+            "paddingBottom|nav",
+            "paddingLeft|other",
+            "paddingRight|body",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "paddingRight|input"
+          ]
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "body",
+            "other",
+            "nav",
+            "button",
+            "image",
+            "input",
+            "list"
+          ],
+          "frequency": 137,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "marginLeft",
+            "paddingTop",
+            "paddingBottom",
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|body",
+            "paddingLeft|body",
+            "paddingLeft|other",
+            "paddingLeft|nav",
+            "paddingRight|nav",
+            "marginLeft|button",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingRight|image",
+            "paddingLeft|image",
+            "marginBottom|body",
+            "paddingLeft|input",
+            "paddingTop|list",
+            "paddingRight|list",
+            "paddingBottom|list",
+            "paddingLeft|list"
+          ]
+        },
+        {
+          "value": 20,
+          "contexts": [
+            "other",
+            "link"
+          ],
+          "frequency": 4,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "marginTop|link"
+          ]
+        },
+        {
+          "value": 24,
+          "contexts": [
+            "other",
+            "link"
+          ],
+          "frequency": 9,
+          "properties": [
+            "marginTop",
+            "paddingBottom",
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|other",
+            "paddingBottom|other",
+            "paddingTop|link"
+          ]
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "other",
+            "footer"
+          ],
+          "frequency": 5,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|footer",
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 40,
+          "contexts": [
+            "list"
+          ],
+          "frequency": 3,
+          "properties": [
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|list"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 4
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "HelveticaNowVar",
+          "source": "custom",
+          "weights": [
+            470,
+            520
+          ],
+          "frequency": 408,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": null,
+      "steps": [
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 520,
+          "contexts": [
+            "other",
+            "link",
+            "body",
+            "nav",
+            "button",
+            "heading",
+            "image",
+            "footer",
+            "list",
+            "icon"
+          ],
+          "frequency": 285,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 520,
+          "contexts": [
+            "other",
+            "link",
+            "nav",
+            "body",
+            "icon",
+            "button",
+            "list"
+          ],
+          "frequency": 107,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 520,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 520,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.85,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 470,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 5,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 470,
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 8,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 13,
+          "family": "HelveticaNowVar",
+          "weight": 520,
+          "contexts": [
+            "input"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.85,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use Gallery White #ffffff as the default page canvas and reserve Butter Ticket #faedbc for footer and service bands.",
+      "Set navigation, utility links, and discovery labels in HelveticaNowVar at 13px weight 520 with 0px tracking.",
+      "Keep interface controls transparent with 0px radius; use spacing, not filled rectangles, to define their hit areas.",
+      "Use 1px solid Rule Gray #e9e9e9 for structural dividers and quiet image-grid boundaries.",
+      "Apply 16px as the default internal and inter-control gap, with 4px, 8px, 12px, 20px, 24px, 32px, and 40px as supporting increments.",
+      "Keep editorial images square-cornered and separated by 20px when used in multi-column campaign grids.",
+      "Restrict 9999px radius to the Floating Chat Launcher and similarly isolated floating utility affordances."
+    ],
+    "donts": [
+      "Do not introduce rounded 4px, 8px, or 12px cards; standard content surfaces use 0px radius.",
+      "Do not use filled black, colored, or gradient buttons for public navigation without evidence of a separate action treatment.",
+      "Do not use #aaaaaa for body copy; reserve it for inactive navigation or disabled controls.",
+      "Do not set interface type larger than the established 13px system merely to manufacture a marketing hierarchy.",
+      "Do not add box shadows to headers, image modules, inputs, or footer containers.",
+      "Do not substitute vivid interface accents for Butter Ticket #faedbc; it is the only recurring chromatic surface.",
+      "Do not use rounded image masks, soft pastel overlays, or decorative background gradients over campaign photography."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#ffffff",
+        "name": "Gallery White",
+        "role": "Page backgrounds, header surfaces, navigation fields, and editorial whitespace",
+        "group": "neutral"
+      },
+      {
+        "hex": "#000000",
+        "name": "Ink Black",
+        "role": "Primary text, logo marks, icon fills, and transparent-control text",
+        "group": "neutral"
+      },
+      {
+        "hex": "#090909",
+        "name": "Near-Black",
+        "role": "Navigation text, links, input text, and fine dark rules",
+        "group": "neutral"
+      },
+      {
+        "hex": "#e9e9e9",
+        "name": "Rule Gray",
+        "role": "1px dividers, quiet section boundaries, and image-grid separation",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f3f3f3",
+        "name": "Studio Gray",
+        "role": "Image loading fields and input surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#aaaaaa",
+        "name": "Inactive Gray",
+        "role": "Inactive navigation and disabled text",
+        "group": "neutral"
+      },
+      {
+        "hex": "#faedbc",
+        "name": "Butter Ticket",
+        "role": "Footer and service-information surfaces; the muted yellow reads as a printed event ticket against the monochrome interface",
+        "group": "accent"
+      }
+    ],
+    "layout": "The page is a full-bleed editorial storefront on a white canvas. A narrow delivery strip sits above a compact two-level header: wordmark and category navigation occupy the upper navigation field, while location/campaign context can sit as a small left-aligned label before the main visual content. The hero and campaign sections prioritize large image-led modules, including a three-column vertical-photo grid with consistent white gutters; minimal discovery links sit beneath imagery rather than overlaying it. Content moves in generous 40px section intervals, with 16px side/control spacing and very little panel framing. The footer shifts to a broad Butter Ticket #faedbc band, while the chat launcher remains as the lone rounded floating element.",
+    "imagery": "Photography is the main storytelling system: candid group portraits and street scenes, tightly cropped in tall rectangular frames with raw square edges. The images are documentary and socially active rather than studio product cutouts, with natural mixed lighting, urban architecture, and muted garment tones. Photography is presented as contained campaign panels in dense multi-column arrangements, not as softly masked decorations. Icons are tiny monochrome black utility marks; their role is navigational, while imagery carries the campaign atmosphere.",
+    "similar": [
+      {
+        "why": "Shares sparse black-on-white fashion navigation and editorial photography that carries more hierarchy than oversized display text.",
+        "business": "Acne Studios"
+      },
+      {
+        "why": "Shares compact typographic utility navigation, square image treatment, and restrained monochrome commerce surfaces.",
+        "business": "A.P.C."
+      },
+      {
+        "why": "Shares documentary-style fashion imagery arranged as an editorial campaign sequence rather than isolated product cards.",
+        "business": "Our Legacy"
+      },
+      {
+        "why": "Shares whitespace-led retail layouts, compact sans-serif labels, and image-first collection storytelling.",
+        "business": "COS"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "links": "0px",
+        "pills": "9999px",
+        "images": "0px",
+        "inputs": "0px",
+        "buttons": "0px"
+      },
+      "elementGap": "16px",
+      "sectionGap": "40px",
+      "cardPadding": "16px",
+      "pageMaxWidth": null
+    },
+    "industry": "ecommerce",
+    "surfaces": [
+      {
+        "hex": "#ffffff",
+        "name": "Gallery White",
+        "level": 0,
+        "purpose": "Primary page, header, navigation, and editorial whitespace."
+      },
+      {
+        "hex": "#f3f3f3",
+        "name": "Studio Gray",
+        "level": 1,
+        "purpose": "Image loading fields and search input surface."
+      },
+      {
+        "hex": "#faedbc",
+        "name": "Butter Ticket",
+        "level": 2,
+        "purpose": "Footer and service-information bands."
+      }
+    ],
+    "northStar": "AXEL ARIGATO — candid city contact sheet. Build pages as a sequence of white editorial margins and tightly cropped, socially charged fashion photography, punctuated by compact black labels.",
+    "typeScale": [
+      {
+        "role": "nav",
+        "size": 13,
+        "family": "HelveticaNowVar",
+        "weight": 520,
+        "lineHeight": 1.5,
+        "letterSpacing": 0
+      },
+      {
+        "role": "utility-uppercase",
+        "size": 13,
+        "family": "HelveticaNowVar",
+        "weight": 520,
+        "lineHeight": 1.5,
+        "letterSpacing": 0
+      },
+      {
+        "role": "compact-discovery-link",
+        "size": 13,
+        "family": "HelveticaNowVar",
+        "weight": 520,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "editorial-label",
+        "size": 13,
+        "family": "HelveticaNowVar",
+        "weight": 470,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      }
+    ],
+    "components": [
+      {
+        "name": "Delivery Announcement Strip",
+        "role": "A compact, full-width service message above the primary header.",
+        "description": "Use a #faedbc background with 13px/520 HelveticaNowVar uppercase #090909 text. Keep the strip flat, square-cornered, and separated from surrounding content without a shadow."
+      },
+      {
+        "name": "Wordmark Header",
+        "role": "Primary site header carrying the black wordmark and category navigation.",
+        "description": "Place the #000000 wordmark on #ffffff with 13px/520 HelveticaNowVar navigation labels. Use 16px horizontal internal spacing, 8px vertical spacing, square edges, and no elevation."
+      },
+      {
+        "name": "Category Navigation Label",
+        "role": "Text-only category control for top-level collections.",
+        "description": "Set at 13px/520 HelveticaNowVar, #090909, with 19.5px line-height and no letter spacing. Keep the control background transparent, borderless, radius 0px, and padded only through its surrounding 16px layout gap."
+      },
+      {
+        "name": "Inactive Category Navigation Label",
+        "role": "Muted alternative for an unselected or unavailable category.",
+        "description": "Match the 13px/520 HelveticaNowVar category treatment but use #aaaaaa text. Keep a transparent background, #aaaaaa text/border state, 0px radius, and no filled hover treatment."
+      },
+      {
+        "name": "Utility Navigation Link",
+        "role": "Help, search, account, and regional utility navigation.",
+        "description": "Use uppercase 13px/520 HelveticaNowVar in #090909 with 19.5px line-height. Controls are transparent, borderless, square, and separated by 6px to 16px gaps rather than contained button fills."
+      },
+      {
+        "name": "Icon Utility Control",
+        "role": "Compact cart, favorite, and account icon control.",
+        "description": "Use a #000000 or #090909 filled icon on transparent #ffffff, with no visible border and 0px radius. Maintain 4px to 6px gaps between icon and adjacent count or label."
+      },
+      {
+        "name": "Location Editorial Label",
+        "role": "Two-line location or campaign identifier positioned above an image story.",
+        "description": "Use 13px/470 HelveticaNowVar in #090909 with 18.2px line-height, aligned to the page’s 16px side inset. Keep the label unboxed on #ffffff."
+      },
+      {
+        "name": "Editorial Image Triptych",
+        "role": "Three-up campaign photography module.",
+        "description": "Use three tall, tightly cropped photographic panels on #f3f3f3 image surfaces, separated by 20px gutters. Images have 0px radius, no shadow, and consume substantially more visual area than their surrounding text labels."
+      },
+      {
+        "name": "Discovery Text Link",
+        "role": "Low-chrome editorial route beneath a visual story.",
+        "description": "Render as uppercase #090909 text in 13px/520 HelveticaNowVar with 15.6px line-height. Pair it with a minimal black directional glyph, retain a transparent background, 0px radius, and use 4px icon-to-label spacing."
+      },
+      {
+        "name": "Search Input",
+        "role": "Inline search field within the navigation layer.",
+        "description": "Use #f3f3f3 background, #090909 text, and a 1px solid #6b7280 border. Set padding to 8px 12px 8px 16px, radius 0px, and 13px/520 HelveticaNowVar with 24.05px line-height."
+      },
+      {
+        "name": "Floating Chat Launcher",
+        "role": "Persistent support entry point.",
+        "description": "Use the lone 9999px-radius treatment as a compact floating pill/circle with a #ffffff surface and #000000 chat icon. Keep it visually isolated at the viewport corner; do not square this control or turn it into a text-heavy banner."
+      },
+      {
+        "name": "Butter Footer Band",
+        "role": "Service, policy, and secondary navigation container.",
+        "description": "Set the footer on #faedbc with #000000 text and 13px HelveticaNowVar labels. Use 32px internal group gaps, 40px separation between list groups, square content modules, and no drop shadows."
+      }
+    ],
+    "typography": [
+      {
+        "role": "The complete interface voice: 520 for navigation, utility links, controls, and uppercase discovery labels; 470 for quieter editorial or descriptive copy. The fixed 13px scale makes the photography—not oversized type—the dominant visual material.",
+        "sizes": "13px",
+        "family": "HelveticaNowVar",
+        "weight": "470, 520",
+        "lineHeight": "15.6px, 18.2px, 19.5px, 24.05px",
+        "substitute": "Helvetica Neue, Arial, sans-serif",
+        "letterSpacing": "0px at 13px"
+      }
+    ],
+    "description": "AXEL ARIGATO uses a gallery-like commerce language: black Helvetica Now labels on a white field, documentary street photography in broad edge-to-edge image modules, and almost no decorative interface treatment. The page feels editorial rather than promotional; navigation, utility controls, and calls to explore are reduced to compact uppercase text and small icon marks. A pale butter-yellow surface interrupts the white canvas in service and footer areas, while square corners and hairline rules keep the interface deliberately architectural.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Gallery White: #ffffff — Page backgrounds, header surfaces, navigation fields, and editorial whitespace\n- Ink Black: #000000 — Primary text, logo marks, icon fills, and transparent-control text\n- Near-Black: #090909 — Navigation text, links, input text, and fine dark rules\n- Rule Gray: #e9e9e9 — 1px dividers, quiet section boundaries, and image-grid separation\n- Studio Gray: #f3f3f3 — Image loading fields and input surfaces\n- Inactive Gray: #aaaaaa — Inactive navigation and disabled text\n- Butter Ticket: #faedbc — Footer and service-information surfaces; the muted yellow reads as a printed event ticket against the monochrome interface\n\nCreate a full-bleed three-panel campaign gallery on Gallery White #ffffff: tall square-cornered documentary fashion photographs with 20px gutters, a 13px/470 HelveticaNowVar Near-Black #090909 location label above, and no image shadow.\nCreate a compact wordmark header on Gallery White #ffffff with #000000 mark treatment, 13px/520 HelveticaNowVar Near-Black #090909 category labels, 16px horizontal spacing, and transparent 0px-radius controls.\nCreate a Butter Footer Band using Butter Ticket #faedbc, #000000 13px HelveticaNowVar service links, 32px group gaps, 40px list separation, and no cards or elevation.\nCreate a square-cornered search field with Studio Gray #f3f3f3 fill, 1px solid #6b7280 border, Near-Black #090909 13px/520 HelveticaNowVar text, 8px 12px 8px 16px padding, and 0px radius.\nCreate a floating support launcher with Gallery White #ffffff surface, #000000 monochrome chat icon, 9999px radius, and no accompanying banner."
+      }
+    ],
+    "elevationPhilosophy": "Surfaces stay flush and are distinguished by white space, square edges, image boundaries, and 1px #e9e9e9 rules rather than shadow. The only visually detached object is the 9999px floating chat launcher."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/e1c3b940-0d54-4620-9368-06de4d6035e3.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/1bb9c76c-7c43-4fc5-9ae7-db5ad96d80c2.jpg"
+  }
+}

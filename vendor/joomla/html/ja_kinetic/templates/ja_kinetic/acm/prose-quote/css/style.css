@@ -1,0 +1,186 @@
+/* Kinetic — Prose Quote ACM block (self-contained, block-scoped).
+   All color/type/spacing route through the template design tokens, so light +
+   dark resolve automatically with the active [data-style]/[data-theme] / html.t4-dark. */
+
+.acm-prose-quote {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+.acm-prose-quote .hx-section {
+  padding: 80px 0;
+}
+.acm-prose-quote .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ---- measure-constrained column (.pen Story Inner = 820, LEFT-aligned) ---- */
+.acm-prose-quote .hx-prose-col {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* ---- ruled header (.pen RuledHeader: 1px rule + row ["(NN)" + title | meta]) ---- */
+.acm-prose-quote .hx-prose-ruled {
+  margin-bottom: 22px;          /* .pen Inner gap */
+}
+.acm-prose-quote .hx-prose-rule {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 14px;          /* .pen RuledHeader gap Rule->Row */
+}
+.acm-prose-quote .hx-prose-rrow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.acm-prose-quote .hx-prose-rl {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+.acm-prose-quote .hx-prose-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  color: var(--primary);
+}
+.acm-prose-quote .hx-prose-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.6px;
+  color: var(--heading);
+}
+.acm-prose-quote .hx-prose-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.acm-prose-quote .hx-eyebrow {
+  margin: 0 0 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+/* ---- rich-text prose body ---- */
+.acm-prose-quote .hx-prose-body {
+  font-size: 18px;       /* .pen P1/P2 */
+  line-height: 1.7;
+  color: var(--text);
+}
+.acm-prose-quote .hx-prose-body p {
+  margin: 0 0 22px;
+}
+.acm-prose-quote .hx-prose-body p:last-child {
+  margin-bottom: 0;
+}
+/* LINK gesture (micro-interactions.md §3c): inline prose links stay
+   primary-colored (standard hyperlink convention inside body copy) — the
+   gesture here is the hover/focus shift to --primary-hover, not a rest→accent
+   reveal. Keyboard focus gets the same visible ring as mouse hover. */
+.acm-prose-quote .hx-prose-body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color .15s ease;
+}
+.acm-prose-quote .hx-prose-body a:hover,
+.acm-prose-quote .hx-prose-body a:focus-visible {
+  color: var(--primary-hover, var(--primary));
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.acm-prose-quote .hx-prose-body strong,
+.acm-prose-quote .hx-prose-body b {
+  color: var(--heading);
+  font-weight: 600;
+}
+.acm-prose-quote .hx-prose-body h2,
+.acm-prose-quote .hx-prose-body h3,
+.acm-prose-quote .hx-prose-body h4 {
+  margin: 34px 0 14px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+}
+.acm-prose-quote .hx-prose-body h2 { font-size: 28px; }
+.acm-prose-quote .hx-prose-body h3 { font-size: 23px; }
+.acm-prose-quote .hx-prose-body h4 { font-size: 19px; }
+.acm-prose-quote .hx-prose-body ul,
+.acm-prose-quote .hx-prose-body ol {
+  margin: 0 0 22px;
+  padding-left: 1.4em;
+  text-align: left;
+}
+.acm-prose-quote .hx-prose-body li {
+  margin: 0 0 8px;
+  line-height: 1.7;
+}
+
+/* ---- pulled blockquote ---- */
+.acm-prose-quote .hx-prose-quote {
+  margin: 22px 0 0;       /* .pen Inner uniform gap */
+  padding: 4px 0 4px 24px;
+  border-left: 3px solid var(--primary);
+  text-align: left;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;        /* .pen Blockquote Quote */
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.4px;
+  color: var(--heading);
+}
+.acm-prose-quote .hx-prose-cite {
+  display: block;
+  margin-top: 18px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+/* ---- responsive (matches design-truth section breakpoint) ---- */
+@media (max-width: 620px) {
+  .acm-prose-quote .hx-section {
+    padding: 56px 0;
+  }
+  .acm-prose-quote .hx-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-prose-quote .hx-prose-body {
+    font-size: 16px;
+  }
+  /* ease the 30px ruled-header title on small phones (no prior clamp) */
+  .acm-prose-quote .hx-prose-title {
+    font-size: 24px;
+  }
+  .acm-prose-quote .hx-prose-quote {
+    font-size: 22px;
+    padding-left: 20px;
+  }
+}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .acm-prose-quote * {
+    transition-duration: .01ms !important;
+  }
+}

@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-gallery-white: #f7f7f7;
+  --color-paper-white: #ffffff;
+  --color-charcoal-field: #222222;
+  --color-graphite: #474747;
+  --color-quiet-gray: #8f8f8f;
+  --color-steel-gray: #808080;
+  --color-ink: #0a0a0a;
+  --color-control-mist: #d6d6d6;
+
+  /* Typography — Font Families */
+  --font-abcdiatype: 'ABCDiatype', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcdiatypemedium: 'ABCDiatypeMedium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcdiatypebold: 'ABCDiatypeBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

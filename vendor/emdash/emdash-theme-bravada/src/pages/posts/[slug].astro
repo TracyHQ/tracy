@@ -1,0 +1,1320 @@
+---
+import {
+	getEmDashEntry,
+	getEmDashCollection,
+	getSeoMeta,
+	decodeSlug,
+	getSiteSettings,
+	getCommentCount,
+	getCollectionInfo,
+	getPluginSetting,
+} from "emdash";
+import { Comments, CommentForm } from "emdash/ui/comments";
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import RichText from "../../components/RichText.astro";
+import SidebarWidgets from "../../components/SidebarWidgets.astro";
+import { getReadingTime } from "../../utils/reading-time";
+import {
+	resolveBlogSiteIdentity,
+	resolveSiteOrigin,
+	resolveTitleSeparator,
+} from "../../utils/site-identity";
+import { getMediaUrl } from "../../utils/media-url";
+import { longDate, monthDay, heroDate } from "../../utils/dates";
+import { heroSlideImage } from "../../utils/hero";
+
+const slug = decodeSlug(Astro.params.slug);
+
+if (!slug) {
+	return Astro.rewrite("/404");
+}
+
+const { entry: post, cacheHint } = await getEmDashEntry("posts", slug);
+
+if (!post) {
+	return Astro.rewrite("/404");
+}
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const siteSettings = await getSiteSettings();
+const { siteTitle } = resolveBlogSiteIdentity(siteSettings);
+const siteOrigin = resolveSiteOrigin(siteSettings, Astro.url.origin);
+
+// Featured image for the hero and the OG fallback — Open Graph needs an
+// absolute URL, so promote root-relative media paths to the site origin.
+const featuredImagePath = getMediaUrl(post.data.featured_image);
+const featuredImageUrl = featuredImagePath
+	? featuredImagePath.startsWith("http")
+		? featuredImagePath
+		: `${siteOrigin}${featuredImagePath}`
+	: undefined;
+
+// Generate SEO meta from content
+const seo = getSeoMeta(post, {
+	siteTitle,
+	siteUrl: siteOrigin,
+	path: `/posts/${slug}`,
+	defaultOgImage: featuredImageUrl,
+	titleSeparator: resolveTitleSeparator(siteSettings),
+});
+
+// getSeoMeta returns null — not undefined — for a post that isn't marked
+// noindex, and a null prop skips Base's default parameter. Passing it
+// straight through left single posts as the only page type with no robots
+// meta at all, and so the only one missing max-image-preview:large, on the
+// pages where a large search thumbnail matters most.
+const robots = seo.robots ?? undefined;
+
+// Bylines are already hydrated by getEmDashEntry
+const bylines = post.data.bylines ?? [];
+
+// Get reading time
+const readingTime = getReadingTime(post.data.content);
+
+// This post's tags are already hydrated onto the entry by getEmDashEntry —
+// no extra query needed.
+const tags = post.data.terms?.tag ?? [];
+
+// Adjacent posts for the floating prev/next navigation (demo #nav-fixed):
+// two targeted range queries instead of scanning the whole collection.
+// "Previous" is older (left), "Next" is newer (right), matching the
+// demo's WordPress convention. Independent queries run in parallel.
+// Range filters compare ISO strings lexicographically (per WhereRange).
+const publishedAtIso = post.data.publishedAt?.toISOString();
+const [{ entries: recentPosts }, newerResult, olderResult, collectionInfo] =
+	await Promise.all([
+		// A few extra recent posts in case the current post is among them.
+		getEmDashCollection("posts", {
+			orderBy: { published_at: "desc" },
+			limit: 4,
+		}),
+		publishedAtIso
+			? getEmDashCollection("posts", {
+					where: { published_at: { gt: publishedAtIso } },
+					orderBy: { published_at: "asc" },
+					limit: 1,
+				})
+			: null,
+		publishedAtIso
+			? getEmDashCollection("posts", {
+					where: { published_at: { lt: publishedAtIso } },
+					orderBy: { published_at: "desc" },
+					limit: 1,
+				})
+			: null,
+		// Comments are enabled per-collection; the demo only shows the
+		// comment count badge on related cards when they are on.
+		getCollectionInfo("posts"),
+	]);
+const otherPosts = recentPosts.filter((p) => p.id !== post.id).slice(0, 3);
+const newerPost = newerResult?.entries[0] ?? null;
+const olderPost = olderResult?.entries[0] ?? null;
+const olderImg = getMediaUrl(olderPost?.data.featured_image);
+const newerImg = getMediaUrl(newerPost?.data.featured_image);
+
+// Where a neighbour is missing (first/last post) the demo fills that
+// panel with the site's hero image — the same one on the home page —
+// as a static, non-clickable placeholder. Only worth fetching when a
+// side is actually missing.
+let heroImg: string | undefined;
+if (!olderPost || !newerPost) {
+	const home = await getEmDashEntry("pages", "home");
+	heroImg = heroSlideImage(home?.entry?.data.content);
+	// This post's cache now depends on the home page too — editing the
+	// hero image has to invalidate the filler panel here.
+	if (home?.cacheHint && Astro.cache?.enabled) Astro.cache.set(home.cacheHint);
+}
+
+const commentsEnabled = collectionInfo?.commentsEnabled ?? true;
+const postCommentCount = commentsEnabled
+	? await getCommentCount("posts", post.data.id)
+	: 0;
+
+// Related cards (demo .related-item): thumbnail + comment-count badge +
+// title + date. Counts only queried when comments are enabled.
+const relatedPosts = await Promise.all(
+	otherPosts.map(async (p) => ({
+		id: p.id,
+		title: p.data.title,
+		img: getMediaUrl(p.data.featured_image),
+		date: monthDay(p.data.publishedAt),
+		commentCount: commentsEnabled ? await getCommentCount("posts", p.data.id) : 0,
+	})),
+);
+
+const headerMeta = [
+	...(post.data.bylines ?? []).slice(0, 2).map((c) => c.byline.displayName),
+]
+	.filter(Boolean)
+	.join(", ");
+
+// The demo's post hero stacks a circled author avatar over the byline
+// name in the after-title meta; the fuller author card (bio + website)
+// still lives in a block below the article.
+const author = bylines[0]?.byline;
+const authorAvatar = author?.avatarStorageKey
+	? `/_emdash/api/media/file/${author.avatarStorageKey}`
+	: undefined;
+
+// Theme settings (admin → Plugins → Bravada Theme): showPostAuthor
+// drops author attribution everywhere on the post (hero chip, meta
+// byline, author card) for single-author sites; showPostNav hides the
+// docked prev/next buttons (#nav-fixed) — the full-bleed image band
+// above the footer is unaffected. Schema defaults aren't materialized,
+// so missing values mean "on".
+const [showAuthorSetting, showPostNavSetting] = await Promise.all([
+	getPluginSetting<boolean>("bravada-theme", "showPostAuthor"),
+	getPluginSetting<boolean>("bravada-theme", "showPostNav"),
+]);
+const showAuthor = showAuthorSetting !== false;
+const showPostNav = showPostNavSetting !== false;
+
+// The theme marks the post author up as a schema.org Person
+// (cryout_schema_microdata('author')); the port's BlogPosting JSON-LD
+// named only the publisher, so the byline the page shows was missing
+// from the structured data and from article:author. Sites that have
+// turned author attribution off stay anonymous in the metadata too.
+const metaAuthor = showAuthor ? (bylines[0]?.byline.displayName ?? null) : null;
+
+// Categories for the hero's pretitle row (demo: icon + linked list
+// above the title).
+const categories = (post.data.terms?.category ?? []) as { slug: string; label: string }[];
+
+const publishDate = longDate(post.data.publishedAt);
+
+// The demo hero closes with what Bravada's source calls the "byline"
+// (option theme_meta_single_byline) — but core.php renders
+// get_the_excerpt() there: it IS the post excerpt, the same text
+// search engines receive as the meta description. Named hero-excerpt
+// here because "byline" already means author profiles in EmDash.
+// Like the demo (has_excerpt() check), it only renders when the post
+// actually has an excerpt.
+const heroExcerpt = (post.data.excerpt as string | undefined) || null;
+
+// The demo's hero date reads "9th May" — ordinal day + month.
+const postHeroDate = heroDate(post.data.publishedAt);
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={robots}
+	type="article"
+	author={metaAuthor}
+	publishedTime={post.data.publishedAt?.toISOString() ?? null}
+	modifiedTime={post.data.updatedAt.toISOString()}
+	content={{ collection: "posts", id: post.data.id, slug }}
+	overHero
+>
+	<PageHeader
+		title={post.data.title}
+		image={featuredImageUrl}
+		imageAlt={post.data.title}
+		crumbs={[{ label: "Blog", href: "/posts" }, { label: post.data.title }]}
+		titleAttrs={post.edit.title}
+		excerpt={heroExcerpt}
+		excerptAttrs={post.edit.excerpt}
+	>
+		{
+			categories.length > 0 && (
+				<div class="hero-cats" slot="pretitle">
+					{categories.map((c) => (
+						<a href={`/category/${c.slug}`}>{c.label}</a>
+					))}
+				</div>
+			)
+		}
+		<div class="hero-meta" slot="meta">
+			<p class="hero-date">
+				{
+					postHeroDate && (
+						<time datetime={post.data.publishedAt?.toISOString()}>{postHeroDate}</time>
+					)
+				}
+				<span>{readingTime} min read</span>
+			</p>
+			{
+				showAuthor && authorAvatar && (
+					<div class="hero-author">
+						<img src={authorAvatar} alt="" width="64" height="64" loading="eager" />
+						<em>{headerMeta}</em>
+					</div>
+				)
+			}
+			{showAuthor && !authorAvatar && headerMeta && <p class="hero-date">{headerMeta}</p>}
+		</div>
+	</PageHeader>
+	<div class="post-grid">
+		{/* One white card holds the article, related posts and comments;
+		    the sidebar sits alongside (demo: constrained inside .main). */}
+		<div class="post-main">
+			<article>
+				<header class="article-header">
+					<div class="article-meta">
+						{
+							showAuthor && bylines.length > 0 && (
+								<>
+									<span class="article-meta-byline">
+										{bylines.map((credit, i) => (
+											<>
+												{i > 0 && ", "}
+												{credit.byline.displayName}
+											</>
+										))}
+									</span>
+									<span class="meta-dot" />
+								</>
+							)
+						}
+						{
+							publishDate && (
+								<>
+									<time>{publishDate}</time>
+									<span class="meta-dot" />
+								</>
+							)
+						}
+						<span>{readingTime} min read</span>
+					</div>
+				</header>
+
+				<div class="article-content">
+					<RichText value={post.data.content} />
+				</div>
+
+				{
+					tags.length > 0 && (
+						<footer class="article-tags">
+							<span class="article-tags-label">Tags:</span>
+							{tags.map((t) => (
+								<a href={`/tag/${t.slug}`} class="article-tag">
+									{t.label}
+								</a>
+							))}
+						</footer>
+					)
+				}
+			</article>
+
+			{
+				showAuthor && author && (
+					<section class="post-author" aria-label="About the author">
+						{authorAvatar && (
+							<img
+								class="post-author-avatar"
+								src={authorAvatar}
+								alt={author.avatarAlt ?? author.displayName}
+								width="64"
+								height="64"
+								loading="lazy"
+							/>
+						)}
+						<div class="post-author-text">
+							<span class="post-author-label">Written by</span>
+							{author.websiteUrl ? (
+								<a class="post-author-name" href={author.websiteUrl}>
+									{author.displayName}
+								</a>
+							) : (
+								<span class="post-author-name">{author.displayName}</span>
+							)}
+							{author.bio && <p class="post-author-bio">{author.bio}</p>}
+						</div>
+					</section>
+				)
+			}
+
+			{
+				relatedPosts.length > 0 && (
+					<section class="related-posts">
+						<h2 class="section-title"><span>Related Posts</span></h2>
+						<ul class="related-grid">
+							{relatedPosts.map((p) => (
+								<li class="related-item">
+									<div class="related-thumb">
+										<a href={`/posts/${p.id}`} class="related-thumb-link" tabindex="-1">
+											{p.img && <img src={p.img} alt="" loading="lazy" />}
+										</a>
+										{commentsEnabled && (
+											<a href={`/posts/${p.id}#comments`} class="related-comments" aria-label={`${p.commentCount} comments`}>
+												{p.commentCount}
+											</a>
+										)}
+									</div>
+									<a href={`/posts/${p.id}`} class="related-name">{p.title}</a>
+									{p.date && <p class="related-date">{p.date}</p>}
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
+
+			{
+				commentsEnabled && (
+					<section class="post-comments" id="comments">
+						{postCommentCount > 0 && (
+							<h2 class="section-title comments-count-title">
+								<span>
+									{postCommentCount} {postCommentCount === 1 ? "Comment" : "Comments"}
+								</span>
+							</h2>
+						)}
+						<Comments collection="posts" contentId={post.data.id} threaded />
+						<h2 class="section-title reply-title">
+							<span>Leave a Reply</span>
+						</h2>
+						<CommentForm collection="posts" contentId={post.data.id} />
+					</section>
+				)
+			}
+		</div>
+
+		<SidebarWidgets name="sidebar-b" />
+	</div>
+
+	{
+		(olderPost || newerPost) && (
+			<nav id="nav-below" aria-label="Previous and next post">
+				{olderPost ? (
+					<a class="nav-below-prev" href={`/posts/${olderPost.id}`} rel="prev">
+						{olderImg && <img src={olderImg} alt="" loading="lazy" />}
+						<span class="nav-below-caption">
+							<em>Previous</em>
+							<span class="nav-below-title">{olderPost.data.title}</span>
+						</span>
+					</a>
+				) : (
+					<div class="nav-below-prev nav-below-filler" aria-hidden="true">
+						{heroImg && <img src={heroImg} alt="" loading="lazy" />}
+					</div>
+				)}
+				{newerPost ? (
+					<a class="nav-below-next" href={`/posts/${newerPost.id}`} rel="next">
+						{newerImg && <img src={newerImg} alt="" loading="lazy" />}
+						<span class="nav-below-caption">
+							<em>Next</em>
+							<span class="nav-below-title">{newerPost.data.title}</span>
+						</span>
+					</a>
+				) : (
+					<div class="nav-below-next nav-below-filler" aria-hidden="true">
+						{heroImg && <img src={heroImg} alt="" loading="lazy" />}
+					</div>
+				)}
+			</nav>
+		)
+	}
+
+	{
+		showPostNav && (olderPost || newerPost) && (
+			<nav id="nav-fixed" aria-label="Post navigation">
+				{olderPost && (
+					<div class="nav-previous">
+						<a
+							href={`/posts/${olderPost.id}`}
+							rel="prev"
+							aria-label={`Previous post: ${olderPost.data.title}`}
+						>
+							<i aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+							</i>
+							<span class="nav-fixed-title">{olderPost.data.title}</span>
+						</a>
+					</div>
+				)}
+				{newerPost && (
+					<div class="nav-next">
+						<a
+							href={`/posts/${newerPost.id}`}
+							rel="next"
+							aria-label={`Next post: ${newerPost.data.title}`}
+						>
+							<span class="nav-fixed-title">{newerPost.data.title}</span>
+							<i aria-hidden="true">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+							</i>
+						</a>
+					</div>
+				)}
+			</nav>
+		)
+	}
+
+	<script>
+		// Reveal the floating prev/next tabs once the reader scrolls in
+		// (demo #nav-fixed.nav-fixed-show, toggled past 30px).
+		const navFixed = document.getElementById("nav-fixed");
+		if (navFixed) {
+			const onNavScroll = () =>
+				navFixed.classList.toggle("nav-fixed-show", window.scrollY > 30);
+			onNavScroll();
+			window.addEventListener("scroll", onNavScroll, { passive: true });
+
+			// The full-bleed image prev/next band reaches the screen edges,
+			// so the floating tabs would collide with its captions. Retract
+			// the tabs while that band is on screen — it does the same job
+			// there anyway.
+			const navBelow = document.getElementById("nav-below");
+			if (navBelow && "IntersectionObserver" in window) {
+				new IntersectionObserver(
+					(entries) =>
+						navFixed.classList.toggle("nav-below-visible", entries[0].isIntersecting),
+					{ rootMargin: "0px 0px -20% 0px" }
+				).observe(navBelow);
+			}
+		}
+	</script>
+
+	<script>
+		// Demo comment form: labels are visually hidden, so mirror each
+		// field's label text into its placeholder (with a * for required
+		// fields). The <label> stays in the DOM for screen readers.
+		for (const field of document.querySelectorAll<HTMLElement>(".ec-comment-form-field")) {
+			const label = field.querySelector<HTMLElement>(":scope > span");
+			const control = field.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+				"input, textarea"
+			);
+			if (label && control && !control.getAttribute("placeholder")) {
+				const req = control.hasAttribute("required") ? " *" : "";
+				control.setAttribute("placeholder", label.textContent!.trim() + req);
+			}
+		}
+	</script>
+</Base>
+
+<style>
+	/* Hero pretitle categories — the demo's pretitle-meta: gold links
+	   with a dotted gold underline that turns white on hover; the
+	   theme's icon glyphs are display:none in the demo, so no icon. */
+	.hero-cats {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 1em;
+		margin-bottom: 1em;
+	}
+
+	.hero-cats a {
+		color: var(--color-brand);
+		text-decoration: none;
+		border-bottom: 1px dotted;
+		transition: 0.2s ease-out all;
+	}
+
+	.hero-cats a:hover {
+		border-bottom-color: #fff;
+	}
+
+	/* Hero after-title meta — the demo's aftertitle-meta. */
+	.hero-meta {
+		margin-top: 1em;
+	}
+
+	/* Demo #header-page-title .date: uppercase, .4em tracking, half
+	   opacity — the airy small-caps date line. */
+	.hero-date {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1.25em;
+		margin: 0;
+		font-size: 0.9em;
+		text-transform: uppercase;
+		letter-spacing: 0.4em;
+		opacity: 0.5;
+		color: #fff;
+	}
+
+	/* Hero author chip — demo .author-container: 2em stack margin,
+	   light weight, avatar in a 2px #BBB ring. */
+	.hero-author {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5em;
+		margin-top: 2em;
+	}
+
+	.hero-author img {
+		width: 4em;
+		height: 4em;
+		border-radius: 100px;
+		border: 2px solid #bbb;
+		object-fit: cover;
+	}
+
+	.hero-author em {
+		font-weight: 300;
+		letter-spacing: 0.5px;
+		font-size: 0.9375em;
+		color: #fff;
+	}
+
+	/* Article container */
+	.article {
+		max-width: var(--wide-width);
+		margin: 0 auto;
+	}
+
+	/* Hero image - full width within container */
+	.article-hero {
+		margin: var(--spacing-16) var(--spacing-6);
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		background: var(--color-surface);
+	}
+
+	.article-hero img {
+		width: 100%;
+		height: auto;
+		max-height: 500px;
+		object-fit: cover;
+	}
+
+	/* Bravada blog layout: one white card (article + related + comments)
+	   beside the sidebar. The white starts right below the hero — no tint
+	   gap — and everything that isn't the sidebar sits inside it. */
+	.post-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+		gap: 0;
+		max-width: var(--wide-width);
+		margin: 0 auto var(--spacing-16);
+		padding: 0 var(--spacing-6);
+	}
+
+	/* Sidebar: a 2.2em inner gutter (like the layout pages) insets the
+	   widgets to ~285px, and a top pad drops the first widget to the
+	   white card's content line instead of touching the hero. */
+	.post-grid > :global(.bravada-sidebar) {
+		padding: clamp(1.75em, 4vw, 3.5em) 0 0 var(--sidebar-gutter);
+	}
+
+	.post-main {
+		min-width: 0;
+		background: var(--color-surface);
+		padding: clamp(1.75em, 4vw, 3.5em);
+	}
+
+	/* Post tags footer (demo: tag links under the article) */
+	.article-tags {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.5em;
+		margin-top: var(--spacing-10);
+		padding-top: var(--spacing-6);
+		border-top: 1px solid var(--color-border);
+		font-size: var(--font-size-sm);
+	}
+
+	.article-tags-label {
+		color: var(--color-muted);
+	}
+
+	.article-tag {
+		color: var(--color-gold);
+		text-decoration: none;
+	}
+
+	.article-tag:hover {
+		color: var(--color-teal);
+	}
+
+	.article-header {
+		margin-bottom: var(--spacing-10);
+	}
+
+	.article-header .article-meta {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		column-gap: var(--spacing-3);
+		row-gap: var(--spacing-1);
+		font-size: var(--font-size-sm);
+		color: var(--color-muted);
+		margin-bottom: var(--spacing-4);
+	}
+
+	.article-meta-byline {
+		font-weight: 500;
+		color: var(--color-text-secondary);
+	}
+
+	.article-title {
+		font-size: clamp(2rem, 5vw, var(--font-size-5xl));
+		font-weight: var(--font-weight-display);
+		line-height: var(--leading-tight);
+		letter-spacing: var(--tracking-tight);
+		margin-bottom: var(--spacing-4);
+	}
+
+	/* The hero excerpt (demo .byline) renders inside PageHeader via the
+	   excerpt prop — styling lives there. */
+
+	/* Article content typography */
+	.article-content {
+		font-size: var(--font-size-base);
+		line-height: var(--leading-relaxed);
+	}
+
+	.article-content :global(p) {
+		margin-bottom: 1.5em;
+	}
+
+	.article-content :global(h1) {
+		font-size: var(--font-size-3xl);
+		margin-top: 2.5em;
+		margin-bottom: 0.75em;
+		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
+	}
+
+	.article-content :global(h2) {
+		font-size: var(--font-size-2xl);
+		margin-top: 2.5em;
+		margin-bottom: 0.75em;
+		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
+	}
+
+	/* The largest in-body headings wear the same gold highlighter strip the
+	   section titles do. inline-block shrinks the box to the text so the
+	   strip underlines the words, not the column; block siblings still wrap
+	   below. */
+	.article-content :global(h1),
+	.article-content :global(h2) {
+		display: inline-block;
+		background-image: var(--gold-scrim);
+		background-repeat: no-repeat;
+		background-size: 100% 0.4em;
+		background-position: 0 88%;
+	}
+
+	.article-content :global(h3) {
+		font-size: var(--font-size-xl);
+		margin-top: 2em;
+		margin-bottom: 0.5em;
+		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
+	}
+
+	.article-content :global(blockquote) {
+		margin: 2em 0;
+		padding: var(--spacing-4) var(--spacing-6);
+		border-left: 3px solid var(--color-border);
+		background: var(--color-bg-subtle);
+		border-radius: 0 var(--radius) var(--radius) 0;
+		color: var(--color-text-secondary);
+		font-style: italic;
+	}
+
+	.article-content :global(pre) {
+		margin: 2em 0;
+		padding: var(--spacing-5);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: var(--font-size-sm);
+		line-height: 1.6;
+	}
+
+	.article-content :global(code) {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		background: var(--color-surface);
+		padding: 0.2em 0.4em;
+		border-radius: var(--radius);
+	}
+
+	.article-content :global(pre code) {
+		background: none;
+		padding: 0;
+	}
+
+	.article-content :global(ul),
+	.article-content :global(ol) {
+		margin-bottom: 1.5em;
+		padding-left: 1.5em;
+	}
+
+	.article-content :global(li) {
+		margin-bottom: 0.5em;
+	}
+
+	.article-content :global(img) {
+		margin: 2em 0;
+		border-radius: var(--radius-lg);
+	}
+
+	.article-content :global(hr) {
+		margin: 3em 0;
+		border: none;
+		border-top: 1px solid var(--color-border);
+	}
+
+	.article-content :global(a) {
+		color: var(--color-brand);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		text-decoration-thickness: 1px;
+	}
+
+	.article-content :global(a:hover) {
+		text-decoration-thickness: 2px;
+	}
+
+	/* Signature section heading (Related Posts + the comments title):
+	   Playfair 700 at 1.2em on the gold strip — like every other section
+	   title on the site. */
+	.section-title {
+		display: inline-block;
+		margin: 0 0 1.2em;
+		font-family: var(--font-heading);
+		font-size: 1.2rem;
+		font-weight: 700;
+		line-height: 1.6;
+		background-image: var(--gold-scrim);
+		background-repeat: no-repeat;
+		background-size: 100% 0.4em;
+		background-position: 0 90%;
+	}
+
+	/* We render our own "N Comments" / "Leave a Reply" headings (demo
+	   text + scrim), so hide EmDash's built-in "No comments yet" one. */
+	.post-comments :global(.ec-comments-heading) {
+		display: none;
+	}
+
+	.reply-title {
+		margin-top: var(--spacing-10);
+	}
+
+	/* Post-foot author block: avatar + name (+ bio when present). Mirrors the
+	   demo's hero author card, relocated below the article until the hero can
+	   carry a rich author card. */
+	.post-author {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-4);
+		margin-top: var(--spacing-12);
+		padding-top: var(--spacing-10);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.post-author-avatar {
+		flex: 0 0 auto;
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.post-author-label {
+		display: block;
+		font-size: var(--font-size-xs);
+		text-transform: uppercase;
+		letter-spacing: var(--tracking-wide);
+		color: var(--color-muted);
+	}
+
+	.post-author-name {
+		font-family: var(--font-heading);
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	a.post-author-name:hover {
+		color: var(--color-teal);
+	}
+
+	.post-author-bio {
+		margin: 0.4em 0 0;
+		font-size: var(--font-size-sm);
+		line-height: var(--leading-normal);
+		color: var(--color-text-secondary);
+	}
+
+	/* Related posts — image cards constrained inside the white card */
+	.related-posts {
+		margin-top: var(--spacing-12);
+		padding-top: var(--spacing-10);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--spacing-6);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.related-item {
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* Demo .related-thumbnail: a 5px white photo frame that sits at 85%
+	   opacity, then lifts (top: -5px), brightens and deepens its shadow on
+	   hover — no image zoom. overflow:hidden clips the chip until it drops
+	   in. */
+	.related-thumb {
+		position: relative;
+		top: 0;
+		overflow: hidden;
+		line-height: 0;
+		border: 5px solid var(--color-surface);
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+		opacity: 0.85;
+		transition: all 0.25s ease;
+	}
+
+	.related-item:hover .related-thumb,
+	.related-item:focus-within .related-thumb {
+		top: -5px;
+		opacity: 1;
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+	}
+
+	.related-thumb-link {
+		display: block;
+		line-height: 0;
+	}
+
+	.related-thumb-link img {
+		width: 100%;
+		aspect-ratio: 512 / 300;
+		object-fit: cover;
+	}
+
+	/* Demo comment count: gold number on a white chip, hidden above the
+	   frame (top:-25px, clipped) until the card is hovered, then it drops
+	   in to top:10px. */
+	.related-comments {
+		position: absolute;
+		top: -25px;
+		right: 10px;
+		padding: 0 7px;
+		background: var(--color-surface);
+		color: var(--color-gold);
+		border-radius: 2px;
+		font-size: 0.85rem;
+		line-height: 1.6;
+		text-decoration: none;
+		transition: all 0.3s ease-out;
+	}
+
+	.related-item:hover .related-comments,
+	.related-item:focus-within .related-comments {
+		top: 10px;
+	}
+
+	/* Demo related-title: Playfair 700 in the body grey — not the near
+	   black heading colour */
+	.related-name {
+		margin-top: 0.9em;
+		font-family: var(--font-heading);
+		font-size: 1.2rem;
+		font-weight: 700;
+		line-height: 1.3;
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.related-name:hover {
+		color: var(--color-teal);
+	}
+
+	.related-date {
+		margin: 0.25em 0 0;
+		font-size: 0.8rem;
+		color: var(--color-text);
+	}
+
+	.post-comments {
+		scroll-margin-top: calc(var(--nav-height) + 1em);
+	}
+
+	/* Comments live inside the white card, below related posts */
+	.post-comments {
+		margin-top: var(--spacing-12);
+		padding-top: var(--spacing-10);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.post-comments :global(.ec-comments) {
+		--ec-comment-border: 1px solid var(--color-border);
+	}
+
+	.post-comments :global(.ec-comment-author) {
+		color: var(--color-text);
+	}
+
+	.post-comments :global(.ec-comment-date) {
+		font-family: var(--font-mono);
+		color: var(--color-muted);
+	}
+
+	.post-comments :global(.ec-comment-body) {
+		color: var(--color-text);
+	}
+
+	/* Demo comment fields: flat #f0f0f0, no border, square. The labels are
+	   hidden and their text moves into the placeholder (set by the script
+	   below), so no tightening is needed — the demo padding stands. */
+	/* Demo comment fields: flat #f0f0f0, bold #707070 text, grey
+	   placeholder */
+	.post-comments :global(.ec-comment-form-field input),
+	.post-comments :global(.ec-comment-form-field textarea) {
+		background: light-dark(#f0f0f0, var(--color-bg-subtle)) !important;
+		border: 0 !important;
+		border-radius: 0 !important;
+		padding: 1em 1.2em !important;
+		color: var(--color-text) !important;
+		font-weight: 700 !important;
+		transition:
+			background 0.2s ease-out,
+			color 0.2s ease-out;
+	}
+
+	.post-comments :global(.ec-comment-form-field input)::placeholder,
+	.post-comments :global(.ec-comment-form-field textarea)::placeholder {
+		color: light-dark(#757575, var(--color-muted)) !important;
+	}
+
+	/* Demo behaviour: the whole field turns gold on focus, with white bold
+	   typed text, reproduced from the original. */
+	.post-comments :global(.ec-comment-form-field input):focus,
+	.post-comments :global(.ec-comment-form-field textarea):focus {
+		outline: none !important;
+		background: var(--color-gold) !important;
+		color: #ffffff !important;
+	}
+
+	.post-comments :global(.ec-comment-form-field input):focus::placeholder,
+	.post-comments :global(.ec-comment-form-field textarea):focus::placeholder {
+		color: rgba(255, 255, 255, 0.8) !important;
+	}
+
+	/* Hide the field labels — placeholders carry the names (demo) — but
+	   keep them for screen readers via the wrapping <label>. */
+	.post-comments :global(.ec-comment-form-field > span) {
+		position: absolute !important;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+	}
+
+	.post-comments :global(.ec-comment-user-info) {
+		background: light-dark(#f0f0f0, var(--color-bg-subtle)) !important;
+		border: 0 !important;
+	}
+
+	/* Demo submit: gold, teal on hover */
+	.post-comments :global(.ec-comment-form-submit) {
+		background: var(--color-gold) !important;
+		color: #ffffff !important;
+		border-radius: 0 !important;
+	}
+
+	.post-comments :global(.ec-comment-form-submit:hover) {
+		background: var(--color-teal-solid) !important;
+	}
+
+	/* Responsive */
+	@media (max-width: 1100px) {
+		/* Stack the sidebar below the white card */
+		.post-grid {
+			grid-template-columns: 1fr;
+			max-width: 860px;
+		}
+
+		/* Desktop insets the sidebar from the left only (0 on the right,
+		   which is fine sitting beside the card inside the grid's own
+		   edge). Stacked full-width, that 0 lands flush against the
+		   card's right edge while .post-main keeps its margin on both
+		   sides. The theme stacks .main and the sidebar as siblings on
+		   one gutter (style.css: both take 2em at <=1024, 1em at <=640,
+		   with .sidey .widget-container zeroed), so widgets line up
+		   with the article text — not with the card's outer edge.
+		   In rem, not em: the sidebar sets font-size 14px, so the same
+		   em clamp resolves 3.5px shallower than it does on the card. */
+		.post-grid > :global(.bravada-sidebar) {
+			padding: clamp(1.75rem, 4vw, 3.5rem);
+		}
+	}
+
+	@media (max-width: 900px) {
+		.article-hero {
+			margin: var(--spacing-4) var(--spacing-4) var(--spacing-8);
+			border-radius: var(--radius);
+		}
+
+		.post-grid {
+			padding: 0 var(--spacing-4);
+		}
+
+		.related-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	/* Phone: the theme drops the card to full-bleed and runs a single
+	   1em gutter for both columns (style.css @media max-width:640 --
+	   .main and #secondary each take padding 1em, and .sidey
+	   .widget-container is zeroed so widgets sit flush inside it).
+	   Measured on the theme at 390pt: #main is 0->390 with no radius,
+	   and the article text and the widgets both run 14->376. Ours put
+	   a 16px inset on .post-grid *and* 28px on the card, landing the
+	   content at 44 -- three times the theme's gutter. The hero above
+	   (.page-hero-image) is already full-bleed, so the card now meets
+	   it instead of sitting inset from it. */
+	@media (max-width: 640px) {
+		.post-grid {
+			padding: 0;
+		}
+
+		.post-main,
+		.post-grid > :global(.bravada-sidebar) {
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.article-title {
+			font-size: var(--font-size-3xl);
+		}
+
+		.related-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Floating previous/next post tabs (demo #nav-fixed): edge-anchored
+	   arrow tabs, vertically centred, that fade in on scroll and expand
+	   on hover to reveal the neighbouring post's title. */
+	#nav-fixed {
+		opacity: 0;
+		transition: opacity 0.3s ease-out;
+	}
+
+	#nav-fixed.nav-fixed-show {
+		opacity: 1;
+	}
+
+	/* Retract while the full-bleed image band is on screen (avoids the
+	   tabs overlapping its edge-to-edge captions) */
+	#nav-fixed.nav-fixed-show.nav-below-visible {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.nav-previous,
+	.nav-next {
+		position: fixed;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 50;
+	}
+
+	.nav-previous {
+		left: 0;
+	}
+
+	.nav-next {
+		right: 0;
+	}
+
+	#nav-fixed a {
+		display: flex;
+		align-items: center;
+		height: 64px;
+		max-width: 44px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-decoration: none;
+		color: #ffffff;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+		transition: max-width 0.35s ease-out;
+	}
+
+	/* Collapsed, only the arrow box shows; anchoring keeps the arrow at
+	   the screen edge while the title clips away. */
+	.nav-previous a {
+		justify-content: flex-start;
+		border-radius: 0 4px 4px 0;
+	}
+
+	.nav-next a {
+		justify-content: flex-end;
+		border-radius: 4px 0 0 4px;
+	}
+
+	#nav-fixed a:hover,
+	#nav-fixed a:focus-visible {
+		max-width: 60vw;
+	}
+
+	/* Demo: grey arrow box that turns teal on hover */
+	#nav-fixed i {
+		flex: 0 0 44px;
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: light-dark(#dbdbdb, #29403e);
+		transition: background 0.3s ease-out;
+	}
+
+	#nav-fixed a:hover i,
+	#nav-fixed a:focus-visible i {
+		background: var(--color-teal-solid);
+	}
+
+	.nav-fixed-title {
+		max-width: 340px;
+		padding: 0 1.2em;
+		background: var(--color-teal-solid);
+		font-style: italic;
+		font-size: 0.85rem;
+		line-height: 64px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	/* Too cramped on phones — the demo hides the tabs on small screens */
+	@media (max-width: 700px) {
+		#nav-fixed {
+			display: none;
+		}
+	}
+
+	/* Image-backed previous/next at the article foot (demo #nav-below):
+	   two 200px panels showing each neighbour's featured image under a
+	   directional dark gradient, with an uppercase label + title. */
+	/* Full-bleed like the demo: two edge-to-edge image panels forming a
+	   full-width band that flows into the "Continue reading" band and the
+	   footer below it. */
+	#nav-below {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		margin-top: var(--spacing-16);
+	}
+
+	/* Panels are either a linked <a> (a real neighbour) or a static
+	   filler <div> showing the site hero where a neighbour is missing —
+	   both keep the 50/50 band, image, gradient and hover shift. */
+	#nav-below .nav-below-prev,
+	#nav-below .nav-below-next {
+		position: relative;
+		display: block;
+		height: 200px;
+		overflow: hidden;
+		line-height: 0;
+		color: #ffffff;
+		background: var(--color-heading);
+	}
+
+	#nav-below img {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		object-position: 50% 50%;
+		transition: object-position 0.3s ease-out;
+	}
+
+	#nav-below .nav-below-prev:hover img,
+	#nav-below .nav-below-next:hover img,
+	#nav-below a:focus-visible img {
+		object-position: 50% 55%;
+	}
+
+	/* Both panels darken toward the page centre (demo effect): the two
+	   images bleed together at the seam under a shared dark vignette,
+	   while the outer edges — where the captions sit — stay lighter. */
+	#nav-below .nav-below-prev::before,
+	#nav-below .nav-below-next::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		background: linear-gradient(
+			to right,
+			rgba(0, 0, 0, 0.6),
+			rgba(0, 0, 0, 0.9) 90%,
+			rgba(0, 0, 0, 1) 100%
+		);
+	}
+
+	#nav-below .nav-below-next::before {
+		background: linear-gradient(
+			to left,
+			rgba(0, 0, 0, 0.6),
+			rgba(0, 0, 0, 0.9) 90%,
+			rgba(0, 0, 0, 1) 100%
+		);
+	}
+
+	#nav-below .nav-below-caption {
+		position: absolute;
+		z-index: 2;
+		top: 50%;
+		left: 2.4em;
+		transform: translateY(-50%);
+		max-width: 78%;
+		line-height: 1.4;
+	}
+
+	#nav-below .nav-below-next {
+		text-align: right;
+	}
+
+	#nav-below .nav-below-next .nav-below-caption {
+		left: auto;
+		right: 2.4em;
+	}
+
+	/* Uppercase "Previous"/"Next" label on the gold highlighter strip */
+	#nav-below em {
+		display: inline;
+		font-style: normal;
+		font-size: 0.7em;
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		background-image: var(--gold-scrim);
+		background-repeat: no-repeat;
+		background-size: 100% 0.4em;
+		background-position: 0 100%;
+	}
+
+	#nav-below .nav-below-title {
+		display: block;
+		margin-top: 0.35em;
+		font-family: var(--font-heading);
+		/* Demo: Playfair Display 400 at 1.7em — elegant, not the heavy 700
+		   used elsewhere for headings */
+		font-size: 1.7rem;
+		font-weight: 400;
+		line-height: 1.2;
+	}
+
+	@media (max-width: 700px) {
+		#nav-below {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,70 @@
+---
+/**
+ * One marketing sample: the iframe on the static document plus its open / download links
+ * (source: `.tracy-marketing__preview` + `.tracy-marketing__actions`). The documents are build
+ * output copied byte-for-byte into public/marketing/ (DECISIONS D10); the page never rewrites
+ * them, it only picks `<key>-light.html` or `<key>-dark.html`. Server-side the frame follows the
+ * request's `?theme=`, then AppearanceSwitch's script follows `html[data-theme]`.
+ *
+ * `sandbox="allow-scripts allow-same-origin"`: the slide deck needs its keyboard script, and the
+ * documents load images from this site's own origin. The source used `allow-scripts` alone; an
+ * opaque-origin frame sends its image requests as `Sec-Fetch-Site: cross-site`, which the Vite dev
+ * server answers with 403 (measured 15/09), so the frame keeps its origin. Forms, popups and
+ * top-navigation stay blocked either way.
+ */
+interface Props {
+  sampleKey: string
+  title: string
+  base: string
+  theme: 'light' | 'dark'
+  openLabel?: string | null
+  downloadLabel?: string | null
+  /** Card preview on the overview, or the tall frame of the detail page. */
+  size?: 'card' | 'full'
+}
+const { sampleKey, title, base, theme, openLabel, downloadLabel, size = 'card' } = Astro.props
+const src = `${base}${sampleKey}-${theme}.html`
+---
+
+<div class="flex flex-col gap-3" data-sample={sampleKey}>
+	<!-- The document renders at its design width (the source shows it in a 1348px frame) and is
+	     scaled down to the box, so its own layout (slide controls beside the caption, poster size)
+	     survives; a card preview is masked at the bottom instead of cutting a line of type. -->
+	<div class:list={["sample-box relative overflow-hidden border border-line-soft bg-surface-warm", size === "full" ? "h-[600px] rounded-[var(--ds-card-radius,var(--radius-lg))] md:h-[900px]" : "h-[420px] rounded-[var(--ds-card-radius,var(--radius-md))] sample-box--card"]} data-sample-box>
+		<iframe
+			class="absolute left-0 top-0 h-[1200px] w-[1348px] origin-top-left border-0"
+			style="transform: scale(var(--sample-scale, 0.32))"
+			src={src}
+			title={title}
+			sandbox="allow-scripts allow-same-origin"
+			referrerpolicy="no-referrer"
+			data-sample-frame={sampleKey}
+			data-sample-base={base}></iframe>
+	</div>
+	{(openLabel || downloadLabel) && (
+		<p class="flex flex-wrap gap-x-5 gap-y-1 text-[14px]">
+			{openLabel && <a href={src} target="_blank" rel="noopener" data-sample-link>{openLabel}</a>}
+			{downloadLabel && <a href={src} target="_blank" rel="noopener" data-sample-link>{downloadLabel}</a>}
+		</p>
+	)}
+</div>
+
+<style>
+	.sample-box--card {
+		mask-image: linear-gradient(#000 78%, transparent);
+		-webkit-mask-image: linear-gradient(#000 78%, transparent);
+	}
+</style>
+<script>
+	// Scale every sample frame to its box: design width 1348px -> box width.
+	const fit = () => {
+		document.querySelectorAll<HTMLElement>('[data-sample-box]').forEach((box) => {
+			const scale = box.clientWidth / 1348
+			box.style.setProperty('--sample-scale', String(scale))
+			const frame = box.querySelector<HTMLIFrameElement>('iframe')
+			if (frame) frame.style.height = `${Math.max(1200, box.clientHeight / scale)}px`
+		})
+	}
+	fit()
+	addEventListener('resize', fit)
+</script>

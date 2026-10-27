@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4040f97b-42cf-49ef-ab2d-a77c00fe8285",
+  "status": "complete",
+  "name": "mostlikely",
+  "url": "https://styles.refero.design/style/4040f97b-42cf-49ef-ab2d-a77c00fe8285",
+  "sourceWebsite": "https://mostlikely.at",
+  "extractedAt": "2026-06-03T16:26:05.354Z",
+  "capturedAt": "2026-10-08T05:10:46.483607+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Inked archways on bone-white vellum",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0ebd5433-eb1c-4c14-83bf-a18500dc37d8.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1afe0f89df5ea05dad0861de0b3dc1e7e5ca4e3b358e453207e54c893ae9c564",
+      "bytes": 13632
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fd2a76dbc907df8276f2c6ca950b7e84da202cc8adff835f6ee4c4ea69f502bc",
+      "bytes": 357986
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "63c249920804d927bfbc3a9890fbe8d7fa5e00c6805a28fb6b335785c6576c56",
+      "bytes": 11984
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1fa27bcb73a3846b5010bf728a93999af6186196977528d53be82580432b8f20",
+      "bytes": 2979
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4db44a3426aa16096fe25ee209e3fcbb348c8c734a7c42adb1c84317a3e3fc64",
+      "bytes": 9500
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "01d0bb925a6be5d8c9755e1d764cc09d27dfcf20d2365dff52ab1df73a35bdfe",
+      "bytes": 1329
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "737330ca5b5319cd146af015d84dfae7f2ff2629856e74c949e18315973ab376",
+      "bytes": 230
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "908bbdd91df249b3f430589d3793d7f90de89cc3b8fe1405b6ce9449cb34edef",
+      "bytes": 247
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f7ad62a5e69fcc621a41ce6ef1854250b223a569039b61fcb770b753de3380ac",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "09059c2b48e545fe45c1d6d31179be304d92edd6a24bc578c67825491bdd45ac",
+      "bytes": 35239
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3095cef732a1b1d748e63cef4c61d9d1d9249be51c8a79d152e0ed2879db32d1",
+      "bytes": 18576
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "772060b974c8582b5d7b83eaf31b1c7378d2f6dcf237ae2febab25b773de62fb",
+      "bytes": 17904
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b33564fd27c598f1e4dea88da324be501f8e34ee0cdb021678d25bfb3c2ee380",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7596cedfffa362a0285a549480173ed14706ea6a048dbce080ccc96b09a4d994",
+      "bytes": 539
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "02cfd58e1627ecc6fcb1cbb0bb813bfbdb4e39a3425c361f5d12b8ecdf94c41f",
+      "bytes": 984
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "15d57573-513b-49aa-91c7-1b7f87bb1a55",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "16be276a-d8ce-484e-8f7a-cbbb09f717f7",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4040f97b-42cf-49ef-ab2d-a77c00fe8285",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "5af60925-9c29-48fe-a19b-0f8cf12505ab",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6262b0bb-ea6f-481b-b706-65df29507b6c",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "e6c20874-c6f9-4c31-b6b2-2cb27cbf15f2",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "e99ae628-89df-4de9-ab80-9885b1be4dc0",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

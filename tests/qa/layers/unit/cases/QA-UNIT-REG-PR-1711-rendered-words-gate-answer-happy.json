@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1711-rendered-words-gate-answer-happy",
+  "itemIds": ["regression:REG-PR-1711-rendered-words-gate-answer"],
+  "requirement": "content.replace on WordPress words the theme prints at render time names the gate that kept the rendered-words road shut (all:true → retry with all:\"page\"; outside the main region; a page with no record of its own; an older plugin), on known and untraced themes alike, instead of the generic 'cannot replace them through a door yet'",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1711-rendered-words-gate-answer.json",
+    "ref": "PR #1711 (fix); fix evidence: Issue #1677 (24/10/2026): on a JA Restaurant WordPress demo, content.replace {all:true} on the /blog/ sidebar banner words answered NOT_EDITABLE with the generic 'cannot replace them through a door yet'; the same call with all:\"page\" changed them. The banner is printed by the theme's PHP into the sidebar of /blog/ only.",
+    "invariant": "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled. 'all:true on words the theme prints on this page names its gate and all:\"page\", nothing written' passes, and 'the same sidebar words with all:\"page\" change through the rendered-words road, one apply' passes. 'all:true on an older plugin says the plugin is older, never sends the call round with all:\"page\"' passes. 'words the theme prints outside the main region say so, never the generic sentence', 'on a known theme, words the theme prints in the header name the outside gate too' and 'on a known theme, a page with no record of its own names that gate' pass. 'a reason with a road of its own keeps its next: the theme file on a page with no record' passes.",
+    "productSources": [
+      "apps/tracy-web/src/sites/content-locate.js:419",
+      "packages/tools/tracy-site-tools/src/host/call-memory.mjs:306",
+      "packages/tools/tracy-site-tools/src/host/html-units.mjs:134",
+      "packages/tools/tracy-site-tools/src/host/legacy-refusal.mjs:14",
+      "packages/tools/tracy-site-tools/src/host/prompter.mjs:591",
+      "packages/tools/tracy-site-tools/src/host/rendered-words.mjs:45",
+      "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs:176",
+      "packages/tools/tracy-site-tools/src/host/replace.mjs:478",
+      "packages/tools/tracy-site-tools/src/host/site-call.mjs:3361",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:243"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-site-tools/src/host/length-advice.mjs:87 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1711-rendered-words-gate-answer.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1711-rendered-words-gate-answer"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1711-rendered-words-gate-answer",
+    "pr": 1711,
+    "kind": "fix",
+    "area": "site-tools/replace/wordpress",
+    "file": "tests/regression/cases/REG-PR-1711-rendered-words-gate-answer.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs",
+    "packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

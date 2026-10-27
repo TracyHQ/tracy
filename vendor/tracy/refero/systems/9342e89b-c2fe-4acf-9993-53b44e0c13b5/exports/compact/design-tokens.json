@@ -1,0 +1,129 @@
+{
+  "color": {
+    "vermilion-flame": {
+      "$value": "#fc4a2b",
+      "$type": "color",
+      "$description": "Vermilion Flame — Brand accent — borders, highlight strokes, icon fills, small inline emphasis marks. The only saturated color in the system; appears as punctuation, never as a wash; Brand-to-tint linear gradient — appears as a full-bleed color bar behind embedded product screenshots"
+    },
+    "ember-pulse": {
+      "$value": "#ea3718",
+      "$type": "color",
+      "$description": "Ember Pulse — Deeper vermilion variant — icon glyphs and small filled marks where the primary accent needs more weight against white"
+    },
+    "tangerine-signal": {
+      "$value": "#f97316",
+      "$type": "color",
+      "$description": "Tangerine Signal — Secondary warm accent — decorative strokes and illustration outlines that sit beside the primary vermilion"
+    },
+    "coral-blush": {
+      "$value": "#ffac9e",
+      "$type": "color",
+      "$description": "Coral Blush — Soft warm fill — subtle wash backgrounds, shadow tints that carry the brand's warmth without screaming"
+    },
+    "peach-mist": {
+      "$value": "#ffe5e0",
+      "$type": "color",
+      "$description": "Peach Mist — Tinted surface — warm-tinted card or section background, barely-there warmth to differentiate from neutral gray"
+    },
+    "apricot-wash": {
+      "$value": "#ffedd5",
+      "$type": "color",
+      "$description": "Apricot Wash — Lightest warm tint — badge fills, tag backgrounds, and hover surfaces that need warmth without saturation"
+    },
+    "brick-alert": {
+      "$value": "#dc2626",
+      "$type": "color",
+      "$description": "Brick Alert — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "forest-confirm": {
+      "$value": "#15803d",
+      "$type": "color",
+      "$description": "Forest Confirm — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Headlines, body text, filled dark buttons, the heaviest typographic weight in the system"
+    },
+    "slate-900": {
+      "$value": "#111827",
+      "$type": "color",
+      "$description": "Slate 900 — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "slate-700": {
+      "$value": "#374151",
+      "$type": "color",
+      "$description": "Slate 700 — Secondary headings and body emphasis where Slate 600 is too light"
+    },
+    "slate-600": {
+      "$value": "#4b5563",
+      "$type": "color",
+      "$description": "Slate 600 — Body text, paragraph copy, secondary descriptions, link text"
+    },
+    "slate-500": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Slate 500 — Tertiary text, captions, icon strokes at reduced weight, disabled labels"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas, card surfaces, button text on dark fills"
+    },
+    "fog-whisper": {
+      "$value": "#f9fafb",
+      "$type": "color",
+      "$description": "Fog Whisper — Section background — the quietest gray band used to separate content zones from the pure white canvas"
+    },
+    "mist-gray": {
+      "$value": "#f2f3f5",
+      "$type": "color",
+      "$description": "Mist Gray — Elevated surface — card backgrounds that sit on the Fog band, subtle inputs, and table row alternation"
+    },
+    "ash-border": {
+      "$value": "#e6e8eb",
+      "$type": "color",
+      "$description": "Ash Border — Hairline dividers, card borders, input outlines at rest"
+    },
+    "coral-wash-gradient": {
+      "$value": "#ff7e67",
+      "$type": "color",
+      "$description": "Coral Wash Gradient — Decorative warm gradient — used behind product imagery to extend the brand's warmth into visual sections"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "inter-display": {
+      "$value": "Inter Display",
+      "$type": "fontFamily",
+      "$description": "Display headlines only — the 96px hero 'Research without the complexity' is the signature moment. Weight 800 at display sizes with -0.035em tracking creates a compressed, editorial block of type. lineHeight 1.0 stacks lines tightly. Do not use below 42px; below that, switch to Inter."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI, navigation, and sub-headings. Weight 400 for paragraphs, 500 for nav and UI labels, 600 for sub-headings and strong emphasis, 700 for inline emphasis. Negative letter-spacing tightens the body (-0.01em to -0.03em) — a small but consistent editorial choice."
+    },
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "Eyebrow and label text — 'DEMOCRATISING RESEARCH AT CUSTOMER OBSESSED COMPANIES SUCH AS' and similar uppercase tags. The +0.15em letter-spacing creates wide mechanical tracking that reads as editorial metadata. Always uppercase, always at 11px."
+    },
+    "source-serif-4": {
+      "$value": "Source Serif 4",
+      "$type": "fontFamily",
+      "$description": "Pull-quote and testimonial body text — introduces a serif counterpoint to the otherwise all-grotesque system. Used sparingly to add texture in quote cards and long-form editorial moments."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ballparkhq.com",
+      "siteName": "Ballpark",
+      "extractedAt": "2026-06-03T15:43:57.455Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,697 @@
+/**
+ * EmDash Admin Styles
+ *
+ * Uses Kumo's semantic token system exclusively (no shadcn/ui tokens).
+ *
+ * Theme system:
+ * - Kumo uses data-mode="dark"/"light" for dark mode (color-scheme + component variants)
+ * - User preference stored in localStorage, applied via data-mode attribute on <html>
+ */
+
+@import "@cloudflare/kumo/styles";
+@import "./media-image-cropper.css";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Scan Kumo component JS for Tailwind utility classes (e.g. Dialog centering) */
+@source "../node_modules/@cloudflare/kumo/dist/**/*.{js,jsx,ts,tsx}";
+
+/* Map Tailwind dark: variant to kumo's data-mode attribute */
+@custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
+
+/*
+ * ThemeProvider always sets data-mode to the resolved preference ("light" or "dark"),
+ * so Tailwind dark: utilities (mapped to [data-mode="dark"]) activate correctly
+ * for both explicit and system-preference themes.
+ */
+
+/**
+ * Classic theme token overrides
+ * Overrides kumo CSS custom properties with classic CMS admin values.
+ * Applied via data-theme="classic" on <html> so portals inherit too.
+ */
+[data-theme="classic"]:not([data-mode="dark"]) {
+	/* Surfaces */
+	--color-kumo-canvas: oklch(98.75% 0 0);
+	--color-kumo-base: #ffffff;
+	--color-kumo-elevated: oklch(98.75% 0 0);
+	--color-kumo-recessed: #dcdcde;
+	--color-kumo-overlay: #ffffff;
+	--color-kumo-control: #ffffff;
+	--color-kumo-tint: #f0f0f1;
+	--color-kumo-fill: #dcdcde;
+	--color-kumo-fill-hover: #c3c4c7;
+	--color-kumo-contrast: #1d2327;
+	--color-kumo-interact: #c3c4c7;
+
+	/* Borders */
+	--color-kumo-line: oklch(14.5% 0 0 / 0.1);
+
+	/* Text hierarchy */
+	--text-color-kumo-default: #1d2327;
+	--text-color-kumo-strong: #50575e;
+	--text-color-kumo-subtle: #646970;
+	--text-color-kumo-inactive: #a7aaad;
+}
+
+/**
+ * Admin font stack
+ *
+ * --font-emdash is set by the Astro Font API (Noto Sans by default).
+ * To add extra script coverage (Arabic, CJK, etc.), configure EmDash with
+ * emdash({ fonts: { scripts: [...] } }) rather than adding another font entry
+ * that targets --font-emdash. If you need to supply your own font entry and
+ * CSS variable instead, disable EmDash-managed fonts first with fonts: false.
+ *
+ * Override Tailwind's --font-sans so all font-sans utilities use it.
+ */
+@theme {
+	--text-color-emdash-media-folder: light-dark(var(--color-blue-500), var(--color-blue-400));
+	--font-sans: var(
+		--font-emdash,
+		ui-sans-serif,
+		system-ui,
+		sans-serif,
+		"Apple Color Emoji",
+		"Segoe UI Emoji",
+		"Segoe UI Symbol",
+		"Noto Color Emoji"
+	);
+}
+
+/* Base styles */
+* {
+	border-color: var(--color-kumo-line);
+}
+
+body {
+	background-color: var(--color-kumo-elevated);
+	color: var(--text-color-kumo-default);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.emdash-media-transparency-grid {
+	background-color: var(--color-kumo-base);
+	background-image: repeating-conic-gradient(
+		var(--color-kumo-tint) 0% 25%,
+		var(--color-kumo-base) 0% 50%
+	);
+	background-position: 50%;
+	background-size: 20px 20px;
+}
+
+@media (max-width: 639px) {
+	.emdash-featured-image-preview {
+		aspect-ratio: 4 / 3 !important;
+	}
+}
+
+/*
+ * Mirrors the pre-React EmDash boot loader exactly. Keep these values in sync
+ * with packages/core/src/astro/routes/admin.astro so the two loading stages do
+ * not visibly shift or change animation as React takes over.
+ */
+.emdash-configuration-loader {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	width: 100%;
+	background: var(--color-kumo-elevated);
+}
+
+.emdash-configuration-loader .loader-inner {
+	text-align: center;
+}
+
+.emdash-configuration-loader .spinner {
+	width: 24px;
+	height: 24px;
+	margin: 0 auto;
+	border: 2.5px solid var(--color-kumo-line);
+	border-top-color: var(--text-color-kumo-subtle);
+	border-radius: 50%;
+	animation: emdash-configuration-spin 0.8s linear infinite;
+}
+
+.emdash-configuration-loader p {
+	margin-top: 1rem;
+	font-family: var(--font-emdash, ui-sans-serif, system-ui, sans-serif);
+	font-size: 0.875rem;
+	color: var(--text-color-kumo-subtle);
+}
+
+@keyframes emdash-configuration-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Keep editor menu choices visibly distinct from their dropdown surfaces. */
+[data-emdash-heading-item][data-highlighted],
+[data-emdash-block-menu-item][data-highlighted] {
+	background-color: var(--color-kumo-interact) !important;
+}
+
+[data-mode="light"] [data-emdash-heading-item][data-highlighted],
+[data-mode="light"] [data-emdash-block-menu-item][data-highlighted],
+[data-mode="light"] [data-slash-command-menu] button:hover,
+[data-mode="light"] [data-slash-command-menu] button.bg-kumo-interact {
+	background-color: var(--color-kumo-tint) !important;
+}
+
+div:has(> [role="listbox"] > .emdash-compact-select-option) {
+	width: var(--anchor-width);
+	min-width: var(--anchor-width);
+}
+
+/* Transitions.dev — Text states swap */
+:root {
+	--text-swap-dur: 150ms;
+	--text-swap-translate-y: 4px;
+	--text-swap-blur: 2px;
+	--text-swap-ease: ease-in-out;
+}
+
+.t-text-swap {
+	display: inline-block;
+	line-height: 1;
+	transform: translateY(0);
+	filter: blur(0);
+	opacity: 1;
+	transition:
+		transform var(--text-swap-dur) var(--text-swap-ease),
+		filter var(--text-swap-dur) var(--text-swap-ease),
+		opacity var(--text-swap-dur) var(--text-swap-ease);
+	will-change: transform, filter, opacity;
+}
+
+.t-text-swap.is-exit {
+	transform: translateY(calc(var(--text-swap-translate-y) * -1));
+	filter: blur(var(--text-swap-blur));
+	opacity: 0;
+}
+
+.t-text-swap.is-enter-start {
+	transform: translateY(var(--text-swap-translate-y));
+	filter: blur(var(--text-swap-blur));
+	opacity: 0;
+	transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.t-text-swap {
+		transition: none !important;
+	}
+}
+
+[data-sidebar-popup] {
+	width: var(--sidebar-width);
+	transition-property: transform, translate, opacity !important;
+}
+
+/* Fix text selection contrast */
+::selection {
+	background-color: var(--color-kumo-interact);
+	color: var(--text-color-kumo-default);
+}
+
+/**
+ * Editor-specific prose overrides
+ */
+
+/* Remove decorative backticks from inline code in editor */
+.prose code::before,
+.prose code::after {
+	content: none !important;
+}
+
+/* Tighter list spacing for editor */
+.prose li {
+	margin-top: 0.25em !important;
+	margin-bottom: 0.25em !important;
+}
+
+.prose li p {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+/**
+ * Prose typography colors — uses kumo token vars so theme overrides flow through.
+ */
+.prose {
+	--tw-prose-body: var(--text-color-kumo-default);
+	--tw-prose-headings: var(--text-color-kumo-default);
+	--tw-prose-links: var(--text-color-kumo-link);
+	--tw-prose-bold: var(--text-color-kumo-default);
+	--tw-prose-counters: var(--text-color-kumo-subtle);
+	--tw-prose-bullets: var(--text-color-kumo-subtle);
+	--tw-prose-hr: var(--color-kumo-line);
+	--tw-prose-quotes: var(--text-color-kumo-default);
+	--tw-prose-quote-borders: var(--color-kumo-line);
+	--tw-prose-code: var(--text-color-kumo-default);
+	--tw-prose-pre-code: var(--text-color-kumo-subtle);
+	--tw-prose-pre-bg: var(--color-kumo-contrast);
+}
+
+.emdash-code-block,
+.emdash-code-editor {
+	--emdash-code-background: #f7f7f5;
+	--emdash-code-foreground: #24292f;
+	--emdash-code-muted: #57606a;
+	--emdash-code-keyword: #b8172a;
+	--emdash-code-string: #0a3069;
+	--emdash-code-number: #0550ae;
+	--emdash-code-title: #7545c7;
+}
+
+.emdash-code-block {
+	background: var(--emdash-code-background);
+	color: var(--emdash-code-foreground);
+	caret-color: var(--emdash-code-foreground);
+	padding-block: 1.875rem;
+}
+
+[data-mode="dark"] :is(.emdash-code-block, .emdash-code-editor) {
+	--emdash-code-background: #202020;
+	--emdash-code-foreground: #f0f3f6;
+	--emdash-code-muted: #c9d1d9;
+	--emdash-code-keyword: #ffc1bb;
+	--emdash-code-string: #b9ddff;
+	--emdash-code-number: #a8d5ff;
+	--emdash-code-title: #e5ccff;
+}
+
+.emdash-code-block code {
+	background: transparent;
+	color: inherit;
+	font-size: 0.8125rem;
+}
+
+.emdash-code-editor .cm-editor {
+	font-size: 0.8125rem;
+}
+
+/* 16px stops iOS from zooming into the editor. */
+@media (pointer: coarse) {
+	.emdash-code-editor .cm-editor {
+		font-size: 1rem;
+	}
+}
+
+.emdash-code-block :is(.hljs-comment, .hljs-quote) {
+	color: var(--emdash-code-muted);
+}
+
+.emdash-code-block
+	:is(.hljs-keyword, .hljs-literal, .hljs-selector-tag, .hljs-section, .hljs-link, .hljs-deletion) {
+	color: var(--emdash-code-keyword);
+}
+
+.emdash-code-block
+	:is(.hljs-string, .hljs-attr, .hljs-attribute, .hljs-symbol, .hljs-bullet, .hljs-addition) {
+	color: var(--emdash-code-string);
+}
+
+.emdash-code-block :is(.hljs-number, .hljs-meta) {
+	color: var(--emdash-code-number);
+}
+
+.emdash-code-block
+	:is(
+		.hljs-title,
+		.hljs-name,
+		.hljs-type,
+		.hljs-built_in,
+		.hljs-selector-id,
+		.hljs-selector-class
+	) {
+	color: var(--emdash-code-title);
+}
+
+.emdash-code-block-controls {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 120ms ease-out;
+}
+.emdash-code-block-node:hover .emdash-code-block-controls,
+.emdash-code-block-node:focus-within .emdash-code-block-controls,
+.emdash-code-block-controls[data-persistent="true"] {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.emdash-code-language-list {
+	scrollbar-color: transparent transparent;
+	scrollbar-width: thin;
+}
+
+.emdash-code-language-list::-webkit-scrollbar {
+	width: 4px;
+}
+
+.emdash-code-language-list::-webkit-scrollbar-track,
+.emdash-code-language-list::-webkit-scrollbar-thumb {
+	background-color: transparent;
+}
+
+.emdash-code-language-list::-webkit-scrollbar-thumb {
+	border-radius: 9999px;
+}
+
+.emdash-code-language-list:hover {
+	scrollbar-color: var(--color-kumo-interact) transparent;
+}
+
+.emdash-code-language-list:hover::-webkit-scrollbar-thumb {
+	background-color: var(--color-kumo-interact);
+}
+
+[data-mode="light"] .emdash-code-language-list [data-highlighted]:not([data-disabled]) {
+	background-color: var(--color-kumo-tint);
+}
+
+.emdash-code-language-input:focus {
+	border-color: color-mix(in oklab, var(--color-kumo-focus) 50%, transparent);
+}
+
+.emdash-code-language-popover[data-instant] {
+	transition-duration: 150ms;
+}
+
+@media (hover: none), (pointer: coarse) {
+	.emdash-code-block-controls {
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.emdash-code-block-controls {
+		transition: none;
+	}
+
+	.emdash-code-language-popover,
+	.emdash-code-language-popover[data-instant] {
+		transition: none;
+	}
+
+	.emdash-code-language-popover[data-starting-style],
+	.emdash-code-language-popover[data-ending-style] {
+		scale: 1;
+	}
+}
+/**
+ * TipTap placeholder styles
+ */
+.tiptap p.is-empty {
+	display: flow-root;
+}
+
+.tiptap p.is-empty::before {
+	color: var(--text-color-kumo-inactive);
+	content: attr(data-placeholder);
+	float: inline-start;
+	/* Leave room for the text caret alongside the full-width placeholder. */
+	width: 100%;
+	margin-inline-end: -100%;
+	pointer-events: none;
+}
+
+/**
+ * Spotlight mode dims non-focused blocks in the editor
+ */
+.spotlight-mode .ProseMirror > *:not(.has-focus) {
+	opacity: 0.3;
+	transition: opacity 0.2s ease;
+}
+
+.spotlight-mode .ProseMirror > .has-focus {
+	opacity: 1;
+	transition: opacity 0.2s ease;
+}
+
+/* Block dragging styles */
+.ProseMirror .dragging {
+	opacity: 0.5;
+}
+
+/* Drop cursor styling - auto-fade to handle cleanup issues */
+.ProseMirror-dropcursor {
+	border-color: #3b82f6 !important;
+	border-width: 2px !important;
+	animation: dropcursor-fade 2s forwards;
+}
+
+@keyframes dropcursor-fade {
+	0%,
+	90% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/*
+ * Keep heading margins compact to minimize drag preview offset.
+ */
+.ProseMirror.prose > h1 {
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em !important;
+}
+
+.ProseMirror.prose > h2 {
+	margin-top: 0.4em !important;
+	margin-bottom: 0.4em !important;
+}
+
+.ProseMirror.prose > h3,
+.ProseMirror.prose > h4,
+.ProseMirror.prose > h5,
+.ProseMirror.prose > h6 {
+	margin-top: 0.3em !important;
+	margin-bottom: 0.3em !important;
+}
+
+/* Top margins add blank space above the text in block drag previews. */
+.ProseMirror.prose > p {
+	font-size: 1rem;
+	line-height: 1.5;
+	margin-block: 0 1em !important;
+}
+
+.ProseMirror.prose > *:first-child {
+	margin-top: 0 !important;
+}
+
+[data-emdash-editor-surface] {
+	container-type: inline-size;
+}
+
+.ProseMirror .tableWrapper {
+	max-inline-size: 100%;
+	margin-block: 1rem;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior-inline: contain;
+	scrollbar-width: none;
+	background:
+		linear-gradient(to right, var(--color-kumo-base), transparent) left / 1rem 100% no-repeat local,
+		linear-gradient(to left, var(--color-kumo-base), transparent) right / 1rem 100% no-repeat local,
+		linear-gradient(to right, color-mix(in srgb, currentcolor 5%, transparent), transparent) left /
+			6px 100% no-repeat scroll,
+		linear-gradient(to left, color-mix(in srgb, currentcolor 5%, transparent), transparent) right /
+			6px 100% no-repeat scroll;
+}
+
+.ProseMirror .tableWrapper::-webkit-scrollbar {
+	display: none;
+}
+
+.ProseMirror.prose > p:last-child {
+	margin-bottom: 0 !important;
+}
+
+/* TipTap table styles */
+.ProseMirror table {
+	border-collapse: collapse;
+	inline-size: 100%;
+	margin: 0;
+	table-layout: fixed;
+}
+
+.ProseMirror td,
+.ProseMirror th {
+	border: 1px solid var(--color-kumo-line);
+	position: relative;
+	padding: 0.375rem 0.5rem;
+	vertical-align: top;
+}
+
+.ProseMirror :is(td, th) > p {
+	margin-block: 0 !important;
+	min-block-size: 1.5rem;
+}
+
+.ProseMirror :is(td, th) p.is-empty::before {
+	content: none;
+}
+
+.ProseMirror th {
+	background-color: var(--color-kumo-tint);
+	font-weight: 600;
+}
+
+.ProseMirror .selectedCell {
+	background-color: var(--color-kumo-info-tint);
+	box-shadow: inset 0 0 0 2px var(--color-kumo-brand);
+}
+
+.ProseMirror :is(td, th).has-focus:not(.selectedCell) {
+	box-shadow: inset 0 0 0 1px var(--color-kumo-brand);
+}
+
+.ProseMirror .column-resize-handle {
+	position: absolute;
+	inset-block: -1px;
+	inset-inline-end: 0;
+	inline-size: 1.5rem;
+	background-color: transparent;
+	pointer-events: auto;
+}
+
+.ProseMirror .column-resize-handle::after {
+	position: absolute;
+	inset-block: 0;
+	inset-inline-end: 0;
+	inline-size: 0.125rem;
+	background-color: color-mix(in srgb, var(--color-kumo-brand) 55%, transparent);
+	content: "";
+	pointer-events: none;
+}
+
+.ProseMirror.resize-cursor {
+	cursor: col-resize;
+}
+
+.ProseMirror.table-resize-dragging .column-resize-handle::after {
+	background-color: var(--color-kumo-brand);
+}
+
+@container (max-width: 30rem) {
+	[data-emdash-editor-surface] .ProseMirror {
+		padding-inline: 1rem;
+	}
+}
+
+.emdash-table-menu {
+	overscroll-behavior: contain;
+	scrollbar-width: none;
+}
+
+.emdash-table-menu::-webkit-scrollbar {
+	display: none;
+}
+
+.emdash-auto-scrollbar {
+	scrollbar-color: transparent transparent;
+	scrollbar-gutter: stable;
+	scrollbar-width: thin;
+}
+
+.emdash-auto-scrollbar:hover,
+.emdash-auto-scrollbar:focus-within {
+	scrollbar-color: var(--color-kumo-line) transparent;
+}
+
+.emdash-auto-scrollbar::-webkit-scrollbar {
+	width: 0.375rem;
+}
+
+.emdash-auto-scrollbar::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+.emdash-auto-scrollbar::-webkit-scrollbar-thumb {
+	border-radius: 9999px;
+	background-color: transparent;
+}
+
+.emdash-auto-scrollbar:hover::-webkit-scrollbar-thumb,
+.emdash-auto-scrollbar:focus-within::-webkit-scrollbar-thumb {
+	background-color: var(--color-kumo-line);
+}
+
+[data-mode="light"] .emdash-table-menu [data-highlighted]:not([data-disabled]) {
+	background-color: var(--color-kumo-tint);
+}
+
+[data-emdash-header-checkbox] {
+	padding-inline: 0.5rem !important;
+	padding-inline-start: 2rem !important;
+}
+
+[data-emdash-header-checkbox] > span:first-child {
+	inset-inline-start: 0.5rem !important;
+	inset-inline-end: auto !important;
+}
+
+@media (forced-colors: active) {
+	[role="gridcell"][aria-selected="true"] {
+		outline: 2px solid Highlight;
+		outline-offset: -2px;
+	}
+
+	.ProseMirror .selectedCell,
+	.ProseMirror :is(td, th).has-focus:not(.selectedCell) {
+		outline: 2px solid Highlight;
+		outline-offset: -2px;
+		box-shadow: none;
+	}
+
+	.ProseMirror .column-resize-handle::after {
+		inline-size: 0;
+		border-inline-end: 2px solid CanvasText;
+		background-color: transparent;
+	}
+
+	.ProseMirror.table-resize-dragging .column-resize-handle::after {
+		border-color: Highlight;
+	}
+}
+
+/* TipTap owns slash-menu focus, so Base UI's portal guards must not enter the Tab order. */
+.slash-command-menu-positioner > [data-base-ui-focus-guard] {
+	display: none;
+}
+
+/**
+ * Prevent dialogs from overflowing the viewport on small screens.
+ * Kumo's size variants set min-width (e.g. min-w-[32rem] for "lg")
+ * which overrides max-width in CSS. We need to cap min-width too.
+ */
+@media (max-width: 639px) {
+	[role="dialog"] {
+		min-width: 0 !important;
+		max-width: calc(100vw - 2rem);
+	}
+}
+
+/**
+ * Isolate the admin root's stacking context.
+ */
+#admin-root {
+	isolation: isolate;
+}
+
+/**
+ * Kumo toast viewport renders at z-10, but modals use z-modal (z-index: 9999).
+ * Override so toasts appear above modals.
+ */
+[role="region"][aria-label="Notifications"] {
+	z-index: 10000 !important;
+}

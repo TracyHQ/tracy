@@ -1,0 +1,2550 @@
+{
+  "format": 1,
+  "scope": "Read from theme files, the spec-pack and the seed report only. No live site, no database, no ids. Counts under \"seed\" are at seed time, not live.",
+  "theme": {
+    "slug": "wp-ja-restaurant",
+    "dir": "wp-ja-restaurant",
+    "header": {
+      "License": "GNU General Public License v3",
+      "Requires at least": "7.0",
+      "Requires PHP": "8.1",
+      "Tested up to": "7.1",
+      "Text Domain": "wp-ja-restaurant",
+      "Theme Name": "WP Restaurant",
+      "Update URI": "https://github.com/TracyHQ/claude-cowork",
+      "Version": "1.0.0"
+    },
+    "themeJson": {
+      "version": 3,
+      "customTemplates": [
+        {
+          "name": "landing",
+          "title": "Landing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "fixture",
+          "title": "Design system page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "artifact",
+          "title": "Design page (engine)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "pricing",
+          "title": "Pricing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-landing",
+          "title": "Landing (sections only)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-account",
+          "title": "Account page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-login",
+          "title": "Sign-in page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-register",
+          "title": "Registration page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-password",
+          "title": "Password page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-contact",
+          "title": "Contact page",
+          "postTypes": [
+            "page"
+          ]
+        }
+      ],
+      "templateParts": [
+        {
+          "name": "header",
+          "title": "Header",
+          "area": "header"
+        },
+        {
+          "name": "footer",
+          "title": "Footer",
+          "area": "footer"
+        },
+        {
+          "name": "sidebar",
+          "title": "Sidebar",
+          "area": "uncategorized"
+        },
+        {
+          "name": "search-description",
+          "title": "Search page description",
+          "area": "uncategorized"
+        },
+        {
+          "name": "search-form",
+          "title": "Search page form and tips",
+          "area": "uncategorized"
+        }
+      ]
+    },
+    "presets": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta"
+        },
+        {
+          "slug": "border",
+          "name": "Border"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active"
+        },
+        {
+          "slug": "success",
+          "name": "Success"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger"
+        }
+      ],
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display"
+        },
+        {
+          "slug": "body",
+          "name": "Body"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono"
+        }
+      ],
+      "fontSizes": [
+        "xs",
+        "sm",
+        "base",
+        "lg",
+        "xl",
+        "xxl",
+        "xxxl",
+        "xxxxl"
+      ],
+      "spacingSizes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "8",
+        "12"
+      ],
+      "layout": {
+        "contentSize": "1190px",
+        "wideSize": "1190px"
+      },
+      "customKeys": [
+        "container",
+        "ease",
+        "elev",
+        "focusRing",
+        "leading",
+        "motion",
+        "radius",
+        "sectionY",
+        "tracking",
+        "tracy"
+      ],
+      "inspiration": "wp-ja-restaurant",
+      "stylesCss": 2094
+    },
+    "templates": [
+      {
+        "name": "404",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-restaurant/part-404"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "archive",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-restaurant/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "artifact",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "category",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-restaurant/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "fixture",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "front-page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "home",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-restaurant/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "index",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-restaurant/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "landing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-account",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-contact",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-landing",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-login",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-password",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-register",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "pricing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/section-cta-final"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "search-form",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-restaurant/blog-search-results"
+        ]
+      },
+      {
+        "name": "single-gallery",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-restaurant/blog-article-info",
+          "wp-ja-restaurant/blog-pagenav"
+        ]
+      },
+      {
+        "name": "single",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-restaurant/blog-article-info",
+          "wp-ja-restaurant/blog-pagenav"
+        ]
+      },
+      {
+        "name": "tag",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-restaurant/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "parts": [
+      {
+        "name": "footer",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "header",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 2,
+        "customBlocks": []
+      },
+      {
+        "name": "search-description",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-restaurant/part-search-description"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search-form",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-restaurant/part-search-form"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "sidebar",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-restaurant/part-sidebar"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "patterns": [
+      {
+        "file": "patterns/cards.php",
+        "slug": "tracy/cards",
+        "title": "Cards",
+        "categories": [
+          "query"
+        ],
+        "blockTypes": [
+          "core/query"
+        ],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/landing.php",
+        "slug": "tracy/landing",
+        "title": "Landing page",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/pricing.php",
+        "slug": "tracy/pricing",
+        "title": "Pricing table",
+        "categories": [
+          "text"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-contact.php",
+        "slug": "tracy/section-contact",
+        "title": "Contact",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-final.php",
+        "slug": "tracy/section-cta-final",
+        "title": "Call to action, final",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/section-cta-inline.php",
+        "slug": "tracy/section-cta-inline",
+        "title": "Call to action, inline",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-faq.php",
+        "slug": "tracy/section-faq",
+        "title": "FAQ",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-features.php",
+        "slug": "tracy/section-features",
+        "title": "Features",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-gallery.php",
+        "slug": "tracy/section-gallery",
+        "title": "Gallery",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-hero.php",
+        "slug": "tracy/section-hero",
+        "title": "Hero",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-how-it-works.php",
+        "slug": "tracy/section-how-it-works",
+        "title": "How it works",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-listing.php",
+        "slug": "tracy/section-listing",
+        "title": "Listing",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pillars.php",
+        "slug": "tracy/section-pillars",
+        "title": "Value pillars",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pricing.php",
+        "slug": "tracy/section-pricing",
+        "title": "Pricing plans",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-problem.php",
+        "slug": "tracy/section-problem",
+        "title": "Problem",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-proof.php",
+        "slug": "tracy/section-proof",
+        "title": "Proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-social-proof.php",
+        "slug": "tracy/section-social-proof",
+        "title": "Social proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-styleguide.php",
+        "slug": "tracy/section-styleguide",
+        "title": "Style guide",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-team.php",
+        "slug": "tracy/section-team",
+        "title": "Team",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/account-login.php",
+        "slug": "wp-ja-restaurant/account-login",
+        "title": "Login form",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-register.php",
+        "slug": "wp-ja-restaurant/account-register",
+        "title": "Registration form",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 2,
+        "own": true
+      },
+      {
+        "file": "patterns/account-remind.php",
+        "slug": "wp-ja-restaurant/account-remind",
+        "title": "Username reminder form",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-reset.php",
+        "slug": "wp-ja-restaurant/account-reset",
+        "title": "Password reset form",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-contact-map-default.php",
+        "slug": "wp-ja-restaurant/acm-contact-map-default",
+        "title": "Contact map",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-1.php",
+        "slug": "wp-ja-restaurant/acm-features-intro-style-1",
+        "title": "Features intro (two stepped blocks)",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 7,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-2.php",
+        "slug": "wp-ja-restaurant/acm-features-intro-style-2",
+        "title": "Features intro (offer cards)",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 9,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-3.php",
+        "slug": "wp-ja-restaurant/acm-features-intro-style-3",
+        "title": "Features intro (picture and text)",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-gallery-slide-default.php",
+        "slug": "wp-ja-restaurant/acm-gallery-slide-default",
+        "title": "Gallery slide",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-happyhours-style-1.php",
+        "slug": "wp-ja-restaurant/acm-happyhours-style-1",
+        "title": "Happy hours: style 1",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 17,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-happyhours-style-2.php",
+        "slug": "wp-ja-restaurant/acm-happyhours-style-2",
+        "title": "Happy hours: style 2",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 8,
+        "namedBlocks": 20,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-happyhours-style-3.php",
+        "slug": "wp-ja-restaurant/acm-happyhours-style-3",
+        "title": "Happy hours: style 3",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 19,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-hero-style-1.php",
+        "slug": "wp-ja-restaurant/acm-hero-style-1",
+        "title": "Hero",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-home-news-default.php",
+        "slug": "wp-ja-restaurant/acm-home-news-default",
+        "title": "Home main body (news and sidebar)",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 9,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-masthead-default.php",
+        "slug": "wp-ja-restaurant/acm-masthead-default",
+        "title": "Masthead",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-menu-style-1.php",
+        "slug": "wp-ja-restaurant/acm-menu-style-1",
+        "title": "Menu: style 1",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 10,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-menu-style-2.php",
+        "slug": "wp-ja-restaurant/acm-menu-style-2",
+        "title": "Menu: style 2",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 12,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-menu-style-3.php",
+        "slug": "wp-ja-restaurant/acm-menu-style-3",
+        "title": "Menu: style 3",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 13,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-opentable-style-1.php",
+        "slug": "wp-ja-restaurant/acm-opentable-style-1",
+        "title": "Booking bar",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 1,
+        "namedBlocks": 2,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-slideshow-style-owl.php",
+        "slug": "wp-ja-restaurant/acm-slideshow-style-owl",
+        "title": "Slideshow",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-statistics-style-1.php",
+        "slug": "wp-ja-restaurant/acm-statistics-style-1",
+        "title": "Statistics (rating bars)",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-subscribe-default.php",
+        "slug": "wp-ja-restaurant/acm-subscribe-default",
+        "title": "Subscribe",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-tabs-style-1.php",
+        "slug": "wp-ja-restaurant/acm-tabs-style-1",
+        "title": "Tabs: menu tabs",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 9,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-teams-style-1.php",
+        "slug": "wp-ja-restaurant/acm-teams-style-1",
+        "title": "Teams (chefs)",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-text-banner-default.php",
+        "slug": "wp-ja-restaurant/acm-text-banner-default",
+        "title": "Text banner",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 3,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-timeline-style-1.php",
+        "slug": "wp-ja-restaurant/acm-timeline-style-1",
+        "title": "Timeline",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/blog-banner.php",
+        "slug": "wp-ja-restaurant/blog-banner",
+        "title": "Blog banner module",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/blog-list.php",
+        "slug": "wp-ja-restaurant/blog-list",
+        "title": "Article list",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/contact-form.php",
+        "slug": "wp-ja-restaurant/contact-form",
+        "title": "Contact",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/heading-blog.php",
+        "slug": "wp-ja-restaurant/heading-blog",
+        "title": "Blog heading",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/heading-smart-search.php",
+        "slug": "wp-ja-restaurant/heading-smart-search",
+        "title": "Smart Search heading",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-404.php",
+        "slug": "wp-ja-restaurant/part-404",
+        "title": "Page not found",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-search-description.php",
+        "slug": "wp-ja-restaurant/part-search-description",
+        "title": "Search page description",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-search-form.php",
+        "slug": "wp-ja-restaurant/part-search-form",
+        "title": "Search page form and tips",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-sidebar.php",
+        "slug": "wp-ja-restaurant/part-sidebar",
+        "title": "Blog sidebar",
+        "categories": [
+          "wp-ja-restaurant",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      }
+    ],
+    "variations": [
+      {
+        "id": "wp-ja-restaurant",
+        "title": "WP Restaurant",
+        "inspiration": "wp-ja-restaurant"
+      }
+    ],
+    "blocks": [],
+    "enqueued": [
+      {
+        "kind": "style",
+        "handle": "tracy",
+        "path": "assets/css/tracy.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy",
+        "path": "assets/js/tracy.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-fixture-page",
+        "path": "assets/css/fixture-page.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-layout",
+        "path": "assets/css/layout.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-motion",
+        "path": "assets/css/tracy-motion.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-motion",
+        "path": "assets/js/tracy-motion.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-preview",
+        "path": "assets/js/tracy-preview.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-sections",
+        "path": "assets/css/sections.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-restaurant",
+        "path": "assets/css/wp-ja-restaurant.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-restaurant",
+        "path": "assets/js/wp-ja-restaurant.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-restaurant-dark",
+        "path": "assets/js/wp-ja-restaurant-dark.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-restaurant-fonts",
+        "path": "assets/css/fonts.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-restaurant-icons",
+        "path": "assets/css/icons.css",
+        "file": "inc/extra.php"
+      }
+    ],
+    "optionsRead": [
+      "tracy_contact_to",
+      "tracy_hero",
+      "tracy_inspiration",
+      "tracy_motion",
+      "tracy_nav",
+      "wp_ja_restaurant_404_page",
+      "wp_ja_restaurant_redirects"
+    ],
+    "hooks": [
+      {
+        "kind": "action",
+        "hook": "admin_post_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "admin_post_nopriv_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "auto_update_theme",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "default_option_tracy_motion",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "do_redirect_guess_404_permalink",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "parse_query",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "pre_option_site_logo",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_loop_block_query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/categories",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/group",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/group",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/html",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/html",
+        "file": "inc/identity.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/image",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/image",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/paragraph",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/paragraph",
+        "file": "inc/identity.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/search",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/site-logo",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/social-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/tag-cloud",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_data",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "run_wptexturize",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "style_loader_src",
+        "file": "inc/asset-version.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_content",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "update_themes_github.com",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "wp_content_img_tag",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_footer",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_footer",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "wp_theme_json_data_theme",
+        "file": "inc/role-reads.php"
+      }
+    ],
+    "overlay": {
+      "dir": "wp-ja-restaurant",
+      "files": [
+        "assets/css/fonts.css",
+        "assets/css/groups/about.css",
+        "assets/css/groups/account.css",
+        "assets/css/groups/article.css",
+        "assets/css/groups/blog.css",
+        "assets/css/groups/chrome.css",
+        "assets/css/groups/g1.css",
+        "assets/css/groups/home.css",
+        "assets/css/groups/menus.css",
+        "assets/css/icons.css",
+        "assets/css/p-ja-restaurant.css",
+        "assets/css/source/acm-features-intro.css",
+        "assets/css/source/acm-happyhours.css",
+        "assets/css/source/acm-hero.css",
+        "assets/css/source/acm-menu.css",
+        "assets/css/source/acm-opentable.css",
+        "assets/css/source/acm-slideshow.css",
+        "assets/css/source/acm-statistics.css",
+        "assets/css/source/acm-tabs.css",
+        "assets/css/source/acm-teams.css",
+        "assets/css/source/acm-testimonials.css",
+        "assets/css/source/acm-timeline.css",
+        "assets/css/source/bootstrap.css",
+        "assets/css/source/megamenu.css",
+        "assets/css/source/off-canvas.css",
+        "assets/css/source/template.css",
+        "assets/css/wp-ja-restaurant.css",
+        "assets/fonts/OFL.txt",
+        "assets/fonts/fontawesome-webfont.woff2",
+        "assets/fonts/ionicons.woff",
+        "assets/fonts/noticia-text-400-latin-ext.woff2",
+        "assets/fonts/noticia-text-400-latin.woff2",
+        "assets/fonts/noticia-text-400-vietnamese.woff2",
+        "assets/fonts/noticia-text-400i-latin-ext.woff2",
+        "assets/fonts/noticia-text-400i-latin.woff2",
+        "assets/fonts/noticia-text-400i-vietnamese.woff2",
+        "assets/fonts/noticia-text-700-latin-ext.woff2",
+        "assets/fonts/noticia-text-700-latin.woff2",
+        "assets/fonts/noticia-text-700-vietnamese.woff2",
+        "assets/fonts/noticia-text-700i-latin-ext.woff2",
+        "assets/fonts/noticia-text-700i-latin.woff2",
+        "assets/fonts/noticia-text-700i-vietnamese.woff2",
+        "assets/fonts/roboto-mono-400-latin-ext.woff2",
+        "assets/fonts/roboto-mono-400-latin.woff2",
+        "assets/fonts/roboto-mono-400-vietnamese.woff2",
+        "assets/fonts/roboto-mono-500-latin-ext.woff2",
+        "assets/fonts/roboto-mono-500-latin.woff2",
+        "assets/fonts/roboto-mono-500-vietnamese.woff2",
+        "assets/fonts/roboto-mono-700-latin-ext.woff2",
+        "assets/fonts/roboto-mono-700-latin.woff2",
+        "assets/fonts/roboto-mono-700-vietnamese.woff2",
+        "assets/fonts/saira-extra-condensed-300-latin-ext.woff2",
+        "assets/fonts/saira-extra-condensed-300-latin.woff2",
+        "assets/fonts/saira-extra-condensed-300-vietnamese.woff2",
+        "assets/fonts/saira-extra-condensed-400-latin-ext.woff2",
+        "assets/fonts/saira-extra-condensed-400-latin.woff2",
+        "assets/fonts/saira-extra-condensed-400-vietnamese.woff2",
+        "assets/fonts/saira-extra-condensed-500-latin-ext.woff2",
+        "assets/fonts/saira-extra-condensed-500-latin.woff2",
+        "assets/fonts/saira-extra-condensed-500-vietnamese.woff2",
+        "assets/fonts/saira-extra-condensed-600-latin-ext.woff2",
+        "assets/fonts/saira-extra-condensed-600-latin.woff2",
+        "assets/fonts/saira-extra-condensed-600-vietnamese.woff2",
+        "assets/fonts/saira-extra-condensed-700-latin-ext.woff2",
+        "assets/fonts/saira-extra-condensed-700-latin.woff2",
+        "assets/fonts/saira-extra-condensed-700-vietnamese.woff2",
+        "assets/fonts/teko-300-latin-ext.woff2",
+        "assets/fonts/teko-300-latin.woff2",
+        "assets/fonts/teko-400-latin-ext.woff2",
+        "assets/fonts/teko-400-latin.woff2",
+        "assets/fonts/teko-500-latin-ext.woff2",
+        "assets/fonts/teko-500-latin.woff2",
+        "assets/fonts/teko-700-latin-ext.woff2",
+        "assets/fonts/teko-700-latin.woff2",
+        "assets/img/arrow-up.gif",
+        "assets/img/arrow.png",
+        "assets/img/decor.png",
+        "assets/img/logo.png",
+        "assets/img/masthead-default.jpg",
+        "assets/img/placeholder.svg",
+        "assets/img/stars.png",
+        "assets/img/subscribe-decor.png",
+        "assets/js/groups/about.js",
+        "assets/js/groups/account.js",
+        "assets/js/groups/blog.js",
+        "assets/js/groups/home.js",
+        "assets/js/groups/menus.js",
+        "assets/js/wp-ja-restaurant-dark.js",
+        "assets/js/wp-ja-restaurant.js",
+        "inc/extra.php",
+        "inc/groups/account.php",
+        "inc/groups/blog.php",
+        "inc/groups/chrome.php",
+        "inc/groups/content.php",
+        "inc/groups/g1.php",
+        "inc/groups/pages.php",
+        "inc/identity.php",
+        "parts/footer.html",
+        "parts/header.html",
+        "parts/search-description.html",
+        "parts/search-form.html",
+        "parts/sidebar.html",
+        "patterns.map.json",
+        "patterns/account-login.php",
+        "patterns/account-register.php",
+        "patterns/account-remind.php",
+        "patterns/account-reset.php",
+        "patterns/acm-contact-map-default.php",
+        "patterns/acm-features-intro-style-1.php",
+        "patterns/acm-features-intro-style-2.php",
+        "patterns/acm-features-intro-style-3.php",
+        "patterns/acm-gallery-slide-default.php",
+        "patterns/acm-happyhours-style-1.php",
+        "patterns/acm-happyhours-style-2.php",
+        "patterns/acm-happyhours-style-3.php",
+        "patterns/acm-hero-style-1.php",
+        "patterns/acm-home-news-default.php",
+        "patterns/acm-masthead-default.php",
+        "patterns/acm-menu-style-1.php",
+        "patterns/acm-menu-style-2.php",
+        "patterns/acm-menu-style-3.php",
+        "patterns/acm-opentable-style-1.php",
+        "patterns/acm-slideshow-style-owl.php",
+        "patterns/acm-statistics-style-1.php",
+        "patterns/acm-subscribe-default.php",
+        "patterns/acm-tabs-style-1.php",
+        "patterns/acm-teams-style-1.php",
+        "patterns/acm-text-banner-default.php",
+        "patterns/acm-timeline-style-1.php",
+        "patterns/blog-banner.php",
+        "patterns/blog-list.php",
+        "patterns/contact-form.php",
+        "patterns/heading-blog.php",
+        "patterns/heading-smart-search.php",
+        "patterns/part-404.php",
+        "patterns/part-search-description.php",
+        "patterns/part-search-form.php",
+        "patterns/part-sidebar.php",
+        "patterns/section-cta-final.php",
+        "readme.txt",
+        "style.css",
+        "templates/404.html",
+        "templates/archive.html",
+        "templates/category.html",
+        "templates/front-page.html",
+        "templates/home.html",
+        "templates/index.html",
+        "templates/page-account.html",
+        "templates/page-contact.html",
+        "templates/page-landing.html",
+        "templates/page-login.html",
+        "templates/page-password.html",
+        "templates/page-register.html",
+        "templates/page.html",
+        "templates/search.html",
+        "templates/single-gallery.html",
+        "templates/single.html",
+        "templates/tag.html",
+        "theme.config.json",
+        "theme.overlay.json",
+        "tokens.css"
+      ]
+    },
+    "fileCount": 199,
+    "fingerprints": {
+      "assets/css/fixture-page.css": "sha256:d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+      "assets/css/fonts.css": "sha256:f8c0436ce5451b5921f281e7abeaa3047313dcf14b4bae85162e6a30cfe52372",
+      "assets/css/groups/about.css": "sha256:f0f2755e7985a885c2158794abf695cee572e9436c67f7e2bd4ca0a54fade4de",
+      "assets/css/groups/account.css": "sha256:938a2ea6723d39cf9acc1bad5ec92f0eefe8a281d57a4fea66e4a9a58f1f1f0c",
+      "assets/css/groups/article.css": "sha256:461c02eb0d58a974f21734af61c46fdfa1b5237c4bba9e5e32389f80adff43a5",
+      "assets/css/groups/blog.css": "sha256:ed3a6682c157764b55426ea30c94e5694a373a6433646f823a347db6984771d8",
+      "assets/css/groups/chrome.css": "sha256:0d8260f3987f30e87f1eddb6ac7c0563461fefabade29cab72c506ca2f78a21f",
+      "assets/css/groups/g1.css": "sha256:473ea6d44cd25f3a292be96640d0e57200f31fc55b31956ab4ce6d02a9ac54a3",
+      "assets/css/groups/home.css": "sha256:44f79f72b4a00726dc160fc1d0fa53fe17f954eddc0a4399ab9bbd5e6d9d92ad",
+      "assets/css/groups/menus.css": "sha256:0159624fa3feffc5aeb02f157f1fcd7dcd22bb111dca3b334f08c712d0c3da81",
+      "assets/css/icons.css": "sha256:48c0ca974deb655bee0f0991c5791e4ba45734b91511cfd971bd40c4f7807c4f",
+      "assets/css/layout.css": "sha256:25c3c8bfca0c51297162ae0d5af711de62bff154b71659b8d182efb34b13bb77",
+      "assets/css/p-ja-restaurant.css": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "assets/css/sections.css": "sha256:4400735807262b53479e4b92770252fd683f3788b433c83ae46df0afd593591f",
+      "assets/css/source/acm-features-intro.css": "sha256:5d1275b91b3e61ce44448ccf8541a38b29ea565de62173288bcf84cd015b7697",
+      "assets/css/source/acm-happyhours.css": "sha256:3a90e966c20d22e984947835f6198a32dd3783e10a681ca22c235903a4dea24a",
+      "assets/css/source/acm-hero.css": "sha256:b24d1932cbfa135b592decdc7e883401180441bbd2ad51908ae9081054186591",
+      "assets/css/source/acm-menu.css": "sha256:03c89931fddb5a3914f5700cf1bec7085a65c49358a3b6f32b0f38d51e3cd50a",
+      "assets/css/source/acm-opentable.css": "sha256:f637d5b9b1fb1b9e3656bd04e66e7ad03611e0d2da416332cd88eeb00b22405d",
+      "assets/css/source/acm-slideshow.css": "sha256:95bf7fa5f4d88c5a5debd26c4d6bdde089eb0aa041c283e510e5d12bec459f7a",
+      "assets/css/source/acm-statistics.css": "sha256:710ad272c6d37cd7d9b6755515220c0cf306e50099c85f5f5f94150a85494633",
+      "assets/css/source/acm-tabs.css": "sha256:0b31aaa2d80a13c969e757ee6efa2f54732f4589d41f2e10d4e5b746b3e82df7",
+      "assets/css/source/acm-teams.css": "sha256:8876c3ec44463dde93a890950e9f5f1b552f5627628d11c1f1924c192b75317c",
+      "assets/css/source/acm-testimonials.css": "sha256:259b725dacfbdb2eda4d554d8bc74e1990272b89afa06e992de22e0d78fc7119",
+      "assets/css/source/acm-timeline.css": "sha256:323207273a193448a0828c9cb455f97a75e69db9806d5519751c7f0d63db0ae3",
+      "assets/css/source/bootstrap.css": "sha256:0a8fb2ee535ffd55009e7fe055c89ec452d53102151719b757993e8a74dab5f7",
+      "assets/css/source/megamenu.css": "sha256:ffa93dc7bb54a4dfc05d2d5e33798f68087e9c4905087a3837a8057f3e061113",
+      "assets/css/source/off-canvas.css": "sha256:3fb235b49953704528e57216f342b1376734746e4ff1e9a7132ee797205d5ea0",
+      "assets/css/source/template.css": "sha256:140bc4f84facd404179d8b5ac302aa83725a9db648c958af630ab9899c68c4cb",
+      "assets/css/tracy-motion.css": "sha256:656642b63d46e2cb41fcd5af3437e25fed38175280bfcf14e9a1f6da5efb6bec",
+      "assets/css/tracy.css": "sha256:e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+      "assets/css/wp-ja-restaurant.css": "sha256:ae07c8881d9bd79628d1df82e8926463887e68e8e0717e53feb203771be9cdfd",
+      "assets/fonts/fontawesome-webfont.woff2": "sha256:7dacf83f51179de8d7980a513e67ab3a08f2c6272bb5946df8fd77c0d1763b73",
+      "assets/fonts/ionicons.woff": "sha256:709f2789daaff440820ebb975d3ae409af45121bdec47e39e83523490b1bc0fc",
+      "assets/fonts/noticia-text-400-latin-ext.woff2": "sha256:2e62570c96291b0e4eb2ade586c4f583275ed257f914b9fe7416e9f78cd1a282",
+      "assets/fonts/noticia-text-400-latin.woff2": "sha256:db18648d1577fca7d25d705f01846231850c5f58fb3aae7785bc0d3f92b83f5c",
+      "assets/fonts/noticia-text-400-vietnamese.woff2": "sha256:d2ee1d35a8bf6c5867878a00c15eaea19b725c156fb4e8bf1d73e1495348ec37",
+      "assets/fonts/noticia-text-400i-latin-ext.woff2": "sha256:a5d8e52dbdc63b87a5d5d1eb3fb4e31608810af8220cbc994560638d43baa17d",
+      "assets/fonts/noticia-text-400i-latin.woff2": "sha256:8ebbf34712672360f3360e0c4d6e48052c635a764c1a69326d2ff8068632e45f",
+      "assets/fonts/noticia-text-400i-vietnamese.woff2": "sha256:cb79becee2b331f1eaffd42762b2bf4611794b662853951970ad6553e0f25656",
+      "assets/fonts/noticia-text-700-latin-ext.woff2": "sha256:f83f7170db087a6fa6dbf166b0786409e2776e4649f1faaf2d7b5217e5ab1753",
+      "assets/fonts/noticia-text-700-latin.woff2": "sha256:5bf76ecccc582b81937fa190e453f99ffc61e7b1f4ffb150e2f848699f6ffb44",
+      "assets/fonts/noticia-text-700-vietnamese.woff2": "sha256:79adf8989f5ecd0fffb8f3fe2a89163ce963ab0950295568f2e5d76dd5f938a2",
+      "assets/fonts/noticia-text-700i-latin-ext.woff2": "sha256:7ba60ab6b4e30a2415677998c667c79a7075eebd0c6674f0034cbc442f1e231b",
+      "assets/fonts/noticia-text-700i-latin.woff2": "sha256:62964e737bd440f906a8d8d58f48d03fc0ef32aca9b9736c02cf9d5997407c18",
+      "assets/fonts/noticia-text-700i-vietnamese.woff2": "sha256:36c4805f69fe85aa79ce8b10c623f595821a45f4426dfd3356eea899117c3322",
+      "assets/fonts/OFL.txt": "sha256:ec29551d8a14af56cb3a6fcf8256c558bf5e65c87044d822dd7865e88fa6e829",
+      "assets/fonts/roboto-mono-400-latin-ext.woff2": "sha256:2cb74c78294bf69bb4c40e56d703014eecb0776df9a23418be836392fc7fdf89",
+      "assets/fonts/roboto-mono-400-latin.woff2": "sha256:2ed6ac9efae6d21f51b2946176a0eef79a4043d643f9ac976e66d7fc4d57803a",
+      "assets/fonts/roboto-mono-400-vietnamese.woff2": "sha256:6f1e6273e1ac677732b6d7dcd785081b9d56b51411c44ab67364d0757b84ae6b",
+      "assets/fonts/roboto-mono-500-latin-ext.woff2": "sha256:2cb74c78294bf69bb4c40e56d703014eecb0776df9a23418be836392fc7fdf89",
+      "assets/fonts/roboto-mono-500-latin.woff2": "sha256:2ed6ac9efae6d21f51b2946176a0eef79a4043d643f9ac976e66d7fc4d57803a",
+      "assets/fonts/roboto-mono-500-vietnamese.woff2": "sha256:6f1e6273e1ac677732b6d7dcd785081b9d56b51411c44ab67364d0757b84ae6b",
+      "assets/fonts/roboto-mono-700-latin-ext.woff2": "sha256:2cb74c78294bf69bb4c40e56d703014eecb0776df9a23418be836392fc7fdf89",
+      "assets/fonts/roboto-mono-700-latin.woff2": "sha256:2ed6ac9efae6d21f51b2946176a0eef79a4043d643f9ac976e66d7fc4d57803a",
+      "assets/fonts/roboto-mono-700-vietnamese.woff2": "sha256:6f1e6273e1ac677732b6d7dcd785081b9d56b51411c44ab67364d0757b84ae6b",
+      "assets/fonts/saira-extra-condensed-300-latin-ext.woff2": "sha256:89d7444cfb6d2f249693df548819adc5c08fd23582a830b3bb5f776d7079b6c4",
+      "assets/fonts/saira-extra-condensed-300-latin.woff2": "sha256:89fab9adf362b66581f68752a83062e2647b3997f4b20c426ae5d450407063ef",
+      "assets/fonts/saira-extra-condensed-300-vietnamese.woff2": "sha256:990c52064504122f94953ee9153d65990d47239c2517fc721f1b510a770c81df",
+      "assets/fonts/saira-extra-condensed-400-latin-ext.woff2": "sha256:930556428740985bff22dfd68ea92502b8413b9b61eae81951f551874f6aa0ee",
+      "assets/fonts/saira-extra-condensed-400-latin.woff2": "sha256:df3d9b923c5ede15aacc955f97e44bbee646593cc27f2d420d82ea1f3ecbf0a2",
+      "assets/fonts/saira-extra-condensed-400-vietnamese.woff2": "sha256:a21892083b6846af1d24c3f71c14e1f4a8338d35f192d32108fe93396b947760",
+      "assets/fonts/saira-extra-condensed-500-latin-ext.woff2": "sha256:7988dfcb933152d6d94b969cf9b93f081c9449cee46f76b1ca4fff0cec8b6993",
+      "assets/fonts/saira-extra-condensed-500-latin.woff2": "sha256:f50d7887294ec8d5cd5a7274cc66aaf099a2933185286c469937006ead54f81b",
+      "assets/fonts/saira-extra-condensed-500-vietnamese.woff2": "sha256:94dd895f04b6f2ef93ebe1c167bd79a07d11ea858e49a9b3a2164d174fe0c2f1",
+      "assets/fonts/saira-extra-condensed-600-latin-ext.woff2": "sha256:a2ed47fccb207af942cc5725c7302cd0758eba2f7e7500e341c88578054b526c",
+      "assets/fonts/saira-extra-condensed-600-latin.woff2": "sha256:35f97654272a86c6c2c56afd48551e50981f417b4c5ca78250721174c0158c04",
+      "assets/fonts/saira-extra-condensed-600-vietnamese.woff2": "sha256:594b9004521e90f4020c65ddbf63170afb019ece521e0de83f62db1e976f0598",
+      "assets/fonts/saira-extra-condensed-700-latin-ext.woff2": "sha256:0cada9ed921214e75e15fbe4758300d2da640ac4741105bdfa72945ca0ea96c7",
+      "assets/fonts/saira-extra-condensed-700-latin.woff2": "sha256:8fb042d0e0bc38d2910fd226c82ef3fcf5c52e8e8c920ce8e39968c4a7704d46",
+      "assets/fonts/saira-extra-condensed-700-vietnamese.woff2": "sha256:0cb6e247177c7eaee8cb14c6b6e831f2d4a09fcad05a2fb33bf42ba7b997c31d",
+      "assets/fonts/teko-300-latin-ext.woff2": "sha256:2613e78c802bc151cd441fd3e2b68b686c178b734a79b4a1790d78be3282e256",
+      "assets/fonts/teko-300-latin.woff2": "sha256:58eb58732f86b38c8d7e3943eff11f189a4bc77094ee77a6c2040a99b6bd2a6a",
+      "assets/fonts/teko-400-latin-ext.woff2": "sha256:2613e78c802bc151cd441fd3e2b68b686c178b734a79b4a1790d78be3282e256",
+      "assets/fonts/teko-400-latin.woff2": "sha256:58eb58732f86b38c8d7e3943eff11f189a4bc77094ee77a6c2040a99b6bd2a6a",
+      "assets/fonts/teko-500-latin-ext.woff2": "sha256:2613e78c802bc151cd441fd3e2b68b686c178b734a79b4a1790d78be3282e256",
+      "assets/fonts/teko-500-latin.woff2": "sha256:58eb58732f86b38c8d7e3943eff11f189a4bc77094ee77a6c2040a99b6bd2a6a",
+      "assets/fonts/teko-700-latin-ext.woff2": "sha256:2613e78c802bc151cd441fd3e2b68b686c178b734a79b4a1790d78be3282e256",
+      "assets/fonts/teko-700-latin.woff2": "sha256:58eb58732f86b38c8d7e3943eff11f189a4bc77094ee77a6c2040a99b6bd2a6a",
+      "assets/img/arrow-up.gif": "sha256:3845efd3114c80c9b01bc0c1405ac77cec1496ac6170036252c6d203d9474381",
+      "assets/img/arrow.png": "sha256:898fe59385f697a261e556914e76bce41bc5c9582d22dbeb7446067b3791fc88",
+      "assets/img/decor.png": "sha256:0a80ddd437da7e3e88cfaae83ffe740f3981ab3ff52b23cc96dfb59472551196",
+      "assets/img/hero-placeholder.svg": "sha256:76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+      "assets/img/logo.png": "sha256:0b7ae443816e877c6c8c3b28797d71fbb855aaeddbc91751a6009abe2d32b92c",
+      "assets/img/masthead-default.jpg": "sha256:66d203711e83ff5fa6e884a06c67a9fbb304181777453e9ff1f9b3cde5cce5b4",
+      "assets/img/placeholder.svg": "sha256:d27d72e99e7f2bfe3152c3e477a57a6cd39434de2ef7e638354c3e6fea7a3541",
+      "assets/img/stars.png": "sha256:5a0e5eaf4f55f5be2713deee76d1850339feda209d564c5863fe7d4bb234447e",
+      "assets/img/subscribe-decor.png": "sha256:5d17eada5dd28ddd290e1e1ad2d92f2a4a0bccef71af3120f13bbc033057843a",
+      "assets/js/groups/about.js": "sha256:8eb2c826224347a6c594772726777d9e5806a2716bf9955c019394d6c7615b9f",
+      "assets/js/groups/account.js": "sha256:4adf47d79fbcc79a61088bf3dfef769f2187a583e023a81c4b449cfea3bd026f",
+      "assets/js/groups/blog.js": "sha256:8e0be32e7db91a9e1957dbc8c97b57278e51d05d5856d8a533dbf07bdd1ee5b3",
+      "assets/js/groups/home.js": "sha256:35955fd29c97787508f341c6f2de95d65ca4a8948a38bf5404f97b4cbd7b826b",
+      "assets/js/groups/menus.js": "sha256:c2e88de52b6c61649f48e7b64b41be56660b35582f31bcc2f2dc6bfc838d439f",
+      "assets/js/tracy-motion.js": "sha256:e0de98821c906566fe3cb2e4ba7d4203375f61e1061a869fe5b53c566a796c36",
+      "assets/js/tracy-preview.js": "sha256:174189d9b2412fe0b7a3f69dde16d901d43d24528b89d3bbad3c78adacb54eed",
+      "assets/js/tracy.js": "sha256:88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+      "assets/js/wp-ja-restaurant-dark.js": "sha256:a62f40664d5e3e46aa561d35b314eb43b9d9a721a3358388034935144b655f6e",
+      "assets/js/wp-ja-restaurant.js": "sha256:c3eb1f66b644a0779ff1282c623a328043319022912bd5c8c8909340dc7f20a9",
+      "functions.php": "sha256:083ca355d06cf8116701f9a1b773d846cc3afed58164513978a27351a5d77752",
+      "inc/asset-version.php": "sha256:3a714c4a5c7cc86565cbafdb063a68340b09c58045962b8751ef3ed66c415b1d",
+      "inc/brand-logo.php": "sha256:41f56347ead3a54e9b75a2a9869c96f61c80abacfb1a524f662e682b771730e9",
+      "inc/extra.php": "sha256:a079c1ebe68e8ce30b1a6fb63bc4c8522220e9e0ff3d52d451bfefeb9cd9aeab",
+      "inc/groups/account.php": "sha256:3788bad2cf1e3b8ddcdb8301a121a74963273a668d9ef66b0296b6228ace7f6b",
+      "inc/groups/blog.php": "sha256:6b64f3e0ce41906c02cc46dbb7e65d4a6e2a70c2df973fb396643cde105b3fde",
+      "inc/groups/chrome.php": "sha256:8dfc92845b9387a94be0de1fa2afe46b69490d77a8a09e8c253765a970224918",
+      "inc/groups/content.php": "sha256:c930bd8694fc98a4ac027a3f28c3f93ba0edb50ac48fe4809e52e5456c2eb791",
+      "inc/groups/g1.php": "sha256:c7e58ee369d9a21d94c1f8b269e9b5b83118a1c7d3bc7d05d0d15170993339a9",
+      "inc/groups/pages.php": "sha256:d0c335994939039d183bc963c4a2ed7ad20a7d4c4b2f2f163a4e6b1e03d050f6",
+      "inc/identity.php": "sha256:a2410a92e69f552087a0ebe5ef3eed7d7907a6dc83310b4e36303405fef315b9",
+      "inc/motion-head.php": "sha256:e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+      "inc/role-reads.php": "sha256:22b8e53eadd46c9d1eedb9d7a9b3839aa0f1182a661a4257c1f9f302744867a2",
+      "inc/update.php": "sha256:6dad5d010f5f782e6684346be7f15c30b93cd17e997c0cc1c270e054e5a5c76d",
+      "inc/variations.php": "sha256:54eee8dcec3f61fcaaffa3ecde6887b2b467cec816cce873f47aa4389d79a447",
+      "inspirations.json": "sha256:799ac52e74ee886125ecd2fc2849309d7f264c91a740fc16923a078f70d1af28",
+      "parts/footer.html": "sha256:6d0431594e1cf97c6b21c4512dc389e63ff97fc04c9660a4440173e32b7793e6",
+      "parts/header.html": "sha256:b3975c72efee9f71c446a8df4119ce69dc21ffde3c8a057a909d863f7c79fb61",
+      "parts/search-description.html": "sha256:97f1a65d6280d2ecd5bb32667a4292f047ea430ec469e82942940a18f5da1e81",
+      "parts/search-form.html": "sha256:b75f1277a0e21b953a4f1b25a7f00f1715e7321f2a5a9452f8152f50c0a90780",
+      "parts/sidebar.html": "sha256:5dc4083fd752d6dd5d083158c2cf514224af0e3e878ac652f1a59314cb5d12e5",
+      "patterns/account-login.php": "sha256:828c86effbd44953add36e2a85b918267cf4b1fc25eedc627a02e94089c81964",
+      "patterns/account-register.php": "sha256:553a64518825288f109250799a8b3345812b97a6f8675b37965381f9928d73ce",
+      "patterns/account-remind.php": "sha256:5f1f80e04c98186c40897c28bf4f779f994f0302f605f48aa351b1da318eb43d",
+      "patterns/account-reset.php": "sha256:3f964e796227550545d016e49039b6b2d9b1d1a589af980f36dbac08cd3d239e",
+      "patterns/acm-contact-map-default.php": "sha256:cf2ce94c8a86c7a043c209c22503ad9c76e9d900f56125d62b4c5343f6604842",
+      "patterns/acm-features-intro-style-1.php": "sha256:4587301585dd07e7516653755bc328719f8c3f4efe1cda2e910212ddabc49c72",
+      "patterns/acm-features-intro-style-2.php": "sha256:55ea2b70561ca6c849a6a76ceb4ebaf7014bc91c7568cdc71480a4ae96954b3b",
+      "patterns/acm-features-intro-style-3.php": "sha256:3c3e64de03972eba59f1395c2ebbbc218fc0ce8d0e6523fe50d72bbaae3b2414",
+      "patterns/acm-gallery-slide-default.php": "sha256:e4abcefcc8bf852f347ab66f697552321f83cc2cc0459bdb4be820006d061c1e",
+      "patterns/acm-happyhours-style-1.php": "sha256:f13da98d1740ab4ff30349c35cd0ddae36631bd6c50781ee8d00433f37b29c13",
+      "patterns/acm-happyhours-style-2.php": "sha256:4c36a1703e3107e4b77770303c1110ea6cb2b5a549e89f0f63b7e695a89f1029",
+      "patterns/acm-happyhours-style-3.php": "sha256:3277e9aacf0cf480ccec0965361f716a71346d0281847d1210d1e4f616a18f34",
+      "patterns/acm-hero-style-1.php": "sha256:137c15af6a7b465ae201437e807ff13e367472fcfc3b98b0c12d4080e06cfcfa",
+      "patterns/acm-home-news-default.php": "sha256:c77e0af2afcc2f9507e0ed6c5e628d50f9a6add734ec78762ef988a05881e9c0",
+      "patterns/acm-masthead-default.php": "sha256:5533b662736851793e3ca8a0fc6c8636641a2db4f5fbcb14dfd4c14417645955",
+      "patterns/acm-menu-style-1.php": "sha256:350bdd1765f45657204ea78fd9af03154fc1ec7f028166266e7cae072323745f",
+      "patterns/acm-menu-style-2.php": "sha256:081d2fa3ec8822319339da5206c8bb4d0fa5561c7a4939096fc652a8d09cfa8e",
+      "patterns/acm-menu-style-3.php": "sha256:d87412ddf9ee7c1739d6b747730fd4734908636662c337976ed804b342d6895e",
+      "patterns/acm-opentable-style-1.php": "sha256:0f1d83ab061bf8b93f34b558a2fe9cde2f68311da36168ac53f83f402a1472e2",
+      "patterns/acm-slideshow-style-owl.php": "sha256:469cac48d2f483f1f850fb66012940bf2d7d7c5ff72418e132532c7feb6d96ad",
+      "patterns/acm-statistics-style-1.php": "sha256:b8f53f64ca871bafcdfdb046ee60c7c764568debe66f9529b04a9938b2b52057",
+      "patterns/acm-subscribe-default.php": "sha256:fec0ff77d0061f9203cf5453a91adb0df305d1f4f6f95b5b21d9f803e5bdd13a",
+      "patterns/acm-tabs-style-1.php": "sha256:097da8db7fb0415d274be0221a7f8ea59d16473c73c35d932cd6fbc90124b2cd",
+      "patterns/acm-teams-style-1.php": "sha256:f7795d5e48f3bb130d837e07304833c9a9ff2df6b6e93bdb108d0ba2634de2ab",
+      "patterns/acm-text-banner-default.php": "sha256:fa74d868399197f8e5f77fb91b9ba2f729177ce46ec39b177679c1b5be1c976c",
+      "patterns/acm-timeline-style-1.php": "sha256:13c3a94b71e00617b86698c042be43d8d7487a08f97f55f85549a21d3226ae40",
+      "patterns/blog-banner.php": "sha256:f73d1a01c363fa7499875c6f0998f441f42dc222b16d167351361136577ef03f",
+      "patterns/blog-list.php": "sha256:6b19d240a113022da2b0a3405c3ea459d44bd534aacff642b929b9202cc49d38",
+      "patterns/cards.php": "sha256:b9cff6d1aebcff1665eb25508e27b38d9527e406740683b56035a715b57b3f85",
+      "patterns/contact-form.php": "sha256:3cfcc3cfc68757e930d749bb8f6be349777ea3d1d1e43b2d9f1c71651ebd0486",
+      "patterns/heading-blog.php": "sha256:f8e11f74c0316e7e377660ff8460d9afe1cb893040f4786674a0d4144351f219",
+      "patterns/heading-smart-search.php": "sha256:7d7789cef179289f7754aa3718607a649dce5ee8ae51c2718aba92c0b6a0d0b5",
+      "patterns/landing.php": "sha256:8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+      "patterns/part-404.php": "sha256:d3990529c8087acabea2b9a8d0dded54f565333b402684e6143a9e2e75de295d",
+      "patterns/part-search-description.php": "sha256:b6cdddbe891204e6dce901a94058ab4ad35ecc93dab186963a32f50e5457d311",
+      "patterns/part-search-form.php": "sha256:3c2a9025f97fd91a4bfe38abdd27364ecca9f6b9060d4f1bb9e466819c1dc0a9",
+      "patterns/part-sidebar.php": "sha256:0f3f02342d560173734d2f83c9d19561c350dc6c552e77187c906bde76dea7a3",
+      "patterns/pricing.php": "sha256:31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+      "patterns/section-contact.php": "sha256:60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+      "patterns/section-cta-final.php": "sha256:983be9cfac8ba3ac280d288748286bea9ea8adb292e118bacc1ade91d359c6cb",
+      "patterns/section-cta-inline.php": "sha256:462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+      "patterns/section-faq.php": "sha256:2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+      "patterns/section-features.php": "sha256:abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+      "patterns/section-gallery.php": "sha256:05eca35fed040a5da189dc458a03cd86a3c3000a50bc14ccc65f98e01976a0df",
+      "patterns/section-hero.php": "sha256:2b6d329d57d9f244e740dcf727d33c5b02a187c4fac52137aeb10760fe1a28be",
+      "patterns/section-how-it-works.php": "sha256:39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+      "patterns/section-listing.php": "sha256:1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+      "patterns/section-pillars.php": "sha256:dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+      "patterns/section-pricing.php": "sha256:54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+      "patterns/section-problem.php": "sha256:c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+      "patterns/section-proof.php": "sha256:2c92469b63fe5d91273f644d0265e0ea7e99ef41bb534e7077cdb35bdb0f7251",
+      "patterns/section-social-proof.php": "sha256:3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+      "patterns/section-styleguide.php": "sha256:036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+      "patterns/section-team.php": "sha256:539399cdefc0989bfdc07cc6ef300e1a632db5d1c40e067cfcae545adff68092",
+      "readme.txt": "sha256:03fbd02f95c08b2ad1f9ad5956567a66a9b4990f003aec846a4584799ffb33b3",
+      "screenshot.png": "sha256:f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+      "style.css": "sha256:41fc826be426a4e1008f9348922d174ae4d2659251016b98b361bc41a74201db",
+      "styles/wp-ja-restaurant.json": "sha256:9926e65066b8010afde65db8446630ba770f42b92325778f786c5bb98c6670fd",
+      "templates/404.html": "sha256:63358c96e72e98f222d157515228b768b897373fe234ac82322a4a8bcaff4b5b",
+      "templates/archive.html": "sha256:be4acce09f1de88f1c492d735cc346e1e1c89385004d61127e1b2904468d28ab",
+      "templates/artifact.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/category.html": "sha256:be4acce09f1de88f1c492d735cc346e1e1c89385004d61127e1b2904468d28ab",
+      "templates/fixture.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/front-page.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/home.html": "sha256:be4acce09f1de88f1c492d735cc346e1e1c89385004d61127e1b2904468d28ab",
+      "templates/index.html": "sha256:be4acce09f1de88f1c492d735cc346e1e1c89385004d61127e1b2904468d28ab",
+      "templates/landing.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-account.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/page-contact.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/page-landing.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/page-login.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/page-password.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/page-register.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/page.html": "sha256:61d5d9d90aa0bced690b6ab7bbddbf936c2010bbfbf300abf642d5666dfb2a33",
+      "templates/pricing.html": "sha256:4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+      "templates/search.html": "sha256:5f1f67a4738fe3e612ea5a670d0e500ba3267f99fbd43bbf9405bd478a6dcaab",
+      "templates/single-gallery.html": "sha256:bc178d34ab0469500bbbc455d10b4af2ba2e8ce469e57be4ad9bd89cd7ee531b",
+      "templates/single.html": "sha256:f4effc90e7405e2ed6cd66e9560b15f56f2085af1ef88b8f4cda5386041407ff",
+      "templates/tag.html": "sha256:be4acce09f1de88f1c492d735cc346e1e1c89385004d61127e1b2904468d28ab",
+      "theme.json": "sha256:5cdea9f73f5316421dfe99f8c78dfecdbfebe5b9b3efc3d4fdd5180b6077051b"
+    }
+  },
+  "spec": {
+    "dir": "spec",
+    "theme": {
+      "palette": {
+        "light": {
+          "primary": "#d24a24",
+          "secondary": "#ffd33d",
+          "body_bg": "#f4f2e7",
+          "text": "#3a352f"
+        },
+        "dark": null
+      },
+      "darkDerived": true,
+      "fonts": {
+        "body": "Noticia Text",
+        "heading": "Teko",
+        "ui": "Roboto Mono"
+      },
+      "hook": null
+    },
+    "routes": [
+      {
+        "path": "/",
+        "view": "front-page",
+        "title": "Read the latest News + Blog"
+      },
+      {
+        "path": "/404",
+        "view": "404",
+        "title": "Not found"
+      },
+      {
+        "path": "/about-us",
+        "view": "page",
+        "title": "About us"
+      },
+      {
+        "path": "/about-us/our-history",
+        "view": "page",
+        "title": "History"
+      },
+      {
+        "path": "/blog",
+        "view": "category",
+        "title": "Blog"
+      },
+      {
+        "path": "/contact/contact-us",
+        "view": "page-contact",
+        "title": "Contact Us"
+      },
+      {
+        "path": "/contact/phone-reservation",
+        "view": "page",
+        "title": "Phone Reservation"
+      },
+      {
+        "path": "/explore/bonus-pages/erro-page",
+        "view": "page",
+        "title": "404 page"
+      },
+      {
+        "path": "/explore/bonus-pages/offline-page",
+        "view": "page",
+        "title": "Offline page"
+      },
+      {
+        "path": "/explore/j-pages/all-categories",
+        "view": "page",
+        "title": "All Categories"
+      },
+      {
+        "path": "/explore/j-pages/category-blog",
+        "view": "page",
+        "title": "Typography"
+      },
+      {
+        "path": "/explore/j-pages/featured-articles",
+        "view": "page-landing",
+        "title": "Featured Articles"
+      },
+      {
+        "path": "/explore/j-pages/login",
+        "view": "page-login",
+        "title": "Login"
+      },
+      {
+        "path": "/explore/j-pages/registration",
+        "view": "page-register",
+        "title": "Registration"
+      },
+      {
+        "path": "/explore/j-pages/reminder",
+        "view": "page-password",
+        "title": "Reminder"
+      },
+      {
+        "path": "/explore/j-pages/reset-password",
+        "view": "page-password",
+        "title": "Reset Password"
+      },
+      {
+        "path": "/explore/j-pages/smart-search",
+        "view": "search",
+        "title": "Smart Search"
+      },
+      {
+        "path": "/explore/j-pages/tagged-items",
+        "view": "tag",
+        "title": "Tagged Items"
+      },
+      {
+        "path": "/explore/j-pages/user-profile",
+        "view": "page-account",
+        "title": "User Profile"
+      },
+      {
+        "path": "/explore/themes/blue-color",
+        "view": "page-landing",
+        "title": "Read the latest News + Blog"
+      },
+      {
+        "path": "/explore/themes/green-color",
+        "view": "page-landing",
+        "title": "Read the latest News + Blog"
+      },
+      {
+        "path": "/explore/themes/pink-color",
+        "view": "page-landing",
+        "title": "Read the latest News + Blog"
+      },
+      {
+        "path": "/explore/themes/purple-color",
+        "view": "page-landing",
+        "title": "Read the latest News + Blog"
+      },
+      {
+        "path": "/gallery",
+        "view": "category",
+        "title": "Gallery"
+      },
+      {
+        "path": "/gallery/18-sample-album-1",
+        "view": "single",
+        "title": "Sample Album 1"
+      },
+      {
+        "path": "/menu",
+        "view": "page",
+        "title": "About us"
+      },
+      {
+        "path": "/menu/2-column-menu",
+        "view": "page-landing",
+        "title": "2 Column Menu"
+      },
+      {
+        "path": "/menu/menu-with-image",
+        "view": "page-landing",
+        "title": "Menu with Image"
+      },
+      {
+        "path": "/menu/simple-menu",
+        "view": "page-landing",
+        "title": "Simple Menu"
+      },
+      {
+        "path": "/offers",
+        "view": "page-landing",
+        "title": "Offers"
+      },
+      {
+        "path": "/your-profile",
+        "view": "page-account",
+        "title": "Your Profile"
+      }
+    ],
+    "routesByView": {
+      "404": 1,
+      "category": 2,
+      "front-page": 1,
+      "page": 8,
+      "page-account": 2,
+      "page-contact": 1,
+      "page-landing": 9,
+      "page-login": 1,
+      "page-password": 2,
+      "page-register": 1,
+      "search": 1,
+      "single": 1,
+      "tag": 1
+    },
+    "gaps": 3,
+    "menus": [
+      {
+        "slug": "mainmenu",
+        "title": "mainmenu",
+        "items": 49
+      },
+      {
+        "slug": "usermenu",
+        "title": "usermenu",
+        "items": 5
+      }
+    ],
+    "redirects": 10,
+    "inputs": {
+      "page-map.json": "sha256:23918e39373e73ef760bc55a759e36a45cf93e3afe7e419c4478a19ef90e2d8f",
+      "menus.json": "sha256:b49da5c83be348c9b5e5fe1f048d59a6014d8a10cffef45a7826b4d892fa7d59",
+      "redirects.json": "sha256:848b65d2118d5855393ac3f01222b36629bc7afb406261698c6a637675a399bd"
+    }
+  },
+  "seed": {
+    "file": "seed-r13.json",
+    "startedAt": "2026-10-21T19:02:07.066Z",
+    "label": "at seed time, not live",
+    "counts": {
+      "authors": {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 1
+      },
+      "categories": {
+        "total": 7,
+        "created": 0,
+        "updated": 0,
+        "skipped": 7
+      },
+      "forms": {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 1
+      },
+      "navigation": {
+        "total": 2,
+        "created": 0,
+        "updated": 0,
+        "skipped": 2
+      },
+      "options": {
+        "total": 9,
+        "created": 0,
+        "updated": 0,
+        "skipped": 9
+      },
+      "pages": {
+        "total": 35,
+        "created": 0,
+        "updated": 0,
+        "skipped": 35
+      },
+      "posts": {
+        "total": 21,
+        "created": 0,
+        "updated": 0,
+        "skipped": 21
+      },
+      "templateParts": {
+        "total": 2,
+        "created": 0,
+        "updated": 0,
+        "skipped": 2
+      }
+    },
+    "navigation": [
+      "mainmenu",
+      "usermenu"
+    ],
+    "templateParts": [
+      "footer",
+      "header"
+    ],
+    "redirects": 11,
+    "sections": {
+      "total": 120,
+      "byKind": {
+        "acm": 118,
+        "html": 2
+      },
+      "byPattern": {
+        "wp-ja-restaurant/acm-contact-map-default": 1,
+        "wp-ja-restaurant/acm-features-intro-style-1": 5,
+        "wp-ja-restaurant/acm-features-intro-style-2": 5,
+        "wp-ja-restaurant/acm-features-intro-style-3": 1,
+        "wp-ja-restaurant/acm-gallery-slide-default": 5,
+        "wp-ja-restaurant/acm-happyhours-style-1": 1,
+        "wp-ja-restaurant/acm-happyhours-style-2": 1,
+        "wp-ja-restaurant/acm-happyhours-style-3": 1,
+        "wp-ja-restaurant/acm-hero-style-1": 5,
+        "wp-ja-restaurant/acm-home-news-default": 5,
+        "wp-ja-restaurant/acm-masthead-default": 21,
+        "wp-ja-restaurant/acm-menu-style-1": 17,
+        "wp-ja-restaurant/acm-menu-style-2": 2,
+        "wp-ja-restaurant/acm-menu-style-3": 2,
+        "wp-ja-restaurant/acm-opentable-style-1": 2,
+        "wp-ja-restaurant/acm-slideshow-style-owl": 6,
+        "wp-ja-restaurant/acm-statistics-style-1": 1,
+        "wp-ja-restaurant/acm-subscribe-default": 28,
+        "wp-ja-restaurant/acm-tabs-style-1": 6,
+        "wp-ja-restaurant/acm-teams-style-1": 1,
+        "wp-ja-restaurant/acm-text-banner-default": 1,
+        "wp-ja-restaurant/acm-timeline-style-1": 1
+      },
+      "pages": 28
+    },
+    "routes": {
+      "checked": 43,
+      "ok": 36
+    },
+    "media": {
+      "files": 69,
+      "imported": 0
+    },
+    "notes": [
+      "7 post(s) shared a post_date with another; each got one second in source order so date-sorted listings serve the same order on every request",
+      "no section of the spec draws a subscribe box (one email field and a Subscribe button); no newsletter form created — a sidebar calling [contact-form-7 title=\"Newsletter\"] prints \"Contact form not found\"",
+      "post authors: admin \"Admin\" [source joomla-user-42]",
+      "the source has no not-found page: draft \"page-not-found\" holds the page-map title \"Not found\" only — the source's other 404 words are not in the spec; write them in the admin",
+      "module mod_jamasthead has no block rendering; skipped",
+      "module mod_articles_popular has no block rendering; skipped",
+      "module mod_jamasthead has no block rendering; skipped",
+      "no pattern mapped for testimonials:style-1",
+      "module mod_articles_popular has no block rendering; skipped",
+      "module mod_jamasthead has no block rendering; skipped",
+      "module mod_articles_popular has no block rendering; skipped",
+      "no page with view home in the page-map; page_for_posts left unset",
+      "single view: redirected to article 18 (sample-album-1)",
+      "page #97 /homepage (publish, seeded by an earlier run) answers the path, so the redirect to / never runs (it fires on a 404 only); draft or trash the page, or drop the rule"
+    ],
+    "hash": "sha256:a3d2bda8b8901e65350500bc3ae2129d85f7971486f7a5c347a345592be404b0"
+  }
+}

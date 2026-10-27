@@ -1,0 +1,59 @@
+---
+/**
+ * PortableText with the theme's custom Bravada block types registered.
+ * Use this instead of importing PortableText directly on any surface
+ * that renders editor content, so sections carrying bravada.* blocks
+ * (hero sliders, icon blocks, boxes, text bands, portfolio grids,
+ * testimonials) render everywhere.
+ */
+import { PortableText } from "emdash/ui";
+import type { ComponentProps } from "astro/types";
+import Hero from "./blocks/Hero.astro";
+import FeatureBlocks from "./blocks/FeatureBlocks.astro";
+import Boxes from "./blocks/Boxes.astro";
+import TextBand from "./blocks/TextBand.astro";
+import Portfolio from "./blocks/Portfolio.astro";
+import Testimonials from "./blocks/Testimonials.astro";
+import WidgetPortfolio from "./blocks/WidgetPortfolio.astro";
+import ProductsWidget from "./blocks/ProductsWidget.astro";
+import PostsWidget from "./blocks/PostsWidget.astro";
+import TabsWidget from "./blocks/TabsWidget.astro";
+import SearchWidget from "./blocks/SearchWidget.astro";
+import ProjectFeatured from "./blocks/ProjectFeatured.astro";
+import ProjectGrid from "./blocks/ProjectGrid.astro";
+import ShopGrid from "./blocks/ShopGrid.astro";
+import ContactForm from "./blocks/ContactForm.astro";
+import Accordion from "./blocks/Accordion.astro";
+import Team from "./blocks/Team.astro";
+import MapBand from "./blocks/MapBand.astro";
+
+type Props = ComponentProps<typeof PortableText>;
+
+const { value, components } = Astro.props;
+
+const bravadaTypes = {
+	"bravada.hero": Hero,
+	"bravada.blocks": FeatureBlocks,
+	"bravada.boxes": Boxes,
+	"bravada.text": TextBand,
+	"bravada.portfolio": Portfolio,
+	"bravada.testimonials": Testimonials,
+	"bravada.widgetportfolio": WidgetPortfolio,
+	"bravada.products": ProductsWidget,
+	"bravada.postswidget": PostsWidget,
+	"bravada.tabswidget": TabsWidget,
+	"bravada.search": SearchWidget,
+	"bravada.projectfeatured": ProjectFeatured,
+	"bravada.projectgrid": ProjectGrid,
+	"bravada.shopgrid": ShopGrid,
+	"bravada.contactform": ContactForm,
+	"bravada.accordion": Accordion,
+	"bravada.team": Team,
+	"bravada.map": MapBand,
+};
+---
+
+<PortableText
+	value={value}
+	components={{ ...components, type: { ...bravadaTypes, ...components?.type } }}
+/>

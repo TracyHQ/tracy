@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1403-emdash-warm-tool",
+  "kind": "fix",
+  "title": "The EmDash MCP warm-up calls schema_list_collections (read-only, no argument), so it warms the road instead of failing input validation on every agent open",
+  "pr": 1403,
+  "area": "site-tools/prewarm",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Create an agent on an EmDash site whose browser said hello, with an exec that records its input.",
+    "S2: Read the tool's definition in the pinned EmDash tree (vendor/emdash/emdash/packages/core/src/mcp/server.ts)."
+  ],
+  "expect": [
+    "S1: one exec whose stdin is tools/call schema_list_collections with empty arguments.",
+    "S2: that tool's inputSchema is z.object({}) and it carries readOnlyHint: true."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/index.ts (EMDASH_WARM_TOOL, prewarm)"
+  },
+  "evidence": "Stand acceptance 16/10/2026 (deschaarem1610): every EmDash agent open logged 'pre-warm of the MCP road ... did not finish: emdash TOOL_FAILED'; content_list without collection answers 'Invalid arguments ... expected string, received undefined at collection'. schema_list_collections on the same site answered 200 in 1.5 s",
+  "fence": "The warm-up stays one read-only call with no argument; it never names a collection a site may not have",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/tools/tracy-site-tools/test/prewarm.test.mjs"],
+    "tests": [
+      "an EmDash agent also warms the site's MCP road",
+      "the MCP warm-up calls an EmDash tool whose input needs no argument"
+    ]
+  }
+}

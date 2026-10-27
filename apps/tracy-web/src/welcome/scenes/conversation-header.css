@@ -1,0 +1,29 @@
+/* Match the product's flexible site/model slots and fixed voice/menu controls. */
+.hs-win .welcome-conversation-header {
+  position: absolute; top: 10px; left: 12px; right: 12px; height: 32px;
+  display: flex; align-items: center; min-width: 0;
+}
+.hs-win .welcome-conversation-header .hs3-sitebtn {
+  position: static; flex: 0 1 auto; min-width: 0; max-width: calc(100% - 134px);
+}
+.hs-win .welcome-site-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hs-win .welcome-conversation-header .hs3-sitebtn svg { flex: none; }
+.hs-win .welcome-conversation-header .hs3-hdr-tools {
+  position: static; flex: 1 0 134px; min-width: 0; height: 32px; gap: 8px;
+}
+.hs-win .welcome-conversation-header .hs3-chip {
+  flex: 1 1 auto; min-width: 32px; width: auto; height: 22px; margin: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hs-win .welcome-conversation-header .hs3-voice {
+  flex: 0 0 50px; width: 50px; margin: 0;
+}
+.hs-win .welcome-conversation-header .hs3-hdr-more {
+  flex: 0 0 36px; margin: 0;
+}
+.hs-win .welcome-captured-header-slot { display: none; }
+.hs-win .welcome-conversation-header.is-captured .hs3-hdr-tools { display: flex; }
+.hs-win .hs3-tab img { flex: 0 0 14px; object-fit: contain; }
+.hs-win .welcome-site-favicon {
+  display: block; flex: 0 0 14px; width: 14px; height: 14px; object-fit: contain;
+}

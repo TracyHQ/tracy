@@ -1,0 +1,58 @@
+{
+  "id": "QA-UNIT-REG-PR-1054-viewer-live-role-happy",
+  "itemIds": ["regression:REG-PR-1054-viewer-live-role"],
+  "requirement": "A Viewer promoted to Editor (or an Editor demoted to Viewer) sees the page follow the new role without a reload: viewer attribute, bar and notice",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1054-viewer-live-role.json",
+    "ref": "PR #1054 (fix); fix evidence: none recorded",
+    "invariant": "0 failures. Every test named in run.tests reports ok: the role store re-reads on the team-changed event and on coming back into sight, a new role reaches every listener, an older answer never overwrites a newer one, the <html> viewer attribute follows the role both ways, and a promotion shows the notice.",
+    "productSources": ["packages/ui/tracy-chat-input/src/client/seat-role.mjs:330"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "refresh reads the door again with refresh, and a new role tells every listener",
+    "only the newest read writes: an older answer arriving last is dropped",
+    "the page reads the role again on the book-changed event and on coming back into sight",
+    "the viewer attribute on <html> follows the role both ways and goes on stop",
+    "the notice shows on a promotion, goes after its time, and goes at once on a demotion"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1054-viewer-live-role"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1054-viewer-live-role",
+    "pr": 1054,
+    "kind": "fix",
+    "area": "seats/roles",
+    "file": "tests/regression/cases/REG-PR-1054-viewer-live-role.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-chat-input/test/seat-role-live.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "refresh reads the door again with refresh, and a new role tells every listener",
+    "only the newest read writes: an older answer arriving last is dropped",
+    "the page reads the role again on the book-changed event and on coming back into sight",
+    "the viewer attribute on <html> follows the role both ways and goes on stop",
+    "the notice shows on a promotion, goes after its time, and goes at once on a demotion"
+  ],
+  "timeoutS": 600
+}

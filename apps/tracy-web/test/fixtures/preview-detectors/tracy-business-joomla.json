@@ -1,0 +1,802 @@
+{
+  "about": "Probe data cut from real Add site previews of Tracy Business Joomla (preview-check.mjs PREVIEW_DATA=1: the preview probe and the detectors' own probes on the plain and the worn page, scripts off as in the preview frame), kept to the boxes each test is about. Regenerate by re-running the probe; never edit values by hand.",
+  "hairlineGrid": {
+    "source": "tracy-business/j6@1.2.3 (https://business-joomla.tracy.site/), Add site preview under refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (refero Moxie), visitor scheme dark, page /en/services, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+    "systemColours": [
+      "#060605",
+      "#f4efd4",
+      "#000000",
+      "#93b6fb",
+      "#84acfb",
+      "#868474",
+      "#1a1a1a",
+      "#b7b39f",
+      "#858273",
+      "#7a786a",
+      "#9fbefc"
+    ],
+    "plain": {
+      "page": {
+        "r": 16,
+        "g": 18,
+        "b": 20,
+        "a": 1
+      },
+      "said": {
+        "--ds-c-bg": "",
+        "--ds-c-fg": "",
+        "--wp--preset--color--bg": "",
+        "color-scheme": "normal"
+      },
+      "width": 1440,
+      "height": 2890,
+      "blocks": [
+        {
+          "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/article:1/div:1/div:1/div:2/section:1/div:1/ul:1",
+          "at": "ul.tb-pg-services__grid",
+          "area": 986701,
+          "share": 0.2371,
+          "top": 725,
+          "bg": {
+            "r": 44,
+            "g": 48,
+            "b": 51,
+            "a": 1
+          },
+          "lines": true
+        }
+      ],
+      "texts": [],
+      "buttons": []
+    },
+    "worn": {
+      "page": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      },
+      "said": {
+        "--ds-c-bg": "#000000",
+        "--ds-c-fg": "#f4efd4",
+        "--wp--preset--color--bg": "",
+        "color-scheme": "dark"
+      },
+      "width": 1440,
+      "height": 2890,
+      "blocks": [
+        {
+          "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/article:1/div:1/div:1/div:2/section:1/div:1/ul:1",
+          "at": "ul.tb-pg-services__grid",
+          "area": 986701,
+          "share": 0.2371,
+          "top": 725,
+          "bg": {
+            "r": 244,
+            "g": 239,
+            "b": 212,
+            "a": 1
+          },
+          "lines": true
+        }
+      ],
+      "texts": [],
+      "buttons": []
+    }
+  },
+  "drawnButton": {
+    "broken": {
+      "source": "tracy-business/j6@1.2.3 (https://business-joomla.tracy.site/), Add site preview under refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (refero Moxie), visitor scheme dark, page /en/marketing-kit/slide, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1, before the contract painted the drawn call",
+      "systemColours": [
+        "#060605",
+        "#f4efd4",
+        "#000000",
+        "#93b6fb",
+        "#84acfb",
+        "#868474",
+        "#1a1a1a",
+        "#b7b39f",
+        "#858273",
+        "#7a786a",
+        "#9fbefc"
+      ],
+      "plain": {
+        "page": {
+          "r": 16,
+          "g": 18,
+          "b": 20,
+          "a": 1
+        },
+        "said": {
+          "--ds-c-bg": "",
+          "--ds-c-fg": "",
+          "--wp--preset--color--bg": "",
+          "color-scheme": "normal"
+        },
+        "width": 1440,
+        "height": 2735,
+        "blocks": [],
+        "texts": [],
+        "buttons": [
+          {
+            "path": "div:4/div:1/div:1/div:1/article:1/div:1/div:2/section:1/div:1/ol:1/li:8/a:1/div:1/span:1",
+            "at": "span.tb-kitslide__cta",
+            "text": "Request an estimate",
+            "fill": {
+              "r": 218,
+              "g": 90,
+              "b": 42,
+              "a": 1
+            },
+            "border": null,
+            "ground": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "worn": {
+        "page": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 1
+        },
+        "said": {
+          "--ds-c-bg": "#000000",
+          "--ds-c-fg": "#f4efd4",
+          "--wp--preset--color--bg": "",
+          "color-scheme": "dark"
+        },
+        "width": 1440,
+        "height": 2744,
+        "blocks": [],
+        "texts": [],
+        "buttons": [
+          {
+            "path": "div:4/div:1/div:1/div:1/article:1/div:1/div:2/section:1/div:1/ol:1/li:8/a:1/div:1/span:1",
+            "at": "span.tb-kitslide__cta",
+            "text": "Request an estimate",
+            "fill": {
+              "r": 147,
+              "g": 182,
+              "b": 251,
+              "a": 1
+            },
+            "border": null,
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    "clean": {
+      "source": "tracy-business/j6@1.2.3 (https://business-joomla.tracy.site/), Add site preview under refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (refero Moxie), visitor scheme dark, page /en/marketing-kit/slide, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1, after",
+      "systemColours": [
+        "#060605",
+        "#f4efd4",
+        "#000000",
+        "#93b6fb",
+        "#84acfb",
+        "#868474",
+        "#1a1a1a",
+        "#b7b39f",
+        "#858273",
+        "#7a786a",
+        "#9fbefc"
+      ],
+      "plain": {
+        "page": {
+          "r": 16,
+          "g": 18,
+          "b": 20,
+          "a": 1
+        },
+        "said": {
+          "--ds-c-bg": "",
+          "--ds-c-fg": "",
+          "--wp--preset--color--bg": "",
+          "color-scheme": "normal"
+        },
+        "width": 1440,
+        "height": 2735,
+        "blocks": [],
+        "texts": [],
+        "buttons": [
+          {
+            "path": "div:4/div:1/div:1/div:1/article:1/div:1/div:2/section:1/div:1/ol:1/li:8/a:1/div:1/span:1",
+            "at": "span.tb-kitslide__cta",
+            "text": "Request an estimate",
+            "fill": {
+              "r": 218,
+              "g": 90,
+              "b": 42,
+              "a": 1
+            },
+            "border": null,
+            "ground": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "worn": {
+        "page": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 1
+        },
+        "said": {
+          "--ds-c-bg": "#000000",
+          "--ds-c-fg": "#f4efd4",
+          "--wp--preset--color--bg": "",
+          "color-scheme": "dark"
+        },
+        "width": 1440,
+        "height": 2744,
+        "blocks": [],
+        "texts": [],
+        "buttons": [
+          {
+            "path": "div:4/div:1/div:1/div:1/article:1/div:1/div:2/section:1/div:1/ol:1/li:8/a:1/div:1/span:1",
+            "at": "span.tb-kitslide__cta",
+            "text": "Request an estimate",
+            "fill": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "border": null,
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "joined": {
+    "source": "tracy-business/j6@1.2.3 (https://business-joomla.tracy.site/), Add site preview under refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (refero Moxie), visitor scheme light, page /en/search, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+    "systemColours": [
+      "#eee9cf",
+      "#000000",
+      "#f4efd4",
+      "#4e6594",
+      "#5b76ac",
+      "#6786c4",
+      "#d2ceb6",
+      "#69665b",
+      "#eae5cc",
+      "#3d3c35",
+      "#5d5b51",
+      "#e3dfc5",
+      "#5e75a1",
+      "#4e6695"
+    ],
+    "plain": {
+      "button-role": {
+        "tokens": {
+          "radius": null,
+          "accent": null
+        },
+        "buttons": [
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/button:1",
+            "at": "button.tb-lang__toggle",
+            "text": "English\n▼",
+            "w": 86,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/button:1",
+            "at": "button.tb-theme-toggle",
+            "text": "Dark",
+            "w": 50,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:3/button:1",
+            "at": "button.tb-iconbtn.tb-header__search",
+            "text": "⚲",
+            "w": 38,
+            "h": 38,
+            "radius": 0,
+            "fill": null,
+            "border": {
+              "r": 220,
+              "g": 215,
+              "b": 204,
+              "a": 1
+            },
+            "ground": {
+              "r": 245,
+              "g": 243,
+              "b": 238,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/form:1/button:1",
+            "at": "button.tb-btn.tb-btn--ink.tb-searchbar__btn",
+            "text": "Search",
+            "w": 105,
+            "h": 47,
+            "radius": 0,
+            "fill": {
+              "r": 20,
+              "g": 23,
+              "b": 26,
+              "a": 1
+            },
+            "border": {
+              "r": 20,
+              "g": 23,
+              "b": 26,
+              "a": 1
+            },
+            "ground": {
+              "r": 245,
+              "g": 243,
+              "b": 238,
+              "a": 1
+            },
+            "field": {
+              "radius": 0,
+              "w": 535,
+              "h": 47
+            }
+          }
+        ]
+      },
+      "button-size": [
+        {
+          "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/button:1",
+          "at": "button.tb-lang__toggle",
+          "text": "English\n▼",
+          "w": 86,
+          "h": 15,
+          "padY": 0,
+          "padX": 0,
+          "lh": 15,
+          "font": 13,
+          "bw": 0,
+          "radius": 0
+        },
+        {
+          "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/button:1",
+          "at": "button.tb-theme-toggle",
+          "text": "Dark",
+          "w": 50,
+          "h": 15,
+          "padY": 0,
+          "padX": 0,
+          "lh": 15,
+          "font": 13,
+          "bw": 0,
+          "radius": 0
+        },
+        {
+          "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:3/button:1",
+          "at": "button.tb-iconbtn.tb-header__search",
+          "text": "⚲",
+          "w": 38,
+          "h": 38,
+          "padY": 0,
+          "padX": 0,
+          "lh": 15,
+          "font": 15,
+          "bw": 2,
+          "radius": 0
+        },
+        {
+          "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/form:1/button:1",
+          "at": "button.tb-btn.tb-btn--ink.tb-searchbar__btn",
+          "text": "Search",
+          "w": 105,
+          "h": 47,
+          "padY": 0,
+          "padX": 52,
+          "lh": 17,
+          "font": 16,
+          "bw": 2,
+          "radius": 0
+        }
+      ]
+    },
+    "worn": {
+      "button-role": {
+        "tokens": {
+          "radius": null,
+          "accent": {
+            "r": 103,
+            "g": 134,
+            "b": 196,
+            "a": 1
+          }
+        },
+        "buttons": [
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/button:1",
+            "at": "button.tb-lang__toggle",
+            "text": "English\n▼",
+            "w": 86,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 103,
+              "g": 134,
+              "b": 196,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/button:1",
+            "at": "button.tb-theme-toggle",
+            "text": "Dark",
+            "w": 49,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 103,
+              "g": 134,
+              "b": 196,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:3/button:1",
+            "at": "button.tb-iconbtn.tb-header__search",
+            "text": "⚲",
+            "w": 38,
+            "h": 38,
+            "radius": 1000,
+            "fill": null,
+            "border": {
+              "r": 210,
+              "g": 206,
+              "b": 182,
+              "a": 1
+            },
+            "ground": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/form:1/button:1",
+            "at": "button.tb-btn.tb-btn--ink.tb-searchbar__btn",
+            "text": "Search",
+            "w": 103,
+            "h": 47,
+            "radius": 0,
+            "fill": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "border": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "ground": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "field": {
+              "radius": 0,
+              "w": 537,
+              "h": 47
+            }
+          }
+        ]
+      },
+      "button-size": [
+        {
+          "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/button:1",
+          "at": "button.tb-lang__toggle",
+          "text": "English\n▼",
+          "w": 86,
+          "h": 15,
+          "padY": 0,
+          "padX": 0,
+          "lh": 15,
+          "font": 13,
+          "bw": 0,
+          "radius": 0
+        },
+        {
+          "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/button:1",
+          "at": "button.tb-theme-toggle",
+          "text": "Dark",
+          "w": 49,
+          "h": 15,
+          "padY": 0,
+          "padX": 0,
+          "lh": 15,
+          "font": 13,
+          "bw": 0,
+          "radius": 0
+        },
+        {
+          "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:3/button:1",
+          "at": "button.tb-iconbtn.tb-header__search",
+          "text": "⚲",
+          "w": 38,
+          "h": 38,
+          "padY": 0,
+          "padX": 0,
+          "lh": 15,
+          "font": 15,
+          "bw": 2,
+          "radius": 1000
+        },
+        {
+          "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/form:1/button:1",
+          "at": "button.tb-btn.tb-btn--ink.tb-searchbar__btn",
+          "text": "Search",
+          "w": 103,
+          "h": 47,
+          "padY": 0,
+          "padX": 52,
+          "lh": 17,
+          "font": 16,
+          "bw": 2,
+          "radius": 0
+        }
+      ]
+    }
+  },
+  "joinedAccent": {
+    "source": "tracy-business/j6@1.2.3 (https://business-joomla.tracy.site/), Add site preview under refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (refero Moxie), visitor scheme dark, page /en/investors, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+    "systemColours": [
+      "#060605",
+      "#f4efd4",
+      "#000000",
+      "#93b6fb",
+      "#84acfb",
+      "#868474",
+      "#1a1a1a",
+      "#b7b39f",
+      "#858273",
+      "#7a786a",
+      "#9fbefc"
+    ],
+    "plain": {
+      "button-role": {
+        "tokens": {
+          "radius": null,
+          "accent": null
+        },
+        "buttons": [
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/button:1",
+            "at": "button.tb-lang__toggle",
+            "text": "English\n▼",
+            "w": 86,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/button:1",
+            "at": "button.tb-theme-toggle",
+            "text": "Light",
+            "w": 52,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:3/button:1",
+            "at": "button.tb-iconbtn.tb-header__search",
+            "text": "⚲",
+            "w": 38,
+            "h": 38,
+            "radius": 0,
+            "fill": null,
+            "border": {
+              "r": 44,
+              "g": 48,
+              "b": 51,
+              "a": 1
+            },
+            "ground": {
+              "r": 21,
+              "g": 24,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/article:1/div:1/div:1/div:5/section:1/div:1/div:1/div:2/button:1",
+            "at": "button.tb-btn.tb-btn--forest.tb-pg-irc__btn",
+            "text": "Subscribe to disclosure alerts",
+            "w": 231,
+            "h": 56,
+            "radius": 0,
+            "fill": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            },
+            "border": {
+              "r": 20,
+              "g": 72,
+              "b": 58,
+              "a": 1
+            },
+            "ground": {
+              "r": 28,
+              "g": 32,
+              "b": 35,
+              "a": 1
+            },
+            "field": {
+              "radius": 0,
+              "w": 288,
+              "h": 56
+            }
+          }
+        ]
+      }
+    },
+    "worn": {
+      "button-role": {
+        "tokens": {
+          "radius": null,
+          "accent": {
+            "r": 132,
+            "g": 172,
+            "b": 251,
+            "a": 1
+          }
+        },
+        "buttons": [
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/button:1",
+            "at": "button.tb-lang__toggle",
+            "text": "English\n▼",
+            "w": 86,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/button:1",
+            "at": "button.tb-theme-toggle",
+            "text": "Light",
+            "w": 51,
+            "h": 15,
+            "radius": 0,
+            "fill": null,
+            "border": null,
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:3/button:1",
+            "at": "button.tb-iconbtn.tb-header__search",
+            "text": "⚲",
+            "w": 38,
+            "h": 38,
+            "radius": 1000,
+            "fill": null,
+            "border": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/article:1/div:1/div:1/div:5/section:1/div:1/div:1/div:2/button:1",
+            "at": "button.tb-btn.tb-btn--forest.tb-pg-irc__btn",
+            "text": "Subscribe to disclosure alerts",
+            "w": 234,
+            "h": 56,
+            "radius": 0,
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "border": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            },
+            "field": {
+              "radius": 0,
+              "w": 285,
+              "h": 56
+            }
+          }
+        ]
+      }
+    }
+  }
+}

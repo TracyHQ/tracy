@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.invite_cancelled-unsubscribe",
+  "itemIds": [
+    "letter:team.invite_cancelled:en",
+    "letter:team.invite_cancelled:vi",
+    "letter:team.invite_cancelled:de",
+    "letter:team.invite_cancelled:it",
+    "letter:team.invite_cancelled:fr",
+    "letter:team.invite_cancelled:nl",
+    "letter:team.invite_cancelled:zh",
+    "letter:team.invite_cancelled:es"
+  ],
+  "requirement": "team.invite_cancelled: carries a working one-click unsubscribe for its own group, none in the locked group",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#team.invite_cancelled:"],
+  "redProof": null,
+  "legacyIds": []
+}

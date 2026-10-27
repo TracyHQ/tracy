@@ -1,0 +1,8 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-gallery-white: #ffffff;
+
+  /* Typography */
+  --font-unica77-ll: 'Unica77 LL', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

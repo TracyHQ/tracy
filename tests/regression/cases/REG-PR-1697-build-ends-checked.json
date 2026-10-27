@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1697-build-ends-checked",
+  "kind": "fix",
+  "title": "A whole-site build that stops before any check is sent to check, a crop rounded to whole pixels is not refused, a turn reopened by a steer is not failed in the seconds it was closed, and a build skips the single-change visual check",
+  "pr": 1697,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: agentImageRecipe with the round-18 band rows (942x881 into 2000/800, 775x590 into 1800/900) and a bad strategy, a wrong output shape, an 8000 px output.",
+    "S2: checkAgainStep with no check in the log, one failed check, a passed one, five failed, a spent budget.",
+    "S3: a client-send turn closed completed with no passing check, read at once and then three minutes later.",
+    "S4: the shipped site-tools bundle: a conversation that answered tracy_demo stops its turn."
+  ],
+  "expect": [
+    "S1: outputs 942x377 and 775x388; each bad recipe names its own reason.",
+    "S2: no check steers 'No check has run … 5 checks remain'; one failed steers '4 of 5 checks remain'; the rest steer nothing.",
+    "S3: queued at once; failed AGENT_DEMO_ENDED_UNCHECKED three minutes later.",
+    "S4: no visual comparison is asked; the only steer is tracy-site-tools:check-again."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/agent-demo-image.js apps/tracy-web/src/opportunities-build/client-demo.js packages/tools/tracy-site-tools/src/host/site-context.mjs packages/tools/tracy-site-tools/src/host/index.ts",
+    "dom": ""
+  },
+  "fence": "shaped; STEER_GRACE_MS; checkFirstNext; isBuild",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-image.test.mjs",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs"
+    ],
+    "tests": [
+      "a crop brought down to whole pixels keeps its shape; what is still wrong is refused with its own why",
+      "a client-send turn that ends completed without a passing check fails the action instead of filling forever",
+      "checkAgainStep: a build ending before any check, or on a failed check with checks left, is steered on; a pass or a spent budget is not",
+      "🔒 a build is judged by its own checks: no comparison, and the only steer is to check"
+    ],
+    "needs": ["postgres"]
+  }
+}

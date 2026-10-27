@@ -1,0 +1,39 @@
+{
+  "id": "REG-044",
+  "kind": "fix",
+  "title": "The thread card of a comment Tracy resolved titles its Resolved pill \"Tracy marked this done\" (the Comments list's words); a person's resolve still reads \"Resolved by <name>\"",
+  "pr": 850,
+  "area": "comments/auto-resolve",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S0: Common setup (tests/regression/README.md). Site S = the WordPress test site (scv2wp.<stand domain>), P = its page origin as its comments carry it. Pick a published post id PID and its exact title T from the site's database (read only).",
+    "S1: api a POST /api/sites/$S/comments '{\"text\":\"[REG-044] tracy\",\"url\":\"$P/\",\"element\":null}' → keep comment.id as C. api a POST /api/sites/$S/requests '{\"sessionId\":\"reg044-<ms>\",\"requestId\":\"r-<ms>\",\"items\":[{\"url\":\"$P/\",\"element\":null,\"text\":\"\",\"commentId\":\"C\"}]}' → keep requests[0].n as N.",
+    "S2: api a POST /api/sites/$S/apply '{\"action\":\"content.update\",\"params\":{\"kind\":\"post\",\"id\":PID,\"fields\":{\"post_title\":\"T\"},\"apply_id\":\"reg044-<ms>\"},\"comment\":N}' (the title written back unchanged). api a GET /api/sites/$S/comments and read row C.",
+    "S3: api a POST /api/sites/$S/comments '{\"text\":\"[REG-044] person\",\"url\":\"$P/\",\"element\":null}' → keep its id as H; api a POST /api/sites/$S/comments/H/resolve.",
+    "S4: Browser as seat a: open $O/$S/?open=browser&page=/&mode=edit&comment=C; wait for [data-thread=\"C\"]; read the title attribute and text of [data-thread=\"C\"] [data-resolved-pill]. Then open $O/$S/?open=browser&page=/&mode=edit&comment=H; wait for [data-thread=\"H\"]; read the same of [data-thread=\"H\"] [data-resolved-pill].",
+    "S5: Clean up: api a POST /api/sites/$S/comments/clear '{\"ids\":[\"C\",\"H\"]}'."
+  ],
+  "expect": [
+    "S2: Apply answers ok:true; row C has status 'resolved' and resolvedByTracy true.",
+    "S4 (seat a in English): C's pill reads 'Resolved' with title 'Tracy marked this done' (never 'Resolved by Tracy'); H's pill reads 'Resolved' with title 'Resolved by <seat a's name>'. A seat in Vietnamese reads 'Tracy đã đánh dấu xong' on C."
+  ],
+  "selectors": {
+    "doors": "POST /api/sites/:key/apply (comment) · GET /api/sites/:key/comments (resolvedByTracy) · POST /api/sites/:key/comments/:id/resolve",
+    "card": "[data-thread=\"<id>\"] [data-resolved-pill] (title attribute)",
+    "test": "vendor/tracy/dsh-better-sidebar/tests/comment-people-layer.spec.tsx · tests/comment-api.spec.ts · tests/comment-store.spec.ts"
+  },
+  "evidence": "After PR #822 (ADR 0025) the Comments list tagged a comment Tracy resolved 'Tracy marked this done' while its thread card's pill still said 'Resolved by Tracy' (tasks/todo-comment-people.md, raised 04/10).",
+  "fence": "The card reads the server's resolvedByTracy; only that flag switches the pill's words, a person's resolve keeps 'Resolved by <name>'",
+  "run": {
+    "cmd": [
+      "node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "tests/regression/playwright.config.mjs",
+      "specs/REG-044-thread-card-tracy-marked-done.spec.mjs"
+    ],
+    "needs": ["stand", "chrome"]
+  }
+}

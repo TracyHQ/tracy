@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-electric-violet: #7270ff;
+  --color-signal-blue: #1560fb;
+  --color-deep-indigo: #2f2b4a;
+  --color-midnight-ink: #1c1a2c;
+  --color-slate: #4b5563;
+  --color-silver: #9ca3af;
+  --color-fog: #d9dbda;
+  --color-mist: #e5e7eb;
+  --color-paper: #ffffff;
+  --color-bone: #f9fafb;
+  --color-pebble: #f3f4f6;
+  --color-sunset-gradient: #facc15;
+  --gradient-sunset-gradient: linear-gradient(to right, #facc15, #f97316);
+  --color-bloom-gradient: #ec4899;
+  --gradient-bloom-gradient: linear-gradient(to right, #ec4899, #f87171);
+
+  /* Typography — Font Families */
+  --font-plus-jakarta-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-google-sans-code: 'Google Sans Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

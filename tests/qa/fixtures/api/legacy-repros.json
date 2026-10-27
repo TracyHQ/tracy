@@ -1,0 +1,20 @@
+{
+  "_comment": "Legacy audit repros that map to the api layer. tests/qa/inventory/legacy-map.json (W1) does not exist on this branch, so no legacyId is attached to any case. Each entry is an unresolved gap, never a converted case.",
+  "source": "qa-suite-plan/inputs/tch-qa-audit/qa-run/ledger-S1.md (shard S1: login, SSR pages, dsh gate, mail)",
+  "repros": [
+    {
+      "legacyId": "F-S1-002",
+      "status": "unresolved",
+      "reason": "OAuth callback failure answers raw JSON; the finding is a page-design complaint (SSR), no independent oracle for the expected status, and the legacy map is absent"
+    },
+    {
+      "legacyId": "F-S1-003",
+      "status": "unresolved",
+      "reason": "HOST_NOT_CONFIGURED 501 JSON on a site scope: a finding from source reading [S] with no spec text fixing the expected answer; runtime repro deferred in the ledger"
+    }
+  ],
+  "missing": [
+    "ledger-S2..S8 are not among the inputs listed for this task",
+    "tests/qa/inventory/legacy-map.json (W1)"
+  ]
+}

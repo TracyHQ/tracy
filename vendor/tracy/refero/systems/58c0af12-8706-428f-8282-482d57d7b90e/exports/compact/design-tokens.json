@@ -1,0 +1,54 @@
+{
+  "color": {
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary dark canvas — hero backgrounds, full-bleed section stages, base for the editorial atmosphere"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Inverse text on dark canvases, form field backgrounds, button text on filled dark elements"
+    },
+    "stone-taupe": {
+      "$value": "#a9a498",
+      "$type": "color",
+      "$description": "Stone Taupe — The system's sole warm chromatic note — muted link states, secondary surface tints, paper-like card backgrounds that soften the black-to-gray transitions"
+    },
+    "bone-cream": {
+      "$value": "#f4f5ef",
+      "$type": "color",
+      "$description": "Bone Cream — Warm off-white surface — secondary card and panel backgrounds, breaks the clinical feel of pure white and echoes the studio's paper-based brand collateral"
+    },
+    "mist-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Mist Gray — Hairline borders, dividers, list separators, subtle structural lines — the 999-occurrence border color that defines spatial relationships without visual weight"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Mid-tone text — secondary headings, supporting copy, metadata that needs presence without competing with primary type"
+    },
+    "forest-ink": {
+      "$value": "#4e5449",
+      "$type": "color",
+      "$description": "Forest Ink — Body text on light surfaces — a desaturated dark olive that reads warmer than pure black, the only hue-leaning neutral in the system"
+    }
+  },
+  "font": {
+    "scto-grotesk-a": {
+      "$value": "Scto Grotesk A",
+      "$type": "fontFamily",
+      "$description": "The sole typeface — a custom neo-grotesque used for everything from 70px display headlines down to 12px captions. Weight 300 carries display and large headings (a deliberate anti-convention choice — most agency sites use bold for impact; Josephmark whispers with light). Weight 400 for body, 500 reserved for emphasis and interactive elements. The consistent aggressive negative tracking (-0.019em to -0.035em) tightens the grotesque's natural apertures, creating a compressed, editorial density even at body sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://josephmark.studio",
+      "siteName": "Josephmark",
+      "extractedAt": "2026-06-03T21:41:07.149Z",
+      "variant": "compact"
+    }
+  }
+}

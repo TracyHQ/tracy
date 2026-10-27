@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1608-cowork-contracts-fetch",
+  "kind": "fix",
+  "title": "Tracy keeps working when the Joomla Claude Cowork release stops carrying contract profiles: the import puts the site's profile into the component from its release asset, and STAB-1 reads the index",
+  "pr": 1608,
+  "area": "import/joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-reporter=tap packages/site/tracy-add-site/test/slim-package.test.mjs packages/site/tracy-add-site/test/import-gates.test.mjs apps/tracy-web/test/template-customization-question-readiness-c.test.mjs scripts/test/pin-joomla-cowork.test.mjs"
+  ],
+  "expect": [
+    "S1: every named test reports ok; for a slim package (administrator/lib/contracts.json, no contract folder) the picked profile and the one it names are put into packages/com_claudecowork.zip under administrator/lib/contracts/<id>/ and the result reads back under Python zipfile and PHP ZipArchive; an asset whose sha256 or length differs from the index is dropped; an unreachable asset leaves the package as released and the install still ends ok; STAB-1 says carries for an indexed id and lacks for an absent one; pin-joomla-cowork checks a slim release's profiles from their assets and refuses a mismatch"
+  ],
+  "selectors": {
+    "host": "tracy-add-site joomla.ts installCowork contractsToKeep, slim-package.ts contractIndex indexedCandidates fetchContractAssets contractCandidates packageForImport",
+    "web": "readers/cowork-plugin-contracts.js pluginCarriesContract",
+    "script": "scripts/pin-joomla-cowork.mjs --assets"
+  },
+  "fence": "A Joomla import never leaves a quickstart site without its contract because the release stopped packing profiles, and never puts an asset that does not match the release's index into a customer's site",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/slim-package.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-c.test.mjs",
+      "scripts/test/pin-joomla-cowork.test.mjs"
+    ],
+    "tests": [
+      "a slim release: the version the site serves is fetched, checked and put in, with the one it names",
+      "a slim package with a contract put in unpacks under PHP ZipArchive, as Joomla installs it",
+      "a slim release: an asset whose sha256 or length does not match the index is dropped",
+      "a slim release: an asset that cannot be fetched leaves the package as released",
+      "a slim release: the contract the site serves is fetched beside the package and put in",
+      "a slim release whose asset cannot be fetched still installs, the package as released",
+      "STAB-1: a slim Joomla package carries the contracts its index lists, with no contract folder",
+      "STAB-1: a Joomla package carries the contract inside its component zip",
+      "a slim release: each recorded profile is checked from its own asset, then the pins move",
+      "a slim release whose asset is not what its index says, or lists no recorded profile, is refused",
+      "a quickstart site keeps the one contract its served files match, under a 2 MB limit",
+      "a slim index id or asset name that is not plain is ignored; an asset with a path in an entry is dropped"
+    ]
+  }
+}

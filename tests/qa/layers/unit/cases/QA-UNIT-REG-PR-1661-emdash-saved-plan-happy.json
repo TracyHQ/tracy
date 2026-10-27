@@ -1,0 +1,53 @@
+{
+  "id": "QA-UNIT-REG-PR-1661-emdash-saved-plan-happy",
+  "itemIds": ["regression:REG-PR-1661-emdash-saved-plan"],
+  "requirement": "tracy_emdash does not ask about a shared, site-wide write once the build's plan is saved; a delete and an unplanned write still ask",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1661-emdash-saved-plan.json",
+    "ref": "PR #1661 (fix); fix evidence: none recorded",
+    "invariant": "S1: CONFIRM_FIRST and nothing written; written once; CONFIRM_FIRST.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/src/host/call-memory.mjs:16",
+      "packages/tools/tracy-site-tools/src/host/emdash-call.mjs:938",
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:343",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:1229"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the model’s own update of the site entry asks first, naming every page; its yes opens it once"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1661-emdash-saved-plan"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1661-emdash-saved-plan",
+    "pr": 1661,
+    "kind": "fix",
+    "area": "site-tools/emdash",
+    "file": "tests/regression/cases/REG-PR-1661-emdash-saved-plan.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/emdash-call.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": ["the model’s own update of the site entry asks first, naming every page; its yes opens it once"],
+  "timeoutS": 600
+}

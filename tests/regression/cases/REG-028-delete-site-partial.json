@@ -1,0 +1,37 @@
+{
+  "id": "REG-028",
+  "kind": "fix",
+  "title": "My Sites delete: a teardown that left the host stack, repository, sessions or seats behind, or an answer nobody could read, is told in a notice instead of closing like a clean delete",
+  "pr": 828,
+  "area": "my-sites/delete",
+  "cms": ["any"],
+  "needs": ["viewport:360"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no real site. From the TCH checkout (dependencies installed, a Chrome or Playwright Chromium available) run, with <artifact-dir> an existing directory the run may write its fixture bundles to: env TRACY_TEST_ARTIFACT_DIR=<artifact-dir> node --test --test-concurrency=1 --test-timeout=120000 packages/site/tracy-my-sites/test/delete-response.test.mjs packages/site/tracy-my-sites/test/e2e/delete-result.test.mjs",
+    "S2: The browser suite bundles the real MySitesTab (fixture packages/site/tracy-my-sites/test/fixtures/delete-result-entry.tsx) and answers /api/sites, /api/team, /auth/me and DELETE /api/sites/<key> at the network with one injected answer per case: 200 {removed:true, host:false, hostReason}, 200 {removed:true, repo:'failed'}, repo false / 'kept', sessions:false + sessionsReason, seats:false, missing or mistyped parts, an empty / non-JSON / array / null body, removed:false, a dropped connection, HTTP 500 and 502, HTTP 403 / 429 / 404 refusals.",
+    "S3: It also unmounts the tab by hand before the DELETE answers (what dsh does when the deleted site is the one the page stands in), deletes the last listed site, presses Delete twice in one tick, and opens the notice at 360x640 in light and dark with a 5000-character reason.",
+    "S4: Read the node:test summary lines (pass / fail counts) and every failing test name."
+  ],
+  "expect": [
+    "S4: fail 0 in both files.",
+    "host:false or repo:'failed' with removed:true: [data-tracy-delete-result=\"partial\"] is shown, lists only the unconfirmed parts with the door's reason as text (or that none was reported), shows the site key, and offers exactly one action button, the acknowledgment 'Got it'; the dialog's Close control ([data-slot=\"dialog-close\"]) is a second way to acknowledge and is not an action; exactly one DELETE was sent.",
+    "repo false / 'kept' / true with every other part true: no [data-tracy-delete-result]; the delete dialog closes.",
+    "Unreadable success body, removed not true, dropped connection, HTTP 5xx: [data-tracy-delete-result=\"unknown\"]; the page never shows the 'Nothing was changed' sentence; no second DELETE.",
+    "HTTP 403 / 429 / 404: no notice; the delete dialog stays open with the refusal sentence in its [role=alert]; the row is still listed.",
+    "Deleting the page's own site with a partial or unknown result: 0 navigations until the notice is acknowledged, then exactly 1 (to /); with every part confirmed: 1 navigation and no notice.",
+    "Tab unmounted before the answer, and last listed site deleted: the notice is still in the document.",
+    "At 360px, light and dark: the notice and its Close are inside the viewport with a 16px gutter, nothing scrolls sideways, the acknowledge button can be scrolled to and pressed."
+  ],
+  "selectors": {
+    "notice": "[data-tracy-delete-result] (value: partial | unknown)",
+    "noticeHost": ".tms-delete-result-host",
+    "deleteGate": "#tracy-delete-name",
+    "refusal": "[role=dialog] [role=alert]",
+    "waitingCover": ".tms-deleting-cover",
+    "door": "DELETE /api/sites/<key> -> { removed, host, hostReason?, repo, sessions, sessionsReason?, seats }"
+  },
+  "evidence": "Issue #801 (source-confirmed, runtime deferred). Before the fix, on the unchanged client, 11 of the delete-result browser cases failed waiting for the notice (the dialog closed as on a clean delete); after the fix they pass. Client behaviour only, against injected answers: no real host teardown, GitHub delete or dsh workspace loss was exercised.",
+  "fence": "packages/site/tracy-my-sites/src/client/delete-response.ts (deleteOutcomeOf, readDeleteAnswer) and delete-result.tsx (showDeleteResult, mounted on document.body with its own root)",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-028.mjs"] }
+}

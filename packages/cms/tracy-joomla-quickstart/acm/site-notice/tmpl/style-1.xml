@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Site Notice Style 1</title>
+  <fields name="site-notice">
+    <fieldset name="content" label="TPL_TRACY_APPLE_ACM_NOTICE_CONTENT_LABEL">
+      <field
+        name="notice"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_NOTICE_TEXT_LABEL"
+        description="TPL_TRACY_APPLE_ACM_NOTICE_TEXT_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-manuscript-cream: #f9f9f7;
+  --color-press-black: #000000;
+  --color-sage-border: #d2ddd2;
+  --color-mist-green: #dee5dd;
+  --color-paper-shadow: #edf0e9;
+  --color-smoke: #c7c7c6;
+  --color-highlighter-lime: #edfe5e;
+  --color-cornflower-wash: #bed4fb;
+  --color-spring-green: #31e992;
+
+  /* Typography — Font Families */
+  --font-abcarizonasans: 'ABCArizonaSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcarizonaflare: 'ABCArizonaFlare', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abccameraheavy: 'ABCCameraHeavy', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcarizonamixvariable: 'ABCArizonaMixVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcarizonasansvariable: 'ABCArizonaSansVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcarizonatext: 'ABCArizonaText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcarizonamix: 'ABCArizonaMix', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

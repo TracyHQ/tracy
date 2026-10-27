@@ -1,0 +1,16 @@
+{
+  "name": "dsh-profile-desktop",
+  "private": true,
+  "dependencies": {},
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "@tracy/dsh-cowork-bundle"
+      ],
+      "patchReload": "live"
+    }
+  },
+  "description": "The profile installs NOTHING. Every package its bundles name is linked into `node_modules/` by `node scripts/materialize-profile.mjs`, from this repository's own workspace -- the same contract the image Dockerfile fills with COPY. A version range here would be a second source of truth for code that is already in the tree."
+}

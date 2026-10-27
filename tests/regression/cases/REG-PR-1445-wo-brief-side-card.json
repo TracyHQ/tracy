@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1445-wo-brief-side-card",
+  "kind": "feat",
+  "title": "Website Opportunities Details: a site brief opens in its own dsh side-card tab; Details lists every demo and the latest brief's status",
+  "pr": 1445,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (dependencies installed) run the client test file named in run.cmd.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "Demos list newest first, numbered by age, each with its CMS, template, state and the number of the brief it came from; a row without an id is dropped; none is an empty list. The brief status is the latest brief with whether the research still reads the same (true, false, or unknown kept as null); no brief, or one without an id, is nothing."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-website-opportunities/test/client-detail.test.mjs"
+    ],
+    "tests": [
+      "demoRows: every demo newest first, numbered by age, with its CMS, template, state and the brief it came from",
+      "briefStatus: the latest brief and whether the research still reads the same; nothing without a brief"
+    ]
+  },
+  "history": [
+    "24/10/2026: b87ed343b5 (23/10/2026) replaced the list of briefs (Open on every row, Build demo site on the newest) with a list of demos and the status of the latest brief; building goes through the demo action. briefRows and its test were replaced by demoRows and briefStatus. The side-card tab is still how a brief opens (detail.tsx openBriefTab) and is not exercised by a node test, as before."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "REG-057",
+  "kind": "fix",
+  "title": "An invite-only viewer lands on /new/ with the normal first screen and the Inbox open beside it: the invite card body is inert, Accept goes into the site; mail names a person by the local part",
+  "pr": 863,
+  "area": "inbox/onboarding",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, A, seat A's cookie COOKIE_A, api. Case variables: KEY = a site where seat A is Owner; C = a fresh address reg057-<unix seconds>@example.test.",
+    "Unit seams: node --test --test-reporter=tap packages/site/tracy-inbox/test/*.test.mjs apps/tracy-web/test/notification-mail.test.mjs apps/tracy-web/test/email-off.test.mjs",
+    "Invite: api a POST /api/team/invite '{\"role\":\"editor\",\"emails\":[\"<C>\"],\"siteKeys\":[\"<KEY>\"]}' -> record NOTIFIED = results[0].notified.",
+    "Mint C's cookie the way Common setup mints A's (mintSession with the stand's SESSION_SECRET; never print it) -> COOKIE_C.",
+    "Root door: curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -H 'Accept: text/html' -H \"Cookie: tracy_sess=$COOKIE_C\" $O/ -> record ROOT.",
+    "Browser: a NEW Playwright context {locale:'en-US', viewport:{width:1400,height:900}} with cookie tracy_sess = COOKIE_C. page.goto(O + '/'); wait (<= 90 s) for .tracy-inbox .tracy-inbox-row.is-card containing KEY. Record URL0 = page.url(), GREETING = count of .tv-start-title, WHOAMI = count of .tracy-inbox-whoami, ATTR = document.documentElement.hasAttribute('data-tracy-pending-invites'), CARD_ROLE = the role attribute of that card.",
+    "Click the card's .tracy-inbox-name, wait 1.5 s -> URL1 = page.url(). Then click the card's Accept button and wait (<= 60 s) for the URL to contain '/' + KEY + '/' -> URL2.",
+    "Clean up: api a GET /api/team -> in sites[] the entry whose siteKey is KEY, its seats[] row whose email is C -> its id; api a DELETE /api/sites/<KEY>/seats/<id> -> record CLEANUP = the status."
+  ],
+  "expect": [
+    "The unit seams exit 0 with '# fail 0'.",
+    "NOTIFIED === true.",
+    "ROOT === '302 /new/?tab=tracy:inbox' (tracy-web answers a root-relative location).",
+    "URL0 path starts with '/new/' (dsh then writes the session into the path) and its query has tab=tracy:inbox; GREETING === 1 (the normal first screen, decided 04/10 after #863); WHOAMI === 0; ATTR === false; CARD_ROLE === null.",
+    "URL1 === URL0 (pressing the invite card's body does nothing).",
+    "URL2 path starts with '/' + KEY + '/'.",
+    "CLEANUP === 200."
+  ],
+  "selectors": {
+    "card": ".tracy-inbox .tracy-inbox-row.is-card (no role on an open invitation)",
+    "greeting": ".tv-start-title (present: the normal first screen)",
+    "doors": "GET / (302 to /new/?tab=tracy:inbox when only invitations wait) · POST /api/team/invite · POST /api/sites/:key/accept"
+  },
+  "evidence": "On cowork.tracy.site 04/10: an invite-only sign-in landed on the 'An invitation is waiting' page with nothing to press but join links; pressing an invite card's body opened Team ('Could not read this site's team') and marked it read unanswered; the invite mail's title was a raw address Gmail turned into a link.",
+  "fence": "workspace/route.js redirects a signed-in viewer with no accepted seat and a pending invitation to /new/?tab=tracy:inbox, where the creation workspace shows its normal first screen beside the Inbox; pressableIn() leaves an open invitation's body inert; Accept marks the row read and lands in the site; shortName/personLine name a person by the local part when no display name exists.",
+  "run": {
+    "cmd": [
+      "node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "tests/regression/playwright.config.mjs",
+      "specs/REG-057-invite-only-lands-on-inbox.spec.mjs"
+    ],
+    "needs": ["stand", "chrome"]
+  }
+}

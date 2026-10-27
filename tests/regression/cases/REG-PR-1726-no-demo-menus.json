@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1726-no-demo-menus",
+  "kind": "fix",
+  "title": "No demo menus on a new JA Boxing site: the Pages branch leaves the navigation, footer # links relink or leave, generic menu labels are not renamed",
+  "pr": 1726,
+  "area": "quickstart/showcase-nav",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test scripts/test/build-joomla-showcase-nav.test.mjs (includes the JoomlArt sample-pages branch rule and the JA Boxing Pages branch).",
+    "S2: node --test apps/tracy-web/test/joomla-anchor-only-menu-items.test.mjs (bare # entries of non-main menus: relinked to the page of their name or unpublished).",
+    "S3: node --test packages/cms/tracy-seeder/test/nav-labels.test.mjs (generic English menu titles never reach the model; others carry nav generic/named).",
+    "S4: node scripts/build-joomla-showcase-nav.mjs --check."
+  ],
+  "expect": [
+    "S1-S3: every test passes.",
+    "S4: exit 0; ja-boxing/j6/1.0.4 hides 15 items (menuItem-152 to 166) with 0 unresolved."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.4/showcase-nav-map.json",
+    "functions": "scripts/lib/showcase-nav/rules.mjs classifyJoomla (hide.kit-branch); apps/tracy-web/src/sites/brief-engines/joomla-tidy.js anchorOnlyMenuItems; packages/cms/tracy-seeder/src/nav-labels.mjs isGenericNavLabel"
+  },
+  "evidence": "Dev site accept-boxing-104 (25/10/2026): PAGES dropdown with Login Form, Typography, Category Blog, Author listting...; 9 footer links to #; provision log 'showcase navigation: skipped — unsupported: This quickstart contract carries no showcase-navigation map'",
+  "fence": "Static map + pure functions; the plugin side (map shipped in the ja-boxing profile) is guarded by the claude-cowork test 'the newest profile carries showcase-nav-map.json'",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "scripts/test/build-joomla-showcase-nav.test.mjs",
+      "apps/tracy-web/test/joomla-anchor-only-menu-items.test.mjs",
+      "packages/cms/tracy-seeder/test/nav-labels.test.mjs"
+    ]
+  }
+}

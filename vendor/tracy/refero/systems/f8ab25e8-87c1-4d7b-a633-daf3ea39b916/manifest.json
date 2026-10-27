@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+  "status": "complete",
+  "name": "Concrete Club Studio",
+  "url": "https://styles.refero.design/style/f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+  "sourceWebsite": "https://concreteclub.studio",
+  "extractedAt": "2026-06-03T18:56:04.130Z",
+  "capturedAt": "2026-10-08T05:19:46.526998+00:00",
+  "theme": "mixed",
+  "industry": "agency",
+  "description": "sun-faded editorial zine on dusty rose paper — the layout is a printed page, not a screen",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b9c9466e-2c34-4945-a896-3e641465cb6a.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "024e06cb0572f0fc3cfcee419dce0a6c8151653ce1a82561a59be11c5911e400",
+      "bytes": 19231
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9035b49e8b710dfce61673b30b1806eb08dbb6181499ef303b7ed621fccf1713",
+      "bytes": 55375
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d5650679cedc8e69c870744f9c41cc907fb9cbb7fd1ec2d5075deae6ebf851c7",
+      "bytes": 16255
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "779261958a13d694c4ad053a91a62348ca6ee887296cdad03f653a7040d752ae",
+      "bytes": 7057
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e74098b8d4decc29449298cb3d85d49735a16be4bfc9ff668c1340fe45dc020b",
+      "bytes": 12516
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9a26e8793eb632fa09a2d53a45c5af2ec672e8595ca7906301b08bf4e617fc58",
+      "bytes": 3156
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5afb2927abfcc779f1ebb8bd7f1f305cc990390466b1100bbe766f88d65d250b",
+      "bytes": 640
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3b3b196f4f0b0473f35eeef7f82d29d2fc239ccfc6c5461b5ba98b7f7f1bc29c",
+      "bytes": 657
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7f62aebf57eb83f9676ce9e061c45e9f9e5e04092af8956ec1a2337bfbfa0b35",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cf8d28d9cda0492c88bba9306637c124fc51fbc5135c57af3eebf2397a4609c6",
+      "bytes": 38915
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a669cebb933880e55518af21d7d991951fb3336414da6e19a4b59a309ce5fb70",
+      "bytes": 20109
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "feeae0efb3d5fbda43b917cc48e09e5b038c929494dab1fbe1075cbe3c67435f",
+      "bytes": 27500
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2f79effbafd99d342cd6cd7592cd16156db3ab2bd27d4859c60b9e3c2ac39cf4",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1910f9988c6b0f251847cbb73071904fd47bfe5b99e1c2120bbe37b01f94b6e7",
+      "bytes": 1276
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1e59faf7cccef369adb16464be22858cc2abea77f4494bc3edaceae24c87bb90",
+      "bytes": 1702
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

@@ -1,0 +1,45 @@
+import { defineConfig } from "@lunariajs/core/config";
+
+import { Footer, StatusByFile, StatusByLocale } from "./i18n/components.js";
+import { SOURCE_LOCALE, TARGET_LOCALES } from "./packages/admin/src/locales/locales.js";
+
+export default defineConfig({
+	repository: {
+		name: "emdash-cms/emdash",
+		branch: "main",
+	},
+	sourceLocale: {
+		label: SOURCE_LOCALE.label,
+		lang: SOURCE_LOCALE.code,
+	},
+	// Lunaria requires a non-empty tuple; TARGET_LOCALES is authored with 10+ entries.
+	// eslint-disable-next-line typescript/no-unsafe-type-assertion -- non-empty by construction (see packages/admin/src/locales/locales.ts)
+	locales: TARGET_LOCALES.filter((l) => l.code !== "pseudo").map((l) => ({
+		label: l.label,
+		lang: l.code,
+	})) as [{ label: string; lang: string }, ...{ label: string; lang: string }[]],
+	files: [
+		{
+			include: ["packages/admin/src/locales/en/messages.po"],
+			pattern: "packages/admin/src/locales/@lang/messages.po",
+			type: "dictionary",
+		},
+	],
+	outDir: "./i18n/dist",
+	dashboard: {
+		title: "EmDash Translation Status",
+		description:
+			"Translation progress for the EmDash admin UI. See what needs translating and get involved.",
+		site: "https://i18n.emdashcms.com/",
+		customCss: ["./i18n/styles.css"],
+	},
+	renderer: {
+		slots: {
+			afterStatusByLocale: Footer,
+		},
+		overrides: {
+			statusByLocale: StatusByLocale,
+			statusByFile: StatusByFile,
+		},
+	},
+});

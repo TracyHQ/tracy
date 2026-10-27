@@ -1,0 +1,295 @@
+[
+  {
+    "assertionIds": [
+      "team-invite-accept#invite-accepted-by-door",
+      "team-invite-accept#seat-row-after-accept",
+      "team-invite-accept#seat-role-is-invited-role",
+      "team-invite-accept#no-seat-before-accept"
+    ],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-happy-invite-accept",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "site"],
+    "redProof": null,
+    "ref": "team-invite-accept",
+    "requirement": "Invite, accept, decline, revoke — invite accept (happy)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "team-invite-decline#decline-leaves-no-seat",
+      "team-invite-decline#declined-cannot-read-site"
+    ],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-happy-invite-decline",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "site"],
+    "redProof": null,
+    "ref": "team-invite-decline",
+    "requirement": "Invite, accept, decline, revoke — invite decline (happy)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["team-revoke#seat-row-gone-after-revoke", "team-revoke#revoked-door-refuses"],
+    "edgeTags": ["rollback"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-rollback-revoke",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "site"],
+    "redProof": null,
+    "ref": "team-revoke",
+    "requirement": "Invite, accept, decline, revoke — revoke (rollback)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "team-viewer-cannot-invite#viewer-invite-refused",
+      "team-viewer-cannot-invite#no-grant-row-from-viewer"
+    ],
+    "edgeTags": ["invalid"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-invalid-viewer-invites",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "site"],
+    "redProof": null,
+    "ref": "team-viewer-cannot-invite",
+    "requirement": "Invite, accept, decline, revoke — viewer invites (invalid)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "team-invalid-role#unknown-role-is-400",
+      "team-invalid-role#no-grant-row-for-unknown-role"
+    ],
+    "edgeTags": ["invalid"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-invalid-role-not-in-list",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "site"],
+    "redProof": null,
+    "ref": "team-invalid-role",
+    "requirement": "Invite, accept, decline, revoke — role not in list (invalid)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["team-accept-twice#one-seat-row-after-two-accepts"],
+    "edgeTags": ["repeat"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-repeat-accept-twice",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "site"],
+    "redProof": null,
+    "ref": "team-accept-twice",
+    "requirement": "Invite, accept, decline, revoke — accept twice (repeat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J6#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-happy-legacy-team",
+    "itemIds": ["flow:team-invite", "capability:team", "journey:J6"],
+    "kind": "legacy",
+    "legacyIds": ["J6"],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J6",
+    "requirement": "Invite, accept, decline, revoke — legacy team (happy) [journey J6: team: invite, role, remove]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["boundary"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-boundary-email-count",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "pendingReason": "not scripted: the limit must come from the spec, not from the code",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Invite, accept, decline, revoke — email count (boundary)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["double-submit"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-double-submit-invite-twice",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Invite, accept, decline, revoke — invite twice (double-submit)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["concurrent-seat"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-concurrent-seat-two-invites",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Invite, accept, decline, revoke — two invites (concurrent-seat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["seat"]
+    },
+    "id": "QA-FLOWS-team-invite-dependency-failure-mail-transport",
+    "itemIds": ["flow:team-invite", "capability:team"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "an invitation exists for the invited address only; accept makes the seat, decline and revoke leave none; a viewer cannot invite",
+      "ref": "seat book and ADR 0028: an Owner or an Editor invites, as Viewer or Editor; a Viewer invites nobody",
+      "source": "docs/adr/0001-seat-door-and-enforcement-boundary.md"
+    },
+    "pendingReason": "not scripted: belongs to the mail layer",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Invite, accept, decline, revoke — mail transport (dependency-failure)",
+    "targets": ["local"]
+  }
+]

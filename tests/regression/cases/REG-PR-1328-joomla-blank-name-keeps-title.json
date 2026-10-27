@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1328-joomla-blank-name-keeps-title",
+  "kind": "fix",
+  "title": "On Joomla a Name left blank keeps the home title the template ships, never one made from the site address",
+  "pr": 1328,
+  "area": "add-site/apply",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "With TEST_DATABASE_URL set as in the tracy-web suite, from apps/tracy-web run: node --test --test-reporter=tap test/brief-joomla.test.mjs",
+    "Read the ok/not ok line of each test named in run.tests, and the fail count."
+  ],
+  "expect": [
+    "'a Name left blank keeps the home entry title as the template ships it, whatever name stands in for it' is ok: with normalized.name 'Sqj2 03j P' and nameFrom 'label', the home entry 101 keeps page_title 'Starter Pro - Modern Joomla Template for Corporate & Business Sites' (was 'Sqj2 03j P').",
+    "\"a template's own title and description in its menu entries give way to the owner's name and words, in the tidy-up's transaction\" stays ok: a name the customer gave still titles the home.",
+    "Every other test of brief-joomla.test.mjs stays ok."
+  ],
+  "selectors": {
+    "name": "answeredName in apps/tracy-web/src/sites/brief-engines/shared.js, read by joomla.js (facts, category rename, menu judge, page titles)",
+    "titles": "pageMetaSteps in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js"
+  },
+  "evidence": "Local stand, develop with #1297, run j2 (14/10/2026): the partial set (About given, Name blank) titled the home page 'Sqj2 0Nj P' on JA Essence, JA Impact, JA Nova and JA Vega Joomla, while their no-answer sites kept the template title.",
+  "fence": "The real Joomla engine over a scratch Postgres schema with a fake site and model doubles. Not exercised: a running Joomla (the local-stand run after the rebuild).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/brief-joomla.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "needs": ["postgres"],
+    "tests": [
+      "a Name left blank keeps the home entry title as the template ships it, whatever name stands in for it",
+      "a template's own title and description in its menu entries give way to the owner's name and words, in the tidy-up's transaction"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+meta {
+  name: not modified
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "view": "pages", "ifVersion": "{{version}}" }
+  }
+}
+
+docs {
+  # Has anything changed since the version I hold?
+
+  Sends the `version` "view pages" answered (run it first). When the site is unchanged the
+  answer is small: `{"notModified": true, "version": "cv1.…"}`. When something changed, the
+  full pages document comes back with a new `version`.
+
+  Look for: `notModified: true` right after "view pages"; edit a page in the CMS and send
+  again to see the full answer return.
+}

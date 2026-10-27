@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><title>Social Links</title><fields name="social-links"><fieldset name="content" label="Social links">
+<field name="heading" type="text" label="Heading" default="Find us online" />
+<field name="handle" type="text" label="Demo account handle" default="@tracyappledemo" />
+</fieldset><fieldset name="socials" label="Networks" multiple="1"><field name="platform" type="list" label="Platform"><option value="linkedin">LinkedIn</option><option value="instagram">Instagram</option><option value="facebook">Facebook</option><option value="tiktok">TikTok</option><option value="youtube">YouTube</option></field><field name="social-url" type="url" label="Profile URL" /></fieldset></fields></form>

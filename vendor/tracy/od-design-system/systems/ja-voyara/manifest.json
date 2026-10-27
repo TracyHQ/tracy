@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "ja-voyara",
+  "name": "JA Voyara",
+  "category": "Media & Consumer",
+  "description": "Warm editorial travel system: cream canvas under white cards and a warm sand band, one terracotta accent for action with a deep teal secondary, serif display over sans body, monospace eyebrows, pill buttons and an 88px section rhythm.",
+  "source": {
+    "type": "bundled",
+    "origin": "Read from the ja_voyara Joomla template source (JoomlArt, T4 framework): the --voy-* token set in scss/_voyara.scss and its dark remap in css/darkmode.css, via the template's docs/design-inspiration.md token map"
+  },
+  "files": {
+    "design": "DESIGN.md",
+    "tokens": "tokens.css",
+    "components": "components.html"
+  },
+  "importMode": "normalized",
+  "craft": {
+    "applies": [],
+    "suggested": [
+      "color",
+      "accessibility-baseline"
+    ],
+    "exemptions": []
+  },
+  "preview": {
+    "dir": "preview",
+    "pages": [
+      {
+        "path": "preview/colors.html",
+        "role": "colors",
+        "title": "Colors"
+      },
+      {
+        "path": "preview/typography.html",
+        "role": "typography",
+        "title": "Typography"
+      },
+      {
+        "path": "preview/spacing.html",
+        "role": "spacing",
+        "title": "Spacing"
+      }
+    ]
+  }
+}

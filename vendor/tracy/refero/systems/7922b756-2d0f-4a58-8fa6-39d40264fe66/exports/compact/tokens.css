@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-ink-black: #080808;
+  --color-true-black: #000000;
+  --color-mist-gray: #dadada;
+  --color-signal-red: #c80000;
+
+  /* Typography — Font Families */
+  --font-suisseintl: 'SuisseIntl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

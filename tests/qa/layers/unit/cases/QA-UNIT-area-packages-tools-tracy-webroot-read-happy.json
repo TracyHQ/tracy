@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-area-packages-tools-tracy-webroot-read-happy",
+  "itemIds": ["test-area:packages/tools/tracy-webroot-read"],
+  "requirement": "Every existing node:test file of packages/tools/tracy-webroot-read (2 files, via test:workers) passes with none skipped.",
+  "oracle": {
+    "source": "existing node:test suites of the area",
+    "ref": "scripts/check-tests.ts GROUPS test:workers; packages/tools/tracy-webroot-read",
+    "invariant": "The suite is green with no skipped, todo or missing test; its pass says nothing about RED until a regression case proves one.",
+    "productSources": [
+      "packages/tools/tracy-webroot-read/index.js:261",
+      "packages/tools/tracy-webroot-read/src/webroot.mjs:53"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-webroot-read/src/webroot.mjs:134 open() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node"],
+  "assertionIds": ["unit.packages-tools-tracy-webroot-read.suite-green"],
+  "redProof": null,
+  "legacyIds": [],
+  "kind": "suite",
+  "area": "packages/tools/tracy-webroot-read",
+  "areas": ["packages/tools/tracy-webroot-read", "tracy-webroot-read", "suites"],
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "--test-force-exit",
+    "packages/tools/tracy-webroot-read/test/resolve-webroot.test.mjs",
+    "packages/tools/tracy-webroot-read/test/symlink-fence.test.mjs"
+  ],
+  "files": [
+    "packages/tools/tracy-webroot-read/test/resolve-webroot.test.mjs",
+    "packages/tools/tracy-webroot-read/test/symlink-fence.test.mjs"
+  ],
+  "timeoutS": 3600
+}

@@ -1,0 +1,42 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHeader from "../components/PageHeader.astro";
+---
+
+<Base title="Page not found" robots="noindex, follow" overHero>
+	<PageHeader
+		title="Not Found"
+		subtitle="Apologies, but the page you requested could not be found."
+		crumbs={[{ label: "Not Found" }]}
+		crumbSchema={false}
+	/>
+	<div class="not-found">
+		<p>Perhaps searching will help, or head back to the front page.</p>
+		<p class="not-found-actions">
+			<a href="/search" class="btn-cry btn-cry-secondary">Search</a>
+			<a href="/" class="btn-cry btn-cry-primary">Go back home</a>
+		</p>
+	</div>
+</Base>
+
+<style>
+	.not-found {
+		text-align: center;
+		padding: var(--spacing-24) var(--spacing-6);
+	}
+
+	.not-found-actions {
+		display: flex;
+		justify-content: center;
+		gap: 1.5em;
+	}
+
+	.not-found p {
+		color: var(--color-muted);
+		margin-bottom: var(--spacing-6);
+	}
+
+	.not-found a {
+		color: var(--color-text);
+	}
+</style>

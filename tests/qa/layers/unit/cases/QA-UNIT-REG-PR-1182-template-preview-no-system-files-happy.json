@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-1182-template-preview-no-system-files-happy",
+  "itemIds": ["regression:REG-PR-1182-template-preview-no-system-files"],
+  "requirement": "The preview dialog of a template card (JA Impact) asks for no design system file and no copy file under the template's id",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1182-template-preview-no-system-files.json",
+    "ref": "PR #1182 (fix); fix evidence: tasks/evidence/e2e-full-dev/2026-10-04/R-em/bugs/J16.1-J12-design-preview-prod-fetch.md",
+    "invariant": "S1: no request names /systems/ja-impact or /copy/ja-impact (before the fix: components.html, slots, copy, system/artifacts/landing.html, artifact-slots/landing — five 404s per open, reported by Chrome as CORS). S2: the design system's own components.html and copy are still asked for.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "sweep 9: a template card asks for no design system file and no copy file under its id",
+    "sweep 9: a design system card still asks for its own fixture, slots and copy"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1182-template-preview-no-system-files"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/design/tracy-design-inspiration", "tracy-design-inspiration"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1182-template-preview-no-system-files",
+    "pr": 1182,
+    "kind": "fix",
+    "area": "design-inspiration/preview-dialog",
+    "file": "tests/regression/cases/REG-PR-1182-template-preview-no-system-files.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "test/template-preview-requests.test.mjs"],
+  "cwd": "packages/design/tracy-design-inspiration",
+  "needs": [],
+  "tests": [
+    "sweep 9: a template card asks for no design system file and no copy file under its id",
+    "sweep 9: a design system card still asks for its own fixture, slots and copy"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,28 @@
+meta {
+  name: one record
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "id": "{{contentId}}" }
+  }
+}
+
+docs {
+  # One record, in full
+
+  Reads the record `contentId` names (set by "list pages" or "view pages"; run one of them
+  first). `id` reads one item and cannot be combined with `type`, `locale`, `limit` or `cursor`.
+
+  Look for: the record's fields, its blocks and `native`. Long block lists are paged with
+  `blocksCursor`; ask for one block with `blockId`.
+}

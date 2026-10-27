@@ -1,0 +1,58 @@
+{
+  "id": "QA-UNIT-REG-PR-1479-stopped-turn-notice-happy",
+  "itemIds": ["regression:REG-PR-1479-stopped-turn-notice"],
+  "requirement": "The turn after a stopped one is told, once and across a host restart, which writes landed and which are unknown",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1479-stopped-turn-notice.json",
+    "ref": "PR #1479 (fix); fix evidence: Review 19/10/2026: after Stop the log said 'tool call aborted' though the write could have landed; the next turn believed nothing changed",
+    "invariant": "S1: the next turn gets one notice naming it as landed; a later turn gets none. S2: named as unknown, never landed. S3: no notice.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:133",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "🔒 Q2: an EmDash write lands after Stop, the host restarts, and the next turn is told it landed — once",
+    "🔒 Q2: an Apply write whose answer was lost after Stop is named as unknown, never as landed",
+    "🔒 Q2: a turn that was not stopped reports nothing and adds no notice; a write Stop kept from being sent is not named"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1479-stopped-turn-notice"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1479-stopped-turn-notice",
+    "pr": 1479,
+    "kind": "fix",
+    "area": "site-changes/stop",
+    "file": "tests/regression/cases/REG-PR-1479-stopped-turn-notice.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/handler.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "🔒 Q2: an EmDash write lands after Stop, the host restarts, and the next turn is told it landed — once",
+    "🔒 Q2: an Apply write whose answer was lost after Stop is named as unknown, never as landed",
+    "🔒 Q2: a turn that was not stopped reports nothing and adds no notice; a write Stop kept from being sent is not named"
+  ],
+  "timeoutS": 600
+}

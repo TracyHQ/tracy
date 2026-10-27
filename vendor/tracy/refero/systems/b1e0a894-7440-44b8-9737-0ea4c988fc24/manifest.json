@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b1e0a894-7440-44b8-9737-0ea4c988fc24",
+  "status": "complete",
+  "name": "Prevalent",
+  "url": "https://styles.refero.design/style/b1e0a894-7440-44b8-9737-0ea4c988fc24",
+  "sourceWebsite": "https://prevalent.ai",
+  "extractedAt": "2026-06-03T21:39:59.568Z",
+  "capturedAt": "2026-10-08T05:16:20.773506+00:00",
+  "theme": "mixed",
+  "industry": "saas",
+  "description": "Editorial command observatory — serif intelligence briefings under a navy planetarium dome",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d2a77671-d25e-493e-a1ab-257ef91a5906.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/b97d4b8d-5c58-4e77-90fc-dce8b97c3c78.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/89ca0b44-5ed9-46d0-aab2-52ebd0299dd7.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c86dc0c9-d4cd-451f-b760-05fd5b7713d5.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/467a548b-6337-44ab-80b3-14727a68d063.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4d6f8aaa605d73672820f14712c8140da62201a715e2d463635f4434ef3b5a76",
+      "bytes": 19894
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8554f850295e0846c98bc79de1d3dfe63eb642a9e8b13de996ba8a57f886a31d",
+      "bytes": 198443
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7c5a551aa8df2cbdfbb9651408b0bcb1b878f59aafd90f7c39060b1619268deb",
+      "bytes": 16200
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "92e25ba2d802454ef6be6ec38ab7fbbfa729a4df55f58c8f521207bbdb55d2bc",
+      "bytes": 10083
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f660f5e87167ac00cda24ba3becfcdbae91f5d0bfc992a7f46167f259ade8cda",
+      "bytes": 12119
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "da69c066c4abb8e81323d8fb57a3babd22806f652dd447b267b62ba7de61d3a8",
+      "bytes": 2499
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "913d968a3465f5b1ab7ea8cb0bdf6e25de1d102eb92d3e41a2bc8efdef9de1c2",
+      "bytes": 503
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9bc3e9efd6feb7323a698ec7d1f846d4bfbf17b5075e78bc59599a5f60bd2d8e",
+      "bytes": 520
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4c6a70cf51e41e90bfeb77838b4b2cd0f130a512f707f88707ea679e430e7823",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6e8e2523a42efc1b5fe588d6077ee04e775d9b693efd638adfeea5098fddaae2",
+      "bytes": 43550
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d821a91819d25db8a9e17057c7c46570a3de98dc2aac59ef801206e57972e2b1",
+      "bytes": 23183
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "acc101cfbef9a940801c84699ed18a4ac423189d520d780e33283750ddeff31a",
+      "bytes": 45906
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ff9ad1fc15cfc87c47c73243aa341f5358b29858898db72c2f865f4626c93954",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e8896c5868fd7b18b85f774658de578e38a87db849ff9e5d75e34f550235cc00",
+      "bytes": 1659
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cdfc77c8db8a507c4d53d0fd2872290e311d5452b3e7c8b8846df5c388104394",
+      "bytes": 2159
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03b3d707-2a30-4f53-a524-347d1b70eb2c",
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "73cd9a6a-f861-4376-a3e1-e12f83c8960e",
+    "802bdc0e-ec2e-4d2d-bf5d-de98c0899f66",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "b1e0a894-7440-44b8-9737-0ea4c988fc24",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

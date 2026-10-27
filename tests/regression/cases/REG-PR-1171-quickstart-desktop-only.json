@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1171-quickstart-desktop-only",
+  "kind": "feat",
+  "title": "The web landing offers Tracy Desktop beside the zip; the app is sent to the waiting template",
+  "pr": 1171,
+  "area": "quickstarts/download",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-web/test/desktop-surface.test.mjs — the TracyCowork/<version> token is the only thing that reads as the app.",
+    "S2: run apps/tracy-web/test/quickstart-download.test.mjs — the door with a fake GitHub: any signed-in session, browser or app, streams the zip exactly as before #1171; no session is 401.",
+    "S3: run apps/tracy-web/test/template-intent.test.mjs — /new?template=<id> on the web (Build + Download, then the Tracy Desktop offer naming the account, the template left waiting with its platform) and in the app (Build + Download, no offer, the waiting row consumed); the root follows a waiting template in the app only.",
+    "S4: migration 091-desktop-intent-platform.sql is present; the download door reads no user agent."
+  ],
+  "expect": [
+    "S1: exit 0, 0 failures.",
+    "S2: exit 0, 0 failures (the Postgres case may be skipped without TEST_DATABASE_URL); the no-session-401 and signed-in-stream cases pass.",
+    "S3: exit 0, 0 failures, 0 skipped; the web-landing (zip then offer), no-zip, app-landing, root-in-app and root-on-web cases pass.",
+    "S4: apps/tracy-web/src/db/migrations/091-desktop-intent-platform.sql present; apps/tracy-web/src/quickstarts/download.js does not import lib/desktop-surface.js."
+  ],
+  "selectors": {
+    "doors": "GET /new?template=, GET /, GET /api/quickstarts/:template/:cms/quickstart.zip",
+    "tool": "tests/regression/scripts/REG-PR-1171-quickstart-desktop-only.mjs"
+  },
+  "fence": "The web and the app have the same features (11/10/2026): the download door serves every signed-in session and reads no user agent. The user-agent token never opens a sign-in, a seat, a profile or a model; it only decides the Tracy Desktop offer on the web landing and the handoff (web writes the waiting template, the app consumes it and its root follows it).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1171-quickstart-desktop-only.mjs"]
+  }
+}

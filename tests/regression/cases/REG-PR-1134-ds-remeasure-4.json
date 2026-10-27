@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1134-ds-remeasure-4",
+  "kind": "fix",
+  "title": "Fourteen JA Joomla slot contracts marked ready with older probes are measured again element by element: eleven failed (kept bands lost their text colour, white labels on light accents, literal dark text on a dark worn page, contrast kinds that sampled nothing), each is fixed in its contract and measures 12/12; three probe errors fixed",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{nova,phio,podcast,prodex,purity-iv,rent,resort,restaurant,resume,rights,sensei,seven,smallbiz,social-ii}.json through loadContract.",
+    "S3: node packages/design/tracy-ds-slot/scripts/ds-slot.mjs joomla <system> --template <contract> --out <file> for Resort (Moxie), Resume (Apple), Rights (MotherDuck), Sensei (Apple), Seven (Moxie, Apple), Smallbiz (MotherDuck), Social II (Toggl Track).",
+    "S4: stand.mjs up quickstart/ja-social-ii/j6 --version 1.0.2, flow.mjs baseline then Moxie, MotherDuck, Toggl Track and Apple, stand.mjs down.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-remeasure-4.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: each is ready, judges every heading and text element (contrast.heading 'body :is(h1, …)', contrast.text 'body :is(p, li, a, …)'), names tasks/evidence/ds-remeasure-4-2026-10-11 in its readyNote, and wears from the same release as before (JA Restaurant: 1.0.4, the tokenized build measured here, which develop names since TCH #1180).",
+    "S3: Resort's kept slider gives back #7b8383 and its card band #ffffff, its primary button follows inside the kept slider; Resume's header and contact band give back #333333; Rights' .text-danger is color-mix(var(--ds-c-danger) 75%, var(--ds-c-fg))!important under a light system; Sensei's topbar gives back #69747f; Seven's .btn-dark label is var(--ds-c-bg)!important and its .color-decor glow is tinted only under a dark system; Smallbiz's .features-item.bg-primary text is the accent's text colour; Social II's testimonial is var(--ds-c-fg)!important.",
+    "S4: 12/12; no text under 4.5:1 worse than the template's own; every contrast kind sampled in every view; kept bands 0 differences; at least half the page follows every system."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-*.json ready, readyNote, contrast, keepColors, keepText, keptButtons, followRules, sideRules, selectors.onAccent, minVersion",
+    "probe": "packages/design/tracy-ds-slot/scripts/flow.mjs contrastProbe (drawn, clippedAway), keptButtonProbe",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom; <style id=\"tracy-ds-slot\">"
+  },
+  "evidence": "tasks/evidence/ds-remeasure-4-2026-10-11/README.md — contract × before × after table, summary.json, report.md and desktop/phone montages of each final measure (11/10/2026).",
+  "fence": "S4 measures one of the fourteen end to end (JA Social II, which exercises kept bands, a !important follow rule and the clipped-label skip); the other thirteen are in the evidence. Judging by eye (logos, icons, glow) is in the evidence, not in a probe. The six contracts measured first (Nova to Rent) were measured before the last two probe fixes (a pseudo-element's percentage size, words clipped out of their box), which only remove false samples.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-remeasure-4.mjs"],
+    "needs": [],
+    "timeout_s": 3600
+  }
+}

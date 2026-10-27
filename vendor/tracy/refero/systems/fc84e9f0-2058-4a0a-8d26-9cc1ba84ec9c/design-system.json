@@ -1,0 +1,339 @@
+{
+  "dos": [
+    "Use Untitled Serif at weight 400 for all headings — never go bold; the serif's stroke contrast and -0.02em tracking carry the weight visually",
+    "Use ABC Diatype Mono for all body copy, buttons, nav labels, badges, and functional UI text — the monospace IS the brand voice",
+    "Set all button and tag border-radius to 100px or 9999px — pill shapes are the container language of this system",
+    "Use Parchment (#f6f3f1) as the page canvas — never substitute pure white (#ffffff); the warm tint is signature",
+    "Reserve Lake Blue (#2b59d1) exclusively for the single primary action per screen; all other buttons use Off-Black or ghost variants",
+    "Use 1px solid Ash (#cecac8) for all borders and dividers — avoid thicker weights or darker border colors",
+    "Apply uppercase + tight tracking to all nav labels, buttons, and tag text via the monospace family"
+  ],
+  "donts": [
+    "Never set headings in bold or 600+ weight — Untitled Serif headlines stay at 400 across all sizes",
+    "Never use pure white (#ffffff) as a page background — always use Parchment (#f6f3f1) to preserve the warm surface",
+    "Never use Lake Blue (#2b59d1) for anything other than the single primary action fill — it loses meaning if scattered",
+    "Never substitute a sans-serif for the monospace body font — the mono/serif pairing is the defining typographic gesture",
+    "Never apply drop shadows to cards — use 1px Ash borders and surface color contrast (Parchment → Periwinkle) for elevation instead",
+    "Never use corner radii below 16px on cards or below 100px on buttons — the system is pill-and-soft-rect, never sharp",
+    "Never introduce additional accent colors for UI elements — the pastel palette (Sky, Mint, Coral, Gold) is decorative-only and belongs in illustrations and gradient washes"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f6f3f1",
+      "name": "Parchment",
+      "role": "Page canvas and the majority of surface fills — this warm off-white IS the brand's signature surface, immediately distinguishing the site from pure-white SaaS templates",
+      "group": "brand"
+    },
+    {
+      "hex": "#2b59d1",
+      "name": "Lake Blue",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#cfdaf5",
+      "name": "Periwinkle Mist",
+      "role": "Muted UI surface for disabled controls, low-emphasis panels, and placeholder blocks.",
+      "group": "accent"
+    },
+    {
+      "hex": "#a0b5eb",
+      "name": "Sky Blue",
+      "role": "Decorative gradient stop — appears in atmospheric washes and the pipeline diagram's flow lines, never as a UI fill",
+      "group": "accent"
+    },
+    {
+      "hex": "#a7fccd",
+      "name": "Mint",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast.",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff9473",
+      "name": "Coral",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast.",
+      "group": "accent"
+    },
+    {
+      "hex": "#ecda98",
+      "name": "Gold",
+      "role": "Decorative gradient stop — warm accent in gradient washes, never used in functional UI",
+      "group": "accent"
+    },
+    {
+      "hex": "#f37a0a",
+      "name": "Crimson",
+      "role": "Decorative gradient stop — deep warm tone in gradient washes alongside gold and coral",
+      "group": "accent"
+    },
+    {
+      "hex": "#242424",
+      "name": "Off-Black",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Announcement bar surface and certain heading fills — the black band at the top of the page and select heading contexts",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4e4d4d",
+      "name": "Graphite",
+      "role": "Secondary text — body copy and sub-headings that need less weight than primary headlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#797776",
+      "name": "Smoke",
+      "role": "Muted helper text and tertiary links",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cecac8",
+      "name": "Ash",
+      "role": "Hairline borders — 1px solid lines separating sections, outlining pipeline diagram nodes, and defining card edges",
+      "group": "neutral"
+    }
+  ],
+  "imagery": "The visual language is dominated by a custom data pipeline diagram: pill-shaped bordered nodes connected by thin curved lines, with small icons inside each node representing data sources (Any Source, Cloud Logs, Vulnerabilities) and destinations (SIEM, Cloud Storage, Data Lake). The diagram uses a soft green radial glow at the center hub to suggest data normalization. Gradient atmospheric washes (Coral → Sky Blue, Sky Blue → Mint) with heavy blur filters create soft color halos behind hero and feature content. Partner logos appear desaturated in a single social-proof row. The 'In-flight Data Transforms' card features a large gradient illustration with overlapping translucent geometric shapes. No photography is used — the brand communicates through typography, diagram, and color wash alone.",
+  "similar": [
+    {
+      "why": "Shares the restrained monochrome palette and minimal-elevation card approach, though Monad's warm Parchment canvas and serif headlines set it apart from Linear's cooler white surface",
+      "business": "Linear"
+    },
+    {
+      "why": "Both use custom editorial serif typefaces for headlines with tight letter-spacing and -0.02em tracking, treating the homepage as a typographic composition rather than a product screenshot",
+      "business": "Stripe"
+    },
+    {
+      "why": "Shares the comfortable-density spacing, generous section gaps, and pill-shaped button language, though Monad adds the warm canvas and mono body twist",
+      "business": "Vercel"
+    },
+    {
+      "why": "Both target developer audiences with a monospace-leaning UI vocabulary and minimal decoration, but Monad layers in the editorial serif for a more literary feel",
+      "business": "Railway"
+    },
+    {
+      "why": "Both use warm off-white surfaces rather than pure white, and both treat the page as a designed editorial artifact rather than a typical SaaS template",
+      "business": "Arc Browser"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "40px",
+      "pills": "9999px",
+      "buttons": "100px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "40px",
+    "pageMaxWidth": "1432px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f6f3f1",
+      "name": "Parchment",
+      "level": 1,
+      "purpose": "Page canvas — the base warm off-white that fills the entire viewport"
+    },
+    {
+      "hex": "#cfdaf5",
+      "name": "Periwinkle Mist",
+      "level": 2,
+      "purpose": "Elevated card surface — the one colored card that breaks the monochrome to draw the eye"
+    },
+    {
+      "hex": "#242424",
+      "name": "Off-Black",
+      "level": 3,
+      "purpose": "Dark surface for secondary buttons and inverted UI contexts"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "level": 4,
+      "purpose": "Announcement bar — the darkest surface, used for the top notification strip"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 0px 10px 0px",
+      "element": "Subtle ambient elevation"
+    }
+  ],
+  "northStar": "editorial tech journal on warm parchment",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.35,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.35,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "label",
+      "size": 18,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1.35,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1.2,
+      "letterSpacing": -1.6
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page notification strip",
+      "description": "Full-width black (#000000) bar, ~40px tall, containing mono text in white (#f6f3f1) at 14px and a small white pill button (9999px radius, white border, 12px uppercase text) anchored right. Close icon (×) in white at far right."
+    },
+    {
+      "name": "Primary Pill Button (Blue)",
+      "role": "Primary conversion action",
+      "description": "Lake Blue (#2b59d1) fill, white text in ABC Diatype Mono at 14px uppercase, 100px border-radius, 16px 32px padding, with a trailing arrow (▸) glyph in white. Height ~48px. This is the only saturated fill in the system."
+    },
+    {
+      "name": "Primary Pill Button (Black)",
+      "role": "Secondary conversion action",
+      "description": "Off-Black (#242424) fill, white text in ABC Diatype Mono at 14px uppercase, 100px border-radius, 16px 32px padding, no arrow. Height ~48px."
+    },
+    {
+      "name": "Ghost Pill Button",
+      "role": "Tertiary navigation action",
+      "description": "Transparent fill, 1px Off-Black (#242424) border, Off-Black text in ABC Diatype Mono at 14px uppercase, 100px border-radius, 16px 32px padding. Height ~48px."
+    },
+    {
+      "name": "Text Link with Arrow",
+      "role": "Navigation link with directional indicator",
+      "description": "Transparent fill, Off-Black (#242424) text in ABC Diatype Mono at 14px, trailing rightward arrow (→) in Off-Black. No background or border. Uppercase tracking."
+    },
+    {
+      "name": "Pipeline Node Tag",
+      "role": "Labeled node in the data pipeline diagram",
+      "description": "Parchment (#f6f3f1) fill, 1px Ash (#cecac8) border, 9999px border-radius (full pill), small mono icon (12px) + 14px mono uppercase text, 12px 20px padding. Connected by thin curved Ash lines to adjacent nodes."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Product capability card with icon, title, description",
+      "description": "Transparent or Parchment fill, 1px Ash (#cecac8) border, 40px border-radius, 40px padding. Small mono icon (20px) in top-left at 16px padding offset. Title in Untitled Serif at 24px weight 400, Off-Black. Body in ABC Diatype Mono at 16px weight 400, Graphite (#4e4d4d). No shadow."
+    },
+    {
+      "name": "Elevated Feature Card (Periwinkle)",
+      "role": "Hero feature card with gradient illustration",
+      "description": "Periwinkle Mist (#cfdaf5) fill, 40px border-radius, 40px padding. Contains a large gradient illustration on the right side using Coral → Sky Blue → Mint washes. Title in Untitled Serif 24px, body in mono 16px. This is the one card that uses a colored surface to draw the eye."
+    },
+    {
+      "name": "FAQ Accordion Item",
+      "role": "Expandable question/answer row",
+      "description": "Full-width row, 40px vertical padding, 1px Ash (#cecac8) bottom border (no top border). Question text in Untitled Serif at 24px weight 400, Off-Black. Trailing chevron icon (↓) in Off-Black, 20px, right-aligned. No background fill change on hover."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof partner logo row",
+      "description": "Single horizontal row of 6-7 partner logos in grayscale (desaturated from original brand colors), evenly spaced with ~32px gaps, left-aligned within max-width container. No logo lockup borders or cards."
+    },
+    {
+      "name": "Gradient Atmospheric Wash",
+      "role": "Decorative background gradient blob",
+      "description": "Large blurred radial/linear gradient using Coral (#ff9473 80% opacity) → Sky Blue (#a0b5eb 80% opacity) or Sky Blue → Mint (#a7fccd), rendered with blur(50-75px) filter, positioned behind hero or feature content. Never sharp-edged, always softly diffused."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Transparent or Parchment background, logo on far left (monad wordmark + circular dot mark), 4-5 nav text links centered or left-grouped in ABC Diatype Mono 18px uppercase Off-Black, action buttons (Login ghost + Get a Demo blue pill) right-aligned. ~80px height, no visible border."
+    },
+    {
+      "name": "Hero Section",
+      "role": "First-screen headline and subtext",
+      "description": "Full-width Parchment background, centered content stack: Untitled Serif headline at 80px weight 400 Off-Black, monospace subtext at 20px Graphite (#4e4d4d) at 1.35 line-height, two pill buttons centered below. No background image — pure typographic hero."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body text, navigation, buttons, badges, tags, and ALL UI strings. The monospace choice across every functional element gives the interface its technical-manual character — body copy at 16-20px reads as data, not marketing. Nav labels and badges use 18px uppercase with tighter tracking; small print and meta text use 12px uppercase. Weight 500 is reserved for emphasized UI labels.",
+      "sizes": "12px, 14px, 16px, 18px, 20px, 28px",
+      "family": "ABC Diatype Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.0–1.35 (varies by size)",
+      "substitute": "JetBrains Mono, IBM Plex Mono, or Space Mono",
+      "letterSpacing": "-0.033em at 12px, -0.025em at 16px, -0.022em at 18px, -0.02em at 14px and 20px, -0.014em at 28px"
+    },
+    {
+      "role": "Display and heading type only — used at 80px (hero), 48px (section), 40px and 32px (sub-section), 24px (feature card titles). Weight is locked at 400 across all sizes; the serif's natural contrast and the -0.02em letter-spacing do the heavy lifting instead of bold weight. This is the editorial confidence signature: headlines whisper through typographic refinement rather than shout through weight.",
+      "sizes": "24px, 32px, 40px, 48px, 80px",
+      "family": "Untitled Serif",
+      "weight": "400",
+      "lineHeight": "1.2",
+      "substitute": "Times New Roman, Georgia, or any editorial serif with similar stroke contrast",
+      "letterSpacing": "-0.02em at all sizes (-1.6px at 80px, -0.96px at 48px, -0.8px at 40px, -0.64px at 32px, -0.48px at 24px)"
+    },
+    {
+      "role": "Untitled Sans — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "Untitled Sans",
+      "weight": "400",
+      "lineHeight": "1.35",
+      "letterSpacing": "-0.02"
+    }
+  ],
+  "description": "Monad renders its entire interface on a warm parchment canvas (#f6f3f1) that immediately separates it from the typical pure-white SaaS template. Headlines carry editorial weight in Untitled Serif at weight 400 — never bold — while every body, nav, and UI string runs in ABC Diatype Mono, giving the site the texture of a technical manual typeset for a literary magazine. A single vivid Lake Blue (#2b59d1) is the only chromatic accent for primary actions; everything else lives in a warm grayscale, so a periwinkle card surface (#cfdaf5) and soft pastel gradient washes (coral, sky, mint, gold) read as deliberate punctuation rather than noise. Components lean on hairline borders and 100px pill containers rather than shadows, and the rhythm stays calm and spacious with 40px card padding and generous vertical breathing room between sections.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #242424 (Off-Black)\n- background: #f6f3f1 (Parchment)\n- border: #cecac8 (Ash)\n- accent: #2b59d1 (Lake Blue)\n- primary action: no distinct CTA color\n\nExample Component Prompts:\n\n1. Create a hero section on Parchment (#f6f3f1) background. Centered headline in Untitled Serif at 80px weight 400, color #242424, letter-spacing -1.6px. Subtext below in ABC Diatype Mono at 20px weight 400, color #4e4d4d, line-height 1.35. Two centered pill buttons: primary Lake Blue (#2b59d1) with white text, and ghost (1px #242424 border, transparent fill, #242424 text), both 100px border-radius, 16px 32px padding, ABC Diatype Mono 14px uppercase.\n\n2. Create a feature card on Parchment background. 1px solid #cecac8 border, 40px border-radius, 40px padding. Small 20px mono icon top-left at #242424. Title in Untitled Serif 24px weight 400, #242424. Body in ABC Diatype Mono 16px weight 400, #4e4d4d. No shadow.\n\n3. Create a secondary pill button: Off-Black (#242424) fill, white text in ABC Diatype Mono 14px uppercase, 100px border-radius, 16px 32px padding, no arrow.\n\n4. Create an FAQ accordion row: full-width, 40px vertical padding, 1px solid #cecac8 bottom border only. Question in Untitled Serif 24px weight 400, #242424. Trailing down-chevron icon (↓) in #242424 at 20px, right-aligned. No background fill.\n\n5. Create a pipeline diagram node tag: Parchment (#f6f3f1) fill, 1px solid #cecac8 border, 9999px border-radius, 12px 20px padding. Small 12px icon + 14px text in ABC Diatype Mono uppercase, #242424."
+    },
+    {
+      "title": "Typography Pairing Philosophy",
+      "content": "The serif-mono pairing is the single most distinctive design choice in this system. Untitled Serif handles all hierarchical display text (headlines, section titles, feature card titles, FAQ questions) — it carries editorial authority through its stroke contrast and refined letterforms, not through weight (always 400). ABC Diatype Mono handles everything functional: body paragraphs, navigation, button labels, badges, tags, and inline UI text. This creates a consistent voice: the serif announces, the mono instructs. A page that swapped in a sans-serif for body would lose its identity immediately."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids prominent shadows. Elevation is communicated through surface color contrast (Parchment canvas → Periwinkle card) and 1px hairline borders rather than drop shadows. The single shadow pattern detected (rgba(0,0,0,0.1) at 0px 0px 10px 0px) is a barely-perceptible ambient glow, used sparingly. This keeps the interface feeling flat, editorial, and paper-like rather than skeuomorphic."
+}

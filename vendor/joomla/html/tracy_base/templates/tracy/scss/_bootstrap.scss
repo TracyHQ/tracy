@@ -1,0 +1,42 @@
+// scss-docs-start import-stack
+// Configuration
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/maps";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/utilities";
+
+// Layout & components
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/root";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/reboot";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/type";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/images";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/containers";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/grid";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/tables";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/forms";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/buttons";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/transitions";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/dropdown";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/button-group";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/nav";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/navbar";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/card";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/accordion";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/breadcrumb";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/pagination";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/badge";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/alert";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/progress";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/list-group";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/close";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/toasts";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/modal";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/tooltip";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/popover";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/carousel";
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/spinners";
+
+// Helpers
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/helpers";
+
+// Utilities
+@import "../../../plugins/system/t4/themes/base/vendors/bootstrap5/scss/utilities/api";
+// scss-docs-end import-stack

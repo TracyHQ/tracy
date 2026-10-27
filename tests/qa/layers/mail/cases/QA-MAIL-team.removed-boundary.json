@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.removed-boundary",
+  "itemIds": [
+    "letter:team.removed:en",
+    "letter:team.removed:vi",
+    "letter:team.removed:de",
+    "letter:team.removed:it",
+    "letter:team.removed:fr",
+    "letter:team.removed:nl",
+    "letter:team.removed:zh",
+    "letter:team.removed:es"
+  ],
+  "requirement": "team.removed stays well-formed for one-character, 10,000-character and Unicode facts",
+  "oracle": {
+    "source": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "ref": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "invariant": "subject has no CR/LF; the HTML document is complete"
+  },
+  "edgeTags": ["boundary"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.boundary#team.removed:"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1703-sync-to-live-menu-row",
+  "kind": "fix",
+  "title": "Sync to live shows once its switch is on: a bundle copy of ui-switches first asked late starts from the page's /api/ui answer (one read for every copy, no defaults written back onto <html>), the ••• menu's Sync rows follow the switches, and the row lands on the Publish tab's Sync to live flow (Review › Send); Will add shows a new record's kind, not its columns",
+  "pr": 1703,
+  "area": "site-tabs/publish",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/core/tracy-core/test/ui-switches-copies.test.mjs packages/site/tracy-my-sites/test/more-sync-rows.test.mjs packages/core/tracy-core/test/publish-push-dom.test.mjs"
+  ],
+  "expect": [
+    "S1: a module copy created after another copy's /api/ui answer reads site-sync-to-live true at once, writes the answer (not the defaults) on <html data-tracy-hide>, and the page makes one /api/ui read; a copy created while the read is on its way joins it and hears it land",
+    "S1: the ••• menu drawn before the door answers gains the Sync to live row when the answer says it is on; an Editor never gets either Sync row",
+    "S1: the menu's landing opens the Publish tab on kind live, step push; Review lists the groups with removals and PHP unticked, Will add names a new record and its kind without its columns while Will change names the changed fields, Continue goes to Send, Confirm posts {deletes:false, php:false}, Back returns with nothing sent; running phases show their stages and no dead button; pushed shows the result and Undo asks once more"
+  ],
+  "selectors": {
+    "web": "data-tracy-hide; [data-publish-wizard][data-publish-kind=live][data-publish-step]; [data-live-push-phase]; [data-push-go]; [data-push-remove]; [data-push-tick=php]; [data-push-undo-ask]; [data-push-undo-now]",
+    "api": "GET /api/ui; GET/POST /api/sites/:key/push[/preview|/:id/undo]"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-to-live-menu-row.md",
+  "fence": "an operator's switch that is off by default shows wherever /api/ui says it is on, in every plugin's copy of the module",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/ui-switches-copies.test.mjs",
+      "packages/site/tracy-my-sites/test/more-sync-rows.test.mjs",
+      "packages/core/tracy-core/test/publish-push-dom.test.mjs"
+    ],
+    "tests": [
+      "a bundle copy first asked after the door answered reads the answer at once",
+      "Sync to live, off by default, appears in a menu drawn before the door said",
+      "an Editor never gets the Sync rows",
+      "the ••• menu lands on Sync to live",
+      "review: every group named",
+      "Confirm’s Back returns to the groups",
+      "pushing: on the Send step",
+      "pushed: what reached the live site"
+    ]
+  }
+}

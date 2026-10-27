@@ -1,0 +1,109 @@
+{
+  "color": {
+    "cream-parchment": {
+      "$value": "#fff9ee",
+      "$type": "color",
+      "$description": "Cream Parchment — Page canvas, section backgrounds, card surfaces, nav bar fill — the warm off-white that defines the entire mood and replaces what would normally be pure white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Elevated card surfaces, video embed containers, contrast panels against the cream canvas"
+    },
+    "bark-brown": {
+      "$value": "#3f322a",
+      "$type": "color",
+      "$description": "Bark Brown — Primary text, all borders, nav links, body copy, headings — replaces black throughout the system, giving every line a warm ink-like quality"
+    },
+    "warm-gray": {
+      "$value": "#9f968c",
+      "$type": "color",
+      "$description": "Warm Gray — Secondary text, subtle borders, nav dividers — the mid-tone that bridges Bark Brown headings and lighter dividers"
+    },
+    "stone": {
+      "$value": "#c5bdb3",
+      "$type": "color",
+      "$description": "Stone — Hairline dividers, image borders, subtle separators between sections"
+    },
+    "driftwood": {
+      "$value": "#b3aea7",
+      "$type": "color",
+      "$description": "Driftwood — Input field borders, form element outlines"
+    },
+    "earth": {
+      "$value": "#796e65",
+      "$type": "color",
+      "$description": "Earth — Secondary headings, muted label text"
+    },
+    "light-stone": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Light Stone — Lightest border tone, disabled states, subtle structure lines"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Input text color, high-contrast form text — the only context where true black appears"
+    },
+    "deep-teal": {
+      "$value": "#004e4e",
+      "$type": "color",
+      "$description": "Deep Teal — Primary action buttons, filled CTAs — the single chromatic fill color permitted for interactive moments, creating quiet authority against the cream"
+    },
+    "aubergine": {
+      "$value": "#560e4b",
+      "$type": "color",
+      "$description": "Aubergine — Decorative card borders, heading accent strokes, editorial highlight containers"
+    },
+    "iris": {
+      "$value": "#a56eff",
+      "$type": "color",
+      "$description": "Iris — Decorative card borders, accent strokes on data containers"
+    },
+    "cobalt": {
+      "$value": "#3074f9",
+      "$type": "color",
+      "$description": "Cobalt — Link accents, decorative borders on blue-themed content blocks"
+    },
+    "ice-blue": {
+      "$value": "#bfebfe",
+      "$type": "color",
+      "$description": "Ice Blue — Input field backgrounds, soft highlight washes on data rows, subtle surface tint"
+    },
+    "saffron": {
+      "$value": "#feed5a",
+      "$type": "color",
+      "$description": "Saffron — Occasional button accent for editorial highlight CTAs"
+    },
+    "amber": {
+      "$value": "#c67700",
+      "$type": "color",
+      "$description": "Amber — Occasional button accent for warm-themed CTAs"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk-display": {
+      "$value": "Neue Haas Grotesk Display",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all headings, body copy, nav, and UI text — the premium editorial grotesque that carries the entire interface. Weight 400 for display headlines creates a whisper rather than a shout; weight 600 for subheadings and emphasis; weight 700 reserved for section labels and small-caps headers"
+    },
+    "neue-haas-grotesk-text": {
+      "$value": "Neue Haas Grotesk Text",
+      "$type": "fontFamily",
+      "$description": "Secondary typeface for small utility text, nav micro-copy, fine print — slightly more compact than the Display variant for 10–12px sizes"
+    },
+    "font-awesome-5-brands": {
+      "$value": "Font Awesome 5 Brands",
+      "$type": "fontFamily",
+      "$description": "Font Awesome 5 Brands — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.munropartners.com.au",
+      "siteName": "Munro Partners",
+      "extractedAt": "2026-06-03T18:44:58.103Z",
+      "variant": "compact"
+    }
+  }
+}

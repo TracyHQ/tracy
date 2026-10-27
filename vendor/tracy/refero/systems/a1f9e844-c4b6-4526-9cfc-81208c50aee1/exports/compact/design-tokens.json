@@ -1,0 +1,39 @@
+{
+  "color": {
+    "cobalt-voltage": {
+      "$value": "#0033e5",
+      "$type": "color",
+      "$description": "Cobalt Voltage — Primary surface, page background, filled action buttons, heading text, link color, and active borders. The structural anchor of the system — every dark panel lives here"
+    },
+    "ice-white": {
+      "$value": "#f0f7ff",
+      "$type": "color",
+      "$description": "Ice White — Light surface, card backgrounds on blue sections, heading and body text on blue panels, hairline borders, ghost button outlines. Counter-surface to Cobalt Voltage"
+    },
+    "cobalt-mist": {
+      "$value": "#527ceb",
+      "$type": "color",
+      "$description": "Cobalt Mist — Soft blue tint used sparingly for secondary button fills and tonal accents where Cobalt Voltage would be too heavy. Falls below WCAG on Ice White"
+    },
+    "pitch": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pitch — SVG icon fills, nav element fills, and decorative graphic anchors. Used as the dark accent inside light panels"
+    }
+  },
+  "font": {
+    "haas-grot-disp-web": {
+      "$value": "Haas Grot Disp Web",
+      "$type": "fontFamily",
+      "$description": "Single neo-grotesque display face used at all scales — from 16px body to 85px hero. The radical choice is weight 400 only: no bold, no light. The system relies on size and the blue/white contrast to create hierarchy, not weight. This flattens typographic texture into a single confident voice that reads as declarative rather than persuasive."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://superhi.plus",
+      "siteName": "SuperHi Plus",
+      "extractedAt": "2026-06-03T21:13:55.418Z",
+      "variant": "compact"
+    }
+  }
+}

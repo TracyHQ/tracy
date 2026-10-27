@@ -1,0 +1,38 @@
+{
+  "id": "QA-MAIL-team-invite-token-happy-links",
+  "itemIds": [
+    "direct:team.invited:en",
+    "direct:team.invited:vi",
+    "direct:team.invited:de",
+    "direct:team.invited:it",
+    "direct:team.invited:fr",
+    "direct:team.invited:nl",
+    "direct:team.invited:zh",
+    "direct:team.invited:es",
+    "flow:team-invite-token"
+  ],
+  "requirement": "the mail carries the accept and decline URLs with the token, absolute, and prints the seven-day life",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "lifetimes.inviteSeconds",
+    "invariant": "seven days"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.invite.link"],
+  "redProof": null,
+  "legacyIds": []
+}

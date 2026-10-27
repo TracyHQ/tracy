@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ignition-orange": {
+      "$value": "#ffa41c",
+      "$type": "color",
+      "$description": "Ignition Orange — Primary CTAs and eyebrow labels — the sole warm accent, providing a clear, unmissable call to action."
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary page background."
+    },
+    "charcoal": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Charcoal — Secondary surfaces, like contained button backgrounds."
+    },
+    "graphite": {
+      "$value": "#1d1d1d",
+      "$type": "color",
+      "$description": "Graphite — Tertiary surfaces, small button backgrounds."
+    },
+    "tarmac": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Tarmac — Interactive element backgrounds."
+    },
+    "stark-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Stark White — Headline text, icon fills."
+    },
+    "cloud": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Cloud — High-emphasis body text."
+    },
+    "ash": {
+      "$value": "#aaaaaa",
+      "$type": "color",
+      "$description": "Ash — Standard body text."
+    },
+    "dusk-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Dusk Gray — Secondary text, navigation links."
+    }
+  },
+  "font": {
+    "tomorrow": {
+      "$value": "Tomorrow",
+      "$type": "fontFamily",
+      "$description": "All headings, subheadings, and prominent UI labels. Its technical, semi-monospace structure and distinctive letter-spacing define the brand's futuristic, tool-like identity."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All body copy and long-form text. Its neutrality provides a readable foundation that complements the stylized 'Tomorrow' headlines."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "Fallback and utilitarian text in less prominent contexts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://rive.app",
+      "siteName": "Rive",
+      "extractedAt": "2026-04-11T17:42:27.457Z",
+      "variant": "compact"
+    }
+  }
+}

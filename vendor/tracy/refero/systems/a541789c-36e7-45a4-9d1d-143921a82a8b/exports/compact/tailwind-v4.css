@@ -1,0 +1,29 @@
+@theme {
+  /* Colors */
+  --color-hero-violet: #1348dc;
+  --color-signal-blue: #2b7fff;
+  --color-sky-tint: #8ec5ff;
+  --color-frost: #bedbff;
+  --color-slate-blue: #74ade8;
+  --color-ice-wash: #e6effe;
+  --color-deep-cobalt: #053794;
+  --color-silver-mist: #e5e7eb;
+  --color-pure-white: #ffffff;
+  --color-off-white: #f4f4f2;
+  --color-graphite: #3a3d43;
+  --color-charcoal: #464b57;
+  --color-slate: #5d636f;
+  --color-pewter: #6a7282;
+  --color-ash: #878a98;
+  --color-steel: #b2b5bb;
+  --color-fog: #cccfd3;
+  --color-mist: #dadde2;
+  --color-onyx: #282c33;
+  --color-midnight: #2f343e;
+
+  /* Typography */
+  --font-writer: 'Writer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-plex-serif: 'Plex Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-zed-mono: 'Zed Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

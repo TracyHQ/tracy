@@ -1,0 +1,384 @@
+---
+/**
+ * Bento grid. `tile_span` picks the tile's footprint:
+ * - a set that uses `feat` / `wide` lays out on four columns: `feat` is 2×2, `wide` spans two columns
+ *   (a big number when it has `tile_stat`, otherwise icon-beside-text), anything else is one cell;
+ * - a set without them lays out on two columns, where `2` is a tile two rows tall.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { image, rows } from './a/panel'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the inner-page 760px column (views/Sections.astro). */
+  narrow?: boolean
+}
+const { data } = Astro.props
+
+type Kind = 'feat' | 'stat' | 'row' | 'small' | 'tall' | 'card'
+const items = rows(data.items).filter(
+  (row) => row.tile_title || row.tile_text || row.tile_stat || row.tile_icon || row.tile_image
+)
+const four = items.some((row) => row.tile_span === 'feat' || row.tile_span === 'wide')
+const tiles = items.map((row) => {
+  const span = String(row.tile_span ?? '').trim()
+  let kind: Kind
+  if (four) kind = span === 'feat' ? 'feat' : span === 'wide' ? (row.tile_stat ? 'stat' : 'row') : 'small'
+  else kind = row.tile_stat ? 'stat' : span === '2' ? 'tall' : 'card'
+  return { row, kind, img: image(row.tile_image, row.tile_title ?? '') }
+})
+const hasHead = Boolean(data.eyebrow || data.title || data.sub)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'bento', null)
+---
+
+{
+	(hasHead || tiles.length > 0) && (
+		<section class="bento" {...s()}>
+			<div class="k-container">
+				<div class="bento-rule" aria-hidden="true" />
+				{hasHead && (
+					<div class="bento-head">
+						{(data.eyebrow || data.title) && (
+							<div class="bento-head-main">
+								{data.eyebrow && <p class="k-eyebrow bento-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+								{data.title && <h2 class="k-h2 bento-title" {...s('title')}>{data.title}</h2>}
+							</div>
+						)}
+						{data.sub && <p class="bento-sub" {...s('sub')}>{data.sub}</p>}
+					</div>
+				)}
+				{tiles.length > 0 && (
+					<div class:list={['bento-grid', four ? 'is-four' : 'is-two']}>
+						{tiles.map(({ row, kind, img }) => (
+							<div class:list={['k-card', 'tile', `is-${kind}`]} {...s.block('items')}>
+								{row.tile_icon && (
+									<span class="tile-ico" aria-hidden="true">
+										<Icon name={row.tile_icon} size={kind === 'small' ? 18 : 20} />
+									</span>
+								)}
+								<div class="tile-body">
+									{row.tile_eyebrow && <p class="tile-eyebrow" {...s('items.tile_eyebrow')}>{row.tile_eyebrow}</p>}
+									{row.tile_stat && (
+										<p class="tile-stat">
+											<span class="tile-stat-val" {...s('items.tile_stat')}>{row.tile_stat}</span>
+											{row.tile_unit && <span class="tile-stat-unit" {...s('items.tile_unit')}>{row.tile_unit}</span>}
+										</p>
+									)}
+									{row.tile_title && <h3 class="tile-title" {...s('items.tile_title')}>{row.tile_title}</h3>}
+									{row.tile_text && <p class="tile-text" {...s('items.tile_text')}>{row.tile_text}</p>}
+								</div>
+								{kind === 'stat' && (
+									// Decoration only (content-gaps G14): an invented trend line, not a chart of any value.
+									<svg
+										class="tile-spark"
+										viewBox="0 0 120 64"
+										preserveAspectRatio="none"
+										fill="none"
+										aria-hidden="true"
+										focusable="false"
+									>
+										<path
+											d="M2 50 L18 44 L32 47 L46 36 L60 40 L74 27 L88 31 L103 15 L118 21"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											vector-effect="non-scaling-stroke"
+										/>
+									</svg>
+								)}
+								{img && (
+									<div class="tile-media">
+										<img src={img.src} width={img.width} height={img.height} alt={img.alt} loading="lazy" decoding="async" {...s('items.tile_image')} />
+									</div>
+								)}
+							</div>
+						))}
+					</div>
+				)}
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.bento {
+		padding-block: 88px;
+	}
+	.bento-rule {
+		height: 1px;
+		margin-bottom: 36px;
+		background: var(--k-border);
+	}
+	.bento-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 32px;
+		margin-bottom: 36px;
+	}
+	.bento-head-main {
+		max-width: 640px;
+	}
+	.bento-eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+	}
+	/* Measured on the source: 38/41.04/−1 down to 621px, 27/29.16/−1 at 620px and below. */
+	.bento-title {
+		margin: 0;
+		font-size: var(--ds-size-heading, 38px);
+		line-height: 1.08;
+		letter-spacing: -1px;
+	}
+	@media (max-width: 620px) {
+		.bento-title {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, 27px));
+		}
+	}
+	.bento-sub {
+		max-width: 360px;
+		margin: 0;
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+
+	.bento-grid {
+		display: grid;
+		gap: 16px;
+	}
+	.bento-grid.is-four {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+	.bento-grid.is-two {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	.is-four .is-feat {
+		grid-column: span 2;
+		grid-row: span 2;
+	}
+	.is-four .is-stat,
+	.is-four .is-row {
+		grid-column: span 2;
+	}
+	.is-two .is-tall {
+		grid-row: span 2;
+	}
+
+	.tile {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		padding: 30px 28px;
+	}
+	.tile-ico {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		margin-bottom: 18px;
+		border-radius: 11px;
+		background: color-mix(in srgb, var(--k-primary) 12%, transparent);
+		color: var(--k-primary);
+	}
+	.tile-body {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+	.tile-title {
+		margin: 0;
+		font-size: 17px;
+		font-weight: 600;
+		line-height: 1.25;
+		letter-spacing: -0.2px;
+	}
+	.tile-text {
+		margin: 6px 0 0;
+		font-size: 14px;
+		line-height: 1.5;
+		color: var(--k-text);
+	}
+	.tile-title + .tile-text {
+		margin-top: 8px;
+	}
+
+	/* Lead tiles: the large 2×2 / two-row tile */
+	.is-feat .tile-title,
+	.is-tall .tile-title {
+		font-size: 23px;
+		line-height: 1.06;
+		letter-spacing: -0.5px;
+	}
+	.is-feat .tile-text,
+	.is-tall .tile-text {
+		font-size: 15px;
+		line-height: 1.6;
+	}
+	.is-feat .tile-title + .tile-text {
+		margin-top: 18px;
+	}
+	.tile-media {
+		margin-top: 18px;
+	}
+	.tile-media img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 10px;
+	}
+
+	/* Four-column cells are narrow: tighter padding, smaller mark. */
+	.is-small {
+		padding: 24px 22px;
+	}
+	.is-small .tile-ico {
+		width: 40px;
+		height: 40px;
+		margin-bottom: 12px;
+		border-radius: 10px;
+	}
+	.is-small .tile-title {
+		font-size: 16px;
+	}
+	.is-small .tile-text {
+		font-size: 13.5px;
+	}
+
+	/* Icon beside text */
+	.is-row {
+		flex-direction: row;
+		align-items: center;
+		gap: 18px;
+		padding: 24px 26px;
+	}
+	.is-row .tile-ico {
+		margin-bottom: 0;
+	}
+	.is-row .tile-text {
+		font-size: 13.5px;
+	}
+	.is-row .tile-title + .tile-text {
+		margin-top: 6px;
+	}
+
+	/* Big number, with the decorative line beside it. Measured on the source: padding 26/28, a 382px text
+	   column at 1440 whose 13.5px description fits "…Ask a question," on its first line, a 120×70 line. */
+	.is-stat {
+		flex-direction: row;
+		align-items: center;
+		gap: 20px;
+		padding: 26px 28px;
+	}
+	.is-stat .tile-ico {
+		margin-bottom: 0;
+	}
+	.is-stat .tile-body {
+		flex: 1;
+	}
+	.is-stat .tile-body .tile-text {
+		font-size: 13.5px;
+		line-height: 1.55;
+	}
+	.tile-spark {
+		flex: none;
+		width: 120px;
+		height: 70px;
+		color: var(--k-primary);
+		overflow: visible;
+	}
+	.tile-eyebrow {
+		margin: 0 0 8px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		line-height: 1.55;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.tile-stat {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 6px;
+		margin: 0 0 8px;
+	}
+	.tile-stat-val {
+		font-family: var(--font-heading);
+		font-size: 46px;
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -2px;
+		color: var(--k-heading);
+	}
+	.tile-stat-unit {
+		font-family: var(--font-mono);
+		font-size: 15px;
+		line-height: 1;
+		color: var(--k-muted);
+	}
+	.is-stat .tile-text {
+		margin-top: 0;
+	}
+	.is-stat .tile-title + .tile-text {
+		margin-top: 8px;
+	}
+	/* A one-cell stat tile (two-column sets) is too narrow for the line beside the number. */
+	.is-two .is-stat {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	.is-two .tile-spark {
+		width: 100%;
+		height: 56px;
+	}
+
+	@media (max-width: 991px) {
+		.bento-grid.is-four {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.is-four .is-feat {
+			grid-row: auto;
+		}
+	}
+	@media (max-width: 767px) {
+		.bento {
+			padding-block: 56px;
+		}
+		.bento-head {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.bento-grid.is-four,
+		.bento-grid.is-two {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.is-four .is-feat,
+		.is-four .is-stat,
+		.is-four .is-row,
+		.is-two .is-tall {
+			grid-column: auto;
+			grid-row: auto;
+		}
+		/* Stacked like the source: the line runs full width under the text. */
+		.is-stat {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 24px;
+		}
+		.tile-spark {
+			width: 100%;
+			height: 56px;
+		}
+	}
+</style>

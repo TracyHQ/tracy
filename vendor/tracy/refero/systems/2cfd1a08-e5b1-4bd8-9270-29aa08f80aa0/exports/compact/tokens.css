@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-ink-black: #151515;
+  --color-graphite: #23241f;
+  --color-slate-gray: #3a4444;
+  --color-stone-border: #333333;
+  --color-mist-gray: #808080;
+  --color-bone: #e5e6e1;
+  --color-pale-sage: #d3e5e9;
+  --color-lavender-mist: #bbb2ce;
+  --color-dusty-rose: #cb9da2;
+  --color-deep-violet: #453b60;
+  --color-burnt-amber: #65451d;
+  --color-honey-gold: #e4b976;
+  --color-burgundy: #5c2529;
+  --color-blush-border: #d79caa;
+
+  /* Typography — Font Families */
+  --font-nng: 'Nng', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apercu-pro-mono: 'Apercu pro mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-moderat: 'Moderat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1369-ds-measure-owed",
+  "kind": "fix",
+  "title": "What #1298 left owed in measuring: no hostname in a measurement file, Google's font files from a disk cache, ROLE-1's follows without what the contract keeps, a kept face as the template's variable, the built-site glyph check reading the page's language",
+  "pr": 1369,
+  "area": "design-system/measure",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/measurement.test.mjs packages/design/tracy-ds-slot/test/tokenize.test.mjs packages/design/tracy-ds-slot/test/contracts.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/glyph-fallback.test.mjs apps/tracy-web/test/template-design-system-readiness.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including: follows leaves out paints the contract keeps (kept bands, keepWhole, paletteKeep) and counts them apart; the measurement file carries followsSamples and followsKept and the ROLE-1 note names both; /ops judges the role margin as the flow does (apart); a re-measure keeps the preview block; no contract names a face by its name (font-family is var(...) or inherit).",
+    "S2: every test passes: a family named only where the release swaps it out for the page's language (a :root:lang(vi) custom property) is no glyph gap on that page and still a gap without the swap; the readiness stamps are read off the tree files."
+  ],
+  "selectors": {
+    "follows": "packages/design/tracy-ds-slot/src/probe.mjs paintProbe, follows",
+    "measurement": "packages/design/tracy-ds-slot/src/measurement.mjs fromFlow, judgeMeasurement",
+    "glyphs": "apps/tracy-web/src/lib/font-glyphs.js glyphGaps"
+  },
+  "evidence": "Before this change 81 measurement files named the measuring Mac's hostname, 18 templates failed FONT-1 on one take whose font request failed, 32 of 90 files failed ROLE-1 on bands their contracts keep, JA Resort's and JA Symphony's kept faces beat their releases' Vietnamese swap, and the built-site glyph check flagged JA Nova's Golos Text and JA Donate's Glegoo on Vietnamese pages that never draw them",
+  "fence": "A follows with nothing kept reads every paint as before; a font URL that does not answer still fails in the measuring Chrome; a non-Vietnamese page keeps the same template faces",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/measurement.test.mjs",
+      "packages/design/tracy-ds-slot/test/tokenize.test.mjs",
+      "packages/design/tracy-ds-slot/test/contracts.test.mjs",
+      "apps/tracy-web/test/glyph-fallback.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+    ]
+  }
+}

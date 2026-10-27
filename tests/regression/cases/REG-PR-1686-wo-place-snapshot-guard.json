@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1686-wo-place-snapshot-guard",
+  "kind": "fix",
+  "title": "The database refuses to edit, add to or delete a published place snapshot and its parts; only published to superseded, a source's scheduling facts and a page named for the next run (nothing collected) move",
+  "pr": 1686,
+  "area": "website-opportunities/schema",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: On a database migrated by the package, edit, insert into and delete the profile, sources, media links and import row of a published snapshot, and change its state, place, scope and published_at.",
+    "S2: Carry a later run's tries onto the published snapshot, record an operator verdict on a social page, revoke a picture, supersede the snapshot.",
+    "S3: Tracy's chain (with 173, the copy of 0004) is adopted with carried: ['0004-place-snapshot-guard.sql']; undeclared, adoption is refused naming the guard; a database adopted at the baseline alone gets 0004 from the package."
+  ],
+  "expect": [
+    "S1: every write is refused with 'place snapshot guard'.",
+    "S2: every write succeeds; superseded cannot go back to published or be deleted.",
+    "S3: verifyWoSchema reports no difference and the marker rows name the adopted files."
+  ],
+  "selectors": {
+    "schema": "packages/wo/website-opportunities/src/schema/0004-place-snapshot-guard.sql = apps/tracy-web/src/db/migrations/173-wo-place-snapshot-guard.sql"
+  },
+  "evidence": "wo_place_snapshot and its four child tables had no trigger, unlike wo_place_media and wo_social_snapshot",
+  "fence": "Triggers wo_place_snapshot_immutable and wo_place_snapshot_*_immutable; adoptWoSchema/verifyWoSchema compare a host's carried later files as applied",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/place-snapshot-guard.test.mjs",
+      "apps/tracy-web/test/wo-schema-baseline.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a snapshot being prepared is the run's own",
+      "published content cannot be edited, added to, or deleted",
+      "a published snapshot may name a page for the next run, but never what was collected",
+      "after publication only the lifecycle and the sources' scheduling facts move",
+      "an import or backfill writes a published snapshot and its parts in one transaction",
+      "a snapshot that never published can be failed or set aside",
+      "Tracy's full chain reaches the target",
+      "a host that does not declare the guard it carries is refused adoption",
+      "a database adopted at the baseline alone gets the guard from the package",
+      "Tracy's copy of each package file it carries is the same SQL"
+    ]
+  },
+  "history": [
+    "24/10/2026: merging #1687 (add a social page by hand) — a source row or ref that only names a page, with nothing collected, is allowed on a published snapshot; collected data stays immutable."
+  ]
+}

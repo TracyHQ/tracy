@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-sensei/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_sensei",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-sensei",
+    "id": "quickstart/ja-sensei/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_sensei",
+    "parts": {
+      "installer": {
+        "file": "ja-sensei-j6-quickstart-1.0.1.zip",
+        "bytes": 63119132,
+        "sha256": "44391ef8d110291a10e2a37ec6e3b1ff5f7e291e891e8a0c3a473820548e6f1f"
+      }
+    },
+    "release": "quickstart/ja-sensei/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-11T15:07:23.095Z",
+    "builtFrom": {
+      "from": "quickstart/ja-sensei/j6@1.0.1",
+      "by": "ds-rebuild lock-fix-release.mjs (TCH #1180)",
+      "change": "the installer of 1.0.1, same bytes; its content contract's lock names T3 dev mode off in the 1 template styles, as the installer's database does"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

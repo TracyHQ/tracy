@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1349-invitations-eligibility-happy",
+  "itemIds": ["regression:REG-PR-1349-invitations-eligibility"],
+  "requirement": "Check eligibility asks aMember once per unsuppressed recipient, page by page, stores allow/none/unknown with no address, and the screen loops pages and shows the totals",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1349-invitations-eligibility.json",
+    "ref": "PR #1349 (feat); fix evidence: none recorded",
+    "invariant": "Without AMEMBER_API_KEY the check answers REAL_MEMBER_CHECK_OFF and makes no request. Pages of 3 then 1 cover the 4 unsuppressed recipients; the suppressed one is never asked; nextCursor ends null. Answers are stored as allow 1, none 2 (expired plan and no account), unknown 1 with reason HTTP_502; no stored row contains an address; a second pass replaces rows instead of adding. The Overview card sends cursors null, c1, c2 with limit 50 and then shows 100 with an active plan, 15 without, 5 not answered, of 120 checked.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/invitations/real-crypto.js:42",
+      "apps/tracy-web/src/invitations/real-eligibility.js:15",
+      "apps/tracy-web/src/invitations/real-import.js:210",
+      "apps/tracy-web/src/invitations/real-keys.js:186"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "apps/tracy-web/src/invitations/real-keys.js:196 readFile() with a computed path",
+      "apps/tracy-web/src/invitations/real-keys.js:43 open() with a computed path",
+      "apps/tracy-web/src/invitations/real-keys.js:73 open() with a computed path",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "Check eligibility asks aMember once per unsuppressed recipient, page by page, and keeps no address",
+    "Check eligibility asks page after page until done, then shows the stored answers"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1349-invitations-eligibility"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1349-invitations-eligibility",
+    "pr": 1349,
+    "kind": "feat",
+    "area": "ops/invitations",
+    "file": "tests/regression/cases/REG-PR-1349-invitations-eligibility.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "apps/tracy-web/test/invitations-real-eligibility.test.mjs",
+    "packages/web/tracy-harness/test/invitations-real-flow.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "Check eligibility asks aMember once per unsuppressed recipient, page by page, and keeps no address",
+    "Check eligibility asks page after page until done, then shows the stored answers"
+  ],
+  "timeoutS": 600
+}

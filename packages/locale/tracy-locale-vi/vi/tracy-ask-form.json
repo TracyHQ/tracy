@@ -1,0 +1,20 @@
+{
+  "action.decide": "Quyết định giúp tôi",
+  "action.followUp": "Hỏi thêm tôi trước đã",
+  "action.submit": "Gửi câu trả lời",
+  "ask.languagePlaceholder": "Chọn ngôn ngữ…",
+  "ask.other": "Khác",
+  "ask.otherPlaceholder": "Hoặc tự gõ câu trả lời của bạn",
+  "ask.recommended": "Nên chọn",
+  "ask.rewrite": "Viết lại bằng AI",
+  "ask.rewriteFailed": "Chưa viết lại được. Thử lại nhé.",
+  "ask.rewriteUndo": "Hoàn tác",
+  "ask.rewriting": "Đang viết lại…",
+  "empty.title": "Không có câu hỏi nào đang chờ",
+  "error.answer": "Câu trả lời của bạn chưa tới được agent. Thử lại nhé.",
+  "pane.lead": "Tracy cần câu trả lời của bạn để làm tiếp",
+  "pointer.many": "{count} câu hỏi đang chờ ở khung bên phải",
+  "pointer.one": "Một câu hỏi đang chờ ở khung bên phải",
+  "pointer.open": "Mở",
+  "tab.title": "Câu hỏi"
+}

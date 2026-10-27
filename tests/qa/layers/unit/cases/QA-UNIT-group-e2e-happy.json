@@ -1,0 +1,32 @@
+{
+  "id": "QA-UNIT-group-e2e-happy",
+  "itemIds": ["test-group:e2e"],
+  "requirement": "The e2e run group of scripts/check-tests.ts is executed and green.",
+  "oracle": {
+    "source": "existing test group",
+    "ref": "scripts/check-tests.ts GROUPS",
+    "invariant": "The group is green with no skipped, todo or missing test.",
+    "productSourceGap": "not executed by this layer: real-browser smoke tests (test/e2e): need a browser; belong to the ui layer"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["unit.e2e.group-green"],
+  "redProof": null,
+  "legacyIds": [],
+  "kind": "group",
+  "area": "e2e",
+  "areas": ["e2e", "suites"],
+  "command": [],
+  "groupRun": "e2e",
+  "probe": "chrome",
+  "notRun": "real-browser smoke tests (test/e2e): need a browser; belong to the ui layer",
+  "files": []
+}

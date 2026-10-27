@@ -1,0 +1,74 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#f25533",
+      "$type": "color",
+      "$description": "Signal Orange — Brand accent, logo mark, decorative SVG fills, nav emphasis — the single warm chromatic note that cuts through the monochrome system"
+    },
+    "concrete": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Concrete — Page canvas, button background — the dominant surface tone that gives the system its paper-like warmth"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairline borders (920+ uses), button outlines — pure black carries all structural line work"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, nav fills — the white layer that sits on top of the concrete canvas"
+    },
+    "carbon": {
+      "$value": "#161618",
+      "$type": "color",
+      "$description": "Carbon — Near-black for nav strokes, emphasis text, and the tinted shadow base — softer than pure ink for layered elements"
+    },
+    "mist": {
+      "$value": "#dadada",
+      "$type": "color",
+      "$description": "Mist — Subtle drop-shadow tone, decorative image edge tint"
+    },
+    "fog": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Fog — Secondary shadow tone, decorative image edge tint"
+    },
+    "parchment": {
+      "$value": "#e4d9c8",
+      "$type": "color",
+      "$description": "Parchment — Warm cream decorative surface — near-gray but carries a beige cast that ties to the orange family"
+    },
+    "alert-red": {
+      "$value": "#ff492c",
+      "$type": "color",
+      "$description": "Alert Red — Orange decorative accent for icons, marks, and small graphic details. Use as a supporting accent, not as a status color"
+    },
+    "ember": {
+      "$value": "#f1641e",
+      "$type": "color",
+      "$description": "Ember — Orange outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "times-system-serif": {
+      "$value": "Times (system serif)",
+      "$type": "fontFamily",
+      "$description": "Body text, headings, nav items, hero copy, card content, list items, footer — Times carries 770+ uses and is the signature typographic choice. A serif body face on a B2B incident-management product is anti-convention: it borrows the authority of a legal broadsheet or technical manual, replacing the usual Inter/system-ui with something that reads as deliberately editorial. Weight 400 for body, 700 for emphasis and headings."
+    },
+    "arial-system-sans": {
+      "$value": "Arial (system sans)",
+      "$type": "fontFamily",
+      "$description": "Small UI micro-text: button labels, nav utility text, icon-adjacent labels. Arial at 13px handles the functional labels while Times carries the voice — a deliberate serif/sans split where Times says something and Arial just tags it."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://incident.io",
+      "siteName": "Incident",
+      "extractedAt": "2026-06-03T20:44:32.574Z",
+      "variant": "compact"
+    }
+  }
+}

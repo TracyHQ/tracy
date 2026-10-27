@@ -1,0 +1,242 @@
+[
+  {
+    "assertionIds": [
+      "add-site-wordpress#job-reaches-done",
+      "add-site-wordpress#site-row-exists",
+      "add-site-wordpress#home-answers-from-outside"
+    ],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-happy-wordpress",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "docker", "cms-image:wordpress"],
+    "redProof": null,
+    "ref": "add-site-wordpress",
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — wordpress (happy)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "add-site-joomla#job-reaches-done",
+      "add-site-joomla#site-row-exists",
+      "add-site-joomla#home-answers-from-outside"
+    ],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-happy-joomla",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "docker", "cms-image:joomla"],
+    "redProof": null,
+    "ref": "add-site-joomla",
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — joomla (happy)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "add-site-emdash#job-reaches-done",
+      "add-site-emdash#site-row-exists",
+      "add-site-emdash#home-answers-from-outside"
+    ],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-happy-emdash",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "docker", "cms-image:emdash"],
+    "redProof": null,
+    "ref": "add-site-emdash",
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — emdash (happy)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["add-site-bad-label#bad-label-refused", "add-site-bad-label#no-site-row-for-bad-label"],
+    "edgeTags": ["invalid"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-invalid-bad-label",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand"],
+    "redProof": null,
+    "ref": "add-site-bad-label",
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — bad label (invalid)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J2b#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-happy-legacy-api",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site", "journey:J2b"],
+    "kind": "legacy",
+    "legacyIds": ["J2b"],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J2b",
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — legacy api (happy) [journey J2b: add a site through the API]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J2a#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-happy-legacy-wizard",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site", "journey:J2a"],
+    "kind": "legacy",
+    "legacyIds": ["J2a"],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J2a",
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — legacy wizard (happy) [journey J2a: add a site through the wizard]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["double-submit"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-double-submit-same-build-id",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — same build id (double-submit)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["boundary"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-boundary-label-length",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted: the label rule is in the legacy env, not an approved spec",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — label length (boundary)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["interrupted"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db", "http"],
+      "writes": ["site", "containers"]
+    },
+    "id": "QA-FLOWS-add-site-interrupted-host-restart-mid-build",
+    "itemIds": ["flow:add-site", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "POST /api/sites yields a job that reaches done and a site that answers from outside; the row exists in the database",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Add a site (WordPress, Joomla, EmDash) — host restart mid build (interrupted)",
+    "targets": ["local"]
+  }
+]

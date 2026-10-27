@@ -1,0 +1,86 @@
+{
+  "ok": true,
+  "css": "/* tracy-ds-slot: refero:03b3d707-2a30-4f53-a524-347d1b70eb2c */\n:root:root:root:root:root:root{--ds-c-bg:var(--wp--preset--color--bg);--ds-c-surface:var(--wp--preset--color--surface);--ds-c-surface-warm:var(--wp--preset--color--surface-warm);--ds-c-fg:var(--wp--preset--color--fg);--ds-c-fg-2:var(--wp--preset--color--fg-2);--ds-c-muted:var(--wp--preset--color--muted);--ds-c-meta:var(--wp--preset--color--meta);--ds-c-border:var(--wp--preset--color--border);--ds-c-border-soft:var(--wp--preset--color--border-soft);--ds-c-accent:var(--wp--preset--color--accent);--ds-c-accent-on:var(--wp--preset--color--accent-on);--ds-c-accent-hover:var(--wp--preset--color--accent-hover);--ds-c-accent-active:var(--wp--preset--color--accent-active);--ds-c-success:var(--wp--preset--color--success);--ds-c-warn:var(--wp--preset--color--warn);--ds-c-danger:var(--wp--preset--color--danger);--ds-c-accent-text:#336bd5;--ds-c-accent-text-hover:#316bd8}\nhtml{color-scheme:light}\n[data-tracy-theme-toggle]{display:none!important}\n:root:root:root:root:root:root .tracy-header__brand .tracy-logo-light{display:block!important}\n:root:root:root:root:root:root .tracy-header__brand .tracy-logo-dark{display:none!important}\n:root:root:root:root:root:root .tracy :is(h1, h2, h3, h4, h5, h6),:root:root:root:root:root:root .tracy .wp-block-post-title{font-weight:300;font-family:\"Source Serif 4\", serif}\n:root:root:root:root:root:root .tracy .tracy-section__head :is(h1, h2),:root:root:root:root:root:root .tracy h2.wp-block-heading.text-2xl{font-size:40px}\n@media (max-width:639px){:root:root:root:root:root:root .tracy .tracy-section__head :is(h1, h2),:root:root:root:root:root:root .tracy h2.wp-block-heading.text-2xl{font-size:28px}}\n:root:root:root:root:root:root .tracy .wp-block-button__link{border-radius:999px;font-weight:500}\n:root:root:root:root:root:root body.tracy{font-weight:400}\n:root:root:root:root:root:root .tracy-display{font-family:\"Source Serif 4\", serif;font-weight:300;font-size:64px;line-height:1;letter-spacing:-0.04em}\n@media (max-width:639px){:root:root:root:root:root:root .tracy-display{font-size:46px}}\n:root:root:root:root:root:root .tracy-card{border-radius:20px}\n:root:root:root:root:root:root .tracy-cta .wp-block-button__link,:root:root:root:root:root:root .tracy-faq__item summary::after,:root:root:root:root:root:root .tracy .wp-block-button.is-style-outline .wp-block-button__link,:root:root:root:root:root:root .tracy .tracy-btn--ghost,:root:root:root:root:root:root .tracy .acm-hero .tracy-eyebrow,:root:root:root:root:root:root .tracy .acm-features-intro .tracy-eyebrow,:root:root:root:root:root:root .tracy.home .tracy-eyebrow,:root:root:root:root:root:root .tracy .wp-block-post-excerpt__more-link,:root:root:root:root:root:root .tracy p.eyebrow.wp-block-paragraph,:root:root:root:root:root:root .has-accent-color{color:#336bd5!important}\n:root:root:root:root:root:root .tracy-entry__title a:hover,:root:root:root:root:root:root .tracy-mega__links a:hover,:root:root:root:root:root:root .tracy-mega__latest .wp-block-post-title a:hover,:root:root:root:root:root:root .tracy-page__latest .wp-block-post-title a:hover,:root:root:root:root:root:root .tracy-page__sidebar .wp-block-categories a:hover,:root:root:root:root:root:root .tracy .acm-cta-capsule .tracy-btn--ghost .wp-block-button__link:hover{color:#316bd8!important}",
+  "palette": [
+    {
+      "slug": "bg",
+      "color": "#ffffff"
+    },
+    {
+      "slug": "surface",
+      "color": "#f5f5f4"
+    },
+    {
+      "slug": "surface-warm",
+      "color": "#f9f9f9"
+    },
+    {
+      "slug": "fg",
+      "color": "#171717"
+    },
+    {
+      "slug": "fg-2",
+      "color": "#515151"
+    },
+    {
+      "slug": "muted",
+      "color": "#6f6f6f"
+    },
+    {
+      "slug": "meta",
+      "color": "#6e6e6e"
+    },
+    {
+      "slug": "border",
+      "color": "#dadada"
+    },
+    {
+      "slug": "border-soft",
+      "color": "#ededed"
+    },
+    {
+      "slug": "accent",
+      "color": "#397dff"
+    },
+    {
+      "slug": "accent-on",
+      "color": "#000000"
+    },
+    {
+      "slug": "accent-hover",
+      "color": "#3671e1"
+    },
+    {
+      "slug": "accent-active",
+      "color": "#4172cd"
+    },
+    {
+      "slug": "success",
+      "color": "#16a34a"
+    },
+    {
+      "slug": "warn",
+      "color": "#eab308"
+    },
+    {
+      "slug": "danger",
+      "color": "#dc2626"
+    }
+  ],
+  "fonts": [
+    {
+      "slug": "display",
+      "fontFamily": "\"Source Serif 4\", serif"
+    },
+    {
+      "slug": "body",
+      "fontFamily": "\"Inter\", sans-serif"
+    },
+    {
+      "slug": "mono",
+      "fontFamily": "\"SF Mono\", ui-monospace, \"JetBrains Mono\", Menlo, Monaco, Consolas, monospace"
+    }
+  ],
+  "variation": "ds-refero-03b3d707-2a30-4f53-a524",
+  "name": "Voiceflow"
+}

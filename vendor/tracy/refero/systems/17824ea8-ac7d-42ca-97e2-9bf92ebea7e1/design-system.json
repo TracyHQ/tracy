@@ -1,0 +1,241 @@
+{
+  "dos": [
+    "Use uppercase with letter-spacing ≥ 0.07em for all interface text — this tracking is the typographic signature, not the weight or size",
+    "Separate content containers with 1px #2d2d2d or #000000 hairline borders, never with background fills or shadows",
+    "Keep the 3px border-radius for every rounded element — a sharper, more architectural system than the common 8–16px",
+    "Limit color to the neutrals plus periwinkle #738ae5; let the periwinkle appear on at most 1–2 elements per view as a quiet accent",
+    "Set body text at 16–18px with 1.22–1.33 line-height and 0.07–0.1em letter-spacing for an editorial gallery feel",
+    "Use GillSansNova-SemiBold (weight 800) at 8px with 0.119em tracking for all micro-labels, badges, and category stamps",
+    "Apply the \"palt\" font-feature setting globally — it optimizes proportional alternates and is non-negotiable for the brand's typographic identity"
+  ],
+  "donts": [
+    "Do not introduce shadows, gradients, or any form of elevation — the design system is flat by philosophy",
+    "Do not add bright or saturated colors beyond #738ae5; even secondary accents should stay neutral",
+    "Do not use border-radius above 3px; avoid pill shapes and large rounded corners",
+    "Do not set type in mixed case or normal letter-spacing; everything reads as editorial display via tracking",
+    "Do not fill cards or sections with tinted backgrounds; rely on hairline borders to create structure on the white canvas",
+    "Do not use large display type below 28px or above 32px — the scale is deliberately compressed and quiet",
+    "Do not add icons with weight above 1px stroke; icons are absent or drawn as the thinnest possible lines"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#2d2d2d",
+      "name": "Graphite",
+      "role": "Primary text, hairline borders, structural lines — the dominant neutral carrying all interface weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Strongest text and most emphatic borders, logo dots, footer marks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page canvas, card surfaces, nav backgrounds — the unbroken white field everything floats on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#878887",
+      "name": "Fog",
+      "role": "Muted helper text, secondary borders, dimmed metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#738ae5",
+      "name": "Periwinkle",
+      "role": "Sole chromatic accent — selected nav state, badge fills, a rare pressure point in an otherwise colorless system",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page model is a single max-width column at ~1200px centered on a white canvas, with no full-bleed sections. The hero is a centered text statement ('BAGS DESIGNED TO FOLD WITH A SNAP') set in wide-tracked uppercase at ~21px, floating in vast negative space with no accompanying image. Navigation sits in the top-right corner as a single small text link. Sections flow vertically with generous 80px+ vertical gaps, separated by hairline rules. Content blocks alternate between text-only editorial statements and product grid cells. Product grids use 3–4 columns at desktop width. The overall rhythm is slow and contemplative — a museum walk-through rather than a commercial browse. Footer is a single hairline-bordered line of micro-text.",
+  "imagery": "Product photography is the only visual content — no lifestyle imagery, no illustrations, no abstract graphics. Product shots appear as tight, centered catalog images on white backgrounds, contained within hairline-bordered cells. The object itself is the hero; the surrounding frame is gallery-like. No overlapping, no masking, no decorative treatment. Imagery-to-text ratio is moderate, with product images occupying roughly 40–50% of viewport space on catalog pages. No icons are used as decorative elements — the system is image-free and icon-free, relying entirely on typography and line work.",
+  "similar": [
+    {
+      "why": "Same near-monochrome palette, hairline structural lines, and uppercase wide-tracked typography on white canvas — both treat the product as the only source of visual warmth",
+      "business": "MUJI"
+    },
+    {
+      "why": "Editorial Japanese design language with compressed type scale, museum-like negative space, and zero decorative chrome — the product is framed, not promoted",
+      "business": "Issey Miyake"
+    },
+    {
+      "why": "Wide letter-spaced uppercase headings, hairline borders defining product cells, and the same restrained gallery-presentation rhythm",
+      "business": "COS (cosstores.com)"
+    },
+    {
+      "why": "Anti-shadow, anti-gradient approach with content defined by serif/grotesque typography and hairlines rather than by color or elevation",
+      "business": "Aesop"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "all": "3px",
+      "cards": "3px",
+      "badges": "3px",
+      "buttons": "3px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Base page canvas and card surface — there is no distinction between page and card backgrounds; everything sits on the same white field"
+    },
+    {
+      "hex": "#2d2d2d",
+      "name": "Ink Hairline",
+      "level": 2,
+      "purpose": "Hairline borders at 1px define every container and divider; surfaces are carved out by line work, not by tonal layering"
+    }
+  ],
+  "northStar": "Museum vitrine on white marble",
+  "typeScale": [
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.29,
+      "letterSpacing": 1.28
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.25,
+      "letterSpacing": 1.44
+    },
+    {
+      "role": "heading-sm",
+      "size": 21,
+      "lineHeight": 1.22,
+      "letterSpacing": 2.52
+    },
+    {
+      "role": "heading-lg",
+      "size": 28,
+      "lineHeight": 1,
+      "letterSpacing": 2.24
+    }
+  ],
+  "components": [
+    {
+      "name": "Hairline-Bordered Card",
+      "role": "Universal content container",
+      "description": "White surface with 1px #2d2d2d border, 3px radius, 24px internal padding. No shadow, no fill distinction from page — the border alone separates content from canvas. The dominant structural unit across the site."
+    },
+    {
+      "name": "Text-Nav Link",
+      "role": "Navigation item",
+      "description": "GillSansNova-SemiBold at 8–18px, uppercase, letter-spacing 0.1–0.119em, color #2d2d2d or #000000. No background, no border, no underline. Items separated by generous whitespace rather than dividers."
+    },
+    {
+      "name": "Selected Nav Dot",
+      "role": "Active state indicator",
+      "description": "A small filled circle in #000000 or the periwinkle #738ae5 placed adjacent to the active nav label — the only visual signal of selection. The periwinkle variant appears on badge/nav surfaces."
+    },
+    {
+      "name": "Editorial Display Heading",
+      "role": "Page title and section headers",
+      "description": "GillSansNova-Book or SemiBold at 21–28px, uppercase, letter-spacing 0.12–0.125em, color #2d2d2d. The wide tracking transforms mid-weight type into a display voice without needing a display weight or decorative treatment."
+    },
+    {
+      "name": "Micro-Label Badge",
+      "role": "Category tags and product marks",
+      "description": "GillSansNova-SemiBold at 8px, uppercase, letter-spacing 0.119em, 3px radius. Background either transparent (text only, #2d2d2d) or filled with #738ae5 (white text). Functions as a typographic stamp, not a pill."
+    },
+    {
+      "name": "Product Grid Cell",
+      "role": "Catalog item",
+      "description": "White card with 1px #2d2d2d border, 3px radius, no padding around the product image (which bleeds to the border). Caption text in GillSansNova-SemiBold 8px or GillSansNova-Book 12px sits below with 16–24px margin-top."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section separator",
+      "description": "1px solid #2d2d2d or #000000 horizontal line, full-width or content-width. The most common separator; no double-line, no dotted, no gradient fades."
+    },
+    {
+      "name": "Ghost Body Link",
+      "role": "Inline text link",
+      "description": "GillSansNova-Book 16–18px, color #000000 with 1px underline border. On hover or active, the underline thickens or shifts to #2d2d2d. No color change, no background change."
+    },
+    {
+      "name": "Sparse Footer Mark",
+      "role": "Footer brand and meta",
+      "description": "Minimalist footer with GillSansNova-SemiBold 8–18px, letter-spacing 0.119em, all caps. A single small #000000 dot serves as the brand mark or separator. Maximum restraint."
+    },
+    {
+      "name": "Image Caption Label",
+      "role": "Photo or product caption",
+      "description": "GillSansNova-Book 12px or CezannePro-DB 15px, uppercase, letter-spacing 0.133em, color #2d2d2d. Sits tightly below images with 3–10px gap, functioning as gallery wall text."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for body, headings, nav, links, and icon-adjacent text — carries the entire English typographic system at a medium weight with wide tracking",
+      "sizes": "12px, 16px, 18px, 19px, 21px, 22px, 28px",
+      "family": "GillSansNova-Book",
+      "weight": "500",
+      "lineHeight": "1.00–1.33",
+      "substitute": "Jost, Outfit, or Avenir Next",
+      "letterSpacing": "0.07–0.125em",
+      "fontFeatureSettings": "\"palt\""
+    },
+    {
+      "role": "Emphasis and key headings — the bolder weight creates hierarchy without size inflation; the 8px variant carries micro-labels and badge text",
+      "sizes": "8px, 18px, 21px, 28px",
+      "family": "GillSansNova-SemiBold",
+      "weight": "800",
+      "lineHeight": "1.00–2.50",
+      "substitute": "Jost Medium or Outfit SemiBold",
+      "letterSpacing": "0.064–0.119em",
+      "fontFeatureSettings": "\"palt\""
+    },
+    {
+      "role": "Japanese text rendering — sits at the same metric scale as the English system, ensuring bilingual visual parity",
+      "sizes": "18px",
+      "family": "游ゴシック体 (Yu Gothic)",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Noto Sans JP or Hiragino Sans",
+      "letterSpacing": "0.1em",
+      "fontFeatureSettings": "\"palt\""
+    },
+    {
+      "role": "Micro-decorative and brand-specific marks — a secondary display face for labels that need a different visual texture from the main Gill system",
+      "sizes": "15px",
+      "family": "CezannePro-DB",
+      "weight": "600",
+      "lineHeight": "1.00–1.33",
+      "substitute": "Italiana or Cinzel",
+      "letterSpacing": "0.133em",
+      "fontFeatureSettings": "\"palt\""
+    },
+    {
+      "role": "GillSansNova-Medium — detected in extracted data but not described by AI",
+      "sizes": "10px, 17px",
+      "family": "GillSansNova-Medium",
+      "weight": "600",
+      "lineHeight": "1, 1.41",
+      "letterSpacing": "0.071, 0.18",
+      "fontFeatureSettings": "\"palt\""
+    }
+  ],
+  "description": "Shupatto's digital presence operates like a quiet museum vitrine for a single physical product. The visual system is almost entirely achromatic — a canvas of white interrupted by hairline charcoal lines, generous negative space, and minuscule typography that whispers rather than shouts. Everything is set in uppercase with dramatically wide letter-spacing, transforming even body copy into editorial display text. The only chromatic note is a soft periwinkle blue that functions less as a brand color and more as a faint pressure point — a tag, a selected state, a small badge. The interface is a study in restraint: no shadows, no gradients, no rounded corners beyond 3px, no decorative imagery competing with the product. Line work and typographic rhythm do all the work.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text: #2d2d2d (primary), #000000 (strongest), #878887 (muted)\n- Background: #ffffff (all surfaces)\n- Border: #2d2d2d (standard hairline), #000000 (emphatic)\n- Accent: #738ae5 (periwinkle — selected states, badge fills only)\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n1. **Editorial Display Heading**: Set in GillSansNova-Book (sub: Jost) weight 500, 28px, uppercase, letter-spacing 0.08em, color #2d2d2d. No border, no background, sits on white canvas with 80px vertical breathing room above and below.\n\n2. **Hairline-Bordered Product Card**: White surface, 1px solid #2d2d2d border, 3px border-radius, 0px internal padding (image bleeds to edge). Caption below: GillSansNova-SemiBold (sub: Jost) 8px, uppercase, letter-spacing 0.119em, color #2d2d2d, 16px margin-top.\n\n3. **Micro-Label Badge**: GillSansNova-SemiBold (sub: Jost) 8px, uppercase, letter-spacing 0.119em, color #2d2d2d, transparent background, 3px radius, 4px 8px padding. For the accent variant: background #738ae5, color #ffffff.\n\n4. **Ghost Nav Link**: GillSansNova-SemiBold (sub: Jost) 18px, uppercase, letter-spacing 0.1em, color #2d2d2d, no underline, no background. Active state: a 4px filled circle in #000000 sits to the right of the text.\n\n5. **Section Divider**: 1px solid #2d2d2d horizontal line, full content width (max 1200px), no spacing above or below — sits flush between content blocks as a typographic mark."
+    },
+    {
+      "title": "Elevation Philosophy",
+      "content": "This design system intentionally avoids all box-shadow usage. Elevation is never communicated through depth, glow, or blur. Instead, structure is created through hairline borders (1px #2d2d2d or #000000) and generous negative space. When separation is needed, a line is drawn — not a shadow cast. This is a deliberate choice: the site treats the interface as a flat editorial layout, not a layered application surface. The single surface level (white) means every container must declare itself through stroke, not through tonal difference."
+    }
+  ]
+}

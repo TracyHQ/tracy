@@ -1,0 +1,64 @@
+{
+  "color": {
+    "linen": {
+      "$value": "#e6dece",
+      "$type": "color",
+      "$description": "Linen — Page canvas, card surfaces, section backgrounds — the warm unbleached-paper field that carries all content"
+    },
+    "deep-ink": {
+      "$value": "#000e13",
+      "$type": "color",
+      "$description": "Deep Ink — Primary text, navigation, structural borders, logo lockup — near-black with the faintest cool undertone"
+    },
+    "carbon": {
+      "$value": "#232323",
+      "$type": "color",
+      "$description": "Carbon — Body text, icon strokes, secondary headings, hairline rules, card borders — workhorse dark for dense UI elements"
+    },
+    "soft-ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Soft Ash — Muted helper text, inactive nav items, subtle dividers, secondary metadata"
+    },
+    "warm-apricot": {
+      "$value": "#ffdead",
+      "$type": "color",
+      "$description": "Warm Apricot — Interactive link underlines, outlined action borders, the sole chromatic accent — used as a 1px rule beneath active elements to signal affordance without weight"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Pure black for maximum-contrast headings and icon fills where Carbon reads as warm"
+    }
+  },
+  "font": {
+    "gt-pressura-mono": {
+      "$value": "GT Pressura Mono",
+      "$type": "fontFamily",
+      "$description": "All functional UI: top navigation, body copy, buttons, links, cards, breadcrumbs, icon labels. The monospaced engine runs the entire interface. Tracking opens up at larger sizes: 0.71px at 10px, 1.0px at 12px, 1.4px at 14px, 1.6px at 16px — the wider letterspacing as size grows gives the type a deliberate, spaced-out breath that suits the editorial register."
+    },
+    "voyage": {
+      "$value": "Voyage",
+      "$type": "fontFamily",
+      "$description": "Hero and section display lines. The extreme sizes (130px, 180px) paired with tight 0.90–0.94 leading create oversized, airy editorial headlines that dominate the page. Only the wordmark-adjacent and 16px use normal leading. This is a custom high-contrast display serif with theatrical curves — it carries the romantic brand voice."
+    },
+    "gtsectradisplay": {
+      "$value": "GTSectraDisplay",
+      "$type": "fontFamily",
+      "$description": "Mid-weight editorial subheadings that bridge the monospaced UI type and the huge Voyage display. A transitional serif with old-style warmth, used sparingly for paragraph-level headings inside content blocks."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Tiny uppercase eyebrow labels (0.2860em letterspacing = 4px) — the 0.28em tracking is a system default; used only for short all-caps tags above headlines. Substitute with a real serif when available."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://miti-navi.com",
+      "siteName": "Miti Navi",
+      "extractedAt": "2026-06-03T15:56:53.540Z",
+      "variant": "compact"
+    }
+  }
+}

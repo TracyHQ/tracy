@@ -1,0 +1,1848 @@
+{
+  "command": "node tests/qa/layers/api/generate.mjs",
+  "items": [
+    {
+      "id": "DELETE /api/me/keys/{id}",
+      "membership": "public",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c n6 n7 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/demos",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n14 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/llm/doors/{door}",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n15 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/llm/providers/{id}",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n7 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/mail/sites/{key}/domain",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c o16 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/quickstart/inspiration",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n14 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/quickstart/questions/set",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n14 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/team/{id}",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n7 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/ops/templates/{templateId}/shots/{file}",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c c n17 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/sites/{key}",
+      "membership": "public",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/sites/{key}/address/domain",
+      "membership": "public",
+      "tags": "o0 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "DELETE /api/sites/{key}/claim",
+      "membership": "public",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/sites/{key}/comments/{id}",
+      "membership": "internal-only",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/sites/{key}/mail/domain",
+      "membership": "public",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /api/sites/{key}/seats/{grant}",
+      "membership": "public",
+      "tags": "o0 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "DELETE /tracy-admin/members/{accountId}",
+      "membership": "internal-only",
+      "tags": "o0 c c n2 o3 o4 o5 c c c n19 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "DELETE /v1/sites/{key}/records/{kind}/{id}",
+      "membership": "public",
+      "tags": "o0 o1 c o20 o3 o4 o5 c c o18 c c n8 c n21 n9 o22 o11 o12 o13 c"
+    },
+    {
+      "id": "DELETE /workspaces/{id}/seats/{accountId}",
+      "membership": "public",
+      "tags": "o0 o1 c n2 o3 o4 o5 c c n6 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "GET /",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/assistant/attachments/{id}",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 n7 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/assistant/conversation",
+      "membership": "public",
+      "tags": "c c c c c c n28 c c n6 n14 c n8 c n33 c n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/beta/waitlist",
+      "membership": "public",
+      "tags": "o35 o24 n25 n2 o26 o27 n28 c o36 n37 n14 c n8 o35 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/config",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/design-systems",
+      "membership": "internal-only",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/desktop/config",
+      "membership": "internal-only",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/host-agents",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/me/keys",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/notifications",
+      "membership": "public",
+      "tags": "c c c c c c n28 c c n6 n14 c n8 c n33 c n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/notifications/preferences",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/notifications/unread",
+      "membership": "public",
+      "tags": "c c c n2 c c n28 c c n6 n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/notifications/unsubscribe",
+      "membership": "public",
+      "tags": "o35 o24 n25 n2 o26 o27 n28 c o36 n37 n14 c n8 o35 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/attention",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/attention/questionnaire",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/beta/signals",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/beta/stuck",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/beta/waitlist",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/build-base/{platform}",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n39 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/build-questions/{platform}",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n39 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/ci",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/ci/{number}",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n40 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/cms/designs",
+      "membership": "internal-only",
+      "tags": "c o38 c c c c n28 c c c n14 c n8 c n33 c n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/cms/environments",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/cms/runtime",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/cms/snapshot",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/demos",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 v n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/demos/history",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/demos/install-job",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/demos/job",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/demos/on-server",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/demos/present",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/desktop",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/general",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/inspiration",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/inventory",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/inventory/approval",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/inventory/eligible",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/inventory/instance",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/inventory/instances",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/invitations",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/invitations/gmail",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/invitations/gmail/callback",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/invitations/{id}",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n7 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/llm",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/llm/audit",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/mail",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/mail/log",
+      "membership": "internal-only",
+      "tags": "c o38 c c c c n28 c c c n14 c n8 c n33 c n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/me",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/quickstart",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/quickstart/capabilities",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/quickstart/inspiration",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 v n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/quickstart/questions/generation",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/quickstart/setting-proposal",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/quickstarts",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/release-checklist",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/servers",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/team",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/templates/{templateId}/shots",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n41 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/ui",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/ops/widget",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/seat-plan/session",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/seat-plan/status",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/design-plan",
+      "membership": "public",
+      "tags": "c c c n2 c c n28 c c n6 n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/questions",
+      "membership": "public",
+      "tags": "c c c n2 c c n28 c c n6 n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/questions/snapshot",
+      "membership": "public",
+      "tags": "c c c n2 c c n28 c c n6 n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/activity",
+      "membership": "public",
+      "tags": "c o24 c c c c n28 c c n6 c c n8 c n33 c n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/activity/unseen",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/address/availability",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/applies",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n42 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/backups",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/changed",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/changes",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/cms-log",
+      "membership": "public",
+      "tags": "c o24 c c c c n28 c c n6 c c n8 c n33 c n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/comments",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/comments/attachments/{id}",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/comments/people",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/comments/reads",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/comments/report",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/comments/sent",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/design",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n42 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/favicon",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/file-diff",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/jobs/{id}",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/mail",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/moments/{sha}/files",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/moments/{sha}/undo-scope",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/press",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/settings",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/state",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/turns",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n42 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/viewing-session",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/sites/{key}/workspace",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 n43 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/team",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /api/templates",
+      "membership": "internal-only",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/templates/{templateId}/demo-frame",
+      "membership": "internal-only",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n41 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/templates/{templateId}/shots/{file}",
+      "membership": "internal-only",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n17 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /api/ui",
+      "membership": "internal-only",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /auth/actor-check",
+      "membership": "internal-only",
+      "tags": "c c n25 n2 c c n28 c c n44 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /auth/link/{nonce}",
+      "membership": "internal-only",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n45 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /auth/me",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /badge.js",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /build-with-tracy-demo.js",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /design-inspiration",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n14 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /design-inspiration/{path}",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n46 n47 n48 n49 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs/api",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs/api/claude-cowork.json",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs/api/llms.txt",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs/api/openapi.json",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs/api/scalar.js",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n14 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /docs/{path}",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n46 n47 n48 n49 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /health",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /invite/{token}",
+      "membership": "public",
+      "tags": "o50 o24 o26 n2 o26 o27 n28 n51 n52 n53 n54 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /invite/{token}/decline",
+      "membership": "public",
+      "tags": "o50 o24 o26 n2 o26 o27 n28 n51 n52 n53 n54 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /login",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n14 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /me/workspaces",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n6 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops/api",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops/api/agent-tools.json",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops/api/openapi.json",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops/api/site-address.json",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops/healthz",
+      "membership": "internal-only",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /ops/invite/{token}",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n6 n54 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /ops/{path}",
+      "membership": "internal-only",
+      "tags": "c o38 c n2 c c n28 c c c n49 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /signin",
+      "membership": "public",
+      "tags": "c c c n2 c c n28 c c n6 n14 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /signin/{provider}",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n55 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /signin/{provider}/callback",
+      "membership": "public",
+      "tags": "o50 o24 o26 n2 o26 o27 n28 n56 n57 n58 n55 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /sites/{key}/seats",
+      "membership": "internal-only",
+      "tags": "c o24 c n2 c c n28 c c n44 o59 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /tracy-admin/members",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /tracy-admin/overview",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /tracy-admin/whoami",
+      "membership": "internal-only",
+      "tags": "c o38 n25 n2 c c n28 c c c n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /tracy-badge",
+      "membership": "public",
+      "tags": "o23 o24 o26 n2 o26 o27 n28 n29 n30 n31 n14 c n8 c n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /tracy-badge.js",
+      "membership": "public",
+      "tags": "o23 o24 n25 n2 o26 o27 n28 n29 n30 n31 n14 c n8 n32 n33 n9 n10 o27 n34 o13 c"
+    },
+    {
+      "id": "GET /v1/me",
+      "membership": "public",
+      "tags": "c c n25 n2 c c n28 c c n37 n14 c n8 n32 n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c c n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/applies",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c c n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/applies/{id}",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c c n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/changes",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c c n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/contents",
+      "membership": "public",
+      "tags": "c o24 c c c c n28 c c n37 c c n8 c n33 c o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/contents/{id}",
+      "membership": "public",
+      "tags": "c o24 c c c c n28 c c n37 c c n8 c n33 c o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/design",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c c n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/pages",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c c n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/records/{kind}",
+      "membership": "public",
+      "tags": "c o24 c c c c n28 c c n37 c c n8 c n33 c o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /v1/sites/{key}/records/{kind}/{id}",
+      "membership": "public",
+      "tags": "c o24 c o20 c c n28 c c n37 c v n8 c n33 n9 o22 c n34 o13 c"
+    },
+    {
+      "id": "GET /workspaces/{id}/seats",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 c c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /{label}/join",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 n60 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "GET /{label}/team",
+      "membership": "public",
+      "tags": "c o24 c n2 c c n28 c c n6 n60 c n8 c n33 n9 n10 c n34 o13 c"
+    },
+    {
+      "id": "PATCH /api/sites/{key}/comments/{id}",
+      "membership": "internal-only",
+      "tags": "o61 n62 c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PATCH /api/sites/{key}/seats/{grant}",
+      "membership": "public",
+      "tags": "o61 c c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PATCH /v1/sites/{key}/records/{kind}/{id}",
+      "membership": "public",
+      "tags": "o61 c c o20 o3 o4 o5 c c o18 c v c c n21 n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "PATCH /workspaces/{id}",
+      "membership": "public",
+      "tags": "o61 n62 c c o3 o4 o5 c c n6 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PATCH /workspaces/{id}/seats/{accountId}",
+      "membership": "public",
+      "tags": "o61 c c n2 o3 o4 o5 c c n6 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /_site-mail",
+      "membership": "internal-only",
+      "tags": "o35 n63 n25 n2 o3 o4 o5 c o36 n37 n14 c n8 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/assistant/conversation/clear",
+      "membership": "public",
+      "tags": "o65 n62 n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/assistant/conversation/read",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/assistant/handoff",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/assistant/handoff/end",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/assistant/telegram/webhook",
+      "membership": "internal-only",
+      "tags": "o35 n63 n25 n2 o3 o4 o5 c o36 n37 n14 c n8 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/assistant/tip/seen",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/assistant/turns",
+      "membership": "public",
+      "tags": "o65 c n66 c o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/assistant/turns/{id}/rating",
+      "membership": "public",
+      "tags": "o65 c c n2 o3 o4 o5 c c n6 n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/beta/waitlist",
+      "membership": "public",
+      "tags": "o35 n63 n25 n2 o3 o4 o5 c o36 n37 n14 v n8 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/discord/events",
+      "membership": "internal-only",
+      "tags": "o35 o1 n66 n2 o3 o4 o5 c o36 n37 n14 c o35 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/discord/link/start",
+      "membership": "internal-only",
+      "tags": "o35 o1 n66 n2 o3 o4 o5 c o36 n37 n14 c o35 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/discord/link/verify",
+      "membership": "internal-only",
+      "tags": "o35 o1 n66 n2 o3 o4 o5 c o36 n37 n14 c o35 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/me/keys",
+      "membership": "public",
+      "tags": "o65 c n66 c o3 o4 o5 c c n6 n14 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/notifications/read-all",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/notifications/unsubscribe",
+      "membership": "public",
+      "tags": "o35 n63 n25 n2 o3 o4 o5 c o36 n37 n14 v n8 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/notifications/{id}/read",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 n7 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/beta/stuck/handled",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c c n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/demos/install",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/inventory/approve",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/inventory/pool",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/inventory/prepare",
+      "membership": "internal-only",
+      "tags": "o65 c n66 c o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/inventory/retire",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations",
+      "membership": "internal-only",
+      "tags": "o65 c n66 c o3 o4 o5 c c c n14 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/gmail/connect",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c c n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/gmail/disconnect",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c c n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/commit",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/generate",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/preview",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/recipients/{rid}/approve",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n67 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/recipients/{rid}/draft",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n67 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/recipients/{rid}/message",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n67 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/invitations/{id}/simulate",
+      "membership": "internal-only",
+      "tags": "o65 c c c o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/llm/providers/{id}/models",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c c n7 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/llm/providers/{id}/test",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/llm/push",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c c n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/quickstart/questions/generate",
+      "membership": "internal-only",
+      "tags": "o65 c n66 c o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/quickstart/questions/generation/cancel",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/quickstart/questions/translate",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/quickstart/setting",
+      "membership": "internal-only",
+      "tags": "o65 n62 c n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/quickstarts/refresh",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c c n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/team",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c c n14 v n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/team/{id}/code",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c c n7 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/templates/{templateId}/capture",
+      "membership": "internal-only",
+      "tags": "o65 n62 c n2 o3 o4 o5 c c c n41 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/ops/templates/{templateId}/generate",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c c n41 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/ops/widget/{id}/preview",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/seat-plan/connect/complete",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/seat-plan/connect/start",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/seat-plan/disconnect",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/site",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/brand-files",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/brief/rewrite",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/claim",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/accept",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/address/verify",
+      "membership": "public",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/agent",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/apply.list",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/apply.revert",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.batch",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.contract",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.delete",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.get",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.language",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.list",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.locate",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.read",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/content.update",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/core.manifest",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/core.upgrade",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.cleanup",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.dump",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.purge",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.restore",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.rollback",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.snapshot",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/db.tables",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/extension.enable",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/extension.install",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/extension.list",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/info",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/language.install",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/media.upload",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/plugin.activate",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/plugin.install",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/plugin.list",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/site.identity",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/template.siteSettings",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/theme.activate",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/theme.install",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/theme.list",
+      "membership": "public",
+      "tags": "o65 n62 c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/apply/theme.style",
+      "membership": "public",
+      "tags": "o65 c c o20 o3 o4 o5 c c o18 c c c c c n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/artifacts/{step}",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/backup",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/changed",
+      "membership": "internal-only",
+      "tags": "o65 n62 c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/cms-log/pull",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments/attachments",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments/clear",
+      "membership": "internal-only",
+      "tags": "o65 n62 c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments/{id}/read",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments/{id}/reopen",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments/{id}/resolve",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/comments/{id}/unread",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/decline",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/edit-access-request",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/go-live",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/import-result",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/lease/release",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/leave",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/mail/verify",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/moment",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/preview-ticket",
+      "membership": "public",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/provision",
+      "membership": "public",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/requests",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/restore",
+      "membership": "public",
+      "tags": "o65 c c c o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/seats/{grant}/edit-access",
+      "membership": "public",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/state",
+      "membership": "public",
+      "tags": "o65 n62 c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/turn",
+      "membership": "internal-only",
+      "tags": "o65 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /api/sites/{key}/turns/undo",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /api/team/invite",
+      "membership": "public",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /auth/link/browser",
+      "membership": "internal-only",
+      "tags": "o23 n63 n25 n2 o3 o4 o5 n29 n30 n31 n14 c n8 n32 n68 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /auth/link/{nonce}/exchange",
+      "membership": "internal-only",
+      "tags": "o35 o1 o26 n2 o3 o4 o5 c o36 n37 n45 c o35 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /auth/link/{nonce}/session",
+      "membership": "internal-only",
+      "tags": "o35 o1 o26 n2 o3 o4 o5 c o36 n37 n45 c o35 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /auth/otp/start",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n44 n14 c c c n69 n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /auth/otp/verify",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c n44 n14 c c c n69 n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /auth/signout",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /fleet/git-token",
+      "membership": "internal-only",
+      "tags": "o70 o1 n66 n2 o3 o4 o5 c o71 n72 n14 c o70 o70 n73 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /github/push",
+      "membership": "internal-only",
+      "tags": "o70 n62 n66 n2 o3 o4 o5 c o71 n72 n14 c o70 o70 n73 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /github/release",
+      "membership": "internal-only",
+      "tags": "o70 n62 n66 n2 o3 o4 o5 c o71 n72 n14 c o70 o70 n73 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /internal/beta/confirmation",
+      "membership": "internal-only",
+      "tags": "o35 n63 n25 n2 o3 o4 o5 c o36 n37 n14 c n8 o35 n64 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /internal/seat-plan/pin",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n44 n14 c n8 n32 n69 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /internal/seat-plan/run",
+      "membership": "internal-only",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n44 n14 c n8 n32 n69 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /invite/{token}/decline",
+      "membership": "public",
+      "tags": "o50 o1 o26 n2 o3 o4 o5 n51 n52 n53 n54 v n8 c n74 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /login",
+      "membership": "public",
+      "tags": "o23 o1 n66 n2 o3 o4 o5 n29 n30 n31 n14 v o23 c n68 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /me/sites/{key}/join-request",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c o18 n75 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /me/workspaces/{id}/accept",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /me/workspaces/{id}/decline",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /me/workspaces/{id}/join-request",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 n76 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /me/workspaces/{id}/leave",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 c c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /signin/approve",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /signin/deny",
+      "membership": "public",
+      "tags": "o65 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /tracy-admin/members",
+      "membership": "internal-only",
+      "tags": "o65 c n66 n2 o3 o4 o5 c c c n14 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /tracy-admin/members/{accountId}/code",
+      "membership": "internal-only",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c c n19 c n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /v1/sites/{key}/applies/{id}/revert",
+      "membership": "public",
+      "tags": "o65 o1 c o20 o3 o4 o5 c c o18 c c n8 c n21 n9 o22 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /v1/sites/{key}/contract/{operation}",
+      "membership": "public",
+      "tags": "o65 n62 c c o3 o4 o5 c c o18 c c c c n21 n9 o22 o11 c o13 c"
+    },
+    {
+      "id": "POST /verify",
+      "membership": "public",
+      "tags": "o50 o1 n66 n2 o3 o4 o5 n77 n78 n79 n14 c o50 c n74 n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /workspaces",
+      "membership": "public",
+      "tags": "o65 c n66 c o3 o4 o5 c c n6 n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /workspaces/{id}/seats",
+      "membership": "public",
+      "tags": "o65 c c n2 o3 o4 o5 c c n6 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "POST /{label}/join",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 n60 v n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "POST /{label}/team",
+      "membership": "public",
+      "tags": "o65 o1 c n2 o3 o4 o5 c c n6 n60 v n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "PUT /api/notifications/preferences",
+      "membership": "public",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c n6 n14 v c n32 c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/build-base/{platform}",
+      "membership": "internal-only",
+      "tags": "o80 c c n2 o3 o4 o5 c c c n39 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/build-questions/{platform}",
+      "membership": "internal-only",
+      "tags": "o80 c c n2 o3 o4 o5 c c c n39 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/demos/domain",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/design-systems",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 c c n32 c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/desktop",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 v c n32 c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/inventory/policy",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/inventory/sweep",
+      "membership": "internal-only",
+      "tags": "o80 n62 n66 n2 o3 o4 o5 c c c n14 c c n32 c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/llm/doors/{door}",
+      "membership": "internal-only",
+      "tags": "o80 c c n2 o3 o4 o5 c c c n15 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/llm/providers/{id}",
+      "membership": "internal-only",
+      "tags": "o80 n62 c n2 o3 o4 o5 c c c n7 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/mail/sites/{key}",
+      "membership": "internal-only",
+      "tags": "o80 n62 c c o3 o4 o5 c c c o16 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/quickstart/inspiration",
+      "membership": "internal-only",
+      "tags": "o80 n62 c n2 o3 o4 o5 c c c n14 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/quickstart/questions/choice",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/quickstart/questions/set",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/templates/{templateId}/shots/{file}",
+      "membership": "internal-only",
+      "tags": "o80 o1 c n2 o3 o4 o5 c c c n17 v n8 c c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "PUT /api/ops/ui",
+      "membership": "internal-only",
+      "tags": "o80 c n66 n2 o3 o4 o5 c c c n14 v c n32 c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/ops/widget/{id}",
+      "membership": "internal-only",
+      "tags": "o80 c c n2 o3 o4 o5 c c c n7 c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/seat-plan/routing",
+      "membership": "public",
+      "tags": "o80 n63 n25 n2 o3 o4 o5 c c n6 n14 c n8 n32 c n9 n10 o11 o12 o13 c"
+    },
+    {
+      "id": "PUT /api/sites/{key}/activity/seen",
+      "membership": "public",
+      "tags": "o80 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/sites/{key}/address",
+      "membership": "public",
+      "tags": "o80 c c n2 o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/sites/{key}/component-credential",
+      "membership": "internal-only",
+      "tags": "o80 c c c o3 o4 o5 c c o18 c c c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/sites/{key}/design",
+      "membership": "internal-only",
+      "tags": "o80 c c n2 o3 o4 o5 c c o18 o59 v c c n69 n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/sites/{key}/mail",
+      "membership": "public",
+      "tags": "o80 c c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    },
+    {
+      "id": "PUT /api/sites/{key}/workspace",
+      "membership": "public",
+      "tags": "o80 c c n2 o3 o4 o5 c c o18 c v c c c n9 n10 o11 c o13 c"
+    }
+  ],
+  "note": "tags: one token per required tag — c cases, v covered by a sibling door case, n<i> N-A, o<i> open; i indexes reasons ({id} = the door id). Case ids are the manifests naming the door under that tag.",
+  "reasons": [
+    "a DELETE door needs a per-door valid request body and a state oracle; the snapshot declares only that it answers 200",
+    "no caller fixture for this door",
+    "no numeric, length or size bound is declared for {id}: no limit/offset/cursor parameter, no minimum/maximum/length keyword, no 413 (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "a write door needs a valid request body to reach its dependency; per-door body fixtures are not built",
+    "idempotency of a write is not stated in the snapshot; needs a per-door contract",
+    "needs a per-door model of what the door creates and the call that removes it",
+    "{id} is gated by identity only, not by a role (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=session)",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [id])",
+    "{id} declares no request body (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "{id} declares no limit, offset or cursor parameter (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "{id} declares no 429 response (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd); no limit obligation in the contract",
+    "concurrent writes need a per-door state oracle (no lost update, no double create)",
+    "a write with no declared body or no fixture caller: no rollback oracle",
+    "needs a per-door deadline/abort contract and a stalled dependency; neither is in the snapshot",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [])",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [door])",
+    "admin-authenticated tenant door: no fixture for a foreign principal",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [templateId,file])",
+    "the snapshot gives no per-door minimum role for a site door (only the session scheme); no role matrix oracle",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [accountId])",
+    "snapshot declares 413 but not the size limit; no oracle for the byte boundary",
+    "{id} is not cookie-authenticated (bearer); the guard leaves doors that never read the session alone (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "the snapshot declares 429 but no threshold or window; no oracle for how many calls trip it",
+    "no fixture caller can satisfy this door's none authentication",
+    "a parameterised read has no per-door fixture for \"exists but empty\" in the pinned oracle",
+    "{id} takes no path parameter, query parameter or body (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "no fixture caller can satisfy this door authentication",
+    "no fixture caller",
+    "a GET door creates no resource to clean up (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd: GET)",
+    "{id} needs no credential before the door (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=none; apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd: security [])",
+    "{id} has no credential that can expire (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=none)",
+    "{id} is not role-gated: no authentication (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=none)",
+    "{id} has no string input a caller controls: no path/query parameter and no string body property (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "a GET does not change state; the guard covers cookie-carrying writes (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "a GET door writes nothing (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "no fixture caller can satisfy this door's token authentication",
+    "token-authenticated: no fixture can mint or age a token credential",
+    "{id} is gated by identity only, not by a role (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=token)",
+    "a staff list over an empty book needs a fixture with every table emptied; the fixture always holds the staff seat itself",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [platform])",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [number])",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [templateId])",
+    "{id} is gated by identity only, not by a role (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=session-or-actor)",
+    "any signed-in person may ask which workspace a site belongs to (ROUTE_DOCS GET /api/sites/:key/workspace @fa4dc66a5 (\"Any signed-in person may ask\"))",
+    "{id} is gated by identity only, not by a role (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=actor)",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [nonce])",
+    "{id} needs no credential before the door (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=n/a; apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd: security [])",
+    "{id} has no credential that can expire (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=n/a)",
+    "{id} is not role-gated: no authentication (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=n/a)",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [path])",
+    "no fixture caller can satisfy this door's entry authentication",
+    "{id} needs no credential before the door (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=invite; apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd: security [actor,session])",
+    "{id} has no credential that can expire (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=invite)",
+    "{id} is not role-gated: no authentication (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=invite)",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [token])",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [provider])",
+    "{id} needs no credential before the door (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=oauth; apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd: security [actor,session])",
+    "{id} has no credential that can expire (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=oauth)",
+    "{id} is not role-gated: no authentication (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=oauth)",
+    "actor-authenticated tenant door: no fixture for a foreign principal",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [label])",
+    "a PATCH door needs a per-door valid request body and a state oracle; the snapshot declares only that it answers 200",
+    "{} satisfies the schema: {id} declares no required property, so an empty body is a valid request (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "no input to leave empty: {id} declares no parameter and no request body (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "{id} is not cookie-authenticated (token); the guard leaves doors that never read the session alone (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "a POST door needs a per-door valid request body and a state oracle; the snapshot declares only that it answers 200",
+    "the only input is the body; its invalid forms are the malformed-body partitions (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd)",
+    "{id} names no site or workspace: nothing tenant-scoped is addressed (apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd path parameters [id,rid])",
+    "{id} is not cookie-authenticated (none); the guard leaves doors that never read the session alone (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "{id} is not cookie-authenticated (actor); the guard leaves doors that never read the session alone (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "no fixture caller can satisfy this door's signature authentication",
+    "signature-authenticated: no fixture can mint or age a signature credential",
+    "{id} is gated by identity only, not by a role (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=signature)",
+    "{id} is not cookie-authenticated (signature); the guard leaves doors that never read the session alone (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "{id} is not cookie-authenticated (entry); the guard leaves doors that never read the session alone (apps/tracy-web/test/csrf.test.mjs@c0bb6b3bd (#662))",
+    "the door exists for a person with no seat on the site: it records a request to join a site the person was not invited to (ROUTE_DOCS POST /me/sites/:key/join-request @fa4dc66a5)",
+    "the door exists for a person who is not in the workspace: it records a request to join (ROUTE_DOCS POST /me/workspaces/:id/join-request @fa4dc66a5)",
+    "{id} needs no credential before the door (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=otp; apps/tracy-web/api-reference.snapshot.json@c0bb6b3bd: security [actor,session])",
+    "{id} has no credential that can expire (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=otp)",
+    "{id} is not role-gated: no authentication (apps/tracy-web/src/api-reference/routes@c0bb6b3bd: auth=otp)",
+    "a PUT door needs a per-door valid request body and a state oracle; the snapshot declares only that it answers 200"
+  ],
+  "requiredTags": [
+    "happy",
+    "empty",
+    "invalid",
+    "boundary",
+    "dependency-failure",
+    "repeat",
+    "cleanup",
+    "anonymous",
+    "expired-auth",
+    "wrong-role",
+    "other-tenant",
+    "wrong-method",
+    "malformed-body",
+    "encoding-injection",
+    "csrf-origin",
+    "pagination",
+    "rate-limit",
+    "concurrent",
+    "partial-write",
+    "cancel-timeout",
+    "no-secret-leak"
+  ],
+  "revision": "c0bb6b3bd7e97a60f3c4d83c79a96d0035aeeadd"
+}

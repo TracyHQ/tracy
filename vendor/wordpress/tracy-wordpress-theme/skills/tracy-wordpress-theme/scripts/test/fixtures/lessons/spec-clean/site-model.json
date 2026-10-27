@@ -1,0 +1,18 @@
+{
+  "records": [
+    {
+      "type": "posts",
+      "slug": "story",
+      "values": {
+        "body": "<ul class=\"list-special\"><li><img src=\"tick.png\">Fast</li></ul>"
+      }
+    },
+    {
+      "type": "hero",
+      "slug": "home-hero",
+      "values": {
+        "title": "Meet the team"
+      }
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+/* =======================================================================
+   Pricing page (Itemid 223) — pixel-perfect overlay vs .pen g6vc2x / jKRkI
+   ALL rules scoped under body.item-223 to avoid sibling-page collisions.
+   Dark-mode toggles added under html.t4-dark where the fix differs by theme.
+   Loaded AFTER all ACM block CSS (auto cache-busted by filemtime on every
+   PHP request) — no optimize-cache clear needed for this file.
+   ======================================================================= */
+
+/* -----------------------------------------------------------------------
+   1. PAGE MASTHEAD  (.pen: NoNFQ outer / EU9uB title / wtu3s sub)
+   Design: padding [66, *, 58, *]; title 46px / LH 1.08 / LS -1.3px;
+           sub = var(--text); border-bottom: 1px solid var(--border).
+   Live:   96 / 96 / 52px / -1.5px / color --muted / no border.
+   ----------------------------------------------------------------------- */
+
+/* style.css sets display:block globally — override to pill on this page. */
+body.item-223 .acm-page-masthead .hx-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: rgba(163, 230, 53, 0.082);
+  border: 1px solid rgba(163, 230, 53, 0.25);
+  margin-bottom: 16px;
+}
+
+body.item-223 .acm-page-masthead .hx-section {
+  padding-top: 66px !important;
+  padding-bottom: 58px !important;
+  border-bottom: 1px solid var(--border);
+}
+body.item-223 .acm-page-masthead .hx-h1 {
+  font-size: 46px !important;
+  line-height: 1.08 !important;
+  letter-spacing: -1.3px !important;
+}
+/* Sub text: design uses --text (not --muted) on both themes */
+body.item-223 .acm-page-masthead .hx-mast-sub {
+  color: var(--text) !important;
+}
+
+/* -----------------------------------------------------------------------
+   2. PLANS SECTION  (.pen: vibr9 outer / eLEvS heading / plan cards)
+   Design: section padding [72, *, 32, *]; heading 28px / LS -0.6px;
+           all 3 plan CTAs are lime (fill #A3E635 on Free / Team / Ent);
+           Team card has radial lime tint (cf5aj fill gradient).
+   Live:   80/80 / 38px / -1px; Free+Ent CTAs are ghost; no gradient.
+   ----------------------------------------------------------------------- */
+body.item-223 .acm-pricing .hx-section {
+  padding-top: 72px !important;
+  padding-bottom: 32px !important;
+}
+body.item-223 .acm-pricing .hx-h2 {
+  font-size: 28px !important;
+  letter-spacing: -0.6px !important;
+}
+
+/* Team card radial lime-tint gradient (.pen cf5aj) */
+body.item-223 .hx-plan.is-popular {
+  background-image: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(163, 230, 53, 0.086) 0%,
+    transparent 70%
+  ) !important;
+}
+
+/* All plan CTAs lime (Free + Enterprise use hx-btn--ghost in PHP; override) */
+body.item-223 .acm-pricing .hx-plan-cta.hx-btn--ghost {
+  background: var(--primary) !important;
+  color: var(--primary-ink) !important;
+  border-color: transparent !important;
+}
+
+/* -----------------------------------------------------------------------
+   3. COMPARISON MATRIX  (.pen: J0SBtK outer / N2b74B title / vx1t0 HRow)
+   Design: section padding [32, *, 72, *]; title 28px / LS -0.6px;
+           table in rounded card: radius 16, fill var(--surface), stroke var(--border);
+           thead row fill: #161B18 dark / var(--elevated) light.
+   Live:   80/80 / 38px / -1px; no wrapper; thead transparent.
+   ----------------------------------------------------------------------- */
+body.item-223 .acm-pricing-matrix .hx-section {
+  padding-top: 32px !important;
+  padding-bottom: 72px !important;
+}
+body.item-223 .acm-pricing-matrix .hx-pm-title {
+  font-size: 28px !important;
+  letter-spacing: -0.6px !important;
+}
+
+/* Matrix table rounded card container (added via PHP as .hx-matrix-wrap) */
+body.item-223 .hx-matrix-wrap {
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+/* thead row background — light theme */
+body.item-223 .hx-matrix thead tr {
+  background: var(--elevated);
+}
+/* thead row background — dark Terminal (#161B18 per HRow vx1t0 fill) */
+html.t4-dark body.item-223 .hx-matrix thead tr {
+  background: #161B18;
+}
+
+/* -----------------------------------------------------------------------
+   4. FAQ ACCORDION  (.pen: heading analogous to matrix @ 28px)
+   Design: heading 28px / LS -0.6px (matches other section headings).
+   Live:   38px / -1px.
+   ----------------------------------------------------------------------- */
+body.item-223 .acm-accordion .hx-h2 {
+  font-size: 28px !important;
+  letter-spacing: -0.6px !important;
+}
+
+/* Centre + balance the FAQ column on this page (unlike the FAQ page, where the
+   shared block is intentionally left-aligned). The accordion head + list are
+   given margin-inline:auto so the block sits centred in the 1240 container,
+   matching the rhythm of the CTA below and the other pricing sections. */
+body.item-223 .acm-accordion .hx-faq-head {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+body.item-223 .acm-accordion .hx-faq-list {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* -----------------------------------------------------------------------
+   5. RESPONSIVE ADJUSTMENTS (mobile — scale desktop overrides down)
+   Mobile design (VEJ7U / j8kFuB): title ~28px, sections compressed.
+   ----------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  /* Masthead container breakpoint: allow full 390px width */
+  body.item-223 .acm-page-masthead .hx-h1 {
+    font-size: 36px !important;
+  }
+}
+@media (max-width: 620px) {
+  body.item-223 .acm-page-masthead .hx-section {
+    padding-top: 40px !important;
+    padding-bottom: 36px !important;
+  }
+  body.item-223 .acm-page-masthead .hx-h1 {
+    font-size: 28px !important;
+    letter-spacing: -0.8px !important;
+  }
+  body.item-223 .acm-pricing .hx-section {
+    padding-top: 48px !important;
+    padding-bottom: 24px !important;
+  }
+  body.item-223 .acm-pricing-matrix .hx-section {
+    padding-top: 24px !important;
+    padding-bottom: 48px !important;
+  }
+  body.item-223 .acm-accordion .hx-h2 {
+    font-size: 24px !important;
+    letter-spacing: -0.4px !important;
+  }
+}

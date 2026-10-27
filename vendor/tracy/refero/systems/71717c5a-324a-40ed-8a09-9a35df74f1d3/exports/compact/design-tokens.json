@@ -1,0 +1,54 @@
+{
+  "color": {
+    "blush-paper": {
+      "$value": "#fce1e3",
+      "$type": "color",
+      "$description": "Blush Paper — Page canvas, section backgrounds, the warm field all content lives on"
+    },
+    "coral-crimson": {
+      "$value": "#db404f",
+      "$type": "color",
+      "$description": "Coral Crimson — All headings, body text, icons, and the sole action color — the entire voice of the brand"
+    },
+    "midnight-ink": {
+      "$value": "#0e1736",
+      "$type": "color",
+      "$description": "Midnight Ink — Deep accent for select surfaces and inverse contexts, a cool counterpoint to the warm field"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Image backgrounds, inline accents, negative space within photographs and cards"
+    },
+    "soft-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Soft Black — Decorative strokes, icon fills, hairline borders — the only place pure black appears"
+    }
+  },
+  "font": {
+    "sansita": {
+      "$value": "Sansita",
+      "$type": "fontFamily",
+      "$description": "Display and heading face — bold, slightly condensed, with -0.02em tracking that tightens at every size. Carries all editorial weight: the page announces itself through this one confident voice."
+    },
+    "nunito-sans": {
+      "$value": "Nunito Sans",
+      "$type": "fontFamily",
+      "$description": "Body and UI face — the 18px body sets a generous reading rhythm at 1.5 line-height; 700 weight for emphasized inline phrases and small caps headers. The 72px outlier is likely a single oversized numeral or pull-quote."
+    },
+    "clarkson": {
+      "$value": "Clarkson",
+      "$type": "fontFamily",
+      "$description": "Secondary prose — the slightly taller 1.7 line-height is for long-form letter passages where breathing room matters more than density"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://annajona.is",
+      "siteName": "Anna Jóna",
+      "extractedAt": "2026-06-03T20:46:14.875Z",
+      "variant": "compact"
+    }
+  }
+}

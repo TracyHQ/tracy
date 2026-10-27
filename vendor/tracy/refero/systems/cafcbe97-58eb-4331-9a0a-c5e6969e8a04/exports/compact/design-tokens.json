@@ -1,0 +1,89 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#faf9f5",
+      "$type": "color",
+      "$description": "Parchment — Page canvas, hero backgrounds, section bands — the warm off-white that makes the whole product feel like paper rather than a screen"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, modal backgrounds, elevated panels — pure white sits on top of Parchment to create depth without shadows"
+    },
+    "soft-sky": {
+      "$value": "#eaf2f8",
+      "$type": "color",
+      "$description": "Soft Sky — Soft section background, alternate surface, and quiet card fill"
+    },
+    "hairline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline — Primary border color for cards, dividers, and input fields — the most-used neutral in the system"
+    },
+    "bone": {
+      "$value": "#cbcac7",
+      "$type": "color",
+      "$description": "Bone — Secondary borders, card outlines in dense grids, subtle structural dividers"
+    },
+    "ash": {
+      "$value": "#717171",
+      "$type": "color",
+      "$description": "Ash — Muted body text, helper copy, secondary metadata, timestamps, and icon fills at rest"
+    },
+    "pebble": {
+      "$value": "#848381",
+      "$type": "color",
+      "$description": "Pebble — Tertiary text and low-emphasis labels"
+    },
+    "slate-dark": {
+      "$value": "#646462",
+      "$type": "color",
+      "$description": "Slate Dark — Secondary headings and medium-emphasis body text"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Headline text, SVG illustration fills, logo lockup — the warm-tinted near-black for editorial type"
+    },
+    "ink": {
+      "$value": "#0d0d0d",
+      "$type": "color",
+      "$description": "Ink — Primary action button background, primary navigation text, high-emphasis links — the only dark fill used for interactive elements"
+    },
+    "jet": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Jet — Body text color, icon strokes, high-contrast outlines — the sharpest dark in the system"
+    },
+    "confirm-green": {
+      "$value": "#34c759",
+      "$type": "color",
+      "$description": "Confirm Green — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    },
+    "instrumentserif-regular": {
+      "$value": "InstrumentSerif-Regular",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — used exclusively for editorial section headlines and hero copy. At 60-80px with -0.02em tracking, it creates a magazine-cover presence that contrasts against Inter's utility. The single weight (400) and high contrast strokes give headlines an unhurried, confident voice that would feel overwrought in any bolder weight."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Universal UI and body sans — Inter handles all interface text from 10px micro-labels up to 20px subheadings. The 400 weight is the workhorse for body, 500 for buttons and labels, 600 for emphasis, and 700 reserved for the smallest badge text. Tight letter-spacing (-0.009em at 14-18px) gives dense UI text a modern, engineered feel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://voicenotes.com",
+      "siteName": "Voicenotes",
+      "extractedAt": "2026-06-03T21:48:15.689Z",
+      "variant": "compact"
+    }
+  }
+}

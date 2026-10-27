@@ -1,0 +1,871 @@
+{
+  "kind": "collapsed-button",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs, the detector's own probe on the plain and the worn page). broken: only the entries the detector flags and their plain twins; clean: the whole probe of a page with none. Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-trip/j6@1.0.5 (https://ja-trip-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#198754",
+        "#fd7e14",
+        "#ef4444",
+        "#ffffff",
+        "#585c63",
+        "#ff6b00",
+        "#df5e00",
+        "#111111",
+        "#0dcaf0",
+        "#f8f5f0",
+        "#212529"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:3/div:1/div:1/div:2/search:1/form:1/div:1/button:1",
+            "at": "button.btn.btn-primary",
+            "text": "Search",
+            "w": 42,
+            "h": 14,
+            "font": 0,
+            "clipped": false,
+            "icon": true
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:3/div:1/div:1/div:2/search:1/form:1/div:1/button:1",
+            "at": "button.btn.btn-primary",
+            "text": "Search",
+            "w": 32,
+            "h": 16,
+            "font": 0,
+            "clipped": false,
+            "icon": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 (https://ja-voyara-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#1F6F6B",
+        "#E0A458",
+        "#C2362F",
+        "#FAF6F0",
+        "#2B2420",
+        "#C2562F",
+        "#A6451F",
+        "#F2EBE1",
+        "#1A1512",
+        "#8A7E72",
+        "#E5DCD0"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/form:1/div:1/p:1/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "w": 42,
+            "h": 42,
+            "font": 18,
+            "clipped": true,
+            "icon": false
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/form:1/div:1/p:1/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "w": 42,
+            "h": 42,
+            "font": 18,
+            "clipped": true,
+            "icon": false
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "tracy-business/emdash-0.x@1.7.19 (https://business-emdash.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#4e6695",
+        "#4e6594",
+        "#eae5cc",
+        "#eee9cf",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:2/astro-island:1/button:1",
+            "at": "button.inline-flex.shrink-0.items-center",
+            "text": "🇺🇸\nEnglish\n▼",
+            "w": 83,
+            "h": 20,
+            "font": 13,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/div:1/div:1/div:2/button:1",
+            "at": "button.ng-theme-toggle.inline-flex.shrink-0",
+            "text": "Dark",
+            "w": 49,
+            "h": 20,
+            "font": 13,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:1/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Resources\n▼",
+            "w": 83,
+            "h": 33,
+            "font": 14.5,
+            "clipped": false,
+            "icon": false
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:2/astro-island:1/button:1",
+            "at": "button.inline-flex.shrink-0.items-center",
+            "text": "🇺🇸\nEnglish\n▼",
+            "w": 87,
+            "h": 20,
+            "font": 13,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/div:1/div:1/div:2/button:1",
+            "at": "button.ng-theme-toggle.inline-flex.shrink-0",
+            "text": "Dark",
+            "w": 50,
+            "h": 20,
+            "font": 13,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:1/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Resources\n▼",
+            "w": 85,
+            "h": 31,
+            "font": 14.5,
+            "clipped": false,
+            "icon": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "tracy-base/emdash-0.x@0.5.4 (https://base-emdash.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#9a6700",
+        "#eae5cc",
+        "#eee9cf",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:1/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Service",
+            "w": 95,
+            "h": 80,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:2/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Resources",
+            "w": 114,
+            "h": 80,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:3/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Company",
+            "w": 108,
+            "h": 80,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Contact",
+            "w": 104,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/header:1/div:1/div:1/button:1",
+            "at": "button.theme-toggle.flex.h-11",
+            "text": "",
+            "w": 44,
+            "h": 44,
+            "font": 17,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/main:1/section:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start a conversation",
+            "w": 198,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-secondary",
+            "text": "Explore our approach",
+            "w": 209,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:6/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start a conversation",
+            "w": 198,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:7/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-xs.-ml-[14px]",
+            "text": "Explore the website toolkit",
+            "w": 200,
+            "h": 35,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:7/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-xs.-ml-[14px]",
+            "text": "Explore the website toolkit",
+            "w": 200,
+            "h": 35,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:7/div:1/div:2/div:3/div:1/a:1",
+            "at": "a.btn.btn-xs.-ml-[14px]",
+            "text": "Explore the website toolkit",
+            "w": 200,
+            "h": 35,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:11/div:1/div:2/div:1/a:1",
+            "at": "a.btn.mt-auto.w-full",
+            "text": "Discuss Starter",
+            "w": 321,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:11/div:1/div:2/div:2/a:1",
+            "at": "a.btn.mt-auto.w-full",
+            "text": "Discuss Studio",
+            "w": 321,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:11/div:1/div:2/div:3/a:1",
+            "at": "a.btn.mt-auto.w-full",
+            "text": "Discuss Foundry",
+            "w": 321,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/div:1/section:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-on-accent",
+            "text": "Start a conversation",
+            "w": 198,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/div:1/section:1/div:1/div:1/a:2",
+            "at": "a.btn.on-accent-soft.hover:text-accent-on",
+            "text": "Explore our services\n→",
+            "w": 225,
+            "h": 36,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:1/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Service",
+            "w": 97,
+            "h": 80,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:2/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Resources",
+            "w": 116,
+            "h": 80,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/nav:1/astro-island:3/button:1",
+            "at": "button.nav-link.inline-flex.items-center",
+            "text": "Company",
+            "w": 110,
+            "h": 80,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/header:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Contact",
+            "w": 102,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/header:1/div:1/div:1/button:1",
+            "at": "button.theme-toggle.flex.h-11",
+            "text": "",
+            "w": 44,
+            "h": 44,
+            "font": 17,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:1/main:1/section:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start a conversation",
+            "w": 192,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-secondary",
+            "text": "Explore our approach",
+            "w": 203,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:6/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start a conversation",
+            "w": 192,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:7/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-xs.-ml-[14px]",
+            "text": "Explore the website toolkit",
+            "w": 199,
+            "h": 35,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:7/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-xs.-ml-[14px]",
+            "text": "Explore the website toolkit",
+            "w": 199,
+            "h": 35,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:7/div:1/div:2/div:3/div:1/a:1",
+            "at": "a.btn.btn-xs.-ml-[14px]",
+            "text": "Explore the website toolkit",
+            "w": 199,
+            "h": 35,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:11/div:1/div:2/div:1/a:1",
+            "at": "a.btn.mt-auto.w-full",
+            "text": "Discuss Starter",
+            "w": 262,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:11/div:1/div:2/div:2/a:1",
+            "at": "a.btn.mt-auto.w-full",
+            "text": "Discuss Studio",
+            "w": 262,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/section:11/div:1/div:2/div:3/a:1",
+            "at": "a.btn.mt-auto.w-full",
+            "text": "Discuss Foundry",
+            "w": 262,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/div:1/section:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-on-accent",
+            "text": "Start a conversation",
+            "w": 192,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:1/main:1/div:1/section:1/div:1/div:1/a:2",
+            "at": "a.btn.on-accent-soft.hover:text-accent-on",
+            "text": "Explore our services\n→",
+            "w": 217,
+            "h": 46,
+            "font": 17,
+            "clipped": false,
+            "icon": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-vital/j6@1.0.4 (https://ja-vital-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#28a745",
+        "#ffc107",
+        "#dc3545",
+        "#ffffff",
+        "#6f6f6f",
+        "#323183",
+        "#26b0eb",
+        "#17a2b8",
+        "#f8f9fa",
+        "#333333",
+        "#212529",
+        "#007bff",
+        "#6c757d",
+        "#354564",
+        "#475d88",
+        "#526b9c"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:2/span:1/button:1",
+            "at": "button.t4-theme-toggle",
+            "text": "",
+            "w": 40,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:2/nav:1/ul:1/li:1/a:1",
+            "at": "a.btn.btn-primary.nav-link",
+            "text": "BOOK APPOINTMENT",
+            "w": 192,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "LEARN MORE",
+            "w": 164,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-default",
+            "text": "CONTACT US",
+            "w": 161,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.mt-3",
+            "text": "LEARN MORE",
+            "w": 164,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:2/div:1/div:1/div:1/div:3/a:1",
+            "at": "a.btn.btn-white",
+            "text": "VIEW MORE",
+            "w": 155,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:2/div:1/div:1/div:2/div:1/div:3/div:1/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "LEARN MORE",
+            "w": 164,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:2/div:1/div:1/form:1/ul:1/li:6/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "SEND EMAIL",
+            "w": 190,
+            "h": 54,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:2/div:1/div:1/div:2/div:1/div:2/div:1/div:3/button:1",
+            "at": "button.owl-dot.active",
+            "text": "",
+            "w": 24,
+            "h": 31,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:2/div:1/div:1/div:2/div:1/div:2/div:1/div:3/button:2",
+            "at": "button.owl-dot",
+            "text": "",
+            "w": 18,
+            "h": 25,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:2/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "CONTACT NOW",
+            "w": 176,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:2/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "VIEW MORE",
+            "w": 155,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "w": 125,
+            "h": 60,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:2/span:1/button:1",
+            "at": "button.t4-theme-toggle",
+            "text": "",
+            "w": 40,
+            "h": 40,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:2/nav:1/ul:1/li:1/a:1",
+            "at": "a.btn.btn-primary.nav-link",
+            "text": "BOOK APPOINTMENT",
+            "w": 238,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "LEARN MORE",
+            "w": 207,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-default",
+            "text": "CONTACT US",
+            "w": 208,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.mt-3",
+            "text": "LEARN MORE",
+            "w": 207,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:2/div:1/div:1/div:1/div:3/a:1",
+            "at": "a.btn.btn-white",
+            "text": "VIEW MORE",
+            "w": 197,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:2/div:1/div:1/div:2/div:1/div:3/div:1/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "LEARN MORE",
+            "w": 207,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:2/div:1/div:1/form:1/ul:1/li:6/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "SEND EMAIL",
+            "w": 195,
+            "h": 54,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:2/div:1/div:1/div:2/div:1/div:2/div:1/div:3/button:1",
+            "at": "button.owl-dot.active",
+            "text": "",
+            "w": 24,
+            "h": 31,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:2/div:1/div:1/div:2/div:1/div:2/div:1/div:3/button:2",
+            "at": "button.owl-dot",
+            "text": "",
+            "w": 18,
+            "h": 25,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:2/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "CONTACT NOW",
+            "w": 224,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:2/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "VIEW MORE",
+            "w": 197,
+            "h": 56,
+            "font": 14,
+            "clipped": false,
+            "icon": true
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "w": 185,
+            "h": 60,
+            "font": 14,
+            "clipped": false,
+            "icon": false
+          }
+        ]
+      }
+    }
+  ]
+}

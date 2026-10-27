@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5c9743ad-fe33-4d21-9185-db012f6f96c7",
+  "status": "complete",
+  "name": "Co Projects",
+  "url": "https://styles.refero.design/style/5c9743ad-fe33-4d21-9185-db012f6f96c7",
+  "sourceWebsite": "https://co-projects.xyz",
+  "extractedAt": "2026-06-03T20:14:53.934Z",
+  "capturedAt": "2026-10-08T05:12:03.625080+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "black geometric sculpture on white void. Massive circular forms carved from a pure white gallery wall, where the only type is whisper-weight 400 and the only accent is the void between things.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b95ac49a-5565-4cbd-86a0-7b5c8290d508.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1e9f8ba2a91708d55bdcd2b3f93269cb95f37710a302512928371a70c9d52b02",
+      "bytes": 15821
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "34e1247f7e282eda68c1df1e842026389b82141994c104d28e03fa53b8e32021",
+      "bytes": 44770
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4979dea9c44a431c08e97e9b3b42ab45b778ea30d7ae7877b4d3e02f11d0e5f0",
+      "bytes": 13781
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6fed60df5b7d58d06f311fa52d98d2ddd60f2f972b0f2f804bdc844db6312706",
+      "bytes": 4912
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7f20670e54c8a906cd4d6a988b5038e15bf6af4f35d6421f32ff544461dafe25",
+      "bytes": 11010
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4f4a9ec7df8247d421dd3fa43fe9d2c8c1cab1ff59d70b2422114a85e3a4c5fc",
+      "bytes": 1809
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7004748c142e78c02259206843711201b0e31aac180fdfb14ea9c8e0e80378c9",
+      "bytes": 377
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0b4288ba18b2fa455985dc566f2d955e8c7d5da083d9daa45933932bef686296",
+      "bytes": 394
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "84e00fd9dd89efa61aec65248b96b237ad94254db30cffb1ec9da4e2f989d57d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2f3185e59b99511a040bfcb7d0edf3ccb38f3f2fc56968b9315421ba660cbdcf",
+      "bytes": 38112
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "12e1bb0bca771687e1d9fe20babe3843493a9e4ad709bf6810d49f5836c0e0e3",
+      "bytes": 19649
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2d7d20b154d042392f4ab97483eae717d3b7acd48403d8558e0cec9d93d5f630",
+      "bytes": 21141
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "87580f20f69ea8e8e8a5ee094b96f9f5330a92ae7eeda2cd3b2ab5f3a7f462a5",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fa2a2d9f0df443f8f46d647163981cce7fade2f3cc788af6b764a259bc1e69a1",
+      "bytes": 752
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7ba9f9744b1a00fcdcce62448510c3e984d133efc9d0c01dccb8eae0e0f74844",
+      "bytes": 1149
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10b9e7bb-9ffb-43eb-9360-5628d8390107",
+    "190d4a0b-0353-4fc8-be09-affa6e977146",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5c9743ad-fe33-4d21-9185-db012f6f96c7",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "bd62b51f-e1be-4e4f-b3d9-e9b91f817625",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

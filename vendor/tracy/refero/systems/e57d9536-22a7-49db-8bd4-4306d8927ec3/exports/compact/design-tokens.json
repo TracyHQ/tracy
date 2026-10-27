@@ -1,0 +1,34 @@
+{
+  "color": {
+    "electric-iris": {
+      "$value": "#2727e6",
+      "$type": "color",
+      "$description": "Electric Iris — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Right content canvas, card and elevated surfaces, sidebar text and illustration on the violet panel"
+    }
+  },
+  "font": {
+    "basis-grotesque": {
+      "$value": "Basis Grotesque",
+      "$type": "fontFamily",
+      "$description": "The workhorse — body, buttons, links, most headings, sidebar labels, and numbered list markers. Weight 500 carries buttons and emphasized inline text, 700 is reserved for strong emphasis within body copy. Its geometric neutrality lets the single accent color do the talking."
+    },
+    "ddc": {
+      "$value": "DDC",
+      "$type": "fontFamily",
+      "$description": "A more humanist display face used sparingly for select headings where a softer, less geometric voice is wanted. Its tight line height (1.00–1.14) is the signature: DDC pulls double duty as type and as a graphical block. Substitute with a humanist sans that has stronger character than Basis — Söhne Breit, ABC Diatype Mono, or Tiempos Headline at low weight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.superhibasicincome.com",
+      "siteName": "SuperHi Basic Income",
+      "extractedAt": "2026-06-03T21:26:52.796Z",
+      "variant": "compact"
+    }
+  }
+}

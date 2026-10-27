@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+  "status": "complete",
+  "name": "Relieve Furniture",
+  "url": "https://styles.refero.design/style/4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+  "sourceWebsite": "https://relievefurniture.com",
+  "extractedAt": "2026-06-03T21:17:31.002Z",
+  "capturedAt": "2026-10-08T05:11:27.829946+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Living moss on warm stone — a grounded, organic palette where a single deep forest-teal holds the structure and chartreuse sparks punctuate the silence.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7ed6a309-f215-455c-a704-cf9f71fc428d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "394e20dbdc34d44cc5723d2920492f62464e0f83f8415ba6494788f939109a00",
+      "bytes": 21872
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a6e577e7e09d469b28bb8f336f13ad39011e83f326a29cc7b2f08ff8e6b948e8",
+      "bytes": 112241
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b3d60cc46fb23fcb25ecdd2a635449df25e2932d567fd979a697a7af14ea9dd2",
+      "bytes": 19169
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "932bc147652338644bb1cc231ca18bea69b86c54f719257e470a3d53c169912d",
+      "bytes": 17918
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "392194210d8343064c5b56a7ff93585885b633c1e25148c244161af26d1bf065",
+      "bytes": 14433
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4426807306385730eef6e5172b621499e5b8d49b027404789e7ddfac4ef02038",
+      "bytes": 4896
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e4ca97aad0087a400079477599a45f1fd4c591b94699b2901fad931cafd497fd",
+      "bytes": 596
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8e18bd53aae43b755ab03185b050609535c6bd410d47ce3750282a85f2137ec7",
+      "bytes": 613
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7c1713b71cb72c932172f57d4fd496d7bf78d1b74b1c0ef1197cebaf246c341a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b986d76053169fcae8ebaa9d0ca4b5beecea8126f525a2d99a4059757283951a",
+      "bytes": 48025
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "485873d8fe4d4166d68e24bdf7405dea0a1b94286ab0e2d362dd6b3a638fec16",
+      "bytes": 25315
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "82584e8b1726f2e016b00bac12a6b82b8a7ceabbcb9b6e532f62a9e7beee4ae4",
+      "bytes": 60963
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "942d75b4048013939ec3517e82e8cd0a88ceed6c0739f8b7ace29d2bb5f3b1b3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ae11d1f98a242557371da918e65d0d2e5f8486264c8920be5ae462c43a3bd10e",
+      "bytes": 1666
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b4ffcbd01b31058950ccb46db279df6bc13716d23b43a949e6a95e88f2a52ef7",
+      "bytes": 2210
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e6b53c1e-644b-4300-b42f-0e64905d1443",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6",
+    "fdc72952-9b36-443a-9e0c-20b366aee29f"
+  ]
+}

@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-roberta-red: #ed2023;
+  --color-charcoal: #2b2f36;
+  --color-pure-white: #ffffff;
+  --color-pure-black: #000000;
+  --color-shadow-gray: #bfbfbf;
+
+  /* Typography */
+  --font-offset-tm: 'Offset TM', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-borensa: 'Borensa', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

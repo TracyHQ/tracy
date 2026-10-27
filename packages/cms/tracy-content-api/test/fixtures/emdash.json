@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "tracy-content/v1",
+  "view": "authenticated",
+  "site": {
+    "id": "s-fixture-emdash",
+    "name": null,
+    "url": "https://example.invalid",
+    "defaultLocale": "en",
+    "locales": ["en"]
+  },
+  "provenance": null,
+  "snapshot": {
+    "revision": "synthetic-snapshot-1",
+    "readAt": "2026-09-25T10:00:00Z"
+  },
+  "pagination": {
+    "limit": 30,
+    "nextCursor": null,
+    "total": 2
+  },
+  "completeness": {
+    "scope": "mapped-content",
+    "status": "partial",
+    "unresolved": [
+      {
+        "code": "FIXTURE_NOT_LIVE",
+        "message": "Seed/profile values; synthetic graph, not a CMS response."
+      }
+    ]
+  },
+  "contents": [
+    {
+      "id": "c-example-page",
+      "type": "project",
+      "title": "Elektra appliance plant, Lipetsk SEZ",
+      "slug": "elektra-lipetsk",
+      "url": null,
+      "locale": "en",
+      "translationGroupId": null,
+      "summary": null,
+      "publishedAt": null,
+      "createdAt": null,
+      "updatedAt": null,
+      "revision": "synthetic-revision-1",
+      "detailState": "complete",
+      "bodyHtml": null,
+      "tags": [],
+      "fields": [],
+      "blocks": [
+        {
+          "id": "b-shared",
+          "key": "b-shared",
+          "role": null,
+          "position": 0,
+          "sharedContentId": "c-example-shared",
+          "visibility": "unknown",
+          "fields": [],
+          "items": []
+        },
+        {
+          "id": "b-list",
+          "key": "b-list",
+          "role": null,
+          "position": 1,
+          "sharedContentId": null,
+          "visibility": "unknown",
+          "fields": [],
+          "items": [
+            {
+              "id": "i-example",
+              "position": 0,
+              "fields": [
+                {
+                  "key": "caption",
+                  "type": "text",
+                  "value": "Synthetic card",
+                  "slotKey": null,
+                  "semanticKey": null
+                }
+              ],
+              "contentId": null
+            }
+          ]
+        }
+      ],
+      "images": [
+        {
+          "id": "m-example",
+          "src": "/media/example.png",
+          "alt": null,
+          "width": null,
+          "height": null,
+          "usages": [
+            {
+              "contentId": "c-example-page",
+              "blockId": "b-list",
+              "itemId": "i-example"
+            }
+          ]
+        }
+      ],
+      "relations": [],
+      "links": {
+        "self": "/content.json?id=c-example-page"
+      },
+      "publication": {
+        "status": "unknown",
+        "valueSource": "unknown",
+        "scheduledAt": null
+      }
+    },
+    {
+      "id": "c-example-shared",
+      "type": "shared",
+      "title": null,
+      "slug": null,
+      "url": null,
+      "locale": null,
+      "translationGroupId": null,
+      "summary": null,
+      "publishedAt": null,
+      "createdAt": null,
+      "updatedAt": null,
+      "revision": "synthetic-revision-1",
+      "detailState": "complete",
+      "bodyHtml": null,
+      "tags": [],
+      "fields": [
+        {
+          "key": "brand_name",
+          "type": "text",
+          "value": "NORTHGATE",
+          "slotKey": null,
+          "semanticKey": null
+        }
+      ],
+      "blocks": [],
+      "images": [],
+      "relations": [],
+      "links": {
+        "self": "/content.json?id=c-example-shared"
+      },
+      "publication": {
+        "status": "unknown",
+        "valueSource": "unknown",
+        "scheduledAt": null
+      }
+    }
+  ]
+}

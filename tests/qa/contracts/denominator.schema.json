@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tch:qa:schema:denominator:1",
+  "title": "Tracy QA layer denominator",
+  "description": "What one layer is responsible for: items, the edge tags each item owes, the tags that do not apply (with a reason and a source) and what the extraction could not resolve. The same shape for every layer; tests/qa/lib/denominator.mjs adds the rules a schema cannot express (kinds and tags per layer, N-A grammar, unique ids).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "layer", "source", "revision", "command", "naReasons", "items", "unresolved"],
+  "properties": {
+    "schema": { "const": "tracy-qa-denominator/v1" },
+    "layer": {
+      "enum": ["static", "unit", "api", "infra", "ui", "flows", "harness", "cms", "mail", "related"]
+    },
+    "source": { "type": "string", "minLength": 1 },
+    "revision": {
+      "description": "What the extraction was taken from: a commit (the only form coverage can prove fresh), a content hash, or null when unknown.",
+      "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 1 }]
+    },
+    "command": { "type": "string", "minLength": 1 },
+    "note": { "type": "string", "minLength": 1 },
+    "sourcePaths": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "items": { "type": "array", "items": { "$ref": "#/$defs/item" } },
+    "unresolved": { "type": "array", "items": { "$ref": "#/$defs/unresolved" } },
+    "naReasons": {
+      "description": "Every N-A reason once: key -> \"<reason>; source: <reference>\". `{id}` in a reason stands for the id of the item that cites it. Items point here from `na`, so a reason shared by hundreds of items is written once.",
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "manual": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": { "id": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "details": {
+      "description": "Layer-specific facts (counts, hashes of sources, coverage tables). Which keys a layer may write is fixed in tests/qa/lib/denominator.mjs.",
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "requiredTags", "na"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "requiredTags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "na": {
+          "description": "tag -> key of the reason in `naReasons`",
+          "type": "object",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "meta": {
+          "description": "Facts of this kind of item. Which keys a kind may carry is fixed in tests/qa/lib/denominator.mjs.",
+          "type": "object"
+        }
+      }
+    },
+    "unresolved": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason"],
+      "anyOf": [{ "required": ["id"] }, { "required": ["source"] }],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "detail": {
+          "description": "Evidence for the entry (for example the rows that were not read).",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

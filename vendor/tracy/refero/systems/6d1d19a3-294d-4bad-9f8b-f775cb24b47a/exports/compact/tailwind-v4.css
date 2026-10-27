@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-off-white-ink: #fffffe;
+  --color-page-void: #1c1c1a;
+  --color-graphite-card: #232320;
+  --color-slate-matte: #2e2e2b;
+  --color-ash-step: #35352f;
+  --color-stone-lift: #3e3e38;
+  --color-pewter-button: #45453e;
+  --color-bistre-border: #161615;
+  --color-fog-text: #7f7e77;
+  --color-sand-label: #a3a29c;
+  --color-spray-wash: #3fe0a6;
+
+  /* Typography */
+  --font-styrene: 'Styrene', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,71 @@
+---
+title: Tracy API
+description: Lee y modifica un sitio web alojado por Tracy — Joomla, WordPress o EmDash — por HTTPS con una clave vinculada a tu propio asiento en ese sitio.
+template: splash
+hero:
+  tagline: Una sola API REST sobre todos los sitios web que Tracy aloja. Una clave vinculada a tu asiento, recursos que ya conoces — páginas, contenidos, registros — y cada escritura reversible.
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: Inicio rápido
+      link: /es/quickstart/
+      icon: right-arrow
+    - text: Referencia de la API
+      link: /es/reference/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## Qué puedes hacer en cinco minutos
+
+1. Crea una clave de API en **Settings → API keys** del sitio en el que tienes un asiento.
+2. `GET /v1/me` — comprueba en nombre de quién actúa la clave, en qué sitio y con qué alcances.
+3. `GET /v1/sites/{key}/pages` — lista las páginas publicadas del sitio con los ids de sus contenidos.
+4. `PATCH /v1/sites/{key}/records/{kind}/{id}` — cambia un título, anotado bajo un `apply_id`.
+5. `POST /v1/sites/{key}/applies/{apply_id}/revert` — vuelve a dejarlo como estaba.
+
+El [Inicio rápido](/es/quickstart/) recorre exactamente estas cinco llamadas con `curl`.
+
+<CardGrid>
+  <Card title="Claves vinculadas a un asiento" icon="seti:lock">
+    Una clave actúa como la persona que la creó, en un solo sitio, con como máximo los conjuntos de herramientas que el rol de esa persona concede. Revocar un asiento revoca con él todas sus claves. Consulta [Autenticación](/es/authentication/).
+  </Card>
+  <Card title="Una sola forma para tres CMS" icon="puzzle">
+    Páginas, contenidos, bloques y campos se leen igual en Joomla, WordPress y EmDash. Los registros son las filas propias del CMS, para cuando los necesites. Consulta [Conceptos](/es/concepts/).
+  </Card>
+  <Card title="Cada escritura es reversible" icon="rocket">
+    Cada cambio queda anotado bajo un `apply_id`; `POST …/applies/{id}/revert` restaura todo lo escrito bajo él, de lo más reciente a lo más antiguo.
+  </Card>
+  <Card title="Versionada, con registro de cambios" icon="document">
+    La API es `v1` en la ruta. Las adiciones reciben una línea fechada en el [registro de cambios](/es/changelog/); un cambio de significado es una versión nueva.
+  </Card>
+</CardGrid>
+
+## Cómo está organizado el sistema
+
+```text
+Bearer trk_…  (you, your agent, a partner's integration)      cookie tracy_sess (a browser on cowork.*)
+      |  /v1/*  — Bearer only, no cookie                              |  /api/sites/{key}/apply, /api/me/keys
+  api.tracy.ai ── API host ── allowlist ──┐                           |
+                 └─ /docs/api/<document>   (this site: docs.tracy.ai) |
+                                          ▼                           ▼
+                        applyDoor(siteKey, action, params, principal)   ← ONE path: seat · effective permissions ∩ scopes · lease · audit
+                                          |
+                  Claude Cowork plugin (Joomla, WordPress) · Tracy reader (EmDash)
+```
+
+- **`api.tracy.ai`** responde `/v1/*` y los tres documentos para máquinas bajo `/docs/api/` (OpenAPI, plugin Claude Cowork, llms.txt). Esta documentación y la referencia interactiva están en **`docs.tracy.ai`**. Nada más: el inicio de sesión, el espacio de trabajo y las herramientas de Ops viven en el propio nombre de host de Tracy y en ambos responden `404 NOT_ON_THIS_HOST`.
+- **Una sola puerta.** Cada ruta `/v1` es un alias fino de una acción de la puerta Apply — el mismo camino que sigue el agente de Tracy: quién eres (el propietario de la clave), qué permite tu asiento, el arrendamiento de escritura del sitio y el registro de auditoría.
+- **El sitio responde.** En Joomla y WordPress la llamada llega al plugin Claude Cowork instalado en el sitio; en EmDash, al lector propio de Tracy. Lo que el sitio rechaza te llega como un [error](/es/reference/errors/) documentado.
+
+## Dónde está cada cosa
+
+| | |
+|---|---|
+| URL base | `https://api.tracy.ai/v1` (desarrollo: `https://api.tracy.site/v1`) |
+| OpenAPI 3.1 | [`/api/openapi.json`](/api/openapi.json) |
+| Referencia interactiva | [`/api/reference/`](/api/reference/) |
+| Para modelos de lenguaje | [`/api/llms.txt`](/api/llms.txt) |
+| Estado | `GET /health` → `{ "ok": true }` |

@@ -1,0 +1,295 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-titan",
+  "release": "quickstart/ja-titan/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default-horizontal",
+    "heading": "h2.item-title",
+    "body": "p.tagline",
+    "button-primary": "div.cta-action a.btn.btn-secondary",
+    "container": "div.t4-section-inner.container",
+    "input": "#email_field_467"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 24px",
+    "body": "first body paragraph",
+    "button-primary": "the yellow call to action (Titan styles its main button as .btn-secondary)",
+    "container": "first content container, max-width 1320px",
+    "input": "first text field"
+  },
+  "keepScopes": [".slide-layout", ".acm-cta"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#121212",
+    "--fg": "#b0b0b0",
+    "--fg-2": "#ffffff",
+    "--accent": "#fadf00",
+    "--accent-hover": "#245dc9",
+    "--surface": "#1b1b1b",
+    "--surface-warm": "#121212",
+    "--meta": "#b0b0b0",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#f8f8f8",
+    "--muted": "#7c7c7c",
+    "--font-display": "\"Inter\", sans-serif",
+    "--font-body": "\"Inter\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#464646",
+      "fg-2": "#292929",
+      "accent": "#1d6bff",
+      "accent-hover": "#245dc9",
+      "surface": "#f8f9fa",
+      "surface-warm": "#121212",
+      "meta": "#b0b0b0",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#f8f8f8",
+      "muted": "#7c7c7c"
+    },
+    {
+      "bg": "#121212",
+      "fg": "#b0b0b0",
+      "fg-2": "#ffffff",
+      "accent": "#fadf00"
+    },
+    {
+      "accent": "#f1b008"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "bg": "#ffffff",
+      "border": "#f8f8f8",
+      "muted": "#7c7c7c",
+      "border-soft": "#e9ecef",
+      "accent-on": "#282828",
+      "fg": "#b0b0b0"
+    },
+    {
+      "border-soft": "#dee2e6",
+      "fg": "#a7a6a6"
+    },
+    {
+      "border-soft": "#eaeaea"
+    }
+  ],
+  "baseNote": "the page as served: body.dark-active (the template's own dark mode is its default look), bg #121212, cards and panels --t4-gray-100 #1b1b1b (css/tpl/theme.tpl.css); the theme file's light set stays a palette. painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (58 line colours, 41 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", ".cta-action .btn-secondary"],
+    "buttonPrimary": [".btn-primary", ".cta-action .btn-secondary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "bodyFace": ["body"],
+    "themeToggle": ".ja-dark-mode"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p.item-introtext, main p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": ".t4-section :is(h1, h2, h3, h4)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 24 tried (byte 5829); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 50,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 18,
+      "kind": "custom",
+      "role": "border",
+      "near": "#f8f8f8",
+      "distance": 0
+    },
+    {
+      "hex": "#7c7c7c",
+      "uses": 13,
+      "kind": "custom",
+      "role": "muted",
+      "near": "#7c7c7c",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 7,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 7,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#282828",
+      "uses": 6,
+      "kind": "custom",
+      "role": "accent-on",
+      "near": "#1b1b1b",
+      "distance": 23
+    },
+    {
+      "hex": "#b0b0b0",
+      "uses": 5,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#b0b0b0",
+      "distance": 0
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#a7a6a6",
+      "uses": 4,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#b0b0b0",
+      "distance": 17
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the 1.0.1 release build itself (stand.mjs --from-dir ~/tracy-bench-work/release/ds-r2b/ja-titan/release; tasks/evidence/ds-remeasure-5-2026-10-11/ja-titan): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 73%–97% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light); the template's own default is its dark mode (body.dark-active). Round 2 measured 1.0.0 tokenized in place. The first re-measure failed 6 of 12 on probe artefacts, each fixed in flow.mjs and checked on the page: a display:none 1px divider (.module-hilite::before) read as the dark fill behind the Top News titles under the light systems (1.14–1.47); the flame icon laid in the flow after \"Top News\" read as the title's ground (Toggl Track 4.09); the next carousel slide's caption, clipped at the sidebar, read against the white column (Apple 1.28). Carousels are stopped on their first slide (measureStill). A site still on 1.0.0 wearing a system was not measured",
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"], body.dark-active",
+  "tokenScopeNote": "the template's own dark mode is a body class (body.dark-active, css/tpl/theme.tpl.css) that declares T4's runtime colours and its --t4-gray-* scale again on body, under :root: the slot's variables are written on that body too, or the runtime colours it repoints (nav and content links, headings) stay the dark mode's literals under a light system",
+  "keepScopesNote": "the Trending Today slider: captions and arrows drawn on the photo (.dark-active .slide-layout .item-title a takes --color-dark, white in the dark mode): kept the template's, or a light system's dark text lands on the photo",
+  "keepDefaults": {
+    "--body-bg-color": "#121212",
+    "--body-text-color": "#B0B0B0",
+    "--body-link-color": "#F1B008",
+    "--body-link-hover-color": "#F1B008",
+    "--color-primary": "#F1B008",
+    "--color-secondary": "#fadf00",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#fff",
+    "--mainnav-text-color": "#464646",
+    "--mainnav-link-color": "#fff",
+    "--mainnav-link-hover-color": "#F1B008",
+    "--mainnav-link-active-color": "#F1B008",
+    "--footer-bg-color": "#121212",
+    "--footer-text-color": "#b0b0b0",
+    "--footer-link-color": "rgba(255, 255, 255, 0.6)",
+    "--footer-link-hover-color": "#ffffff",
+    "--t4-gray-100": "#1B1B1B",
+    "--t4-gray-200": "#343a40",
+    "--t4-gray-300": "#464646",
+    "--t4-gray-400": "#7C7C7C",
+    "--t4-gray-500": "#A7A6A6",
+    "--t4-gray-600": "#ced4da",
+    "--t4-gray-700": "#dee2e6",
+    "--t4-gray-800": "#e9ecef",
+    "--t4-gray-900": "#F8F8F8",
+    "--t4-heading-color": "#fff",
+    "--t4-dark": "#fff",
+    "--t4-white": "#000"
+  },
+  "keepDefaultsNote": "what the slider computes on the released page (body.dark-active), read 11/10/2026",
+  "selectorsNote": "themeToggle: Titan's own light/dark switch (.ja-dark-mode, js/template.js) is hidden while a system is worn: a system is one look",
+  "varRoles": {
+    "--t4-gray-100": "surface",
+    "--t4-gray-200": "surface",
+    "--t4-gray-300": "border",
+    "--t4-gray-400": "muted",
+    "--t4-gray-500": "muted",
+    "--t4-gray-600": "fg",
+    "--t4-gray-700": "fg",
+    "--t4-gray-800": "fg-2",
+    "--t4-gray-900": "fg-2",
+    "--t4-emphasis-color": "fg-2",
+    "--t4-heading-color": "fg-2",
+    "--t4-dark": "fg-2",
+    "--t4-white": "bg",
+    "--body-link-color": "accent-text",
+    "--body-link-hover-color": "accent-text-hover",
+    "--mainnav-link-hover-color": "accent-text",
+    "--mainnav-link-active-color": "accent-text"
+  },
+  "varRolesNote": "the role of each of its own colour variables, wherever a stylesheet declares one (tokenize.mjs varRoles): the T4 grey scale by what its stylesheets paint with each step (css/template.css, 11/10/2026) — --t4-gray-100/200 fill cards and panels (26 + 16 backgrounds), 300 a line-dark fill, 400/500 grey meta text, 600/700 secondary text (the dark mode redeclares 700 on .module-title a and .nav-tabs), 800/900 article-title links and strong text (Most View's titles: #F8F8F8 read as a line colour, light grey on a light system); heading, emphasis and the dark/white aliases take the page's text and ground; the dark mode's link colours are text, the readable accent",
+  "keepText": [".slide-layout"],
+  "minVersion": {
+    "quickstart/ja-titan/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-titan/j6": "1.0.1"
+  },
+  "templateVars": {},
+  "templateVarsNote": "none beyond the family's: measured so (11/10/2026, round 2 r2b) — an empty map also keeps pass-joomla.mjs from deriving T4 theme variables (and dropping keepDefaults) on a later run",
+  "measureStill": true,
+  "measureStillNote": "its owl carousels (Trending Today, the slide layout that runs on under the sidebar) autoplay: each step measured another photo under the same white caption (Apple 1.28 on one, 11/10/2026); flow.mjs stops them on their first slide",
+  "bands": {
+    ".slide-layout": {
+      "ground": "#121212",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".item-cat a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".acm-cta.style-1": {
+      "ground": "#121212",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".cta-desc span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "reviewV8Note": "15/10/2026 (look review v8): the \"Easy way to TRADE Bitcoin\" call band (.acm-cta.style-1) sits on a dark photo; its highlighted word reads --color-secondary, which a dark system makes dark: near-black on the photo under Moxie, Spotify and Linear. It is a picture band like the hero: its words keep the template’s white, the highlighted word takes the accent judged on the photo"
+}

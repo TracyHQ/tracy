@@ -1,0 +1,225 @@
+---
+import { getEmDashCollection, getEmDashEntry, getTaxonomyTerms, getTermsForEntries } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import { wordsOf } from '@/lib/locale-words'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { mediaUrl } from '@/lib/media'
+import { referencedEntry } from '@/lib/references'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+
+const { entry: home } = await getEmDashEntry('home', 'home', {
+  locale,
+  references: { project_big: true, project_small_1: true, project_small_2: true }
+})
+if (!home) return new Response('Home entry missing', { status: 500 })
+const h = home.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'home', home)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+
+// Projects: three reference fields (src/lib/references.ts).
+const [big, ...smallRes] = await Promise.all(
+  ['project_big', 'project_small_1', 'project_small_2'].map((slug) =>
+    referencedEntry(home as any, slug, 'projects', locale)
+  )
+)
+const small = smallRes.filter(Boolean) as any[]
+
+const { entries: news } = await getEmDashCollection('posts', {
+  locale,
+  status: 'published',
+  orderBy: { date: 'desc' },
+  limit: 3
+})
+const cats = await getTermsForEntries(
+  'posts',
+  news.map((p: any) => p.data.id),
+  'category',
+  { locale }
+)
+const projectUrl = (slug: string) => href(locale, `/projects/${slug}`)
+const sectors = await getTaxonomyTerms('sector', { locale })
+
+// A home block whose only job is to show a page goes with that page (TCH #1013): when the customer unticks
+// Projects or News, Apply unpublishes the page record, its list view answers 404 on `!entry` (Projects.astro,
+// News.astro), and a block still linking there would be a row of dead links. Same record, same test.
+const [{ entry: projectsPage }, { entry: newsPage }] = await Promise.all([
+  getEmDashEntry('projects_page', 'projects', { locale }),
+  getEmDashEntry('news_page', 'news', { locale })
+])
+const showProjects = Boolean(projectsPage)
+const showNews = Boolean(newsPage) && news.length > 0
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const cta1Url = h.hero_cta1_url || href(locale, '/services')
+const servicesAllUrl = h.services_all_url || href(locale, '/services')
+const bandUrl = h.band_url || href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [cta1Url, servicesAllUrl, bandUrl])
+---
+
+<Base chrome={chrome} title={h.title} description={h.hero_text} heroImage={mediaUrl(h.hero_image)} currentPath="/" content={{ collection: "home", id: home.data.id, slug: "home", toPath: () => "/" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<section class="band-ink relative overflow-hidden">
+			<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] items-end gap-14 pt-[clamp(56px,6vw,96px)]">
+				<div class="pb-24">
+					<div class="mb-7 inline-flex items-center gap-2.5 border border-on-ink-line-2 px-3.5 py-[7px] text-[12px] uppercase tracking-[.14em] text-on-ink-muted">
+						<span class="h-1.5 w-1.5 rounded-[var(--ds-pill-radius,calc(infinity_*_1px))] bg-signal"></span>{h.hero_badge}
+					</div>
+					<h1 class="h-hero mb-6" {...$page("hero_title_a")}>{h.hero_title_a}<br /><em class="text-signal-text" {...$page("hero_title_b")}>{h.hero_title_b}</em></h1>
+					<p class="mb-9 max-w-[520px] text-[18px] leading-[1.65] text-on-ink-muted" {...$page("hero_text")}>{h.hero_text}</p>
+					<div class="flex flex-wrap gap-3">
+						{h.hero_cta1_label && live(cta1Url) && <a href={cta1Url} class="btn-primary !px-[var(--ds-btn-pad-x,28px)] !py-[var(--ds-btn-pad-y,15px)] text-[15px] [[data-ds-worn]_&]:inline-flex [[data-ds-worn]_&]:items-center" {...$page("hero_cta1_label")}>{h.hero_cta1_label}</a>}
+						{h.hero_cta2_label && (h.hero_cta2_url ? <a href={h.hero_cta2_url} class="btn-outline-ink" target="_blank" rel="noopener" {...$page("hero_cta2_label")}>{h.hero_cta2_label}</a> : <span class="btn-outline-ink opacity-60" aria-disabled="true" {...$page("hero_cta2_label")}>{h.hero_cta2_label}</span>)}
+					</div>
+				</div>
+				<Photo image={h.hero_image} stamp={$page("hero_image")} alt="" placeholder={slots.hero} class="h-[clamp(300px,40vw,460px)] min-w-0 !border-0" priority />
+			</div>
+			{(h.stats ?? []).length > 0 && (
+			<div class="border-t border-on-ink-line">
+				<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))]">
+					{(h.stats ?? []).map((s: any) => (
+						<div class="border-r border-on-ink-line px-6 py-7" {...$page.block("stats")}>
+							<div class="font-serif text-[clamp(28px,3.2vw,38px)] leading-none" {...$page("stats.value")}>{s.value}</div>
+							<div class="mt-1 text-[13px] text-on-ink-meta" {...$page("stats.label")}>{s.label}</div>
+						</div>
+					))}
+				</div>
+			</div>
+			)}
+		</section>
+
+		<section id="sec-services" class="container-site py-[88px]">
+			<div class="mb-10 flex items-end justify-between gap-8 border-b border-line pb-5">
+				<div>
+					<div class="eyebrow mb-2.5" {...$page("services_eyebrow")}>{h.services_eyebrow}</div>
+					<h2 class="h-section-lg" {...$page("services_title")}>{h.services_title}</h2>
+				</div>
+				{live(servicesAllUrl) && <a href={servicesAllUrl} class="link-underline" {...$page("services_all_label")}>{h.services_all_label}</a>}
+			</div>
+			<div class="grid-lines grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
+				{(h.services_items ?? []).map((it: any) => (
+					<div class="px-[26px] py-8 hover:!bg-signal-tint" {...$page.block("services_items")}>
+						<div class="mb-[22px] font-serif text-[15px] text-signal-text" {...$page("services_items.number")}>{it.number}</div>
+						<h3 class="mb-2.5 text-[19px] font-semibold tracking-[-.01em]" {...$page("services_items.title")}>{it.title}</h3>
+						<p class="text-[14.5px] leading-[1.6] text-fg-muted" {...$page("services_items.text")}>{it.text}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		{showProjects && (
+		<section id="sec-projects" class="band-paper2">
+			<div class="container-site py-[88px]">
+				<div class="mb-10 flex items-end justify-between gap-8">
+					<h2 class="h-section-lg" {...$page("projects_title")}>{h.projects_title}</h2>
+					<div class="flex flex-wrap items-center gap-2">
+						<a href={href(locale, "/projects")} class="chip-active tb-chip-on-band !bg-forest" {...$site("all_label")}>{site.all_label ?? wordsOf(uiLocale(locale)).all}</a>
+						{sectors.map((t) => <a href={href(locale, `/projects/sector/${t.slug}`)} class="chip !border-line-strong">{t.label}</a>)}
+						<a href={href(locale, "/projects")} class="link-underline ml-1.5" {...$site("all_projects_label")}>{site.all_projects_label} →</a>
+					</div>
+				</div>
+				<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
+					{big && (
+						<article class="border border-line-card bg-paper" {...$('projects', big)()}>
+							<Photo image={big.data.image} stamp={$('projects', big)("image")} alt={big.data.title} placeholder={slots.project} class="h-[300px] !border-0 !border-b" />
+							<div class="p-[26px]">
+								{big.data.card_tag && <div class="text-[12px] font-semibold uppercase tracking-[.14em] text-signal-text" {...$('projects', big)("card_tag")}>{big.data.card_tag}</div>}
+								<h3 class="my-2.5 text-[24px] font-semibold tracking-[-.015em]" {...$('projects', big)("title")}>{big.data.title}</h3>
+								<p class="mb-[18px] text-[15px] leading-[1.6] text-fg-muted" {...$('projects', big)("summary")}>{big.data.summary}</p>
+								<a href={projectUrl(big.data.slug ?? "")} class="link-underline" {...$('projects', big)("cta_label")}>{big.data.cta_label ? `${big.data.cta_label} →` : `${site.all_projects_label} →`}</a>
+							</div>
+						</article>
+					)}
+					{small.map((p) => (
+						<article class="border border-line-card bg-paper" {...$('projects', p)()}>
+							<Photo image={p.data.image} stamp={$('projects', p)("image")} alt={p.data.title} placeholder={slots.projectSm} class="h-[190px] !border-0 !border-b" />
+							<a href={projectUrl(p.data.slug ?? "")} class="block p-[22px] text-fg hover:text-forest-text">
+								{p.data.card_tag && <div class="text-[12px] font-semibold uppercase tracking-[.14em] text-signal-text" {...$('projects', p)("card_tag")}>{p.data.card_tag}</div>}
+								<h3 class="mb-2 mt-2.5 text-[19px] font-semibold tracking-[-.01em]" {...$('projects', p)("title")}>{p.data.title}</h3>
+								<p class="text-[14.5px] leading-[1.6] text-fg-muted" {...$('projects', p)("summary")}>{p.data.summary}</p>
+							</a>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+		)}
+
+		<section id="sec-about" class="container-site grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] items-center gap-16 py-[88px]">
+			<Photo image={h.about_image} stamp={$page("about_image")} alt="" placeholder={slots.team} class="h-[clamp(300px,38vw,420px)] min-w-0" />
+			<div>
+				<div class="eyebrow mb-3.5" {...$page("why_eyebrow")}>{h.why_eyebrow}</div>
+				<h2 class="h-section-lg mb-[22px]" {...$page("why_title")}>{h.why_title}</h2>
+				<div class="flex flex-col gap-5">
+					{(h.why_items ?? []).map((w: any) => (
+						<div class="grid grid-cols-[32px_1fr] items-start gap-4" {...$page.block("why_items")}>
+							<div class="font-serif text-[20px] leading-[1.2] text-forest-text">→</div>
+							<div>
+								<div class="mb-1 text-[17px] font-semibold" {...$page("why_items.title")}>{w.title}</div>
+								<p class="text-[15px] leading-[1.6] text-fg-muted" {...$page("why_items.text")}>{w.text}</p>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-forest text-on-forest-band">
+			<div class="container-site flex flex-wrap items-center justify-between gap-10 py-16">
+				<div>
+					<h2 class="h-section mb-2.5 text-[color:var(--ds-c-on-accent-band,#F5F3EE)]" {...$page("band_title")}>{h.band_title}</h2>
+					<p class="text-[16.5px] text-on-forest-muted" {...$page("band_text")}>{h.band_text}</p>
+				</div>
+				{live(bandUrl) && <a href={bandUrl} class="btn-primary !px-[34px] !py-[17px] !text-[16px]" {...$page("band_button")}>{h.band_button}</a>}
+			</div>
+		</section>
+
+		{showNews && (
+		<section class="container-site py-[88px]">
+			<div class="mb-9 flex items-end justify-between gap-8 border-b border-line pb-5">
+				<h2 class="h-section" {...$page("news_title")}>{h.news_title}</h2>
+				<a href={href(locale, "/news")} class="link-underline" {...$page("news_all_label")}>{h.news_all_label}</a>
+			</div>
+			<div class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-7">
+				{news.map((p: any) => {
+					const cat = (cats.get(p.data.id) ?? [])[0];
+					const url = href(locale, `/news/${p.slug}`);
+					return (
+						<article {...$('posts', p)()}>
+							<Photo image={p.data.featured_image} stamp={$('posts', p)("featured_image")} alt={p.data.title} placeholder={slots.news} class="mb-[18px] h-[180px]" />
+							<div class="mb-2 text-[13px] text-fg-meta">{formatDate(p.data.date, uiLocale(locale))}{cat ? ` · ${cat.label}` : ""}</div>
+							<h3 class="mb-2 text-[19px] font-semibold leading-[1.35] tracking-[-.01em]"><a href={url} class="text-fg hover:text-forest-text" {...$('posts', p)("title")}>{p.data.title}</a></h3>
+							<p class="text-[14.5px] leading-[1.6] text-fg-muted" {...$('posts', p)("excerpt")}>{p.data.excerpt}</p>
+						</article>
+					);
+				})}
+			</div>
+		</section>
+		)}
+
+		{(h.client_logos ?? []).length > 0 && (
+		<section class="border-t border-line">
+			<div class="container-site flex flex-wrap items-center justify-between gap-10 py-11">
+				<span class="text-[12px] font-semibold uppercase tracking-[.16em] text-fg-meta" {...$page("clients_label")}>{h.clients_label}</span>
+				<div class="flex flex-wrap gap-3.5">
+					{(h.client_logos ?? []).map((l: any) => <Photo image={l.logo} stamp={$page("client_logos.logo")} alt={l.name ?? ""} placeholder="Logo" contain class="h-[52px] w-[130px]" width={260} height={104}/>)}
+				</div>
+			</div>
+		</section>
+		)}
+	</main>
+</Base>

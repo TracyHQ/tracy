@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-obsidian: #222222;
+  --color-graphite: #333333;
+  --color-bone: #ffffff;
+  --color-ember: #ffaa20;
+  --color-amber-glow: #ff8800;
+
+  /* Typography — Font Families */
+  --font-mija: 'Mija', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

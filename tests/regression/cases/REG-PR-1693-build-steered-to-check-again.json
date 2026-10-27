@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1693-build-steered-to-check-again",
+  "kind": "fix",
+  "title": "A whole-site build about to end on a failed check while checks remain is steered to repair and check again, at most three times a turn",
+  "pr": 1693,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: checkAgainStep over a log whose latest tracy_demo check failed with one check run.",
+    "S2: the same with a later check that passed; with five failed checks; with DEMO_CHECK_BUDGET_EXHAUSTED; with no check."
+  ],
+  "expect": ["S1: a system-reminder saying 4 of 5 checks remain.", "S2: null each time."],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/site-context.mjs packages/tools/tracy-site-tools/src/host/index.ts",
+    "dom": ""
+  },
+  "fence": "checkAgainStep and its turn-stopping steer",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs"
+    ],
+    "tests": [
+      "checkAgainStep: a build ending on a failed check with checks left is steered on; a pass, a spent budget or no check is not"
+    ],
+    "needs": []
+  }
+}

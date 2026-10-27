@@ -1,0 +1,227 @@
+---
+/**
+ * Plan comparison table. Rows carry either a `group` (a band heading) or a `label` with three cells.
+ * Cell words "yes"/"no" become a check / a dash (the raw word stays as the accessible name); anything
+ * else prints as text. The table scrolls inside its own box on narrow screens, never the page.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import Col from './c/Col.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+
+const text = (value: unknown) => String(value ?? '').trim()
+const CELL_KEYS = ['free_cell', 'team_cell', 'ent_cell'] as const
+const items: any[] = Array.isArray(data.items) ? data.items : []
+
+// A column is shown when it has a name or at least one filled cell.
+const columns = [data.col1_name, data.col2_name, data.col3_name]
+  .map((name, i) => ({ name: text(name), key: CELL_KEYS[i], field: `col${i + 1}_name` }))
+  .filter((col) => col.name || items.some((row) => text(row?.[col.key])))
+
+type Cell = { kind: 'yes' | 'no' | 'text' | 'empty'; raw: string }
+function cell(value: unknown): Cell {
+  const raw = text(value)
+  const flag = raw.toLowerCase()
+  if (!raw) return { kind: 'empty', raw }
+  if (flag === 'yes' || flag === 'true' || raw === '✓') return { kind: 'yes', raw }
+  if (flag === 'no' || flag === 'false' || raw === '-' || raw === '—') return { kind: 'no', raw }
+  return { kind: 'text', raw }
+}
+
+// Source rows that only name a group have empty cells; they render as a band heading alone
+// (the Joomla module also printed an empty row of dashes under each group — a data artefact).
+const rows: Array<{ type: 'group'; label: string } | { type: 'row'; label: string; cells: Cell[] }> = []
+for (const row of items) {
+  if (!row) continue
+  const group = text(row.group)
+  const label = text(row.label)
+  const cells = columns.map((col) => cell(row[col.key]))
+  if (group) rows.push({ type: 'group', label: group })
+  if (label || cells.some((c) => c.kind !== 'empty')) rows.push({ type: 'row', label, cells })
+}
+const hasHead = Boolean(data.eyebrow || data.title || data.sub)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'pricing_matrix', null)
+---
+
+{
+	rows.length > 0 && (
+		<section class="k-section matrix" {...s()}>
+			<Col narrow={narrow}>
+				{hasHead && (
+					<header class="head">
+						<hr class="rule" />
+						{data.eyebrow && <p class="k-eyebrow eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+						{data.title && <h2 class="title" {...s('title')}>{data.title}</h2>}
+						{data.sub && <p class="sub" {...s('sub')}>{data.sub}</p>}
+					</header>
+				)}
+				<div class="scroll" role="region" aria-label={data.title || undefined} tabindex="0">
+					<table>
+						<thead>
+							<tr>
+								<th scope="col" class="corner" {...s('corner_label')}>
+									{data.corner_label}
+								</th>
+								{columns.map((col) => (
+									<th scope="col" class="col" {...s(col.field)}>
+										{col.name}
+									</th>
+								))}
+							</tr>
+						</thead>
+						<tbody>
+							{rows.map((row) =>
+								row.type === 'group' ? (
+									<tr class="group" {...s.block('items')}>
+										<th scope="colgroup" colspan={columns.length + 1} {...s('items.group')}>
+											{row.label}
+										</th>
+									</tr>
+								) : (
+									<tr {...s.block('items')}>
+										<th scope="row" class="label" {...s('items.label')}>
+											{row.label}
+										</th>
+										{row.cells.map((c, i) => (
+											<td {...s(`items.${columns[i].key}`)}>
+												{c.kind === 'yes' ? (
+													<span class="yes" role="img" aria-label={c.raw}>
+														<Icon name="check" size={18} strokeWidth={2.2} />
+													</span>
+												) : c.kind === 'no' ? (
+													<span class="no" role="img" aria-label={c.raw}>
+														—
+													</span>
+												) : (
+													c.raw
+												)}
+											</td>
+										))}
+									</tr>
+								)
+							)}
+						</tbody>
+					</table>
+				</div>
+			</Col>
+		</section>
+	)
+}
+
+<style>
+	/* Directly after the plans section the source leaves ~64px between the includes box and this rule;
+	   Pricing drops its bottom padding in that case (lens N-e08af9). */
+	:global(.k-section.pricing) + .matrix {
+		padding-top: 64px;
+	}
+	.head {
+		margin-bottom: 20px;
+	}
+	.rule {
+		margin: 0 0 12px;
+		border: 0;
+		border-top: 1px solid var(--k-border);
+	}
+	.eyebrow {
+		margin: 0 0 12px;
+		font-size: 12px;
+	}
+	.title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 28px;
+		line-height: 1.08;
+		font-weight: 700;
+		letter-spacing: -0.6px;
+		color: var(--k-heading);
+	}
+	.sub {
+		margin: 12px 0 0;
+		font-size: 16px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.scroll {
+		overflow-x: auto;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 12px;
+		-webkit-overflow-scrolling: touch;
+	}
+	table {
+		width: 100%;
+		min-width: 500px;
+		border-collapse: collapse;
+		font-size: 15px;
+		line-height: 1.7;
+		color: var(--k-text);
+	}
+	thead tr {
+		background: var(--k-elevated);
+	}
+	th,
+	td {
+		padding: 12px 14px;
+		text-align: left;
+		vertical-align: middle;
+		border-bottom: 1px solid var(--k-border);
+	}
+	tbody tr:last-child th,
+	tbody tr:last-child td {
+		border-bottom: 0;
+	}
+	.corner {
+		width: 40%;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 400;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.col {
+		font-size: 15px;
+		font-weight: 500;
+		color: var(--k-heading);
+	}
+	.group th {
+		padding: 30px 14px 12px;
+		font-family: var(--font-mono);
+		font-size: 14px;
+		font-weight: 400;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		color: var(--k-text);
+	}
+	.label {
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--k-heading);
+	}
+	td {
+		font-size: 14px;
+	}
+	.yes {
+		display: inline-flex;
+		vertical-align: middle;
+		color: var(--k-primary);
+	}
+	.no {
+		color: var(--k-muted);
+	}
+	@media (max-width: 767px) {
+		.title {
+			font-size: 24px;
+		}
+	}
+</style>

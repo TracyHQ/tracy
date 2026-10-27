@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-PR-944-ja-kinetic-wp7-contact-recipient-pending",
+  "itemIds": ["regression:REG-PR-944-ja-kinetic-wp7-contact-recipient"],
+  "requirement": "JA Kinetic wp7: the Contact form delivers to tracy_contact_to, else the public contact address, else the administrator's address, and the page never prints admin_email or the recipient",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-944-ja-kinetic-wp7-contact-recipient.json",
+    "ref": "PR #944 (fix); fix evidence: 05/10/2026 on a restore of the 1.0.4 pack with theme 1.1.6 (sha256 36942e19bf29): demo state -> one mail to admin_email; tracy_contact_to set -> one mail to it, none to admin_email (captured headers in the run's NOTES).",
+    "invariant": "S2: the page shows the success notice \"Thank you for your email.\"; exactly one mail is captured, addressed to the stand's admin_email; the Contact page body shows no mailbox. S3: the page shows the success notice; exactly one mail is captured, addressed to owner@stand.test and none to admin_email; neither admin_email nor owner@stand.test is printed on the page. Package test: node --test packages/cms/tracy-wordpress-theme/test/wp-ja-kinetic.test.mjs passes (recipient order, fallback to admin_email, invalid admin_email sends nothing and shows the existing error).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-PR-944-ja-kinetic-wp7-contact-recipient"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-PR-944-ja-kinetic-wp7-contact-recipient",
+    "pr": 944,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-kinetic",
+    "file": "tests/regression/cases/REG-PR-944-ja-kinetic-wp7-contact-recipient.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

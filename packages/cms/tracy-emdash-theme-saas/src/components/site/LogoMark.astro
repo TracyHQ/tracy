@@ -1,0 +1,38 @@
+---
+/**
+ * The template's own brand mark: a pulse line on a small baseline, drawn for this template, coloured
+ * --k-logo. `sprite` emits the one <symbol> definition (the header renders it); every other use
+ * references it, including the drawer island.
+ */
+interface Props {
+  size?: number
+  sprite?: boolean
+}
+const { size = 24, sprite = false } = Astro.props
+---
+
+{
+	sprite ? (
+		<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+			<symbol id="k-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M2.5 13h4l2.5-7 4.5 13 2.5-6h5.5" />
+			</symbol>
+		</svg>
+	) : (
+		<svg class="k-mark" width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+			<use href="#k-mark" />
+		</svg>
+	)
+}
+
+<style>
+	.k-mark {
+		flex: none;
+		color: var(--k-logo);
+	}
+	/* The drawer island renders its own <svg class="k-mark">. */
+	:global(.k-drawer .k-mark) {
+		flex: none;
+		color: var(--k-logo);
+	}
+</style>

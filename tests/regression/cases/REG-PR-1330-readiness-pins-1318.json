@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1330-readiness-pins-1318",
+  "kind": "fix",
+  "title": "JA Voyara 1.0.8 and Tracy Business 1.2.3 are pinned end to end: contracts in the tree naming the published archives and Claude Cowork for Joomla 0.24.27, maxVersion 1.0.8 and 1.2.3, every Joomla quickstart pinned on 0.24.27 in both catalogues",
+  "pr": 1330,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.8/* and tracy-business/j6/1.2.3/* with their .design.json and .copy.json, packages/design/tracy-ds-slot/templates/joomla-ja-voyara.json and joomla-tracy-business.json, and both quickstarts.json catalogues.",
+    "S2: Run node --test --test-name-pattern maxVersion apps/tracy-web/test/design-system-door.test.mjs."
+  ],
+  "expect": [
+    "S1: every contract file exists; manifest ids ja-voyara/j6/1.0.8 (quickstart/ja-voyara/j6 1.0.8, webroot ja-voyara-j6-webroot-1.0.8.tar.gz sha256 e71d15d7…1a8dde) and tracy-business/j6/1.2.3 (tracy-business/j6 1.2.3, webroot tracy-business-j6-webroot-1.2.3.tar.gz sha256 04ec5c41…4bb511), coworkContractVersion 0.24.27, the Tracy Business sidecar maps pinned to 1.2.3; maxVersion 1.0.8 and 1.2.3 not below minVersion with notes naming them; the catalogue rows serve those versions and name those contracts; every Joomla pin in apps/tracy-web/src/quickstarts.json is 0.24.27 or newer and the provision copy pins the same.",
+    "S2: the door tests pass: the moved maxVersions are offered and the next version refused."
+  ],
+  "selectors": {
+    "contracts": "packages/cms/tracy-joomla-quickstart/contracts/{ja-voyara/j6/1.0.8,tracy-business/j6/1.2.3}/manifest.json",
+    "templates": "packages/design/tracy-ds-slot/templates/{joomla-ja-voyara,joomla-tracy-business}.json maxVersion",
+    "pins": "apps/tracy-web/src/quickstarts.json + packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json cowork.version"
+  },
+  "evidence": "Before this PR the Design system door stopped at 1.0.7 and 1.2.2 (TEMPLATE_VERSION_UNCHECKED for a site built from 1.0.8 or 1.2.3) and no Claude Cowork pin carried the two contracts",
+  "fence": "Both releases were verified from their own archives (VERIFICATION.json and VERIFICATION-1.2.3.json on the releases); JA Voyara's css files are byte-identical to 1.0.7, Tracy Business keeps the 1.2.2 database",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1330-readiness-pins-1318.mjs"]
+  }
+}

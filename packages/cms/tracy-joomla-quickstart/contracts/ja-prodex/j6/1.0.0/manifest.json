@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-prodex/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_prodex",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-prodex",
+    "id": "quickstart/ja-prodex/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_prodex",
+    "parts": {
+      "installer": {
+        "file": "ja-prodex-j6-quickstart.zip",
+        "bytes": 74446896,
+        "sha256": "2324fe51b5a2fd8cadbcac72f5abbd9a5a072c29b961cd74b7f7f288ad8cc7d7"
+      }
+    },
+    "release": "quickstart/ja-prodex/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

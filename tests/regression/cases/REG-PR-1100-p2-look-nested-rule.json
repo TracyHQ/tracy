@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1100-p2-look-nested-rule",
+  "kind": "fix",
+  "title": "A rule nested in another (CSS nesting) is named and measured whole, so look.set aims past its real specificity",
+  "pr": 1100,
+  "area": "site-tools/look",
+  "cms": ["jo", "wp", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/tools/tracy-site-tools run: node --test --test-reporter=tap test/look-style.test.mjs test/look-set.test.mjs",
+    "S2: Read the tests named in run.tests (the dskeepjo home h1 as CDP read it: T4's `h1` rules and the landing's `h1` nested in `.tracy-native-landing.tracy-native-landing`, nestingSelectors and specificity (0,2,1))."
+  ],
+  "expect": [
+    "S1 exits 0.",
+    "color's `by` is '.tracy-native-landing.tracy-native-landing h1' with spec [0,2,1] — not 'h1'; `& .x` under .a reads '.a .x', `&.on` under .btn '.btn.on', `& > li` under '.menu .list' '.menu .list > li', `.x &` under '.a .b' '.x :is(.a .b)', `h1` under '.a, .b' ':is(.a, .b) h1', two levels nearest-first '.outer .inner h1'.",
+    "look.set on Joomla writes to templates/tracy/css/styles/base.css a rule starting 'body.item-247 h1' at least as specific as (0,2,1), holding 'color: #166534'."
+  ],
+  "selectors": {
+    "code": "packages/tools/tracy-site-tools/src/host/look-style.mjs resolveStyles (unnest, ruleName, spec); look-set.mjs specOf"
+  },
+  "evidence": "dskeepjo 10/10/2026 (stand from 96a53b266), session jo-I4b: look.set answered LOOK_SET_NO_EFFECT 'color: #171717 by h1 in …/media/tracy-landing/native-landing.css' after writing body.item-247 h1 (0,1,2); CDP shows the winner nested in .tracy-native-landing.tracy-native-landing with specificity (0,2,1) — tasks/evidence/followups-2026-10-10/p2-look/jo-look-set-h1-*.json.",
+  "fence": "a nested rule is desugared from CDP's nestingSelectors, and look.set beats the browser's own specificity",
+  "run": {
+    "cwd": "packages/tools/tracy-site-tools",
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/look-style.test.mjs", "test/look-set.test.mjs"],
+    "tests": ["🔒 a nested rule is named whole", "🔒 Joomla, a winner nested in another rule"]
+  }
+}

@@ -1,0 +1,245 @@
+# The image's profile layer — applied after the four bundles the profile names.
+#
+# IT CARRIES ONLY WHAT NO BUNDLE CARRIES. Everything a lane already gets from
+# `@tracy/dsh-native-bundle` — brand, the left rail, Settings, the locales, the side-card tabs,
+# the deck, the twelve presets, `dsh-passwords`, the directory picker — lives THERE, and repeating
+# a row here would put one decision in two files that drift apart in silence. What is left is the
+# handful of rows that are true of THIS deployment and of no lane: one dsh, many sites, a docker
+# socket, and a shell that runs in somebody else's container.
+
+# Listen on every interface: the port is published by docker, the host is 0.0.0.0 inside.
+# A patch by id replaces the row's WHOLE config, so dsh-web-app's compression keys are restated.
+#
+# 51700, NOT the published port — dsh is the UPSTREAM here, not the front door. `dsh-passwords`
+# listens on 8080 and proxies to this one, and the fleet publishes 8080 alone. A host port mapped
+# straight at 51700 would be a way in that the seat book never issued and cannot take back.
+- id: webserver
+  config:
+    host: 0.0.0.0
+    port: 51700
+    compression: gzip
+    compressionLevel: 1
+    compressionThresholdBytes: 1024
+
+# The container is the sandbox (Plan 1). Both rows must go together.
+- id: subprocess
+  disabled: true
+- id: sandbox
+  disabled: true
+
+# The PTC runtime (`ptc-runtime`, dsh 0.1.6 — `code-runtime` before) would run model-written
+# TypeScript INSIDE this container — the one that holds the docker socket. Off, and the tool mode pinned to native so no environment variable can
+# turn it back on (dsh-base reads DSH_TOOLS_MODE for it). `mode` is the only key dsh-web-app's
+# `tools` row carries, so replacing that row's whole config restates all of it.
+- id: ptc-runtime
+  disabled: true
+- id: tools
+  config:
+    mode: native
+
+# dsh 0.1.6-alpha.2 ships a Plugin Manager (`plugin-manager`, in `base`) that rewrites THIS
+# profile at runtime — `cordis.patch.yml` rows and `package.json` bundles, plus `pnpm install` of
+# outside bundles whose Host code then runs in this process, outside any workspace sandbox — and
+# an HMR watcher (`hmr`, `base` enables it whenever a profile context exists) that applies such
+# edits live. One dsh serves every site on this host (ADR 0014), so a profile change here is a
+# change for every customer at once, and the only sanctioned path for one is an image build.
+# Both stand down; the Web page over the manager (`ui-plugin-manager`) stands down in the bundle.
+- id: plugin-manager
+  disabled: true
+- id: hmr
+  disabled: true
+
+# dsh 0.1.7-rc.2 turned on rows that write host state from a browser — Config forms persisted into
+# THIS profile (`settings`, `config-editor`), a DeepSeek account sign-in (`authorization`,
+# `deepseek-account`, `llm-deepseek-account`, `account-controller`, `ui-settings-account`), the
+# Plugins-page forms over host namespaces (`ui-settings-shell`, `-agent-loop`, `-subagent`,
+# `-web-search`) — plus `cordis-inspect-providers`, product analytics, session log settings and telemetry.
+# `@tracy/dsh-native-bundle` turns every one off and says why, row by row. They are restated here
+# for the reason `plugin-manager`/`hmr` are: this is the image's own layer, applied last, so a
+# bundle edit that drops one still cannot reopen it on a host, and `check-image-profile` reads it.
+# `shortcuts`, `job-controller` and `ui-shortcuts` stay on (the bundle says why).
+- id: settings
+  disabled: true
+- id: config-editor
+  disabled: true
+- id: authorization
+  disabled: true
+# dsh's Models settings page, where an LLM sign-in starts. One dsh serves every seat on this host
+# (ADR 0014), so a credential signed in here would be the whole host's. Both bundles turn it off;
+# restated here since 07/10/2026 so a bundle edit cannot reopen it (tasks/todo-desktop-surface.md).
+- id: ui-settings-models
+  disabled: true
+# The host-wide subscription adapter must never own customer credentials.
+- id: dsh-subscriptions
+  disabled: true
+# Account-owned cloud subscriptions; no credential is kept in the shared dsh.
+- id: tracy-model-plan
+  disabled: false
+- id: tracy-mode-picker
+  config:
+    accountSubscriptions: true
+- id: deepseek-account
+  disabled: true
+- id: llm-deepseek-account
+  disabled: true
+- id: account-controller
+  disabled: true
+- id: ui-settings-account
+  disabled: true
+- id: ui-settings-shell
+  disabled: true
+- id: ui-settings-agent-loop
+  disabled: true
+- id: ui-settings-subagent
+  disabled: true
+- id: ui-settings-web-search
+  disabled: true
+- id: cordis-inspect-providers
+  disabled: true
+- id: product-analytics
+  disabled: true
+- id: ui-settings-session-log
+  disabled: true
+- id: otel
+  disabled: true
+- id: session-telemetry-otel
+  disabled: true
+- id: open-in-app
+  disabled: true
+- id: ui-open-in-app
+  disabled: true
+
+# Keep the model picker enabled on the host profile so the provider-backed catalog and `/model`
+# command are available in every site session.
+- id: ui-model-selection
+  disabled: false
+
+- insert:
+    - id: tracy-sandbox-docker
+      name: '@tracy/dsh-sandbox-docker'
+    - id: tracy-subprocess-docker
+      name: '@tracy/dsh-subprocess-docker'
+
+# A DeepSeek stream that sends nothing for 20 s is treated as dead, not the adapter's default five
+# minutes. SSE keep-alive comments count as activity (`llm-deepseek/src/sse.ts`), so a request the
+# API is keeping alive is not cut; a truly silent one fails with `TIMEOUT`, which `llm-retry` (from
+# dsh-base) retries, instead of holding the turn for five minutes per attempt.
+# 🔒 20 s, not 45 s (bench 25/09/2026): the longest silence inside 2,553 healthy streams was 6.3 s,
+# so 20 s is still 3x the worst gap a stream survived; 5 of the 6 TIMEOUTs were truly hung streams
+# that each held the turn ~25 s longer at 45 s (EmDash C01, C33; Joomla C26; WordPress C42, C47).
+# The one 181 s TIMEOUT was a stream kept alive by keep-alives, which no idle limit can cut.
+# Cost of too low: a live stream silent for > 20 s is retried from the start.
+# A patch by id replaces the row's WHOLE config. dsh-base inserts this row with no config and no
+# bundle this profile loads patches it, so these two keys are the complete config. Since dsh
+# 0.1.7-rc.2 the row loads `@deepseek-ai/dsh-llm-deepseek-api-key`, which spreads the same protocol
+# fields (`deepSeekConfigFields`, `llm-deepseek/src/config.ts`), so both keys keep their meaning.
+# Until then an `llm-deepseek:` section in the user settings document (`/desk-home/settings.yaml`)
+# layered over them; 0.1.7 removed that reader (`dsh-settings-file`), and `settings` stands down
+# above.
+#
+# 🔒 ONE MODEL, AND IT READS PICTURES (David, 24/09/2026). `models` replaces the adapter's default
+# catalogue, which also lists `deepseek-v4-pro`, a text-only model. With it listed, anyone can pick
+# it in the model chip or `/model`. dsh saves that pick as the HOST's default (`selectModel` calls
+# `agentDefaultModel.saveSelection`), so every new session on the host, on every site it serves,
+# starts text-only, and its composer refuses a pasted screenshot: "The current model does not
+# support images". The entry below is the default catalogue's own `deepseek-flash` row (its context
+# window is the adapter default either way). `@tracy/dsh-mode-picker` (`model-pin.mjs`) moves a
+# session still on another model onto the deployment default. Since 28/09 a second model here no
+# longer brings the choice back (the picker is off and `model-policy.mjs` refuses any other route),
+# but it would still be one more route nobody runs.
+# (Since 0.1.7 `saveSelection` persists through `config-editor`, which stands down above, so a pick
+# no longer outlives a restart; the single entry below is still what keeps the choice from existing.)
+#
+# 🔒 S2 (27/09/2026): THE RETRY IS OURS TO SET, AND THE DEFAULT WAITED TOO LONG TO SAY SO. Without a
+# `retryPolicy` the adapter retries five times with 0.5–8 s backoff, each attempt allowed the 20 s idle
+# above: a stalled DeepSeek stream held the step up to ~135 s before the turn failed, and a 429 whose
+# Retry-After passed 10 s was given up at once (`llm-retry`, `maxDelayMs`). Now the first retry of a
+# stalled stream comes after 0.25 s, three at most (~82 s worst case), and a Retry-After up to 15 s is
+# honoured. The retryable codes are the adapter's default five (EMPTY_RESPONSE, RATE_LIMIT, SERVER,
+# TIMEOUT, TRANSPORT) plus two the model's own stream can end with (survey 08/10/2026): a tool call
+# whose input is not valid JSON (MALFORMED_RESPONSE, met in the bench) and a stream that closes before
+# `message_stop` (STREAM_CLOSED). Each ended the turn on the first occurrence with a raw English line
+# naming the vendor. Both fail before any tool runs, so a fresh attempt repeats nothing; this is a
+# safety net for the model's glitch, not a fix of a Tracy cause. A patch by id replaces the whole row,
+# so every key above is kept here, and the list below must keep the five defaults.
+# `toolUpdate: addition-only` is the catalogue row's own key since dsh 0.1.7-rc.2 and was lost when
+# this row was written out. Without it a change of the tool set (a mode switch, a seat with other
+# toolsets, a deploy adding a tool) starts a new request series, which folds every in-history system
+# prompt update back into the first message. Measured 09/10/2026 on the API itself
+# (`tasks/evidence/harness-survey-followup/deepseek-tool-cache.jsonl`): DeepSeek kept 22,528 of 22,596
+# cached tokens after a tool was added in either shape, 24,704 of 25,298 after a middle tool was
+# removed, 24,064 after the end of the system text changed — so the key saves little; it is kept
+# because it is the catalogue's own and the endpoint accepts it.
+- id: llm-deepseek
+  config:
+    # Reasoning effort `low` for every conversation (PR #1026, measured 09/10/2026 on the full local stand,
+    # 13 customer requests x 3 CMS x 2 runs, same image, effort the only difference): output tokens -26 %,
+    # model time -26 %, tool calls -21 %, pass 74/78 -> 75/78. The one request that fell at `low` (EmDash:
+    # put project X's picture in the hero) passes once `page.text` names the pictures beside the words.
+    # Set host-wide, never per step: DeepSeek keeps its prefix cache per effort, so a switch inside a
+    # conversation re-sends the whole context uncached (measured 27/09/2026).
+    reasoningEffort: low
+    streamIdleTimeoutMs: 20000
+    retryPolicy:
+      mode: normal
+      maxRetries: 3
+      retryableCodes:
+        [EMPTY_RESPONSE, RATE_LIMIT, SERVER, TIMEOUT, TRANSPORT, MALFORMED_RESPONSE, STREAM_CLOSED]
+      backoff:
+        initialDelayMs: 250
+        maxDelayMs: 15000
+        jitterRatio: 0.2
+    models:
+      - id: deepseek-flash
+        name: DeepSeek-V41-Flash
+        inputModalities: [text, image]
+        systemPromptUpdate: in-history
+        toolUpdate: addition-only
+
+# ── An optional second model route: OpenRouter through pi-ai ──────────────────────────────────────
+#
+# Moved here from `settings.yaml` (26/09/2026): since dsh 0.1.7 a provider route is the
+# `providers` field of this row's Config (`llm-pi-ai/src/config.ts`, a volatile dict keyed by
+# route), and the settings document that used to layer it in is no longer read (`settings` stands
+# down above). `openrouter` is an installed pi-ai catalog route, so the key name is all it needs.
+#
+# It is NOT the route the agent takes — that is `llm-deepseek` above — and it is inert wherever
+# `OPENROUTER_API_KEY` is unset in the dsh container: `host-dsh.env.example`, `host-dsh.yml` and
+# `host-dsh-init.sh` do not set it (checked 07/09), so on fleet hosts it lists nothing. The local
+# stand's `deploy/compose.yml` DOES pass it to `tracy-dsh` (for the EmDash personalize stage's
+# images); there this route goes live exactly as it did through `settings.yaml` on dsh 0.1.6.
+#
+# Nothing else in the composed tree patches `llm-pi-ai` (dsh-base inserts it bare), so this is the
+# row's whole config.
+- id: llm-pi-ai
+  config:
+    providers:
+      openrouter:
+        apiKeyEnv: OPENROUTER_API_KEY
+
+# ── The side card: the bundle's one key, restated ────────────────────────────────────────────────
+#
+# 🔒 A PATCH BY ID REPLACES THE ROW'S WHOLE CONFIG, and this layer is applied AFTER
+# `@tracy/dsh-native-bundle`. So this row restates the bundle's row exactly: naming anything less
+# here would drop what the bundle set. The bundle is where it is decided and explained
+# (`packages/bundle/tracy-native/cordis.patch.yml`, last row); change one, change both.
+#
+# Until dsh-better-sidebar 0.18.1-tracy.9 this row also carried `tabsEnabled.terminal: false`,
+# `seedTabs: []`, `seedFilesTab: false` and `shell: /bin/bash` (the name the plugin's Terminal tab
+# resolved on the dsh side before exec'ing it in the site's container). 0.21 removed the Terminal
+# tab and tab seeding upstream, and its Config (`src/config.ts`) no longer has those keys — the
+# schema drops them silently, so they would only read as decisions in force. The side card
+# preferences that `settings.yaml` used to set (`openByDefault`, `browserNoSandbox`,
+# `agentBrowserTools`, `agentOpenTools`) are gone with it: the first three no longer exist, and
+# since dsh 0.1.7 a preference is a volatile field of THIS row, not a `settings.yaml` section.
+# `agentOpenTools` (the model's `sidebar_open`) is left at its default `false`. Its opens reach the
+# browser through `/sidebar/ws/agent-opens`, which `dsh-passwords` 2.6.6-tracy.45 opens to a seat
+# for a session it holds (TCH #515 — before that the socket was owner-only and a seat's side card
+# retried it forever). Turning the tool on is a product decision nobody has taken; the socket being
+# reachable does not make it one.
+#
+# `scripts/check-image-profile.ts` reads this row: `workspaceFence: true`, and none of the removed
+# keys.
+- id: better-sidebar
+  config:
+    workspaceFence: true

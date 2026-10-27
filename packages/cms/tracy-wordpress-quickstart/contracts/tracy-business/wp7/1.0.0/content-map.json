@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "What a Build may write into a restored Tracy Business site. Only the site identity options are mapped here; all other content (pages, patterns, menus) ships pre-built in the archive and is kept as-is. A slot whose input is absent keeps the quickstart's own words.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "Tracy Business"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": "A professional company site"
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "Tracy Business",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "A professional company site",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    }
+  ]
+}

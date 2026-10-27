@@ -1,0 +1,26 @@
+/* Mode A: this page owns <html>, so Tailwind's one preflight is the reset. `wo-views` stays after
+   `utilities`, as in the plugin: its plain CSS adjusts the @tracy/ui primitives it wraps. */
+@layer theme, base, components, utilities, wo-views;
+@import "tailwindcss";
+@import "@tracy/ui/tokens.css";
+@import "@tracy/wo-views/styles.css" layer(wo-views);
+
+@source "./";
+@source "../../../../packages/site/tracy-website-opportunities/src/client";
+@source "../../../ui/tracy-ui/src";
+@source "../../../ui/tracy-wo-views/src";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root { min-height: 100%; }
+body { margin: 0; background: var(--background); color: var(--foreground); }
+
+.find-page { box-sizing: border-box; width: 100%; max-width: 72rem; margin: 0 auto; padding: 24px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
+.find-page-head { display: flex; flex-direction: column; gap: 6px; }
+.find-page-head h1 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; }
+.find-page-head p { margin: 0; color: var(--muted-foreground); font-size: 14px; line-height: 20px; }
+.find-page-head a { align-self: flex-start; font-size: 13px; color: var(--foreground); text-underline-offset: 0.15em; }
+/* The public Find never loads a photo: an empty cover shrinks to the bar that holds the checkbox. */
+.tracy-wo-public .tracy-wo-cover { height: 36px; background: transparent; }
+.tracy-wo-public .tracy-wo-cover-empty { display: none; }
+.find-page-head a:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }

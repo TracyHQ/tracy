@@ -1,0 +1,64 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, primary canvas — the dominant near-white that lets photography and type carry all visual weight"
+    },
+    "warm-ash": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Warm Ash — Elevated surface backgrounds for cards, buttons, and nav pill container — a warm gray one step darker than canvas for subtle layering without shadows"
+    },
+    "mid-gray": {
+      "$value": "#cdcdce",
+      "$type": "color",
+      "$description": "Mid Gray — Hairline borders, link underlines, and divider lines — sits between canvas and text to create structure without weight"
+    },
+    "ink-black": {
+      "$value": "#07060b",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, button labels, heading copy — a near-pure black with a faint blue undertone for maximum contrast against the warm canvas"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Navigation borders and secondary text accents — used sparingly where a slightly harder edge is needed"
+    },
+    "glacial-mist": {
+      "$value": "#ddfcff",
+      "$type": "color",
+      "$description": "Glacial Mist — Faint cool-tinted accent on borders and fills — a barely-perceptible icy wash that adds micro-contrast without breaking the monochrome discipline"
+    }
+  },
+  "font": {
+    "helveticanowdisplay": {
+      "$value": "HelveticaNowDisplay",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines — weight 800 at 160px with -0.05em tracking is the signature: massively compressed, ultra-bold statement type that dominates the viewport. Also used at 18px/500 for emphasized inline labels and 11px for caption-level brand marks"
+    },
+    "editorialnew": {
+      "$value": "EditorialNew",
+      "$type": "fontFamily",
+      "$description": "Editorial body and subheadings — the light-weight serif (weight 200) at 40-60px creates the 'fashion magazine pull-quote' feeling. The extreme thinness against the massive Helvetica display generates typographic tension. Also flows at 14-16px for editorial paragraph text"
+    },
+    "departuremono": {
+      "$value": "DepartureMono",
+      "$type": "fontFamily",
+      "$description": "Monospaced utility face for navigation labels, button text, form inputs, and small data — uppercase tracked monospace signals 'technical/informational' against the display serif and sans"
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "Fallback body text and generic UI copy — system sans at 16px handles the long tail of small interface labels that don't warrant the custom faces"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://altitudebev.com",
+      "siteName": "Altitude Beverages",
+      "extractedAt": "2026-06-03T20:48:52.014Z",
+      "variant": "compact"
+    }
+  }
+}

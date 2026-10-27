@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1660-wo-shared-places",
+  "kind": "feat",
+  "title": "Place research travels one way between deployments: only allow-listed published rows cross the ingest door, imports are idempotent, pictures live in the shared bucket under content keys, and old pictures are re-keyed only to their own bytes",
+  "pr": 1660,
+  "area": "website-opportunities/shared-places",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: a sender with the shared store stores a new place picture; shared keys for Google and other sources.",
+    "S2: push a researched place from a sender database to a destination database through the real ingest door.",
+    "S3: send the same place again, three at once, and an origin snapshot already imported.",
+    "S4: call the door unconfigured, with a wrong secret, and with a body too large.",
+    "S5: configure the shared bucket with fewer than four settings; set the ingest secret on a shard.",
+    "S6: dry run and real move of old pictures into an in-memory shared bucket; change object_key to a key naming other bytes."
+  ],
+  "expect": [
+    "S1: the key is media/google|other/<sha[0:2]>/<sha>.<ext>, naming the content and not the place.",
+    "S2: no account or opportunity data leaves the sender; the destination writes only allow-listed tables; pictures load there with the sender's store off.",
+    "S3: one place and one snapshot; the imported snapshot is not imported twice.",
+    "S4: 404 before the body is read when unconfigured or the secret is wrong; 413 when too large.",
+    "S5: refused, with no fallback to the artifact store; a shard with the ingest secret is refused.",
+    "S6: the dry run writes nothing; the move copies, verifies and re-keys, skips missing and mismatched sources, reruns and rolls back; the guard refuses a key for other bytes."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/place-ingest-door.js apps/tracy-web/src/opportunities/place-import.js apps/tracy-web/src/opportunities/place-export.js apps/tracy-web/src/lib/place-media-store.js apps/tracy-web/src/opportunities/place-media-move.js apps/tracy-web/src/config.js apps/tracy-web/src/db/migrations/166-wo-place-import.sql",
+    "dom": ""
+  },
+  "fence": "the ingest door's secret check and allow-list, wo_place_snapshot_import's unique origin snapshot, placeMediaStore's prefix routing, config's no-fallback and shard refusal, wo_place_media_guard's same-bytes rekey",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-shared-places.test.mjs",
+      "apps/tracy-web/test/wo-place-media-store.test.mjs",
+      "apps/tracy-web/test/wo-shared-places-config.test.mjs",
+      "apps/tracy-web/test/wo-place-media-move.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the sender stores new place pictures under content-addressed shared keys",
+      "1. no account data leaves the sender and the destination writes only the allow-listed tables",
+      "1b. the importer source writes no table outside its allow-list",
+      "2. ingest is idempotent: sent again, or three at once, it is one place and one snapshot",
+      "2b. a snapshot already imported from this origin is never imported twice",
+      "3. pictures load on the destination with the sender store switched off; a stranger is refused",
+      "4. the door: 404 unconfigured or wrong secret before the body is read, 413 when too large",
+      "5. a missing or wrong object publishes nothing",
+      "a shared key names the content, not the place, and its origin prefix",
+      "the shared place media bucket needs its own four settings, with no fallback to the artifact store",
+      "the ingest secret is read on the master, refused when malformed, and refused on a shard",
+      "dry run counts rows, bytes, unstored and missing sources, and writes nothing",
+      "move copies, verifies and re-keys; skips missing and mismatched sources; reruns; rolls back",
+      "the guard still refuses a key that names other bytes"
+    ]
+  }
+}

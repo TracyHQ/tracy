@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1338-tb-emdash-undo-keeps-template-theme",
+  "kind": "fix",
+  "title": "Taking a design system off a Tracy Business EmDash site gives every visitor the template's own light again (UNDO-1), released as 1.7.19 and pinned",
+  "pr": 1338,
+  "area": "design/slot",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/cms/tracy-emdash-theme-business/tests/theme-preference.test.mjs (the real Base.astro pre-paint and Topbar.astro toggle scripts on one shared storage).",
+    "S2: read the theme toggle in src/components/site/Topbar.astro and the pre-paint script in src/layouts/Base.astro.",
+    "S3: read contracts/1.7.19/design-system-measurement.json of the theme.",
+    "S4: read tracy-business/emdash in both quickstarts.json copies, the theme's package.json, template.config.json, Dockerfile and the slot contract emdash-tracy-business.json.",
+    "All of it: node tests/regression/scripts/REG-PR-1338-tb-emdash-undo-keeps-template-theme.mjs"
+  ],
+  "expect": [
+    "S1: passes: a dark system worn then taken off opens light in the same storage, and opening on the system's mode or on ?theme= stores nothing.",
+    "S2: only a click stores, under ngi-theme@<id> while a system is worn; Base.astro reads the same key.",
+    "S3: version 1.7.19, controls 0, 0, 0, 0 (1.7.18 measured 0, 0, 3, 3).",
+    "S4: both copies pin 1.7.19 on tracy-business-emdash-quickstart-1.7.19.zip (6475347 bytes, sha256 4369ec6c...c26e, asset 638772950) and tracy-business-emdash-state-1.7.19.tar.gz (8472464 bytes, sha256 fb3a181a...2241, asset 638772954); every version and maxVersion say 1.7.19."
+  ],
+  "selectors": {
+    "theme": "packages/cms/tracy-emdash-theme-business/src/components/site/Topbar.astro, src/layouts/Base.astro",
+    "pins": "apps/tracy-web/src/quickstarts.json, packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json"
+  },
+  "fence": "No stand, no model, no network. The release is on JoomlArt-Products/ja-products tag tracy-business/emdash-0.x; the measurement was taken on the iMac on the restored release; this case reads only the repo.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1338-tb-emdash-undo-keeps-template-theme.mjs"],
+    "needs": [],
+    "timeout_s": 120
+  }
+}

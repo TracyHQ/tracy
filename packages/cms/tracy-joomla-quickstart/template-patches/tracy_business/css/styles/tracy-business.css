@@ -1,0 +1,556 @@
+/*
+ * northgate — token layer and dark remap
+ * Authored from the Tracy Business Industrial style guide (Style guide.html) and the measured chrome
+ * (spec/chrome-measurements.md). Every value here was read from the source render, not invented.
+ * Light values are the design's; dark values are the design's own [data-theme="dark"] remap.
+ */
+:root {
+  /* ---- palette: the six named colours from the style guide ---- */
+  --tb-ink:     var(--ds-c-fg, #14171A);
+  /* Forest and signal are each two roles with one default (as in the EmDash twin): the TEXT/line colour
+     (links, eyebrows, rules drawn as text) reads the readable accent; the fills read --tb-forest-fill and
+     --tb-band-*-bg below, which read the accent fill. */
+  --tb-forest:  var(--ds-c-accent-text, #14483A);
+  --tb-forest-fill: var(--ds-c-accent, #14483A);
+  --tb-signal:  var(--ds-c-accent-text, #DA5A2A);
+  --tb-paper:   var(--ds-c-bg, #F5F3EE);
+  --tb-paper-2: var(--ds-c-surface, #EDEAE2);
+  --tb-line:    var(--ds-c-border, #DCD7CC);
+
+  /* ---- the measured greys the chrome actually uses (see chrome-measurements.md §9) ---- */
+  --tb-ink-2:    var(--ds-c-fg-2, #242830);
+  --tb-ink-3:    var(--ds-c-fg-2, #3D4045);
+  --tb-muted:    var(--ds-c-muted, #5A5952);
+  --tb-muted-2:  var(--ds-c-meta, #6B6A64);
+  --tb-meta:     var(--ds-c-meta, #A8A49B);
+  --tb-meta-2:   var(--ds-c-border, #B4AFA4);
+  --tb-line-2:   var(--ds-c-border-soft, #E4DFD6);
+  --tb-line-3:   var(--ds-c-border, #C9C3B6);
+  /* the card face (white on paper); a worn system paints cards in its page colour (slot contract) */
+  --tb-white:    var(--ds-c-bg, #FFFFFF);
+
+  /* ---- forest band (topbar / dark CTA) ---- */
+  --tb-forest-text:  var(--ds-c-accent-on, #CFE0D8);
+  --tb-forest-sep:   var(--tb-ds-forest-sep, var(--ds-c-accent-on, #5E8A79));
+  --tb-forest-caret: var(--tb-ds-forest-caret, var(--ds-c-accent-on, #9FC3B4));
+  --tb-forest-deep:  var(--ds-c-accent-active, #0E3B2F);
+
+  /* ---- ink band (footer / hero) ---- */
+  --tb-ink-band:       var(--ds-c-ink, #14171A);
+  --tb-ink-band-text:  var(--tb-ds-on-ink-muted, var(--ds-c-on-ink, #B9B5AC));
+  --tb-ink-band-meta:  var(--tb-ds-on-ink-meta, var(--ds-c-on-ink, #8A8780));
+  --tb-ink-band-chip:  var(--tb-ds-on-ink-soft, var(--ds-c-on-ink, #E4DFD6));
+  --tb-ink-band-line:  var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32));
+  --tb-ink-band-line-2:var(--tb-ds-on-ink-line-2, var(--ds-c-on-ink, #35383B));
+  --tb-ink-band-line-3:var(--tb-ds-on-ink-line-3, var(--ds-c-on-ink, #4A4D50));
+
+  /* chrome surfaces: header, megamenu panel, language menu */
+  --tb-chrome-bg: var(--ds-c-bg, #F5F3EE);
+
+  /* ---- semantic (from style guide §5 system messages) ---- */
+  --tb-info-bg:    var(--ds-c-info-bg, #E8F0EB);    --tb-info-fg:    var(--ds-c-info-text, #22453A);
+  --tb-success-bg: var(--ds-c-success-bg, #E9F2E9); --tb-success-fg: var(--ds-c-success-text, #1F4A22);
+  --tb-warn-bg:    var(--ds-c-warn-bg, #FBF2E2);    --tb-warn-fg:    var(--ds-c-warn-text, #6B4A0E);
+  --tb-danger-bg:  var(--ds-c-danger-bg, #FCF3F2);  --tb-danger-fg:  var(--ds-c-danger-text, #7A2016);
+  /* the rule of an informational notice: the readable forest, read as the info state */
+  --tb-info:       var(--ds-c-info, var(--accent));
+
+  /* ---- generic roles the shared template layer reads ---- */
+  --bg:           var(--tb-paper);
+  --surface:      var(--tb-paper-2);
+  --surface-warm: var(--tb-white);
+  --fg:           var(--tb-ink);
+  --fg-2:         var(--tb-ink-3);
+  --muted:        var(--tb-muted);
+  --meta:         var(--tb-muted-2);
+  --border:       var(--tb-line);
+  --border-soft:  var(--tb-line-2);
+  --accent:       var(--tb-forest);
+  /* --accent is TEXT here (links, labels, 121 uses); a fill drawn in it reads --accent-fill */
+  --accent-fill:  var(--tb-forest-fill);
+  --accent-on:    var(--ds-c-accent-on, #FFFFFF);
+  --accent-hover: var(--ds-c-accent-text-hover, var(--tb-signal));
+  --accent-active:var(--tb-forest-deep);
+  --success: var(--ds-c-success, var(--tb-success-fg));
+  --warn:    var(--ds-c-warn, var(--tb-warn-fg));
+  --danger:  var(--ds-c-danger, var(--tb-danger-fg));
+
+  /* ---- type ---- */
+  --font-display: var(--ds-font-display, Newsreader, Georgia, "Times New Roman", serif);
+  --font-body:    var(--ds-font-body, Archivo, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  --font-mono:    var(--ds-font-mono, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+
+  --text-xs:   12px;      /* eyebrow */
+  --text-sm:   13px;      /* meta */
+  --text-base: 17.5px;    /* body */
+  --text-lg:   20px;      /* h3 */
+  --text-xl:   28px;
+  --text-2xl:  40px;      /* h2 */
+  --text-3xl:  52px;      /* h1 */
+  --text-4xl:  64px;
+
+  --leading-body:  1.72;
+  --leading-tight: 1.08;
+  --tracking-display: -0.028em;
+  --tracking-eyebrow: 0.18em;
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+
+  --section-y-desktop: 72px;
+  --section-y-tablet:  56px;
+  --section-y-phone:   40px;
+
+  /* the design has no rounded corners anywhere */
+  --radius-sm: var(--ds-input-radius, 0); --radius-md: var(--ds-card-radius, 0); --radius-lg: var(--ds-card-radius, 0);
+  --radius-xl: var(--ds-card-radius, 0); --radius-pill: var(--ds-pill-radius, 0);
+
+  --elev-flat:   none;
+  --elev-ring:   0 0 0 1px var(--border);
+  --elev-raised: 0 18px 40px rgba(20, 23, 26, 0.12); /* ds-keep: shadow tint, not a colour role */
+
+  --focus-ring: 0 0 0 3px var(--ds-c-focus-ring, color-mix(in srgb, var(--tb-signal) 55%, transparent));
+
+  --motion-fast:   150ms;
+  --motion-base:   220ms;
+  --ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
+
+  --container-max:            1240px;
+  --container-gutter-desktop: 32px;
+  --container-gutter-tablet:  24px;
+  --container-gutter-phone:   20px;
+
+  --font-substitute-stack: var(--ds-font-body, Archivo, system-ui, sans-serif);
+  --text-4xl-phone: 40px;
+  --text-3xl-phone: 36px;
+  --text-2xl-phone: 30px;
+
+  --tracy-band-y: 72px;
+  --tracy-band-y-tablet: 56px;
+  --tracy-band-y-phone: 40px;
+  --tracy-body-tracking: normal;
+  --tracy-capsule: var(--ds-pill-radius, 0);
+  --tracy-capsule-pad: 11px 20px;
+  --tracy-ring: 0 0 0 1px var(--border);
+  --tracy-shell-radius: var(--ds-card-radius, 0);
+  --tracy-quiet: var(--muted);
+  /* a scene drawn in the text colour (inverse of the page): the inverse ground and its words */
+  --tracy-scene-bg: var(--ds-c-ink, var(--tb-ink));
+  --tracy-scene-fg: var(--ds-c-on-ink, var(--tb-paper));
+  /* the same inverse pair for chips, pagination and buttons filled in the text colour: the system's
+     text and page colours, as the template's own --tb-ink / --tb-paper on both modes (a dark side's ink
+     is its card surface, a grey fill on its black page) */
+  --tb-ink-fill: var(--ds-c-fg, var(--tb-ink));
+  --tb-on-ink-fill: var(--ds-c-bg, var(--tb-paper));
+  --tb-ink-fill-hover: var(--tb-ds-ink-hover, var(--tb-ink-2));
+  /* a disabled control: its fill and its words */
+  --tb-disabled-bg: var(--ds-c-disabled-bg, var(--surface));
+  --tb-disabled-fg: var(--ds-c-disabled-fg, var(--tb-meta));
+}
+
+/* Shades a worn design system derives from its own roles, at the steps the slot contract mixes them.
+   Each reads roles WITHOUT a fallback: with no design system the property is invalid at computed-value
+   time and every token that reads it falls back to the template's own value, so nothing changes. */
+:root {
+  --tb-ds-on-ink-soft: color-mix(in srgb, var(--ds-c-on-ink) 88%, var(--ds-c-ink));
+  --tb-ds-on-ink-muted: color-mix(in srgb, var(--ds-c-on-ink) 84%, var(--ds-c-ink));
+  --tb-ds-on-ink-meta: color-mix(in srgb, var(--ds-c-on-ink) 70%, var(--ds-c-ink));
+  --tb-ds-on-ink-line: color-mix(in srgb, var(--ds-c-on-ink) 12%, var(--ds-c-ink));
+  --tb-ds-on-ink-line-2: color-mix(in srgb, var(--ds-c-on-ink) 18%, var(--ds-c-ink));
+  --tb-ds-on-ink-line-3: color-mix(in srgb, var(--ds-c-on-ink) 26%, var(--ds-c-ink));
+  --tb-ds-forest-sep: color-mix(in srgb, var(--ds-c-accent-on) 40%, var(--ds-c-accent));
+  --tb-ds-forest-caret: color-mix(in srgb, var(--ds-c-accent-on) 70%, var(--ds-c-accent));
+  --tb-ds-signal-tint: color-mix(in srgb, var(--ds-c-accent) 10%, transparent);
+  --tb-ds-ink-hover: color-mix(in srgb, var(--ds-c-fg) 85%, var(--ds-c-bg));
+  /* The accent fill and its words, taken on the root: the slot resets --ds-c-accent* inside the bands
+     it keeps (the footer), and a mark drawn there still follows the system like the header's. */
+  --tb-ds-accent: var(--ds-c-accent);
+  --tb-ds-accent-on: var(--ds-c-accent-on);
+}
+
+/* The readable accent on an ink band: the system's accent made readable on its ink, else the
+   template's own signal (unchanged with no system). */
+:root {
+  --tb-signal-on-ink: var(--ds-c-accent-on-ink, var(--tb-signal));
+}
+
+/* Dark remap — the values the design itself applies under html[data-theme="dark"]. */
+html[data-theme="dark"],
+[data-bs-theme="dark"] {
+  --tb-paper:   var(--ds-c-bg, #101214);
+  --tb-paper-2: var(--ds-c-surface, #1C2023);
+  --tb-white:   var(--ds-c-bg, #191C1F);
+  --tb-ink:     var(--ds-c-fg, #ECEAE4);
+  --tb-ink-2:   var(--ds-c-fg-2, #DDDAD3);
+  --tb-ink-3:   var(--ds-c-fg-2, #C7C4BD);
+  --tb-muted:   var(--ds-c-muted, #A9A6A0);
+  --tb-muted-2: var(--ds-c-meta, #96938C);
+  --tb-meta:    var(--ds-c-meta, #807D77);
+  --tb-meta-2:  var(--ds-c-border, #6E6B66);
+  --tb-line:    var(--ds-c-border, #2C3033);
+  --tb-line-2:  var(--ds-c-border-soft, #24282B);
+  --tb-line-3:  var(--ds-c-border, #33383C);
+  --tb-forest:  var(--ds-c-accent-text, #7FBFA6);   /* links + hovers go mint; bands keep the deep forest below */
+  --tb-forest-fill: var(--ds-c-accent, #7FBFA6);
+  --tb-signal:  var(--ds-c-accent-text, #F0865A);
+  --tb-forest-deep: var(--ds-c-accent-active, #0C2B23);
+  --tb-info-bg: var(--ds-c-info-bg, #14241E); --tb-info-fg: var(--ds-c-info-text, #9ED3BC);
+  --tb-success-bg: var(--ds-c-success-bg, #16261C); --tb-success-fg: var(--ds-c-success-text, #A6D6A9);
+  --tb-warn-bg: var(--ds-c-warn-bg, #2C2517); --tb-warn-fg: var(--ds-c-warn-text, #DDB769);
+  --tb-danger-bg: var(--ds-c-danger-bg, #2B1A19); --tb-danger-fg: var(--ds-c-danger-text, #F0A296);
+
+  --surface-warm: var(--ds-c-bg, #15181A);
+  --tb-chrome-bg: var(--ds-c-bg, #15181A);
+  --tb-ink-band: var(--ds-c-surface-warm, #0A0C0D);
+  --tb-ink-band-line-2: var(--tb-ds-on-ink-line-2, var(--ds-c-on-ink, #24282B));
+  --accent-on: var(--ds-c-accent-on, #0A0C0D);
+  --elev-raised: 0 18px 40px rgba(0, 0, 0, 0.45); /* ds-keep: shadow tint, not a colour role */
+}
+
+/* Bands keep their measured colours in both themes: the topbar, the CTA and the logo box stay
+   deep forest on white; the footer only goes a shade darker. */
+:root {
+  --tb-band-forest-bg:   var(--ds-c-accent, #14483A);
+  --tb-band-forest-fg:   var(--ds-c-accent-on, #CFE0D8);
+  --tb-band-forest-white:var(--ds-c-accent-on, #FFFFFF);
+  --tb-band-signal-bg:   var(--ds-c-accent, #DA5A2A);
+}
+
+/* T4 reads its theme JSON as literals in a sheet that loads after template.css. Restate them in
+   tokens so the dark hook flips them too. */
+html[data-theme="dark"],
+html.t4-dark,
+[data-bs-theme="dark"] {
+  --body-bg-color: var(--bg);
+  --body-text-color: var(--fg);
+  --body-link-color: var(--accent);
+  --body-link-hover-color: var(--accent-hover);
+  --color-primary: var(--accent);
+  --color-secondary: var(--tb-signal);
+  --color-success: var(--success);
+  --color-info: var(--accent);
+  --color-warning: var(--warn);
+  --color-danger: var(--danger);
+  --color-light: var(--surface);
+  --color-dark: var(--fg);
+  --mainnav-text-color: var(--fg-2);
+  --mainnav-link-color: var(--fg-2);
+  --mainnav-link-hover-color: var(--accent);
+  --mainnav-link-active-color: var(--fg);
+  --footer-bg-color: var(--tb-ink-band);
+  --footer-text-color: var(--tb-ink-band-text);
+  --footer-link-color: var(--tb-ink-band-text);
+  --footer-link-hover-color: var(--ds-c-on-ink, #ffffff);
+}
+
+/* Bootstrap-side variables T4 compiled from one system; every value is a var() so they follow. */
+:root {
+  --t4-body-bg: var(--bg);
+  --t4-white: var(--surface-warm);
+  --t4-body-color: var(--fg);
+  /* headings read the heading role; with none they keep the text colour, as before */
+  --t4-heading-color: var(--ds-c-heading, var(--fg));
+  --t4-emphasis-color: var(--fg);
+  --t4-dark: var(--fg);
+  --t4-secondary: var(--muted);
+  --t4-gray: var(--muted);
+  --t4-secondary-color: var(--muted);
+  --t4-tertiary-color: var(--meta);
+  --t4-highlight-color: var(--fg);
+  --t4-border-color: var(--border);
+  --t4-border-radius: var(--ds-card-radius, 0);
+  --t4-border-radius-sm: var(--ds-card-radius, 0);
+  --t4-border-radius-lg: var(--ds-card-radius, 0);
+  --t4-border-radius-xl: var(--ds-card-radius, 0);
+  --t4-border-radius-pill: var(--ds-pill-radius, 0);
+  /* Bootstrap's own values, read by the framework CSS: the system's body face and card corner */
+  --t4-border-radius-xxl: var(--ds-card-radius, 2rem);
+  --t4-font-sans-serif: var(--ds-font-body, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+  --t4-body-font-family: var(--ds-font-body, var(--t4-font-sans-serif));
+  --t4-gray-100: var(--surface-warm);
+  --t4-gray-200: var(--surface);
+  --t4-gray-300: var(--border-soft);
+  --t4-gray-400: var(--border);
+  --t4-gray-500: var(--meta);
+  --t4-gray-600: var(--muted);
+  --t4-gray-700: var(--fg-2);
+  --t4-gray-800: var(--fg);
+  --t4-gray-900: var(--fg);
+  --t4-gray-dark: var(--fg);
+  --t4-light: var(--surface);
+  --t4-secondary-bg: var(--surface);
+  --t4-tertiary-bg: var(--surface-warm);
+  --t4-blue: var(--accent);
+  --t4-primary: var(--accent);
+  --t4-link-color: var(--accent);
+  --t4-link-hover-color: var(--accent-hover);
+  --link-hover-color: var(--accent-hover);
+  --t4-success: var(--success);
+  --t4-green: var(--success);
+  --t4-warning: var(--warn);
+  --t4-yellow: var(--warn);
+  --t4-danger: var(--danger);
+  --t4-red: var(--danger);
+  --t4-primary-bg-subtle: var(--tb-info-bg);
+  --t4-primary-border-subtle: color-mix(in srgb, var(--accent) 34%, var(--bg));
+  --t4-primary-text-emphasis: var(--tb-info-fg);
+  --t4-secondary-bg-subtle: var(--surface);
+  --t4-secondary-border-subtle: var(--border);
+  --t4-secondary-text-emphasis: var(--fg-2);
+  --t4-success-bg-subtle: var(--tb-success-bg);
+  --t4-success-border-subtle: var(--tb-success-fg);
+  --t4-success-text-emphasis: var(--tb-success-fg);
+  --t4-info-bg-subtle: var(--tb-info-bg);
+  --t4-info-border-subtle: var(--tb-info-fg);
+  --t4-info-text-emphasis: var(--tb-info-fg);
+  --t4-warning-bg-subtle: var(--tb-warn-bg);
+  --t4-warning-border-subtle: var(--tb-warn-fg);
+  --t4-warning-text-emphasis: var(--tb-warn-fg);
+  --t4-danger-bg-subtle: var(--tb-danger-bg);
+  --t4-danger-border-subtle: var(--tb-danger-fg);
+  --t4-danger-text-emphasis: var(--tb-danger-fg);
+  --t4-light-bg-subtle: var(--surface-warm);
+  --t4-light-border-subtle: var(--border-soft);
+  --t4-light-text-emphasis: var(--fg-2);
+  --t4-dark-bg-subtle: var(--surface);
+  --t4-dark-border-subtle: var(--border);
+  --t4-dark-text-emphasis: var(--fg);
+  --t4-card-bg: var(--surface-warm);
+  --t4-card-border-color: var(--border);
+  --t4-card-cap-bg: var(--surface);
+  --t4-dropdown-bg: var(--bg);
+  --t4-dropdown-border-color: var(--border);
+  --t4-dropdown-divider-bg: var(--border-soft);
+  --t4-dropdown-link-hover-bg: var(--surface);
+  --t4-dropdown-link-hover-color: var(--fg);
+  --t4-dropdown-link-active-bg: var(--accent);
+  --t4-dropdown-link-active-color: var(--accent-on);
+  --t4-list-group-bg: var(--surface-warm);
+  --t4-list-group-border-color: var(--border-soft);
+  --t4-list-group-disabled-bg: var(--surface);
+  --t4-list-group-active-bg: var(--accent);
+  --t4-list-group-active-color: var(--accent-on);
+  --t4-list-group-active-border-color: var(--accent);
+  --t4-modal-bg: var(--bg);
+  --t4-modal-border-color: var(--border);
+  --t4-popover-bg: var(--bg);
+  --t4-popover-border-color: var(--border);
+  --t4-popover-header-bg: var(--surface);
+  --t4-toast-bg: var(--bg);
+  --t4-toast-header-bg: var(--surface);
+  --t4-tooltip-bg: var(--fg);
+  --t4-tooltip-color: var(--bg);
+  --t4-table-color: var(--fg);
+  --t4-table-bg: transparent;
+  --t4-table-border-color: var(--border);
+  --t4-table-striped-color: var(--fg);
+  --t4-table-striped-bg: var(--surface-warm);
+  --t4-table-hover-color: var(--fg);
+  --t4-table-hover-bg: var(--surface);
+  --t4-table-active-color: var(--fg);
+  --t4-table-active-bg: var(--surface);
+  --t4-table-accent-bg: var(--surface-warm);
+  --t4-nav-tabs-link-active-bg: var(--bg);
+  --t4-nav-pills-link-active-bg: var(--accent);
+  --t4-nav-pills-link-active-color: var(--accent-on);
+  --t4-navbar-color: var(--fg-2);
+  --t4-navbar-hover-color: var(--accent);
+  --t4-navbar-active-color: var(--fg);
+  --t4-navbar-disabled-color: var(--meta);
+  --t4-navbar-brand-color: var(--fg);
+  --t4-navbar-brand-hover-color: var(--fg);
+  --t4-navbar-toggler-border-color: var(--border);
+  --t4-pagination-bg: var(--bg);
+  --t4-pagination-active-bg: var(--accent);
+  --t4-pagination-active-color: var(--accent-on);
+  --t4-pagination-active-border-color: var(--accent);
+  --t4-pagination-disabled-bg: var(--bg);
+  --t4-progress-bar-bg: var(--accent);
+  --t4-progress-bar-color: var(--accent-on);
+  --t4-badge-color: var(--accent-on);
+  --t4-btn-close-color: var(--fg);
+  --t4-backdrop-bg: var(--fg);
+  --t4-border-color-translucent: var(--border-soft);
+  --t4-focus-ring-color: var(--ds-c-focus-ring, color-mix(in srgb, var(--tb-signal) 45%, transparent));
+  --t4-code-color: var(--fg-2);
+  --t4-highlight-bg: var(--surface-warm);
+  --t4-form-valid-color: var(--success);
+  --t4-form-valid-border-color: var(--success);
+  --t4-form-invalid-color: var(--danger);
+  --t4-form-invalid-border-color: var(--danger);
+  --t4-box-shadow: 0 0 0 1px var(--border);
+  --t4-box-shadow-sm: 0 0 0 1px var(--border-soft);
+}
+
+/* ---- language switcher: two shapes, and the second one is a modal --------------------------- */
+/* `tb.php` adds `--modal` past 8 languages. Under that the panel stays the anchored dropdown it
+   always was; past it the SAME <dialog> opens with showModal() at every width — top layer, so no
+   ancestor's transform, overflow or z-index can move or clip it. Column count is `auto-fill`:
+   the grid fits as many 190px tracks as the dialog is wide, and no breakpoint names a number. */
+.tb-topbar .mod-languages dialog.tb-lang__panel {
+  background: var(--tb-chrome-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 14px 30px rgba(20, 23, 26, .22);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  margin: 9px 0 0;
+  max-width: calc(100vw - 32px);
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: auto;
+  z-index: 70;
+}
+.tb-topbar .mod-languages dialog.tb-lang__panel:not([open]) { display: none; }
+.tb-topbar .mod-languages dialog.tb-lang__panel::backdrop { background: rgba(20, 23, 26, .55); }
+
+/* `__menu` was the floating panel in an earlier life and kept `position:absolute; top:100%`.
+   Inside the dialog it must be an ordinary flow child, or it leaves the flex column and the panel
+   collapses to the height of the filter box. */
+.tb-topbar .mod-languages .tb-lang__menu {
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr);
+  inset: auto;
+  list-style: none;
+  margin: 0;
+  max-height: min(60vh, 520px);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0;
+  position: static;
+}
+
+/* The modal shape, at every width. */
+.tb-topbar .mod-languages .tb-lang--modal dialog.tb-lang__panel {
+  /* `inset: 0` + `margin: auto` is what centres a fixed box. NOTHING may reset an edge after it:
+     a trailing `right: auto; top: auto` — carried over from the anchored shape — cancels two of
+     the four and the dialog lands in the bottom-left corner. That mistake was made twice in one
+     afternoon (21/09/2026), so the edges are written once, here, and the anchored variant above
+     sets its own without a shorthand. */
+  border-radius: var(--ds-card-radius, 14px);
+  inset: 0;
+  margin: auto;
+  max-height: min(80vh, 620px);
+  max-width: none;
+  position: fixed;
+  width: min(92vw, 640px);
+}
+.tb-topbar .mod-languages .tb-lang--modal .tb-lang__menu {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  max-height: calc(min(80vh, 620px) - 62px);
+}
+.tb-topbar .mod-languages .tb-lang__search {
+  background: var(--tb-chrome-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.tb-topbar .mod-languages .tb-lang__search-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-input-radius, 0);
+  color: var(--fg);
+  font-size: 14px;
+  padding: 8px 10px;
+  width: 100%;
+}
+.tb-topbar .mod-languages .tb-lang__empty {
+  color: var(--muted, var(--fg));
+  font-size: 14px;
+  margin: 0;
+  padding: 14px;
+}
+.tb-topbar .mod-languages .tb-lang__item[hidden] { display: none; }
+.tb-topbar .mod-languages .tb-lang--modal .tb-lang__item { border-right: 1px solid var(--border-soft); }
+
+/* Flag + code only on a phone; the full name stays in the DOM for the accessible name. */
+.tb-topbar .mod-languages .tb-lang__code { display: none; }
+@media (max-width: 767px) {
+  .tb-topbar .mod-languages .tb-lang__toggle .tb-lang__name {
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  .tb-topbar .mod-languages .tb-lang__code {
+    display: inline;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+}
+
+/* ---- topbar contacts on a phone ------------------------------------------------------------- */
+/* An earlier pass hid the address below 768px and the email below 520px to keep the bar to two
+   rows. Reverted: which of a customer's contact details reach a visitor is a decision about the
+   SITE, not about a layout, and centring the list solves the lopsidedness that prompted it. All
+   three items stay; they wrap, and the bar grows a row on a narrow screen. */
+
+/* ---- topbar: the two controls stay on the right at every width ------------------------------ */
+/* `__inner` is `space-between`, so on a wide screen the right group already sits right. Once it
+   WRAPS the group starts a new line at the left margin and the language switcher and theme toggle
+   travel with it — the two controls a reader looks for in a fixed corner end up in a different
+   place on every viewport. Give the wrapped group the full line and push the controls to its end,
+   leaving the utility links where they read first. */
+/* No breakpoint: the topbar wraps when its CONTENT stops fitting, and that width moves with the
+   language — measured 21/09/2026 it wrapped at ~1032px in French, nowhere near any breakpoint a
+   stylesheet could name. Letting the right group grow and end-align makes the two controls sit on
+   the right edge whether the bar is one row or two, without anyone guessing a number. */
+.tb-topbar .tb-topbar__group--right {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+/* ---- topbar contacts on a phone: as many rows as they need, nothing cut ------------------- */
+/* Until 13/10/2026 the three items sat on ONE scrolled row with a fade at the right edge: at 390px
+   the address read "Vorsino Indu…" and nothing said the rest was there (TCH #1318). A customer's
+   hotline, mailbox and address are facts a visitor came for; the row now wraps and the bar grows a
+   row or two on a phone, and a long address or e-mail breaks inside the word rather than past the
+   edge. Which details show is the site's decision; the layout cuts none of them. */
+@media (max-width: 767px) {
+  .tb-topbar .tb-topbar__group--left {
+    flex: 1 1 100%;
+    justify-content: center;
+    min-width: 0;                 /* a flex child will not shrink below content without this */
+  }
+  /* `min-width: 0` has to repeat down the whole chain: a flex item defaults to `min-width: auto`,
+     which means "never smaller than my content", and one link in the chain that still has it makes
+     the row 526px wide inside a 372px parent — drawn over the edge instead of scrolled. Measured
+     21/09/2026 at 469px. `.custom` is the wrapper mod_custom renders. */
+  .tb-topbar .tb-topbar__group--left > .custom { min-width: 0; max-width: 100%; }
+  .tb-topbar .tb-contacts {
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    font-size: 12px;
+    gap: 4px 14px;
+    justify-content: center;
+    overflow: visible;
+  }
+  .tb-topbar .tb-contacts > li {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+/* Dark-mode logo pair (html/layouts/t4/element/logo.php, html/mod_custom/default.php): a bitmap
+   logo shows in light mode, its .d-dark counterpart (site_logo_dark, or the lockup when there is
+   none) in dark mode. The footer is dark in both modes, so its brand shows site_logo_dark, else
+   the lockup. Uploaded logos keep their proportions inside the lockup height. */
+.tb-brand .d-dark { display: none; }
+html.t4-dark .tb-brand .d-light { display: none; }
+html.t4-dark .tb-brand .d-dark { display: inline-flex; align-items: center; gap: inherit; }
+.tb-brand img.tb-brand__logo { width: auto; height: auto; max-width: 100%; max-height: 44px; }
+.tb-footbrand__logo { display: inline-block; }
+.tb-footbrand__logo img { display: block; width: auto; height: auto; max-width: 100%; max-height: 48px; }

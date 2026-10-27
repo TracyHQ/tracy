@@ -1,0 +1,4474 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from quickstart/ja-nova/wp7 1.1.10's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "ja_nova"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": ""
+    },
+    {
+      "key": "page-home",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home"
+      }
+    },
+    {
+      "key": "page-login-form",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "login-form"
+      }
+    },
+    {
+      "key": "page-registration-form",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "registration-form"
+      }
+    },
+    {
+      "key": "page-user-profile",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "user-profile"
+      }
+    },
+    {
+      "key": "page-error-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "error-page"
+      }
+    },
+    {
+      "key": "page-offline-pages",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "offline-pages"
+      }
+    },
+    {
+      "key": "page-typography",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "typography"
+      }
+    },
+    {
+      "key": "page-featured-articles",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "featured-articles"
+      }
+    },
+    {
+      "key": "page-project",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "project"
+      }
+    },
+    {
+      "key": "page-about-us-2",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about-us-2"
+      }
+    },
+    {
+      "key": "page-services",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "services"
+      }
+    },
+    {
+      "key": "page-development",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "development"
+      }
+    },
+    {
+      "key": "page-mobile-application",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "mobile-application"
+      }
+    },
+    {
+      "key": "page-cloud-solutions",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "cloud-solutions"
+      }
+    },
+    {
+      "key": "page-it-infrastructure",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "it-infrastructure"
+      }
+    },
+    {
+      "key": "page-cybersecurity",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "cybersecurity"
+      }
+    },
+    {
+      "key": "page-virtualization",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "virtualization"
+      }
+    },
+    {
+      "key": "page-category-blog",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "category-blog"
+      }
+    },
+    {
+      "key": "page-author-listting",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "author-listting"
+      }
+    },
+    {
+      "key": "page-tagged-items",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "tagged-items"
+      }
+    },
+    {
+      "key": "page-contact",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "contact"
+      }
+    },
+    {
+      "key": "page-career",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "career"
+      }
+    },
+    {
+      "key": "page-branding",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "branding"
+      }
+    },
+    {
+      "key": "page-ui-ux-design",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "ui-ux-design"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "ja_nova",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "home.hero.desc",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get education on business planning, direct access to planning experts and a funding platform that’s helped raise over $500 million for startups",
+      "maxCharacters": 306,
+      "label": "home — hero.desc"
+    },
+    {
+      "key": "home.hero.button",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get started - For free",
+      "maxCharacters": 80,
+      "label": "home — hero.button"
+    },
+    {
+      "key": "home.hero.button.url",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — hero.button (link)"
+    },
+    {
+      "key": "home.features-intro.info-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.info-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "In today's digital age, having reliable IT and software solutions is crucial for businesses of all sizes. Whether you're a startup, a small business, or an established enterprise, leveraging technology can streamline operations, enhance productivity, and drive growth.",
+      "maxCharacters": 556,
+      "label": "home — features-intro.info-desc"
+    },
+    {
+      "key": "home.features-intro.desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Prioritize the features your customers need",
+      "maxCharacters": 106,
+      "label": "home — features-intro.desc.1"
+    },
+    {
+      "key": "home.features-intro.desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Align everyone around the roadmap",
+      "maxCharacters": 86,
+      "label": "home — features-intro.desc.2"
+    },
+    {
+      "key": "home.features-intro.info-cta",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.info-cta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More than 350 brands available",
+      "maxCharacters": 80,
+      "label": "home — features-intro.info-cta"
+    },
+    {
+      "key": "home.features-intro.button",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "home — features-intro.button"
+    },
+    {
+      "key": "home.features-intro.button.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features-intro.button (link)"
+    },
+    {
+      "key": "home.text-slider.title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Business consultant",
+      "maxCharacters": 80,
+      "label": "home — text-slider.title.1"
+    },
+    {
+      "key": "home.text-slider.title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Fintech",
+      "maxCharacters": 80,
+      "label": "home — text-slider.title.2"
+    },
+    {
+      "key": "home.text-slider.title.3",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Insurance",
+      "maxCharacters": 80,
+      "label": "home — text-slider.title.3"
+    },
+    {
+      "key": "home.text-slider.title.4",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Marketing",
+      "maxCharacters": 80,
+      "label": "home — text-slider.title.4"
+    },
+    {
+      "key": "home.text-slider.title.5",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "UI/UX design",
+      "maxCharacters": 80,
+      "label": "home — text-slider.title.5"
+    },
+    {
+      "key": "home.text-slider.title.6",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.title.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "SEO",
+      "maxCharacters": 80,
+      "label": "home — text-slider.title.6"
+    },
+    {
+      "key": "home.features-intro.description.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "home — features-intro.description.1"
+    },
+    {
+      "key": "home.features-intro.description.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "home — features-intro.description.2"
+    },
+    {
+      "key": "home.features-intro.description.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "home — features-intro.description.3"
+    },
+    {
+      "key": "home.features-intro.bottom-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.bottom-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "At Salmon, we specialize in providing comprehensive IT and software services tailored to meet your specific business needs.",
+      "maxCharacters": 266,
+      "label": "home — features-intro.bottom-desc"
+    },
+    {
+      "key": "home.features-intro.title-btn",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "View all services",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title-btn"
+    },
+    {
+      "key": "home.features-intro.title-btn.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "home — features-intro.title-btn (link)"
+    },
+    {
+      "key": "home.cta.cta-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "In today's digital age, having reliable IT and software solutions is crucial for businesses of all sizes. Whether you're a startup, a small business, or an established enterprise, leveraging technology can streamline operations, enhance productivity, and drive growth.",
+      "maxCharacters": 556,
+      "label": "home — cta.cta-desc"
+    },
+    {
+      "key": "home.cta.item.1",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.item.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get started Now",
+      "maxCharacters": 80,
+      "label": "home — cta.item.1"
+    },
+    {
+      "key": "home.cta.item.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.item.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — cta.item.1 (link)"
+    },
+    {
+      "key": "home.teams.team-position.1",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Web Designer",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.1"
+    },
+    {
+      "key": "home.teams.team-position.2",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Graphics Designer",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.2"
+    },
+    {
+      "key": "home.teams.team-position.3",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Web Designer",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.3"
+    },
+    {
+      "key": "home.teams.title-btn",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our team",
+      "maxCharacters": 80,
+      "label": "home — teams.title-btn"
+    },
+    {
+      "key": "home.teams.title-btn.url",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — teams.title-btn (link)"
+    },
+    {
+      "key": "home.features-intro.number.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.number.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "35k",
+      "maxCharacters": 80,
+      "label": "home — features-intro.number.1"
+    },
+    {
+      "key": "home.features-intro.number.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.number.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "36k",
+      "maxCharacters": 80,
+      "label": "home — features-intro.number.2"
+    },
+    {
+      "key": "home.features-intro.number.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.number.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "119",
+      "maxCharacters": 80,
+      "label": "home — features-intro.number.3"
+    },
+    {
+      "key": "home.features-intro.number.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.number.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "220+",
+      "maxCharacters": 80,
+      "label": "home — features-intro.number.4"
+    },
+    {
+      "key": "home.features-intro.title.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Happy clients",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.4"
+    },
+    {
+      "key": "home.features-intro.description.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get and share your personal profile URL",
+      "maxCharacters": 98,
+      "label": "home — features-intro.description.4"
+    },
+    {
+      "key": "home.pricing.title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Basic Plan",
+      "maxCharacters": 80,
+      "label": "home — pricing.title.1"
+    },
+    {
+      "key": "home.pricing.title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Business",
+      "maxCharacters": 80,
+      "label": "home — pricing.title.2"
+    },
+    {
+      "key": "home.pricing.title.3",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Agency",
+      "maxCharacters": 80,
+      "label": "home — pricing.title.3"
+    },
+    {
+      "key": "home.pricing.price.1",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$19.50",
+      "maxCharacters": 80,
+      "label": "home — pricing.price.1"
+    },
+    {
+      "key": "home.pricing.desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For people and little activities",
+      "maxCharacters": 84,
+      "label": "home — pricing.desc.1"
+    },
+    {
+      "key": "home.pricing.btn.1",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.btn.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Choose now",
+      "maxCharacters": 80,
+      "label": "home — pricing.btn.1"
+    },
+    {
+      "key": "home.pricing.btn.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.btn.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — pricing.btn.1 (link)"
+    },
+    {
+      "key": "home.pricing.price.2",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$29.50",
+      "maxCharacters": 80,
+      "label": "home — pricing.price.2"
+    },
+    {
+      "key": "home.pricing.desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Cum sociis natoque penatibus et magnis",
+      "maxCharacters": 96,
+      "label": "home — pricing.desc.2"
+    },
+    {
+      "key": "home.pricing.btn.2",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.btn.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Choose now",
+      "maxCharacters": 80,
+      "label": "home — pricing.btn.2"
+    },
+    {
+      "key": "home.pricing.btn.2.url",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.btn.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — pricing.btn.2 (link)"
+    },
+    {
+      "key": "home.pricing.price.3",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$59.50",
+      "maxCharacters": 80,
+      "label": "home — pricing.price.3"
+    },
+    {
+      "key": "home.pricing.desc.3",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donec pede justo, fringilla vel",
+      "maxCharacters": 82,
+      "label": "home — pricing.desc.3"
+    },
+    {
+      "key": "home.pricing.btn.3",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.btn.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Choose now",
+      "maxCharacters": 80,
+      "label": "home — pricing.btn.3"
+    },
+    {
+      "key": "home.pricing.btn.3.url",
+      "entity": "page-home",
+      "target": {
+        "block": "pricing.btn.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — pricing.btn.3 (link)"
+    },
+    {
+      "key": "home.articles-category.main-section",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Latest news from us",
+      "maxCharacters": 80,
+      "label": "home — articles-category.main-section"
+    },
+    {
+      "key": "home.articles-category.title-btn",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "View all our news",
+      "maxCharacters": 80,
+      "label": "home — articles-category.title-btn"
+    },
+    {
+      "key": "home.articles-category.title-btn.url",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/category-blog",
+      "maxCharacters": 2048,
+      "label": "home — articles-category.title-btn (link)"
+    },
+    {
+      "key": "home.accordion.button",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "home — accordion.button"
+    },
+    {
+      "key": "home.accordion.button.url",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — accordion.button (link)"
+    },
+    {
+      "key": "home.accordion.accordion-name.1",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "home — accordion.accordion-name.1"
+    },
+    {
+      "key": "home.accordion.accordion-desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "home — accordion.accordion-desc.1"
+    },
+    {
+      "key": "home.accordion.accordion-name.2",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "home — accordion.accordion-name.2"
+    },
+    {
+      "key": "home.accordion.accordion-desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "home — accordion.accordion-desc.2"
+    },
+    {
+      "key": "home.accordion.accordion-name.3",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "home — accordion.accordion-name.3"
+    },
+    {
+      "key": "home.accordion.accordion-desc.3",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "home — accordion.accordion-desc.3"
+    },
+    {
+      "key": "home.accordion.accordion-name.4",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "home — accordion.accordion-name.4"
+    },
+    {
+      "key": "home.accordion.accordion-desc.4",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "home — accordion.accordion-desc.4"
+    },
+    {
+      "key": "home.accordion.accordion-name.5",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "home — accordion.accordion-name.5"
+    },
+    {
+      "key": "home.accordion.accordion-desc.5",
+      "entity": "page-home",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "home — accordion.accordion-desc.5"
+    },
+    {
+      "key": "login-form.cta.cta-title",
+      "entity": "page-login-form",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "login-form — cta.cta-title"
+    },
+    {
+      "key": "login-form.cta.cta-title.url",
+      "entity": "page-login-form",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "login-form — cta.cta-title (link)"
+    },
+    {
+      "key": "registration-form.cta.cta-title",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "registration-form — cta.cta-title"
+    },
+    {
+      "key": "registration-form.cta.cta-title.url",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "registration-form — cta.cta-title (link)"
+    },
+    {
+      "key": "user-profile.cta.cta-title",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "user-profile — cta.cta-title"
+    },
+    {
+      "key": "user-profile.cta.cta-title.url",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "user-profile — cta.cta-title (link)"
+    },
+    {
+      "key": "error-page.cta.cta-title",
+      "entity": "page-error-page",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "error-page — cta.cta-title"
+    },
+    {
+      "key": "error-page.cta.cta-title.url",
+      "entity": "page-error-page",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "error-page — cta.cta-title (link)"
+    },
+    {
+      "key": "offline-pages.cta.cta-title",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "offline-pages — cta.cta-title"
+    },
+    {
+      "key": "offline-pages.cta.cta-title.url",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "offline-pages — cta.cta-title (link)"
+    },
+    {
+      "key": "typography.cta.cta-title",
+      "entity": "page-typography",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "typography — cta.cta-title"
+    },
+    {
+      "key": "typography.cta.cta-title.url",
+      "entity": "page-typography",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "typography — cta.cta-title (link)"
+    },
+    {
+      "key": "featured-articles.cta.cta-title",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "featured-articles — cta.cta-title"
+    },
+    {
+      "key": "featured-articles.cta.cta-title.url",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "featured-articles — cta.cta-title (link)"
+    },
+    {
+      "key": "project.articles-categories.main-section",
+      "entity": "page-project",
+      "target": {
+        "block": "articles-categories.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We have an experienced team of production",
+      "maxCharacters": 102,
+      "label": "project — articles-categories.main-section"
+    },
+    {
+      "key": "project.cta.cta-title",
+      "entity": "page-project",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "project — cta.cta-title"
+    },
+    {
+      "key": "project.cta.cta-title.url",
+      "entity": "page-project",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "project — cta.cta-title (link)"
+    },
+    {
+      "key": "about-us-2.features-intro.content-featured",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.content-featured",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We’re a company committed to shaping better futures. We put people first — our clients, our employees, and the users we serve. We pursue excellence — with our unwavering commitment to make work that goes above and beyond. We embrace growth — continually scaling in size, capabilities, and cultural intelligence. We own truth in action — using our powers for good to leave a lasting impact on the world.",
+      "maxCharacters": 824,
+      "label": "about-us-2 — features-intro.content-featured"
+    },
+    {
+      "key": "about-us-2.features-intro.number.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.number.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.number.1"
+    },
+    {
+      "key": "about-us-2.features-intro.title.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Nimble",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.title.1"
+    },
+    {
+      "key": "about-us-2.features-intro.description.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are flexible and adapt our roadmap to the needs of our customers.",
+      "maxCharacters": 156,
+      "label": "about-us-2 — features-intro.description.1"
+    },
+    {
+      "key": "about-us-2.features-intro.number.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.number.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.number.2"
+    },
+    {
+      "key": "about-us-2.features-intro.title.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Partner",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.title.2"
+    },
+    {
+      "key": "about-us-2.features-intro.description.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our methods are transparent and co-constructed.",
+      "maxCharacters": 114,
+      "label": "about-us-2 — features-intro.description.2"
+    },
+    {
+      "key": "about-us-2.features-intro.number.3",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.number.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.number.3"
+    },
+    {
+      "key": "about-us-2.features-intro.title.3",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Innovative",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.title.3"
+    },
+    {
+      "key": "about-us-2.features-intro.description.3",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We invest heavily in R&D.",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.description.3"
+    },
+    {
+      "key": "about-us-2.features-intro.number.4",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.number.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.number.4"
+    },
+    {
+      "key": "about-us-2.features-intro.title.4",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Available",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.title.4"
+    },
+    {
+      "key": "about-us-2.features-intro.description.4",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are proactive and listen to our users.",
+      "maxCharacters": 102,
+      "label": "about-us-2 — features-intro.description.4"
+    },
+    {
+      "key": "about-us-2.features-intro.info-desc",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.info-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "In today's digital age, having reliable IT and software solutions is crucial for businesses of all sizes. Whether you're a startup, a small business, or an established enterprise, leveraging technology can streamline operations, enhance productivity, and drive growth.",
+      "maxCharacters": 556,
+      "label": "about-us-2 — features-intro.info-desc"
+    },
+    {
+      "key": "about-us-2.features-intro.desc.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Prioritize the features your customers need",
+      "maxCharacters": 106,
+      "label": "about-us-2 — features-intro.desc.1"
+    },
+    {
+      "key": "about-us-2.features-intro.desc.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Align everyone around the roadmap",
+      "maxCharacters": 86,
+      "label": "about-us-2 — features-intro.desc.2"
+    },
+    {
+      "key": "about-us-2.features-intro.info-cta",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.info-cta",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More than 350 brands available",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.info-cta"
+    },
+    {
+      "key": "about-us-2.features-intro.button",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.button"
+    },
+    {
+      "key": "about-us-2.features-intro.button.url",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about-us-2 — features-intro.button (link)"
+    },
+    {
+      "key": "about-us-2.features-intro.main-section",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our expertise",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.main-section"
+    },
+    {
+      "key": "about-us-2.features-intro.sub-title.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.sub-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Team",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.sub-title.1"
+    },
+    {
+      "key": "about-us-2.features-intro.sub-title.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.sub-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Team",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.sub-title.2"
+    },
+    {
+      "key": "about-us-2.features-intro.sub-title.3",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.sub-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Team",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.sub-title.3"
+    },
+    {
+      "key": "about-us-2.features-intro.sub-title.4",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.sub-title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Team",
+      "maxCharacters": 80,
+      "label": "about-us-2 — features-intro.sub-title.4"
+    },
+    {
+      "key": "about-us-2.teams.team-position.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.team-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Web Designer",
+      "maxCharacters": 80,
+      "label": "about-us-2 — teams.team-position.1"
+    },
+    {
+      "key": "about-us-2.teams.team-position.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.team-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Graphics Designer",
+      "maxCharacters": 80,
+      "label": "about-us-2 — teams.team-position.2"
+    },
+    {
+      "key": "about-us-2.teams.team-position.3",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.team-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Web Designer",
+      "maxCharacters": 80,
+      "label": "about-us-2 — teams.team-position.3"
+    },
+    {
+      "key": "about-us-2.teams.title-btn",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join our team",
+      "maxCharacters": 80,
+      "label": "about-us-2 — teams.title-btn"
+    },
+    {
+      "key": "about-us-2.teams.title-btn.url",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about-us-2 — teams.title-btn (link)"
+    },
+    {
+      "key": "about-us-2.cta.cta-title",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "about-us-2 — cta.cta-title"
+    },
+    {
+      "key": "about-us-2.cta.cta-title.url",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about-us-2 — cta.cta-title (link)"
+    },
+    {
+      "key": "services.features-intro.description.1",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer project management services to ensure the successful execution of IT initiatives. This involves planning, organizing, coordinating, and overseeing projects from inception to completion",
+      "maxCharacters": 406,
+      "label": "services — features-intro.description.1"
+    },
+    {
+      "key": "services.features-intro.description.2",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "services — features-intro.description.2"
+    },
+    {
+      "key": "services.features-intro.description.3",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "services — features-intro.description.3"
+    },
+    {
+      "key": "services.features-intro.description.4",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "services — features-intro.description.4"
+    },
+    {
+      "key": "services.features-intro.description.5",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "services — features-intro.description.5"
+    },
+    {
+      "key": "services.features-intro.description.6",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We prioritize safeguarding digital assets against cyber threats. Our cybersecurity services include",
+      "maxCharacters": 218,
+      "label": "services — features-intro.description.6"
+    },
+    {
+      "key": "services.features-intro.description.7",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We provide technical support and training to end-users within organizations.",
+      "maxCharacters": 172,
+      "label": "services — features-intro.description.7"
+    },
+    {
+      "key": "services.features-intro.description.8",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We provide guidance and support in selecting and implementing the right IT infrastructure",
+      "maxCharacters": 198,
+      "label": "services — features-intro.description.8"
+    },
+    {
+      "key": "services.features-intro.info-desc",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.info-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get education on business planning, direct access to planning experts and a funding platform that’s helped raise over $500 million for startups. Get education on business planning, direct access to planning experts and a funding.",
+      "maxCharacters": 478,
+      "label": "services — features-intro.info-desc"
+    },
+    {
+      "key": "services.features-intro.desc.1",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get education on business planning,\ndirect access to planning experts",
+      "maxCharacters": 158,
+      "label": "services — features-intro.desc.1"
+    },
+    {
+      "key": "services.features-intro.desc.2",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Integer molestie magna in augue euismod, sit amet pulvinar arcu dapibus.",
+      "maxCharacters": 164,
+      "label": "services — features-intro.desc.2"
+    },
+    {
+      "key": "services.accordion.button",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "services — accordion.button"
+    },
+    {
+      "key": "services.accordion.button.url",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "services — accordion.button (link)"
+    },
+    {
+      "key": "services.accordion.accordion-name.1",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "services — accordion.accordion-name.1"
+    },
+    {
+      "key": "services.accordion.accordion-desc.1",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "services — accordion.accordion-desc.1"
+    },
+    {
+      "key": "services.accordion.accordion-name.2",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "services — accordion.accordion-name.2"
+    },
+    {
+      "key": "services.accordion.accordion-desc.2",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "services — accordion.accordion-desc.2"
+    },
+    {
+      "key": "services.accordion.accordion-name.3",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "services — accordion.accordion-name.3"
+    },
+    {
+      "key": "services.accordion.accordion-desc.3",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "services — accordion.accordion-desc.3"
+    },
+    {
+      "key": "services.accordion.accordion-name.4",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "services — accordion.accordion-name.4"
+    },
+    {
+      "key": "services.accordion.accordion-desc.4",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "services — accordion.accordion-desc.4"
+    },
+    {
+      "key": "services.accordion.accordion-name.5",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "services — accordion.accordion-name.5"
+    },
+    {
+      "key": "services.accordion.accordion-desc.5",
+      "entity": "page-services",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "services — accordion.accordion-desc.5"
+    },
+    {
+      "key": "services.cta.cta-title",
+      "entity": "page-services",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "services — cta.cta-title"
+    },
+    {
+      "key": "services.cta.cta-title.url",
+      "entity": "page-services",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "services — cta.cta-title (link)"
+    },
+    {
+      "key": "development.features-intro.description.1",
+      "entity": "page-development",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "development — features-intro.description.1"
+    },
+    {
+      "key": "development.features-intro.description.2",
+      "entity": "page-development",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "development — features-intro.description.2"
+    },
+    {
+      "key": "development.features-intro.description.3",
+      "entity": "page-development",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "development — features-intro.description.3"
+    },
+    {
+      "key": "development.accordion.button",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "development — accordion.button"
+    },
+    {
+      "key": "development.accordion.button.url",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "development — accordion.button (link)"
+    },
+    {
+      "key": "development.accordion.accordion-name.1",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "development — accordion.accordion-name.1"
+    },
+    {
+      "key": "development.accordion.accordion-desc.1",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "development — accordion.accordion-desc.1"
+    },
+    {
+      "key": "development.accordion.accordion-name.2",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "development — accordion.accordion-name.2"
+    },
+    {
+      "key": "development.accordion.accordion-desc.2",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "development — accordion.accordion-desc.2"
+    },
+    {
+      "key": "development.accordion.accordion-name.3",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "development — accordion.accordion-name.3"
+    },
+    {
+      "key": "development.accordion.accordion-desc.3",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "development — accordion.accordion-desc.3"
+    },
+    {
+      "key": "development.accordion.accordion-name.4",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "development — accordion.accordion-name.4"
+    },
+    {
+      "key": "development.accordion.accordion-desc.4",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "development — accordion.accordion-desc.4"
+    },
+    {
+      "key": "development.accordion.accordion-name.5",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "development — accordion.accordion-name.5"
+    },
+    {
+      "key": "development.accordion.accordion-desc.5",
+      "entity": "page-development",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "development — accordion.accordion-desc.5"
+    },
+    {
+      "key": "development.cta.cta-title",
+      "entity": "page-development",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "development — cta.cta-title"
+    },
+    {
+      "key": "development.cta.cta-title.url",
+      "entity": "page-development",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "development — cta.cta-title (link)"
+    },
+    {
+      "key": "mobile-application.features-intro.description.1",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "mobile-application — features-intro.description.1"
+    },
+    {
+      "key": "mobile-application.features-intro.description.2",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "mobile-application — features-intro.description.2"
+    },
+    {
+      "key": "mobile-application.features-intro.description.3",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "mobile-application — features-intro.description.3"
+    },
+    {
+      "key": "mobile-application.accordion.button",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "mobile-application — accordion.button"
+    },
+    {
+      "key": "mobile-application.accordion.button.url",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "mobile-application — accordion.button (link)"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-name.1",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "mobile-application — accordion.accordion-name.1"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-desc.1",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "mobile-application — accordion.accordion-desc.1"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-name.2",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "mobile-application — accordion.accordion-name.2"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-desc.2",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "mobile-application — accordion.accordion-desc.2"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-name.3",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "mobile-application — accordion.accordion-name.3"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-desc.3",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "mobile-application — accordion.accordion-desc.3"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-name.4",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "mobile-application — accordion.accordion-name.4"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-desc.4",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "mobile-application — accordion.accordion-desc.4"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-name.5",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "mobile-application — accordion.accordion-name.5"
+    },
+    {
+      "key": "mobile-application.accordion.accordion-desc.5",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "mobile-application — accordion.accordion-desc.5"
+    },
+    {
+      "key": "mobile-application.cta.cta-title",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "mobile-application — cta.cta-title"
+    },
+    {
+      "key": "mobile-application.cta.cta-title.url",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "mobile-application — cta.cta-title (link)"
+    },
+    {
+      "key": "cloud-solutions.features-intro.description.1",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "cloud-solutions — features-intro.description.1"
+    },
+    {
+      "key": "cloud-solutions.features-intro.description.2",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "cloud-solutions — features-intro.description.2"
+    },
+    {
+      "key": "cloud-solutions.features-intro.description.3",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "cloud-solutions — features-intro.description.3"
+    },
+    {
+      "key": "cloud-solutions.accordion.button",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "cloud-solutions — accordion.button"
+    },
+    {
+      "key": "cloud-solutions.accordion.button.url",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "cloud-solutions — accordion.button (link)"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-name.1",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "cloud-solutions — accordion.accordion-name.1"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-desc.1",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cloud-solutions — accordion.accordion-desc.1"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-name.2",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "cloud-solutions — accordion.accordion-name.2"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-desc.2",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cloud-solutions — accordion.accordion-desc.2"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-name.3",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "cloud-solutions — accordion.accordion-name.3"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-desc.3",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cloud-solutions — accordion.accordion-desc.3"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-name.4",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "cloud-solutions — accordion.accordion-name.4"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-desc.4",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cloud-solutions — accordion.accordion-desc.4"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-name.5",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "cloud-solutions — accordion.accordion-name.5"
+    },
+    {
+      "key": "cloud-solutions.accordion.accordion-desc.5",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cloud-solutions — accordion.accordion-desc.5"
+    },
+    {
+      "key": "cloud-solutions.cta.cta-title",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "cloud-solutions — cta.cta-title"
+    },
+    {
+      "key": "cloud-solutions.cta.cta-title.url",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "cloud-solutions — cta.cta-title (link)"
+    },
+    {
+      "key": "it-infrastructure.features-intro.description.1",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "it-infrastructure — features-intro.description.1"
+    },
+    {
+      "key": "it-infrastructure.features-intro.description.2",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "it-infrastructure — features-intro.description.2"
+    },
+    {
+      "key": "it-infrastructure.features-intro.description.3",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "it-infrastructure — features-intro.description.3"
+    },
+    {
+      "key": "it-infrastructure.accordion.button",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "it-infrastructure — accordion.button"
+    },
+    {
+      "key": "it-infrastructure.accordion.button.url",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "it-infrastructure — accordion.button (link)"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-name.1",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "it-infrastructure — accordion.accordion-name.1"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-desc.1",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "it-infrastructure — accordion.accordion-desc.1"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-name.2",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "it-infrastructure — accordion.accordion-name.2"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-desc.2",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "it-infrastructure — accordion.accordion-desc.2"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-name.3",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "it-infrastructure — accordion.accordion-name.3"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-desc.3",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "it-infrastructure — accordion.accordion-desc.3"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-name.4",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "it-infrastructure — accordion.accordion-name.4"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-desc.4",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "it-infrastructure — accordion.accordion-desc.4"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-name.5",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "it-infrastructure — accordion.accordion-name.5"
+    },
+    {
+      "key": "it-infrastructure.accordion.accordion-desc.5",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "it-infrastructure — accordion.accordion-desc.5"
+    },
+    {
+      "key": "it-infrastructure.cta.cta-title",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "it-infrastructure — cta.cta-title"
+    },
+    {
+      "key": "it-infrastructure.cta.cta-title.url",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "it-infrastructure — cta.cta-title (link)"
+    },
+    {
+      "key": "cybersecurity.features-intro.description.1",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "cybersecurity — features-intro.description.1"
+    },
+    {
+      "key": "cybersecurity.features-intro.description.2",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "cybersecurity — features-intro.description.2"
+    },
+    {
+      "key": "cybersecurity.features-intro.description.3",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "cybersecurity — features-intro.description.3"
+    },
+    {
+      "key": "cybersecurity.accordion.button",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "cybersecurity — accordion.button"
+    },
+    {
+      "key": "cybersecurity.accordion.button.url",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "cybersecurity — accordion.button (link)"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-name.1",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "cybersecurity — accordion.accordion-name.1"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-desc.1",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cybersecurity — accordion.accordion-desc.1"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-name.2",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "cybersecurity — accordion.accordion-name.2"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-desc.2",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cybersecurity — accordion.accordion-desc.2"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-name.3",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "cybersecurity — accordion.accordion-name.3"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-desc.3",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cybersecurity — accordion.accordion-desc.3"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-name.4",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "cybersecurity — accordion.accordion-name.4"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-desc.4",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cybersecurity — accordion.accordion-desc.4"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-name.5",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "cybersecurity — accordion.accordion-name.5"
+    },
+    {
+      "key": "cybersecurity.accordion.accordion-desc.5",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "cybersecurity — accordion.accordion-desc.5"
+    },
+    {
+      "key": "cybersecurity.cta.cta-title",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "cybersecurity — cta.cta-title"
+    },
+    {
+      "key": "cybersecurity.cta.cta-title.url",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "cybersecurity — cta.cta-title (link)"
+    },
+    {
+      "key": "virtualization.features-intro.description.1",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We offer expert IT consulting services to help you develop a robust technology strategy aligned.",
+      "maxCharacters": 212,
+      "label": "virtualization — features-intro.description.1"
+    },
+    {
+      "key": "virtualization.features-intro.description.2",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Protect your business from evolving cyber threats with our robust cybersecurity solutions.",
+      "maxCharacters": 200,
+      "label": "virtualization — features-intro.description.2"
+    },
+    {
+      "key": "virtualization.features-intro.description.3",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We assist in migrating your applications and data to the cloud, ensuring data security.",
+      "maxCharacters": 194,
+      "label": "virtualization — features-intro.description.3"
+    },
+    {
+      "key": "virtualization.accordion.button",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book an intro call",
+      "maxCharacters": 80,
+      "label": "virtualization — accordion.button"
+    },
+    {
+      "key": "virtualization.accordion.button.url",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "virtualization — accordion.button (link)"
+    },
+    {
+      "key": "virtualization.accordion.accordion-name.1",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is Salmon?",
+      "maxCharacters": 80,
+      "label": "virtualization — accordion.accordion-name.1"
+    },
+    {
+      "key": "virtualization.accordion.accordion-desc.1",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "virtualization — accordion.accordion-desc.1"
+    },
+    {
+      "key": "virtualization.accordion.accordion-name.2",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "virtualization — accordion.accordion-name.2"
+    },
+    {
+      "key": "virtualization.accordion.accordion-desc.2",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "virtualization — accordion.accordion-desc.2"
+    },
+    {
+      "key": "virtualization.accordion.accordion-name.3",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "virtualization — accordion.accordion-name.3"
+    },
+    {
+      "key": "virtualization.accordion.accordion-desc.3",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "virtualization — accordion.accordion-desc.3"
+    },
+    {
+      "key": "virtualization.accordion.accordion-name.4",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "virtualization — accordion.accordion-name.4"
+    },
+    {
+      "key": "virtualization.accordion.accordion-desc.4",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "virtualization — accordion.accordion-desc.4"
+    },
+    {
+      "key": "virtualization.accordion.accordion-name.5",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Do I get a refund if the expert doesn't show up for the meeting?",
+      "maxCharacters": 148,
+      "label": "virtualization — accordion.accordion-name.5"
+    },
+    {
+      "key": "virtualization.accordion.accordion-desc.5",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "virtualization — accordion.accordion-desc.5"
+    },
+    {
+      "key": "virtualization.cta.cta-title",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "virtualization — cta.cta-title"
+    },
+    {
+      "key": "virtualization.cta.cta-title.url",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "virtualization — cta.cta-title (link)"
+    },
+    {
+      "key": "category-blog.articles-latest.main-section",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Latest news from us",
+      "maxCharacters": 80,
+      "label": "category-blog — articles-latest.main-section"
+    },
+    {
+      "key": "category-blog.search-band.search-title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "search-band.search-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Search",
+      "maxCharacters": 80,
+      "label": "category-blog — search-band.search-title"
+    },
+    {
+      "key": "category-blog.search-band.tags-title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "search-band.tags-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags Popular",
+      "maxCharacters": 80,
+      "label": "category-blog — search-band.tags-title"
+    },
+    {
+      "key": "category-blog.cta.cta-title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "category-blog — cta.cta-title"
+    },
+    {
+      "key": "category-blog.cta.cta-title.url",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-blog — cta.cta-title (link)"
+    },
+    {
+      "key": "author-listting.cta.cta-title",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "author-listting — cta.cta-title"
+    },
+    {
+      "key": "author-listting.cta.cta-title.url",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "author-listting — cta.cta-title (link)"
+    },
+    {
+      "key": "tagged-items.cta.cta-title",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "tagged-items — cta.cta-title"
+    },
+    {
+      "key": "tagged-items.cta.cta-title.url",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "tagged-items — cta.cta-title (link)"
+    },
+    {
+      "key": "contact.cta.cta-title",
+      "entity": "page-contact",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "contact — cta.cta-title"
+    },
+    {
+      "key": "contact.cta.cta-title.url",
+      "entity": "page-contact",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "contact — cta.cta-title (link)"
+    },
+    {
+      "key": "career.features-intro.main-section",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Open positions",
+      "maxCharacters": 80,
+      "label": "career — features-intro.main-section"
+    },
+    {
+      "key": "career.features-intro.title.1",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Product designer",
+      "maxCharacters": 80,
+      "label": "career — features-intro.title.1"
+    },
+    {
+      "key": "career.features-intro.apply-position.1",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-time",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-position.1"
+    },
+    {
+      "key": "career.features-intro.apply-time.1",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-time.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newark, NJ",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-time.1"
+    },
+    {
+      "key": "career.features-intro.desc.1",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are seeking a highly motivated and skilled individual to join our team as a Product designer. The Product designer will play a key role in company",
+      "maxCharacters": 318,
+      "label": "career — features-intro.desc.1"
+    },
+    {
+      "key": "career.features-intro.btn.1",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Apply",
+      "maxCharacters": 80,
+      "label": "career — features-intro.btn.1"
+    },
+    {
+      "key": "career.features-intro.btn.1.url",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "career — features-intro.btn.1 (link)"
+    },
+    {
+      "key": "career.features-intro.title.2",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Software engineer",
+      "maxCharacters": 80,
+      "label": "career — features-intro.title.2"
+    },
+    {
+      "key": "career.features-intro.apply-position.2",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-time",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-position.2"
+    },
+    {
+      "key": "career.features-intro.apply-time.2",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-time.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newark, NJ",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-time.2"
+    },
+    {
+      "key": "career.features-intro.desc.2",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are seeking a highly motivated and skilled individual to join our team as a Product designer. The Product designer will play a key role in company",
+      "maxCharacters": 318,
+      "label": "career — features-intro.desc.2"
+    },
+    {
+      "key": "career.features-intro.btn.2",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Apply",
+      "maxCharacters": 80,
+      "label": "career — features-intro.btn.2"
+    },
+    {
+      "key": "career.features-intro.btn.2.url",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "career — features-intro.btn.2 (link)"
+    },
+    {
+      "key": "career.features-intro.title.3",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Junior frontend developer",
+      "maxCharacters": 80,
+      "label": "career — features-intro.title.3"
+    },
+    {
+      "key": "career.features-intro.apply-position.3",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-time",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-position.3"
+    },
+    {
+      "key": "career.features-intro.apply-time.3",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-time.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newark, NJ",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-time.3"
+    },
+    {
+      "key": "career.features-intro.desc.3",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are seeking a highly motivated and skilled individual to join our team as a Product designer. The Product designer will play a key role in company",
+      "maxCharacters": 318,
+      "label": "career — features-intro.desc.3"
+    },
+    {
+      "key": "career.features-intro.btn.3",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Apply",
+      "maxCharacters": 80,
+      "label": "career — features-intro.btn.3"
+    },
+    {
+      "key": "career.features-intro.btn.3.url",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "career — features-intro.btn.3 (link)"
+    },
+    {
+      "key": "career.features-intro.title.4",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Finance executive",
+      "maxCharacters": 80,
+      "label": "career — features-intro.title.4"
+    },
+    {
+      "key": "career.features-intro.apply-position.4",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-position.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-time",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-position.4"
+    },
+    {
+      "key": "career.features-intro.apply-time.4",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-time.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newark, NJ",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-time.4"
+    },
+    {
+      "key": "career.features-intro.desc.4",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are seeking a highly motivated and skilled individual to join our team as a Product designer. The Product designer will play a key role in company",
+      "maxCharacters": 318,
+      "label": "career — features-intro.desc.4"
+    },
+    {
+      "key": "career.features-intro.btn.4",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Apply",
+      "maxCharacters": 80,
+      "label": "career — features-intro.btn.4"
+    },
+    {
+      "key": "career.features-intro.btn.4.url",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "career — features-intro.btn.4 (link)"
+    },
+    {
+      "key": "career.features-intro.title.5",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Junior copywriter",
+      "maxCharacters": 80,
+      "label": "career — features-intro.title.5"
+    },
+    {
+      "key": "career.features-intro.apply-position.5",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-position.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Full-time",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-position.5"
+    },
+    {
+      "key": "career.features-intro.apply-time.5",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.apply-time.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newark, NJ",
+      "maxCharacters": 80,
+      "label": "career — features-intro.apply-time.5"
+    },
+    {
+      "key": "career.features-intro.desc.5",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are seeking a highly motivated and skilled individual to join our team as a Product designer. The Product designer will play a key role in company",
+      "maxCharacters": 318,
+      "label": "career — features-intro.desc.5"
+    },
+    {
+      "key": "career.features-intro.btn.5",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Apply",
+      "maxCharacters": 80,
+      "label": "career — features-intro.btn.5"
+    },
+    {
+      "key": "career.features-intro.btn.5.url",
+      "entity": "page-career",
+      "target": {
+        "block": "features-intro.btn.5",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "career — features-intro.btn.5 (link)"
+    },
+    {
+      "key": "career.cta.cta-title",
+      "entity": "page-career",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "career — cta.cta-title"
+    },
+    {
+      "key": "career.cta.cta-title.url",
+      "entity": "page-career",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "career — cta.cta-title (link)"
+    },
+    {
+      "key": "branding.related-items.main-section",
+      "entity": "page-branding",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Check some of recent work",
+      "maxCharacters": 80,
+      "label": "branding — related-items.main-section"
+    },
+    {
+      "key": "branding.cta.cta-title",
+      "entity": "page-branding",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "branding — cta.cta-title"
+    },
+    {
+      "key": "branding.cta.cta-title.url",
+      "entity": "page-branding",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "branding — cta.cta-title (link)"
+    },
+    {
+      "key": "ui-ux-design.related-items.main-section",
+      "entity": "page-ui-ux-design",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Check some of recent work",
+      "maxCharacters": 80,
+      "label": "ui-ux-design — related-items.main-section"
+    },
+    {
+      "key": "ui-ux-design.cta.cta-title",
+      "entity": "page-ui-ux-design",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact us",
+      "maxCharacters": 80,
+      "label": "ui-ux-design — cta.cta-title"
+    },
+    {
+      "key": "ui-ux-design.cta.cta-title.url",
+      "entity": "page-ui-ux-design",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "ui-ux-design — cta.cta-title (link)"
+    },
+    {
+      "key": "home.hero.image-decor",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.image-decor",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/decor.png",
+      "sampleId": 66,
+      "maxCharacters": 255,
+      "label": "home — hero.image-decor"
+    },
+    {
+      "key": "home.features-intro.intro-img",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.intro-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1.png",
+      "sampleId": 67,
+      "maxCharacters": 255,
+      "label": "home — features-intro.intro-img"
+    },
+    {
+      "key": "home.features-intro.info-icon",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.info-icon",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-1.png",
+      "sampleId": 68,
+      "maxCharacters": 255,
+      "label": "home — features-intro.info-icon"
+    },
+    {
+      "key": "home.text-slider.logo.1",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.logo.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-1-1.png",
+      "sampleId": 75,
+      "maxCharacters": 255,
+      "label": "home — text-slider.logo.1"
+    },
+    {
+      "key": "home.text-slider.logo.2",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.logo.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2.png",
+      "sampleId": 76,
+      "maxCharacters": 255,
+      "label": "home — text-slider.logo.2"
+    },
+    {
+      "key": "home.text-slider.logo.3",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.logo.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3.png",
+      "sampleId": 77,
+      "maxCharacters": 255,
+      "label": "home — text-slider.logo.3"
+    },
+    {
+      "key": "home.text-slider.logo.4",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.logo.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4.png",
+      "sampleId": 78,
+      "maxCharacters": 255,
+      "label": "home — text-slider.logo.4"
+    },
+    {
+      "key": "home.text-slider.logo.5",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.logo.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-5.png",
+      "sampleId": 79,
+      "maxCharacters": 255,
+      "label": "home — text-slider.logo.5"
+    },
+    {
+      "key": "home.text-slider.logo.6",
+      "entity": "page-home",
+      "target": {
+        "block": "text-slider.logo.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-6.png",
+      "sampleId": 80,
+      "maxCharacters": 255,
+      "label": "home — text-slider.logo.6"
+    },
+    {
+      "key": "home.features-intro.img-icon.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "home — features-intro.img-icon.1"
+    },
+    {
+      "key": "home.features-intro.img-icon.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "home — features-intro.img-icon.2"
+    },
+    {
+      "key": "home.features-intro.img-icon.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "home — features-intro.img-icon.3"
+    },
+    {
+      "key": "home.clients.logo.1",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.logo.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-1.png",
+      "sampleId": 92,
+      "maxCharacters": 255,
+      "label": "home — clients.logo.1"
+    },
+    {
+      "key": "home.clients.logo.2",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.logo.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-2.png",
+      "sampleId": 93,
+      "maxCharacters": 255,
+      "label": "home — clients.logo.2"
+    },
+    {
+      "key": "home.clients.logo.3",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.logo.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-1.png",
+      "sampleId": 94,
+      "maxCharacters": 255,
+      "label": "home — clients.logo.3"
+    },
+    {
+      "key": "home.clients.logo.4",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.logo.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-4.png",
+      "sampleId": 95,
+      "maxCharacters": 255,
+      "label": "home — clients.logo.4"
+    },
+    {
+      "key": "home.clients.logo.5",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.logo.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-5.png",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "home — clients.logo.5"
+    },
+    {
+      "key": "home.clients.logo.6",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.logo.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-6.png",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "home — clients.logo.6"
+    },
+    {
+      "key": "home.features-intro.intro.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.intro.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-11.png",
+      "sampleId": 70,
+      "maxCharacters": 255,
+      "label": "home — features-intro.intro.1"
+    },
+    {
+      "key": "home.features-intro.intro.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.intro.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-12.png",
+      "sampleId": 71,
+      "maxCharacters": 255,
+      "label": "home — features-intro.intro.2"
+    },
+    {
+      "key": "home.teams.img.1",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-5.jpg",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "home — teams.img.1"
+    },
+    {
+      "key": "home.teams.img.2",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-5.jpg",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "home — teams.img.2"
+    },
+    {
+      "key": "home.teams.img.3",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-5.jpg",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "home — teams.img.3"
+    },
+    {
+      "key": "about-us-2.features-intro.image",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.image",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-4-6.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "about-us-2 — features-intro.image"
+    },
+    {
+      "key": "about-us-2.features-intro.intro-img",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.intro-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1.png",
+      "sampleId": 67,
+      "maxCharacters": 255,
+      "label": "about-us-2 — features-intro.intro-img"
+    },
+    {
+      "key": "about-us-2.features-intro.info-icon",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "features-intro.info-icon",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-1.png",
+      "sampleId": 68,
+      "maxCharacters": 255,
+      "label": "about-us-2 — features-intro.info-icon"
+    },
+    {
+      "key": "about-us-2.teams.img.1",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-5.jpg",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "about-us-2 — teams.img.1"
+    },
+    {
+      "key": "about-us-2.teams.img.2",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-5.jpg",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "about-us-2 — teams.img.2"
+    },
+    {
+      "key": "about-us-2.teams.img.3",
+      "entity": "page-about-us-2",
+      "target": {
+        "block": "teams.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-5.jpg",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "about-us-2 — teams.img.3"
+    },
+    {
+      "key": "services.features-intro.img-icon.1",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.1"
+    },
+    {
+      "key": "services.features-intro.img-icon.2",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-15.png",
+      "sampleId": 88,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.2"
+    },
+    {
+      "key": "services.features-intro.img-icon.3",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.3"
+    },
+    {
+      "key": "services.features-intro.img-icon.4",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.4"
+    },
+    {
+      "key": "services.features-intro.img-icon.5",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.5"
+    },
+    {
+      "key": "services.features-intro.img-icon.6",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-16.png",
+      "sampleId": 89,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.6"
+    },
+    {
+      "key": "services.features-intro.img-icon.7",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.7",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-17.png",
+      "sampleId": 90,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.7"
+    },
+    {
+      "key": "services.features-intro.img-icon.8",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.img-icon.8",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-18.png",
+      "sampleId": 91,
+      "maxCharacters": 255,
+      "label": "services — features-intro.img-icon.8"
+    },
+    {
+      "key": "services.features-intro.intro-img",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.intro-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-1.png",
+      "sampleId": 69,
+      "maxCharacters": 255,
+      "label": "services — features-intro.intro-img"
+    },
+    {
+      "key": "services.features-intro.intro.1",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.intro.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-11.png",
+      "sampleId": 70,
+      "maxCharacters": 255,
+      "label": "services — features-intro.intro.1"
+    },
+    {
+      "key": "services.features-intro.intro.2",
+      "entity": "page-services",
+      "target": {
+        "block": "features-intro.intro.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-12.png",
+      "sampleId": 71,
+      "maxCharacters": 255,
+      "label": "services — features-intro.intro.2"
+    },
+    {
+      "key": "development.features-intro.img-icon.1",
+      "entity": "page-development",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "development — features-intro.img-icon.1"
+    },
+    {
+      "key": "development.features-intro.img-icon.2",
+      "entity": "page-development",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "development — features-intro.img-icon.2"
+    },
+    {
+      "key": "development.features-intro.img-icon.3",
+      "entity": "page-development",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "development — features-intro.img-icon.3"
+    },
+    {
+      "key": "mobile-application.features-intro.img-icon.1",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "mobile-application — features-intro.img-icon.1"
+    },
+    {
+      "key": "mobile-application.features-intro.img-icon.2",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "mobile-application — features-intro.img-icon.2"
+    },
+    {
+      "key": "mobile-application.features-intro.img-icon.3",
+      "entity": "page-mobile-application",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "mobile-application — features-intro.img-icon.3"
+    },
+    {
+      "key": "cloud-solutions.features-intro.img-icon.1",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "cloud-solutions — features-intro.img-icon.1"
+    },
+    {
+      "key": "cloud-solutions.features-intro.img-icon.2",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "cloud-solutions — features-intro.img-icon.2"
+    },
+    {
+      "key": "cloud-solutions.features-intro.img-icon.3",
+      "entity": "page-cloud-solutions",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "cloud-solutions — features-intro.img-icon.3"
+    },
+    {
+      "key": "it-infrastructure.features-intro.img-icon.1",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "it-infrastructure — features-intro.img-icon.1"
+    },
+    {
+      "key": "it-infrastructure.features-intro.img-icon.2",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "it-infrastructure — features-intro.img-icon.2"
+    },
+    {
+      "key": "it-infrastructure.features-intro.img-icon.3",
+      "entity": "page-it-infrastructure",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "it-infrastructure — features-intro.img-icon.3"
+    },
+    {
+      "key": "cybersecurity.features-intro.img-icon.1",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "cybersecurity — features-intro.img-icon.1"
+    },
+    {
+      "key": "cybersecurity.features-intro.img-icon.2",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "cybersecurity — features-intro.img-icon.2"
+    },
+    {
+      "key": "cybersecurity.features-intro.img-icon.3",
+      "entity": "page-cybersecurity",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "cybersecurity — features-intro.img-icon.3"
+    },
+    {
+      "key": "virtualization.features-intro.img-icon.1",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-2-1.png",
+      "sampleId": 85,
+      "maxCharacters": 255,
+      "label": "virtualization — features-intro.img-icon.1"
+    },
+    {
+      "key": "virtualization.features-intro.img-icon.2",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-3-1.png",
+      "sampleId": 86,
+      "maxCharacters": 255,
+      "label": "virtualization — features-intro.img-icon.2"
+    },
+    {
+      "key": "virtualization.features-intro.img-icon.3",
+      "entity": "page-virtualization",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/icon-4-1.png",
+      "sampleId": 87,
+      "maxCharacters": 255,
+      "label": "virtualization — features-intro.img-icon.3"
+    }
+  ]
+}

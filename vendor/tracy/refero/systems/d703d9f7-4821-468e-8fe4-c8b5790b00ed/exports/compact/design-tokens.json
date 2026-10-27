@@ -1,0 +1,59 @@
+{
+  "color": {
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, hairlines, filled primary buttons, dark section backgrounds, and card surfaces on dark bands — the structural default that carries the entire system"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on dark fills, form input fills — the negative space that frames everything"
+    },
+    "warm-gray": {
+      "$value": "#736f7c",
+      "$type": "color",
+      "$description": "Warm Gray — Body text on light surfaces, subtle borders, muted helper text — a near-gray that warms the neutral palette slightly"
+    },
+    "mist": {
+      "$value": "#dedede",
+      "$type": "color",
+      "$description": "Mist — Hairline dividers, input borders, disabled states — the lightest structural line in the system"
+    },
+    "fog": {
+      "$value": "#bdbdbd",
+      "$type": "color",
+      "$description": "Fog — Placeholder text, inactive borders, secondary dividers"
+    },
+    "slate": {
+      "$value": "#7f7f7f",
+      "$type": "color",
+      "$description": "Slate — Inactive nav text, subtle metadata"
+    },
+    "iris-shadow": {
+      "$value": "#8b8893",
+      "$type": "color",
+      "$description": "Iris Shadow — Rare shadow tint and muted border accent"
+    },
+    "neon-pulse": {
+      "$value": "#ff17e9",
+      "$type": "color",
+      "$description": "Neon Pulse — Brand accent — logo mark, active nav underline, highlighted section labels, badge borders, decorative emphasis on key words — one vivid pink against the monochrome system"
+    }
+  },
+  "font": {
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Single-family system used for everything from 12px captions to 200px stat numerals. The extreme range (16× scale) is the signature — the same weight carries caption text and hero headlines, letting scale and tracking do the differentiation. Positive letter-spacing (+0.08em) on the smallest sizes signals uppercase labels; aggressive negative tracking (-0.05em) on display sizes tightens large type to a poster-like density."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sundayapp.com",
+      "siteName": "sunday",
+      "extractedAt": "2026-06-03T17:23:01.116Z",
+      "variant": "compact"
+    }
+  }
+}

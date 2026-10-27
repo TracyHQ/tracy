@@ -1,0 +1,1074 @@
+{
+  "source": "quickstart/ja-resort/j6@1.0.4",
+  "pages": ["/", "/index.php", "/index.php/rooms", "/index.php/about-us"],
+  "page": "#fbf6f3",
+  "rules": [
+    [".sr-checkavailability-wrap .datefield", "border-top-color", "border", 0],
+    [".sr-checkavailability-wrap .datefield", "border-right-color", "border", 0],
+    [".sr-checkavailability-wrap .datefield", "border-bottom-color", "border", 0],
+    [".sr-checkavailability-wrap .datefield", "border-left-color", "border", 0],
+    ["div[id*=\"t4-section-\"] .sr-checkavailability-wrap", "background-color", "surface", 0],
+    ["div[id*=\"t4-section-\"] .sr-checkavailability-wrap .form-title h6", "color", "on-band", 0],
+    ["div[id*=\"t4-section-\"] .sr-checkavailability-wrap label", "color", "fg", 0],
+    [".solidres-module-checkavailability .input-group input.form-control", "background-color", "surface", 0],
+    [".solidres-module-checkavailability .input-group .input-group-text", "background-color", "surface", 0],
+    [".ui-widget.ui-widget-content", "border-top-color", "border", 0],
+    [".ui-widget.ui-widget-content", "border-right-color", "border", 0],
+    [".ui-widget.ui-widget-content", "border-bottom-color", "border", 0],
+    [".ui-widget.ui-widget-content", "border-left-color", "border", 0],
+    [".ui-widget-content", "color", "fg", 0],
+    [".ui-widget-content", "background-color", "surface", 0],
+    [".ui-widget-content", "border-top-color", "border", 0],
+    [".ui-widget-content", "border-right-color", "border", 0],
+    [".ui-widget-content", "border-bottom-color", "border", 0],
+    [".ui-widget-content", "border-left-color", "border", 0],
+    [".ui-widget-content a", "color", "fg", 0],
+    [".ui-widget-header", "color", "fg", 0],
+    [".ui-widget-header", "background-color", "surface", 0],
+    [".ui-widget-header", "border-top-color", "border", 0],
+    [".ui-widget-header", "border-right-color", "border", 0],
+    [".ui-widget-header", "border-bottom-color", "border", 0],
+    [".ui-widget-header", "border-left-color", "border", 0],
+    [".ui-widget-header a", "color", "fg", 0],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active",
+      "color",
+      "fg",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active",
+      "background-color",
+      "bg",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus",
+      "color",
+      "fg",
+      0
+    ],
+    [
+      ".ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      ".ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover",
+      "border-top-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover",
+      "border-right-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover",
+      "border-bottom-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover",
+      "border-left-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight",
+      "color",
+      "accent-text",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight",
+      "border-top-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight",
+      "border-right-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight",
+      "border-bottom-color",
+      "accent",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight",
+      "border-left-color",
+      "accent",
+      0
+    ],
+    [".c-offcanvas", "background-color", "surface", 0],
+    [".acm-slideshow .item", "background-color", "band", 0],
+    [".acm-slideshow .owl-carousel .owl-nav button", "color", "fg", 0],
+    [".acm-slideshow .owl-carousel .owl-nav button", "background-color", "surface", 0],
+    [".acm-features.style-1 .owl-dots > button span", "background-color", "surface", 0],
+    [
+      ".acm-features.style-3 .acm-feature-slide .container-inner .owl-carousel .owl-dots > button.active > span",
+      "background-color",
+      "surface",
+      1
+    ],
+    [".acm-features.style-3 .acm-feature-intro .container-inner::before", "background-color", "surface", 0],
+    [".acm-testimonial.style-1 .testimonial-item-wrap::before", "background-color", "band", 0],
+    [".acm-testimonial.style-1 .desc", "color", "muted", 0],
+    [".acm-testimonial.style-1 .quote-mask span", "color", "muted", 0],
+    [".ui-datepicker th", "color", "fg", 0],
+    [".ui-widget-header", "color", "accent-text", 0],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default",
+      "color",
+      "muted",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, a.ui-state-default:hover",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, a.ui-state-default:hover",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, a.ui-state-default:hover",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, a.ui-state-default:hover",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, a.ui-state-default:hover",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active",
+      "background-color",
+      "accent",
+      0
+    ],
+    ["a.ui-state-default:hover", "color", "accent-text", 0],
+    [".ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current", "color", "accent-text", 0],
+    [
+      ".ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      ".ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [".ui-datepicker-next:hover, .ui-datepicker-prev:hover", "border-top-color", "border", 0],
+    [".ui-datepicker-next:hover, .ui-datepicker-prev:hover", "border-right-color", "border", 0],
+    [".ui-datepicker-next:hover, .ui-datepicker-prev:hover", "border-bottom-color", "border", 0],
+    [".ui-datepicker-next:hover, .ui-datepicker-prev:hover", "border-left-color", "border", 0],
+    [
+      "td.bookable a.ui-state-default, td.bookable.ui-datepicker-unselectable a.ui-state-default",
+      "color",
+      "accent-text",
+      0
+    ],
+    [
+      "td.bookable a.ui-state-default, td.bookable.ui-datepicker-unselectable a.ui-state-default",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      "td.bookable a.ui-state-default:hover, td.bookable.ui-datepicker-unselectable a.ui-state-default:hover",
+      "background-color",
+      "surface",
+      0
+    ],
+    ["body", "color", "muted", 0],
+    ["body", "background-color", "surface", 0],
+    [".form-control, .inputbox", "color", "fg", 0],
+    [".form-control, .inputbox", "background-color", "surface", 0],
+    [".form-control:focus, .inputbox:focus", "color", "fg", 0],
+    [".form-control:focus, .inputbox:focus", "background-color", "surface", 0],
+    [".form-control:focus, .inputbox:focus", "border-top-color", "border", 0],
+    [".form-control:focus, .inputbox:focus", "border-right-color", "border", 0],
+    [".form-control:focus, .inputbox:focus", "border-bottom-color", "border", 0],
+    [".form-control:focus, .inputbox:focus", "border-left-color", "border", 0],
+    [
+      ".form-control:disabled, .inputbox:disabled, .form-control[readonly], [readonly].inputbox",
+      "background-color",
+      "surface",
+      0
+    ],
+    [".btn-primary, .search .btn-toolbar .btn", "color", "on-accent", 0],
+    [".btn-primary, .search .btn-toolbar .btn", "background-color", "accent", 0],
+    [".btn-primary, .search .btn-toolbar .btn", "border-top-color", "accent", 0],
+    [".btn-primary, .search .btn-toolbar .btn", "border-right-color", "accent", 0],
+    [".btn-primary, .search .btn-toolbar .btn", "border-bottom-color", "accent", 0],
+    [".btn-primary, .search .btn-toolbar .btn", "border-left-color", "accent", 0],
+    [".btn-primary:hover, .search .btn-toolbar .btn:hover", "color", "on-accent", 0],
+    [".btn-primary:hover, .search .btn-toolbar .btn:hover", "background-color", "accent", 0],
+    [".btn-primary:hover, .search .btn-toolbar .btn:hover", "border-top-color", "accent", 0],
+    [".btn-primary:hover, .search .btn-toolbar .btn:hover", "border-right-color", "accent", 0],
+    [".btn-primary:hover, .search .btn-toolbar .btn:hover", "border-bottom-color", "accent", 0],
+    [".btn-primary:hover, .search .btn-toolbar .btn:hover", "border-left-color", "accent", 0],
+    [
+      ".btn-primary.disabled, .search .btn-toolbar .disabled.btn, .btn-primary:disabled, .search .btn-toolbar .btn:disabled",
+      "color",
+      "on-accent",
+      0
+    ],
+    [
+      ".btn-primary.disabled, .search .btn-toolbar .disabled.btn, .btn-primary:disabled, .search .btn-toolbar .btn:disabled",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary.disabled, .search .btn-toolbar .disabled.btn, .btn-primary:disabled, .search .btn-toolbar .btn:disabled",
+      "border-top-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary.disabled, .search .btn-toolbar .disabled.btn, .btn-primary:disabled, .search .btn-toolbar .btn:disabled",
+      "border-right-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary.disabled, .search .btn-toolbar .disabled.btn, .btn-primary:disabled, .search .btn-toolbar .btn:disabled",
+      "border-bottom-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary.disabled, .search .btn-toolbar .disabled.btn, .btn-primary:disabled, .search .btn-toolbar .btn:disabled",
+      "border-left-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary:not(:disabled):not(.disabled):active, .search .btn-toolbar .btn:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .search .btn-toolbar .btn:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .search .btn-toolbar .show > .dropdown-toggle.btn",
+      "color",
+      "on-accent",
+      0
+    ],
+    [
+      ".btn-primary:not(:disabled):not(.disabled):active, .search .btn-toolbar .btn:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .search .btn-toolbar .btn:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .search .btn-toolbar .show > .dropdown-toggle.btn",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary:not(:disabled):not(.disabled):active, .search .btn-toolbar .btn:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .search .btn-toolbar .btn:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .search .btn-toolbar .show > .dropdown-toggle.btn",
+      "border-top-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary:not(:disabled):not(.disabled):active, .search .btn-toolbar .btn:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .search .btn-toolbar .btn:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .search .btn-toolbar .show > .dropdown-toggle.btn",
+      "border-right-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary:not(:disabled):not(.disabled):active, .search .btn-toolbar .btn:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .search .btn-toolbar .btn:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .search .btn-toolbar .show > .dropdown-toggle.btn",
+      "border-bottom-color",
+      "accent",
+      0
+    ],
+    [
+      ".btn-primary:not(:disabled):not(.disabled):active, .search .btn-toolbar .btn:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .search .btn-toolbar .btn:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .search .btn-toolbar .show > .dropdown-toggle.btn",
+      "border-left-color",
+      "accent",
+      0
+    ],
+    [".btn-outline-secondary", "border-top-color", "border", 0],
+    [".btn-outline-secondary", "border-right-color", "border", 0],
+    [".btn-outline-secondary", "border-bottom-color", "border", 0],
+    [".btn-outline-secondary", "border-left-color", "border", 0],
+    [".btn-outline-secondary:hover", "color", "muted", 0],
+    [".btn-outline-secondary:hover", "background-color", "band", 0],
+    [".btn-outline-secondary:hover", "border-top-color", "border", 0],
+    [".btn-outline-secondary:hover", "border-right-color", "border", 0],
+    [".btn-outline-secondary:hover", "border-bottom-color", "border", 0],
+    [".btn-outline-secondary:hover", "border-left-color", "border", 0],
+    [
+      ".btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle",
+      "color",
+      "muted",
+      0
+    ],
+    [
+      ".btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [".dropdown-menu", "color", "fg", 0],
+    [".dropdown-menu", "background-color", "surface", 0],
+    [".dropdown-item.active, .dropdown-item:active", "color", "on-band", 0],
+    [".input-group-text, .input-group-addon > span", "color", "fg", 0],
+    [".input-group-text, .input-group-addon > span", "background-color", "surface", 0],
+    [".text-white", "color", "on-band", 1],
+    [".form-select", "background-color", "surface", 0],
+    [".owl-dots > button span", "background-color", "surface", 0],
+    [".t4-megamenu .dropdown-toggle .item-caret::before", "border-top-color", "border", 0],
+    [".t4-megamenu .dropdown-menu", "background-color", "surface", 0],
+    [".t4-offcanvas", "background-color", "band", 0],
+    [".t4-offcanvas .t4-off-canvas-header .close", "background-color", "surface", 0],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .nav-link, .t4-offcanvas .t4-off-canvas-body .navbar .separator",
+      "color",
+      "muted",
+      0,
+      "--body-text-color"
+    ],
+    [".t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle", "color", "muted", 0],
+    [".t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle", "background-color", "bg", 0],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle:hover, .t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle:focus, .t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle:active",
+      "color",
+      "fg",
+      0
+    ],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle:hover, .t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle:focus, .t4-offcanvas .t4-off-canvas-body .navbar .btn-toggle:active",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu .dropdown-item, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu .nav-link",
+      "color",
+      "muted",
+      0,
+      "--body-text-color"
+    ],
+    [".t4-offcanvas-toggle .toggle-bars", "background-color", "surface", 0],
+    [
+      ".t4-offcanvas-toggle .toggle-bars::before, .t4-offcanvas-toggle .toggle-bars::after",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      ".t4-offcanvas-toggle:hover .toggle-bars, .t4-offcanvas-toggle:hover .toggle-bars::before, .t4-offcanvas-toggle:hover .toggle-bars::after",
+      "background-color",
+      "band",
+      0
+    ],
+    [".t4-offcanvas .t4-off-canvas-header", "color", "on-band", 0],
+    [".t4-offcanvas .t4-off-canvas-header", "background-color", "band", 0],
+    [".t4-offcanvas .t4-off-canvas-header .close", "color", "on-band", 0],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .nav-link:hover, .t4-offcanvas .t4-off-canvas-body .navbar .nav-link:focus, .t4-offcanvas .t4-off-canvas-body .navbar .nav-link:active, .t4-offcanvas .t4-off-canvas-body .navbar .separator:hover, .t4-offcanvas .t4-off-canvas-body .navbar .separator:focus, .t4-offcanvas .t4-off-canvas-body .navbar .separator:active",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .active > a, .t4-offcanvas .t4-off-canvas-body .navbar .active > span, .t4-offcanvas .t4-off-canvas-body .navbar .show > a, .t4-offcanvas .t4-off-canvas-body .navbar .show > span",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu li > a:hover, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu li > a:focus, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu li > a:active, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu li > span:hover, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu li > span:focus, .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-menu li > span:active",
+      "color",
+      "on-band",
+      1
+    ],
+    [".t4-offcanvas .t4-module .module-title", "color", "on-band", 0],
+    [".head-info .head-phone a", "background-color", "band", 0],
+    [".head-info .head-phone a:hover span", "color", "on-band", 1],
+    [".nav-breakpoint-lg div.t4-megamenu", "background-color", "band", 0],
+    [
+      ".nav-breakpoint-lg div.t4-megamenu .navbar-nav > li > a, .nav-breakpoint-lg div.t4-megamenu .navbar-nav > li > .nav-link",
+      "color",
+      "on-band",
+      0
+    ],
+    [".nav-breakpoint-lg div.t4-megamenu .mega-col-title", "color", "on-band", 0],
+    [".nav-breakpoint-lg div.t4-megamenu .dropdown-menu a", "color", "on-band", 0],
+    [".section-title-wrap .section-title::before", "background-color", "surface", 0],
+    ["#back-to-top i", "color", "on-band", 0],
+    [".t4-palette-dark", "color", "on-band", 0],
+    [".t4-palette-dark", "background-color", "band", 0],
+    [".t4-palette-dark a", "color", "on-band", 0],
+    [
+      ".t4-palette-dark a:not(.btn):hover, .t4-palette-dark a:not(.btn):focus, .t4-palette-dark a:not(.btn):active",
+      "color",
+      "on-band",
+      0
+    ],
+    [".t4-palette-dark .navbar-nav > li > a", "color", "on-band", 1],
+    [
+      ".t4-palette-dark .navbar-nav > li.active > a, .t4-palette-dark .navbar-nav > li.show > a, .t4-palette-dark .navbar-nav > li > a:hover, .t4-palette-dark .navbar-nav > li > a:focus, .t4-palette-dark .navbar-nav > li > a:active",
+      "color",
+      "on-band",
+      1
+    ],
+    [".t4-palette-dark .navbar-nav > li > a .item-caret::before", "border-top-color", "accent", 1],
+    [
+      ".t4-palette-dark .navbar-nav > li.active > a .item-caret::before, .t4-palette-dark .navbar-nav > li.show > a .item-caret::before, .t4-palette-dark .navbar-nav > li > a:hover .item-caret::before, .t4-palette-dark .navbar-nav > li > a:focus .item-caret::before, .t4-palette-dark .navbar-nav > li > a:active .item-caret::before",
+      "border-top-color",
+      "border",
+      1
+    ],
+    [".t4-palette-gray", "color", "muted", 0],
+    [".t4-palette-gray", "background-color", "surface", 0],
+    [".t4-palette-gray a", "color", "fg", 0],
+    [
+      ".t4-palette-gray a:not(.btn):hover, .t4-palette-gray a:not(.btn):focus, .t4-palette-gray a:not(.btn):active",
+      "color",
+      "accent-text",
+      0
+    ],
+    [".t4-palette-light", "color", "on-band", 0],
+    [".t4-palette-light", "background-color", "band", 0],
+    [".t4-palette-light .module-title", "color", "on-band", 0],
+    [".t4-palette-light a", "color", "on-band", 0],
+    [
+      ".t4-palette-light a:not(.btn):hover, .t4-palette-light a:not(.btn):focus, .t4-palette-light a:not(.btn):active",
+      "color",
+      "on-band",
+      0
+    ],
+    ["body", "background-color", "bg", 0, "--body-bg-color"],
+    [".t4-content", "background-color", "bg", 0, "--body-bg-color"],
+    [".btn.btn-primary", "background-color", "accent", 0, "--color-primary"],
+    [
+      ".btn.btn-primary:focus, .btn.btn-primary:hover, .btn.btn-primary:active",
+      "background-color",
+      "accent",
+      0,
+      "--color-primary"
+    ],
+    [".btn.btn-outline-secondary", "color", "fg", 0, "--color-secondary"],
+    [".btn.btn-outline-secondary:hover", "background-color", "band", 0, "--color-secondary"],
+    [".bg-heading", "background-color", "band", 0, "--heading_color"],
+    ["#back-to-top", "background-color", "accent", 0],
+    [".heading-link", "color", "fg", 0, "--heading_color"],
+    [".heading-link:hover, .heading-link:focus, .heading-link:active", "color", "accent-text", 0],
+    [".text-color", "color", "on-band", 0, "--body-text-color"],
+    [".feature-title span", "color", "on-band", 0, "--title_module"],
+    [".btn.btn-primary", "color", "on-accent", 0],
+    [".btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active", "color", "on-accent", 0],
+    [".section-title.title-primary", "color", "accent-text", 0, "--title_module"],
+    [".section-title.title-primary::before", "background-color", "accent", 0, "--title_module"],
+    [
+      ".t4-offcanvas-toggle .toggle-bars, .t4-offcanvas-toggle .toggle-bars::before, .t4-offcanvas-toggle .toggle-bars::after, .navbar .navbar-toggler .toggle-bars, .navbar .navbar-toggler .toggle-bars::before, .navbar .navbar-toggler .toggle-bars::after",
+      "background-color",
+      "accent",
+      1
+    ],
+    [".owl-dots > button.active > span", "background-color", "accent", 1],
+    [".action a", "color", "accent-text", 0, "--title_module"],
+    [".action a:hover, .action a:focus, .action a:active", "color", "accent-text", 0],
+    [".t4-footnav .t4-module .module-title span", "color", "on-band", 0, "--footer_color"],
+    [
+      ".dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-menu li > a:active, .dropdown-menu li > span:hover, .dropdown-menu li > span:focus, .dropdown-menu li > span:active",
+      "color",
+      "on-band",
+      1
+    ],
+    [".acm-features.style-3 .acm-feature-slide .owl-item", "background-color", "band", 0, "--heading_color"],
+    [".btn-outline-secondary", "color", "fg", 1],
+    [".btn-outline-secondary", "border-top-color", "border", 1],
+    [".btn-outline-secondary", "border-right-color", "border", 1],
+    [".btn-outline-secondary", "border-bottom-color", "border", 1],
+    [".btn-outline-secondary", "border-left-color", "border", 1],
+    [
+      ".btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active",
+      "color",
+      "muted",
+      1
+    ],
+    [
+      ".btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active",
+      "background-color",
+      "band",
+      1
+    ],
+    [".module-title span", "color", "on-band", 0, "--title_module"],
+    [".module-title span::before", "background-color", "accent", 0, "--title_module"],
+    ["div#solidres .box-wrap", "background-color", "surface", 0],
+    ["div#solidres .room_type_row", "background-color", "surface", 0],
+    [
+      "div#solidres .room_type_row .roomtype_name .label-default, div#solidres .room_type_row .roomtype_name .badge",
+      "color",
+      "fg",
+      0
+    ],
+    [
+      "div#solidres .room_type_row .roomtype_name .label-default, div#solidres .room_type_row .roomtype_name .badge",
+      "background-color",
+      "surface",
+      1
+    ],
+    ["div#solidres .room_type_row div[id*=\"tariff-holder-\"] .tariff-box", "background-color", "surface", 0],
+    [
+      "div#solidres .reservation-single-step-holder.guestinfo, div#solidres .reservation-single-step-holder.confirmation",
+      "background-color",
+      "surface",
+      0
+    ],
+    [".com_solidres #solidres .reservation_asset_item ul#asset-infoTabs", "border-bottom-color", "border", 0],
+    [".com_solidres #solidres .reservation_asset_item .wizard ul.steps li", "color", "on-band", 0],
+    [".com_solidres #solidres .reservation_asset_item .wizard ul.steps li", "background-color", "band", 0],
+    [".com_solidres #solidres .reservation_asset_item .wizard ul.steps li .badge", "color", "on-band", 0],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li .badge",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li .badge",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li .badge",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li .badge",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li.complete, .com_solidres #solidres .reservation_asset_item .wizard ul.steps li.active",
+      "color",
+      "on-accent",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li.complete, .com_solidres #solidres .reservation_asset_item .wizard ul.steps li.active",
+      "background-color",
+      "surface",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li.complete .badge, .com_solidres #solidres .reservation_asset_item .wizard ul.steps li.active .badge",
+      "color",
+      "fg",
+      0
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li.complete .badge, .com_solidres #solidres .reservation_asset_item .wizard ul.steps li.active .badge",
+      "background-color",
+      "surface",
+      1
+    ],
+    ["#solidres .rating, .reservation-row h3 i", "color", "accent-text", 0],
+    [".room_num_row fieldset", "background-color", "bg", 0],
+    [".wizard ul li.active", "color", "on-accent", 0],
+    [".wizard ul li.active .badge", "background-color", "accent", 1],
+    [".breakdown-row span.gross, .powered a", "color", "accent-text", 0],
+    [".custom-field-row", "border-bottom-color", "border", 0],
+    ["#cboxOverlay", "background-color", "band", 0],
+    ["#cboxContent", "background-color", "band", 0],
+    ["#cboxTitle", "color", "muted", 0],
+    ["#cboxCurrent", "color", "muted", 0],
+    ["#cboxSlideshow", "color", "on-band", 0],
+    [".reservation_asset_item .reservation_asset_subinfo", "color", "muted", 0],
+    [".reservation_asset_item .tab-content", "border-top-color", "border", 0],
+    [".reservation_asset_item .tab-content", "border-right-color", "border", 0],
+    [".reservation_asset_item .tab-content", "border-bottom-color", "border", 0],
+    [".reservation_asset_item .tab-content", "border-left-color", "border", 0],
+    [".wizard", "background-color", "bg", 0],
+    [".wizard", "border-top-color", "border", 0],
+    [".wizard", "border-right-color", "border", 0],
+    [".wizard", "border-bottom-color", "border", 0],
+    [".wizard", "border-left-color", "border", 0],
+    [".wizard ul li", "color", "on-band", 0],
+    [".wizard ul li .chevron, .wizard ul li .chevron::before", "border-left-color", "border", 0],
+    [".wizard ul li .chevron::before", "border-left-color", "border", 0],
+    [".button-row, .reservation-single-step-holder", "background-color", "bg", 0],
+    ["div.even", "background-color", "bg", 0],
+    ["div.odd", "background-color", "surface", 0],
+    [".tariff-box", "background-color", "bg", 0],
+    [".tariff-box", "border-top-color", "border", 0],
+    [".tariff-box", "border-right-color", "border", 0],
+    [".tariff-box", "border-bottom-color", "border", 0],
+    [".tariff-box", "border-left-color", "accent", 0],
+    [".min_tariff, .normal_tariff", "color", "accent-text", 0],
+    [".ja-masthead::before", "background-color", "band", 0],
+    [
+      ".btn-secondary, .js-stools-container-bar .btn, .tag-category .filters .btn-group .btn",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".btn-secondary, .js-stools-container-bar .btn, .tag-category .filters .btn-group .btn",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".btn-secondary, .js-stools-container-bar .btn, .tag-category .filters .btn-group .btn",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary, .js-stools-container-bar .btn, .tag-category .filters .btn-group .btn",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary, .js-stools-container-bar .btn, .tag-category .filters .btn-group .btn",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary, .js-stools-container-bar .btn, .tag-category .filters .btn-group .btn",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:hover, .js-stools-container-bar .btn:hover, .tag-category .filters .btn-group .btn:hover",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".btn-secondary:hover, .js-stools-container-bar .btn:hover, .tag-category .filters .btn-group .btn:hover",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".btn-secondary:hover, .js-stools-container-bar .btn:hover, .tag-category .filters .btn-group .btn:hover",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:hover, .js-stools-container-bar .btn:hover, .tag-category .filters .btn-group .btn:hover",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:hover, .js-stools-container-bar .btn:hover, .tag-category .filters .btn-group .btn:hover",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:hover, .js-stools-container-bar .btn:hover, .tag-category .filters .btn-group .btn:hover",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary.disabled, .js-stools-container-bar .disabled.btn, .tag-category .filters .btn-group .disabled.btn, .btn-secondary:disabled, .js-stools-container-bar .btn:disabled, .tag-category .filters .btn-group .btn:disabled",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".btn-secondary.disabled, .js-stools-container-bar .disabled.btn, .tag-category .filters .btn-group .disabled.btn, .btn-secondary:disabled, .js-stools-container-bar .btn:disabled, .tag-category .filters .btn-group .btn:disabled",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".btn-secondary.disabled, .js-stools-container-bar .disabled.btn, .tag-category .filters .btn-group .disabled.btn, .btn-secondary:disabled, .js-stools-container-bar .btn:disabled, .tag-category .filters .btn-group .btn:disabled",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary.disabled, .js-stools-container-bar .disabled.btn, .tag-category .filters .btn-group .disabled.btn, .btn-secondary:disabled, .js-stools-container-bar .btn:disabled, .tag-category .filters .btn-group .btn:disabled",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary.disabled, .js-stools-container-bar .disabled.btn, .tag-category .filters .btn-group .disabled.btn, .btn-secondary:disabled, .js-stools-container-bar .btn:disabled, .tag-category .filters .btn-group .btn:disabled",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary.disabled, .js-stools-container-bar .disabled.btn, .tag-category .filters .btn-group .disabled.btn, .btn-secondary:disabled, .js-stools-container-bar .btn:disabled, .tag-category .filters .btn-group .btn:disabled",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:not(:disabled):not(.disabled):active, .js-stools-container-bar .btn:not(:disabled):not(.disabled):active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .js-stools-container-bar .btn:not(:disabled):not(.disabled).active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .js-stools-container-bar .show > .dropdown-toggle.btn, .tag-category .filters .btn-group .show > .dropdown-toggle.btn",
+      "color",
+      "on-band",
+      0
+    ],
+    [
+      ".btn-secondary:not(:disabled):not(.disabled):active, .js-stools-container-bar .btn:not(:disabled):not(.disabled):active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .js-stools-container-bar .btn:not(:disabled):not(.disabled).active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .js-stools-container-bar .show > .dropdown-toggle.btn, .tag-category .filters .btn-group .show > .dropdown-toggle.btn",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".btn-secondary:not(:disabled):not(.disabled):active, .js-stools-container-bar .btn:not(:disabled):not(.disabled):active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .js-stools-container-bar .btn:not(:disabled):not(.disabled).active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .js-stools-container-bar .show > .dropdown-toggle.btn, .tag-category .filters .btn-group .show > .dropdown-toggle.btn",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:not(:disabled):not(.disabled):active, .js-stools-container-bar .btn:not(:disabled):not(.disabled):active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .js-stools-container-bar .btn:not(:disabled):not(.disabled).active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .js-stools-container-bar .show > .dropdown-toggle.btn, .tag-category .filters .btn-group .show > .dropdown-toggle.btn",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:not(:disabled):not(.disabled):active, .js-stools-container-bar .btn:not(:disabled):not(.disabled):active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .js-stools-container-bar .btn:not(:disabled):not(.disabled).active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .js-stools-container-bar .show > .dropdown-toggle.btn, .tag-category .filters .btn-group .show > .dropdown-toggle.btn",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ".btn-secondary:not(:disabled):not(.disabled):active, .js-stools-container-bar .btn:not(:disabled):not(.disabled):active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .js-stools-container-bar .btn:not(:disabled):not(.disabled).active, .tag-category .filters .btn-group .btn:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle, .js-stools-container-bar .show > .dropdown-toggle.btn, .tag-category .filters .btn-group .show > .dropdown-toggle.btn",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [".modal-content", "background-color", "surface", 0],
+    [".carousel-control-prev, .carousel-control-next", "color", "muted", 0],
+    [
+      ".carousel-control-prev:hover, .carousel-control-prev:focus, .carousel-control-next:hover, .carousel-control-next:focus",
+      "color",
+      "muted",
+      0
+    ],
+    [".bg-secondary", "background-color", "band", 1],
+    [".bg-info", "background-color", "accent", 1],
+    [".badge", "border-top-color", "border", 0],
+    [".badge", "border-right-color", "border", 0],
+    [".badge", "border-bottom-color", "border", 0],
+    [".badge", "border-left-color", "border", 0],
+    ["#login-form .plg_system_webauthn_login_button svg", "fill", "on-band", 0],
+    [
+      "#login-form .form-group .input-group-text:hover, #login-form .control-group .input-group-text:hover, #login-form .form-group .input-group-addon > span:hover, #login-form .control-group .input-group-addon > span:hover",
+      "background-color",
+      "surface",
+      0
+    ],
+    [".bg-secondary", "background-color", "band", 0, "--color-secondary"],
+    [".bg-info", "background-color", "accent", 0, "--color-info"],
+    [".btn.btn-secondary", "background-color", "band", 0, "--color-secondary"],
+    [
+      ".btn.btn-secondary:focus, .btn.btn-secondary:hover, .btn.btn-secondary:active",
+      "background-color",
+      "band",
+      0,
+      "--color-secondary"
+    ],
+    [
+      "#login-form li a:hover, .categories-module li a:hover, .latestnews li a:hover",
+      "color",
+      "accent-text",
+      1
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success",
+      "color",
+      "on-accent",
+      0
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success",
+      "background-color",
+      "accent",
+      1
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success",
+      "border-top-color",
+      "accent",
+      1
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success",
+      "border-right-color",
+      "accent",
+      1
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success",
+      "border-bottom-color",
+      "accent",
+      1
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success",
+      "border-left-color",
+      "accent",
+      1
+    ],
+    [
+      ".com_solidres #solidres .btn.trigger_checkinoutform:hover, .com_solidres #solidres .btn.btn-success:hover",
+      "color",
+      "on-accent",
+      1
+    ],
+    [
+      ".com_solidres #solidres .reservation_asset_item .wizard ul.steps li.complete, .com_solidres #solidres .reservation_asset_item .wizard ul.steps li.active",
+      "background-color",
+      "accent",
+      0
+    ],
+    [".gm-err-container", "background-color", "surface", 0],
+    [".gm-err-title", "color", "fg", 0],
+    [".gm-err-message", "color", "fg", 0],
+    [
+      ".acm-members .item .sraff-inner .member-title h4, .acm-members .item .sraff-inner .member-title h6",
+      "color",
+      "muted",
+      0
+    ],
+    [".acm-members .item .sraff-inner .member-hover-desc", "color", "muted", 0],
+    [".page-about .member-hover-desc .scoial_icons ul li:hover a", "color", "accent-text", 1]
+  ],
+  "vars": [
+    ["--color-primary", "accent"],
+    ["--color-success", "accent"],
+    ["--color-info", "accent"],
+    ["--color-warning", "accent"],
+    ["--color-danger", "accent"],
+    ["--body-link-color", "accent"],
+    ["--body-link-hover-color", "accent"],
+    ["--title_module", "accent-text"]
+  ],
+  "inline": [["#e5e3df", "background-color", "surface"]],
+  "colours": {
+    "#e1dbd5": "border",
+    "#ffffff": "surface",
+    "#294138": "fg",
+    "#c5c5c5": "border",
+    "#333333": "fg",
+    "#dddddd": "border",
+    "#e9e9e9": "surface",
+    "#454545": "fg",
+    "#f6f6f6": "bg",
+    "#2b2b2b": "fg",
+    "#ededed": "surface",
+    "#cccccc": "border",
+    "#007fff": "accent",
+    "#003eff": "accent",
+    "#777620": "accent-text",
+    "#fffa90": "accent",
+    "#dad55e": "accent",
+    "#122223": "band",
+    "#1a4444": "band",
+    "#555555": "fg",
+    "#008080": "accent-text",
+    "#777777": "muted",
+    "#eeeeee": "border",
+    "#aaaaaa": "border",
+    "#008489": "accent-text",
+    "#edf6f6": "surface",
+    "#cceeeb": "surface",
+    "#7b8383": "muted",
+    "#adb5bd": "border",
+    "#2196f3": "accent",
+    "#0c83e2": "accent",
+    "#0c7cd5": "accent",
+    "#0b75c9": "accent",
+    "#212529": "fg",
+    "#f8f0eb": "bg",
+    "#dee2e6": "surface",
+    "#bbbebe": "surface",
+    "#1f312b": "band",
+    "#d3b298": "on-band",
+    "#dbcbbe": "on-band",
+    "#fbf6f3": "bg",
+    "#a95514": "on-band",
+    "#ffbb00": "accent-text",
+    "#f7f7f7": "bg",
+    "#000000": "band",
+    "#999999": "muted",
+    "#f9f9f9": "bg",
+    "#d4d4d4": "border",
+    "#f5f5f5": "bg",
+    "#f4f6f7": "bg",
+    "#fafafa": "bg",
+    "#008000": "accent-text",
+    "#686f6f": "band",
+    "#626969": "border",
+    "#5c6262": "border",
+    "#00bcd4": "accent",
+    "#17a2b8": "accent",
+    "#e8eaed": "surface",
+    "#3c4043": "fg"
+  }
+}

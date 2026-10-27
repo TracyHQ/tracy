@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-deep-plum: #250835;
+  --color-dark-mauve: #473054;
+  --color-vivid-violet: #ab2fed;
+  --color-vivid-blue: #0283ec;
+  --color-electric-indigo: #4b38ee;
+  --color-warm-gray-purple: #6a5b72;
+  --color-lavender-mist: #ebe6ee;
+  --color-soft-white: #f5f4f5;
+  --color-plum-shadow: #cdc7d1;
+  --color-lavender-wash: #decaff;
+  --color-blush-bloom: #e9bded;
+  --color-sky-mist: #bbcfe4;
+  --color-plum-to-pink-wash: #ba59ff;
+  --gradient-plum-to-pink-wash: linear-gradient(142deg, rgb(186, 89, 255) 0%, rgb(186, 89, 255) 30%, rgb(255, 89, 241) 100%);
+  --color-aurora-gradient: #3ca1ff;
+  --gradient-aurora-gradient: linear-gradient(97deg, rgb(60, 161, 255) 5.54%, rgb(200, 82, 255) 49.85%, rgb(255, 96, 240) 94.14%);
+
+  /* Typography — Font Families */
+  --font-agrandir: 'Agrandir', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-manrope: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

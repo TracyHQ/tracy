@@ -1,0 +1,25 @@
+meta {
+  name: v1
+  seq: 5
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}
+
+docs {
+  # The public REST API on the api host
+
+  Every request in this folder goes to `{{baseUrl}}/v1/...` with `Authorization: Bearer {{apiKey}}`
+  — a seat key minted on the cowork host (Settings > API keys, or `POST /api/me/keys`). Use the
+  `api-dev` environment: `baseUrl` is the api host, and `apiKey` is a SECRET variable Bruno keeps
+  on your machine. The collection-level `cookie` header is sent too; the api host ignores it.
+
+  Run the folder in order: "pages" saves `version` and `contentId` for the requests after it.
+  Requests 10–13 WRITE to the site (`PATCH`, `DELETE`, `contract/apply`, `revert`): point them at
+  a test site, and read each one's Docs tab first.
+}

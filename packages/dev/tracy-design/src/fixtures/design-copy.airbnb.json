@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "tracy-design-copy/v2",
+  "system": "airbnb",
+  "writtenAt": "2026-09-06T09:00:00.000Z",
+  "lang": "en",
+  "brief": null,
+  "pages": {
+    "/": {
+      "versions": [
+        {
+          "id": "v-rewritten",
+          "title": "Rewritten",
+          "kind": "rewritten",
+          "prompt": null,
+          "slots": {
+            "p.0": "AI workstation for website operations",
+            "h1.0": "One desk for every site you run, and one agent per site.",
+            "p.1": "Tracy pairs an AI agent with each of your sites — armed with the skills of the teams who operate Joomla, WordPress, WooCommerce and Shopify best. It reads, checks and proposes; you approve what ships, and nothing changes on your site until you say so.",
+            "a.0": "Download for macOS & Windows",
+            "a.1": "Browse Skills & Bundles",
+            "span.19": "No credit card to start. Download for macOS.",
+            "button.6": "Start monthly",
+            "p.2": "Skills are the playbooks of the teams who run these platforms. Tracy loads the right one for your.",
+            "span.22": "4.9",
+            "p.3": "What Tracy does on a",
+            "h2.0": "Three platforms, every skill resolved through one desk.",
+            "p.4": "Joomla, WordPress, WooCommerce and Shopify, on one seat, for one price — add as many as you run.",
+            "span.25": "$29",
+            "span.26": "Monthly at $29 per seat, or yearly at $299.",
+            "span.28": "$299",
+            "span.32": "3",
+            "span.35": "152",
+            "p.7": "Two plans",
+            "h2.1": "Pricing is per person, not per site.",
+            "button.10": "See yearly"
+          },
+          "at": "2026-09-06T09:00:00.000Z",
+          "model": null
+        },
+        {
+          "id": "v-gen-about",
+          "title": "About Tracy",
+          "kind": "rewritten",
+          "prompt": null,
+          "slots": {
+            "p.0": "About Tracy",
+            "h1.0": "We built the desk we wished our sites had.",
+            "p.1": "We ran Joomla and WordPress sites for years and kept losing evenings to the same small jobs. Tracy is the desk we wished existed: one agent per site, loaded with the playbooks of the people who run these platforms best, proposing changes we approve in a click.",
+            "a.0": "Meet the team",
+            "a.1": "Read the manifesto",
+            "span.19": "A site is a living thing, and the person who.",
+            "p.2": "We will not ship a change you have not seen, and we will not touch your database from the outside.",
+            "h2.0": "Why one agent per site",
+            "h2.1": "What we will never do"
+          },
+          "at": "2026-09-06T09:00:00.000Z",
+          "model": null
+        }
+      ],
+      "selected": "v-rewritten",
+      "nextPrompt": null
+    },
+    "form": {
+      "versions": [
+        {
+          "id": "v-gen-form",
+          "title": "Contact form",
+          "kind": "rewritten",
+          "prompt": null,
+          "slots": {
+            "p.0": "Get in touch",
+            "h1.0": "Tell us about your sites",
+            "p.1": "Three fields and we will read your site before we reply — no demo call, no deck, just a",
+            "a.0": "Send",
+            "p.3": "We answer within a day, in your language.",
+            "label.0": "Name",
+            "label.1": "Work email",
+            "option.0": "Platform",
+            "option.1": "Joomla"
+          },
+          "at": "2026-09-06T09:00:00.000Z",
+          "model": null
+        }
+      ],
+      "selected": "v-gen-form",
+      "nextPrompt": null
+    }
+  }
+}

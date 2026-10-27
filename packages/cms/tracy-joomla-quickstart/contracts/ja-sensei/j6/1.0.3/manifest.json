@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-sensei/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_sensei",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-sensei",
+    "id": "quickstart/ja-sensei/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_sensei",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-sensei-j6-webroot-1.0.3.tar.gz",
+        "bytes": 55263294,
+        "sha256": "3cfabc9c54b81dc091ccea89a895c53d0e748f19b2c2e195b62f1dae55cb39be"
+      },
+      "database": {
+        "file": "ja-sensei-j6-database-1.0.3.sql.gz",
+        "bytes": 77952,
+        "sha256": "9767773bcb94e8906f363bc9595019b9317e574392c88e87cf1d5a047cbebcab"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T08:05:13.061Z",
+    "builtFrom": {
+      "site": "sensei-j6-g2",
+      "tag": "quickstart/ja-sensei/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-sensei/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

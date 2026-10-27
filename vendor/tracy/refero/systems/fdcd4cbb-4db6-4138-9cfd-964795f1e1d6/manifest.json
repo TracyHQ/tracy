@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6",
+  "status": "complete",
+  "name": "Lightship",
+  "url": "https://styles.refero.design/style/fdcd4cbb-4db6-4138-9cfd-964795f1e1d6",
+  "sourceWebsite": "https://lightshiprv.com",
+  "extractedAt": "2026-06-03T17:26:28.085Z",
+  "capturedAt": "2026-10-08T05:19:59.965269+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Cinematic open-road diorama. Warm cream gallery walls with oversized landscape photographs pinned at gentle radii, thin black type whispering across the frames, one ember-orange accent breaking the monochrome like a campfire in a meadow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/11b38a0d-a4a3-4121-a4b4-cda8617209e8.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "661e8911a3d47d70aa2dfee239651b41079a996f4c6ea7bfdd8220941431de7c",
+      "bytes": 15913
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4bd9dab19fca2688d2f72b6010b6be0c84ac2203c3c30ddcb5a365644c35b873",
+      "bytes": 123211
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "db9b61f1f7a2765ddad5346eb017d57606ec76bb57b5f2eb61c852abcb1a460c",
+      "bytes": 13425
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c606f5fe0c2a139a25f9355ec74dbd8a1d4c43b9cec2366e936cdfdf4ca17124",
+      "bytes": 7510
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ff63781af7cc59b8718cf01b470f815e82be689e85d97a7bf39ad1b177ccf6cc",
+      "bytes": 10912
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "36c39c8c0da94e035800497b3efd0d89e62934b4dd01ec1c53994a7063918fd1",
+      "bytes": 2151
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "81628376fad4b94ba868f95aa34dbc36f9ba5d0b880f615b07538ae443c1c1ed",
+      "bytes": 377
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6ac3bacaf354f7cefb4b2c813f0fc98434ac7ad61232a63df9db26419081e0f8",
+      "bytes": 394
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b57254ff17bcf29e580daf19007e65a0b26f468a0ada492a41803bc8f881dd98",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fbaec2e0fdd83e2a3c591a250087fab42ae21d57ba7cfd6d242c9e5aa84033a1",
+      "bytes": 39529
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "16f810e9cfffb38de70f55c99e24cfd71fc1cd97e280c98b30912c1e7a6e3e1b",
+      "bytes": 20497
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1beffc4d6a4c26e2289610745891f9416aa090c3efe0e27f556e7326e4416c45",
+      "bytes": 36110
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "19b28b8421a5e1e02cf3099f0152a5d7f3c4d339468e21ad5548b0e1f73a62a6",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "eac6d5c09243ba3d1296fdcf6918c44e77b0c54e8f14f79997c62db287ee2339",
+      "bytes": 1453
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6457a3041f9a240132cd74c128bafcb2c6ed70956800f48a8b263b97a81c65ec",
+      "bytes": 1928
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "7de578bc-9fbd-4664-a731-6223515bb601",
+    "887f0c74-c696-4589-82ae-85705ecda919",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f6b396e6-0ad6-402e-9ab9-0034df0d204d",
+    "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6"
+  ]
+}

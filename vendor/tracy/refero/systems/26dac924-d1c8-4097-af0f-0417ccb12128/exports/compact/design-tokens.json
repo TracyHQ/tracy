@@ -1,0 +1,74 @@
+{
+  "color": {
+    "honey-yellow": {
+      "$value": "#fffa77",
+      "$type": "color",
+      "$description": "Honey Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "marigold": {
+      "$value": "#fffa56",
+      "$type": "color",
+      "$description": "Marigold — Accent fills on cards, headline underline strokes, icon highlights, secondary callouts — slightly punchier sibling of Honey Yellow for moments that need to sit on white"
+    },
+    "inkwell": {
+      "$value": "#142127",
+      "$type": "color",
+      "$description": "Inkwell — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "carbon": {
+      "$value": "#131416",
+      "$type": "color",
+      "$description": "Carbon — Body text and high-contrast borders on light surfaces, alt dark fill for emphasis blocks"
+    },
+    "slate-gray": {
+      "$value": "#343c40",
+      "$type": "color",
+      "$description": "Slate Gray — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "pebble": {
+      "$value": "#63696c",
+      "$type": "color",
+      "$description": "Pebble — Muted helper text, secondary metadata, low-emphasis captions"
+    },
+    "river-mist": {
+      "$value": "#c7d5d9",
+      "$type": "color",
+      "$description": "River Mist — Card and link borders on white surfaces, hairline dividers — cool enough to feel distinct from the warm yellow system"
+    },
+    "fog": {
+      "$value": "#e0e5e7",
+      "$type": "color",
+      "$description": "Fog — Subtle borders, disabled state outlines, very light separators"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page and card surfaces, text on dark fills, primary button text"
+    }
+  },
+  "font": {
+    "stk-bureau-serif": {
+      "$value": "STK Bureau Serif",
+      "$type": "fontFamily",
+      "$description": "Display and large headline face — the editorial voice for hero statements, section titles, and feature headlines. Tight tracking (-0.027em to -0.05em) pulls the letters into a dense, magazine-like block. A serif in a SaaS hero is the signature move; it humanizes the product and signals 'crafted for creatives'."
+    },
+    "stk-bureau-sans": {
+      "$value": "STK Bureau Sans",
+      "$type": "fontFamily",
+      "$description": "Workhorse UI and body face — navigation, buttons, paragraphs, form fields, cards. Weights 500–700 handle subheads and CTAs. The pairing with the serif display creates a clear voice hierarchy: serif for poetry, sans for instructions."
+    },
+    "stk-gerhard": {
+      "$value": "STK Gerhard",
+      "$type": "fontFamily",
+      "$description": "Tiny all-caps eyebrow labels above section headers (e.g. 'CAPTURE LEADS') — wide tracking (+0.071em) in uppercase gives every section a labeled, editorial entry point. Used sparingly; one per section, never in body copy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.honeybook.com",
+      "siteName": "HoneyBook",
+      "extractedAt": "2026-06-03T17:27:24.050Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "newsprint": {
+      "$value": "#f7f6f5",
+      "$type": "color",
+      "$description": "Newsprint — Page canvas and ambient background — warm off-white that softens the stark black type"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, product screenshot frames, nav background — the raised, clean tier above the canvas"
+    },
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "midnight": {
+      "$value": "#0a0a0c",
+      "$type": "color",
+      "$description": "Midnight — Announcement bar and dark band backgrounds — near-black for the slim top promo strip"
+    },
+    "graphite": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Graphite — Body text and secondary headings — readable but recedes against Press Black for hierarchy"
+    },
+    "ash": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, icon strokes, tertiary metadata"
+    },
+    "silver": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Silver — Hairline borders, dividers, inactive UI edges — the only border color in the system"
+    },
+    "highlighter": {
+      "$value": "#edfc47",
+      "$type": "color",
+      "$description": "Highlighter — Emphasis accent on words inside headlines, icon fills, tag highlights — chartreuse that never fills a button, only marks what matters"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "All display and heading copy — geometric sans with tight tracking that lets headlines read as editorial blocks. Weight 500 (not 700) keeps the large sizes from feeling like a poster; the restraint is the point."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, nav, buttons, badges, labels, icons — the workhorse UI face. 400 for body, 500 for nav and labels, 600 for button text and emphasized UI."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.openphone.com",
+      "siteName": "Quo (formerly OpenPhone)",
+      "extractedAt": "2026-06-03T20:16:46.998Z",
+      "variant": "compact"
+    }
+  }
+}

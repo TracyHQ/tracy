@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-ink: #333333;
+  --color-carbon: #000000;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-pragmatica: 'pragmatica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

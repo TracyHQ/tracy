@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-1421-export-failed-object-deleted",
+  "kind": "fix",
+  "title": "A site export's ZIP never lingers in the artifact store: a failed one is deleted at once, the hourly sweep retries without starving or sticking on any row, a site delete takes them, and each deletion is audited once",
+  "pr": 1421,
+  "area": "site-backup/export-zip",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: The host answers ok with a size, but the object it PUT has another size.",
+    "S2: Same, with the store refusing the first DELETE; then run the sweep twice.",
+    "S3: Same as S2, then delete the site (forgetSite) before any sweep.",
+    "S4: A ready export past its 24 hours, then the sweep.",
+    "S5: 201 old failed rows whose DELETE the store always refuses, plus one newer failed row; run the sweep twice.",
+    "S6: forgetSite reads a failed uncleaned row and is held at the store while the sweep deletes and marks it; then forgetSite resumes.",
+    "S7: 200 ready rows past their day whose object is already deleted (object_deleted_at set), then one normal due ready row behind them; run the sweep twice.",
+    "S8: 200 ready rows past their day whose DELETE the store always refuses, then one later due row; run the sweep twice. Then ask a download code for a ready, unexpired row whose object_deleted_at is set."
+  ],
+  "expect": [
+    "S1: the export ends failed with UPLOAD_NOT_FOUND, the store holds nothing, object_deleted_at is set, and the audit reads requested, failed, deleted.",
+    "S2: after the failure the object is still there and object_deleted_at is null; the first sweep reports deleted 1 and the object is gone; the second reports deleted 0; one 'deleted' audit only.",
+    "S3: forgetSite answers { removed: 1, kept: [] } and the store holds nothing.",
+    "S4: the sweep deletes the object and the row is expired.",
+    "S5: the first sweep deletes 0, the second deletes the newer row's object; all 201 refused rows carry object_delete_tried_at and stay in the store.",
+    "S6: the sweep reports deleted 1, forgetSite removed 0; the audit reads requested, failed, deleted (one 'deleted'); a second forgetSite answers { removed: 0, kept: [] }.",
+    "S7: the first sweep reports deleted 1 and the due object is gone; all 201 rows are expired; the only DELETE is the due row's and the only audit is its 'deleted'; the second sweep answers { deleted: 0, ended: 0 }.",
+    "S8: the first sweep deletes 0, the second deletes the later due object; the code door answers 409 EXPORT_NOT_READY."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/backup-export.js, apps/tracy-web/src/db/migrations/121-backup-export-object-deleted.sql",
+    "column": "backup_export.object_deleted_at, backup_export.object_delete_tried_at",
+    "tool": "node --test against Postgres with a scripted host and store"
+  },
+  "evidence": "Before this change finish(row, {error}) marked the row failed and never deleted row.key, the sweep read only ready and in-flight rows, and forgetSite treated every failed row as having no object; the three new tests fail on the old module; the sweep took the 200 oldest failed rows every hour (S5 fails on that order), and forgetSite audited from the row it read, so racing the sweep audited one object twice (S6 fails on that); the sweep kept selecting ready rows whose object a half-done site delete had already marked, but its update needed object_deleted_at null, so 200 such rows held its batch forever (S7 fails on that), and ready rows the store refused took the oldest-first batch the same way (S8 fails on that order and without the code door's object_deleted_at check)",
+  "fence": "Scripted host and artifact store; the real R2 bucket and a real host upload are not exercised",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/backup-export.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "export: an upload whose size differs from the host's word fails, and its object is deleted from the store",
+      "export: a failed export whose object the store would not delete is retried by the next sweep",
+      "export: a failed export whose object was never deleted goes with its site (forgetSite)",
+      "export: failed objects the store keeps refusing do not starve a newer failed export out of the sweep",
+      "export: a site delete racing the sweep on one failed object audits its deletion once",
+      "export: past its 24 hours a ready export issues no link, and the sweep deletes the object",
+      "export: ready rows whose object is already deleted are settled by the sweep and do not block due rows behind them",
+      "export: ready objects the store keeps refusing do not starve a later due export, and a deleted object issues no code"
+    ]
+  }
+}

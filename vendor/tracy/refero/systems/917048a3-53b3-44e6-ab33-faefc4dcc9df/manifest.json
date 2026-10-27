@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+  "status": "complete",
+  "name": "Kippo",
+  "url": "https://styles.refero.design/style/917048a3-53b3-44e6-ab33-faefc4dcc9df",
+  "sourceWebsite": "https://kippo.com",
+  "extractedAt": "2026-06-03T20:51:47.605Z",
+  "capturedAt": "2026-10-08T05:14:55.002505+00:00",
+  "theme": "dark",
+  "industry": "other",
+  "description": "Pixel arcade boot screen in a black void. Monospace glyphs traced in white neon against a pure black void, with a single hot-pink power-up color that should feel rare and electric when it appears.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/17773304-2b88-4e88-9f73-42fd4c87e00b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/bed693f6-68f5-4c4a-8227-3bff7226f870.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b892567c-6727-400a-bab7-1542b2375575.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/dfca15fd-0067-4d33-8242-0b38597abb05.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/72fbff04-1fe7-4f98-a226-350ec30760f7.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b9852101ef00cc8212352fede76df69bf1cebde32148172824f82ae6ed455ed8",
+      "bytes": 18690
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2f8ee032bf34bed3c1ce94e24f9450d566da24232a9f7344d4d171ebc2a4340e",
+      "bytes": 81682
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cdc855547536a89880510c8d65d0ee098beb4706c960a4cf31564ff9a00c7fdb",
+      "bytes": 16691
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9f332ab2eb3ec4cc58320700be31658b82ac82debfac473c6ebb9a57c174eb28",
+      "bytes": 7725
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0ea020d96fcf1a67126a2142183390c388ad688379b838cb66f85134c179c98c",
+      "bytes": 11851
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ee1eb67e1861cb58ca5532251ff473b6490f9bd20040d7753078b895b7f4a301",
+      "bytes": 2282
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d12a06e274cd7cd4ae7b08d150054741e5c6c7ac7583e6fb004fd812858d392f",
+      "bytes": 371
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9f59be69fdaea5e2a50696e588310692904c378451148a7e52b971f3e7a72ff8",
+      "bytes": 536
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e521a8b804c60f28c776e3c06026e32dd60e378d0519093d677d35e4ae5355f6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d05ae72427e626dccfc72d3b171824851449bd5e6a696f8d56fa9811b97d95a7",
+      "bytes": 44215
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "460a90a987efb85dd68423d06e590ed8e70b635985ea31c7cb436b6835678371",
+      "bytes": 23616
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "29b6f7337d109f49c9c339038b318270b299ecf3de6c690d8550eec7b3301a42",
+      "bytes": 43255
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "02d551bf53a013950aa5d574dceb708c4b1f26d94604485fbde951feffdbc1df",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "110b20f8bf2984942875de4b5b485bd56f727e85ccf00572ad59b729777c163d",
+      "bytes": 979
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0f47f04a6c5f1066dac98870f007d18deca42e7993e3971973d18478bf519f3d",
+      "bytes": 1620
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "029d3ce0-0fe5-4a8c-99c4-4f9d704f1c60",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "4e10797e-03eb-4efb-a16d-1d93272e1cab",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "7510b18e-63c3-4c2a-97c3-39fa7dfa6ae3",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "c445eb73-e403-4a00-8b90-f454c9181fd6",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

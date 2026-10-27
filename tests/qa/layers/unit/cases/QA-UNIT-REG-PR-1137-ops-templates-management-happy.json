@@ -1,0 +1,52 @@
+{
+  "id": "QA-UNIT-REG-PR-1137-ops-templates-management-happy",
+  "itemIds": ["regression:REG-PR-1137-ops-templates-management"],
+  "requirement": "Templates Management on /ops/cms: releases fold into templates like the customer card, one header press per template state with per-CMS presses on the listing strip, and Save listing never publishes",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1137-ops-templates-management.json",
+    "ref": "PR #1137 (feat); fix evidence: 10/10/2026: one Templates Management screen replaces Quickstarts and Design inspiration; saving a card used to publish it.",
+    "invariant": "The run exits 0 with 0 failures and 0 skipped tests. template-fold: a release on a shown card belongs to that card's template; tracy-base/wp7 folds into Tracy Base, tracy-apple/j6 is its own template; two releases of one CMS in a template carry their tag on the chip. template-presses: a Published template shows only Unpublish in the header, a Disabled one only Publish (off with 'Fix N issues first.' while issues remain); the listing strip shows Unpublish <CMS> when Listed, Publish <CMS> when Hidden (off with the reason the publish door would give), and an off Publish <CMS> with 'Save a listing first' when Not listed; design packs show no press. card-save-publish: Save listing calls PUT /api/ops/quickstart/inspiration only, Publish calls POST /api/ops/quickstart/inspiration/publish, and a refused press prints the server text for that release.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/web/tracy-harness/test/card-save-publish.test.mjs:46 import() with a computed specifier",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path",
+      "packages/web/tracy-harness/test/template-fold.test.mjs:44 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1137-ops-templates-management.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1137-ops-templates-management"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/web/tracy-harness", "tracy-harness"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1137-ops-templates-management",
+    "pr": 1137,
+    "kind": "feat",
+    "area": "ops/templates",
+    "file": "tests/regression/cases/REG-PR-1137-ops-templates-management.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/web/tracy-harness/test/template-fold.test.mjs",
+    "packages/web/tracy-harness/test/template-presses.test.mjs",
+    "packages/web/tracy-harness/test/card-save-publish.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

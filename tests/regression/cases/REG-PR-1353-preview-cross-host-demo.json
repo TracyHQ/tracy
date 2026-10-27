@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1353-preview-cross-host-demo",
+  "kind": "fix",
+  "title": "Design system preview: demos on another host read at their public address; Light | Dark in the Add site popup; Tracy Base and SaaS EmDash measurements in the image",
+  "pr": 1353,
+  "area": "design-system/preview",
+  "cms": ["jo", "em", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Ask the Add site preview door for a demo row on host fleet01 (this server dev) whose <label>.fleet01-sites.tracy.site name throws and whose public address serves the home.",
+    "S2: Ask the same door for a demo on this host.",
+    "S3: Ask the door for the EmDash Tracy Business demo (two modes), then open the Add site popup on a two-mode page and press Dark.",
+    "S4: Run the design system readiness check on Tracy Base EmDash 0.5.4 and Tracy SaaS EmDash 1.4.14 from the tree, and read apps/tracy-web/Dockerfile."
+  ],
+  "expect": [
+    "S1: 200 HTML, only the public address fetched.",
+    "S2: 200, read on its container only.",
+    "S3: the page carries x-tracy-ds-modes: both, also when kept; the popup shows Light | Dark and the framed page root gets data-theme=dark; a one-look page shows no switch.",
+    "S4: every built-site rule measured and passing; every EmDash theme with contracts has its COPY line into src/contracts/<slug>/emdash-0.x."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/{design-system-preview-door,emdash-target,template-design-system-readiness}.test.mjs, packages/site/tracy-add-site/test/design-system-pick.test.mjs"
+  },
+  "evidence": "14/10/2026 on cowork.tracy.site: every fleet01 demo answered 409 DEMO_UNREADABLE; the Add site popup of EmDash Tracy Business showed Desktop | Mobile only; /ops showed Tracy Base EmDash 0.5.4 C 5/13 not measured yet",
+  "fence": "Door, reader and Dockerfile tests in node; the Add site popup's switch is covered by the plugin's Playwright e2e (design-system-card.test.mjs), not run by this case",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/design-system-preview-door.test.mjs",
+      "apps/tracy-web/test/emdash-target.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "packages/site/tracy-add-site/test/design-system-pick.test.mjs"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r2a",
+  "kind": "feat",
+  "title": "Round 2 (batch r2a) of the JA Joomla j6 slot contracts: JA Lawfirm, JA Magz II, JA Mason and JA Teline V are offered on their tokenized 1.0.1 re-releases",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, read templates/joomla-{ja-lawfirm,ja-magz-ii,ja-mason,ja-teline-v}.json through loadContract: template key, ready, minVersion, readyNote, sideRules, selectors.heading, selectors.onAccent, keepScopes, keepGround, tokenScope.",
+    "S2: Build the module sheet (joomlaSlot) for ja-mason under MotherDuck and Toggl Track, ja-magz-ii, ja-lawfirm and ja-teline-v under Toggl Track.",
+    "S3: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-magz-ii --port 53281 --cdp 9781 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r2a.mjs"
+  ],
+  "expect": [
+    "S1: each template is joomla/<slug>, ready, minVersion quickstart/<slug>/j6 = 1.0.1, readyNote names tasks/evidence/ds-contracts-r2a-2026-10-11/templates/<slug>-j6 (or, for a template re-measured since, a tasks/evidence/ds-remeasure-*/ds-reverify-* folder of it that exists, as the later pass rewrote the readyNote on 11-12/10/2026); Mason's sideRules.light names .logo-img and .sub-heading::after; Magz II's heading rule is #t3-section h3.module-title only and it keeps .dark; Lawfirm's keepGround is .acm-container-tabs; Teline V's tokenScope is :root:not([data-theme=\"dark\"]) with two onAccent selectors.",
+    "S2: Mason under MotherDuck has '.logo-img{filter:invert(1)}', under Toggl Track no invert(; Magz II under Toggl Track has '.logo-img{filter:invert(1) hue-rotate(180deg)}'; Lawfirm has '.acm-container-tabs{background-color:#ffffff}'; Teline V's sheet opens its tokens on ':root:not([data-theme=\"dark\"]){' and has a '{color:var(--ds-c-accent-on)}' rule.",
+    "S3: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following >= 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-{ja-lawfirm,ja-magz-ii,ja-mason,ja-teline-v}.json sideRules, keepGround, selectors.onAccent, tokenScope, ready, minVersion"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r2a-2026-10-11/README.md: per template the final measure (flow.json, report.md, desktop screenshots checked by eye), Teline V's dark-mode scan.",
+  "fence": "which r2a templates are offered and the contract fields (sideRules, keepGround, onAccent, light-mode tokenScope) that made them pass; not the release upload (RELEASE-DS-R2A.sh, a person runs it) nor a site created through Add site",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r2a.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1034-hide-only-unticked-pages",
+  "kind": "fix",
+  "title": "A page is hidden only when the customer unticked it: no showcase rule, model judge or template hide rule takes a page off on WordPress, Joomla or EmDash",
+  "pr": 1034,
+  "area": "add-site/questions",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/brief-wp-residue.test.mjs apps/tracy-web/test/brief-wp-kept-pages.test.mjs apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/brief-joomla.test.mjs packages/cms/tracy-emdash-theme-business/tests/personalize-hide.test.mjs packages/cms/tracy-emdash-theme-business/tests/personalize-pages.test.mjs",
+    "S2: Read the exit code and the fail count."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures.",
+    "WordPress: a published page no slot names (the email kit) and a page the model would not want (Careers) stay published with their menu links where they led, and no link is moved to the contact page; an unticked page is drafted with its translation and its menu links.",
+    "Joomla: a model answer that names entries to hide unpublishes none; an unticked page's entry and what only leads to it are unpublished.",
+    "EmDash: no template hide rule applies, ticked, unasked or never listed; an unticked page is unpublished."
+  ],
+  "selectors": {
+    "wp": "sweepWordPress and judgeSite in apps/tracy-web/src/sites/brief-engines/wp-residue.js",
+    "joomla": "judgeMenus / judgeMenuItems in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js",
+    "emdash": "templateHideRules in tools/personalize.mjs of the three EmDash themes"
+  },
+  "evidence": "08/10/2026: on dev the WordPress judge drafted a bakery's ticked Product page (tamq-7q-tbwp5); decision: a page goes only when the customer unticks it, pages still holding template sample text stay public and the customer is not told.",
+  "fence": "Units over fake Apply doors and the templates' own seeds. Not exercised: a running site, the dev surface.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/brief-wp-residue.test.mjs",
+      "apps/tracy-web/test/brief-wp-kept-pages.test.mjs",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "packages/cms/tracy-emdash-theme-business/tests/personalize-hide.test.mjs",
+      "packages/cms/tracy-emdash-theme-business/tests/personalize-pages.test.mjs"
+    ],
+    "needs": []
+  }
+}

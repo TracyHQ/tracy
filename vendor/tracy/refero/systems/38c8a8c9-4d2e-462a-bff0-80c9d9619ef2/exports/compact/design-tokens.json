@@ -1,0 +1,64 @@
+{
+  "color": {
+    "fog": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Fog — Page canvas, card surfaces, divider hairlines — the warm light gray that IS the page background"
+    },
+    "ink": {
+      "$value": "#10100f",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav links, body copy, icon strokes — near-black with a barely-warm bias (never pure #000)"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces over the gray canvas, text on dark buttons, product image backgrounds"
+    },
+    "charcoal": {
+      "$value": "#26292a",
+      "$type": "color",
+      "$description": "Charcoal — Filled button background, active states, inverted UI surfaces — warm-tinted dark, never pure black"
+    },
+    "graphite": {
+      "$value": "#40403f",
+      "$type": "color",
+      "$description": "Graphite — Secondary button fill, subtle dark UI accents"
+    },
+    "ash": {
+      "$value": "#b3b3b2",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, tertiary metadata, inactive nav items"
+    },
+    "black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Black — Pure black for SVG icon fills and the occasional hard edge — functional, not brand"
+    },
+    "butter-cream": {
+      "$value": "#fffb85",
+      "$type": "color",
+      "$description": "Butter Cream — Hero display text accent — the single chromatic voice on the page, used only on oversized seasonal headlines over photography"
+    }
+  },
+  "font": {
+    "europagronr2sh": {
+      "$value": "EuropaGroNr2SH",
+      "$type": "fontFamily",
+      "$description": "Headings, display statements, nav items, body emphasis — the hero font. Used at 232–245px with weight 400 and line-height 0.90 for the signature oversized editorial type. The ultra-tight leading locks massive letters into a single visual band. Subheads drop to 32–48px at weight 600–700."
+    },
+    "europagronr2sb": {
+      "$value": "EuropaGroNr2SB",
+      "$type": "fontFamily",
+      "$description": "Small UI text, nav labels, button copy, captions, footer micro-copy. The functional sans — quiet, compact, only at 12–14px. The deliberate size gap between this and EuropaGroNr2SH creates a clear voice split: small = system, large = editorial."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.rains.com",
+      "siteName": "Rains INT",
+      "extractedAt": "2026-06-03T21:27:56.272Z",
+      "variant": "compact"
+    }
+  }
+}

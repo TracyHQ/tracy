@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-parchment-canvas: #fffaeb;
+  --color-pure-card: #ffffff;
+  --color-midnight-ink: #1f1f1f;
+  --color-carbon: #000000;
+  --color-graphite: #3c3c3c;
+  --color-ember: #fa520f;
+  --color-soft-butter: #fff0c2;
+  --color-honeycomb: #ecdaa2;
+
+  /* Typography */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

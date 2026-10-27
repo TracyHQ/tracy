@@ -1,0 +1,64 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#ff5b29",
+      "$type": "color",
+      "$description": "Signal Orange — Headline accent, large stat numerals, emphasis spans, decorative borders — the only color with voice, used to make key phrases feel switched on against the monochrome canvas"
+    },
+    "chartreuse-highlight": {
+      "$value": "#f5ff80",
+      "$type": "color",
+      "$description": "Chartreuse Highlight — Announcement bars, highlighted callout blocks, featured chip backgrounds — acts as a spotlight wash, never a CTA fill, drawing the eye to time-sensitive or notable content"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, filled button backgrounds, hairline borders, hard offset shadows, icon strokes — the dominant structural color, used at scale for borders and dividers"
+    },
+    "paper-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills — warm off-white, never pure #fff, giving the whole system a printed-paper warmth"
+    },
+    "graphite": {
+      "$value": "#242424",
+      "$type": "color",
+      "$description": "Graphite — Dark surface variant for inverted sections and elevated panels — a softer black for areas that need depth without going fully dark"
+    },
+    "steel": {
+      "$value": "#6c6c6c",
+      "$type": "color",
+      "$description": "Steel — Secondary text, subdued labels, muted helper copy, and shadow tints — the first step down from black when text needs to recede"
+    },
+    "ash": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, disabled states, placeholder copy, very light dividers — the lightest functional gray before content disappears entirely"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary interface and heading typeface — used for navigation, body copy, button labels, and hero headlines. Weight 600 for headings, 400 for body, 700 for the largest display. Negative tracking tightens the type as size grows, creating a dense, engineered feel."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Technical and numerical typeface — reserved for large stat readouts, inline code, API references, and any text that should feel computed or terminal-generated. The dual-font system (Geist for voice, Geist Mono for numbers) is a signature: it means stats always feel like live data, not marketing copy."
+    },
+    "ui-sans-serif-system-fallback": {
+      "$value": "ui-sans-serif (system fallback)",
+      "$type": "fontFamily",
+      "$description": "System fallback for rendering edge cases — not a design choice, just coverage"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.timescale.com",
+      "siteName": "Timescale",
+      "extractedAt": "2026-06-03T20:26:39.604Z",
+      "variant": "compact"
+    }
+  }
+}

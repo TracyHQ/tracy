@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-butter-cream: #f9e5b1;
+  --color-ink-black: #1d1e21;
+  --color-true-black: #000000;
+  --color-warm-bone: #fef9f3;
+  --color-ash-gray: #e5e7eb;
+
+  /* Typography */
+  --font-lausanne: 'Lausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

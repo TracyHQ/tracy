@@ -1,0 +1,472 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#020618",
+      "$type": "color",
+      "$description": "Void Canvas — Page background, header field, dark controls, command surfaces"
+    },
+    "midnight-panel": {
+      "$value": "#080e21",
+      "$type": "color",
+      "$description": "Midnight Panel — Card surfaces, code-editor body, contained product panels"
+    },
+    "deep-slate": {
+      "$value": "#0f172b",
+      "$type": "color",
+      "$description": "Deep Slate — Selected dark tabs, secondary dark buttons, inset control surfaces"
+    },
+    "steel-outline": {
+      "$value": "#1d293d",
+      "$type": "color",
+      "$description": "Steel Outline — Hairline card outlines, image frames, dark raised button fills"
+    },
+    "blue-steel": {
+      "$value": "#314158",
+      "$type": "color",
+      "$description": "Blue Steel — Inset control rings, subdued control borders, navigation separators"
+    },
+    "muted-fog": {
+      "$value": "#90a1b9",
+      "$type": "color",
+      "$description": "Muted Fog — Body copy, inactive navigation, secondary labels, supporting metadata"
+    },
+    "pale-frost": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Pale Frost — High-emphasis navigation text, secondary button labels, light icon strokes"
+    },
+    "signal-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Signal White — Display headings, selected tab labels, inverted button fills"
+    },
+    "nuxt-signal": {
+      "$value": "#00dc82",
+      "$type": "color",
+      "$description": "Nuxt Signal — Filled getting-started buttons, logo, release markers, highlighted display words — vivid green acts as a precise activation signal in the blue-black interface"
+    },
+    "vue-link": {
+      "$value": "#42b883",
+      "$type": "color",
+      "$description": "Vue Link — Partner-technology links and small ecosystem references"
+    },
+    "vite-link": {
+      "$value": "#a156fe",
+      "$type": "color",
+      "$description": "Vite Link — Vite ecosystem links and compact technology references"
+    },
+    "nitro-link": {
+      "$value": "#fb848e",
+      "$type": "color",
+      "$description": "Nitro Link — Nitro ecosystem links and compact technology references"
+    }
+  },
+  "font": {
+    "public-sans": {
+      "$value": "Public Sans",
+      "$type": "fontFamily",
+      "$description": "The universal UI and editorial face: 16px/400 body text, 14px/500 navigation, 14px/600 section labels, 16px/500 buttons, and 48px or 72px/700 displays. The -0.025em tracking at 48px and 72px compresses the heavy display weight into framework-tool directness rather than oversized marketing softness."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Code editor content, terminal commands, and implementation snippets; the system monospace face makes product demonstrations read as live tooling rather than decorative mockups."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "10px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "12px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 12px"
+    },
+    "xs-5": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-5 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.71,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "ui-monospace",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.71,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.14,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "18px",
+        "fontWeight": 600,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "xl-3": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "20px",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-3 at 20px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "48px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Public Sans",
+        "fontSize": "72px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 72px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "44": {
+      "$value": "44px",
+      "$type": "dimension",
+      "$description": "Spacing 44px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "128": {
+      "$value": "128px",
+      "$type": "dimension",
+      "$description": "Spacing 128px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "oklch(0.279 0.041 260.031) 0px 0px 0px 1px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "subtle-2": {
+      "$value": "oklch(0.372 0.044 257.287) 0px 0px 0px 1px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-2"
+    },
+    "subtle-3": {
+      "$value": "oklab(0.786145 -0.174855 0.0792278 / 0.25) 0px 0px 0px 1px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-3"
+    },
+    "subtle-4": {
+      "$value": "oklch(0.279 0.041 260.031) 0px 0px 0px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-4"
+    }
+  },
+  "surface": {
+    "void-canvas": {
+      "$value": "#020618",
+      "$type": "color",
+      "$description": "Surface level 0: Global page field, header, dark command controls"
+    },
+    "midnight-panel": {
+      "$value": "#080e21",
+      "$type": "color",
+      "$description": "Surface level 1: Cards, editor bodies, contained module surfaces"
+    },
+    "deep-slate": {
+      "$value": "#0f172b",
+      "$type": "color",
+      "$description": "Surface level 2: Selected editor rows, dark button fills, inset control states"
+    },
+    "steel-outline": {
+      "$value": "#1d293d",
+      "$type": "color",
+      "$description": "Surface level 3: Panel boundaries, image frames, subtle raised dark controls"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://nuxt.com",
+      "siteName": "Nuxt",
+      "extractedAt": "2026-09-24T17:43:43.467Z",
+      "variant": "extended"
+    }
+  }
+}

@@ -1,0 +1,292 @@
+{
+  "dos": [
+    "Use outlined violet #6d28d2 with 1.5px stroke as the primary action treatment — never a flooded fill.",
+    "Set page background to #e9eaf2 and card surfaces to #ffffff; band intermediate sections in #f6f7f9.",
+    "Use 8px radius for buttons and small cards, 16px for feature cards, 1000px for pills and search.",
+    "Keep type to one family (Udemy Sans / Inter) and use weight 700 for display, 500 for subheadings and nav, 400 for body, 300 only for muted large text.",
+    "Reach for 1px #d1d2e0 or #e9eaf2 borders before adding shadow; reserve the double-layer cool shadow for hover and lift states.",
+    "Pair the violet Aubergine with the warm Ember #c4710d as a secondary accent — never introduce a third chromatic hue.",
+    "Maintain 24px card padding and 16px element gap as the default interior rhythm."
+  ],
+  "donts": [
+    "Don't fill buttons with #6d28d2 — the brand voice comes from outline, not flood.",
+    "Don't use solid #6d28d2 as a panel background; reserve violet for stroke, icon, and small marks.",
+    "Don't add gradients — the surface language is flat and instructional.",
+    "Don't mix radii on the same component class: all standard buttons share 8px, all pills share 1000px.",
+    "Don't introduce a third type family; the single-family discipline is part of the identity.",
+    "Don't apply warm orange #c4710d to body text or large fills — keep it to badge borders and small icon accents.",
+    "Don't use pure #000 or #fff for surfaces — use #2a2b3f for ink and #e9eaf2 for canvas to preserve the cool instructional tone."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#2a2b3f",
+      "name": "Ink",
+      "role": "Primary text, heading strokes, default icon strokes, body copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#202230",
+      "name": "Obsidian",
+      "role": "Card backgrounds in dark sections, inverted surfaces, footer panel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#33364a",
+      "name": "Graphite",
+      "role": "Body-level dark surfaces, secondary panel fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3d4055",
+      "name": "Slate",
+      "role": "Card borders and muted dark backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#595c73",
+      "name": "Steel",
+      "role": "Muted text, heading accents, low-emphasis borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9194ac",
+      "name": "Fog",
+      "role": "Helper text, hairline borders, disabled strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b7b9cd",
+      "name": "Mist",
+      "role": "Card outlines, subtle dividers on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d1d2e0",
+      "name": "Chalk",
+      "role": "Light borders, icon strokes on white, card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e9eaf2",
+      "name": "Porcelain",
+      "role": "Page background, secondary surface, button ghost fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f7f9",
+      "name": "Paper",
+      "role": "Off-white panel surface between white and porcelain",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "role": "Card surface, button text on dark, primary surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6d28d2",
+      "name": "Aubergine",
+      "role": "Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#c0c4fc",
+      "name": "Lavender Haze",
+      "role": "Tinted link hover, soft violet highlight wash, light brand surface",
+      "group": "brand"
+    },
+    {
+      "hex": "#c4710d",
+      "name": "Ember",
+      "role": "Secondary accent — badge borders, callout borders, warm icon accent",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content column on a #e9eaf2 canvas. Hero is a top-anchored search bar with a large brand wordmark at left, followed by a 2-column band: a left text block describing the value prop and a right 3D-illustration placeholder. Below, a 3-column category grid with carousel pagination, then a single dark #202230 hero band for course content, then a 4-column testimonial grid, then another dark band for certification providers, then a multi-column footer. Vertical rhythm uses 48px between major sections, 24px within cards, 16px between list items. Navigation is a minimal top bar with a search field, login link, and outlined action — no mega-menu, no sidebar.",
+  "imagery": "Illustration-driven, not photographic. 3D clay-like renders dominate category cards: geometric solids, isometric phones and tablets, oversized hands holding objects, a golden trophy, confetti on white. Tiles use saturated local color (teal, red, gold, cobalt) on neutral beige backdrops. Course thumbnails mix portrait photography (instructor headshots in context) with product-screenshot mockups. Imagery is always contained inside 8–16px rounded cards — never full-bleed hero photography. Icon style is mono-stroke line icons at 1.5px weight, typically in #2a2b3f on white, with the violet Aubergine reserved for active and brand-marked icons.",
+  "similar": [
+    {
+      "why": "Same light-canvas marketplace layout with 3D-illustration category cards, though Coursera leans more photographic and uses blue rather than violet.",
+      "business": "Coursera"
+    },
+    {
+      "why": "Equal emphasis on outlined-not-filled action language and a single chromatic accent (Skillshare's teal, Udemy's violet) over a neutral ink scale.",
+      "business": "Skillshare"
+    },
+    {
+      "why": "Shares the quiet 8px-radius card grammar, minimal elevation, and white-on-cool-gray surface stack.",
+      "business": "Notion"
+    },
+    {
+      "why": "Both lean on custom type, one chromatic brand color used sparingly, and dark-panel section inversions to break up light marketplaces.",
+      "business": "Duolingo"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "8px",
+      "pills": "1000px",
+      "inputs": "4px",
+      "buttons": "8px",
+      "largeCards": "16px",
+      "featureCards": "24px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "48px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#e9eaf2",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background"
+    },
+    {
+      "hex": "#f6f7f9",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Soft banded sections between cards"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Card surfaces, input fills, raised content"
+    },
+    {
+      "hex": "#202230",
+      "name": "Inverted Panel",
+      "level": 3,
+      "purpose": "Dark hero/banner sections, certification blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "oklch(0.6295 0.0204 306.5 / 0.08) 0px 2px 8px 0px, oklch(0.6295 0.0204 306.5 / 0.12) 0px 4px 16px 0px",
+      "element": "Button hover, card lift"
+    }
+  ],
+  "northStar": "Modern classroom whiteboard with violet ink.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Outlined Violet Action",
+      "role": "Primary action trigger",
+      "description": "Transparent fill, 1.5px #6d28d2 border, 8px radius, 12px 24px padding. Label in Udemy Sans 16px weight 500, #6d28d2. On hover a double-layer cool shadow appears. This is the signature control — the brand speaks through outline, not fill."
+    },
+    {
+      "name": "Solid Dark Action",
+      "role": "Inverse action on light surfaces",
+      "description": "#202230 fill, white text weight 500 at 16px, 8px radius, 12px 24px padding. Used sparingly where the outlined violet would lose contrast against a colored illustration."
+    },
+    {
+      "name": "Ghost Neutral Button",
+      "role": "Secondary text action",
+      "description": "Transparent fill, 1px #d1d2e0 border, 8px radius, 12px 20px padding, label #2a2b3f weight 500 16px."
+    },
+    {
+      "name": "Pill Search Field",
+      "role": "Hero-level search",
+      "description": "Full-width white pill at 1000px radius, 48px tall, magnifier icon at left in #2a2b3f, placeholder #9194ac, 1px #d1d2e0 border, 16px horizontal padding."
+    },
+    {
+      "name": "Text Input",
+      "role": "Form input",
+      "description": "White fill, 4px radius, 1px #d1d2e0 border, 16px text, 12px 16px padding. Focus ring shifts to 1.5px #6d28d2."
+    },
+    {
+      "name": "Category Card",
+      "role": "Topic landing tile",
+      "description": "16px radius, white surface, 0px top padding with full-bleed illustration, then 24px bottom padding for label and arrow. 1px #d1d2e0 border, 8px inner image radius. Label is 18px weight 500 #2a2b3f."
+    },
+    {
+      "name": "Course Thumbnail Card",
+      "role": "Course listing tile",
+      "description": "8px radius, white fill, 1px #e9eaf2 border. Top half is a 16:9 image with top corners matched, bottom half has 16px padding with title 16px weight 500 and instructor 14px weight 400 #595c73."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof block",
+      "description": "White surface, 8px radius, 24px padding, no border. Large violet quotation glyph top-left at 32px, quote text 16px weight 400 #2a2b3f, author block with 40px avatar + name 14px weight 500 + role 14px weight 400 #595c73, and a violet arrow link at bottom."
+    },
+    {
+      "name": "Certification Provider Card",
+      "role": "Certification upsell tile",
+      "description": "On dark #202230 panel. Image fills top with 16px radius, 24px padding below with provider name 18px weight 700 white, topic 14px weight 400 #b7b9cd."
+    },
+    {
+      "name": "Pagination Indicator",
+      "role": "Carousel page control",
+      "description": "Pill at 1000px radius, 24px wide x 6px tall, #6d28d2 fill for active state, #d1d2e0 for inactive. Surrounded by 40px circular ghost prev/next buttons with #2a2b3f chevrons."
+    },
+    {
+      "name": "Logo Lockup",
+      "role": "Brand mark",
+      "description": "Lowercase wordmark 'udemy' in Udemy Sans 24px weight 700, #2a2b3f, preceded by a rounded-square violet badge with white 'U' glyph. Icon and wordmark share a 28px cap height."
+    },
+    {
+      "name": "Footer Link List",
+      "role": "Site directory",
+      "description": "Vertical list, 8px row gap, each item 14px weight 400 #595c73, hover transitions to #2a2b3f."
+    },
+    {
+      "name": "Dark Hero Band",
+      "role": "Section inversion",
+      "description": "#202230 full-bleed band with 48px vertical padding. Internal card at 16px radius, #33364a fill, hosts image placeholder on right and text stack on left with 32px gap."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single-family system: weight 700 for display headlines, 500 for subheadings and nav labels, 400 for body and UI, 300 sparingly for muted large text. The custom face has open apertures and a humanist x-height — it reads as instructional, not corporate.",
+      "sizes": "12px, 14px, 16px, 18px, 24px, 32px",
+      "family": "Udemy Sans",
+      "weight": "300, 400, 500, 700",
+      "lineHeight": "1.10, 1.20, 1.40, 1.50, 1.60",
+      "substitute": "Inter, Source Sans 3, IBM Plex Sans"
+    }
+  ],
+  "description": "Udemy reads as a calm, instructive marketplace: white canvas with soft cool-gray surfaces, a near-black ink scale for type, and two chromatic accents — a signature violet and a warm orange — that always appear as outlined borders or small marks rather than filled panels. Components are flat and lightweight, leaning on 8px radii and hairline borders instead of heavy elevation. A 3D-illustration vocabulary (soft clay-like product objects, isometric shapes, saturated accent pops) carries the personality, while the UI itself stays disciplined and instructional.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #2a2b3f\n- background: #e9eaf2\n- card surface: #ffffff\n- border: #d1d2e0\n- accent: #6d28d2 (Aubergine violet)\n- secondary accent: #c4710d (Ember)\n- primary action: #6d28d2 (outlined action border)\n\nExample Component Prompts:\n\n1. Outlined Violet Action Button: 12px 24px padding, 8px radius, transparent fill, 1.5px #6d28d2 border, label 'Enroll now' in Udemy Sans 16px weight 500 #6d28d2. On hover add the double-layer cool shadow: oklch(0.6295 0.0204 306.5 / 0.08) 0px 2px 8px 0px, oklch(0.6295 0.0204 306.5 / 0.12) 0px 4px 16px 0px.\n\n2. Category Card: White #ffffff surface, 16px radius, 1px #d1d2e0 border. Top half is a 16:9 illustration placeholder, bottom 24px padding holds 'Generative AI' label in 18px weight 500 #2a2b3f and a right arrow in #2a2b3f.\n\n3. Testimonial Card: White #ffffff, 8px radius, no border, 24px padding. Opening quote glyph at 32px #6d28d2, quote body 16px weight 400 #2a2b3f, 40px circular avatar, author name 14px weight 500 #2a2b3f, role 14px weight 400 #595c73, footer link 'View course →' in 14px weight 500 #6d28d2.\n\n4. Dark Hero Band: Full-width #202230 panel, 48px vertical padding, internal card at 16px radius with #33364a fill. Left column has heading 32px weight 700 white over subtext 16px weight 400 #b7b9cd. Right column is a #2a2b3f image placeholder block.\n\n5. Pill Search Field: 1000px radius, 48px tall, white #ffffff fill, 1px #d1d2e0 border, magnifier icon #2a2b3f at left 16px, placeholder 'Search for anything' in 16px weight 400 #9194ac, spans full content width."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is minimal and always cool-tinted (violet-tinged neutrals in the shadow stop), reinforcing the outlined-not-filled visual language. Most surfaces rely on a 1px border rather than shadow."
+}

@@ -1,0 +1,79 @@
+{
+  "color": {
+    "highlighter-yellow": {
+      "$value": "#e6e51e",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Primary brand accent — logo mark, filled pill buttons, accent shapes inside product mockups, highlight washes on feature cards"
+    },
+    "annotation-red": {
+      "$value": "#f34646",
+      "$type": "color",
+      "$description": "Annotation Red — Red supporting accent for decorative details and low-frequency emphasis"
+    },
+    "signal-blue": {
+      "$value": "#466cf3",
+      "$type": "color",
+      "$description": "Signal Blue — Product mockup logos, icon accents, connector arrows inside the flow diagram — the cool counterweight to warm yellow"
+    },
+    "peach-wash": {
+      "$value": "#ff8562",
+      "$type": "color",
+      "$description": "Peach Wash — Soft tinted background blocks behind product mockup clusters — warm secondary surface that softens the gray canvas"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, dark filled buttons, icon strokes — the structural ink of the entire system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, navigation bar background, product mockup canvas — every elevated surface"
+    },
+    "graphite-mist": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Graphite Mist — Page canvas background — the cool gray field that makes white cards appear to float"
+    },
+    "hairline-gray": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Hairline Gray — Subtle borders, secondary surface fills, dividers between content sections"
+    },
+    "shadow-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Shadow Gray — Single soft drop shadow color (used at 20% opacity as rgba), muted text on dark surfaces"
+    },
+    "sunbeam": {
+      "$value": "#fff705",
+      "$type": "color",
+      "$description": "Sunbeam — Brighter yellow variant for highlighted feature containers — the outer glow on flow-diagram cards"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    },
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "Display and heading family — weight 700 for the hero headline and section titles, weight 500 for sub-headings. Its geometric roundness echoes the pill buttons and rounded cards, making type and shape feel like one material. Tight negative tracking at large sizes pulls letters together into a confident block."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body and UI text — nav links, button labels, descriptions, form text. Inter's humanist proportions provide readable density at small sizes while weight 700 can punch up to match Poppins in nav and button contexts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://aaply.app",
+      "siteName": "Aaply",
+      "extractedAt": "2026-06-03T16:48:25.505Z",
+      "variant": "compact"
+    }
+  }
+}

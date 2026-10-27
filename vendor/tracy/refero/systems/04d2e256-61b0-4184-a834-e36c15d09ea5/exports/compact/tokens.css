@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-the-green: #027b49;
+  --color-the-pink: #f19ec8;
+  --color-the-red: #fa4d43;
+  --color-the-yellow: #fbb833;
+  --color-concrete: #d9d9d9;
+  --color-iron: #1f1f1f;
+  --color-carbon: #000000;
+
+  /* Typography — Font Families */
+  --font-kh-teka: 'KH Teka', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-sans-serif: 'System sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

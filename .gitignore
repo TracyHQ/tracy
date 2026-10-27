@@ -1,0 +1,203 @@
+node_modules/
+# ...and node_modules as a SYMLINK. The trailing slash above matches a directory only, so a
+# worktree that borrows the main checkout's install (the documented way to run a commit hook
+# where `pnpm install` has not run) leaves a symlink `git add -A` will happily stage. Caught
+# 10/09 mid-commit.
+node_modules
+# Agent worktrees are independent checkouts, never part of this checkout's source.
+.claude/worktrees/
+# Build jobs, generated copy and seeder receipts in the local workspace.
+docs/agents/*
+# ...except the three agent-skill config files written by /setup-matt-pocock-skills (13/10/2026).
+!docs/agents/issue-tracker.md
+!docs/agents/triage-labels.md
+!docs/agents/domain.md
+data/
+# ...except a design export's data/ under vendor/joomla/html: it is contract source, hashed by the
+# template's qa.contract.json. The line above kept tracy_base/data/*.json out of git (15/09/2026), and
+# with the machine that had them gone, Tracy Base's contracts gate failed everywhere (TCH #1180).
+!vendor/joomla/html/*/data/
+
+# Finder junk. One got into the tree on 01/09 (`workers/.DS_Store`, `4004157`) because no line
+# blocked it, not through anyone's carelessness. Listed here, it covers every folder.
+.DS_Store
+
+# Worker secrets for local dev. These files hold REAL values (`FLEET_ACTOR_SECRET` signs identity
+# claims for EVERY person on EVERY site; `SHOPIFY_CLIENT_SECRET` is one secret shared by every
+# customer store). They came along with the Worker code from tracy-infra, which ignores them —
+# without this line the first commit here would push all of them to GitHub.
+.dev.vars
+.dev.vars.*
+# ...except the empty template. `.dev.vars.*` above also swallows `.dev.vars.example`, so the
+# template must be named again here, or it silently stays out of git and newcomers can't tell what the Worker needs.
+!.dev.vars.example
+# wrangler run/build output, not definitions.
+.wrangler/
+# `.env` alone does NOT match `.env.desktop` — each profile has its own env file because
+# dsh-passwords pins the gateway port there, and both hold real secrets.
+.env
+.env.*
+# ...except the empty templates for newcomers. Same reason as `.dev.vars.example` above: `.env.*`
+# also matches `.env.example`, and a template that can't get into git is a template nobody reads.
+!.env*.example
+# A second local stand's names and ports (docs/running-locally.md).
+deploy/compose.override.yml
+
+# Private keys never go into git. This folder holds things that are NOT environment variables —
+# a GitHub App private key, for instance — which `.env.*` above does not cover.
+.secrets/
+# An operator's local secrets folder at the repo root (SRE, 14/10/2026). Never commit anything in it.
+/credentials/
+tch/sessions/
+tch/storages/
+tch/settings.yaml*
+tch/.credentials.yaml*
+# Images users paste into a chat session, hashed by content. One machine's DATA, possibly
+# screenshots with private information — the worst thing to commit by accident. First appeared
+# on 31/08 when the `native` profile came into real use.
+tch/attachments/
+# Model provider's file-list cache; dsh regenerates it when needed.
+tch/llm-deepseek/
+.teamshare/
+
+tch/.anonymous-user-id
+
+# Electron build output — ~250 MB of binaries, rebuilt with `pnpm --filter @tracy/desktop package`
+packages/desktop/tracy-desktop/dist/
+# Bundled by build/build-shell.mjs from shell/ and the dsh submodule at start and package time.
+packages/desktop/tracy-desktop/src/generated/
+# The macOS notification permission addon, built by build/build-native.sh at package time.
+packages/desktop/tracy-desktop/src/native/
+packages/desktop/tracy-desktop/build/icon.iconset/
+packages/desktop/tracy-desktop/build/icon.icns
+
+# Vite build of the design bench (~668 KB), produced by `pnpm build`. UNLIKE a plugin's
+# `lib/client.js`, which IS committed because the fleet copies the folder as-is and builds nothing
+# there — nobody ships the bench, it only runs on the author's machine. Without this line anyone's
+# first `pnpm build` leaves an untracked folder inviting an accidental commit.
+packages/dev/tracy-design/dist/
+# CMS template zips: built from the committed sources by each package's scripts/build.mjs
+packages/cms/tracy-joomla-template/dist/
+packages/cms/tracy-wordpress-theme/dist/
+packages/cms/tracy-seeder/dist/
+
+# dsh's one-time sign-in token, regenerated on every run — secret, and meaningless on another machine.
+tch/profiles/*/.launch-token
+# Skill library + design systems built for an agent running LOCALLY (`node scripts/dev-skills.mjs`).
+# Generated from `vendor/tracy/od-skill` and `vendor/tracy/od-design-system`, so committing them
+# duplicates a library already in the repo. On the fleet, `dsh/Dockerfile` builds the equivalent at
+# `/opt/tracy/skills`.
+tch/skills/
+tch/design-systems
+tch/design-catalog.json
+tch/craft
+
+
+# A reference template, NOT a build dependency — which is why it differs from everything else in
+# `vendor/`.
+#
+# `vendor/tracy/dsh-passwords`, `vendor/tracy/dsh-locale-vi`, `vendor/tracy/dsh-better-sidebar`,
+# `vendor/tracy/dsh-better-locale`, `vendor/tracy/od-brand-engine`, `vendor/tracy/mattpocock-skills` are TRACKED
+# subtrees: since 06/09 they are workspace members or content `dsh/Dockerfile` copies straight into
+# the image — no publish step in between — so their code must live in the repo.
+# `vendor/tracy/shadcn-admin` is READ-ONLY — look at how it builds layouts, never import a line.
+# tracy-infra keeps it out of git for the same reason.
+#
+# Recreate when needed (the exact commit tracy-infra references):
+#   git clone https://github.com/satnaing/shadcn-admin.git vendor/tracy/shadcn-admin
+#   git -C vendor/tracy/shadcn-admin checkout e16c87f
+vendor/tracy/shadcn-admin/
+
+# `pnpm install` inside the vendor subtree (to run its tests) leaves this lockfile. Upstream uses
+# npm with its own `package-lock.json`; committing a second lockfile litters their tree and makes
+# the next rebase harder to read.
+vendor/tracy/dsh-passwords/pnpm-lock.yaml
+
+# State of the `@tracy/dsh-add-site` host half when run OUTSIDE dsh (tests, manual scripts).
+#
+# `tokens.ts` and `resume.ts` write to `$DSH_HOME`; without it they fall back to cwd, and the cwd of
+# an `npx tsx` run is the repo root. The content is customer-site extension codes and a download
+# cursor — none of it belongs in git.
+/tracy-add-site/
+packages/web/tracy-harness/dist/
+# Generated from git by `scripts/gen-ops-cms-snapshot.mjs` right before each tracy-web image build
+# (one JSON per environment, with provenance). Not committed: it describes a commit that changes daily.
+apps/tracy-web/static/ops-cms/
+
+# Storybook build (`pnpm --filter @tracy/design build-storybook`). It packs every story into one
+# minified bundle — committing it recommits all of @tracy/ui in unreadable form, and
+# `check-language` trips on Vietnamese text pulled in by the bundle's dependencies.
+packages/dev/tracy-design/storybook-static/
+
+# Storybook debug logs left by manual runs.
+packages/dev/tracy-design/*.log
+__pycache__/
+
+# Local site folders of the one-dsh test bed (packages/tools/tracy-subprocess-docker/dev)
+tch/sites/
+
+# The CMS seeder staged for the host-dsh image (scripts/tools/stage-cms-seeder.sh); rebuilt, never committed
+packages/fleet/tracy-fleet-operation/dsh/cms/
+
+# The Turnstile SITE key is public by design (it ships in the page HTML); committing it lets
+# scripts/deploy.mjs build the page the same from any checkout. The secret lives only in the Worker.
+!packages/web/tracy-design-page/.env.production
+
+# wp-tracy-business dossier: two evidence folders live outside the repo and are symlinks on the
+# machine; not committed — CI has no target, and oxlint would scan customer JS through the symlink.
+tasks/wp-tracy-business/spec/assets
+tasks/wp-tracy-business/spec/reference
+# `contract.mjs init` moves the old canonical copy here on every run (a local safety net, not code):
+# 24 folders after one day of building, and the canonical copy in use is already committed.
+tasks/wp-tracy-business/attempts/
+
+# ── Machine-generated, not code (added 15/09/2026 during a tree cleanup) ──────────────
+.claude/scheduled_tasks.lock
+.dsh-mattskillsdeck-cache/
+packages/cms/tracy-emdash-theme-business/server.log
+# retired private registry (ADR 0014 §6) — data left on the machine, not for git
+infra/registry/
+# read-only shadcn-admin clone, same rule as vendor/tracy/shadcn-admin above
+vendor/shadcn-admin/
+# An unpacked npm package, not a vendor subtree — same rule as the line above. The test is
+# IMPORT-NOTE.md: on 23/09, 15 vendors had one, and the only two leaves without one were the line
+# above and this one. This tree has `package/` + `package-lock.json` (the `npm pack` layout) and no
+# note, so it never came in through the commit-pinned subtree path (ADR 0006). 64 MB, `??` in
+# `git status`, so `git add -A` would take all of it — the same trap as `workers/` at the end of this file.
+vendor/dsh-mattpocock-skills-deck/
+# design-library store generated by the tracy-design plugin at runtime
+tch/design-library/
+
+# 🔒 THE WORKER TREE WAS DELETED, AND IT IS STILL ON THE DISK OF ANYONE WHO CHECKED OUT BEFORE THE DELETION.
+# `b98f21c8f` (16/09/2026) removed 181 files, −62 924 lines — "nothing in the product runs on them any
+# more"; every old door is now answered by `apps/tracy-web` (`src/lanes/route.js` and its sibling routes).
+# But `git rm` does not clean an existing checkout's folder: measured on 23/09, one machine still had
+# **1471 files / 41 MB**, and with no line blocking it, `git status` lists it as `??` — so **one
+# `git add -A` takes the whole tree and revives a buried architecture**, silently, in a commit
+# meant to be about something else. Same shape of accident as the submodule pointer in `606c6d82`.
+#
+# Ignored rather than forcing anyone to delete: the files on disk stay searchable, and `git log -- workers/` keeps the history.
+# ⚠ Two files `workers/harness/{src/hosts.js,test/host-agents.test.mjs}` carry timestamps AFTER the
+# deletion (20/09), so they look like work in progress — compared byte for byte with the pre-deletion
+# copy: **identical**. That was a restore, not anyone's new code.
+workers/
+
+# tsc --incremental build-info (CI restores it; see tracy-ci.yml)
+.cache/
+
+# Output of `pnpm qa` (manual QA suite runs, stand manifests, fixture secrets).
+qa-results/
+# dsh-subscriptions runtime state (accounts, quarantine) when a local profile runs the plan card — never commit
+tch/subscriptions/
+
+# Turborepo run logs and local cache (turbo.json); never inputs, never committed.
+.turbo/
+
+# Pinned gitleaks downloaded by scripts/opensource/install-gitleaks.mjs.
+scripts/opensource/.bin/
+
+# Local dev-server logs (one was committed by mistake on 26/10/2026).
+.dev-logs/
+
+# A machine's own dsh profile rows (test webroot, local paths); ./run.sh loads it with --patch.
+tch/profiles/*/cordis.local.yml

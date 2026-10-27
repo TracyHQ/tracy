@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-whitelist-beta-happy-shape",
+  "itemIds": [
+    "direct:whitelist-beta:en",
+    "direct:whitelist-beta:vi",
+    "direct:whitelist-beta:de",
+    "direct:whitelist-beta:it",
+    "direct:whitelist-beta:fr",
+    "direct:whitelist-beta:nl",
+    "direct:whitelist-beta:zh",
+    "direct:whitelist-beta:es"
+  ],
+  "requirement": "the whitelist (beta) letter renders every part in all eight languages and prints what it must",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7 and templates/README.md",
+    "invariant": "every Tracy letter wears the shared layout and one-line footer; each language is complete"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.shape:whitelist-beta"],
+  "redProof": null,
+  "legacyIds": []
+}

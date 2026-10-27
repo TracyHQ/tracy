@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-922-community-help-link-happy",
+  "itemIds": ["regression:REG-PR-922-community-help-link"],
+  "requirement": "The Tracy community on Discord is one press away: a Community row above Settings in the left column, and a floating Need help? pill in the conversation that opens a panel with Open Discord and can be hidden per browser, after which the row stays",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-922-community-help-link.json",
+    "ref": "PR #922 (feat); fix evidence: 05/10/2026: customers need one place to ask questions, report bugs and share feedback with the team and each other. Variant chosen on two HTML mock pages (option E floating pill + option A footer row): the pill sits in the chat column, not the screen corner, because the screen corner is the site preview where a site's own chat widget lives (measured overlap on the mock).",
+    "invariant": "S3: no `.tsb-community` in the rail; the account menu has `[data-menu-item=community]` as its last row; pressing it calls window.open with 'https://discord.gg/BM9TMRcEBb' and target '_blank'. S4: `.tch-help-pill` exists and does not overlap the composer box (its bottom edge is above the composer's top, or it sits in the column's bottom corner when the composer is centred). The panel opens with `.tch-help-go` href = 'https://discord.gg/BM9TMRcEBb', target '_blank', rel containing 'noopener'; Escape closes it. S5: after Hide, localStorage 'tracy.help-button.hidden' = '1', `.tch-help-note` is shown, `[data-tracy-account-trigger]` carries `tsb-community-flash`; after 4 s no `.tch-help-pill`; after reload still no `.tch-help-pill` while the account menu still has `[data-menu-item=community]`. A piece listed in HIDDEN (S2) is absent instead, and nothing else changes.",
+    "productSources": ["apps/tracy-web/src/lib/session.js:101"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["tests/regression/specs/stand.mjs:53 readFileSync() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:chrome"],
+  "assertionIds": ["REG-PR-922-community-help-link.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-922-community-help-link"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "playwright",
+  "regression": {
+    "id": "REG-PR-922-community-help-link",
+    "pr": 922,
+    "kind": "feat",
+    "area": "ui/sidebar/community",
+    "file": "tests/regression/cases/REG-PR-922-community-help-link.json"
+  },
+  "command": [
+    "../../node_modules/.bin/playwright",
+    "test",
+    "-c",
+    "playwright.config.mjs",
+    "specs/REG-PR-922-community-help-link.spec.mjs"
+  ],
+  "cwd": "tests/regression",
+  "needs": ["stand", "chrome"],
+  "tests": [],
+  "timeoutS": 600
+}

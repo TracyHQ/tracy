@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1363-ds-ops-detect-all",
+  "kind": "fix",
+  "title": "/ops judges the Add site design system preview with one detector per kind of error, as the frame shows it, and holds Publish when it is not measured",
+  "pr": 1363,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the detector tests: every kind fails on its broken sample cut from a real 14/10 preview and passes on a clean one.",
+    "S2: Run the measurement tests: detector kinds feed their rules, an unmeasured preview rule is never a pass, a row without its stylesheets counts for PREV-1 only, a kind one system causes on most templates is the system's.",
+    "S3: Run the readiness, Road to live and live preview door tests: unmeasured preview rules and DEMO-1 are must-fix, a failing asset door fails PREV-1."
+  ],
+  "expect": [
+    "S1: every detector test passes.",
+    "S2: every measurement test passes.",
+    "S3: every readiness, road and door health test passes."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/preview-detectors-*.test.mjs, apps/tracy-web/test/preview-door-health.test.mjs, packages/design/tracy-ds-slot/test/measurement.test.mjs, apps/tracy-web/test/{template-design-system-readiness,design-system-readiness,road-to-live}.test.mjs"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/preview-detectors-d1.test.mjs",
+      "apps/tracy-web/test/preview-detectors-d2.test.mjs",
+      "apps/tracy-web/test/preview-detectors-g3.test.mjs",
+      "apps/tracy-web/test/preview-detectors-g4.test.mjs",
+      "apps/tracy-web/test/preview-detectors-buttons.test.mjs",
+      "apps/tracy-web/test/preview-detectors-veil.test.mjs",
+      "apps/tracy-web/test/preview-detectors-embed.test.mjs",
+      "apps/tracy-web/test/preview-detectors-layout.test.mjs",
+      "apps/tracy-web/test/preview-detectors-e1.test.mjs",
+      "apps/tracy-web/test/preview-detectors-e3.test.mjs",
+      "apps/tracy-web/test/preview-door-health.test.mjs",
+      "packages/design/tracy-ds-slot/test/measurement.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "apps/tracy-web/test/road-to-live.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 300
+  },
+  "evidence": "14/10/2026: after PR 1356 the eye audits of every Moxie preview found about 25 kinds of error (inverted logos, half-recoloured gradients, inflated and collapsed buttons, black strips, empty slabs, unreadable cover titles, an unstyled preview behind a 502 asset door) while /ops passed or marked the template not measured",
+  "fence": "apps/tracy-web: scripts/preview-check.mjs, scripts/preview-detectors/*, src/sites/design-system-preview-probe.js, src/lib/preview-door-health.js, readiness rules and rule-severity.json, road-to-live.js, ops/quickstarts.js; packages/design/tracy-ds-slot/src/measurement.mjs; packages/web/tracy-harness RoadToLive and Templates; scripts/tdsr/preview-measure-all.mjs, preview-system-issues.mjs, preview-lines.mjs."
+}

@@ -1,0 +1,366 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-seven",
+  "release": "quickstart/ja-seven/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.title-effect-child",
+    "heading": "h2",
+    "container": "div.t4-section-inner.container",
+    "section": "#Mod101"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 64px",
+    "displayFace": "Playfair Display 400, tracking 0em",
+    "heading": "first section heading: 48px",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 120px"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#4f4f4f",
+    "--fg-2": "#212529",
+    "--accent": "#181818",
+    "--accent-hover": "#291abd",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#ffffff",
+    "--meta": "#181818",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#f2f2f2",
+    "--muted": "#828282",
+    "--font-display": "\"Playfair Display\", sans-serif",
+    "--font-body": "\"Manrope\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#212529",
+      "accent": "#181818",
+      "accent-hover": "#291abd",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "meta": "#181818",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#f2f2f2",
+      "muted": "#828282"
+    },
+    {
+      "bg": "#f2f2f2",
+      "surface-warm": "#ffffff"
+    },
+    {
+      "accent": "#5f54cb"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "meta": "#181818",
+      "fg": "#495057",
+      "border-soft": "#dee2e6",
+      "border": "#f2f2f2",
+      "surface": "#ecf0f1"
+    },
+    {
+      "border-soft": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (58 line colours, 44 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.title-effect-child",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#Mod101"],
+    "bodyFace": ["body"],
+    "eyebrow": [".feature-title"],
+    "pill": [".stats-count", ".team-position"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": "div.features-descriptions, div.pricing-desc, span.feature-title, .t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "div.section-info-desc, div.testimonial-desc, main p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 13 tried (byte 4523); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#181818",
+      "uses": 14,
+      "kind": "custom",
+      "role": "meta",
+      "near": "#181818",
+      "distance": 0
+    },
+    {
+      "hex": "#495057",
+      "uses": 12,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#4f4f4f",
+      "distance": 10
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 7,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 5,
+      "kind": "custom",
+      "role": "border",
+      "near": "#f2f2f2",
+      "distance": 0
+    },
+    {
+      "hex": "#ecf0f1",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 17
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (heading and text kinds added) on the published quickstart/ja-seven/j6 1.0.1 (installer sha256 42937362…, the same file as the local build), after clearing media/t4/css so T4 regenerated its CSS as on a new site (tasks/evidence/ds-remeasure-4-2026-10-11/ja-seven-j6): first 6/12 — the hero title on its cyan glow under dark systems (Moxie 1.66:1, Toggl Track 2.69:1) and, reflowed, on the hero picture under light ones (MotherDuck 2.66:1, Apple 4.09:1), and the white label of the dark buttons on Moxie's cream fill (1.16:1). The title now takes the system's strongest text, the glow a faint accent tint under a dark system, the dark buttons' label the page colour (followRules, sideRules); the black logo and the dark service icons are turned light under a dark system. Then 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.51), 87% or more of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at. Earlier: measured 11/10/2026 on the local build of ja-seven/j6 1.0.1 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-seven-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 87% or more of the page follows; without a system 1.0.1 computes exactly what 1.0.0 does; T4 secondary (#181818, its heading and link colour) takes the system heading colour, not the surface (runtime); 0 of ~5,300 painted values differ from 1.0.0 without a system (pixel differences only in the running counters)",
+  "runtime": {
+    "--body-bg-color": "var(--ds-c-bg)",
+    "--body-text-color": "var(--ds-c-fg)",
+    "--body-link-color": "var(--ds-c-accent-text)",
+    "--body-link-hover-color": "var(--ds-c-accent-text-hover)",
+    "--color-primary": "var(--ds-c-accent)",
+    "--color-secondary": "var(--ds-c-fg-2)",
+    "--color-success": "var(--ds-c-success)",
+    "--color-info": "var(--ds-c-accent)",
+    "--color-warning": "var(--ds-c-warn)",
+    "--color-danger": "var(--ds-c-danger)",
+    "--color-light": "var(--ds-c-surface)",
+    "--color-dark": "var(--ds-c-fg)",
+    "--mainnav-text-color": "var(--ds-c-fg)",
+    "--mainnav-link-color": "var(--ds-c-fg)",
+    "--mainnav-link-hover-color": "var(--ds-c-accent-text)",
+    "--mainnav-link-active-color": "var(--ds-c-accent-text)",
+    "--footer-bg-color": "var(--ds-c-surface)",
+    "--footer-text-color": "var(--ds-c-meta)",
+    "--footer-link-color": "var(--ds-c-muted)",
+    "--footer-link-hover-color": "var(--ds-c-fg)"
+  },
+  "runtimeNote": "JA Seven paints its headings, heading links and body links with T4 secondary (#181818, 29 text uses against 5 fills): it takes the system heading colour, not the surface the family gives secondary (a light system turned every heading link #351840-on-dark under Toggl Track, 1.08:1)",
+  "contrastNote": "the home page has no main p: its section descriptions and testimonials (body) and the feature and pricing notes (muted) are what a reader reads (11/10/2026)",
+  "minVersion": {
+    "quickstart/ja-seven/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-seven/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 2): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "followRules": {
+    ".btn-dark": {
+      "color": "bg!"
+    },
+    ".stats-item-counter": {
+      "border-color": "border"
+    },
+    ".social-list": {
+      "border-color": "border"
+    },
+    ".t4-mod-wrap.border-top": {
+      "border-color": "border"
+    },
+    ".progressbar": {
+      "border-color": "border"
+    },
+    ".color-decor": {
+      "background-color": "surface-warm"
+    },
+    ".pricing-features": {
+      "background-color": "surface-warm",
+      "color": "fg"
+    },
+    ".pricing-features :is(h1, h2, h3, h4, h5, h6, p, li, span, small)": {
+      "color": "fg"
+    },
+    ".acm-hero .title-effect-child": {
+      "color": "meta"
+    },
+    ".acm-pricing .pricing-item .pricing-desc": {
+      "color": "meta"
+    },
+    ".acm-pricing .pricing-features .pricing-desc": {
+      "color": "meta"
+    }
+  },
+  "followNote": "the hero title (h1.title-effect-child, its two lines in spans) takes the system's strongest text colour: it sits on a blurred glow and, once the system's face reflows it, partly on the hero picture (MotherDuck 2.66:1 and Apple 4.09:1 in the secondary text colour on the picture's light blue); the dark buttons (.btn-dark) fill with the system's text colour, so their label takes the page colour (white on Moxie's cream fill read 1.16:1); 15/10/2026 (final measure on the develop merge): the plan cards' note (.pricing-item .pricing-desc, the template's --gray-500) read the system's third or fourth text colour on the pricing section's tinted ground, 3.2–4.5:1 under 8 of 15 systems; it takes the second (fg-2), still below the card titles; the features column's note (.pricing-features .pricing-desc, a div the column's word list missed) sits on the column's inline photo with the template's muted grey, 3.0-4.5:1 under 8 systems: it takes the second ink too; the second ink still read 4.0-4.1:1 on the tinted plan cards under Toggl Track and Pitch: both notes take the strongest ink, which this template's text order (meta, fg-2, fg, muted) puts on the meta role",
+  "sideRules": {
+    "dark": {
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      ".custom :is(.info-contact, .list-unstyled) a:is(:hover, :focus), .feature-info .desc-short a:is(:hover, :focus), .feature-info .desc-short a:is(:hover, :focus) *": {
+        "text-decoration-line": "underline !important"
+      },
+      ".color-decor": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 15%, var(--ds-c-bg))"
+      },
+      "body:not(.theme-dark) .navbar-brand img.logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".features-item .img-icon img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".t4-megamenu .navbar-nav.level0": {
+        "flex-wrap": "nowrap"
+      },
+      "h1.title-effect-child span": {
+        "color": "inherit"
+      },
+      ".t4-megamenu .navbar-nav.level0 .nav-link:not(.dropdown-menu *)": {
+        "white-space": "nowrap"
+      },
+      "img[src*=\"logo/logo-2.png\"]": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      "body.theme-dark :is(.t4-wrapper, .t4-offcanvas) a:not(.btn):is(:hover, :focus), .pagination .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "light": {
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      ".custom :is(.info-contact, .list-unstyled) a:is(:hover, :focus), .feature-info .desc-short a:is(:hover, :focus), .feature-info .desc-short a:is(:hover, :focus) *": {
+        "text-decoration-line": "underline !important"
+      },
+      "body.theme-dark": {
+        "--tracy-seven-words": "var(--ds-c-on-ink)",
+        "--tracy-seven-ground": "var(--ds-c-ink)",
+        "--tracy-seven-accent": "var(--ds-c-accent-on-ink)",
+        "--body-bg-color": "var(--ds-c-ink)",
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      "body.theme-dark :is(.t4-wrapper, .t4-offcanvas)": {
+        "--ds-c-bg": "var(--tracy-seven-ground)",
+        "--ds-c-surface": "color-mix(in srgb, var(--tracy-seven-words) 7%, var(--tracy-seven-ground))",
+        "--ds-c-surface-warm": "color-mix(in srgb, var(--tracy-seven-words) 4%, var(--tracy-seven-ground))",
+        "--ds-c-heading": "var(--tracy-seven-words)",
+        "--ds-c-meta": "var(--tracy-seven-words)",
+        "--ds-c-fg-2": "var(--tracy-seven-words)",
+        "--ds-c-fg": "var(--tracy-seven-words)",
+        "--ds-c-muted": "color-mix(in srgb, var(--tracy-seven-words) 90%, var(--tracy-seven-ground))",
+        "--ds-c-border": "color-mix(in srgb, var(--tracy-seven-words) 40%, var(--tracy-seven-ground))",
+        "--ds-c-border-soft": "color-mix(in srgb, var(--tracy-seven-words) 22%, var(--tracy-seven-ground))",
+        "--ds-c-accent-text": "var(--tracy-seven-accent)",
+        "--ds-c-accent-text-hover": "var(--tracy-seven-accent)",
+        "--ds-c-ink": "var(--tracy-seven-words)",
+        "--ds-c-on-ink": "var(--tracy-seven-ground)",
+        "--body-bg-color": "var(--ds-c-bg)",
+        "--body-text-color": "var(--ds-c-fg)",
+        "--body-link-color": "var(--ds-c-accent-text)",
+        "--body-link-hover-color": "var(--ds-c-accent-text-hover)",
+        "--color-secondary": "var(--ds-c-meta)",
+        "--color-light": "var(--ds-c-surface)",
+        "--color-dark": "var(--ds-c-fg)",
+        "--mainnav-text-color": "var(--ds-c-fg)",
+        "--mainnav-link-color": "var(--ds-c-fg)",
+        "--mainnav-link-hover-color": "var(--ds-c-accent-text)",
+        "--mainnav-link-active-color": "var(--ds-c-accent-text)",
+        "--footer-bg-color": "var(--ds-c-surface)",
+        "--footer-text-color": "var(--ds-c-meta)",
+        "--footer-link-color": "var(--ds-c-muted)",
+        "--footer-link-hover-color": "var(--ds-c-fg)",
+        "--t4-body-color": "var(--ds-c-fg)",
+        "--t4-body-bg": "var(--ds-c-bg)",
+        "--t4-emphasis-color": "var(--ds-c-heading)",
+        "--t4-secondary-color": "var(--ds-c-muted)",
+        "--t4-secondary-bg": "var(--ds-c-surface-warm)",
+        "--t4-tertiary-color": "var(--ds-c-meta)",
+        "--t4-tertiary-bg": "var(--ds-c-surface)",
+        "--t4-link-color": "var(--ds-c-accent-text)",
+        "--t4-link-hover-color": "var(--ds-c-accent-text-hover)",
+        "--t4-border-color": "var(--ds-c-border)",
+        "--t4-border-color-translucent": "var(--ds-c-border-soft)",
+        "--t4-light-text-emphasis": "var(--ds-c-fg)",
+        "--t4-dark-text-emphasis": "var(--ds-c-fg)",
+        "--t4-light-bg-subtle": "var(--ds-c-surface)",
+        "--t4-dark-bg-subtle": "var(--ds-c-border-soft)",
+        "--t4-dark-border-subtle": "var(--ds-c-border)",
+        "--t4-code-color": "var(--ds-c-accent-text)",
+        "--t4-gray-100": "var(--ds-c-surface)",
+        "--t4-gray-400": "var(--ds-c-border)",
+        "--t4-gray-500": "var(--ds-c-muted)",
+        "--t4-gray-600": "var(--ds-c-muted)"
+      },
+      ".color-decor": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 25%, var(--ds-c-bg))"
+      },
+      ".t4-megamenu .navbar-nav.level0": {
+        "flex-wrap": "nowrap"
+      },
+      "h1.title-effect-child span": {
+        "color": "inherit"
+      },
+      ".t4-megamenu .navbar-nav.level0 .nav-link:not(.dropdown-menu *)": {
+        "white-space": "nowrap"
+      },
+      "body.theme-dark :is(.t4-wrapper, .t4-offcanvas) a:not(.btn):is(:hover, :focus), .pagination .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "sideNote": "the hero's glow (.color-decor, #3fffdc blurred 75px behind the title) is drawn for a light page: under a dark system the light title sat on a bright cyan blob (Moxie 1.66:1, Toggl Track 2.69:1); there the glow takes a faint tint of the system's accent on its page. The black logo (logo-1.png) and the dark line icons of the services (features item-1..4.png) are drawn for a light page: under a dark system they are turned light (invert, hues kept), as JA Magz II's and Teline V's logos are",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-meta)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "sideRulesNote": "visual review 14/10/2026: the hero heading sits half over a decor disc (.color-decor, the template’s aqua #3fffdc) that a light system kept, and its spans took the system’s body grey (followRules fg: #6c6c6c on the aqua, 4.14:1). The spans now inherit the heading’s own ink (the followRule is gone), and on a light system the disc is a light tint of the accent (25% into the page), as on a dark one; the main menu fills its centred column exactly in the template’s face (629 of 630px), so a slightly wider system face wrapped CONTACT onto a second row: its top-level row and links do not wrap (it runs ~10px past the column on each side, clear of the logo and the header button)",
+  "contractNotes1317": "13/10/2026 (#1317): the counters, social list, section rules and progress bars draw the template lines (#181818, #828282, #e9ecef) and the mint decor (#3fffdc) and the dark pricing block paint their own; they follow the system. SCREEN-1 21% at 390 under BMW is to be read off the new run. Second run (21:46): the hero title span sits on the accent under a light system and on a dark mix under a dark one, so no one role reads on both and it keeps its own colour (readable in the first run); the dark pricing block turned light while its white heading stayed (1.04:1 under BMW at 390), so its words follow the text. Round 4 (14/10): the hero title read 1.05-1.3:1 under BMW and Stripe: it took the template's secondary grey through --color-secondary while the blurred glow behind it (.color-decor) took the accent, which is what the measure reads under it. The glow takes the system's warm surface and the title the system text, which read on it under every system (the accent's own text would have been white on a white page around the glow).",
+  "reviewV8Note": "15/10/2026 (look review v8): the hero title took fg, which this contract’s text order makes the system’s third text colour (washed grey on the lavender hero picture): it takes the strongest ink (meta)",
+  "buttonPrimaryNote": "16/10/2026 (batch 2): the template primary button is its dark text-coloured call to action, not an accent fill: from the role-variable release it paints itself with the page words colour (--ds-c-fg, labels --ds-c-bg) through its own stylesheet, so the slot no longer repaints .btn-primary with the accent (a dark button turned the lightest fill of the page under Moxie, BTN-1 button-dark). Older releases still take the accent through --color-primary.",
+  "darkPageNote": "16/10/2026 (batch 2, manager decision 18:44: a deliberately dark page stays dark under a light system, its ground the ink band): home-4 is the template’s dark page (Theme profile Dark, body.theme-dark: #1a1a1a page, white logo-4.png, white words). Under a light system it turned light under its white logo and the white dates of its news cards (IDENT-2, CON-2 under Figma). Under a light system the page now wears the inverse pair: ground --ds-c-ink, words --ds-c-on-ink, links --ds-c-accent-on-ink (each made for that ground: 5.17-17.2:1 words and >=4.5:1 links over the 12 measured light systems); the body keeps that pair under names of its own (--tracy-seven-words/-ground/-accent), the page wrapper and the off-canvas panel read their roles off it (muted 90% and lines 40%/22% of the words into the ground, the inverse pair swapped; a selector naming children with > is refused by the emitter) and resolve again the T4 and Bootstrap variables :root resolved from those roles. A first cut on --ds-c-heading read better on light inks but is no ground role of the system (GROUND-1). Known limit: Stripe’s ink is a light grey (#b0b7be, its words dark): home-4 turns a grey page with dark words there and the white logo-4.png reads 2.03:1 (Stripe is not among the preview systems). Under a dark system the page is dark already and only the logo turn changes: the inversion meant for the black logo-1.png skips home-4’s white logo-4.png (black on black under Moxie); the black logo-2.png of the contact module (module-128, home-2 footer) is turned light like logo-1.png.",
+  "hoverNote": "Social icons: hover and focus dim the link to 70% opacity, the cue an icon without words can carry. 21/10/2026 (HOVER-2, TEXT-1 batch 2): Home 2's contact list and social links and Home 4's feature tags hover from the template's #4f4f4f to its purple, which collapse into one role under a system: each is underlined on hover and focus too.  21/10/2026 (HOVER-2, TEXT-1 batch 2): on the dark pages (body.theme-dark) the links rest and hover in one role (the light rules give accent-text and accent-text-hover the same --tracy-seven-accent; under a dark system both compute the text role), and the pagination's page-link hovers in its rest colour: the template's own page moves #4f4f4f to #5f54cb there. Under a system each such hover and focus is underlined, as batch 1 did on JA Space, so the dark band keeps its single accent."
+}

@@ -1,0 +1,289 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-helple",
+  "release": "quickstart/ja-helple/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.slide-title.text-white",
+    "heading": "h2.sub-heading.text-normal",
+    "body": "p.lead",
+    "button-primary": "a.btn.btn-lg",
+    "container": "div.t4-section-inner.container",
+    "section": "#t4-spotlight-1",
+    "input": "#contact_name"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 80px",
+    "displayFace": "Anton 400, tracking 0em",
+    "heading": "first section heading: 42px",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(198, 71, 90)",
+    "container": "first content container, max-width 1230px",
+    "section": "first padded full-width section, padding-top 120px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-sideshow", ".t4-section-5", ".t4-footnav", ".t4-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#faf4ed",
+    "--fg": "#585858",
+    "--fg-2": "#212529",
+    "--accent": "#c6475a",
+    "--accent-hover": "#f5ba48",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212529",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#ebebeb",
+    "--muted": "#828282",
+    "--font-display": "\"Anton\", sans-serif",
+    "--font-body": "\"Barlow\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#faf4ed",
+      "fg": "#585858",
+      "fg-2": "#212529",
+      "accent": "#c6475a",
+      "accent-hover": "#f5ba48",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#ebebeb",
+      "muted": "#828282"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#585858",
+      "fg-2": "#0d0f22",
+      "accent": "#c6475a",
+      "accent-on": "#ffffff",
+      "surface-warm": "#faf4ed"
+    },
+    {
+      "accent": "#c6475a"
+    },
+    {
+      "fg": "#212529"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface-warm": "#1c1c1c",
+      "border-soft": "#dddddd",
+      "surface": "#ebebeb"
+    },
+    {
+      "bg": "#eaedf1",
+      "surface-warm": "#1d2124"
+    },
+    {
+      "bg": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (84 line colours, 120 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-lg"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-lg"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#t4-spotlight-1"],
+    "bodyFace": ["body"],
+    "groundPicture": [".hero-desc span::before"],
+    "inkImages": [".features-detail .info-img img"],
+    "cardLike": [".mem-item"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 7062); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ebebeb",
+      "uses": 23,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 19
+    },
+    {
+      "hex": "#1c1c1c",
+      "uses": 9,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 17
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#faf4ed",
+      "distance": 18
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#faf4ed",
+      "distance": 10
+    },
+    {
+      "hex": "#1d2124",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 8
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person; #ebebeb is the fill of the template's form fields, so it is a surface, not the page (under a dark system the fields vanished into the page, 11/10/2026)",
+  "keepDefaults": {
+    "--body-bg-color": "#faf4ed",
+    "--body-text-color": "#585858",
+    "--body-link-color": "#c6475a",
+    "--body-link-hover-color": "#f5ba48",
+    "--color-primary": "#c6475a",
+    "--color-secondary": "#f5ba48",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "t4Placeholders": {
+    "__color_white": "bg",
+    "__body_bg_color": "bg",
+    "__body_text_color": "fg",
+    "__link_color": "accent",
+    "__link_hover_color": "accent-hover",
+    "__background_color": {
+      "fill": "bg"
+    },
+    "__text_color": {
+      "text": "fg"
+    },
+    "__color_primary": "accent",
+    "__color_secondary": "accent-hover",
+    "__color_success": "success",
+    "__color_info": "meta",
+    "__color_warning": "warn",
+    "__color_danger": "danger",
+    "__color_light": "surface",
+    "__color_dark": "fg",
+    "__color_black": "fg"
+  },
+  "t4PlaceholdersNote": "each placeholder of css/tpl/theme.tpl.css reads the slot in the role the t4SiteCss build gave its value in the generated sheet (tokenize.mjs t4Placeholders). pattern.tpl.css is written once per palette (mainnav: white ground, #212529 links; light: white, #c6475a; dark, blue and footer paint only kept bands on the home page): its ground reads bg, its text fg and its links the accent, so every palette keeps a readable pair under any system — with the ground left to T4, the header stayed white under a dark system while its links took the system's accent text (2.26:1 under Moxie, 11/10/2026). T4 rewrites media/t4/css/<style id>.css whenever its content changes, so the tokenized sheets the first 1.0.1 build shipped with their hashes held on a fresh site but went back to literals once T4 wrote them again (11/10/2026: sheets emptied and the page asked for twice, 4/12, page ground and call to action the template's under every system, a muted text 1.06:1 under Moxie)",
+  "t4SiteNote": "T4 writes each template style's colours into media/t4/css/<style id>.css as literals and rewrites the file whenever its content changes: the colours reach the slot through the placeholders of css/tpl/*.tpl.css (t4Placeholders), never through the generated file",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (text judged per element, paint stack under each text) on the 1.0.1 build stood up from its own zip, media/t4/css, media/t4/optimize and the t4asset cache emptied so T4 wrote its sheets anew before measuring (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-helple-j6): controls 0, kept bands unchanged, no text under 4.5:1 worse than the template's own under Moxie, MotherDuck, Toggl Track and Apple, 73–94% of the page follows, every contrast kind sampled, dark and light screenshots read by eye (Moxie's pill radius turns the red 'Check Out Our Work' tile, a .btn-lg, into a rounded tile; its words still read); role misses unchanged (body weight); earlier: measured 11/10/2026 on the 1.0.1 build (tasks/evidence/ds-contracts-r2c-2026-10-11/templates/ja-helple-j6/final-1.0.1): default unchanged (0 differences, desktop and phone, before and after), no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple — the round-1 topbar link (1.01:1) was the probe reading the link, not the light span that holds its words — 72% or more of the page follows, and the dark and light screenshots read by eye; regeneration-checked 11/10/2026 (…/ja-helple-j6/regen-1.0.1): the 1.0.1 build rebuilt with t4Placeholders instead of t4SiteCss (the first build's tokenized sheets held on a fresh site but went back to literals once T4 wrote them again: 4/12), stood up, media/t4/css and media/t4/optimize emptied and the page asked for twice so T4 wrote its sheet anew: 6/12 as before (the failing checks are body weight only), controls 0, 73–94% follows, no text worse than the template's own, the dark screenshot read by eye",
+  "minVersion": {
+    "quickstart/ja-helple/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-helple/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "groundNote": "the brush picture behind the hero's highlighted number (.hero-desc span::before) is the template's yellow: it gives way under a worn system (selectors.groundPicture); the line icons of the feature lists are dark-ink images, inverted with hues kept under a dark system (selectors.inkImages)",
+  "bands": {
+    ".t4-sideshow": {
+      "ground": "#f8f9fa",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        "": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".t4-section-5": {
+      "ground": "#c6475a",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {},
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#1c1c1c",
+      "texts": ["#828282", "#ffffff"],
+      "paint": {
+        ".h4": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#1c1c1c",
+      "texts": ["#ffffff", "#828282"],
+      "important": true
+    },
+    ".t4-section.t4-section-5.section-overlap.t4-palette-blue": {
+      "ground": "#c6475a",
+      "texts": ["#ffffff", "#f5ba48"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".section-title span", ".sub-heading", ".stats-subject", ".stats-item-counter"],
+      "paint": {
+        ".stats-item-counter::before": {
+          "background-color": "text"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the progress band (#t4-section-5, the fill that wears the accent) showed its counters (.stats-item-counter, the template’s second brand colour on its red) painted with the accent made readable on the photo band’s ground, so on the band’s accent fill they came out one fixed dark colour: near black on near black under Airbnb, Eddie, ElevenLabs, ~2:1 under Figma, Pitch, Stripe (visual review 14/10/2026). The counters and their underline bar (::before) take the fill’s own words colour, the colour that reads on the ground the band wears; the kept band’s accent paints were dropped"
+}

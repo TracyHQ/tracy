@@ -1,0 +1,29 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Dark supporting neutral for text, icons, and strong contrast"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas and every surface; the design's only second value, existing solely to make Ink legible"
+    }
+  },
+  "font": {
+    "storenorskejalight": {
+      "$value": "store_norske_ja_light",
+      "$type": "fontFamily",
+      "$description": "The single typeface of the entire system — a custom hairline display used both for the 24px catalog body and the 490px brand mark. Weight 400 on this font already renders as an extreme thin; the same whisper set at 24px feels like a table of contents, set at 490px it becomes a building facade. Tracking is tightened to -0.0200em at every size — letters should feel pressed together, not floating apart. Kerning is explicitly enabled (\"kern\") to keep the negative tracking from creating collisions at the display scale."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://19-86.fr",
+      "siteName": "19–86",
+      "extractedAt": "2026-06-03T19:28:29.399Z",
+      "variant": "compact"
+    }
+  }
+}

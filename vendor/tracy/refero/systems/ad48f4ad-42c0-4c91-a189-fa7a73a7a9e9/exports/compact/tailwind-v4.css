@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-console-charcoal: #232324;
+  --color-bone-white: #fafafa;
+  --color-true-black: #000000;
+  --color-off-white: #ebeced;
+  --color-mute-gray: #a1a1aa;
+  --color-wire-gray: #5c5c61;
+  --color-recess-black: #181818;
+  --color-nav-ink: #0e0e10;
+  --color-smoke: #454546;
+  --color-ash: #696970;
+  --color-aurora-spectrum: #c7b8f5;
+
+  /* Typography */
+  --font-geistsans: 'GeistSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geistmono: 'GeistMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

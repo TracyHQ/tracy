@@ -1,0 +1,64 @@
+{
+  "color": {
+    "canvas-cream": {
+      "$value": "#f4f4f0",
+      "$type": "color",
+      "$description": "Canvas Cream — Page background, input fills, and the warm base layer every other surface sits on"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card and product-tile surfaces elevated above the cream canvas"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#242423",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and input borders; reads as a softened black when true black would feel too harsh against cream"
+    },
+    "hairline": {
+      "$value": "#d1d5dc",
+      "$type": "color",
+      "$description": "Hairline — Card and button borders, dividers, and ghost-button outlines"
+    },
+    "coin-pink": {
+      "$value": "#ff90e8",
+      "$type": "color",
+      "$description": "Coin Pink — Brand mascot coin fills, decorative accents, and the single chromatic signature of the product"
+    },
+    "highlight-yellow": {
+      "$value": "#ffc900",
+      "$type": "color",
+      "$description": "Highlight Yellow — Accent swatches and small punctuation marks — never backgrounds of full components"
+    },
+    "highlight-lime": {
+      "$value": "#f1f333",
+      "$type": "color",
+      "$description": "Highlight Lime — Accent swatches used alongside yellow as a paired color-marker system"
+    },
+    "highlight-vermillion": {
+      "$value": "#dc341e",
+      "$type": "color",
+      "$description": "Highlight Vermillion — Accent swatch for the third color in the marker trio; reserved for emphasis only"
+    }
+  },
+  "font": {
+    "abc-favorit": {
+      "$value": "ABC Favorit",
+      "$type": "fontFamily",
+      "$description": "The sole type family across the system — used for headings, body, buttons, inputs, and even icons. Weights split into 400 (body/UI), 500 (emphasis, prices, nav), 700 (display and oversized marketing type). Letter-spacing pulls negative on every step above 24px, reaching -0.029em at 192px, which tightens the geometric forms into a confident, almost stencil-like display voice. The stylistic alternates ss04 and ss11 are always on and shape the personality of every glyph."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://gumroad.com",
+      "siteName": "Gumroad",
+      "extractedAt": "2026-06-03T15:01:11.612Z",
+      "variant": "compact"
+    }
+  }
+}

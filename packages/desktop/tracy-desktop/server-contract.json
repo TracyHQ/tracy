@@ -1,0 +1,215 @@
+{
+  "about": "Every server door the Tracy Cowork shell itself calls on the origin it is pinned to. A released app lives longer than one web deploy, so each door here must keep answering this shape for as long as an app that calls it is installed. Probes never create state: bad nonces, malformed secrets, signed-out requests. Check with: node build/check-server-contract.mjs <origin> [--scope packaged|all].",
+  "notInContract": [
+    "GET /signin/google, GET /signin/github, GET /signin/email: the shell never requests them; it intercepts a navigation the page itself makes (src/signin-doors.js signInDoor) and starts the desktop round instead (the email door hands its address to the round body).",
+    "GET https://update.tracy.ai/desktop/<channel>-mac.yml: the update feed (feat/desktop-auto-update, src/update-plan.js UPDATE_FEED) is another origin, checked by build/release-preflight.mjs, not here.",
+    "Loopback OAuth callbacks (src/subscription-handoff.js) are served BY the app on 127.0.0.1, not by the server.",
+    "POST /auth/link/:nonce/cancel: sent fire-and-forget when a started round is cancelled (src/signin-handoff.js). The app never reads the answer, so a server without the door (404) leaves the round pending until it expires, which is the behaviour before the door existed. Not a door the app needs in order to work, so not probed."
+  ],
+  "doors": [
+    {
+      "id": "home",
+      "method": "GET",
+      "path": "/",
+      "usedBy": "packaged",
+      "source": "src/main.js (remote target: openWindow(`${remote}/`))",
+      "probe": {
+        "path": "/"
+      },
+      "expect": {
+        "status": 302,
+        "location": {
+          "pathname": "/login"
+        }
+      },
+      "note": "Signed out, the home sends the window to the sign-in door."
+    },
+    {
+      "id": "login",
+      "method": "GET",
+      "path": "/login",
+      "usedBy": "packaged",
+      "source": "src/main.js (startSignIn fallback: loadURL(signInFailedUrl(...)) = `${origin}/login?reason=<word>`; a server without reasons ignores the parameter)",
+      "probe": {
+        "path": "/login"
+      },
+      "expect": {
+        "status": 200,
+        "contentType": "text/html"
+      }
+    },
+    {
+      "id": "login-onboard",
+      "method": "GET",
+      "path": "/login?onboard=1",
+      "usedBy": "packaged",
+      "source": "src/main.js markFirstRunSignIn (first run: every sign-in page request carries onboard=1)",
+      "probe": {
+        "path": "/login?onboard=1"
+      },
+      "expect": {
+        "status": 200,
+        "contentType": "text/html"
+      },
+      "note": "A first run asks for the sign-in page in the Setup frame; a server without the frame must still answer the plain page."
+    },
+    {
+      "id": "auth-link-open",
+      "method": "POST",
+      "path": "/auth/link/browser",
+      "usedBy": "packaged",
+      "source": "src/signin-handoff.js step 1",
+      "probe": {
+        "path": "/auth/link/browser",
+        "headers": {
+          "Origin": "{origin}",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "purpose": "desktop",
+          "device": 42
+        }
+      },
+      "expect": {
+        "status": 400,
+        "contentType": "application/json",
+        "json": {
+          "code": "INVALID_REQUEST"
+        }
+      },
+      "note": "A valid body opens a round (state), so the probe sends a non-string device and expects the door's own refusal. Limit: this does not prove the success shape {nonce, clientSecret, matchCode, expiresAt}; the session door below, which only exists with desktop rounds, stands in for that."
+    },
+    {
+      "id": "auth-link-status",
+      "method": "GET",
+      "path": "/auth/link/:nonce",
+      "usedBy": "packaged",
+      "source": "src/signin-handoff.js step 3 (poll)",
+      "probe": {
+        "path": "/auth/link/0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expect": {
+        "status": 200,
+        "contentType": "application/json",
+        "json": {
+          "status": "expired"
+        }
+      },
+      "note": "An unknown nonce answers the same word as an expired one, by design."
+    },
+    {
+      "id": "auth-link-session",
+      "method": "POST",
+      "path": "/auth/link/:nonce/session",
+      "usedBy": "packaged",
+      "source": "src/signin-handoff.js step 4 (redeem)",
+      "probe": {
+        "path": "/auth/link/0000000000000000000000000000000000000000000000000000000000000000/session",
+        "headers": {
+          "Origin": "{origin}",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "clientSecret": "not-a-secret"
+        }
+      },
+      "expect": {
+        "status": 400,
+        "contentType": "application/json",
+        "json": {
+          "code": "INVALID_REQUEST"
+        }
+      },
+      "note": "Reaching INVALID_REQUEST proves the door exists, accepts this origin as its own (else 403 ORIGIN_REFUSED: the server's configured origin differs from the one the app is pinned to) and takes JSON."
+    },
+    {
+      "id": "auth-me",
+      "method": "GET",
+      "path": "/auth/me",
+      "usedBy": "packaged",
+      "source": "src/signin-handoff.js step 5 (redeem answer lost)",
+      "probe": {
+        "path": "/auth/me"
+      },
+      "expect": {
+        "status": 200,
+        "contentType": "application/json",
+        "json": {
+          "email": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "id": "signin-approve-page",
+      "method": "GET",
+      "path": "/signin",
+      "usedBy": "packaged",
+      "source": "src/signin-handoff.js step 2 (openExternal(`${origin}/signin?n=<nonce>`) in the system browser)",
+      "probe": {
+        "path": "/signin?n=0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expect": {
+        "status": 302,
+        "location": {
+          "pathname": "/login",
+          "query": {
+            "next": {
+              "startsWith": "/signin?n="
+            }
+          }
+        }
+      },
+      "note": "Signed out, the approve page sends the person to sign in and back with n= intact."
+    },
+    {
+      "id": "desktop-config",
+      "method": "GET",
+      "path": "/api/desktop/config",
+      "usedBy": "local-dsh",
+      "source": "src/plan-profile.js readDesktopConfig (only with TRACY_DESKTOP_CONFIG_ORIGIN, when the app runs its own dsh)",
+      "probe": {
+        "path": "/api/desktop/config"
+      },
+      "expect": {
+        "status": 200,
+        "contentType": "application/json",
+        "headers": {
+          "Cache-Control": "no-store"
+        },
+        "json": {
+          "llm": {
+            "type": "object"
+          }
+        }
+      },
+      "note": "A packaged app never calls it (it is pinned to a remote origin and runs no dsh), so release preflight checks scope packaged only."
+    },
+    {
+      "id": "desktop-app-opened",
+      "method": "POST",
+      "path": "/api/desktop/installs/opened",
+      "usedBy": "packaged",
+      "source": "src/main.js sendAppOpened; src/app-opened.js persistent daily foreground-open delivery",
+      "probe": {
+        "path": "/api/desktop/installs/opened",
+        "headers": {
+          "Origin": "{origin}",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "installId": "not-an-install-id"
+        }
+      },
+      "expect": {
+        "status": 400,
+        "contentType": "application/json",
+        "json": {
+          "code": "INVALID_INSTALL_ID"
+        }
+      },
+      "note": "Malformed body proves this server accepts the new shell door without creating any event or copy. Identity comes only from an existing session cookie; signed-out valid opens are also accepted."
+    }
+  ]
+}

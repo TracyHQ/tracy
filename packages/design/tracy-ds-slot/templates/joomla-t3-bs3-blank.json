@@ -1,0 +1,276 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/t3-bs3-blank",
+  "minVersion": {
+    "quickstart/t3-framework/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/t3-framework/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/t3-framework/j6@1.0.1",
+  "roles": {
+    "page": "body",
+    "display": "h1",
+    "heading": "div.col-xs-12.col-sm-4 h2",
+    "body": "div.col-xs-12.col-sm-4 p",
+    "button-primary": "a.btn.btn-primary"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 98px",
+    "displayFace": "Helvetica Neue 500, tracking 0em",
+    "heading": "first section heading: 30px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(51, 121, 181)"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#333333",
+    "--fg-2": "#333333",
+    "--accent": "#3379b5",
+    "--accent-hover": "#204c73",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#dddddd",
+    "--muted": "#555555",
+    "--font-display": "\"Helvetica Neue\", sans-serif",
+    "--font-body": "\"Helvetica Neue\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "accent": "#428bca",
+      "accent-hover": "#204c73",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#dddddd",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#333333",
+      "accent": "#3379b5",
+      "accent-on": "#ffffff"
+    },
+    {
+      "accent": "#3174af"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#e5e5e5",
+      "accent": "#3a87ad",
+      "border": "#e0e2e3"
+    },
+    {
+      "surface": "#fcf8e3",
+      "accent": "#3071a9",
+      "border": "#e1e1e1",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border": "#e3e3e3",
+      "accent": "#357ebd"
+    },
+    {
+      "surface": "#f8f8f8",
+      "border": "#d5d5d5"
+    },
+    {
+      "surface": "#f9f2f4"
+    },
+    {
+      "surface": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (65 line colours, 80 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"],
+    "cardLike": [".thumbnail"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "sideRules": {
+    "light": {
+      "#t3-footer :is(.poweredby, .poweredby a)": {
+        "color": "color-mix(in srgb, var(--ds-c-accent-text) 70%, var(--ds-c-fg))"
+      }
+    }
+  },
+  "sideNote": "the footer's powered-by line is the link colour on the footer's bottom bar, a blue-grey tint of the page (#3174af on #d3dee5, 3.62:1 on the template): under Apple the readable accent read 3.54:1 on that tint (re-measured 12/10/2026 with every text judged), so on a light worn page it is the readable accent moved three tenths toward the system's text",
+  "module": {
+    "title": "Tracy design system",
+    "position": "head-search",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 22 tried (byte 5195); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 92,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 42,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 30,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#3a87ad",
+      "uses": 18,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#3379b5",
+      "distance": 18
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 8
+    },
+    {
+      "hex": "#3071a9",
+      "uses": 8,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#3379b5",
+      "distance": 15
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#357ebd",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent",
+      "near": "#3379b5",
+      "distance": 10
+    },
+    {
+      "hex": "#d5d5d5",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 14
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "licence": "t3_bs3_blank 3.1.1 (JoomlArt, GNU/GPLv3, templateDetails.xml): a tokenized re-release is allowed",
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-t3-bs3-blank): 12/12 on every release measured, controls 0 differences, lowest text 4.51:1, 95% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on a stand of the 1.0.1 build itself (stand.mjs --from-dir ~/tracy-bench-work/release/ds-batch4/t3-framework/release, Joomla's CLI installer as the fleet) (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-t3-bs3-blank): every system step passes with Moxie, MotherDuck, Toggl Track and Apple, 95% or more of the page follows, lowest text 4.51:1 over 49 samples per view, none worse than the template's own; controls 0 differences (step 1 = the clear step = the release verify's own default snap, controls.json — the flow's baseline was snapped while an interrupted run's module was still published, so its control verdicts compare with that and are void). First measured: measured 11/10/2026 on t3-framework/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-batch4-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 95%-100% of the page follows. The page colours follow only from 1.0.1 (the re-release in ~/tracy-bench-work/RELEASE-DS-BATCH4.sh, not yet uploaded); a site still on 1.0.0 wearing a system was not measured"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-893-emdash-business-no-demo-post",
+  "kind": "fix",
+  "title": "Tracy Business EmDash: no demo news post stays on a personalised site; the news page stays",
+  "pr": 893,
+  "area": "emdash-theme-business/personalize",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-emdash-theme-business/tests/personalize-trim.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"no demo post stays on a personalised site, even with a model to rewrite one; the news page stays, with no post to list\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 8: TCH #1013, PR #1040, dropped the file's hide-rule test).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): the posts trim keeps none (keep: 0) even with a model to rewrite one: every demo post is unpublished before anything is written to it, links into one lead to /contact, and the news list page stays published with no post to list."
+  ],
+  "selectors": {
+    "map": "packages/cms/tracy-emdash-theme-business/seed/personalize.json (trim, collection posts, keep 0)"
+  },
+  "evidence": "Ledger L21, 05/10/2026: a Tracy Business EmDash site made with Apply kept three demo news posts (trim keep 3), rewritten, whose bodies still named the demo company's plants and cities in every language (/news/four-common-mistakes-..., /vi/news/...-kaluga, /vi/news/...-obninsk): 6 demo words left. Product owner's decision: demo news under the customer's name is false. Red 42657ecbb, fix 131fddcdd.",
+  "fence": "Posts are unpublished, never deleted; the news page and the links to /news stay working.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-business/tests/personalize-trim.test.mjs"
+    ],
+    "tests": [
+      "no demo post stays on a personalised site, even with a model to rewrite one; the news page stays, with no post to list"
+    ]
+  }
+}

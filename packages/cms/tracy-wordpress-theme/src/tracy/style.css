@@ -1,0 +1,18 @@
+/*
+Theme Name: Tracy
+Theme URI: https://tracy.ai
+Update URI: https://github.com/TracyHQ/claude-cowork
+Description: One theme, 152 looks: each design inspiration is a style variation, and the navigation and hero layouts follow it.
+Version: 1.1.6
+Author: Tracy
+Author URI: https://tracy.ai
+Requires at least: 6.6
+Tested up to: 6.8
+Requires PHP: 8.1
+Text Domain: tracy
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/* The Version line above is rewritten by scripts/build.mjs from package.json.
+ * Styles live in assets/css/ (enqueued by functions.php) and in theme.json. */

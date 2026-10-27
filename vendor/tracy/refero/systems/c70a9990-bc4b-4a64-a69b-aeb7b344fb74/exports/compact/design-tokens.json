@@ -1,0 +1,54 @@
+{
+  "color": {
+    "microsoft-blue": {
+      "$value": "#0067b8",
+      "$type": "color",
+      "$description": "Microsoft Blue — Primary action background, link text, navigation accents, icon strokes — the single chromatic authority in the system, used for all filled CTAs and interactive highlights"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page background, card surfaces, button text on blue, surface elevation"
+    },
+    "mist-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Mist Gray — Footer background, subtle surface tone, page canvas under cards"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, card borders, hairline dividers — the dominant typographic and structural color"
+    },
+    "steel-gray": {
+      "$value": "#616161",
+      "$type": "color",
+      "$description": "Steel Gray — Secondary text, navigation text, muted UI elements, footer copy"
+    },
+    "graphite": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Graphite — Body text variant, list borders, navigation dividers, secondary headings"
+    },
+    "deep-charcoal": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Deep Charcoal — Dense text blocks, list separators, button border variant — the darkest neutral after pure black"
+    }
+  },
+  "font": {
+    "segoe-ui": {
+      "$value": "Segoe UI",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system — navigation, body, headings, buttons, footer. Weight 400 is the workhorse; weight 600 is reserved for headings and button labels to create section-level contrast without switching families. Segoe UI's humanist proportions and open apertures give the system its calm, enterprise-confident voice — the type does not perform, it informs."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.microsoft.com",
+      "siteName": "Microsoft",
+      "extractedAt": "2026-06-03T22:09:57.481Z",
+      "variant": "compact"
+    }
+  }
+}

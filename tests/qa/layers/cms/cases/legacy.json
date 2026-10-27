@@ -1,0 +1,343 @@
+[
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "packages/fleet/tracy-fleet-operation/test/emdash-quickstart.test.mjs",
+      "runner": "node",
+      "variant": "fleet_tracy-fleet-operation_test_emdash-quickstart.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-fleet_tracy-fleet-operation_test_emdash-quickstart.test.mjs",
+    "itemIds": ["suite:packages/fleet/tracy-fleet-operation/test/emdash-quickstart.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "packages/fleet/tracy-fleet-operation/test/installer-quickstart.test.mjs",
+      "runner": "node",
+      "variant": "fleet_tracy-fleet-operation_test_installer-quickstart.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-fleet_tracy-fleet-operation_test_installer-quickstart.test.mjs",
+    "itemIds": ["suite:packages/fleet/tracy-fleet-operation/test/installer-quickstart.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "packages/fleet/tracy-fleet-operation/test/local-quickstart.test.mjs",
+      "runner": "node",
+      "variant": "fleet_tracy-fleet-operation_test_local-quickstart.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-fleet_tracy-fleet-operation_test_local-quickstart.test.mjs",
+    "itemIds": ["suite:packages/fleet/tracy-fleet-operation/test/local-quickstart.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "packages/fleet/tracy-fleet-operation/test/quickstart-jpa.test.py",
+      "runner": "python3",
+      "variant": "fleet_tracy-fleet-operation_test_quickstart-jpa.test.py"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-fleet_tracy-fleet-operation_test_quickstart-jpa.test.py",
+    "itemIds": ["suite:packages/fleet/tracy-fleet-operation/test/quickstart-jpa.test.py"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": ["tool:python3"],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "packages/fleet/tracy-fleet-operation/test/template-quickstart.test.mjs",
+      "runner": "node",
+      "variant": "fleet_tracy-fleet-operation_test_template-quickstart.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-fleet_tracy-fleet-operation_test_template-quickstart.test.mjs",
+    "itemIds": ["suite:packages/fleet/tracy-fleet-operation/test/template-quickstart.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs",
+      "runner": "node",
+      "variant": "fleet_tracy-fleet-operation_test_wordpress-quickstart.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-fleet_tracy-fleet-operation_test_wordpress-quickstart.test.mjs",
+    "itemIds": ["suite:packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "apps/tracy-web/test/build-questions.test.mjs",
+      "runner": "node",
+      "variant": "tracy-web_test_build-questions.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-tracy-web_test_build-questions.test.mjs",
+    "itemIds": ["suite:apps/tracy-web/test/build-questions.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "apps/tracy-web/test/contracts.test.mjs",
+      "runner": "node",
+      "variant": "tracy-web_test_contracts.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-tracy-web_test_contracts.test.mjs",
+    "itemIds": ["suite:apps/tracy-web/test/contracts.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "apps/tracy-web/test/local-releases.test.mjs",
+      "runner": "node",
+      "variant": "tracy-web_test_local-releases.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-tracy-web_test_local-releases.test.mjs",
+    "itemIds": ["suite:apps/tracy-web/test/local-releases.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": ["db:test-database"],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "apps/tracy-web/test/quickstart-releases.test.mjs",
+      "runner": "node",
+      "variant": "tracy-web_test_quickstart-releases.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-tracy-web_test_quickstart-releases.test.mjs",
+    "itemIds": ["suite:apps/tracy-web/test/quickstart-releases.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  },
+  {
+    "area": "legacy",
+    "assertionIds": ["legacy.suite-exit-status"],
+    "dimensions": {
+      "assertion": "legacy.suite-exit-status",
+      "file": "apps/tracy-web/test/release-assets.test.mjs",
+      "runner": "node",
+      "variant": "tracy-web_test_release-assets.test.mjs"
+    },
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["the suite file and what it imports"],
+      "writes": ["run scratch directory under --out"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-legacy-happy-tracy-web_test_release-assets.test.mjs",
+    "itemIds": ["suite:apps/tracy-web/test/release-assets.test.mjs"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "exit 0, no skipped tests; an owner-written suite is evidence about its own assertions only",
+      "ref": "suite assertions",
+      "source": "the suite itself (owner: the package that carries it)"
+    },
+    "prerequisites": [],
+    "redProof": null,
+    "requirement": "The existing release/contract/quickstart suite of the repo that owns it runs to the end without failing.",
+    "targets": ["local"]
+  }
+]

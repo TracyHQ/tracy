@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-amber-pulse: #ffbe3c;
+  --color-cream-paper: #f9f9f8;
+  --color-white-card: #ffffff;
+  --color-ink-charcoal: #262a2e;
+  --color-notion-charcoal: #37352f;
+  --color-steel-body: #66707a;
+  --color-slate-mute: #808c99;
+  --color-carbon: #111111;
+  --color-black: #090909;
+  --color-hairline: #ebebeb;
+  --color-silver-divider: #ccd1d6;
+  --color-warm-taupe: #787673;
+
+  /* Typography */
+  --font-beausite: 'Beausite', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

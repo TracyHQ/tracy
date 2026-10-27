@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cc38369a-41e3-4bcd-b619-230ccffe7e8e",
+  "status": "complete",
+  "name": "Neon",
+  "url": "https://styles.refero.design/style/cc38369a-41e3-4bcd-b619-230ccffe7e8e",
+  "sourceWebsite": "https://neon.tech",
+  "extractedAt": "2026-04-11T17:38:19.074Z",
+  "capturedAt": "2026-10-08T05:17:35.280783+00:00",
+  "theme": "dark",
+  "industry": null,
+  "description": "Server Room After Dark. A deep black environment where data and interactions are the only sources of light.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f8702c84-0251-44b0-b71f-1706ef64345d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f6a0441a-129c-416b-8b81-6e43da0fbe5b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/554b3bbe-4685-4afe-873d-b862884b1e93.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/065b22a8-fb9d-49e6-bfe2-abc4866d27a7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3fb86700-bc24-4c6c-a1e9-94173023d801.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d37b61ed24cb51980e095b6b88762fff9fee81a4abe7cc7c6cf246e3a030b7d4",
+      "bytes": 15940
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7af07ce0b14b4b9fee5b12d03924fd4587d9c0e612a04c36490688ebb520c7fe",
+      "bytes": 131749
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5094d576186591c1042716fa46abe8cfab9d72f2467edfebef7903b0d81fe3da",
+      "bytes": 26389
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "073937c689b1597692b8acd6224313f912a866f32f3cbb05bf12af51e11c115f",
+      "bytes": 19176
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "96de2224fa438243abb1be906c1efa7c8c867ef19385265538a09b6a8180aa14",
+      "bytes": 8625
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f1383971c26488882ee856f024900924973c59b3a8057ba2e0df5ac077903b12",
+      "bytes": 2990
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4d6aab50edfea5e463fb2e7725a76c63f44b52d1e2ca5d3d5a2fdc44e9e0df78",
+      "bytes": 650
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e21e17a64e22d96523ed65b751303fe52b45c129f2ea2160b3d2ff1bf2d56002",
+      "bytes": 770
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "94309178790fe693c8d00674accf193c0d1119112c98cba303ee25aff0bb964f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b808bf89fd1f92cdee456f9512efefaac30eab769f1f78d1f328f64d34390d51",
+      "bytes": 47210
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d5a17d023d947246b60d45652328944c8577366628740ef2106eac127ae60223",
+      "bytes": 24309
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5dd625e71bed401b996ce892a6f7e78d2cfb243aaeb6e5f2b77bd69db94ff700",
+      "bytes": 64213
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "07bc57ee78029af243dad1700eceb00d249fb615cede88d2ed4bbfd12edd6526",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ef73e8e101710a933af2ce86c5ad6096dc4dfcb67b6b84a713ca51ca41f1a636",
+      "bytes": 1827
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "21e5bbb29c5a32e14060a28543c69128e3a88a1b339fe13a1d2a3cb595832b81",
+      "bytes": 2336
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "5a7ec81f-03b6-4d21-a706-0d1d323d8899",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "6323a42b-3b47-4774-92e4-15651a9ba2ac",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "ad48f4ad-42c0-4c91-a189-fa7a73a7a9e9",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "bc4fb98b-37ec-480a-b7a9-acd197cbebb9",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "cc38369a-41e3-4bcd-b619-230ccffe7e8e",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

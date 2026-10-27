@@ -1,0 +1,123 @@
+/* wp-ja-restaurant: acm/tabs/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.acm-container-tabs {
+  color: var(--ds-c-fg, light-dark(#3a352f, #e9e4d6));
+}
+.acm-container-tabs > .container {
+  padding: 120px 200px;
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+}
+@media (min-width: 1200px) {
+  .acm-container-tabs > .container {
+    width: 892.5px;
+  }
+}
+@media (max-width: 1199px) {
+  .acm-container-tabs > .container {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+@media (max-width: 991px) {
+  .acm-container-tabs > .container {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+@media (max-width: 767px) {
+  .acm-container-tabs > .container {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
+.no-padding .acm-container-tabs > .container {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+.acm-container-tabs .tabs-heading {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+}
+@media (max-width: 767px) {
+  .acm-container-tabs .tabs-heading {
+    letter-spacing: 3px;
+    font-size: 46px;
+  }
+}
+.acm-container-tabs .container-tabs-nav {
+  background-color: var(--ds-c-ink, light-dark(#3a352f, #11100e));
+  margin-bottom: 30px;
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs {
+  border: 0;
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li {
+  width: auto;
+  margin-bottom: 0;
+  margin-right: 0;
+  border-right: 2px solid light-dark(#615e59, #3a352f) ; /* ds-keep: hairline on the template's own dark band; no page border role reads there */
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li a {
+  border: 0;
+  color: var(--ds-c-on-ink, #ffffff);
+  outline: none;
+  margin: 0;
+  padding: 13px 20px;
+  position: relative;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-family: "Roboto Mono", sans-serif;
+  font-weight: 700;
+}
+@media (min-width: 768px) {
+  .acm-container-tabs .container-tabs-nav .nav-tabs li a {
+    border: 0;
+  }
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:after {
+  content: "";
+  display: block;
+  left: 0;
+  position: absolute;
+  -webkit-transition: width 0.35s;
+  -o-transition: width 0.35s;
+  transition: width 0.35s;
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:hover,
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:focus,
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:active {
+  background-color: transparent;
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:hover:after,
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:focus:after,
+.acm-container-tabs .container-tabs-nav .nav-tabs li a:active:after {
+  width: 100%;
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li.active {
+  border-right-color: var(--ds-c-accent, #d24a24);
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li.active a {
+  background: var(--ds-c-accent, #d24a24);
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li a.active {
+  background: var(--ds-c-accent, #d24a24);
+}
+.acm-container-tabs .tab-pane {
+  display: none;
+}
+.acm-container-tabs .tab-pane .section-inner {
+  padding: 90px 0 0;
+}
+.acm-container-tabs .tab-pane.active {
+  display: block;
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+.j40 .tab-pane {
+  display: none !important;
+}
+.j40 .tab-pane.active {
+  display: block !important;
+}

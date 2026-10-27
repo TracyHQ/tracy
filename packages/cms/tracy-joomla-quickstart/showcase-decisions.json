@@ -1,0 +1,874 @@
+{
+  "$comment": "Per-contract showcase-navigation decisions read by scripts/build-joomla-showcase-nav.mjs. hide/keep name a menu item by key (+ path and menutype, checked), optionally its whole subtree, or a whole menutype; every entry carries the reason. A subtree or menutype hide never takes a working screen inside it (users, smart search, tags, search, contact): such an item stays and is listed unresolved until an entry names it by its own key and reason. Contracts not listed use the automatic rule alone.",
+  "contracts": {
+    "ja-boxing/j6/1.0.3": {
+      "hide": [
+        {
+          "key": "menuItem-152",
+          "path": "pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-156",
+          "path": "pages/users/login-form",
+          "menutype": "mainmenu",
+          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-157",
+          "path": "pages/users/registration-form",
+          "menutype": "mainmenu",
+          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-158",
+          "path": "pages/users/user-profile",
+          "menutype": "mainmenu",
+          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-162",
+          "path": "pages/j-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-163",
+          "path": "pages/j-content/category-blog",
+          "menutype": "mainmenu",
+          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-166",
+          "path": "pages/j-content/blog-detail",
+          "menutype": "mainmenu",
+          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-boxing/j6/1.0.4": {
+      "hide": [
+        {
+          "key": "menuItem-152",
+          "path": "pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-156",
+          "path": "pages/users/login-form",
+          "menutype": "mainmenu",
+          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-157",
+          "path": "pages/users/registration-form",
+          "menutype": "mainmenu",
+          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-158",
+          "path": "pages/users/user-profile",
+          "menutype": "mainmenu",
+          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-162",
+          "path": "pages/j-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-163",
+          "path": "pages/j-content/category-blog",
+          "menutype": "mainmenu",
+          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-166",
+          "path": "pages/j-content/blog-detail",
+          "menutype": "mainmenu",
+          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-boxing/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-152",
+          "path": "pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-156",
+          "path": "pages/users/login-form",
+          "menutype": "mainmenu",
+          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-157",
+          "path": "pages/users/registration-form",
+          "menutype": "mainmenu",
+          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-158",
+          "path": "pages/users/user-profile",
+          "menutype": "mainmenu",
+          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-162",
+          "path": "pages/j-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-163",
+          "path": "pages/j-content/category-blog",
+          "menutype": "mainmenu",
+          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-166",
+          "path": "pages/j-content/blog-detail",
+          "menutype": "mainmenu",
+          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-conf/j6/1.0.3": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-106",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-107",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-108",
+          "path": "j-pages/user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-109",
+          "path": "j-pages/edit-user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-111",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-diner/j6/1.0.4": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-119",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-120",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "j-pages/user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-122",
+          "path": "j-pages/edit-user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-125",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-directory/j6/1.0.3": {
+      "hide": [
+        {
+          "key": "menuItem-160",
+          "path": "2015-05-27-03-13-06",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-174",
+          "path": "features/shortcodes",
+          "menutype": "mainmenu",
+          "reason": "\"Shortcodes\" demonstrates the template's content shortcodes; it is not a page of the business"
+        }
+      ],
+      "keep": []
+    },
+    "ja-donate/j6/1.0.7": {
+      "hide": [
+        {
+          "key": "menuItem-126",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-128",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-essence/j6/1.0.10": {
+      "hide": [
+        {
+          "key": "menuItem-104",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-105",
+          "path": "pages/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-essence/j6/1.0.9": {
+      "hide": [
+        {
+          "key": "menuItem-104",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-105",
+          "path": "pages/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-impact/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-110",
+          "path": "pages/j-page",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Page\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-115",
+          "path": "pages/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-mood/j6/1.0.4": {
+      "hide": [
+        {
+          "key": "menuItem-157",
+          "path": "pages/j-page",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Page\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-169",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla!\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": [
+        {
+          "key": "menuItem-170",
+          "path": "pages/j-page/get-in-touch",
+          "menutype": "mainmenu",
+          "reason": "a contact form is a working feature of the business, not a sample screen; kept until the PO decides"
+        }
+      ]
+    },
+    "ja-morgan/j6/1.0.9": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-109",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-110",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-111",
+          "path": "j-pages/profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-112",
+          "path": "j-pages/edit-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-115",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-nova/j6/1.0.9": {
+      "hide": [
+        {
+          "menutype": "jcontent",
+          "reason": "the \"jcontent\" footer menu (module \"J! Content\") lists only Joomla sample content views of the demo"
+        }
+      ],
+      "keep": []
+    },
+    "ja-phio/j6/1.0.8": {
+      "hide": [
+        {
+          "key": "menuItem-109",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-110",
+          "path": "pages/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-podcast/j6/1.0.7": {
+      "hide": [
+        {
+          "key": "menuItem-118",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-123",
+          "path": "pages/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-prodex/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-104",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-105",
+          "path": "pages/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-rent/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-128",
+          "path": "explore/joomla-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-144",
+          "path": "explore/features/shortcodes",
+          "menutype": "mainmenu",
+          "reason": "\"Shortcodes\" demonstrates the template's content shortcodes; it is not a page of the business"
+        },
+        {
+          "key": "menuItem-171",
+          "path": "explore/colors",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Colors\" lists the template's colour variants of the home page"
+        },
+        {
+          "key": "menuItem-156",
+          "path": "user-site-showcase",
+          "menutype": "usefull-links",
+          "reason": "\"User site showcase\" links to JoomlArt's gallery of other customers' sites, not to this business"
+        },
+        {
+          "key": "menuItem-126",
+          "path": "explore/joomla-pages/login-page",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-151",
+          "path": "explore/joomla-pages/registration-page",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-resort/j6/1.0.8": {
+      "hide": [
+        {
+          "key": "menuItem-114",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-115",
+          "path": "pages/j-pages/login",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-116",
+          "path": "pages/j-pages/registration",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-117",
+          "path": "pages/j-pages/user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-restaurant/j6/1.0.6": {
+      "hide": [
+        {
+          "key": "menuItem-109",
+          "path": "explore/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-150",
+          "path": "explore/themes",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Themes\" lists the template's colour variants of the home page"
+        },
+        {
+          "key": "menuItem-111",
+          "path": "explore/j-pages/login",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-112",
+          "path": "explore/j-pages/registration",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-113",
+          "path": "explore/j-pages/user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-122",
+          "path": "explore/j-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-resume/j6/1.0.7": {
+      "hide": [
+        {
+          "key": "menuItem-130",
+          "path": "j-pages",
+          "menutype": "other-menu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-133",
+          "path": "j-pages/login-form",
+          "menutype": "other-menu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-134",
+          "path": "j-pages/registration",
+          "menutype": "other-menu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-136",
+          "path": "j-pages/smart-seach",
+          "menutype": "other-menu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": [
+        {
+          "key": "menuItem-140",
+          "path": "j-pages/contact-us",
+          "menutype": "other-menu",
+          "reason": "a contact form is a working feature of the business, not a sample screen; kept until the PO decides"
+        }
+      ]
+    },
+    "ja-sensei/j6/1.0.6": {
+      "hide": [],
+      "keep": [
+        {
+          "key": "menuItem-110",
+          "path": "j-pages/login",
+          "menutype": "offcanvas",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        },
+        {
+          "key": "menuItem-111",
+          "path": "j-pages/registration",
+          "menutype": "offcanvas",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        },
+        {
+          "key": "menuItem-112",
+          "path": "j-pages/user-profile",
+          "menutype": "offcanvas",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        }
+      ]
+    },
+    "ja-seven/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-122",
+          "path": "page/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-127",
+          "path": "page/j-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-smallbiz/j6/1.0.4": {
+      "hide": [
+        {
+          "key": "menuItem-104",
+          "path": "pages/joomla-page",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-105",
+          "path": "pages/joomla-page/login",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-106",
+          "path": "pages/joomla-page/registration",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-114",
+          "path": "pages/joomla-page/user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-social-ii/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-174",
+          "path": "pages/colors",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Colors\" lists the template's colour variants of the home page"
+        },
+        {
+          "key": "menuItem-178",
+          "path": "pages/layouts",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Layouts\" lists the template's sidebar layout samples"
+        }
+      ],
+      "keep": [
+        {
+          "key": "menuItem-130",
+          "path": "als-login-page",
+          "menutype": "joomla-pages",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        },
+        {
+          "key": "menuItem-131",
+          "path": "als-registration-page",
+          "menutype": "joomla-pages",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        },
+        {
+          "key": "menuItem-170",
+          "path": "pages/joomla-pages/login-page",
+          "menutype": "mainmenu",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        },
+        {
+          "key": "menuItem-171",
+          "path": "pages/joomla-pages/registration",
+          "menutype": "mainmenu",
+          "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+        }
+      ]
+    },
+    "ja-spa/j6/1.0.7": {
+      "hide": [
+        {
+          "key": "menuItem-118",
+          "path": "page/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-spa/j6/1.0.8": {
+      "hide": [
+        {
+          "key": "menuItem-118",
+          "path": "page/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-space/j6/1.0.3": {
+      "hide": [
+        {
+          "key": "menuItem-109",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-110",
+          "path": "pages/j-pages/login",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-111",
+          "path": "pages/j-pages/registration",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-112",
+          "path": "pages/j-pages/user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-113",
+          "path": "pages/j-pages/edit-user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-space/j6/1.0.7": {
+      "hide": [
+        {
+          "key": "menuItem-109",
+          "path": "pages/j-pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        },
+        {
+          "key": "menuItem-110",
+          "path": "pages/j-pages/login",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-111",
+          "path": "pages/j-pages/registration",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-112",
+          "path": "pages/j-pages/user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-113",
+          "path": "pages/j-pages/edit-user-profile",
+          "menutype": "mainmenu",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-symphony/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-118",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-tour/j6/1.0.5": {
+      "hide": [
+        {
+          "key": "menuItem-118",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    },
+    "ja-vital/j6/1.0.7": {
+      "hide": [
+        {
+          "key": "menuItem-134",
+          "path": "pages/joomla-content",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+        }
+      ],
+      "keep": []
+    }
+  }
+}

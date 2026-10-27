@@ -1,0 +1,20 @@
+# The ten-minute publish of every lane's Brand/<host>/ to the public community shelf
+# (sync-brands.sh, TCH ADR 0013).
+#
+# Installed on a fleet host next to tracy-hooks.service:
+#   cp tracy-brands-sync.service tracy-brands-sync.timer /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now tracy-brands-sync.timer
+# Run it now: systemctl start tracy-brands-sync.service. Read it: journalctl -u tracy-brands-sync.
+[Unit]
+Description=Tracy fleet: publish every lane's brands to the community shelf
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/tracy-fleet/tools/sync-brands.sh
+# sync-brands.sh reads FLEET_RELAY_SECRET from /etc/tracy/hooks.env itself; nothing else is needed.
+# It writes /srv/tracy/_brands and pushes from it, so it runs as root like tracy-hooks does.
+NoNewPrivileges=yes
+ProtectHome=yes
+PrivateTmp=yes

@@ -1,0 +1,68 @@
+:root {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-milk-paper: #fff4ec;
+  --color-cocoa-ink: #1b0800;
+  --color-talent-peach: #f6c9a1;
+  --color-home-umber: #381a06;
+  --color-join-blush: #fae3cf;
+  --color-shortlist-clay: #78492d;
+  --color-shortlist-cream: #fdf4ed;
+  --color-peach-wash: #ffe2cc;
+  --color-profile-copper: #db9a68;
+  --color-fine-grey: #999999;
+
+  /* Typography — Font Families */
+  --font-die-grotesk-b-semibold: 'Die Grotesk B SemiBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-die-grotesk-b-bold: 'Die Grotesk B Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-die-grotesk-b-black: 'Die Grotesk B Black', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-die-grotesk-c-black: 'Die Grotesk C Black', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bonto: 'Bonto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-nav-control: 12px;
+  --leading-nav-control: 1.4;
+  --tracking-nav-control: 0px;
+  --text-body: 12px;
+  --leading-body: 1.4;
+  --tracking-body: 0px;
+  --text-skip-link: 15px;
+  --leading-skip-link: 1.4;
+  --tracking-skip-link: 0px;
+  --text-partner-label: 16px;
+  --leading-partner-label: 1.1;
+  --tracking-partner-label: 0px;
+  --text-intro-heading: 22px;
+  --leading-intro-heading: 1.1;
+  --tracking-intro-heading: 0px;
+  --text-statement-heading: 30px;
+  --leading-statement-heading: 1.18;
+  --tracking-statement-heading: 0px;
+  --text-display-title: 66px;
+  --leading-display-title: 1;
+  --tracking-display-title: -1.98px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+
+  /* Spacing */
+  --spacing-unit: 6px;
+  --spacing-6: 6px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+
+  /* Layout */
+  --element-gap: 12px;
+
+  /* Named Radii */
+  --radius-links: 0px;
+  --radius-images: 0px;
+  --radius-buttons: 0px;
+
+  /* Surfaces */
+  --surface-paper-white: #ffffff;
+  --surface-milk-paper: #fff4ec;
+  --surface-join-blush: #fae3cf;
+  --surface-cocoa-ink: #1b0800;
+  --surface-home-umber: #381a06;
+}

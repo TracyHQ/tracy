@@ -1,0 +1,1028 @@
+{
+  "contractId": "tracy-apple-studio",
+  "contractHash": "b54fc5f3117b836fbdb1bbe0ada8bf0fd885827f261729a33048681954874a10",
+  "surfaces": [
+    {
+      "id": "/",
+      "fields": {
+        "page.title": "Home",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+        "brand.name": "Tracy Apple",
+        "hero.cta.href": "/resources/contact",
+        "contact.email": "hello@tracy-apple.example"
+      }
+    },
+    {
+      "id": "/product",
+      "fields": {
+        "page.title": "Product",
+        "page.heading": "A clear foundation for the work ahead.",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services",
+      "fields": {
+        "page.title": "Service",
+        "page.heading": "Website services",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+        "service1.name": "Website strategy",
+        "service2.name": "Brand and interface design",
+        "service3.name": "Website development",
+        "service4.name": "Content and photography",
+        "service5.name": "Website care",
+        "service6.name": "Planning a focused campaign page"
+      }
+    },
+    {
+      "id": "/services/service-detail",
+      "fields": {
+        "page.title": "Website design and build",
+        "page.heading": "Website design and build",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/website-strategy",
+      "fields": {
+        "page.title": "Website strategy",
+        "page.heading": "Website strategy",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/brand-and-interface-design",
+      "fields": {
+        "page.title": "Brand and interface design",
+        "page.heading": "Brand and interface design",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/website-development",
+      "fields": {
+        "page.title": "Website development",
+        "page.heading": "Website development",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/content-and-photography",
+      "fields": {
+        "page.title": "Content and photography",
+        "page.heading": "Content and photography",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pricing",
+      "fields": {
+        "page.title": "Pricing",
+        "page.heading": "Choose the level of support that fits.",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+        "plan1.name": "Starter",
+        "plan1.amount": "$0",
+        "plan1.period": "demo plan",
+        "plan2.name": "Studio",
+        "plan2.amount": "$24",
+        "plan2.period": "per month · demo",
+        "plan3.name": "Foundry",
+        "plan3.amount": "$96",
+        "plan3.period": "per month · demo",
+        "pricing.notice": "Illustrative plans for this demo studio. Scope and prices are examples, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog",
+      "fields": {
+        "page.title": "Blog",
+        "page.heading": "Content guides",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/category-list",
+      "fields": {
+        "page.title": "All articles",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/archive",
+      "fields": {
+        "page.title": "Archive",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories",
+      "fields": {
+        "page.title": "Topics",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-procurement",
+      "fields": {
+        "page.title": "Website planning",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter",
+      "fields": {
+        "page.title": "Website operations",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-world",
+      "fields": {
+        "page.title": "Studio notes",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/style-guide",
+      "fields": {
+        "page.title": "Style guide",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/typography",
+      "fields": {
+        "page.title": "Typography",
+        "page.heading": "Typography",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/colors",
+      "fields": {
+        "page.title": "Color roles",
+        "page.heading": "Color roles",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/spacing",
+      "fields": {
+        "page.title": "Spacing and radius",
+        "page.heading": "Spacing and radius",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/faq",
+      "fields": {
+        "page.title": "Questions",
+        "page.heading": "Questions",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/contact",
+      "fields": {
+        "page.title": "Contact us",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+        "contact.title": "Tracy Studio — Demo enquiries",
+        "contact.notice": "This is a demonstration contact page. Replace the recipient email and business details before enabling enquiries for your own website.",
+        "contact.email": "hello@tracy-apple.example"
+      }
+    },
+    {
+      "id": "/resources/search",
+      "fields": {
+        "page.title": "Search",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/tags",
+      "fields": {
+        "page.title": "Tags",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/sign-in",
+      "fields": {
+        "page.title": "Sign in",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/home-2",
+      "fields": {
+        "page.title": "Home — variant",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/single-contact",
+      "fields": {
+        "page.title": "Talk to sales",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/single-tag",
+      "fields": {
+        "page.title": "Joomla",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/marketing-samples",
+      "fields": {
+        "page.title": "Marketing samples",
+        "page.heading": "One identity. Every message.",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/home-variation",
+      "fields": {
+        "page.title": "Home variation",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/home-onepage",
+      "fields": {
+        "page.title": "Home - Onepage",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+        "brand.name": "Tracy Apple",
+        "member1.name": "Adam Hale",
+        "member2.name": "Peter Lang",
+        "member3.name": "Sofia Lindqvist",
+        "member4.name": "Lucas Meyer"
+      }
+    },
+    {
+      "id": "/company/about",
+      "fields": {
+        "page.title": "About",
+        "page.heading": "Make the first impression feel like you.",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team",
+      "fields": {
+        "page.title": "Team",
+        "page.heading": "People",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+        "member1": "Adam Hale — Design Director",
+        "member2": "Peter Lang — Development Lead",
+        "member3": "Sofia Lindqvist — Brand Designer",
+        "member4": "Lucas Meyer — Research Lead"
+      }
+    },
+    {
+      "id": "/company/careers",
+      "fields": {
+        "page.title": "Careers",
+        "page.heading": "Small steps, a shared direction.",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/contact-category",
+      "fields": {
+        "page.title": "Contact category",
+        "page.heading": "Studio contacts",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/featured-contacts",
+      "fields": {
+        "page.title": "Featured contacts",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/news-feeds",
+      "fields": {
+        "page.title": "News feeds",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/wrapper",
+      "fields": {
+        "page.title": "Wrapper",
+        "page.heading": "Design reference",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/account/create-account",
+      "fields": {
+        "page.title": "Create account",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/account/profile",
+      "fields": {
+        "page.title": "Sign in",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/account/reset-password",
+      "fields": {
+        "page.title": "Reset password",
+        "page.heading": "Reset password",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/account/forgot-username",
+      "fields": {
+        "page.title": "Forgot username",
+        "page.heading": "Forgot username",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "fields": {
+        "page.title": "Website care",
+        "page.heading": "Website care",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/43-22-sure-fire-headline-formulas-that-work",
+      "fields": {
+        "page.title": "Planning a focused campaign page",
+        "page.heading": "Planning a focused campaign page",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "fields": {
+        "page.title": "Writing a useful website brief",
+        "page.heading": "Writing a useful website brief",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "fields": {
+        "page.title": "Designing a contact page people can use",
+        "page.heading": "Designing a contact page people can use",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/36-how-to-write-like-hemingway",
+      "fields": {
+        "page.title": "Editing website copy for clarity",
+        "page.heading": "Editing website copy for clarity",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/37-how-much-money-do-youtubers-make",
+      "fields": {
+        "page.title": "Choosing what belongs on the homepage",
+        "page.heading": "Choosing what belongs on the homepage",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "fields": {
+        "page.title": "Building an editorial calendar",
+        "page.heading": "Building an editorial calendar",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/tracyagent",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/tags/t4-framework",
+      "fields": {
+        "page.title": "T4 Framework",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "fields": {
+        "page.title": "Making service pages more specific",
+        "page.heading": "Making service pages more specific",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "fields": {
+        "page.title": "Writing headings that guide a reader",
+        "page.heading": "Writing headings that guide a reader",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "fields": {
+        "page.title": "Using customer stories responsibly",
+        "page.heading": "Using customer stories responsibly",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "fields": {
+        "page.title": "A simple content review workflow",
+        "page.heading": "A simple content review workflow",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "fields": {
+        "page.title": "Lessons from a website discovery workshop",
+        "page.heading": "Lessons from a website discovery workshop",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "fields": {
+        "page.title": "Keeping project communication clear",
+        "page.heading": "Keeping project communication clear",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "fields": {
+        "page.title": "A thoughtful follow-up after launch",
+        "page.heading": "A thoughtful follow-up after launch",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised",
+      "fields": {
+        "page.title": "Studio resources",
+        "page.heading": "Studio resources",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories",
+      "fields": {
+        "page.title": "Explore the studio",
+        "page.heading": "Explore the studio",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical",
+      "fields": {
+        "page.title": "Practical guides",
+        "page.heading": "Practical guides",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "fields": {
+        "page.title": "Inside the studio",
+        "page.heading": "Inside the studio",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "fields": {
+        "page.title": "Studio life",
+        "page.heading": "Studio life",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages",
+      "fields": {
+        "page.title": "Website pages",
+        "page.heading": "Website pages",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/17-magazine",
+      "fields": {
+        "page.title": "Insights",
+        "page.heading": "Insights",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "fields": {
+        "page.title": "Choosing a CMS your team can use",
+        "page.heading": "Choosing a CMS your team can use",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/demo",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "fields": {
+        "page.title": "Asking better questions about hosting",
+        "page.heading": "Asking better questions about hosting",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "fields": {
+        "page.title": "Preparing an asset inventory",
+        "page.heading": "Preparing an asset inventory",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "fields": {
+        "page.title": "Reviewing third-party integrations",
+        "page.heading": "Reviewing third-party integrations",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "fields": {
+        "page.title": "Comparing proposals on the same basis",
+        "page.heading": "Comparing proposals on the same basis",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "fields": {
+        "page.title": "Studio notes: making time for improvements",
+        "page.heading": "Studio notes: making time for improvements",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "fields": {
+        "page.title": "Studio notes: welcoming a new perspective",
+        "page.heading": "Studio notes: welcoming a new perspective",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "fields": {
+        "page.title": "Studio notes: reviewing work together",
+        "page.heading": "Studio notes: reviewing work together",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "fields": {
+        "page.title": "Studio notes: a better project kickoff",
+        "page.heading": "Studio notes: a better project kickoff",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "fields": {
+        "page.title": "Studio notes: starting with the customer",
+        "page.heading": "Studio notes: starting with the customer",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "fields": {
+        "page.title": "Reducing unnecessary page weight",
+        "page.heading": "Reducing unnecessary page weight",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "fields": {
+        "page.title": "Making recovery part of launch planning",
+        "page.heading": "Making recovery part of launch planning",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/Lawrence",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "fields": {
+        "page.title": "A routine for website updates",
+        "page.heading": "A routine for website updates",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "fields": {
+        "page.title": "Keeping forms connected to your team",
+        "page.heading": "Keeping forms connected to your team",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "fields": {
+        "page.title": "Reading website analytics with a purpose",
+        "page.heading": "Reading website analytics with a purpose",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/DamonZ",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/tags/jooma-4-x",
+      "fields": {
+        "page.title": "Jooma 4.x",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/tags/joomla-3-9",
+      "fields": {
+        "page.title": "Joomla 3.9",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": "Adam Hale — Design Director",
+        "page.heading": "Adam Hale — Design Director",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "fields": {
+        "page.title": "Peter Lang — Development Lead",
+        "page.heading": "Peter Lang — Development Lead",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "fields": {
+        "page.title": "Sofia Lindqvist — Brand Designer",
+        "page.heading": "Sofia Lindqvist — Brand Designer",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "fields": {
+        "page.title": "Lucas Meyer — Research Lead",
+        "page.heading": "Lucas Meyer — Research Lead",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "fields": {
+        "page.title": "How the demo team works together",
+        "page.heading": "How the demo team works together",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "fields": {
+        "page.title": "Meet the people behind a project",
+        "page.heading": "Meet the people behind a project",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised",
+      "fields": {
+        "page.title": "News feeds",
+        "page.heading": "Industry updates",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/margarete69",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/authors/author/dion.parker",
+      "fields": {
+        "page.title": "Authors",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/1-about-us",
+      "fields": {
+        "page.title": "About us",
+        "page.heading": "About us",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/13-full-width",
+      "fields": {
+        "page.title": "Full width",
+        "page.heading": "Full width",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "fields": {
+        "page.title": "Sidebar Left + Content",
+        "page.heading": "Sidebar Left + Content",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "fields": {
+        "page.title": "Content + Sidebar Right",
+        "page.heading": "Content + Sidebar Right",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "fields": {
+        "page.title": "Testing a website before launch",
+        "page.heading": "Testing a website before launch",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": "Planning a website migration",
+        "page.heading": "Planning a website migration",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "fields": {
+        "page.title": "Keeping images sharp on smaller screens",
+        "page.heading": "Keeping images sharp on smaller screens",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "fields": {
+        "page.title": "Making a website easy to maintain",
+        "page.heading": "Making a website easy to maintain",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "fields": {
+        "page.title": "A practical handover checklist",
+        "page.heading": "A practical handover checklist",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "fields": {
+        "page.title": "Testing keyboard navigation",
+        "page.heading": "Testing keyboard navigation",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": "Inside a collaborative design review",
+        "page.heading": "Inside a collaborative design review",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "fields": {
+        "page.title": "Preparing for a team photo session",
+        "page.heading": "Preparing for a team photo session",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "fields": {
+        "page.title": "A workspace that supports creative work",
+        "page.heading": "A workspace that supports creative work",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "fields": {
+        "page.title": "From workshop notes to a page plan",
+        "page.heading": "From workshop notes to a page plan",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "fields": {
+        "page.title": "Organising a useful inspiration library",
+        "page.heading": "Organising a useful inspiration library",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "fields": {
+        "page.title": "Keeping project decisions findable",
+        "page.heading": "Keeping project decisions findable",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "fields": {
+        "page.title": "Making room for informal conversations",
+        "page.heading": "Making room for informal conversations",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "fields": {
+        "page.title": "A team lunch with a purpose",
+        "page.heading": "A team lunch with a purpose",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "fields": {
+        "page.title": "Collecting inspiration outside the studio",
+        "page.heading": "Collecting inspiration outside the studio",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": "Sharing knowledge in small sessions",
+        "page.heading": "Sharing knowledge in small sessions",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/32-header-1",
+      "fields": {
+        "page.title": "Header 1",
+        "page.heading": "Header 1",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/33-header-2",
+      "fields": {
+        "page.title": "Header 2",
+        "page.heading": "Header 2",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/34-header-3",
+      "fields": {
+        "page.title": "Header 3",
+        "page.heading": "Header 3",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/35-header-4",
+      "fields": {
+        "page.title": "Header 4 (Main menu - Logo - Topbar right)",
+        "page.heading": "Header 4 (Main menu - Logo - Topbar right)",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "fields": {
+        "page.title": "Joomla! announcements",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/16-3-columns",
+      "fields": {
+        "page.title": "3 Columns",
+        "page.heading": "3 Columns",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/17-layouts",
+      "fields": {
+        "page.title": "Layouts",
+        "page.heading": "Layouts",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/31-home-dark",
+      "fields": {
+        "page.title": "Home Dark",
+        "page.heading": "Home Dark",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/65-offline-page",
+      "fields": {
+        "page.title": "Offline page",
+        "page.heading": "Offline page",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/46-features-page",
+      "fields": {
+        "page.title": "Features page",
+        "page.heading": "Features page",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/48-faqs",
+      "fields": {
+        "page.title": "FAQs",
+        "page.heading": "FAQs",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/64-error-page",
+      "fields": {
+        "page.title": "Error page",
+        "page.heading": "Error page",
+        "disclosure": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy."
+      }
+    }
+  ]
+}

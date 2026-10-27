@@ -1,0 +1,29 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#fffffc",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas, card surfaces, button fills — the slightly warm off-white prevents stark contrast against black ink, giving the entire site a printed-paper warmth rather than a digital-screen feel"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All text, borders, navigation background, button borders, icon strokes — the only foreground color in the system, used at full saturation with no opacity reductions"
+    }
+  },
+  "font": {
+    "circular-std": {
+      "$value": "Circular Std",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all UI and editorial text. Used at 400 for body, nav, and captions; 700 for emphasis and display-level statements. The display sizes (109–201px) with tightened tracking and 0.80 line-height create headlines that function as architectural objects — each word occupies physical space, almost like load-bearing elements."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.clouarchitects.com",
+      "siteName": "CLOU architects",
+      "extractedAt": "2026-06-03T20:37:26.008Z",
+      "variant": "compact"
+    }
+  }
+}

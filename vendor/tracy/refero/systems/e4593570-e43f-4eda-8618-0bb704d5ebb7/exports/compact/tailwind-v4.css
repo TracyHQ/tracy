@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-parchment: #dbd6d0;
+  --color-carbon-ink: #1e1f1f;
+  --color-pitch-black: #000000;
+
+  /* Typography */
+  --font-lausanne: 'Lausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gunsan: 'Gunsan', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

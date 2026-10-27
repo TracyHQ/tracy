@@ -1,0 +1,353 @@
+{
+  "dos": [
+    "Use Paper White (#ffffff) as the default canvas and card surface.",
+    "Set display headlines in Inter 700: use 64px/1.05 with -1.92px tracking for hero statements and 48px/1.05 with -1.44px tracking for major editorial transitions.",
+    "Use Ink (#1a1a1d) with Paper White text for filled conversion buttons; use 6px radius and 8px 14px padding.",
+    "Build trust, metric, and testimonial cards with 16px radius, 28px padding, a 1px Stone (#ecebea) border, and 0 1px 2px rgba(0,0,0,0.04).",
+    "Use Sunlit Wash (#fef3c7), Honey Line (#fde68a), and Amber Ink (#945424) together for promotional strips and warm selected pills.",
+    "Keep body copy Graphite (#5c5959) at 16px/1.5 and use Ash (#a7a2a1) only for metadata and supporting text.",
+    "Use 4px as the spacing base; compose compact clusters with 6px, 8px, 12px, and 16px gaps, then give major sections a 73px gap."
+  ],
+  "donts": [
+    "Do not use saturated blue, violet, green, or red as page-wide conversion colors; reserve pastel blue and lilac for object-card accents.",
+    "Do not use pill radii on rectangular conversion buttons; keep filled and discovery buttons at 6px or 8px radius.",
+    "Do not make cards borderless or heavily elevated; use Stone (#ecebea) outlines and the 0 1px 2px rgba(0,0,0,0.04) card shadow.",
+    "Do not set body text in Ink (#1a1a1d) by default; reserve Ink for headings, emphatic labels, and filled controls.",
+    "Do not spread the Sunlit Wash (#fef3c7) across whole content sections; confine it to the announcement layer, selected filters, and localized hero glow.",
+    "Do not use loose positive tracking on large headings; keep display tracking at -0.0300em and section-heading tracking at -0.0250em.",
+    "Do not introduce dense dashboard grids above the fold; lead with one centered thought and peripheral object fragments."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page backgrounds, card surfaces, inverted text, and light navigation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1a1a1d",
+      "name": "Ink",
+      "role": "Display headlines, logo marks, icons, and filled conversion buttons; the near-black creates the system's decisive contrast against Paper White",
+      "group": "neutral"
+    },
+    {
+      "hex": "#454447",
+      "name": "Charcoal",
+      "role": "Navigation labels, links, and secondary dark interface text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5c5959",
+      "name": "Graphite",
+      "role": "Body copy, explanatory text, and secondary content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a7a2a1",
+      "name": "Ash",
+      "role": "Captions, trust statements, quiet metadata, and low-emphasis links",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f4f3",
+      "name": "Porcelain",
+      "role": "Hairline card borders, dividers, and pale neutral fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ecebea",
+      "name": "Stone",
+      "role": "Visible card outlines and quiet structural borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fffbeb",
+      "name": "Butter Paper",
+      "role": "Warm-tinted object tiles and selected audience-filter surfaces",
+      "group": "accent"
+    },
+    {
+      "hex": "#fef3c7",
+      "name": "Sunlit Wash",
+      "role": "Announcement-strip fill, soft decorative highlights, and the warm hero atmosphere",
+      "group": "accent",
+      "gradient": "radial-gradient(100% 70% at 50% 0%, oklch(0.9243 0.1151 95.76 / 0.5) 0%, rgba(0, 0, 0, 0) 100%)"
+    },
+    {
+      "hex": "#fde68a",
+      "name": "Honey Line",
+      "role": "Borders around warm audience pills and promotional surfaces",
+      "group": "accent"
+    },
+    {
+      "hex": "#945424",
+      "name": "Amber Ink",
+      "role": "Orange text accent for links, tags, and emphasized short phrases",
+      "group": "accent"
+    },
+    {
+      "hex": "#eff6ff",
+      "name": "Cloud Blue",
+      "role": "Pale blue object-card fills and background accents",
+      "group": "accent"
+    },
+    {
+      "hex": "#d2e6fe",
+      "name": "Blue Note Edge",
+      "role": "Borders for blue-tinted note objects",
+      "group": "accent"
+    },
+    {
+      "hex": "#f0e2ff",
+      "name": "Lilac Note Edge",
+      "role": "Borders for lilac-tinted note objects",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page is a centered, max-width-contained marketing composition on a full Paper White canvas. A 64px top navigation is followed by a slim full-width yellow announcement bar; the hero centers a large multi-line statement, supporting paragraph, and paired conversion controls while small pastel note objects float asymmetrically around its edges. The hero flows into a contained landscape video with rounded corners and a centered caption, then spacious white sections with centered text introductions, three-column metric cards, monochrome publication-logo rows, and multi-column testimonial cards. Sections are separated primarily by generous blank space and extremely pale horizontal boundaries rather than alternating dark bands; the footer returns to grouped link columns.",
+  "imagery": "Imagery is sparse and product-adjacent: the hero uses contained floating note, task, document, and bookmark objects rather than a large illustration, each rendered as a white or softly tinted mini-card with a tiny pastel icon and faint shadow. A single contained lifestyle video frame supplies human context; it uses natural, bright photography, rounded corners, and a black circular play overlay. Faint outline file and note icons drift in the whitespace of subsequent sections as low-contrast atmosphere. The page is text-dominant, with imagery acting as evidence that ideas are tangible connected objects rather than decorative wallpaper.",
+  "similar": [
+    {
+      "why": "White knowledge-work canvas, near-black interface text, contained document-like cards, and sparse monochrome navigation.",
+      "business": "Notion"
+    },
+    {
+      "why": "Scattered idea-object compositions make notes and artifacts feel spatial rather than file-bound.",
+      "business": "Milanote"
+    },
+    {
+      "why": "Editorially spaced productivity marketing, soft rounded white cards, and restrained pastel surface accents.",
+      "business": "Craft"
+    },
+    {
+      "why": "Text-led knowledge-management presentation with centered statements, testimonial proof, and quiet warm accent treatments.",
+      "business": "Readwise"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "links": "6px",
+      "pills": "9999px",
+      "images": "12px",
+      "inputs": "8px",
+      "buttons": "6px",
+      "iconTiles": "8px",
+      "compactCards": "6px",
+      "featureCards": "20px"
+    },
+    "elementGap": "6px",
+    "sectionGap": "73px",
+    "cardPadding": "28px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Primary page canvas, navigation, cards, and footer."
+    },
+    {
+      "hex": "#fffbeb",
+      "name": "Butter Paper",
+      "level": 1,
+      "purpose": "Warm object surfaces and selected audience controls."
+    },
+    {
+      "hex": "#eff6ff",
+      "name": "Cloud Blue",
+      "level": 2,
+      "purpose": "Pastel knowledge-object backgrounds and small icon areas."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 1px 2px rgba(0,0,0,0.04)",
+      "element": "Floating Knowledge Object"
+    },
+    {
+      "style": "0 1px 2px rgba(0,0,0,0.04)",
+      "element": "Metric Card"
+    },
+    {
+      "style": "0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)",
+      "element": "Media Testimonial Frame"
+    }
+  ],
+  "northStar": "Capacities - sunlit desk of ideas. Build pages as an open white workspace where connected notes drift around one central thought.",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 10,
+      "family": "ui-sans-serif",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "mono-metadata",
+      "size": 12,
+      "family": "JetBrains Mono",
+      "weight": 400,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "nav",
+      "size": 14,
+      "family": "ui-sans-serif",
+      "weight": 400,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "eyebrow",
+      "size": 14,
+      "family": "ui-sans-serif",
+      "weight": 600,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.35
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "family": "ui-sans-serif",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-small",
+      "size": 18,
+      "family": "ui-sans-serif",
+      "weight": 600,
+      "lineHeight": 1.56,
+      "letterSpacing": -0.45
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "family": "ui-sans-serif",
+      "weight": 700,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.9
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "family": "Inter",
+      "weight": 700,
+      "lineHeight": 1.05,
+      "letterSpacing": -1.44
+    },
+    {
+      "role": "hero-display",
+      "size": 64,
+      "family": "Inter",
+      "weight": 700,
+      "lineHeight": 1.05,
+      "letterSpacing": -1.92
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Public-site header",
+      "description": "Use a 64px-high Paper White bar with Ink logo text at 18px/700 and Charcoal navigation at 14px/500. Space compact controls on the 4px grid; use 8px radius on icon controls and a 1px solid Porcelain separator only where needed."
+    },
+    {
+      "name": "Seasonal Announcement Strip",
+      "role": "Promotional message",
+      "description": "Place a full-width Sunlit Wash strip below navigation with a 1px solid Honey Line border. Set copy in Amber Ink at 14px/500 with 8px vertical padding and a compact icon-plus-text gap."
+    },
+    {
+      "name": "Compact Inverted Header Button",
+      "role": "Header conversion control",
+      "description": "Use Ink fill, Paper White 14px/500 text, 6px radius, and 6px 10px padding. Keep the white border treatment at 1px where it sits against pale navigation surfaces."
+    },
+    {
+      "name": "Filled Conversion Button",
+      "role": "Primary page conversion",
+      "description": "Use Ink fill with Paper White 16px/500 text, 6px radius, and 8px 14px padding. Pair with a simple arrow icon at a 6px gap; do not replace it with a chromatic fill."
+    },
+    {
+      "name": "Text Discovery Button",
+      "role": "Secondary conversion link",
+      "description": "Use a transparent surface, Charcoal 16px/500 text, a 1px Charcoal border, 8px radius, and 8px 12px padding. Keep its weight visually lighter than the Filled Conversion Button."
+    },
+    {
+      "name": "Pill Audience Filter",
+      "role": "Segment selector",
+      "description": "Use Paper White fill, Ash text at 14px, a 1px solid Porcelain border, 9999px radius, and 8px 14px padding. The selected warm treatment uses Butter Paper fill, Honey Line border, and Amber Ink text."
+    },
+    {
+      "name": "Floating Knowledge Object",
+      "role": "Hero decorative product artifact",
+      "description": "Build small Paper White note cards with 12px or 16px radius, a 1px Stone or pastel-tinted border, and the shadow 0 1px 2px rgba(0,0,0,0.04). Use 14px/600 Ink titles, tiny muted metadata, and isolated pastel icon tiles; position these as peripheral, slightly rotated fragments around the central hero copy."
+    },
+    {
+      "name": "Metric Card",
+      "role": "Trust and social-proof statistic",
+      "description": "Use a Paper White surface with a 1px Stone border, 16px radius, 28px padding, and 0 1px 2px rgba(0,0,0,0.04). Center an 8px icon tile, an Ink 36px/700 value, a 14px/600 label, and Ash 12px supporting copy."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Customer quote",
+      "description": "Use a Paper White card with a 1px Stone border, 16px radius, 28px padding, and 0 1px 2px rgba(0,0,0,0.04). Set the quote in Graphite at 15px/400 with 1.7 line-height and use an oversized Ash quotation glyph as a quiet corner detail."
+    },
+    {
+      "name": "Media Testimonial Frame",
+      "role": "Embedded product-story video",
+      "description": "Use a contained photographic frame with 12px radius and the shadow 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04). Overlay a solid black circular play control with a white triangular icon; keep the caption centered below in Graphite italic styling."
+    },
+    {
+      "name": "Publication Logo Row",
+      "role": "Press recognition",
+      "description": "Set an uppercase Ash 10px/400 label above a centered row of monochrome gray publication marks. Keep logos subdued rather than black, with 24px or greater horizontal separation."
+    },
+    {
+      "name": "Footer Link Group",
+      "role": "Footer navigation",
+      "description": "Use 14px/400 Ash links in vertical lists with 8px gaps; group headings use 14px/600 uppercase labels with 0.35px tracking. Separate footer regions using 1px Porcelain rules."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display family for the 64px/700 hero and 48px/700 editorial transition headings. The -3% tracking makes broad, heavy letters lock into dense multi-line thought blocks rather than airy marketing headlines.",
+      "sizes": "9px, 48px, 64px",
+      "family": "Inter",
+      "weight": "500, 700",
+      "lineHeight": "1.05, 1.25, 1.33",
+      "substitute": "Arial, ui-sans-serif, system-ui",
+      "letterSpacing": "-1.92px at 64px; -1.44px at 48px; -0.0300em to -0.0250em"
+    },
+    {
+      "role": "Interface and body family: 14px/500 navigation, 16px/500 buttons, 16px/400 body copy, 18px/600 feature headings, and 36px/700 section headings. It keeps UI labels compact while section type retains the same firm, close-set voice as Inter display.",
+      "sizes": "9px, 10px, 11px, 12px, 13px, 14px, 15px, 16px, 17px, 18px, 28px, 36px",
+      "family": "ui-sans-serif",
+      "weight": "400, 500, 600, 700, 800",
+      "lineHeight": "1.10, 1.25, 1.30, 1.33, 1.43, 1.50, 1.56, 1.60, 1.63, 1.70",
+      "substitute": "Inter, system-ui, -apple-system, Segoe UI",
+      "letterSpacing": "-0.9px at 36px; -0.45px at 18px; +0.35px at 14px uppercase; otherwise normal to -0.0200em"
+    },
+    {
+      "role": "Small structured text inside product-like objects and technical note content; its fixed-width texture distinguishes metadata and snippets from prose.",
+      "sizes": "12px",
+      "family": "JetBrains Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.33",
+      "substitute": "SFMono-Regular, Menlo, Consolas, monospace",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Capacities is a white knowledge-work canvas animated by small, paper-like object cards, faint pastel category tints, and a warm yellow halo behind the opening statement. Nearly black type carries the page; color stays peripheral in the announcement strip, floating note labels, tiny icon tiles, and lightly tinted product surfaces. Large Inter display headlines use tight negative tracking and stacked line breaks, while the remaining interface stays compact in system sans typography, thin warm-gray rules, restrained shadows, and generously rounded cards.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Paper White: #ffffff — Page backgrounds, card surfaces, inverted text, and light navigation\n- Ink: #1a1a1d — Display headlines, logo marks, icons, and filled conversion buttons; the near-black creates the system's decisive contrast against Paper White\n- Charcoal: #454447 — Navigation labels, links, and secondary dark interface text\n- Graphite: #5c5959 — Body copy, explanatory text, and secondary content\n- Ash: #a7a2a1 — Captions, trust statements, quiet metadata, and low-emphasis links\n- Porcelain: #f5f4f3 — Hairline card borders, dividers, and pale neutral fills\n- Stone: #ecebea — Visible card outlines and quiet structural borders\n- Butter Paper: #fffbeb — Warm-tinted object tiles and selected audience-filter surfaces\n- Sunlit Wash: radial-gradient(100% 70% at 50% 0%, oklch(0.9243 0.1151 95.76 / 0.5) 0%, rgba(0, 0, 0, 0) 100%) — Announcement-strip fill, soft decorative highlights, and the warm hero atmosphere\n- Honey Line: #fde68a — Borders around warm audience pills and promotional surfaces\n- Amber Ink: #945424 — Orange text accent for links, tags, and emphasized short phrases\n- Cloud Blue: #eff6ff — Pale blue object-card fills and background accents\n- Blue Note Edge: #d2e6fe — Borders for blue-tinted note objects\n- Lilac Note Edge: #f0e2ff — Borders for lilac-tinted note objects\n\nCreate a centered hero on Paper White with a 64px/700 Inter Ink headline, 67.2px line-height, -1.92px tracking, a localized Sunlit Wash radial glow, and scattered 12px-radius floating knowledge objects edged in Blue Note Edge or Lilac Note Edge.\nCreate a Filled Conversion Button with Ink fill, Paper White 16px/500 system-sans text, 6px radius, 8px 14px padding, and a small arrow separated by 6px.\nCreate a three-column Metric Card row using Paper White cards, Stone 1px borders, 16px radius, 28px padding, and Ink 36px/700 numeric values.\nCreate a contained video testimonial using a bright lifestyle photograph in a 12px-radius frame with the Media Testimonial Frame shadow and a black circular play control.\nCreate a seasonal announcement strip using Sunlit Wash fill, Honey Line 1px borders, and Amber Ink 14px/500 text."
+    }
+  ]
+}

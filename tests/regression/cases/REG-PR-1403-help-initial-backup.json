@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-1403-help-initial-backup",
+  "kind": "fix",
+  "title": "/help knows every site starts with \"Initial backup — site as built\" and never says there is nothing earlier to go back to",
+  "pr": 1403,
+  "area": "assistant/product-facts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Build the Help system prompt (systemPrompt) with no asker context."],
+  "expect": [
+    "S1: it states that every site starts with one backup already made and names it \"Initial backup — site as built\", the name Site changes shows (tracy-site-tabs strings backup.initialName)."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/assistant/prompt.js (PRODUCT)"
+  },
+  "evidence": "16/10/2026 local stand: \"/help How do I undo a change … can I get my old site back?\" answered that a backup the person had not made left nothing earlier to go back to, while Site changes listed \"Initial backup — site as built · Full backup\"",
+  "fence": "The product facts are the only facts Help knows; the backup fact must be among them",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/assistant.test.mjs"],
+    "tests": ["Help prompt knows every site starts with the Initial backup"]
+  }
+}

@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-bone-paper: #edeae4;
+  --color-stone-gray: #c9c7c4;
+  --color-ink-black: #28282a;
+
+  /* Typography — Font Families */
+  --font-waka-sans: 'Waka Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

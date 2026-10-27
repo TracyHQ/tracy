@@ -1,0 +1,49 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, all section backgrounds — the true floor of the UI; every element floats above absolute black"
+    },
+    "salt": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Salt — All text, links, nav labels, borders, icons — the single foreground tone serving every text and UI edge function against black"
+    },
+    "ash": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Ash — Secondary labels, muted nav text, subdued body copy — mid-tone for visual hierarchy without introducing any hue"
+    },
+    "ghost-line": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Ghost Line — Grid tile borders, dividers — rgba(248,248,248,0.12) at 12% opacity; nearly invisible structural seams"
+    },
+    "veil": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Veil — Overlay labels, secondary text on image tiles — rgba(248,248,248,0.45) at 45% opacity for text sitting over photography"
+    }
+  },
+  "font": {
+    "dm-sans": {
+      "$value": "DM Sans",
+      "$type": "fontFamily",
+      "$description": "All body copy, navigation labels, press list items, links, captions. Weight 300 across every size — the site refuses to bold anything in this family, keeping the text layer visually quiet against photography."
+    },
+    "clashdisplay": {
+      "$value": "ClashDisplay",
+      "$type": "fontFamily",
+      "$description": "Project initials on tiles (44px weight 300, tracking -0.04em), section codes and labels (12-14px weight 300, tracking +0.05em to +0.14em), name logotype. The 44px weight-300 display setting — a nearly invisible letterform over a photograph — is the signature visual move of the portfolio."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://juliakrantz.com",
+      "siteName": "Julia Krantz",
+      "extractedAt": "2026-04-28T21:33:21.869Z",
+      "variant": "compact"
+    }
+  }
+}

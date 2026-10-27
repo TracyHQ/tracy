@@ -1,0 +1,31 @@
+{
+  "languageWord": "tiếng",
+  "names": {
+    "english": "en",
+    "tiếng anh": "en",
+    "vietnamese": "vi",
+    "tiếng việt": "vi",
+    "french": "fr",
+    "tiếng pháp": "fr",
+    "german": "de",
+    "tiếng đức": "de",
+    "spanish": "es",
+    "tiếng tây ban nha": "es",
+    "italian": "it",
+    "tiếng ý": "it",
+    "portuguese": "pt",
+    "tiếng bồ đào nha": "pt",
+    "dutch": "nl",
+    "tiếng hà lan": "nl",
+    "chinese": "zh",
+    "tiếng trung": "zh",
+    "japanese": "ja",
+    "tiếng nhật": "ja",
+    "korean": "ko",
+    "tiếng hàn": "ko",
+    "russian": "ru",
+    "tiếng nga": "ru",
+    "thai": "th",
+    "tiếng thái": "th"
+  }
+}

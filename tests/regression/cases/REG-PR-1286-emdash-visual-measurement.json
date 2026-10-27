@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1286-emdash-visual-measurement",
+  "kind": "fix",
+  "title": "Visual QA respects hidden roles, verified fragment status and occluded border geometry",
+  "pr": 1286,
+  "area": "site-editing/template-acceptance",
+  "cms": ["em"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "Measure ancestor-hidden navigation and display-none CTA on both sides, then expose the source CTA only.",
+    "Navigate twice to the same fragment, to another fragment, and to a real 404 document.",
+    "Scan a scrolled sticky header overlapping an input border, then adjacent visible, offscreen and nested hero borders."
+  ],
+  "expect": [
+    "Hidden roles are absent on both sides; a genuinely visible source-only role still produces a parity finding.",
+    "Same-document navigation preserves independently verified HTTP status; a real 404 never passes as 200.",
+    "A border proven covered by an opaque surface or border is ignored; real visible, offscreen and nested seams still produce findings."
+  ],
+  "selectors": {},
+  "evidence": "Independent responsive r10 observed 34 false nav/CTA findings plus null-response fragment navigation failure. Baseline and fixed fixture output are retained in acceptance evidence. Contact r12 false seam aligned sticky header bottom with an occluded input border at document y629.",
+  "fence": "Tests exercise the actual shared browser helpers against real HTTP fixtures; no model or customer site state.",
+  "run": {
+    "cmd": [
+      "env",
+      "RENDER_CHROME_CHANNEL=chrome",
+      "node",
+      "--test",
+      "--test-name-pattern=hidden responsive nav|same-document fragment navigation|seam scanning ignores",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs"
+    ],
+    "needs": ["chrome"],
+    "timeout_s": 90
+  }
+}

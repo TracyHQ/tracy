@@ -1,0 +1,80 @@
+{
+  "id": "QA-UNIT-REG-PR-1188-answer-actions-happy",
+  "itemIds": ["regression:REG-PR-1188-answer-actions"],
+  "requirement": "One action row under the last finished answer of any kind: a Help answer and a / command result end with dsh's copy, thumbs, branch and clock like an agent reply, until a new request is sent",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1188-answer-actions.json",
+    "ref": "PR #1188 (fix); fix evidence: tasks/evidence/answer-actions-2026-10-12/ (before/after screenshots on a real dsh page: agent reply, /help answer, / command result, row kept while typing, row moved after a new request, hover and focus)",
+    "invariant": "S1: the row gets answerId from done; a press shows the rating at once and posts {rating} to /api/assistant/turns/<id>/rating; a refusal puts it back; pressing the recorded rating posts {rating: null} and clears it. S2: the restored answer carries answerId, rating and at (epoch ms of the stored answer); a bad date carries no at; a live answer's at is the clock when it finished; the askBack row's at is the clock when it was given. S3: text for done, stopped-with-words and askBack; null otherwise. S4: every source test passes; the focus rule is outline 1px solid var(--ring) with no box-shadow. S5: the fork specs pass (CI=true corepack pnpm install --ignore-scripts --frozen-lockfile inside the submodule first).",
+    "productSources": [
+      "packages/brand/tracy-brand/src/client/styles.ts:9",
+      "packages/ui/tracy-assistant/src/client/help.ts:493",
+      "packages/ui/tracy-assistant/src/client/strings.ts:10",
+      "packages/ui/tracy-assistant/src/client/styles.ts:9",
+      "vendor/tracy/deepseek-harness/packages/client/ui-chat/src/client/chat/MessageIconActions.module.css:5",
+      "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/skeleton/InputBar.module.css:2"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-assistant/test/help-ui.test.mjs:73 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "rating: the answer id comes from done",
+    "rating a row that has no answer id yet does nothing",
+    "a restored answer brings back its id, its rating and when it was written",
+    "an answer carries the time it finished",
+    "the action row shows under a finished answer only",
+    "a finished answer ends with dsh's own action row",
+    "on the start screen each Help row sits in a flow item of its own",
+    "a question and the reply to a bare /help are upserted as an exchange",
+    "the action row under an answer takes focus as one 1px stroke",
+    "dsh's row sits as far under a Help answer as under an agent reply"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1188-answer-actions"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-assistant", "tracy-assistant"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1188-answer-actions",
+    "pr": 1188,
+    "kind": "fix",
+    "area": "assistant/help",
+    "file": "tests/regression/cases/REG-PR-1188-answer-actions.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-assistant/test/help.test.mjs",
+    "packages/ui/tracy-assistant/test/help-ui.test.mjs",
+    "packages/brand/tracy-brand/test/composer-primary-css.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "rating: the answer id comes from done",
+    "rating a row that has no answer id yet does nothing",
+    "a restored answer brings back its id, its rating and when it was written",
+    "an answer carries the time it finished",
+    "the action row shows under a finished answer only",
+    "a finished answer ends with dsh's own action row",
+    "on the start screen each Help row sits in a flow item of its own",
+    "a question and the reply to a bare /help are upserted as an exchange",
+    "the action row under an answer takes focus as one 1px stroke",
+    "dsh's row sits as far under a Help answer as under an agent reply"
+  ],
+  "timeoutS": 600
+}

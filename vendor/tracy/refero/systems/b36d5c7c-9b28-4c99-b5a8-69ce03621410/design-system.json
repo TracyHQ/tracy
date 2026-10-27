@@ -1,0 +1,296 @@
+{
+  "dos": [
+    "Use Void Black (#000000) as the universal background. Never use solid grays.",
+    "Achieve depth and hierarchy using translucent white overlays (e.g., rgba(255,255,255,0.08)), not shadows.",
+    "Reserve the vibrant Spline Blue (#0062ff) exclusively for primary call-to-action buttons.",
+    "Use a 24px radius for large panels/cards and a 12px radius for buttons.",
+    "Set all UI text, including headlines, in Spline Sans at a 400 or 500 font weight.",
+    "Maintain generous whitespace between sections (approx. 96px) to let content breathe.",
+    "Pair any imagery or illustrative elements with the core accent palette (Neon Pink, Golden Orb, Violet Haze)."
+  ],
+  "tags": [
+    "dark mode",
+    "3D",
+    "glow",
+    "glassmorphism",
+    "vibrant accent",
+    "translucent",
+    "minimal UI",
+    "creative tool",
+    "spacious",
+    "sans-serif"
+  ],
+  "donts": [
+    "Don't use drop shadows or box shadows for elevation.",
+    "Don't introduce new saturated colors for UI elements beyond the primary Spline Blue.",
+    "Don't use bold (700+) font weights; rely on size and color for typographic hierarchy.",
+    "Don't use fully opaque gray backgrounds for any component.",
+    "Don't use inconsistent corner radii; stick to the 12px/24px/pill system.",
+    "Don't outline buttons or inputs with solid borders; use translucent fills instead.",
+    "Don't place text directly on complex background imagery without a text protection scrim or overlay."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Global page background, the foundational canvas for all content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Panel Sheen",
+      "role": "Card and panel surfaces (CSS var: --color-panel-bg)",
+      "alpha": 0.08,
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Button Sheen",
+      "role": "Secondary button backgrounds (CSS var: --color-btn-bg)",
+      "alpha": 0.15,
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bright White",
+      "role": "Headlines, primary text, active icons, logos",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Cloud",
+      "role": "Secondary body text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Silver",
+      "role": "Tertiary text, metadata, placeholder text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Text Dim",
+      "role": "Inactive navigation link text",
+      "alpha": 0.7,
+      "group": "neutral"
+    },
+    {
+      "hex": "#191a1d",
+      "name": "Nav Background",
+      "role": "Opaque background for navigation bar on scroll",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0062ff",
+      "name": "Spline Blue",
+      "role": "Primary CTA buttons — the single, high-energy action color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff5cab",
+      "name": "Neon Pink",
+      "role": "Hero graphic accents and illustrative elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffb01f",
+      "name": "Golden Orb",
+      "role": "Hero graphic accents and illustrative elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#a770ff",
+      "name": "Violet Haze",
+      "role": "Hero graphic accents and illustrative elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#47b35f",
+      "name": "Emerald Glow",
+      "role": "Hero graphic accents and illustrative elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#ce9178",
+      "name": "Code Orange",
+      "role": "Syntax highlighting in code blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#6a9955",
+      "name": "Code Green",
+      "role": "Syntax highlighting in code blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#569cd6",
+      "name": "Code Blue",
+      "role": "Syntax highlighting in code blocks",
+      "group": "accent"
+    }
+  ],
+  "layout": "The layout leads with a full-bleed, immersive hero section with centered text over an animated visual background. Subsequent content is contained within a centered, max-width (approx. 1280px) column. The page structure is a simple vertical stack of sections separated by generous whitespace (96px+). Content is often arranged in multi-column grids, such as the 5-column community showcase and the multi-column logo marquee, to display information densely but cleanly.",
+  "imagery": "The visual language is split between abstract and concrete. The hero features amorphous, glowing 3D shapes that are purely atmospheric, setting a futuristic and creative tone. Below this, the imagery switches to product-focused showcases: a grid of thumbnails displaying user-generated 3D scenes and designs. All imagery serves to demonstrate the tool's capabilities, either by evoking creative possibility (abstract) or showing tangible results (showcase). There is no lifestyle photography; the product and its output are the heroes.",
+  "similar": [
+    {
+      "why": "Precision dark-mode UI with a custom sans-serif font and a single, vibrant accent color for key actions.",
+      "business": "Linear"
+    },
+    {
+      "why": "Developer-focused dark theme, emphasis on typography, and a minimalist interface with high-contrast elements.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Creative tool for digital products with a polished dark theme, clean typography, and focus on interactive examples.",
+      "business": "Framer"
+    },
+    {
+      "why": "AI creative tool with a futuristic dark UI, glowing accents, and emphasis on showcasing generated media.",
+      "business": "Runway"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "24px",
+      "pills": "99px",
+      "buttons": "12px",
+      "smallPanels": "16px"
+    },
+    "elementGap": "",
+    "sectionGap": "96px",
+    "cardPadding": "40px",
+    "pageMaxWidth": "1280px"
+  },
+  "category": "dev-tools",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "level": 0,
+      "purpose": "Global page background"
+    },
+    {
+      "hex": "#ffffff14",
+      "name": "Panel",
+      "level": 1,
+      "purpose": "Base card and large container surfaces"
+    },
+    {
+      "hex": "#ffffff26",
+      "name": "Interactive",
+      "level": 2,
+      "purpose": "Secondary buttons and interactive surfaces"
+    }
+  ],
+  "northStar": "Glowing Forms in the Void",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.35
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "display",
+      "size": 58,
+      "lineHeight": 1.22
+    }
+  ],
+  "components": [
+    {
+      "html": "<style>\n  :root {\n    --color-void-black: #000000;\n    --color-spline-blue: #0062ff;\n    --color-bright-white: #ffffff;\n    --color-cloud: #cccccc;\n    --color-silver: #999999;\n    --font-spline-sans: 'Inter', sans-serif;\n  }\n\n  .btn-group-wrapper {\n    background: var(--color-void-black);\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    padding: 56px 40px;\n    gap: 16px;\n    font-family: var(--font-spline-sans);\n  }\n\n  .btn-group-label {\n    font-family: var(--font-spline-sans);\n    font-size: 13px;\n    font-weight: 400;\n    color: var(--color-silver);\n    letter-spacing: 0.04em;\n    text-transform: uppercase;\n    margin-bottom: 8px;\n  }\n\n  .btn-row {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 12px;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .btn-primary {\n    display: inline-flex;\n    align-items: center;\n    gap: 10px;\n    background: var(--color-spline-blue);\n    color: var(--color-bright-white);\n    font-family: var(--font-spline-sans);\n    font-size: 16px;\n    font-weight: 500;\n    padding: 16px 24px;\n    border-radius: 12px;\n    border: none;\n    cursor: pointer;\n    text-decoration: none;\n    white-space: nowrap;\n    transition: opacity 0.2s;\n  }\n\n  .btn-primary:hover {\n    opacity: 0.88;\n  }\n\n  .btn-primary .btn-divider {\n    width: 1px;\n    height: 16px;\n    background: rgba(255,255,255,0.3);\n    display: inline-block;\n    margin: 0 2px;\n  }\n\n  .btn-primary .btn-sub {\n    font-size: 14px;\n    font-weight: 400;\n    color: rgba(255,255,255,0.75);\n  }\n\n  .btn-primary .btn-arrow {\n    font-size: 16px;\n    color: rgba(255,255,255,0.85);\n  }\n\n  .btn-secondary {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    background: rgba(255, 255, 255, 0.15);\n    color: var(--color-bright-white);\n    font-family: var(--font-spline-sans);\n    font-size: 16px;\n    font-weight: 500;\n    padding: 10px 20px;\n    border-radius: 12px;\n    border: none;\n    cursor: pointer;\n    text-decoration: none;\n    white-space: nowrap;\n    transition: background 0.2s;\n  }\n\n  .btn-secondary:hover {\n    background: rgba(255, 255, 255, 0.22);\n  }\n\n  .btn-ghost {\n    display: inline-flex;\n    align-items: center;\n    background: transparent;\n    color: rgba(255,255,255,0.7);\n    font-family: var(--font-spline-sans);\n    font-size: 16px;\n    font-weight: 400;\n    padding: 10px 16px;\n    border-radius: 12px;\n    border: none;\n    cursor: pointer;\n    text-decoration: none;\n    white-space: nowrap;\n    transition: color 0.2s;\n  }\n\n  .btn-ghost:hover {\n    color: var(--color-bright-white);\n  }\n\n  .btn-section-title {\n    font-family: var(--font-spline-sans);\n    font-size: 20px;\n    font-weight: 400;\n    color: var(--color-bright-white);\n    text-align: center;\n    margin-bottom: 4px;\n  }\n\n  .btn-section-sub {\n    font-family: var(--font-spline-sans);\n    font-size: 14px;\n    font-weight: 400;\n    color: var(--color-silver);\n    text-align: center;\n    margin-bottom: 24px;\n  }\n</style>\n<div class=\"btn-group-wrapper\">\n  <p class=\"btn-group-label\">Button Variants</p>\n  <p class=\"btn-section-title\">Ready to start creating?</p>\n  <p class=\"btn-section-sub\">Pick the interaction that fits your workflow.</p>\n  <div class=\"btn-row\">\n    <a href=\"#\" class=\"btn-primary\">\n      Get started\n      <span class=\"btn-divider\"></span>\n      <span class=\"btn-sub\">it's free</span>\n      <span class=\"btn-arrow\">→</span>\n    </a>\n    <a href=\"#\" class=\"btn-secondary\">Log In</a>\n    <a href=\"#\" class=\"btn-ghost\">Learn more</a>\n  </div>\n</div>",
+      "name": "CTA Button Group",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>\n  :root {\n    --color-void-black: #000000;\n    --color-bright-white: #ffffff;\n    --color-cloud: #cccccc;\n    --color-silver: #999999;\n    --color-panel-bg: rgba(255,255,255,0.08);\n    --font-spline-sans: 'Inter', sans-serif;\n  }\n\n  .showcase-wrapper {\n    background: var(--color-void-black);\n    padding: 40px 32px;\n    font-family: var(--font-spline-sans);\n  }\n\n  .showcase-header {\n    text-align: center;\n    margin-bottom: 32px;\n  }\n\n  .showcase-header h2 {\n    font-family: var(--font-spline-sans);\n    font-size: 36px;\n    font-weight: 400;\n    color: var(--color-bright-white);\n    margin: 0 0 10px 0;\n    line-height: 1.22;\n  }\n\n  .showcase-header p {\n    font-family: var(--font-spline-sans);\n    font-size: 16px;\n    font-weight: 400;\n    color: var(--color-cloud);\n    margin: 0;\n    line-height: 1.5;\n  }\n\n  .showcase-grid {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    gap: 12px;\n  }\n\n  .showcase-card {\n    background: var(--color-panel-bg);\n    border-radius: 16px;\n    overflow: hidden;\n    cursor: pointer;\n    transition: background 0.2s;\n    text-decoration: none;\n  }\n\n  .showcase-card:hover {\n    background: rgba(255,255,255,0.13);\n  }\n\n  .showcase-thumb {\n    width: 100%;\n    height: 130px;\n    border-radius: 0;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 13px;\n    font-family: var(--font-spline-sans);\n    color: var(--color-silver);\n    font-weight: 400;\n  }\n\n  .thumb-product   { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4e 100%); }\n  .thumb-brand     { background: linear-gradient(135deg, #1a0a0a 0%, #3a1a1a 100%); }\n  .thumb-gamified  { background: linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 100%); }\n  .thumb-mockup    { background: linear-gradient(135deg, #1a1010 0%, #2e2020 100%); }\n\n  .showcase-info {\n    padding: 12px 14px 14px;\n    display: flex;\n    align-items: center;\n    gap: 10px;\n  }\n\n  .showcase-icon {\n    width: 28px;\n    height: 28px;\n    border-radius: 99px;\n    background: rgba(255,255,255,0.12);\n    flex-shrink: 0;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .showcase-icon svg {\n    width: 14px;\n    height: 14px;\n  }\n\n  .showcase-text {\n    display: flex;\n    flex-direction: column;\n    gap: 2px;\n  }\n\n  .showcase-title {\n    font-family: var(--font-spline-sans);\n    font-size: 14px;\n    font-weight: 500;\n    color: var(--color-bright-white);\n    line-height: 1.3;\n  }\n\n  .showcase-author {\n    font-family: var(--font-spline-sans);\n    font-size: 12px;\n    font-weight: 400;\n    color: var(--color-silver);\n    line-height: 1.3;\n  }\n</style>\n<div class=\"showcase-wrapper\">\n  <div class=\"showcase-header\">\n    <h2>Start with real-time interactive design</h2>\n    <p>Get started by remixing a 3D design made by the Spline community.</p>\n  </div>\n  <div class=\"showcase-grid\">\n    <a href=\"#\" class=\"showcase-card\">\n      <div class=\"showcase-thumb thumb-product\">\n        <div style=\"width:80%;height:70%;background:rgba(255,255,255,0.06);border-radius:8px;\"></div>\n      </div>\n      <div class=\"showcase-info\">\n        <div class=\"showcase-icon\">\n          <svg viewBox=\"0 0 16 16\" fill=\"none\"><circle cx=\"8\" cy=\"8\" r=\"6\" stroke=\"#aaa\" stroke-width=\"1.5\"/><circle cx=\"8\" cy=\"8\" r=\"2\" fill=\"#aaa\"/></svg>\n        </div>\n        <div class=\"showcase-text\">\n          <span class=\"showcase-title\">Product Design</span>\n          <span class=\"showcase-author\">@heyvlad</span>\n        </div>\n      </div>\n    </a>\n    <a href=\"#\" class=\"showcase-card\">\n      <div class=\"showcase-thumb thumb-brand\">\n        <div style=\"width:80%;height:70%;background:rgba(255,255,255,0.06);border-radius:8px;\"></div>\n      </div>\n      <div class=\"showcase-info\">\n        <div class=\"showcase-icon\">\n          <svg viewBox=\"0 0 16 16\" fill=\"none\"><polygon points=\"8,2 14,14 2,14\" stroke=\"#aaa\" stroke-width=\"1.5\" fill=\"none\"/></svg>\n        </div>\n        <div class=\"showcase-text\">\n          <span class=\"showcase-title\">Brand &amp; Marketing</span>\n          <span class=\"showcase-author\">@sanny.verkissen</span>\n        </div>\n      </div>\n    </a>\n    <a href=\"#\" class=\"showcase-card\">\n      <div class=\"showcase-thumb thumb-gamified\">\n        <div style=\"width:80%;height:70%;background:rgba(255,255,255,0.06);border-radius:8px;\"></div>\n      </div>\n      <div class=\"showcase-info\">\n        <div class=\"showcase-icon\">\n          <svg viewBox=\"0 0 16 16\" fill=\"none\"><rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"2\" stroke=\"#aaa\" stroke-width=\"1.5\"/><path d=\"M6 8h4M8 6v4\" stroke=\"#aaa\" stroke-width=\"1.5\"/></svg>\n        </div>\n        <div class=\"showcase-text\">\n          <span class=\"showcase-title\">Gamified Experiences</span>\n          <span class=\"showcase-author\">@rluzmotion</span>\n        </div>\n      </div>\n    </a>\n    <a href=\"#\" class=\"showcase-card\">\n      <div class=\"showcase-thumb thumb-mockup\">\n        <div style=\"width:80%;height:70%;background:rgba(255,255,255,0.06);border-radius:8px;\"></div>\n      </div>\n      <div class=\"showcase-info\">\n        <div class=\"showcase-icon\">\n          <svg viewBox=\"0 0 16 16\" fill=\"none\"><rect x=\"2\" y=\"4\" width=\"12\" height=\"9\" rx=\"1.5\" stroke=\"#aaa\" stroke-width=\"1.5\"/><path d=\"M5 4V3M11 4V3\" stroke=\"#aaa\" stroke-width=\"1.5\"/></svg>\n        </div>\n        <div class=\"showcase-text\">\n          <span class=\"showcase-title\">3D Mockups</span>\n          <span class=\"showcase-author\">@tanyadizone</span>\n        </div>\n      </div>\n    </a>\n  </div>\n</div>",
+      "name": "Community Showcase Cards",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>\n  :root {\n    --color-void-black: #000000;\n    --color-bright-white: #ffffff;\n    --color-cloud: #cccccc;\n    --color-silver: #999999;\n    --color-spline-blue: #0062ff;\n    --color-neon-pink: #ff5cab;\n    --color-golden-orb: #ffb01f;\n    --color-violet-haze: #a770ff;\n    --color-emerald-glow: #47b35f;\n    --color-panel-bg: rgba(255,255,255,0.08);\n    --font-spline-sans: 'Inter', sans-serif;\n  }\n\n  .section-wrapper {\n    background: var(--color-void-black);\n    padding: 32px 32px 48px;\n    font-family: var(--font-spline-sans);\n    display: flex;\n    flex-direction: column;\n    gap: 24px;\n  }\n\n  /* Announcement Banner */\n  .announcement-banner {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 10px;\n    background: rgba(255,255,255,0.07);\n    border-radius: 99px;\n    padding: 10px 20px;\n    width: 100%;\n    box-sizing: border-box;\n    cursor: pointer;\n    transition: background 0.2s;\n    text-decoration: none;\n  }\n\n  .announcement-banner:hover {\n    background: rgba(255,255,255,0.12);\n  }\n\n  .announce-badge {\n    font-family: var(--font-spline-sans);\n    font-size: 13px;\n    font-weight: 500;\n    color: var(--color-bright-white);\n    white-space: nowrap;\n  }\n\n  .announce-text {\n    font-family: var(--font-spline-sans);\n    font-size: 13px;\n    font-weight: 400;\n    color: var(--color-cloud);\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n\n  .announce-arrow {\n    color: var(--color-silver);\n    font-size: 13px;\n    flex-shrink: 0;\n  }\n\n  /* Feature Card */\n  .feature-card {\n    background: var(--color-panel-bg);\n    border-radius: 24px;\n    padding: 40px;\n    display: flex;\n    flex-direction: column;\n    gap: 20px;\n    box-sizing: border-box;\n    width: 100%;\n  }\n\n  .feature-accent-dots {\n    display: flex;\n    gap: 8px;\n    margin-bottom: 4px;\n  }\n\n  .dot {\n    width: 10px;\n    height: 10px;\n    border-radius: 99px;\n  }\n\n  .feature-card-tag {\n    font-family: var(--font-spline-sans);\n    font-size: 12px;\n    font-weight: 500;\n    color: var(--color-silver);\n    text-transform: uppercase;\n    letter-spacing: 0.08em;\n  }\n\n  .feature-card-title {\n    font-family: var(--font-spline-sans);\n    font-size: 24px;\n    font-weight: 400;\n    color: var(--color-bright-white);\n    line-height: 1.33;\n    margin: 0;\n  }\n\n  .feature-card-body {\n    font-family: var(--font-spline-sans);\n    font-size: 16px;\n    font-weight: 400;\n    color: var(--color-cloud);\n    line-height: 1.5;\n    margin: 0;\n  }\n\n  .feature-card-visual {\n    width: 100%;\n    height: 160px;\n    border-radius: 16px;\n    background: linear-gradient(135deg, rgba(0,98,255,0.18) 0%, rgba(167,112,255,0.18) 50%, rgba(71,179,95,0.12) 100%);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 16px;\n    margin-top: 4px;\n  }\n\n  .orb {\n    border-radius: 99px;\n    opacity: 0.85;\n  }\n\n  .feature-card-cta {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    background: var(--color-spline-blue);\n    color: var(--color-bright-white);\n    font-family: var(--font-spline-sans);\n    font-size: 15px;\n    font-weight: 500;\n    padding: 13px 22px;\n    border-radius: 12px;\n    border: none;\n    cursor: pointer;\n    text-decoration: none;\n    align-self: flex-start;\n    transition: opacity 0.2s;\n  }\n\n  .feature-card-cta:hover {\n    opacity: 0.88;\n  }\n</style>\n<div class=\"section-wrapper\">\n  <a href=\"#\" class=\"announcement-banner\">\n    <span class=\"announce-badge\">Meet Omma</span>\n    <span class=\"announce-text\">Build interactive experiences, websites, 3d, and apps using natural language.</span>\n    <span class=\"announce-arrow\">\n      <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\"><path d=\"M3 7h8M8 4l3 3-3 3\" stroke=\"#999\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>\n    </span>\n  </a>\n\n  <div class=\"feature-card\">\n    <div>\n      <div class=\"feature-accent-dots\">\n        <div class=\"dot\" style=\"background:var(--color-neon-pink);\"></div>\n        <div class=\"dot\" style=\"background:var(--color-golden-orb);\"></div>\n        <div class=\"dot\" style=\"background:var(--color-violet-haze);\"></div>\n        <div class=\"dot\" style=\"background:var(--color-emerald-glow);\"></div>\n      </div>\n      <p class=\"feature-card-tag\">AI-powered</p>\n    </div>\n    <h3 class=\"feature-card-title\">Where ideas become production-ready experiences</h3>\n    <p class=\"feature-card-body\">Supercharge your team to deliver production-ready interactive 2D &amp; 3D experiences all-in-one platform. Collaborate in real-time, export anywhere.</p>\n    <div class=\"feature-card-visual\">\n      <div class=\"orb\" style=\"width:56px;height:56px;background:linear-gradient(135deg,#ff5cab,#a770ff);\"></div>\n      <div class=\"orb\" style=\"width:72px;height:72px;background:linear-gradient(135deg,#0062ff,#47b35f);\"></div>\n      <div class=\"orb\" style=\"width:44px;height:44px;background:linear-gradient(135deg,#ffb01f,#ff5cab);\"></div>\n    </div>\n    <a href=\"#\" class=\"feature-card-cta\">Get started — it's free →</a>\n  </div>\n</div>",
+      "name": "Announcement Banner + Feature Card",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "The main user call-to-action.",
+      "description": "Solid Spline Blue (#0062ff) background with Bright White (#ffffff) text. Uses a 12px radius and generous padding (16px 24px). Font is Spline Sans 16px weight 500."
+    },
+    {
+      "name": "Secondary Button",
+      "role": "Secondary actions, like 'Log in' or alternate CTAs.",
+      "description": "Translucent Button Sheen (rgba(255, 255, 255, 0.15)) background with Bright White (#ffffff) text. Uses a 12px radius and 10px 20px padding."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Links within the main header navigation.",
+      "description": "Ghost button style with a transparent background. Text is Text Dim (rgba(255, 255, 255, 0.7)) and becomes Bright White (#ffffff) on hover/active. No border or radius."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Large cards used to detail product features or benefits.",
+      "description": "Large container with a Panel Sheen (rgba(255, 255, 255, 0.08)) background, a 24px border radius, and 40px internal padding. Contains heading and body text."
+    },
+    {
+      "name": "Header Nav Bar",
+      "role": "Persistent site navigation.",
+      "description": "A full-width container, initially transparent over the hero and transitioning to a translucent Nav Background (#191a1d) on scroll. Contains the logo, navigation links, and primary/secondary buttons."
+    },
+    {
+      "name": "Logo Marquee Item",
+      "role": "Displaying partner or customer logos.",
+      "description": "A simple container with a single monochrome logo in Bright White (#ffffff). No background, border, or shadow."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The universal brand typeface for all UI text, from display headlines to body copy. Its use at normal weights (400/500) gives the design an approachable, technical feel, avoiding the aggression of heavy, bold headlines.",
+      "sizes": "12px, 13px, 14px, 16px, 18px, 20px, 24px, 36px, 40px, 58px",
+      "family": "Spline Sans",
+      "weight": "400, 500",
+      "lineHeight": "1.15, 1.22, 1.24, 1.25, 1.33, 1.35, 1.38, 1.43, 1.50, 1.56, 1.71",
+      "substitute": "Inter"
+    },
+    {
+      "role": "Used exclusively for code snippets and technical text, providing clear differentiation from UI copy.",
+      "sizes": "14px",
+      "family": "Spline Sans Mono",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "IBM Plex Mono"
+    }
+  ],
+  "description": "The design feels like a creative void, a deep space canvas where ideas materialize as glowing forms. An absolute black (#000000) background serves as this void, making every piece of content feel like it's emitting light. Hierarchy is achieved not through shadows or solid grays, but through layered translucency — panels and buttons are semi-transparent white overlays, creating a glassmorphism effect. The custom Spline Sans typeface is used universally at normal weights, giving headings a confident but understated presence. A single, energetic Spline Blue (#0062ff) is reserved for primary actions, acting as a focused beacon in the minimalist dark environment.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "### Quick Color Reference\n- **Background**: `Void Black` (#000000)\n- **Text**: `Bright White` (#ffffff)\n- **Secondary Text**: `Silver` (#999999)\n- **Primary CTA**: `Spline Blue` (#0062ff)\n- **Card Surface**: `Panel Sheen` (rgba(255, 255, 255, 0.08))\n\n### Example Component Prompts\n1.  **Hero Section**: \"Create a full-screen hero section with a `Void Black` (#000000) background. Add a headline 'The all-in-one platform' in `Spline Sans` at 58px font size, `Bright White` (#ffffff) color, and 400 weight. Below it, add a primary CTA button with the text 'Get started — it’s free'. The button should have a `Spline Blue` (#0062ff) background, `Bright White` text, 12px border-radius, and 16px vertical, 24px horizontal padding.\"\n2.  **Community Gallery Card**: \"Create a card with a 16px border-radius and a transparent background. Inside, place an image that fills the width. Below the image, add a title 'Product Design' in `Spline Sans` 14px `Bright White` (#ffffff), and a sub-caption '@username' in `Spline Sans` 13px `Silver` (#999999) prefixed with a small user icon.\"\n3.  **Feature Section**: \"Create a content section with 96px top/bottom padding. Inside a 1280px max-width container, create a large feature card with a `Panel Sheen` (rgba(255, 255, 255, 0.08)) background, 24px border-radius, and 40px padding. The card should contain a headline 'Where ideas become production-ready' in `Spline Sans` 40px `Bright White` (#ffffff).\""
+    }
+  ],
+  "elevationPhilosophy": "Elevation is achieved through layered glassmorphism, not shadows. Surfaces are defined by varying opacities of white (e.g., rgba(255, 255, 255, 0.08) for panels) on the pitch-black #000000 background. This creates a sense of depth through emitted light rather than cast shadow, reinforcing the 'glow in the void' aesthetic."
+}

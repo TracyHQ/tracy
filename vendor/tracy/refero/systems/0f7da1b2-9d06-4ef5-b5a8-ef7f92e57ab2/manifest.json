@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+  "status": "complete",
+  "name": "Augen Pro",
+  "url": "https://styles.refero.design/style/0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+  "sourceWebsite": "https://augen.pro",
+  "extractedAt": "2026-07-03T03:18:40.191Z",
+  "capturedAt": "2026-10-08T05:08:17.363331+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Apple keynote on surgical white — clinical, weightless, electric blue as single accent in monochrome void",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0bd71252-c89f-48af-bf1d-2f0bf77a1a49.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/eca5d44f-ac32-45ed-a7ad-80bb40a7cd4d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fc7e2ead-bf52-4282-b9f1-f915c9d6814b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/019f3cdc-8f0b-4ddf-b1ab-45feebc606b5.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/38093eb9-9725-4024-aa95-9a29402990df.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "65180298c790add936f6de641dc2072ae0c9a9e6abe3bdbb281617042d3154e4",
+      "bytes": 17756
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1ff1e5f57e9613275ed4eba846b418589af071d8ed737c38de1a15ca6d0e9805",
+      "bytes": 40741
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "30c9aa2be7f5094bf8ac304d60ace8f227c54da064f522b30fd52e5903de6bc7",
+      "bytes": 14895
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "99249a9c9a2eaaa043193e42d69c9a5dacf913c0e446f9632aa0c50412817c8d",
+      "bytes": 7363
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a9e4c189ccf8a2eaac241ce312c3c61a27423d9a6ecb7402b9a635f87fcd04f7",
+      "bytes": 11457
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e1369a60d9d212a5a36f1fee29d590724812c4454f1c42b83a06113a79a4e09e",
+      "bytes": 2335
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a767976d3e32f7eb8ba35d78e9cd92dd8516a246176c4c2309b1bbd45f95a77e",
+      "bytes": 399
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cc878702fa40e3628cb336cdc37847d9dec8521789a689913d413eed81968f14",
+      "bytes": 416
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bee7c6d698234ae5becf3a35f5eff2f08ba2a5081a65dcf34dd62c0c7d267881",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "697d4460a8215c7ae353e648eaba95122bac1da916fabf7758c5bdfc3e3b044f",
+      "bytes": 41867
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "00a5e51438c27591e04995c08200e6f508b780d27918b03532e5d19282bcd9ed",
+      "bytes": 21878
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6420dad1fdf4d7db9dd04702d41574f70bbd843aa67461162b6acc8e3b864240",
+      "bytes": 32823
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "eb7755dec0f9baee8497d82753d19e23be1049a7cdff4808928a8d249e3143d6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f3c805a92f7e7305e121a53e80fd49f718ae95b5e3211117274dbacb8b2f1823",
+      "bytes": 1268
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6cc48749d855c6f5af96b8df704449a30920a9796c98280330981bd27ca6a58a",
+      "bytes": 1826
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "04109c48-f591-4110-9739-622243d4ecc2",
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "7510b18e-63c3-4c2a-97c3-39fa7dfa6ae3",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "ec0f5bca-8367-49e7-b8aa-73b3fa09a4a0",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

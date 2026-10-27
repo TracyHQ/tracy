@@ -1,0 +1,44 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, primary surface, heading text on light zones — the dominant black that absorbs all surrounding elements"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Inverse text on dark surfaces, hairline borders on dark zones, contrast punctuation against the black canvas"
+    },
+    "charcoal": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Charcoal — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "basis-grotesque-pro": {
+      "$value": "Basis Grotesque Pro",
+      "$type": "fontFamily",
+      "$description": "All functional copy: body text, metadata annotations, labels, nav, buttons, lists. The 350 weight (light) handles editorial captioning at 12px — the small annotations like 'EST 2006', 'BC, CA', '12:32 EDT' — while 400 handles body and interactive text at 16px. Slight -0.01em tracking tightens the grotesque into a precise, measured voice. This font does the quiet work; the serif does the talking."
+    },
+    "pp-eiko": {
+      "$value": "PP Eiko",
+      "$type": "fontFamily",
+      "$description": "Display headings only — the 88px ultra-light serif is the signature element. Weight 240 (near-hairline) is a dramatic anti-convention choice: most agencies use 400-500 serifs for authority; Metalab's whisper-weight communicates confidence through restraint, not volume. Tight 0.80 line-height and -0.02em tracking let letters nearly touch, creating a sculptural block of text."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://metalab.com",
+      "siteName": "Metalab",
+      "extractedAt": "2026-06-03T20:13:14.715Z",
+      "variant": "compact"
+    }
+  }
+}

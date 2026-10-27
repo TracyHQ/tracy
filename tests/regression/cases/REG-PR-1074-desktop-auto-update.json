@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1074-desktop-auto-update",
+  "kind": "feat",
+  "title": "The desktop app updates itself from update.<zone>/desktop, and tracy-web records which installs ask",
+  "pr": 1074,
+  "area": "desktop/auto-update",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/update-channel.test.mjs, update-plan.test.mjs, updater.test.mjs, release-feed.test.mjs and shell-build.test.mjs.",
+    "S2: With TEST_DATABASE_URL set to the stand's Postgres, run node --test apps/tracy-web/test/desktop-update.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes: channel stable/dev only for cowork.tracy.ai/cowork.tracy.site, 5 s then 4 h ± 15 % with 5/10/20/40/60 min backoff, allowDowngrade false set after the channel, autoInstallOnAppQuit false, Restart installs once and can be retried after a refusal, Later installs nothing, ad-hoc copies only notify, electron-updater bundled with nothing but electron and node built-ins outside.",
+    "S2: every test passes: the channel file streams from tracy-releases with no-store, zips stream with immutable cache, only GET/HEAD of a plain name reaches the store, a valid x-user-staging-id is upserted in desktop_install, a malformed one is not and the file is still served, the link door needs a same-origin session, /ops lists installs to staff only."
+  ],
+  "selectors": {
+    "feed": "GET https://update.<zone>/desktop/<channel>-mac.yml",
+    "link": "POST /api/desktop/installs/link",
+    "ops": "GET /api/ops/desktop/installs, GET /ops/desktop/installs"
+  },
+  "evidence": "tasks/evidence/desktop-auto-update/imac-spike/ and imac-devid/ (Developer ID) (0.2.0 → 0.2.1 on the iMac: Later keeps 0.2.0, Restart installs 0.2.1 signed in, an impostor-signed zip is refused)",
+  "fence": "The update host answers only the feed; Squirrel.Mac's designated-requirement check refuses a bundle signed by another certificate",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/desktop/tracy-desktop/test/update-channel.test.mjs",
+      "packages/desktop/tracy-desktop/test/update-plan.test.mjs",
+      "packages/desktop/tracy-desktop/test/updater.test.mjs",
+      "packages/desktop/tracy-desktop/test/release-feed.test.mjs",
+      "packages/desktop/tracy-desktop/test/shell-build.test.mjs",
+      "apps/tracy-web/test/desktop-update.test.mjs"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "home": true
+    },
+    {
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "id": "services_page",
+      "label": "Service"
+    },
+    {
+      "id": "pricing",
+      "label": "Pricing"
+    },
+    {
+      "id": "blog",
+      "label": "Resources"
+    },
+    {
+      "id": "about",
+      "label": "Company"
+    }
+  ]
+}

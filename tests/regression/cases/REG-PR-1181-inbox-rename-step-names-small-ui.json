@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1181-inbox-rename-step-names-small-ui",
+  "kind": "fix",
+  "title": "An Inbox rename row reads the two names of that step (old → new), not the site's name now, after the site is renamed again",
+  "pr": 1181,
+  "area": "inbox/team",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, with TEST_DATABASE_URL set to a throwaway Postgres: node --test --test-reporter=tap packages/site/tracy-inbox/test/rows.test.mjs apps/tracy-web/test/site-event-notifications.test.mjs",
+    "S2: Read the lines for 'T14: each rename reads the two names of that step, not the name the site has now' and 'T14: a new address tells the team except the person who changed it'."
+  ],
+  "expect": [
+    "Both tests report ok and the run ends with '# fail 0'.",
+    "The first: a row {oldSite: e2e04-wp.tracy.site, newSite: e2e04-wpx.tracy.site} on a site named e2e04-wp.tracy.site today reads 'Renamed e2e04-wp.tracy.site to e2e04-wpx.tracy.site' (pre-fix: '… to e2e04-wp.tracy.site'); a row with no newSite still reads the name now.",
+    "The second: PUT /api/sites/:key/address writes team.site_renamed rows whose data holds both oldSite and newSite."
+  ],
+  "selectors": {
+    "doors": "PUT /api/sites/:key/address · GET /api/notifications (data.oldSite, data.newSite)"
+  },
+  "evidence": "E2E dev 04/10 E9.1b (tasks/evidence/e2e-dev-0410/bugs.md item 7, E9/b-list-0.json): renaming wp → wpx → wp left a first row 'Renamed e2e04-wp.tracy.site to e2e04-wp.tracy.site', because the row stored only oldSite and the Inbox drew the 'to' side from the site's name at read time.",
+  "fence": "sites/route.js onRenamed stores data.newSite beside data.oldSite; tracy-inbox rows.ts describe() draws team.site_renamed from data.newSite (fallback: siteName for rows written before); mail/letters/team.js does the same.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-inbox/test/rows.test.mjs",
+      "apps/tracy-web/test/site-event-notifications.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "T14: each rename reads the two names of that step, not the name the site has now",
+      "T14: a new address tells the team except the person who changed it"
+    ]
+  }
+}

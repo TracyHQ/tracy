@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary type, borders, icon strokes, and all hairline rules. The only foreground color in the system"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary canvas, card surfaces, and reverse text on dark photo overlays"
+    },
+    "paper-mist": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Paper Mist — Soft surface elevation for insets, input fields, and section backgrounds that need to step down from pure white without introducing a hue"
+    },
+    "sage-paper": {
+      "$value": "#dbded5",
+      "$type": "color",
+      "$description": "Sage Paper — Warm greenish-gray paper tint used as a section-break wash and full-bleed band. Provides the only chromatic moment in the system without becoming a brand color"
+    }
+  },
+  "font": {
+    "kinfolk-serif-text": {
+      "$value": "Kinfolk-Serif-Text",
+      "$type": "fontFamily",
+      "$description": "Long-form body copy, captions, and article decks at 20px (lead paragraphs) and 15px (body). Normal letter-spacing lets the text breathe at reading size; the elevated line-height (1.5 at 15px) gives prose an airier, more literary rhythm than typical web body text."
+    },
+    "kinfolk-serif-display": {
+      "$value": "Kinfolk-Serif-Display",
+      "$type": "fontFamily",
+      "$description": "Hero and feature headlines (60px, lh 1.0, tracking -0.025em / -1.5px). The tight tracking on a single 400 weight produces compressed, almost carved letterforms — authority through restraint, not volume. Used sparingly for the largest editorial moments."
+    },
+    "kinfolk-serif-deck": {
+      "$value": "Kinfolk-Serif-Deck",
+      "$type": "fontFamily",
+      "$description": "Section titles, article headlines, and deck/sub-deck lines at 50/32/25px. Same 400-only discipline as the display face but at intermediate optical sizes. Tracking is still negative at the top end (-0.5px at 50px) for that dense editorial feel."
+    },
+    "kinfolk-sans": {
+      "$value": "Kinfolk-Sans",
+      "$type": "fontFamily",
+      "$description": "UI chrome, metadata, category labels, navigation, button text, and small functional text. Tracking opens up dramatically at the small end (0.06em / ~0.78px at 13px) — a common editorial convention that makes all-caps metadata read as labels rather than body. One weight only, with scale doing all the differentiation."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.kinfolk.com",
+      "siteName": "Kinfolk",
+      "extractedAt": "2026-06-03T20:14:28.774Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1708-sync-to-live-renumbered-ids",
+  "kind": "fix",
+  "title": "Sync to live pairs a record the id map files under the wrong live number with the live record it is, never offers it as new plus removed, and never creates a record the map names; the sync never numbers again a record the map put on its read",
+  "pr": 1708,
+  "area": "sync/live-push",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-name-pattern=\"wrong live number\" packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs",
+    "S2: node --test --test-name-pattern=\"already names\" packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs",
+    "S3: node --test --test-name-pattern=\"a chain of syncs\" packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+  ],
+  "expect": [
+    "S1 WordPress: with the map {33:82, 34:84, 35:85} as the old engine wrote it, live posts 41/46/47 pair with copy 82/84/85 (one update for Tracy's edit, nothing for the rest); only Tracy's own post is created; only the post Tracy deleted is removed; copy 86 filed under a lost number is listed unsupported why live-record, not created; repairs [41,82,33] [46,84,34] [47,85,35]; record leaves {12:13, 33:41, 34:46, 36:86, 41:82, 46:84, 47:85}",
+    "S1 Joomla: live article 41 pairs with copy 82 as an update; Tracy's article is created; two live articles with the same name as a dangling copy article are not removed (live-record-unclear) and the copy article is not created (live-record)",
+    "S2: without pushed.json, the live page the map names (12 -> 11) is not renumbered as created on both; the copy keeps one page 11 and the map keeps 12 -> 11",
+    "S3: after five syncs (created-on-both, occupied three deep), the push changeset updates Tracy's edits under the live numbers 7, 22, 40, creates only Tracy's posts, removes nothing, repairs nothing"
+  ],
+  "selectors": {
+    "host": "live_push.py Changeset.repair_map known_live record; live_sync.py IdMap.clash IdMap.moved DbMerge.align_pushed"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-to-live-renumbered-ids.md",
+  "fence": "Sync to live never creates on the live site a record the id map says the live site already has",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a post the id map files under the wrong live number",
+      "Joomla: an article the id map files under the wrong live number",
+      "without the push’s places, a record the id map already names",
+      "WordPress: a chain of syncs that renumber many posts"
+    ]
+  }
+}

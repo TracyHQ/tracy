@@ -1,0 +1,639 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-tracy-business",
+  "minVersion": {
+    "wp-tracy-business": "1.1.6"
+  },
+  "maxVersion": {
+    "wp-tracy-business": "1.1.10"
+  },
+  "maxVersionNote": "1.1.7 checked 11/10/2026 (ds-minversion-audit): the #1087 re-release that makes its stylesheet read the slot (0 → 21 var(--ds-c- reads), same tracy_apply_inspiration; 1.1.8 checked 12/10/2026 (published-templates-green): the same var(--ds-*) reads as 1.1.7 and tracy_apply_inspiration kept; every role class is still drawn by the theme or the demo; the theme change is words, dates, fonts and links, no colour; 1.1.9 checked 13/10/2026 (#1312, the identity fallback of PR #1301): inc/identity.php gains the site title, its initials and the uploaded site logo as defaults, the stylesheet gains one rule hiding an empty mark (html .tracy-brand__mark:empty), no colour; the same 21 var(--ds-*) reads as 1.1.8 and tracy_apply_inspiration kept; 1.1.10 checked 16/10/2026 (feat/ds-role-variables, quickstart tracy-business/wp7 1.3.8): the theme reads every design-system role variable (21 to 195 var(--ds- reads, no file reads fewer than 1.1.9), tracy_apply_inspiration kept, role-scan --check 0 unresolved",
+  "release": "tracy-business/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-tracy-business/tokens.css",
+  "roles": {
+    "page": "body.home.wp-singular",
+    "display": "h1.wp-block-heading.wtb-hero__heading",
+    "heading": "h2.wp-block-heading.wtb-heading",
+    "body": "p.wtb-intro.wp-block-paragraph",
+    "button-primary": ".tracy-header a.wp-block-button__link",
+    "container": "div.wp-block-group.wtb-inner"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 64px",
+    "displayFace": "Newsreader 400, tracking -0.025em",
+    "heading": "first section heading: 40px",
+    "button": "the hero's pair of calls to action (.wtb-actions), measured on 1.3.8 at 1440: 14px (the sm preset every .wp-block-button__link takes); in the longest locales the pair fills 570 of its 615px row, so a system's larger label wraps it (16/10/2026)",
+    "body": "first body paragraph",
+    "button-primary": "the header's call to action, chosen by hand 10/10/2026: every filled call to action in the content (the hero's and the closing call's orange buttons) sits in a kept band, where it keeps the template's look, so discover.mjs offers none outside one",
+    "container": "first content container, max-width 1176px"
+  },
+  "keepScopes": [".tracy-topbar", ".wtb-hero", ".wtb-cta", ".wtb-team", ".tracy-footer"],
+  "keptButtons": {
+    ".wtb-hero:not(.wtb-hero--404)": {
+      "ground": "#14171a",
+      "buttons": [".wp-block-button:not(.is-style-outline):not(.is-style-link) > .wp-block-button__link"]
+    },
+    ".wtb-cta:not(.wtb-cta--panel):not(.wtb-cta--ink)": {
+      "ground": "#14483a",
+      "buttons": [".wp-block-button:not(.is-style-outline):not(.is-style-link) > .wp-block-button__link"]
+    },
+    ".wtb-cta.wtb-cta--panel": {
+      "ground": "#eceae4",
+      "buttons": [".wp-block-button:not(.is-style-outline):not(.is-style-link) > .wp-block-button__link"]
+    },
+    ".wtb-cta.wtb-cta--ink": {
+      "ground": "#14171a",
+      "buttons": [".wp-block-button:not(.is-style-outline):not(.is-style-link) > .wp-block-button__link"]
+    }
+  },
+  "keptButtonsNote": "the filled calls to action of the kept bands (the hero's 'See our capabilities', the closing call's 'Talk to our sales team', both is-style-orange) wear the system's accent and its text while the band keeps its ink, green or paper ground, picture and text (decision 11/10/2026, walkthrough note 12); ground = the fill each band shows behind its buttons on the released page (sections.css: hero --wtb-ink, front-page call --wtb-green, inner-page panel surface-warm, inner-page ink call --wtb-ink). The 404 hero is left out: its call is a text link. Outline and link buttons are drawn in the band's own text colour and stay",
+  "bands": {
+    ".tracy-topbar": {
+      "ground": "#14483a",
+      "texts": ["#c1cbc3", "#f5f3ee"],
+      "kind": "brand",
+      "repaint": true,
+      "vars": {
+        "--wp--custom--tracy--brand--green": "ground",
+        "--wp--custom--tracy--brand--paper": "text"
+      },
+      "paint": {
+        "&": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".wtb-hero:not(.wtb-hero--404)": {
+      "ground": "#14171a",
+      "texts": ["#f5f3ee", "#8a8780", "#b9b5ac"],
+      "vars": {
+        "--wtb-ink": "ground",
+        "--wtb-orange": "accent",
+        "--ds-c-accent-text-hover": "accent"
+      },
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(.wtb-eyebrow, .wtb-intro, .wtb-stat__label, .wtb-lead)": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".wtb-cta:not(.wtb-cta--panel):not(.wtb-cta--ink)": {
+      "ground": "#14483a",
+      "texts": ["#f5f3ee", "#bfd4cb"],
+      "kind": "brand",
+      "repaint": true,
+      "vars": {
+        "--wtb-green": "ground",
+        "--wtb-on-green": "text",
+        "--wtb-on-green-text": "text-2"
+      }
+    },
+    ".wtb-cta.wtb-cta--ink": {
+      "ground": "#14171a",
+      "texts": ["#f5f3ee", "#b9b5ac"],
+      "vars": {
+        "--wtb-ink": "ground",
+        "--wtb-orange": "accent"
+      },
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ".wtb-intro": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".wtb-cta.wtb-cta--panel": {
+      "ground": "#eceae4",
+      "texts": ["#14171a", "#3a3f43"],
+      "root": false,
+      "repaint": true,
+      "vars": {
+        "--wp--preset--color--surface-warm": "ground",
+        "--wp--preset--color--fg": "text",
+        "--wp--preset--color--fg-2": "text-2",
+        "--wtb-orange": "accent",
+        "--wtb-green-text": "accent"
+      }
+    },
+    ".tracy-footer": {
+      "ground": "#14171a",
+      "texts": ["#b9b5ac", "#f5f3ee", "#7f8080"],
+      "vars": {
+        "--wp--custom--tracy--brand--ink": "ground"
+      },
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(.tracy-footer__title, .tracy-footer__wordmark, h3, h4)": {
+          "color": "text"
+        },
+        ":is(a, span, p:not(.tracy-brand__mark, .tracy-footer__wordmark), li, small)": {
+          "color": "text-2"
+        },
+        ".tracy-footer__legal": {
+          "color": "text-2"
+        },
+        ".tracy-footer__strip-inner": {
+          "color": "text-2"
+        },
+        ".tracy-brand__mark--footer": {
+          "background-color": "text",
+          "color": "ground"
+        }
+      }
+    },
+    ".wtb-hero": {
+      "ground": "#14171a",
+      "texts": ["#f5f3ee", "#8a8780", "#b9b5ac"],
+      "paint": {
+        ".wtb-eyebrow::before": {
+          "background-color": "accent-fill"
+        },
+        ".wp-block-heading em": {
+          "color": "accent"
+        }
+      }
+    },
+    ".wtb-cta": {
+      "ground": "#14483a",
+      "texts": ["#f5f3ee", "#bfd4cb"]
+    },
+    ".wtb-team": {
+      "ground": "#14171a",
+      "texts": ["#f5f3ee", "#ffffff", "#da5a2a", "#8a8780"],
+      "vars": {
+        "--wtb-ink": "ground",
+        "--wtb-orange": "accent"
+      },
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ".wtb-team__name": {
+          "color": "text"
+        },
+        ":is(.wtb-intro, .wtb-team__bio)": {
+          "color": "text-2"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours 13/10/2026: the footer's legal line and bottom strip mix its paper 52% into its ink (color-mix in oklab); on a worn ground of pure black (Notion, Eddie, ElevenLabs, Figma, Moxie, Spotify) the mix read 3.5:1, so both take the band's second text (paint text-2, 4.5:1 or more on the band).; the footer monogram badge (.tracy-brand__mark--footer, the site initials theme 1.1.9 prints) kept the template orange fill while the band repaints its words: grey on orange, 1.7-2.3:1 under every system (final measure 14/10/2026); it wears the band pair turned, the band text as its fill and the band ground as its letters, readable by construction; 15/10/2026: the about page’s team band (.wtb-team, the same ink as the hero) was not declared: its names took the system’s accent-on (black on the ink under Moxie, 1.17:1) and its roles the page’s accent (Stripe’s indigo on the ink, 2.91:1). It is now an ink band like the ink call: the system’s ink ground, its words, its accent for the roles",
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "selectors": {
+    "display": "h1.wp-block-heading.wtb-hero__heading, .tracy-display",
+    "heading": ["main h2.wp-block-heading:where(:not(.tracy-aside *))"],
+    "headingNote": "heading: the section headings, not a sidebar card's title (.tracy-aside: the news, article and search sidebars): the subscribe card titles with an h2.wp-block-heading at the xl preset (22px) in a 340px column, and under Moxie it took the section size (43px) and four lines (15/10/2026). The card titles keep the template's size and take the system's face and weight (headingsAll).",
+    "buttonPrimary": [
+      ".tracy .wp-block-button:not(.is-style-outline):not(.is-style-link) > a.wp-block-button__link"
+    ],
+    "bodyFace": [
+      "body.tracy",
+      ".tracy p:not(:where([class*=\"brand\"], [class*=\"logo\"], .wp-block-site-title))",
+      ".tracy li"
+    ],
+    "container": [".tracy div.wp-block-group.wtb-inner"],
+    "accentText": [
+      ".tracy-cta .wp-block-button__link",
+      ".tracy-faq__item summary::after",
+      ".tracy .wp-block-button.is-style-outline .wp-block-button__link",
+      ".tracy .wp-block-button.is-style-link .wp-block-button__link",
+      ".tracy .tracy-btn--ghost",
+      ".tracy .acm-hero .tracy-eyebrow",
+      ".tracy .acm-features-intro .tracy-eyebrow",
+      ".tracy.home .tracy-eyebrow",
+      ".tracy .wp-block-post-excerpt__more-link",
+      ".tracy p.eyebrow.wp-block-paragraph",
+      ".has-accent-color",
+      ".wtb-card__link",
+      ".wtb-card__link a",
+      ".wtb-news__item .wtb-card__title:not(:has(a))",
+      ".wtb-news__item .wtb-card__title a",
+      ".wtb-form__row-link a",
+      ".wtb-slide__link a",
+      ".wtb-text--pricing .wtb-text__point-meta"
+    ],
+    "eyebrow": [".wtb-eyebrow", ".wtb-card__meta"],
+    "button": [
+      ".tracy .wp-block-button:not(.is-style-link):not(:is(.wtb-cta--panel, .wtb-cta--ink) .is-style-outline) > .wp-block-button__link",
+      ".tracy .wpcf7-submit",
+      ".tracy .wpcf7-form .wtb-form__reset",
+      ".tracy .wp-block-post-content button[data-dc-tpl]",
+      ".tracy .wp-block-post-content a[data-dc-tpl][style*=\"display: inline-block\"][style*=\"padding: 1\"]"
+    ],
+    "buttonNote": "button: not the link-style button (is-style-link: a text link with an underline, 'View all') nor the inner-page closing calls' outline button, which those calls draw as a ruled text link ('Projects', 'Services'): given the system's button box it grew from 65x20 to 108x32 (button-size, 15/10/2026); and the form's submit (contact form 7) and the demo content's own buttons, which kept a 0px corner under every system (button-role); the demo content's button links (inline-block links padded 13-15px: the style guide's Primary, Secondary and Outline specimens, 'Send your CV', 'Discuss a similar project', 'Read the full story') are buttons too"
+  },
+  "inlineFaces": {
+    "scope": "[data-dc-tpl]",
+    "faces": { "Newsreader": "heading", "Archivo": "body" },
+    "headingSize": [
+      "main h2[data-dc-tpl]:is([style*=\"font-size: clamp(24px\"], [style*=\"font-size: clamp(26px\"])"
+    ]
+  },
+  "inlineFacesNote": "15/10/2026: the content of the design export (data-dc-tpl blocks, and a customer's own made the same way) writes its type inline in the template's faces by name: Newsreader on the section headings, card titles, figures and arrows, Archivo on its buttons. The /services 'What we offer' heading and its six card titles kept Newsreader under every system, the heading at 36px beside the theme's 43px section headings (Moxie). Newsreader takes the heading role (face and weight), Archivo the body face (src/inline-faces.mjs); the inline section headings (clamp from 24 or 26px up to 32-36px: services, about, careers, projects, project detail, slide, investor relations) also take the section heading size. A smaller inline h2 (the newsletter card's 25px, the investor relations 22-27px sub-heading) keeps the template's size",
+  "contrast": {
+    "accent-text": "main .tracy-eyebrow, main a:not([class*=button]):not(:has(img))",
+    "muted": "main .has-muted-color, main .tracy-section__head p",
+    "body": "main p",
+    "card-text": "main .tracy-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "keepDefaults": {
+    "--wp--preset--color--bg": "#f5f3ee",
+    "--wp--preset--color--surface": "#ffffff",
+    "--wp--preset--color--surface-warm": "#eceae4",
+    "--wp--preset--color--fg": "#14171a",
+    "--wp--preset--color--fg-2": "#3a3f43",
+    "--wp--preset--color--muted": "#5a5952",
+    "--wp--preset--color--meta": "#6b6a64",
+    "--wp--preset--color--border": "#dcd7cc",
+    "--wp--preset--color--border-soft": "#eceae4",
+    "--wp--preset--color--accent": "#14483a",
+    "--wp--preset--color--accent-on": "#ffffff",
+    "--wp--preset--color--accent-hover": "#0f3a2e",
+    "--wp--preset--color--accent-active": "#0b2c23",
+    "--wp--preset--color--success": "#14483a",
+    "--wp--preset--color--warn": "#da5a2a",
+    "--wp--preset--color--danger": "#b23a1c",
+    "--wp--custom--tracy--brand--header": "#f5f3ee",
+    "--wp--custom--tracy--brand--orange": "#da5a2a",
+    "--wtb-orange": "#da5a2a"
+  },
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-tracy-business): 12/12 on every release measured, controls 0 differences, lowest text 4.53:1, 92% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on a stand of tracy-business/wp7 1.3.4 wearing wp-tracy-business 1.1.6 (its minVersion, installed from the claude-cowork theme release) (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-tracy-business): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, kept bands unchanged, 93% or more of the page follows, lowest text 4.53:1 over 52 samples per view, none worse than the template's own. Before: kept-band buttons re-measured 11/10/2026 on a tracy-business/wp7 1.3.4 stand (tasks/evidence/ds-kept-buttons-2026-10-11): 10 systems 24/24, both buttons follow under each, fill on band >= 3.32:1, text on fill >= 4.7:1. First measured 11/10/2026 on a new tracy-business/wp7 1.3.4 site (theme 1.1.6) through the Design system door's write path (tasks/evidence/ds-contracts-business-2026-10-11): default and clear 0 differences, 10 systems 24/24 — every role check, no text below 4.5:1 or worse than the template's own, the four kept bands unchanged, worn on the first request; under a system the dark state is the same look",
+  "templateVars": {
+    "--wp--custom--tracy--brand--header": "var(--ds-c-bg)",
+    "--wp--custom--tracy--brand--orange": "var(--ds-c-accent-text)",
+    "--wp--custom--tracy--brand--ink": "var(--ds-c-ink)",
+    "--wp--custom--tracy--brand--paper": "var(--ds-c-on-ink)",
+    "--wp--custom--tracy--brand--ink-text": "color-mix(in srgb, var(--ds-c-on-ink) 84%, var(--ds-c-ink))",
+    "--wp--custom--tracy--brand--ink-caption": "color-mix(in srgb, var(--ds-c-on-ink) 70%, var(--ds-c-ink))",
+    "--wp--custom--tracy--brand--green": "var(--ds-c-accent)",
+    "--wp--custom--tracy--brand--green-deep": "var(--ds-c-accent-active)",
+    "--wp--custom--tracy--brand--green-text": "color-mix(in srgb, var(--ds-c-accent-on) 84%, var(--ds-c-accent))",
+    "--wp--custom--tracy--brand--green-rule": "color-mix(in srgb, var(--ds-c-accent-on) 30%, var(--ds-c-accent))",
+    "--wp--custom--tracy--brand--prose": "var(--ds-c-fg-2)"
+  },
+  "templateNote": "the theme's own brand constants (theme.overlay.json settings.custom.tracy.brand) the slot repoints: the header's paper (brand.header, a fill the header and its mega panel sit on) takes the page colour — left alone it stayed #f5f3ee under a dark system, its nav text the system's light fg on it (Spotify, 11/10/2026); the signal orange, TEXT outside the kept bands (eyebrows, service numbers, card meta, team roles), takes the readable accent. Its fills (is-style-orange) outside a kept band are primary buttons (selectors.buttonPrimary: accent and accent-on). Brand green, ink and paper paint the kept bands and the logo mark and stay",
+  "keepDefaultsNote": "the released page's light values (discover.mjs before any slot); --wtb-orange is sections.css's own name for the orange, computed once on body, so a kept band gets it back by name",
+  "accentTextNote": "the theme's text painted with the accent PRESET, a fill (sections.css: card links, news and project titles through --wtb-green-text, form and slide links, pricing meta): it takes the accent made readable on the page — measured 11/10/2026, 'Read the case study' read 1.18–4.31:1 under 9 of 14 systems before; the project page's 'Other projects' grid (after its ink opening sheet) draws every title in ink, so the link-colour titles stop there (heading-split, 15/10/2026: the first card black, the other three the accent); 15/10/2026 (HIER-2): the front page's project titles beside the first card no longer take the accent: under Figma dark the readable accent (#7e7bf8, 4.66:1) read quieter than the body text (5.87:1); they take the system's text colour (followRules), as the first card's title and the 'Other projects' titles already do",
+  "contractNotes1317": "13/10/2026 (#1317): the hero and the footer kept the template paper and stone words (#f5f3ee, #b9b5ac, #8a8780: 103 of the left paints) while their ground followed, and the footer nav read 3.5:1 under Moxie; the ink bands now repaint their words with the system text (headings text, the rest text-2), as the topbar and the green call band already did through the theme variables.",
+  "followRules": {
+    ".wtb-team .wtb-team__name": {
+      "color": "on-ink"
+    },
+    ":is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-title": {
+      "color": "on-ink"
+    },
+    ".tracy-chips .current-cat > a": {
+      "color": "on-ink"
+    },
+    ".wtb-hero--404 .wp-block-search__button": {
+      "color": "on-ink"
+    },
+    ".tracy-listing__search .wp-block-search__button": {
+      "color": "on-ink"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: var(--wp--preset--color--accent-on)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: var(--wp--preset--color--accent-on)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    ":is(.tracy-page-home, .tracy.blog) .tracy-chips__all a": {
+      "color": "on-ink"
+    },
+    "[style^=\"color: var(--wp--preset--color--accent)\"]": {
+      "color": "accent-text!"
+    },
+    "[style*=\"color: rgb(138, 135, 128)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgba(138, 135, 128, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgb(180, 175, 164)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgba(180, 175, 164, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgb(168, 164, 155)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgba(168, 164, 155, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgb(201, 198, 190)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"color: rgba(201, 198, 190, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(245, 243, 238)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(245, 243, 238)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(185, 181, 172)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(185, 181, 172)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(228, 223, 214)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(228, 223, 214)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(138, 135, 128)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(138, 135, 128)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(168, 164, 155)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(168, 164, 155)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(180, 175, 164)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(180, 175, 164)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"color: rgba(191, 212, 203, 0.996)\"], [style*=\"color: rgb(191, 212, 203)\"]": {
+      "color": "accent-on!"
+    },
+    "[style*=\"color: rgb(192, 57, 43)\"]": {
+      "color": "danger!"
+    },
+    "[style*=\"color: rgb(122, 32, 22)\"]": {
+      "color": "danger!"
+    },
+    "[style*=\"color: rgb(107, 74, 14)\"]": {
+      "color": "warn!"
+    },
+    "[style*=\"color: rgb(31, 74, 34)\"]": {
+      "color": "success!"
+    },
+    "[style*=\"border-left: 3px solid rgb(46, 125, 50)\"]": {
+      "border-color": "success!"
+    },
+    "[style*=\"border-left: 3px solid rgb(200, 137, 27)\"]": {
+      "border-color": "warn!"
+    },
+    "[style*=\"border-left: 3px solid rgb(192, 57, 43)\"], [style*=\"border: 1px solid rgb(192, 57, 43)\"]": {
+      "border-color": "danger!"
+    },
+    "button[style*=\"background: var(--wp--preset--color--warn)\"]": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    "[style*=\" color: var(--wp--preset--color--accent)\"]": {
+      "color": "accent-text!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--green)\"][style*=\"color: rgb(245, 243, 238)\"]": {
+      "color": "accent-on!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--green)\"] button[style*=\"background: var(--wp--preset--color--warn)\"]": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    },
+    ".tracy-brand__mark:not(.tracy-brand__mark--footer)": {
+      "background-color": "fg",
+      "color": "bg"
+    },
+    ".tracy-aside__subscribe": {
+      "color": "accent-on"
+    },
+    "[style*=\"background: rgb(232, 240, 235)\"], [style*=\"background: rgba(232, 240, 235, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: rgb(233, 242, 233)\"], [style*=\"background: rgba(233, 242, 233, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: rgb(251, 242, 226)\"], [style*=\"background: rgba(251, 242, 226, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: rgb(252, 243, 242)\"], [style*=\"background: rgba(252, 243, 242, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: rgb(245, 243, 238)\"], [style*=\"background: rgba(245, 243, 238, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: rgb(237, 234, 226)\"], [style*=\"background: rgba(237, 234, 226, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: rgb(220, 215, 204)\"], [style*=\"background: rgba(220, 215, 204, 0.996)\"]": {
+      "background-color": "surface!"
+    },
+    "[style*=\"background: var(--wp--preset--color--border)\"][style*=\"color: rgb(168, 164, 155)\"]": {
+      "background-color": "surface-warm!",
+      "color": "muted!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(245, 243, 238, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(185, 181, 172, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(228, 223, 214, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(138, 135, 128, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(168, 164, 155, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(180, 175, 164, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style^=\"color: var(--wp--preset--color--warn)\"]": {
+      "color": "accent-text!"
+    },
+    "[style*=\" color: var(--wp--preset--color--warn)\"]": {
+      "color": "accent-text!"
+    },
+    "[style^=\"background: var(--wp--preset--color--warn)\"]:not(button)": {
+      "background-color": "accent!"
+    },
+    "[style*=\" background: var(--wp--preset--color--warn)\"]:not(button)": {
+      "background-color": "accent!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgb(201, 198, 190)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"] [style*=\"color: rgba(201, 198, 190, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: var(--wp--custom--tracy--brand--ink)\"][style*=\"color: rgb(201, 198, 190)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(245, 243, 238)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(245, 243, 238, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(245, 243, 238)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(185, 181, 172)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(185, 181, 172, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(185, 181, 172)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(228, 223, 214)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(228, 223, 214, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(228, 223, 214)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(138, 135, 128)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(138, 135, 128, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(138, 135, 128)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(168, 164, 155)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(168, 164, 155, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(168, 164, 155)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(180, 175, 164)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(180, 175, 164, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(180, 175, 164)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgb(201, 198, 190)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"] [style*=\"color: rgba(201, 198, 190, 0.996)\"]:not([style*=\"background\"])": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"][style*=\"color: rgb(201, 198, 190)\"]": {
+      "color": "on-ink!"
+    },
+    "[style*=\"background: rgb(218, 90, 42)\"], [style*=\"background: rgba(218, 90, 42, 0.996)\"]": {
+      "background-color": "accent!"
+    },
+    "[style*=\"background: rgb(20, 72, 58)\"], [style*=\"background: rgba(20, 72, 58, 0.996)\"]": {
+      "background-color": "accent!"
+    },
+    "[style*=\"background: rgb(20, 23, 26)\"], [style*=\"background: rgba(20, 23, 26, 0.996)\"]": {
+      "background-color": "ink!"
+    },
+    "[style*=\"outline: rgb(207, 224, 216)\"]": {
+      "outline-color": "accent!"
+    },
+    "[style*=\"border: 1px solid rgb(180, 175, 164)\"]": {
+      "border-color": "border!"
+    },
+    "[style*=\"color: rgb(185, 181, 172)\"]:not([style*=\"background\"])": {
+      "color": "muted!"
+    },
+    "[style*=\"border: 1px solid rgb(61, 107, 92)\"]": {
+      "background-color": "bg!",
+      "color": "fg!",
+      "border-color": "border!"
+    },
+    "input[style*=\"color: rgb(168, 164, 155)\"]": {
+      "color": "muted!"
+    },
+    ".wtb-projects .wtb-projects__item:not(:first-child) :is(.wtb-card__title, .wtb-card__title a)": {
+      "color": "fg"
+    },
+    ".tracy .wpcf7-form input[type=\"submit\"]:disabled": {
+      "background-color": "accent",
+      "color": "accent-on"
+    }
+  },
+  "followRulesDisabledNote": "18/10/2026 (BTN-1, probe v10, /contact/ and its de and ru copies): Contact Form 7's Send request is held disabled until the consent box is ticked. The template draws it in its orange at 60% opacity (tracy-base sections-extra.css), the call to action still read as one; sections.css hands the disabled face to the system's disabled roles, and with the opacity on top it stood as a pale grey slab on its card (Moxie #777568 on #d5d1b9, 1.6:1 off the card): no visitor would read it as the form's button. Under a system it keeps the system's accent and its words, the template's opacity still saying it is not yet pressable. This rule stays in the contract (dot 3, 19/10/2026): it is a worn-only interaction the theme cannot draw itself. The theme keeps reading the disabled roles (sections.css, var(--ds-c-disabled-bg, accent)), which every disabled control should; with no worn marker on a WordPress page it cannot drop its 60% opacity only while a system is worn. Measured without this rule on 1.3.8 (/contact/, Moxie and Figma, light and dark, probe v10): BTN-1 lostButtons on every run (Moxie light #d5d1b9 on the card #eae5cc, dark #2a2a24 on #1a1a1a, under 1.25:1); with it, none.",
+  "followRulesNote": "15/10/2026 (every declared page measured): the theme and the demo content paint words on the brand ink with the accent-on preset (white in the template, its own white on the ink); under a system the ink takes the system's ink role (templateVars) while accent-on is the system's word on its accent (Moxie's black), so the team names, the ink chips, the priced list's titles and the content's inline ink blocks (the projects chips, the investor table head, the careers quote, the slide numbers) read 1:1. Words on the ink take the ink's own words (on-ink); an inline colour is beaten with !important, as only that outranks a style attribute",
+  "followRulesInlineNote": "15/10/2026: the demo content (style guide, slide, form, careers, investor and newsletter pages) writes some colours inline as the template's literals: the stone greys (#8a8780, #b4afa4, #a8a49b, #c9c6be) take the system's muted text; the paper and stone words inside an inline ink block take the ink's words; the green copy grey (#bfd4cb) on the brand green, which became the accent, takes the accent's words; the alerts' red, brown and green words and rules take the system's status colours; an inline `color: accent` link takes the readable accent; the content's orange call buttons (background: warn) are the system's primary button; the content's orange labels and rules written with the warn preset (the warn preset IS the brand orange, #da5a2a: card meta, sector chips, slide kickers, the 36px rules over a slide title) take the readable accent and the accent fill: as a status colour the slot only moved them a fifth toward the system's text, so they stayed orange under every system (status-hue, 15/10/2026)",
+  "followRulesLogoNote": "16/10/2026 (Akemi: the logo follows a worn system, header and footer alike): f5b74a9a23 froze the header monogram's fill at the template green (#14483a) while this rule painted its letters in the accent's words, so under a dark system the header read dark letters on dark green (Moxie dark) and the footer's mark followed the system. The header monogram now wears the page's text pair turned (fg as its fill, bg as its letters) on the header, which takes the page ground (brand.header), as the footer monogram wears its band's pair turned: readable by construction (the fg/bg pair is 4.5:1 or more), and the same white square with dark letters as the footer on a dark system. With no system worn the theme draws its own green, paper and face. The footer wordmark (a p.wp-block-site-title) was caught by the band's second-text rule (p:not(.tracy-brand__mark) outweighs the class alone), so it read grey while the header wordmark read the page text; it now leaves that rule and takes the band text the paint above names, as the template draws it (paper on the ink)",
+  "followRulesDarkNote": "15/10/2026 (dark side): the header's monogram and the news sidebar's subscribe card sit on the brand green, which became the accent: their words take the accent's words, not the ink's (Moxie dark: cream on light blue, 1.96:1). The content's pale inline grounds (the alerts' tints, the paper and warm cards, #e8f0eb and friends) take the system's surface, as the theme's own dark rules give them a dark tint; the disabled chip on the border colour takes the warm surface. An ink block's words rule stops at an inner element with its own ground (the green NG chip, the orange call button on the ink card). The hero's outline button on hover (wp-tracy-business.css: var(--ds-c-accent-text-hover, accent preset)) takes the band's readable accent through the band's own --ds-c-accent-text-hover; the dark side wrote that variable as initial, so the button fell back to the hero's kept accent preset (it read #14483a on the dark hero, 1.67:1)",
+  "followRulesMockNote": "15/10/2026 (MOCK-1 to 0): the last inline literals of the demo content: the style guide's colour swatches and the inline orange, green and ink grounds (#da5a2a, #14483a, #14171a) take the accent and the ink; the stone words on a literal ink ground take the ink's words like those on the brand-ink variable; the focus ring (#cfe0d8 outline) takes the accent, the subscribe field on the green card (a darker green fill, a green rule) the page's own field colours, as it otherwise matched its card under a system (unstyled-input); the disabled field's stone text the muted text, the checkbox and dashed rules (#b4afa4) the border; the warm grey copy (#b9b5ac) outside an ink block the muted text",
+  "literalsNote": "#a16207: the rating stars, a status colour (amber)",
+  "sideRules": {
+    "light": {
+      ".tracy-social-proof__rating": {
+        "color": "#a16207"
+      },
+      ":is([style^=\"color: var(--wp--preset--color--accent)\"], [style*=\" color: var(--wp--preset--color--accent)\"], [style^=\"color: var(--wp--preset--color--warn)\"], [style*=\" color: var(--wp--preset--color--warn)\"]):not([style*=\"background\"]):not([style*=\"background\"]:not([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) *)": {
+        "color": "var(--ds-c-accent-text) !important"
+      },
+      ":is([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) :is([style^=\"color: var(--wp--preset--color--accent)\"], [style*=\" color: var(--wp--preset--color--accent)\"], [style^=\"color: var(--wp--preset--color--warn)\"], [style*=\" color: var(--wp--preset--color--warn)\"]):not([style*=\"background\"]):not(:is([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) [style*=\"background\"]:not([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) *)": {
+        "color": "var(--ds-c-accent-text) !important"
+      }
+    },
+    "dark": {
+      ":is([style^=\"color: var(--wp--preset--color--accent)\"], [style*=\" color: var(--wp--preset--color--accent)\"], [style^=\"color: var(--wp--preset--color--warn)\"], [style*=\" color: var(--wp--preset--color--warn)\"]):not([style*=\"background\"]):not([style*=\"background\"]:not([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) *)": {
+        "color": "var(--ds-c-accent-text) !important"
+      },
+      ":is([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) :is([style^=\"color: var(--wp--preset--color--accent)\"], [style*=\" color: var(--wp--preset--color--accent)\"], [style^=\"color: var(--wp--preset--color--warn)\"], [style*=\" color: var(--wp--preset--color--warn)\"]):not([style*=\"background\"]):not(:is([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) [style*=\"background\"]:not([style*=\"background: var(--wp--custom--tracy--brand--header)\"], [style*=\"background: var(--wp--preset--color--surface)\"], [style*=\"background: var(--wp--preset--color--bg)\"]) *)": {
+        "color": "var(--ds-c-accent-text) !important"
+      }
+    }
+  },
+  "innerNote": "15/10/2026 (v10 inner measure, /about/ 8/12): the page content (core/html blocks of the design export) writes its colours inline from the presets: the history years in the warn preset (the template's signal orange #da5a2a, which the slot keeps: 3.31:1 on Moxie's derived cream, the template's own 3.46:1 on its paper) and the Where we work arrows in the accent preset, a fill (3.14:1 on Moxie's derived cream, 3.07:1 on Stripe's derived navy). The theme's own orange words already take the readable accent (templateVars brand.orange), so inline words in the accent or warn preset take it too, !important being the only way past an inline style: on the page, or in a cell drawn in the page colour (brand.header, which follows the page), the surface or the page preset, never past a ground of another colour on the way (ink panels, warm sections and a literal pill keep the template's inline colour). Matched on the released content (jsdom): about 10, services 36, slide 24, projects 12, careers 6, contact 5, investor relations 5, home 0. The readable accent reads 4.53:1 or more on the page under all 1334 systems on both sides: 4.96:1 and 5.41:1 there. Written as sideRules on both sides (a followRule with accent-text! is repeated in hex inside every worn band); the light side keeps tracy-base's rating-stars rule, which setting sideRules here would otherwise drop."
+}

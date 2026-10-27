@@ -1,0 +1,19 @@
+{
+  "name": "@tracy/od-skill",
+  "version": "0.1.3",
+  "description": "OpenDesign's 162 skills plus 4 design templates and 13 craft files, packaged to be preinstalled in the agent image; tracy-enabled.txt decides which are enabled",
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    "./tracy-enabled.txt": "./tracy-enabled.txt",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "skills",
+    "tracy-enabled.txt",
+    "NOTICE",
+    "LICENSE",
+    "design-templates",
+    "craft"
+  ]
+}

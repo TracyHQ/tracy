@@ -1,0 +1,72 @@
+---
+/**
+ * One router for both locales. Astro resolves `Astro.currentLocale` from the URL (measured on
+ * 0.37/Astro 7: `/ru/about` -> "ru"), so a single catch-all serves `/about` and `/ru/about`
+ * without duplicating page files. Unknown paths render the 404 view with a 404 status.
+ * Route table: tasks/emdash-northgate/inventory/routes.json.
+ */
+export const prerender = false
+import { splitPath } from '@/lib/i18n'
+import { loadChrome } from '@/lib/chrome'
+import Home from '@/views/Home.astro'
+import About from '@/views/About.astro'
+import Services from '@/views/Services.astro'
+import Service from '@/views/Service.astro'
+import Projects from '@/views/Projects.astro'
+import Project from '@/views/Project.astro'
+import News from '@/views/News.astro'
+import Article from '@/views/Article.astro'
+import Careers from '@/views/Careers.astro'
+import Investors from '@/views/Investors.astro'
+import Contact from '@/views/Contact.astro'
+import Search from '@/views/Search.astro'
+import Kit from '@/views/Kit.astro'
+import Page from '@/views/Page.astro'
+import Sitemap from '@/views/Sitemap.astro'
+import NotFound from '@/views/NotFound.astro'
+
+const { locale, path } = splitPath(Astro.url.pathname)
+const chrome = await loadChrome(locale)
+const segs = path.split('/').filter(Boolean)
+const [a, b, c] = segs
+const KIT: Record<string, string> = {
+  newsletter: 'kit-newsletter',
+  email: 'kit-email',
+  form: 'kit-form',
+  slides: 'kit-slides',
+  'style-guide': 'kit-style-guide'
+}
+const SLUG = /^[a-z0-9][a-z0-9-]*$/
+
+type View = { component: any; props: Record<string, unknown> } | null
+let view: View = null
+if (segs.length === 0) view = { component: Home, props: {} }
+else if (segs.length === 1) {
+  if (a === 'about') view = { component: About, props: {} }
+  else if (a === 'services') view = { component: Services, props: {} }
+  else if (a === 'projects') view = { component: Projects, props: {} }
+  else if (a === 'news') view = { component: News, props: {} }
+  else if (a === 'careers') view = { component: Careers, props: {} }
+  else if (a === 'investors') view = { component: Investors, props: {} }
+  else if (a === 'contact') view = { component: Contact, props: {} }
+  else if (a === 'search') view = { component: Search, props: {} }
+  else if (a === 'sitemap') view = { component: Sitemap, props: {} }
+  else if (a === '404') view = null
+  else if (SLUG.test(a)) view = { component: Page, props: { slug: a } }
+} else if (segs.length === 2) {
+  if (a === 'services' && SLUG.test(b)) view = { component: Service, props: { slug: b } }
+  else if (a === 'projects' && SLUG.test(b)) view = { component: Project, props: { slug: b } }
+  else if (a === 'news' && SLUG.test(b)) view = { component: Article, props: { slug: b } }
+  else if (a === 'kit' && KIT[b]) view = { component: Kit, props: { slug: KIT[b] } }
+} else if (segs.length === 3) {
+  if (a === 'projects' && b === 'sector' && SLUG.test(c)) view = { component: Projects, props: { sector: c } }
+  else if (a === 'news' && b === 'category' && SLUG.test(c))
+    view = { component: News, props: { category: c } }
+  else if (a === 'news' && b === 'tag' && SLUG.test(c)) view = { component: News, props: { tag: c } }
+}
+
+const Component = view?.component ?? NotFound
+if (!view) Astro.response.status = 404
+---
+
+<Component chrome={chrome} locale={locale} path={path} {...(view?.props ?? {})} />

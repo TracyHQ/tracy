@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1094-chat-bubble-fail-closed",
+  "kind": "fix",
+  "title": "The sign-in gate's chat bubble stays hidden for a seat when the state answer fails, errors or does not say chatEnabled",
+  "pr": 1094,
+  "area": "auth/dsh-passwords/chat",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run vendor/tracy/dsh-passwords test/tracy/chat-entry-client.test.ts (mounts the real ChatLauncher with a faked fetch)."
+  ],
+  "expect": [
+    "S1: 500 answer, thrown fetch, and an OK answer without chatEnabled render no bubble and fetch no messages; chatEnabled true shows it."
+  ],
+  "selectors": {
+    "door": "GET /api/dsh-passwords/state"
+  },
+  "evidence": "Found 09/10/2026 while closing the avatar debt of PR #1082: chat.tsx set the bubble 'on' in its catch and on !res.ok.",
+  "fence": "Client hook H18 (src/client/tracy/chat-entry.ts). Not covered: the server's chat policy.",
+  "run": {
+    "cwd": "vendor/tracy/dsh-passwords",
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "test/tracy/chat-entry-client.test.ts"
+    ],
+    "tests": [
+      "K6: the bubble stays hidden when the state answer is an error",
+      "K6: the bubble stays hidden when the state request itself fails",
+      "K6: the bubble stays hidden when the state answer does not say \"on\"",
+      "K6: the bubble shows when the state answer says this account switched it on"
+    ]
+  }
+}

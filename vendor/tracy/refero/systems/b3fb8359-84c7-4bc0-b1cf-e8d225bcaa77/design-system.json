@@ -1,0 +1,234 @@
+{
+  "dos": [
+    "Use Editorial New weight 200 exclusively for display headlines at 48px or larger — never below 48px, never above weight 200",
+    "Keep the page 97% achromatic: Ink Black, Paper White, and grayscale neutrals handle 95% of the visual load",
+    "Apply 0.107em letter-spacing to all PP Mori text at 12-15px — this tracked-out feel is the small-type signature",
+    "Use 24px radius for buttons, 8px for cards, 800px for images — the radius scale is dramatic and must be preserved",
+    "Reserve #fef199 yellow for the dark footer panel only — it is the single chromatic event on the page",
+    "Maintain generous section gaps of 80-120px between major blocks; the airy rhythm is editorial, not compact",
+    "Let display headlines run full-width without max-width constraints; the oversized serif is the layout"
+  ],
+  "donts": [],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#111118",
+      "name": "Ink Black",
+      "role": "Primary text, nav text, dark footer surface, filled button background, badge fills — near-black with a barely-perceptible cool tint reads as warmer than pure #000 in print contexts",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button text on dark fills, inverted button text — the dominant ground",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dddddd",
+      "name": "Soft Ash",
+      "role": "Muted borders, image placeholder backgrounds, secondary dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bdbdbd",
+      "name": "Stone Gray",
+      "role": "List dividers, body-level borders, tertiary structural lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7c7c7c",
+      "name": "Slate",
+      "role": "Helper text, de-emphasized body copy, subtle metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Graphite",
+      "role": "Link text and link borders in body context — slight lift from pure ink",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "True Black",
+      "role": "Hard border accent in lists and structural dividers where maximum contrast is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#283338",
+      "name": "Night Forest",
+      "role": "Navigation-specific borders and text — a cool desaturated charcoal distinct from the warm Ink Black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fef199",
+      "name": "Highlighter Yellow",
+      "role": "Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "accent"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "80px",
+      "cards": "8px",
+      "links": "8px",
+      "badges": "50px",
+      "images": "800px",
+      "buttons": "24px",
+      "headings": "150px"
+    },
+    "elementGap": "16-24px",
+    "sectionGap": "80-120px",
+    "cardPadding": "24px",
+    "pageMaxWidth": null
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Base page canvas and card surfaces"
+    },
+    {
+      "hex": "#dddddd",
+      "name": "Soft Mist",
+      "level": 2,
+      "purpose": "Subtle alt sections, image card backgrounds, muted panels"
+    },
+    {
+      "hex": "#111118",
+      "name": "Ink Black",
+      "level": 3,
+      "purpose": "Footer and CTA panel — the only dark surface, creates the page's only dramatic inversion"
+    }
+  ],
+  "northStar": "Editorial serif on cream paper with one yellow highlighter mark.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": 1.28
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.4,
+      "letterSpacing": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "heading-lg",
+      "size": 72,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "display",
+      "size": 160,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Pill Button (Light)",
+      "role": "Primary CTA on light backgrounds",
+      "description": "Ink Black (#111118) fill, Paper White (#ffffff) text, PP Mori 14-15px weight 600, letter-spacing 0.107em, uppercase tracking. 24px border-radius, 16px horizontal × 10px vertical padding. 1px Ink Black border for definition."
+    },
+    {
+      "name": "Ghost Pill Button",
+      "role": "Secondary action on light backgrounds",
+      "description": "Transparent fill, 1px Ink Black (#111118) border, Ink Black text. 24px border-radius, 16px × 10px padding. Used for the 'Start a project' and 'About me' actions."
+    },
+    {
+      "name": "Capsule Link Button",
+      "role": "Inline text-link with border treatment",
+      "description": "8px radius, 1px border in #333333 or #111118, small PP Mori 14-15px weight 400. Behaves like a pill-tag hybrid for 'Work with me' in nav."
+    },
+    {
+      "name": "Work Card",
+      "role": "Portfolio project tile in the grid",
+      "description": "8px border-radius, contains a capsule-shaped (800px radius) image, project name overlaid in PP Mori 600. Image bleeds to capsule shape regardless of source aspect ratio. No shadow."
+    },
+    {
+      "name": "About Card (Sidebar)",
+      "role": "'Your New Partner' intro block",
+      "description": "Left-column card with portrait image, uppercase PP Mori 12-14px label 'YOUR NEW PARTNER' with down-arrow icon, intro paragraph in PP Mori 16px, embedded ghost button."
+    },
+    {
+      "name": "Footer CTA Panel",
+      "role": "Dark closing section with primary conversion",
+      "description": "Full-width Ink Black (#111118) background, 'Ready to take your brand to the next level?' in PP Mori body weight. Massive pill button: outlined in Highlighter Yellow (#fef199), 150px radius, Editorial New or PP Mori text at 48-72px, arrow icon in a separate circular capsule (50px radius) touching the main pill."
+    },
+    {
+      "name": "Circular Text Badge",
+      "role": "Decorative availability indicator (the 'AVAILABLE NOW' element)",
+      "description": "Text wraps around an invisible circle in PP Mori 12px weight 400, 0.107em tracking, Ink Black on white. A small emoji or icon sits at the center. Used as a single floating decorative element — not a repeatable component."
+    },
+    {
+      "name": "Service/Client Logo Row",
+      "role": "Trust strip showing partner brands",
+      "description": "Horizontal row of monochrome logos, PP Mori or custom, evenly spaced with 24-40px gaps. No borders, logos sit directly on white. Filters to grayscale for uniformity."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Sticky/fixed top bar, white background, 1px bottom border. Logo block (name + 'Visual Designer' sub-label) left, centered nav links (Work, Services, About) in PP Mori 15-16px, capsule CTA right. 80px radius on the nav container edges in some breakpoints."
+    },
+    {
+      "name": "Project Detail Image Card",
+      "role": "Large showcase image within portfolio pages",
+      "description": "800px border-radius creating a capsule/lozenge shape. No padding, no border, no shadow — the shape IS the container. Used for phone mockups and hero project visuals."
+    },
+    {
+      "name": "Headline Display Block",
+      "role": "Section-opening serif statement",
+      "description": "Editorial New weight 200 at 70-160px, line-height 1.0-1.1, Ink Black on white. Occupies full width of its container. No uppercase, no decoration — the extreme thinness is the visual event."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body, nav, UI, and secondary display — the workhorse sans. Weight 200 carries small labels with editorial lightness; 400 is body; 600 is reserved for button text and emphasis. The unusually wide 0.107em letter-spacing on small text (12-15px) gives nav and badges an open, tracked-out feel typical of fashion-editorial UI.",
+      "sizes": "12px, 14px, 15px, 16px, 18px, 24px, 72px",
+      "family": "PP Mori",
+      "weight": "200, 400, 600",
+      "lineHeight": "1.00–1.40",
+      "substitute": "Inter, Manrope, or DM Sans",
+      "letterSpacing": "0.107em at 12-15px, tighter at larger sizes"
+    },
+    {
+      "role": "Hero and section display headlines only — a thin didone serif at extreme sizes (70-160px) with 1.0 line-height. The whisper-thin weight 200 is the signature: most serif sites use 400-600 for display, this site lets the letterforms almost disappear, making the few words monumental. The contrast between the ultra-thin serif and the heavier PP Mori body creates the magazine-cover tension that defines the brand.",
+      "sizes": "48px, 70px, 72px, 160px",
+      "family": "Editorial New",
+      "weight": "200",
+      "lineHeight": "1.00–1.20",
+      "substitute": "Playfair Display, DM Serif Display, or Libre Caslon Display"
+    }
+  ],
+  "description": "André Cândido's portfolio operates as an editorial design studio: a near-monochrome canvas of off-white paper and near-black ink, with one warm yellow accent that breaks the page like a highlighter mark. The signature is the pairing of PP Mori — a geometric sans — with Editorial New, a high-contrast didone serif used at extreme display sizes (up to 160px) for headlines that behave like magazine covers. Components are quiet and lightweight: hairline borders, pill-shaped buttons (24-50px radius), capsule-shaped images (800px radius), and no shadows. The footer inverts into a deep #111118 panel where the yellow reappears, creating a single dramatic dark moment in an otherwise airy light page. The visual system is dense with personality despite being 97% achromatic — circular text badges, playful geometric project cards, and asymmetric editorial grids give it character without color.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "primary action: #111118 (filled action)\nCreate a Primary Action Button: #111118 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA."
+    }
+  ]
+}

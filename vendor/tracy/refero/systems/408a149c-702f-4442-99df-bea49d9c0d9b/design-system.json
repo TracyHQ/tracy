@@ -1,0 +1,373 @@
+{
+  "dos": [
+    "Use #f472b6 as the sole pink for all primary actions — never substitute with #ec4899 or lighter pinks for button fills",
+    "Apply the 9999px pill radius to all interactive elements that should feel tap-friendly: buttons, tabs, tags, badges",
+    "Reserve the 2px pink border treatment exclusively for the install command box — other code blocks use #282a36 hairline",
+    "Set body text at 16px with line-height 1.63 in #9ca3af or #d1d5db for descriptions, #e5e7eb for primary content",
+    "Use JetBrains Mono for any text that looks like a command, path, version, or package name — never for body prose",
+    "Color-code tool accents consistently: Runtime=pink, Package Manager=cyan, Test Runner=gold, Bundler=violet",
+    "Stack surfaces at #0d0e11 → #14151a → #1e2028 for depth — never use drop shadows to create elevation"
+  ],
+  "donts": [
+    "Don't use #f472b6 for body text or large background fills — pink is an accent, not a surface",
+    "Don't apply shadows to cards or panels — depth comes from surface color steps and 1px borders only",
+    "Don't mix the 8px card radius with 9999px on the same component — pick one radius family per element type",
+    "Don't use color logos in the 'USED BY' row — keep all third-party marks at #9ca3af for visual consistency",
+    "Don't break the dark surface system with light cards or white backgrounds — even feature comparisons stay in the dark palette",
+    "Don't use system-ui weight 300 for body copy — reserve light weights for large display headlines only",
+    "Don't add more than one chromatic accent per section — Bun's discipline is one hot color against many grays"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#0d0e11",
+      "name": "Void",
+      "role": "Page canvas, hero backgrounds, deepest surface layer",
+      "group": "neutral"
+    },
+    {
+      "hex": "#14151a",
+      "name": "Obsidian",
+      "role": "Card surfaces, elevated panels, code block backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1e2028",
+      "name": "Graphite",
+      "role": "Secondary card surfaces, hover states, nested panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#282a36",
+      "name": "Iron",
+      "role": "Borders, dividers, subtle separators, table lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3a3a3f",
+      "name": "Steel",
+      "role": "Stronger borders, input outlines, card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3b3f4b",
+      "name": "Slate",
+      "role": "Icon strokes, secondary borders, button outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4f5666",
+      "name": "Pewter",
+      "role": "Muted text, inactive labels, tertiary content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6b7280",
+      "name": "Fog",
+      "role": "Secondary text, descriptions, helper text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9ca3af",
+      "name": "Ash",
+      "role": "Tertiary text, captions, metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d1d5db",
+      "name": "Bone",
+      "role": "Light secondary text, subtle emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Pearl",
+      "role": "Near-white text, icon fills, high-contrast labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Primary text, logo marks, maximum contrast headings",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f472b6",
+      "name": "Bun Pink",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ec4899",
+      "name": "Magenta Core",
+      "role": "Hover states on pink CTAs, gradient endpoint for headlines, emphasis text",
+      "group": "brand"
+    },
+    {
+      "hex": "#f9a8d4",
+      "name": "Rose Petal",
+      "role": "Light pink backgrounds for tags, soft highlights, gradient midpoint",
+      "group": "accent"
+    },
+    {
+      "hex": "#fbcfe8",
+      "name": "Blush",
+      "role": "Softest pink for background washes, subtle pink tints",
+      "group": "accent"
+    },
+    {
+      "hex": "#3d1629",
+      "name": "Wine",
+      "role": "Pink-tinted borders for highlighted sections, badge outlines",
+      "group": "accent"
+    },
+    {
+      "hex": "#3f1f33",
+      "name": "Plum",
+      "role": "Deep pink-tinted backgrounds for active states or featured panels",
+      "group": "accent"
+    },
+    {
+      "hex": "#a855f7",
+      "name": "Violet",
+      "role": "Decorative accent, gradient endpoint, illustration highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#c084fc",
+      "name": "Lavender",
+      "role": "Headline gradient, icon accents, link hover states",
+      "group": "accent"
+    },
+    {
+      "hex": "#d8b4fe",
+      "name": "Lilac",
+      "role": "Soft violet text, gradient midpoint, subtle highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#06b6d4",
+      "name": "Cyan",
+      "role": "Code syntax highlighting, tool accent for Postgres/data features",
+      "group": "accent"
+    },
+    {
+      "hex": "#e67e22",
+      "name": "Amber",
+      "role": "Code syntax highlighting, tool accent for runtime features, warm contrast",
+      "group": "accent"
+    },
+    {
+      "hex": "#facc15",
+      "name": "Gold",
+      "role": "Code syntax highlighting, test runner badge accent, attention markers",
+      "group": "accent"
+    },
+    {
+      "hex": "#34d399",
+      "name": "Mint",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content with generous side padding. The hero is a two-column split: left side holds the headline, description, install command, and social proof; right side holds the tabbed benchmark visualization. Below the hero, sections are single-column centered with content capped at ~800px reading width. The 'Four tools' section uses a 2×2 card grid with 16px gaps. The 'APIs you need' section centers a cloud of category tags above a full-width code block. Vertical rhythm is established by 64-96px gaps between sections, with no alternating background bands — everything stays on #0d0e11. Navigation is a simple top bar with logo left, nav links right, and a single pink CTA.",
+  "imagery": "The site uses almost no traditional imagery — no photography, no lifestyle shots, no stock illustrations. Visual interest comes from: (1) syntax-highlighted code blocks that act as both content and decoration, (2) the benchmark bar chart in the hero where the visual IS the data, (3) starburst 'REPLACES' badges that function as playful stickers, and (4) the gradient text on section headlines. Third-party company logos in the social proof row are the only external imagery, rendered in monochrome. The aesthetic is 'documentation page that got promoted to a marketing site' — the interface is the visual.",
+  "similar": [
+    {
+      "why": "Same dark-mode developer aesthetic with monochrome base and single bright accent for CTAs. Both use system-font stacks with tight tracking on large headlines.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Dark canvas, generous spacing, code blocks as hero elements, and pill-shaped interactive components. Both treat the terminal as a first-class design element.",
+      "business": "Railway"
+    },
+    {
+      "why": "Disciplined dark palette with one hot accent color cutting through grays. Large confident headlines and flat surfaces without drop shadows.",
+      "business": "Linear"
+    },
+    {
+      "why": "Competitor devtool with similarly dark, code-forward marketing pages. Both use syntax-highlighted code as primary visual content rather than illustration.",
+      "business": "Deno"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "8px",
+      "icons": "4px",
+      "badges": "9999px",
+      "inputs": "8px",
+      "buttons": "9999px",
+      "codeBlocks": "8px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64-96px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#0d0e11",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Page background, hero space, footer"
+    },
+    {
+      "hex": "#14151a",
+      "name": "Obsidian Card",
+      "level": 1,
+      "purpose": "Primary card surface, code block background, elevated panels"
+    },
+    {
+      "hex": "#1e2028",
+      "name": "Graphite Panel",
+      "level": 2,
+      "purpose": "Nested cards, hover states, secondary surfaces"
+    },
+    {
+      "hex": "#282a36",
+      "name": "Iron Border",
+      "level": 3,
+      "purpose": "Hairline borders, dividers, table cell separators"
+    }
+  ],
+  "northStar": "Hot pink cursor in a midnight terminal — every interface element is either prose or code, and the pink tells you what to click.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.63
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.78
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Single dominant action on any page — 'Build', 'Get started', primary install trigger",
+      "description": "Pill-shaped (9999px radius), 32px height, 16px horizontal padding. Background: #f472b6. Text: #ffffff, system-ui 14px weight 500. No border. On hover: shifts to #ec4899. Sits boldly against the dark canvas — this is the one element that should demand attention."
+    },
+    {
+      "name": "Ghost Navigation Button",
+      "role": "Secondary nav items: Docs, Reference, Guides, Blog, Discord",
+      "description": "No background, no border. Text: #ffffff or #e5e7eb, system-ui 14px weight 500. On hover: text shifts to #f472b6. Minimal weight — the logo and active 'Build' pill do the heavy lifting."
+    },
+    {
+      "name": "Tab Pill Navigation",
+      "role": "Switching between tool views (Bundler, Express, Postgres, WebSockets) in the hero comparison panel",
+      "description": "Pill-shaped (9999px radius), 32px height, 16px horizontal padding. Inactive state: transparent background, #9ca3af text. Active state: #f472b6 background, #ffffff text. The pink fill on the active tab is the only color in the comparison panel, making the selected tool obvious."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Grid cards in the 'Four tools' section — JavaScript Runtime, Package Manager, Test Runner, Bundler",
+      "description": "8px radius, background #14151a, 1px border #282a36. Padding 24-32px. Contains: title in system-ui 20px weight 600 white, a colored 'REPLACES' badge in top-right corner, a code snippet at top (#ec4899 text in #1e2028 inset box), description text in #9ca3af, and a two-column feature list with #34d399 checkmarks. No shadow — depth comes from the border and surface color difference."
+    },
+    {
+      "name": "Tool \"REPLACES\" Badge",
+      "role": "Decorative sticker in feature card corners — REPLACES Node.js, REPLACES NPM, etc.",
+      "description": "Starburst/jagged shape, 12-16px text, varied accent colors per tool (pink #f472b6 for Runtime, blue #06b6d4 for Package Manager, yellow #facc15 for Test Runner, violet #a855f7 for Bundler). This color-coding creates instant visual mapping between the four tools."
+    },
+    {
+      "name": "Install Command Box",
+      "role": "Prominent terminal-style code block for installation instructions",
+      "description": "8px radius, background #14151a, 2px solid #f472b6 border (the pink border is the signature — no other code block gets this treatment). Interior: JetBrains Mono 14px, #e5e7eb text, with the command highlighted in #f472b6. Copy icon button on the right. Full-width within its container, with platform tabs (Linux & macOS / Windows / View install script) above it."
+    },
+    {
+      "name": "Code Block (Standard)",
+      "role": "Syntax-highlighted code in feature cards and API sections",
+      "description": "8px radius, background #14151a, 1px border #282a36. JetBrains Mono 13-14px. Filename tab in top-left (e.g., 'index.ts') in #9ca3af. Syntax colors: keywords in #c084fc, strings in #f1fa8c, comments in #6b7280, variables in #67e8f9, functions in #ff79c6, types in #50fa7b. No pink border — only the install command gets that treatment."
+    },
+    {
+      "name": "Category Tag",
+      "role": "Pill-shaped API category labels — 'Start an HTTP server', 'Use Redis', etc.",
+      "description": "9999px radius, background transparent, 1px border #3b3f4b. Text: #e5e7eb, system-ui 13px weight 500. Padding 8px 16px. Arranged in a centered cloud layout. No fill — these are navigation hints, not actions."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social proof row — 'USED BY' with Anthropic, Typeform, Midjourney, etc.",
+      "description": "Single horizontal row, centered. Logos rendered in #9ca3af or #d1d5db at uniform height (~20px). Section label 'USED BY' in #6b7280, uppercase, 11px tracking-wide. No logos in color — monochrome keeps the row quiet so it doesn't compete with the CTA."
+    },
+    {
+      "name": "Benchmark Bar Chart",
+      "role": "Performance comparison in hero right panel — Bun vs Rolldown, esbuild, Farm, Rspack",
+      "description": "Horizontal bars on #14151a surface. Bun's bar: #f472b6 fill, short (fastest). Competitor bars: #4f5666 fill, progressively longer. Tool names in JetBrains Mono 12px left-aligned, version strings in #6b7280 below names, times in #e5e7eb right-aligned. The visual contrast between Bun's tiny pink bar and competitors' long gray bars is the entire argument."
+    },
+    {
+      "name": "Feature List Item",
+      "role": "Checkmark + feature description in feature cards",
+      "description": "Two-column grid layout. Each item: #34d399 checkmark icon (16px), then #d1d5db text in system-ui 14px. No bullets, no indent — the checkmark IS the bullet. Spacing 8px between items vertically."
+    },
+    {
+      "name": "Gradient Headline",
+      "role": "Section titles that need extra emphasis — 'Four tools, one toolkit', 'The APIs you need. Baked in.'",
+      "description": "Large system-ui (48-60px) weight 600-700. Text fill: linear-gradient from #f9a8d4 through #f472b6 to #c084fc. Centered alignment. The gradient is the section's visual anchor — it signals 'this is important' without needing color backgrounds or borders."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for all prose, headings, navigation, buttons, and UI text. The full weight range (300–800) gives the system flexibility from whisper-light display headings to bold section labels. Large display sizes (48–60px) carry headline weight, while 16–18px holds body copy at a comfortable reading rhythm.",
+      "sizes": "12, 13, 14, 16, 18, 20, 21, 24, 48, 53, 60",
+      "family": "system-ui",
+      "weight": "300, 400, 500, 600, 700, 800",
+      "lineHeight": "1.0–1.85",
+      "substitute": "Inter, -apple-system, Segoe UI, Roboto",
+      "letterSpacing": "normal at body sizes; tight tracking on display headlines (–0.02em at 48–60px)",
+      "fontFeatureSettings": "\"kern\" on"
+    },
+    {
+      "role": "Monospace companion for all executable content: code blocks, terminal commands, file paths, version strings, package names. Tight line-height (1.11) at smaller sizes keeps code dense and scannable. The 500/600 weights are used for emphasis inside code, not body text.",
+      "sizes": "12, 13, 14, 16, 18, 19",
+      "family": "JetBrains Mono",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.11–1.63",
+      "substitute": "Fira Code, IBM Plex Mono, Menlo, Consolas",
+      "fontFeatureSettings": "\"kern\""
+    }
+  ],
+  "description": "Bun's design language is a dark, developer-first aesthetic that treats the terminal as a design surface. The interface lives in near-black depths (#0d0e11) with elevated cards floating at #14151a and #1e2028, creating subtle depth without shadows. A single hot pink accent (#f472b6) cuts through the monochrome like a syntax highlighter cursor — it marks every primary action, highlights the fast word in headlines, and outlines code blocks, making interactive elements instantly scannable against the quiet background. Typography is utilitarian: system-ui for everything readable, JetBrains Mono for everything executable. Headlines are large and tight-tracked, body copy is generous and unembellished, and the visual rhythm alternates between prose sections and terminal-style code blocks. The overall feel is developer-tool meets brutalist poster — confident, slightly irreverent, and obsessed with speed.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text primary: #ffffff\n- Text secondary: #9ca3af\n- Text muted: #6b7280\n- Background canvas: #0d0e11\n- Background card: #14151a\n- Border: #282a36\n- Accent (Bun Pink): #f472b6\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\n1. **Hero headline**: system-ui 60px weight 700, white (#ffffff) with the word 'fast' in #f472b6. Letter-spacing -1.2px. Line-height 1.0. On #0d0e11 background.\n\n2. **Install command box**: 8px radius, background #14151a, 2px solid #f472b6 border. Interior text in JetBrains Mono 14px, command text in #f472b6, rest in #e5e7eb. Copy icon button on the right edge.\n\n3. **Feature card**: 8px radius, background #14151a, 1px border #282a36, padding 24-32px. Title in system-ui 20px weight 600 white. Code snippet in JetBrains Mono 13px at top with #ec4899 text. Feature list with #34d399 checkmarks and #d1d5eb descriptions.\n\n4. **Tab pill navigation**: 9999px radius, 32px height. Active: #f472b6 background, white text. Inactive: transparent background, #9ca3af text. system-ui 14px weight 500.\n\n5. **Gradient section headline**: system-ui 48px weight 600, centered. Text fill: linear-gradient from #f9a8d4 through #f472b6 to #c084fc. On #0d0e11 background."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Three gradient types serve distinct purposes:\n\n1. **Headline gradient** (linear, 90deg): #f9a8d4 → #f472b6 → #c084fc. Applied as text fill on section titles that need to feel celebratory. The pink-to-violet sweep mirrors the brand's chromatic range.\n\n2. **Edge fade** (linear, 90deg, transparent → pink → transparent): rgba(0,0,0,0) → rgba(236,72,153,0.5) → rgba(0,0,0,0). Used as decorative dividers or edge highlights on cards. Creates a 'glowing seam' effect.\n\n3. **Panel wash** (linear, 0deg): rgba(244,114,182,0.03) → rgba(20,21,26,0.5). Extremely subtle background gradient on featured panels. Barely visible — just enough to break the flat void.\n\n4. **Spotlight gradient** (radial): #b301b3 → #381dbd. Decorative background glow for hero or feature highlights. Used sparingly, always behind content."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is communicated entirely through surface color steps (#0d0e11 → #14151a → #1e2028) and 1px hairline borders in #282a36. No drop shadows are used on cards, buttons, or panels. The only shadow usage is on large overlay elements (modals, floating chat widgets) where functional separation requires it. This creates a flat, terminal-like aesthetic where depth is suggested, not rendered."
+}

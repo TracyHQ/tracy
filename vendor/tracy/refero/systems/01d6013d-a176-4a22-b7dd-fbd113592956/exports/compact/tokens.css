@@ -1,0 +1,18 @@
+:root {
+  /* Colors */
+  --color-eucalyptus: #778643;
+  --gradient-eucalyptus: radial-gradient(ellipse at 50% 50%, rgba(119,134,67,0.35) 0%, rgba(119,134,67,0.08) 50%, #ffffff 100%);
+  --color-ink-black: #000000;
+  --color-pure-canvas: #ffffff;
+  --color-graphite: #4e4e4e;
+  --color-mist: #c8c8c8;
+
+  /* Typography — Font Families */
+  --font-space-regular: 'space-regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl: 'Suisse Int'l', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-space-grotesk: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-sans: 'System Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-light: 'suisse-light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-regular: 'suisse-regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

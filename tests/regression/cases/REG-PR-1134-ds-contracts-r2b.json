@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r2b",
+  "kind": "feat",
+  "title": "Round 2 of the JA Joomla j6 slot contracts (r2b): JA Titan, JA Rights, JA Stark and JA Fresco, not ready in round 1, wear a design system from their 1.0.1 re-release",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{titan,rights,stark,fresco}.json through loadContract; tokenize a Titan dark-mode block with its varRoles and a Stark style-template body rule with its t4Placeholders; build JA Rights' Moxie module sheet (joomlaSlot).",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version}) for each, at 1.0.1 and at 1.0.0.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-fresco --port 53661 --cdp 9871 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r2b.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all four ready, minVersion {'quickstart/ja-<name>/j6': '1.0.1'}, readyNote naming tasks/evidence/ds-contracts-r2b-2026-10-11/templates/ja-<name>-j6 (or, for a template re-measured since, a tasks/evidence/ds-remeasure-*/ds-reverify-* folder of it that exists, as the later pass rewrote the readyNote on 11-12/10/2026); Titan's tokenScope includes body.dark-active and '.dark-active{--t4-gray-900:#F8F8F8;--t4-gray-100:#1B1B1B}' tokenizes to var(--ds-c-fg-2, #F8F8F8) and var(--ds-c-surface, #1B1B1B); Stark's 'body{background-color:__color_white;color:__body_text_color}' tokenizes to var(--ds-c-bg, __color_white) and var(--ds-c-fg, __body_text_color), no t4SiteCss; Rights' sheet has color:var(--ds-c-accent-on)!important and a :where(.item-align-center,.t4-footer,.bg-white,.bg-dark,.bg-purple) rule; Fresco keeps .t4-hero and .acm-features.",
+    "S3: at 1.0.1 {contract:'joomla-ja-<name>'}; at 1.0.0 reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following ≥ 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{titan,rights,stark,fresco}.json ready, minVersion, tokenScope, varRoles, t4Placeholders, keepScopes, keepDefaultsYield, buttonTextImportant"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r2b-2026-10-11/README.md: each template measured on 1.0.0 tokenized in place and on its 1.0.1 build stood up from its own zip; desktop and phone screenshots checked by eye.",
+  "fence": "which r2b templates are offered and the contract fields and library options that made them pass; not the release upload (RELEASE-DS-R2B.sh, a person runs it)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r2b.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

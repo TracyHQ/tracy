@@ -1,0 +1,34 @@
+/*
+ * pulse — two rings swell out of the marked element and fade, over and over; the second one runs
+ * 600 ms behind the first, as JA Vega's video button does (css/template.css `pulse-border`,
+ * 2200 ms ease-out infinite, `:after` delayed 600 ms).
+ *
+ * Opt-in by markup: the element carries `tracy-motion-pulse`, and the rings are its `::before`
+ * and `::after`, which the THEME draws (size, border, position). This sheet only moves them, and it
+ * moves them with `scale` rather than `transform`, so a theme that centres its rings with
+ * `transform: translate(-50%, -50%)` keeps that centring while they grow. The runtime adds
+ * `tracy-motion-on` to the element when the effect is switched on; without it nothing loops.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion .tracy-motion-pulse.tracy-motion-on::before,
+  html.tracy-motion .tracy-motion-pulse.tracy-motion-on::after {
+    animation: tracy-motion-pulse 2200ms ease-out infinite;
+  }
+
+  html.tracy-motion .tracy-motion-pulse.tracy-motion-on::after {
+    animation-delay: 600ms;
+  }
+}
+
+@keyframes tracy-motion-pulse {
+  from {
+    opacity: 1;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    scale: 1.3;
+  }
+}

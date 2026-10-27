@@ -1,0 +1,69 @@
+/* tokens.css — written by scripts/theme-tokens.mjs of the tracy-wordpress-theme skill.
+ * Design contract: tasks/ja-diner-wp7/design-contract.json (id wp-ja-diner, revision 2), variant desktop-light.
+ * Fallback: vendor/tracy/od-design-system/systems/apple/tokens.css.
+ *
+ * Every token says on its line where its value came from. A fallback value is a guess standing in until a rule measures it.
+ * Schema: the 56 custom properties the theme generator accepts (TOKEN_NAMES in its build.mjs).
+ */
+
+:root {
+  --bg:                        #fcfaf6; /* measured: body backgroundColor */
+  --surface:                   #ffffff; /* hand, S-5: white boxes and form fields (source input.form-control bg) */
+  --surface-warm:              #222222; /* hand, S-5: the dark subscribe band and ink panels (source --ds-c-ink) */
+  --fg:                        #555555; /* measured: body color */
+  --fg-2:                      #222222; /* measured: article h1/h2 color */
+  --muted:                     #555555; /* hand, S-5: source @gray */
+  --meta:                      #999999; /* hand, S-5: source --ds-c-meta */
+  --border:                    #e8e6e3; /* hand, S-5: source --ds-c-border, the most used rule colour */
+  --border-soft:               #c2c0be; /* measured: form-input borderTopColor */
+  --accent:                    #c36349; /* measured: btn-primary backgroundColor */
+  --accent-on:                 #ffffff; /* measured: btn-primary color */
+  --accent-hover:              #a34d36; /* hand, S-5: source --ds-c-accent-hover */
+  --accent-active:             #a34d36; /* hand, S-5: as hover */
+  --success:                   #16a34a; /* fallback */
+  --warn:                      #eab308; /* fallback */
+  --danger:                    #dc2626; /* fallback */
+  --font-display:              Eczar, Georgia, serif; /* measured: article-h1 fontFamily */
+  --font-body:                 "Work Sans", Helvetica, Arial, sans-serif; /* measured: body fontFamily */
+  --font-mono:                 "Work Sans", Helvetica, Arial, sans-serif; /* hand, S-5: the source UI face is the body face (menu, buttons, section labels) */
+  --text-xs:                   12px; /* measured: section-title, btn-primary fontSize */
+  --text-sm:                   13px; /* measured: copyright line */
+  --text-base:                 15px; /* measured: body fontSize */
+  --text-lg:                   22px; /* measured: article-title fontSize */
+  --text-xl:                   28px; /* fallback */
+  --text-2xl:                  36px; /* measured: article h2 */
+  --text-3xl:                  36px; /* measured: article h2 */
+  --text-4xl:                  60px; /* measured: article h1, masthead title */
+  --leading-body:              1.6; /* measured: 24px / 15px */
+  --leading-tight:             1.2; /* measured: 72px / 60px */
+  --tracking-display:          0; /* measured */
+  --space-1:                   4px; /* fallback */
+  --space-2:                   8px; /* fallback */
+  --space-3:                   12px; /* fallback */
+  --space-4:                   16px; /* fallback */
+  --space-5:                   20px; /* fallback */
+  --space-6:                   24px; /* fallback */
+  --space-8:                   32px; /* fallback */
+  --space-12:                  48px; /* fallback */
+  --radius-sm:                 0px; /* measured: form-input radius */
+  --radius-md:                 0px; /* measured: btn-primary radius */
+  --radius-lg:                 0px; /* hand, S-5: square cards like the source */
+  --radius-pill:               980px; /* fallback */
+  --elev-flat:                 none; /* fallback */
+  --elev-ring:                 0 0 0 1px var(--border); /* fallback */
+  --elev-raised:               0 12px 32px rgba(0, 0, 0, 0.08); /* fallback */
+  --focus-ring:                0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%); /* fallback */
+  --motion-fast:               150ms; /* fallback */
+  --motion-base:               220ms; /* fallback */
+  --ease-standard:             cubic-bezier(0.28, 0, 0.22, 1); /* fallback */
+  --section-y-desktop:         100px; /* fallback */
+  --section-y-tablet:          64px; /* fallback */
+  --section-y-phone:           40px; /* fallback */
+  --container-max:             1260px; /* measured: .t3-mainbody.container width at 1440 */
+  --container-gutter-desktop:  18px; /* measured: container paddingLeft */
+  --container-gutter-tablet:   18px; /* hand: Bootstrap 3 gutter of the source */
+  --container-gutter-phone:    18px; /* measured: container paddingLeft at 390 */
+}
+
+/* Provenance: each line says measured (a rule of tasks/ja-diner-wp7/spec/design-contract.json, measured on the running
+ * JA Diner 1.0.4 source on 21/10/2026), hand (S-5: the generator's token map read the wrong role) or fallback (a guess). */

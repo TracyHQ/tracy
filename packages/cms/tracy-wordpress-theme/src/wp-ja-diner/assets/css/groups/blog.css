@@ -1,0 +1,113 @@
+/* Blog group: article lists, sidebar, single article, search. The Joomla rules for the markup drawn in inc/groups/blog.php are carried in source/template.css; this sheet holds only what WordPress wrappers need undone. */
+
+/* Search results: Joomla's finder sheet is not part of the template, so its few rules are written here. */
+.com-finder__results {
+	margin-top: 24px;
+}
+.com-finder__results-list {
+	list-style: none;
+	margin: 24px 0 0;
+	padding: 0;
+}
+.result__title {
+	margin: 0;
+}
+.result__title-link {
+	display: flex;
+	flex-direction: column;
+}
+.result__title-text {
+	font-size: 13px;
+	line-height: 1.875;
+}
+.result__title-url {
+	color: var(--wp--preset--color--muted);
+	display: block;
+	font-style: normal;
+	margin-bottom: 4px;
+	overflow-wrap: anywhere;
+}
+.result__description {
+	margin: 4px 0 0;
+}
+.result__date {
+	color: var(--wp--preset--color--muted);
+}
+.result__taxonomy {
+	list-style: none;
+	margin: 4px 0 24px;
+	padding: 0;
+}
+.result__taxonomy-item {
+	display: inline-block;
+	margin-right: 15px;
+}
+.result__taxonomy-item span {
+	font-weight: 700;
+}
+
+/* The advanced-search tips open from the button beside Search (blog.js toggles `.in`, as the source's collapse does). */
+.com-finder__advanced.collapse:not(.in) {
+	display: none;
+}
+.com-finder__advanced {
+	border: 0;
+	margin: 0;
+	min-width: 0;
+	padding: 0;
+}
+
+/* The search form's fields are the source's own rules (`div.finder #search-form .word ...`); only the icon font is added: the source's Joomla icon font is not carried, the theme's Font Awesome has the glyphs. */
+.com-finder [class^='icon-search']::before {
+	display: inline-block;
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 14px;
+}
+.com-finder .icon-search::before {
+	content: '\f002';
+}
+.com-finder .icon-search-plus::before {
+	content: '\f00e';
+}
+.com-finder__explained p,
+.com-finder__empty h2,
+.com-finder__empty p {
+	margin-bottom: 0;
+}
+
+/* WordPress puts `search` on <body>; the source's `.search` rule (padding around the com_search component) must not pad the page. */
+body.search {
+	background-color: var(--wp--preset--color--bg);
+	padding: 0;
+}
+
+/* The page navigation's chevrons: the source's Joomla icon font draws them; the theme's Font Awesome has the same glyphs. */
+.pagenavigation .icon-chevron-right::before,
+.pagenavigation .icon-chevron-left::before {
+	display: inline-block;
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: 400;
+}
+.pagenavigation .icon-chevron-right::before {
+	content: '\f105';
+}
+.pagenavigation .icon-chevron-left::before {
+	content: '\f104';
+}
+/* The tag list's filter fields: the same mono bold field as the finder's. */
+.com-tags-tag .filters :is(.inputbox, .form-select) {
+	background: transparent;
+	box-sizing: border-box;
+	color: var(--ds-c-fg, var(--wp--preset--color--fg));
+	font-family: var(--ds-font-ui, 'Work Sans', Helvetica, Arial, sans-serif);
+	font-size: 14px;
+	font-weight: 700;
+	height: 50px;
+	padding: 8px 15px;
+}
+.com-tags-tag .filters .inputbox {
+	line-height: 30px;
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/article-foot",
+  "version": "0.1.0",
+  "title": "Article foot (hidden)",
+  "category": "design",
+  "icon": "hidden",
+  "description": "The two nodes the source prints after the tags on every article and then hides (`single-article.css` §12, `display: none !important`): Joomla's prev/next `nav.pagenavigation` and the info block `footer.hx-article__foot > dl.article-info`. Rebuilt in the source's own shape so the article tree matches; never visible.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

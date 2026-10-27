@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-992-csp-form-action-whitelist",
+  "kind": "fix",
+  "title": "A returning Google sign-in that is not admitted can follow the redirect to the whitelist page",
+  "pr": 992,
+  "area": "web/sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/security-headers.test.mjs",
+    "S2: Read the line for the test whose name starts with 'a refused Google sign-in may end at the whitelist page'."
+  ],
+  "expect": [
+    "That test reports ok: with BETA_GATE=on and a whitelist page on another origin, GET /login answers a content-security-policy whose form-action is 'self' accounts.google.com github.com plus that origin (pre-fix: no third origin, so the browser blocked the 303 from /signin/google/callback to the whitelist page and nothing happened on screen)."
+  ],
+  "selectors": {},
+  "evidence": "Measured 07/10/2026 on cowork.tracy.ai: console 'Sending form data to .../signin/google?next=... violates ... form-action self accounts.google.com github.com. The request has been blocked.' on the second Google sign-in of an address that was not admitted.",
+  "fence": "apps/tracy-web/src/lib/security-headers.js: hardenPage adds the whitelist origin set by app.js to form-action.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/security-headers.test.mjs"],
+    "tests": ["a refused Google sign-in may end at the whitelist page"]
+  }
+}

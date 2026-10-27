@@ -1,0 +1,80 @@
+---
+/** Zig-zag feature rows: kicker + h3 + text + link beside an illustrative panel with the icon. */
+import Icon from '@/components/site/Icon.astro'
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+interface Props {
+  items: Array<{
+    icon?: string
+    kicker?: string
+    title: string
+    text: string
+    link_label?: string
+    link_url?: string
+  }>
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+  /** The subfield `link_label` is read from, when the repeater names it otherwise (`cta_label`). */
+  linkField?: string
+}
+const { items, stamp, field, linkField = 'link_label' } = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(
+  Astro.request,
+  splitPath(Astro.url.pathname).locale,
+  items.map((it) => it?.link_url)
+)
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+---
+
+<div class="feature-rows flex flex-col" data-block="features">
+	{items.map((it, i) => (
+		<div class:list={["feature-row grid items-center", i % 2 === 1 && "feature-row--reverse"]} {...row}>
+			<div>
+				{it.kicker && <span class="eyebrow" {...sub("kicker")}>{it.kicker}</span>}
+				<h3 class="h-card mb-3" {...sub("title")}>{it.title}</h3>
+				<p class="feature-description mb-5 leading-[1.47] text-fg-muted" {...sub("text")}>{it.text}</p>
+				{it.link_label && live(it.link_url) && <a href={it.link_url || "#"} class="btn text-accent hover:text-accent-hover" {...sub(linkField)}>{it.link_label}</a>}
+			</div>
+			<div class="feature-visual card flex min-h-[240px] flex-col gap-5 p-8" aria-hidden="true">
+				<span class="flex h-10 w-10 items-center justify-center rounded-[var(--ds-card-radius,12px)] bg-surface text-accent">{it.icon && <Icon name={it.icon} />}</span>
+				<span class="block h-3 w-[70%] rounded bg-surface"></span>{/* ds-keep: skeleton line of a drawn mock interface */}
+				<span class="block h-3 w-[52%] rounded bg-surface"></span>{/* ds-keep: skeleton line of a drawn mock interface */}
+				<div class="mt-auto grid grid-cols-2 gap-3"><span class="block h-16 rounded-[var(--ds-card-radius,10px)] bg-surface"></span><span class="block h-16 rounded-[var(--ds-card-radius,10px)] border border-line-soft bg-bg"></span></div>
+			</div>
+		</div>
+	))}
+</div>
+
+<style>
+	.feature-description {
+		font-size: var(--ds-size-body, 21px);
+		max-width: 46ch;
+	}
+	.feature-rows {
+		gap: clamp(48px, 7vw, 96px);
+	}
+	.feature-row {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: clamp(32px, 5vw, 72px);
+	}
+	.feature-row--reverse > :first-child {
+		order: 2;
+	}
+	@media (max-width: 880px) {
+		.feature-row {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 28px;
+		}
+		.feature-row--reverse > :first-child {
+			order: 0;
+		}
+		.feature-visual {
+			order: -1;
+		}
+	}
+</style>

@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1104-settings-dialog-fits-360",
+  "kind": "fix",
+  "title": "Settings dialog at 360x740 is one column: every section fits, Sign out does not cover its words, Connect account is whole",
+  "pr": 1104,
+  "area": "settings/layout",
+  "cms": ["any"],
+  "needs": ["viewport:360"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run packages/ui/tracy-settings/test/e2e/settings-fits-360.test.mjs (the real SettingsPage with the real General, Account, AI accounts, Notifications and Help & about sections and each plugin's stylesheet, at 360x740 light and dark, and at 1280x800).",
+    "S2: Read the reported tests."
+  ],
+  "expect": [
+    "S1: at 360x740 the section (.ts-content) is as wide as the dialog (.ts-surface) less its border, nothing in it sticks out sideways, the page does not scroll sideways, in every section, light and dark.",
+    "S1: Settings > Account: no line of the Session row's words lies under the Sign out button.",
+    "S1: Settings > AI accounts: both Connect account buttons lie inside the section and show their whole label.",
+    "S1: the open section's tab is in view; every section is reachable from the strip.",
+    "S1: at 1280x800 the nav stays 196px beside the section in a 760px dialog."
+  ],
+  "selectors": {
+    "dialog": ".ts-surface",
+    "section": ".ts-content",
+    "nav": ".ts-nav[aria-current=page]",
+    "accountRow": ".tracy-mysites-account-row",
+    "planButtons": ".tracy-model-plan button"
+  },
+  "evidence": "Measured on dev 09/10/2026 at 360x740 (account-menu acceptance hc-hca-360-*-9-account.jpg, -9-ai-accounts.jpg): the 196px nav beside the section left it about 100px; Sign out covered its help line and Connect account was cut off",
+  "fence": "Responsive rules of the Settings dialog (packages/ui/tracy-settings/src/client/styles.ts, max-width 640px) and the wrapping rows of Account (tracy-my-sites styles.ts) and AI accounts (tracy-model-plan AccountSubscription)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "packages/ui/tracy-settings/test/e2e/settings-fits-360.test.mjs"
+    ],
+    "tests": [
+      "at 360x740: the dialog is one column",
+      "at 360x740, dark: the dialog is one column",
+      "at 360x740, Settings > Account",
+      "at 360x740, Settings > AI accounts",
+      "at 360x740 every section is reachable",
+      "at 1280x800 the dialog keeps its two columns"
+    ]
+  }
+}

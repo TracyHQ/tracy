@@ -1,0 +1,155 @@
+/* Kinetic — Features Intro ACM block (self-contained, block-scoped).
+   All color/type/spacing route through the template design tokens, so light +
+   dark + the 3 directions resolve automatically with the active
+   [data-style]/[data-theme] / html.t4-dark.
+
+   The lighter, intro-level feature grid: borderless icon-led cards. Visually
+   DISTINCT from features-ledger (numbered spec rows / bordered stat cards). */
+
+.acm-features-intro {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+.acm-features-intro .hx-section {
+  padding: 80px 0;
+}
+.acm-features-intro .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ---- head ---- */
+.acm-features-intro .hx-fi-head {
+  max-width: 720px;
+  margin-bottom: 44px;
+}
+.acm-features-intro .hx-eyebrow {
+  margin: 0 0 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.acm-features-intro .hx-h2 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--heading);
+}
+.acm-features-intro .hx-fi-sub {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- grid ---- */
+.acm-features-intro .hx-fi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ---- intro card (borderless / lighter register) ---- */
+/* Canonical CARD gesture (micro-interactions.md §3a): neutral (invisible)
+   border at rest, lift + primary border + shadow on hover. Padding/margin
+   cancel out so the rest-state box model is unchanged (no layout shift vs.
+   pages without this hover) — the border/shadow just wraps the existing
+   content on hover. Page overlays (page-218/page-225) that add their own
+   surface+border card treatment simply override these same properties. */
+.acm-features-intro .hx-feat {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  margin: -10px -12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: border-color .15s ease, transform .2s ease, box-shadow .2s ease;
+}
+.acm-features-intro .hx-feat:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+.acm-features-intro .hx-feat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 11px;
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  color: var(--primary);
+  margin-bottom: 20px;
+  transition: transform .2s ease;
+}
+.acm-features-intro .hx-feat:hover .hx-feat-icon {
+  transform: scale(1.06);
+}
+.acm-features-intro .hx-feat-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.acm-features-intro .hx-feat-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+}
+.acm-features-intro .hx-feat-text {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.acm-features-intro .hx-feat-stat {
+  align-self: flex-start;
+  margin-top: 16px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--primary);
+}
+
+/* ---- responsive — 4/3-up to 2-up on tablet, single col on phone ---- */
+@media (max-width: 880px) {
+  .acm-features-intro .hx-fi-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+@media (max-width: 620px) {
+  .acm-features-intro .hx-section {
+    padding: 56px 0;
+  }
+  .acm-features-intro .hx-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-features-intro .hx-h2 {
+    font-size: 30px;
+  }
+  .acm-features-intro .hx-fi-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .acm-features-intro * {
+    transition-duration: .01ms !important;
+  }
+  .acm-features-intro .hx-feat:hover {
+    transform: none;
+  }
+}

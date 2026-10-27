@@ -1,0 +1,84 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#f5f4f0",
+      "$type": "color",
+      "$description": "Cream Paper — Page background, canvas — warm off-white that softens the overall feel and keeps the pastel accents from vibrating against pure white"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card and button surfaces — sits one elevation above the cream canvas"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, icon strokes, card outlines — the dominant structural color, 3625 occurrences make it the spine of every layout"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Body text and secondary headings when a slightly softer black is needed"
+    },
+    "slate": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate — Nav text and subdued UI labels"
+    },
+    "fog": {
+      "$value": "#dddfe2",
+      "$type": "color",
+      "$description": "Fog — Subtle link underlines and dividers in muted contexts"
+    },
+    "mint-splash": {
+      "$value": "#99ffcc",
+      "$type": "color",
+      "$description": "Mint Splash — Primary action button fill, hand-drawn headline highlight swashes, active nav emphasis — the signature color that signals go"
+    },
+    "plum-ink": {
+      "$value": "#160042",
+      "$type": "color",
+      "$description": "Plum Ink — Deep brand accent for dark surface text, illustration fills, and emphasis — provides a rich counterweight to the pastels"
+    },
+    "aubergine": {
+      "$value": "#26153f",
+      "$type": "color",
+      "$description": "Aubergine — Outlined action border, dark button outline variant — borders and strokes when a deeper violet frame is needed without filling"
+    },
+    "sky-pop": {
+      "$value": "#7bbbff",
+      "$type": "color",
+      "$description": "Sky Pop — Decorative illustration strokes, confetti dots, secondary accent chips, icon outlines — the cool member of the pastel set"
+    },
+    "bubblegum": {
+      "$value": "#ff99cc",
+      "$type": "color",
+      "$description": "Bubblegum — Decorative confetti dots, highlight swashes, playful accent shapes — adds warmth and energy"
+    },
+    "peach-pop": {
+      "$value": "#ffcc99",
+      "$type": "color",
+      "$description": "Peach Pop — Decorative dots, warm accent fills, illustration warm tones — the sunset note in the pastel quartet"
+    }
+  },
+  "font": {
+    "recoleta": {
+      "$value": "Recoleta",
+      "$type": "fontFamily",
+      "$description": "All headlines, hero display, nav wordmark. Used exclusively at weight 700; the high-contrast chunky serif gives the brand its editorial-creative voice. Scales from 32px subheadings up to 151px hero display. Tight negative tracking (approximately -0.028em) tightens the bold forms at large sizes so the headline reads as one confident block rather than airy display type."
+    },
+    "lota-grotes-que-alt": {
+      "$value": "Lota Grotes Que Alt",
+      "$type": "fontFamily",
+      "$description": "Body copy, UI labels, button text, nav links, icon labels. The 400 weight carries paragraphs and helper text; 700 weight handles button labels and small emphatic UI strings. Acts as the quiet utilitarian counterpoint to Recoleta's personality — it should never compete for attention."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.hatch.fm",
+      "siteName": "Hatch",
+      "extractedAt": "2026-06-03T18:38:37.954Z",
+      "variant": "compact"
+    }
+  }
+}

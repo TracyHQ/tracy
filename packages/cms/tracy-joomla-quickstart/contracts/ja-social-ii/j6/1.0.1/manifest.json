@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-social-ii/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_social_ii",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-social-ii",
+    "id": "quickstart/ja-social-ii/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_social_ii",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-social-ii-j6-webroot-1.0.1.tar.gz",
+        "bytes": 95196438,
+        "sha256": "799f93258bddd5bb474fda59c2769a0ac13177ef8eea1e236820b1bb693903ed"
+      },
+      "database": {
+        "file": "ja-social-ii-j6-database-1.0.1.sql.gz",
+        "bytes": 84898,
+        "sha256": "0206f9e3cfa5be7adf4a2b8e59a39bbf317aae8dc38d787a7a2a0cccb79f5cf8"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-08T05:59:47.016Z",
+    "builtFrom": {
+      "site": "s101",
+      "tag": "quickstart/ja-social-ii/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-social-ii/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.2",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,69 @@
+{
+  "color": {
+    "peloton-red": {
+      "$value": "#df1c2f",
+      "$type": "color",
+      "$description": "Peloton Red — Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "carbon-black": {
+      "$value": "#181a1d",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text color, dark hero surfaces, navigation bar, footer backgrounds, heading color — the structural anchor of the entire system"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "mist-gray": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Mist Gray — Page canvas, subtle section backgrounds behind product grids, alternate band separator"
+    },
+    "silver-lining": {
+      "$value": "#e4e6e7",
+      "$type": "color",
+      "$description": "Silver Lining — Hairline borders, dividers between sections, card outlines, disabled surface fills, icon background washes"
+    },
+    "slate": {
+      "$value": "#65666a",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, nav link default state, helper text, metadata, breadcrumb separators"
+    },
+    "graphite": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite — Headings on light surfaces, logo, strong emphasis text, icon strokes on light backgrounds"
+    },
+    "fog": {
+      "$value": "#a8acb1",
+      "$type": "color",
+      "$description": "Fog — Tertiary text, placeholder text, subtle icon fills, inactive form labels, decorative icon strokes"
+    },
+    "steel": {
+      "$value": "#888b93",
+      "$type": "color",
+      "$description": "Steel — Input borders in default state, secondary borders, subtle structural lines"
+    },
+    "ash": {
+      "$value": "#a3a3a6",
+      "$type": "color",
+      "$description": "Ash — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system. Weight 300 at 48px for hero headlines creates an editorial, gallery-like restraint — the opposite of the shouting-bold approach typical of fitness brands. Weight 500–600 for navigation and CTAs gives interaction labels confident authority. Weight 400 carries all body copy. Tighter tracking (-0.008em to -0.004em) at larger sizes sharpens the geometric Inter forms for display use, while the positive +0.025em at 12px opens up micro-labels for legibility."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://onepeloton.com",
+      "siteName": "Peloton",
+      "extractedAt": "2026-06-03T19:03:37.207Z",
+      "variant": "compact"
+    }
+  }
+}

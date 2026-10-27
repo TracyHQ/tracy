@@ -1,0 +1,74 @@
+{
+  "color": {
+    "obsidian-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian Ink — Primary text, hairline borders, icon strokes, button outlines — the near-total absence of color in the UI makes pure black the structural backbone"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas, card surfaces, button text on dark fills"
+    },
+    "parchment": {
+      "$value": "#f7f5ee",
+      "$type": "color",
+      "$description": "Parchment — Warm off-white surface layer above the page — hero overlays, section backgrounds, and elevated product zones"
+    },
+    "linen": {
+      "$value": "#ece9df",
+      "$type": "color",
+      "$description": "Linen — Subtle surface step for footers and the deepest background band — barely darker than Parchment, used to create quiet zone separation"
+    },
+    "graphite": {
+      "$value": "#403e3c",
+      "$type": "color",
+      "$description": "Graphite — Body text secondary, form field borders — a soft black that softens dense body copy"
+    },
+    "stone": {
+      "$value": "#888783",
+      "$type": "color",
+      "$description": "Stone — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "mist": {
+      "$value": "#b9b8b3",
+      "$type": "color",
+      "$description": "Mist — Disabled borders and ultra-subtle dividers"
+    },
+    "bronze-seal": {
+      "$value": "#a77a41",
+      "$type": "color",
+      "$description": "Bronze Seal — Sole chromatic accent — product award seals, premium badges, decorative icon strokes. Warm against matte black, evokes a pharmacist's stamp on a label"
+    },
+    "alpine-forest": {
+      "$value": "#205f4b",
+      "$type": "color",
+      "$description": "Alpine Forest — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    }
+  },
+  "font": {
+    "plantin": {
+      "$value": "plantin",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines. The condensed proportions with extreme negative tracking (-0.43em at display sizes) create a fashion-editorial compression — a custom-feeling face that is the brand's signature. Weight 300 dominates to keep display type quiet and sophisticated rather than loud"
+    },
+    "practice": {
+      "$value": "practice",
+      "$type": "fontFamily",
+      "$description": "The workhorse sans — body copy (18px/400), sub-headlines (23–25px/600), section titles (36–38px/600), and the massive 88px hero lockup. All-caps labels use 0.10em tracking to read as pharmaceutical or sports-science signage"
+    },
+    "lab-mono": {
+      "$value": "lab-mono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels, tag prefixes (NEU, VEGAN-HYBRID), ingredient metadata, footer fine print. The monospaced face reads as laboratory notepad, reinforcing the scientific-formulation angle"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://a-ware.at",
+      "siteName": "A-WARE",
+      "extractedAt": "2026-06-03T20:44:11.949Z",
+      "variant": "compact"
+    }
+  }
+}

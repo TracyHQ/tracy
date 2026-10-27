@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1669-copy-snapshot-sweep",
+  "kind": "fix",
+  "title": "Expired table snapshots are dropped from a copy's database whole tag by whole tag (older than 7 days, keeping the newest tag), at every backup's retention step and once a day by tracy-host; young, newest and undatable snapshots and trash tables stay",
+  "pr": 1669,
+  "area": "copy/backup",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/copy-snapshots.test.mjs apps/tracy-host/test/sync.test.mjs"
+  ],
+  "expect": [
+    "S1: the sweep drops only expired tags, keeps the newest and undatable ones, skips busy and stopped sites, runs from backup prune with TRACY_SNAP_KEEP_DAYS, and reports a refused drop; the tracy-host clock schedules it daily"
+  ],
+  "selectors": {
+    "host": "lib/copy_snapshots.py; site-backup.sh tracy_snap_sweep tracy_backup_prune; tools/sweep-copy-snapshots.sh; apps/tracy-host/src/sync.js"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-copy-snapshot-sweep.md",
+  "fence": "A copy's database never keeps growing with snapshots nobody can use any more",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/copy-snapshots.test.mjs",
+      "apps/tracy-host/test/sync.test.mjs"
+    ]
+  }
+}

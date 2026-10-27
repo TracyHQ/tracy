@@ -1,0 +1,155 @@
+---
+import { getTranslations } from 'emdash'
+import LanguageMenu from '@/components/islands/LanguageMenu'
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { href, LOCALES, type Locale } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { WORDS, wordsOf } from '@/lib/locale-words'
+import { switcherOption } from '@/lib/display-locale'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  /** The current entry, so the switcher can point at its translation. */
+  translationOf?: { collection: string; id: string; toPath: (slug: string) => string } | null
+}
+const { chrome, translationOf = null } = Astro.props
+const { site, locale } = chrome
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const s = stampFor(Astro.request, 'site', site)
+
+// Language options: the translation of the current entry when one exists, else the other
+// locale's home page (routes.json: "switcher target when no translation").
+const served: string[] = chrome.locales ?? [...LOCALES]
+const targets: Record<string, string> = Object.fromEntries(served.map((l: string) => [l, href(l, '/')]))
+if (translationOf) {
+  const { translations } = await getTranslations(translationOf.collection, translationOf.id)
+  for (const t of translations) {
+    if (t.status === 'published' && t.slug && served.includes(t.locale)) {
+      targets[t.locale] = href(t.locale as Locale, translationOf.toPath(t.slug))
+    }
+  }
+}
+// Each option is named by the language its pages are SHOWN in (`switcherOption`, display-locale.json): a root stored as
+// `en` and written in Vietnamese is "Tiếng Việt" with its flag, never "English" (TCH #1013, LANG-2).
+const options = served.map((l: string) => ({
+  ...switcherOption(l, LOCALES, (language) => WORDS[language]?.name),
+  url: targets[l],
+  current: l === locale
+}))
+// A dev-only `?langs=43` stub padded this list while the template shipped four locales and the
+// dialog shape had nothing real to draw. It shipped forty on 22/09, so the stub measured a
+// placeholder where a measurement of the real thing was available — it is gone.
+const words = wordsOf(uiLocale(locale))
+const darkLabel = site.theme_dark_label ?? 'Dark'
+const lightLabel = site.theme_light_label ?? 'Light'
+---
+
+<!--
+	The bar is ONE row at every width and nothing is dropped from it. An earlier pass hid the
+	address below 768px and the email below 520px; which of a customer's contact details reach a
+	visitor is a decision about the SITE, not about a layout. Instead the contacts row scrolls
+	sideways: `flex-nowrap` + `overflow-x-auto`, and `min-w-0` repeated down the whole chain,
+	because a flex item defaults to `min-width:auto` ("never smaller than my content") and one
+	link left with it makes the row draw over the edge instead of scrolling inside it.
+	A scrolled row hides its overflow silently, so the right edge carries a fade — but only while
+	something is actually cut off (`data-overflow`, set by the script below).
+	The two controls stay in the right corner at every width: `ml-auto shrink-0`, the same
+	pattern Header.astro uses for search + CTA. No breakpoint decides it — the bar's content
+	stops fitting at a width that moves with the language.
+-->
+<div class="bg-forest text-[13px] text-on-forest">
+	<div class="container-site flex min-w-0 flex-nowrap items-center gap-4 py-[9px]">
+		<div class="ng-topbar-left min-w-0 flex-1">
+			<ul class="ng-topbar-contacts m-0 flex min-w-0 list-none flex-nowrap items-center gap-x-[14px] overflow-x-auto p-0 text-[12px] md:gap-x-6">
+				<li class="shrink-0 whitespace-nowrap" {...s("topbar_phone")}>{site.topbar_phone}</li>
+				<li class="shrink-0 whitespace-nowrap" {...s("topbar_email")}>{site.topbar_email}</li>
+				<li class="shrink-0 whitespace-nowrap" {...s("topbar_address")}>{site.topbar_address}</li>
+				{chrome.topbar.map((i: ChromeMenuItem) => (
+					<li class="shrink-0 whitespace-nowrap"><a href={i.url} class="text-on-forest hover:text-[color:var(--ds-c-on-accent-band,var(--color-white))]">{i.label}</a></li>
+				))}
+			</ul>
+		</div>
+		<div class="ml-auto flex shrink-0 items-center gap-3.5">
+			<LanguageMenu
+				client:load
+				options={options}
+				label={site.language_name ?? "Language"}
+				filterLabel={words.languageFilter}
+				emptyLabel={words.noLanguageMatch}
+			/>
+			<span class="tb-topbar-divider text-on-forest-line" aria-hidden="true">|</span>
+			<button
+				type="button"
+				class="ng-theme-toggle inline-flex shrink-0 items-center gap-[7px] whitespace-nowrap text-on-forest hover:text-[color:var(--ds-c-on-accent-band,var(--color-white))]"
+				data-dark-label={darkLabel}
+				data-light-label={lightLabel}
+				aria-label={darkLabel}
+				{...s("theme_dark_label")}
+			>
+				<svg class="ng-icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 13.4A8.6 8.6 0 1 1 10.6 3.5a6.8 6.8 0 0 0 9.9 9.9Z"></path></svg>
+				<svg class="ng-icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.4v2.4M12 19.2v2.4M2.4 12h2.4M19.2 12h2.4M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2 17.1 6.9M6.9 17.1 5.2 18.8"></path></svg>
+				<span class="ng-theme-label hidden sm:inline">{darkLabel}</span>
+			</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* The row scrolls; the scrollbar itself would sit on top of a 24px-tall bar. */
+	.ng-topbar-contacts { scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+	.ng-topbar-contacts::-webkit-scrollbar { display: none; }
+	.ng-topbar-contacts > li { scroll-snap-align: start; }
+	/* The fade is the only sign a reader gets that the row continues past the edge, so it is
+	   drawn only while something is actually cut off — permanent, it would lie on a wide screen. */
+	.ng-topbar-left[data-overflow] {
+		-webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 24px), transparent 100%);
+		mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 24px), transparent 100%);
+	}
+	html[data-theme="dark"] .ng-icon-moon { display: none; }
+	html:not([data-theme="dark"]) .ng-icon-sun { display: none; }
+	html[data-theme="dark"] .ng-theme-toggle { color: var(--ds-c-on-accent-band, #fff); font-weight: 600; }
+</style>
+
+<script>
+	// Mark the contacts row while its content is genuinely wider than the box, so the stylesheet
+	// can fade the cut edge. Re-measured on resize and on any size change of the row itself
+	// (the language switcher's width changes with the locale, and so does the space left here).
+	for (const wrap of document.querySelectorAll<HTMLElement>(".ng-topbar-left")) {
+		const list = wrap.querySelector<HTMLElement>(".ng-topbar-contacts");
+		if (!list) continue;
+		const mark = () => {
+			if (list.scrollWidth - list.clientWidth > 1) wrap.setAttribute("data-overflow", "");
+			else wrap.removeAttribute("data-overflow");
+		};
+		mark();
+		addEventListener("resize", mark);
+		if (window.ResizeObserver) new ResizeObserver(mark).observe(list);
+	}
+
+	// Theme toggle: the source stores the choice under localStorage "ngi-theme" and flips
+	// html[data-theme]; the label names the theme you would switch TO (Dark / Light).
+	// Only a click stores anything: opening on a worn system's own mode, or on `?theme=`, is not the
+	// visitor's choice (UNDO-1). While a system is worn the key is that system's own ("ngi-theme@<id>",
+	// the same key Base.astro's pre-paint script reads), so the choice leaves with the system.
+	const ds = document.getElementById("tracy-ds-slot")?.getAttribute("data-ds");
+	const KEY = ds ? `ngi-theme@${ds}` : "ngi-theme";
+	const show = (dark: boolean) => {
+		for (const btn of document.querySelectorAll<HTMLButtonElement>(".ng-theme-toggle")) {
+			const label = dark ? btn.dataset.lightLabel : btn.dataset.darkLabel;
+			btn.querySelector(".ng-theme-label")!.textContent = label ?? "";
+			btn.setAttribute("aria-label", label ?? "");
+		}
+	};
+	const choose = (dark: boolean) => {
+		document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+		try {
+			localStorage.setItem(KEY, dark ? "dark" : "light");
+		} catch {}
+		show(dark);
+	};
+	for (const btn of document.querySelectorAll<HTMLButtonElement>(".ng-theme-toggle")) {
+		btn.addEventListener("click", () => choose(document.documentElement.getAttribute("data-theme") !== "dark"));
+	}
+	if (document.documentElement.getAttribute("data-theme") === "dark") show(true);
+</script>

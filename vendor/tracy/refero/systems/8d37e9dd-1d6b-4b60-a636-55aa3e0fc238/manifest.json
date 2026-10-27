@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8d37e9dd-1d6b-4b60-a636-55aa3e0fc238",
+  "status": "complete",
+  "name": "Prisma Labs",
+  "url": "https://styles.refero.design/style/8d37e9dd-1d6b-4b60-a636-55aa3e0fc238",
+  "sourceWebsite": "https://prisma-ai.com",
+  "extractedAt": "2026-06-03T21:28:44.582Z",
+  "capturedAt": "2026-10-08T05:14:41.186333+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Sunlit monochrome studio — a white gallery wall where one beam of yellow light hits",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/125b904b-cd4c-48c6-8bce-2ca44a951e09.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6ee7add1a4a159d4da41089d51435a0e5228ccb0872ed3fbc0133da4de67fa94",
+      "bytes": 16417
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fc6e4e608491fc92ce576d829776bb737bce8b6a29bafe2b4f2bf6d3e9763db1",
+      "bytes": 83144
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b4363a78f633cae143dd27c75f25e2362a28d952ef29afefc70b4989955286da",
+      "bytes": 13679
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8656cbc99e6917c6325cbd30223adf12fe8b2ca00dfb4357621a3f54ae87edee",
+      "bytes": 5343
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b9c82d4dd11097e83a3ad542cadebde9de37eee7568cbd4c24de82ee6866e1e1",
+      "bytes": 10427
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b36b1157756d6f7598fa551b092a37957bdc91fd0b76863fd1405a5991730589",
+      "bytes": 1966
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0c1c9bc89c9f95d86e473fddbe56a68135f0215e83723cd955ca64cd6d4f8e73",
+      "bytes": 448
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2214798d875c0bfa63de8b4f705ccf9b18b658faf2ab2a722b8a1541e0f8aada",
+      "bytes": 465
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7e53cded07abf7185081b78a6db09aac38e9b3df1e78acb86856a0e4c948e36c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6c898106d4ada07cc94971d48157a5ec54f4b9c88ad515fd2b73853b1149c940",
+      "bytes": 39471
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "af82c156f83ed08c1f5cc6be39f3e7cfee3f5132e11bed7a99e3156c85e20d9d",
+      "bytes": 20611
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3ff408ede239d7841ec0547fe13adfa68cbe8018f16a211fa36817c6e67722a7",
+      "bytes": 27800
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d1b549dc4d70f14418371422cc4f03dd57b6dbadcc26fd87a6b8c670920ab0fa",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0add989e57e16f26f59f4345e4b4625b5db637aaed4eb8505b6a769353647d61",
+      "bytes": 1178
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4c9f5e48153e2648b39e2bfb9b697bfa8b9c8558425d10d3a744907bc89aa94e",
+      "bytes": 1644
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "155dbf6e-1187-424e-9ce8-59ffecff7e6b",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "41af8353-6a8f-416d-947b-57932f591497",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "8d37e9dd-1d6b-4b60-a636-55aa3e0fc238",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c521be99-14af-4d57-8f8f-34c76c9ade61",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "e549766e-b8b1-48a2-bd72-8cc04e9e4e9d",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

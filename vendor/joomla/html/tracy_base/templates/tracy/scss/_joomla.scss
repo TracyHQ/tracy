@@ -1,0 +1,1278 @@
+// ------------------------------------
+// Joomla! specific styles
+// ------------------------------------
+
+// Extend style in base
+// --------------------
+@import "../../../plugins/system/t4/themes/base/scss/_joomla";
+
+//
+// Generic Styles
+// -------------------------
+
+// Article Titles
+// -------------------------
+h2.item-title,
+.item-title h2 {
+  font-size: var(--h2-font-size);
+  margin-bottom: calc($spacer / 2);
+
+  a {
+    color: var(--body-text-color);
+
+    &:hover, &:active, &:focus {
+      color: var(--body-link-hover-color);
+    }
+  }
+}
+
+// Page Header
+.page-header,
+.categories-list {
+  h1 {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+  }
+
+  h2 {
+    font-size: var(--h3-font-size);
+    margin: 0;
+
+    a {
+      color: var(--body-text-color);
+      &:hover, &:focus, &:active {
+        color: var(--body-link-hover-color);
+      }
+    }
+  }
+}
+
+
+// Article Aside
+// -------------------------
+.article-info {
+  a {
+    // Link states
+    &:hover, &:focus, &:active {
+    }
+  }
+  
+  .article-info-term {
+  }
+  
+  dd {
+    > div {
+    }
+  }
+}
+
+// Author
+.createdby {
+}
+
+// Category Name
+.category-name {
+}
+
+// URL
+.article-url {
+}
+
+// Publish Date
+.published {
+  time {
+  }
+}
+
+// Modified Date
+.modifydate {
+}
+
+// Hits
+.hits {
+}
+
+// Article Desciption
+.contentdescription {
+}
+
+.contentdescription p {
+}
+
+// Content rating
+.content_rating {
+}
+
+.content_vote {
+}
+
+
+// Article Tools
+// -------------------------
+.icons {
+  .btn {
+    .caret {
+    }
+  }
+
+  .icon-cog {
+  }
+
+  .dropdown-menu {
+    a {
+      border-bottom: 1px solid $border-color;
+      color: $gray-700;
+
+      &:hover, &:focus, &:active {
+        background-color: $gray-100;
+        color: var(--link-hover-color);
+      }
+    }
+  }
+}
+
+
+// Tags
+// -------------------------
+.tags {
+  > li {
+
+    > a {
+    }
+  }
+}
+
+.com-tags-tag.tag-category {
+  .filters {
+  }
+  
+  .category {
+  }
+
+  .item-tag-title {
+    font-size: 1rem;
+  }
+}
+
+.com-tags-tag-list {
+  #filter-search {
+    border: $input-border-width solid $input-border-color;
+    border-top-left-radius: $input-border-radius;
+    border-bottom-left-radius: $input-border-radius;
+    outline: none;
+    padding: $input-padding-y $input-padding-x;
+  }
+
+  .com-tags-tag-list__category {
+    margin-top: $spacer;
+  }
+}
+
+
+// Article Images
+// -------------------------
+.item-image {
+  img {
+  }
+}
+
+// Float Left Image
+.pull-left.item-image,
+.item-image.pull-left {
+}
+
+// Float right Image
+.pull-right.item-image,
+.item-image.pull-right {
+}
+
+// Image caption
+.img_caption img {
+}
+
+div.img_caption {
+
+  p.img_caption {
+  }
+}
+
+figure {
+  &.pull-left {
+  }
+
+  &.pull-right {
+  }
+
+  figcaption {
+  }
+}
+
+// Article Index
+// -----------
+.article-index {
+  h3 {
+  }
+
+  ul {
+  }
+}
+
+.com-content-article__body {
+  .pagenavcounter {
+  }
+
+  .pager {
+    ul {
+
+      li {
+      }
+    }
+  }
+
+  // Slider style
+  .pane-sliders {
+    .panel {
+      border: 1px solid $border-color;
+
+      h3.title {
+        background-color: $gray-100;
+        font-size: $font-size-base;
+
+        &.pane-toggler-down {
+          border-bottom: 1px solid $border-color;
+        }
+
+        a {
+          &:hover, &:focus, &:active {
+          }
+        }
+      }
+
+      .content {
+      }
+    }
+  }
+
+  // Tabs style
+  dl.tabs {
+    border-bottom: 1px solid $border-color;
+
+    dt {
+      border: 1px solid $border-color;
+      border-radius: 3px 3px 0 0;
+
+      &.open {
+        border-bottom: 1px solid $white;
+      }
+
+      h3 {
+
+        a {
+          color: var(--body-text-color);
+
+          &:hover, &:focus, &:active {
+            color: var(--link-hover-color);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Read more
+// -----------
+p.readmore {
+  @extend .mt-4;
+
+  .btn {
+    background-color: $gray-200;
+    padding: calc($spacer / 3) calc($spacer / 1.5);
+    
+    // Link States
+    &:hover, &:active, &:focus {
+      background-color: $primary;
+      color: $white;
+    }
+
+    // The Arrow
+    .icon-chevron-right {
+    }
+  }
+}
+
+// Items More
+// -----------
+.items-more {
+  .nav-tabs {
+    padding-bottom: 2rem;
+
+    > li {
+    }
+
+    > li > a {
+      background: $gray-100;
+      color: var(--body-text-color);
+
+      // Link States
+      &:hover, &:active, &:focus {
+        background: $gray-800;
+        color: $white;
+      }
+    }
+  }
+}
+
+
+//
+// List Layouts
+// -------------------------
+
+// Leading Items
+// -------------
+.items-leading {
+  @include clearfix();
+
+  // Single Item
+  .col {
+    .item-image {
+    }
+
+    p {}
+  }
+}
+
+
+// Intro Items
+// -------------
+.items-row {
+
+  // Single Item
+  .item {
+
+    // Styles on Desktop
+    @include media-breakpoint-up(md) {
+    }
+
+    .item-title {
+    }
+
+    .item-image {
+    }
+
+    .item-content {
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+}
+
+// Blog Layout
+// -----------
+.blog,
+.blog-featured {
+  .items-leading {
+    .blog-item {
+    }
+  }
+
+  .blog-items {
+    .blog-item {
+    }
+  }
+
+  // The Article
+  .blog-item {}
+  .blog-item-content {}
+}
+
+// Reset the duplicate container inside t4-body-main
+.blog-featured {
+}
+
+
+
+//
+// Article Page
+// -------------------------
+.item-page {
+  .page-header h2 {
+    font-size: var(--h3-font-size);
+
+    @include media-breakpoint-up(md) {
+      font-size: var(--h2-font-size);
+    }
+
+
+    @include media-breakpoint-up(lg) {
+      font-size: var(--h1-font-size);
+    }
+  }
+
+  [itemprop="articleBody"] {
+    img {
+    }
+  }
+}
+
+
+//
+// Generic Category
+// -------------------------
+.category-desc {
+  border: 1px solid $border-color;
+
+  > img {
+  }
+}
+
+.category {
+
+  li {}
+
+  .list {}
+
+  .list-title {
+    a {
+      color: $gray-700;
+      &:hover, &:focus, &:active {
+        color: var(--link-hover-color);
+      }
+    }
+  }
+
+  // Striped Style
+  &.row-striped,
+  &.list-striped {
+  }
+}
+
+// Filters
+// T4: Joomla! use <fieldset> that break "display: flex".
+// So we need to re-style the layout without using BS "btn-toolbar" styles 
+// More info here: https://bugs.chromium.org/p/chromium/issues/detail?id=262679
+.filters {
+  legend {
+  }
+
+  legend,
+  .btn-group,
+  .input-group {
+  }
+
+  .input-group + .btn-group {
+  }
+}
+
+//
+// Categories List
+// -------------------------
+.categories-list {
+
+  .base-desc {
+    background-color: darken($gray-100, 2%);
+    border-radius: $border-radius;
+    padding: $spacer*2;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .page-header {
+    border: 0;
+    border-bottom: 1px solid $border-color;
+    margin: 0 0 $spacer;
+    padding: 0 0 $spacer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a {
+      font-weight: $font-weight-bold;
+
+      &:hover, &:focus, &:active {
+      }
+    }
+
+    // Badges
+    .badge {
+      font-weight: 400;
+      float: right;
+      margin-left: auto;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    // Collapse Toggle
+    .btn {
+    }
+  }
+
+  // Indent Sub Categories
+  .page-header + .fade,
+  .fade > div {
+  }
+
+  // Category Desc
+  .category-desc {
+  }
+
+  .com-content-categories__items {
+    display: flex;
+    row-gap: $spacer*2;
+    .com-content-categories__item {
+      .item-inner {
+        padding: 1rem;
+      }
+
+      img {
+        @extend .rounded-3;
+        @extend .shadow-sm;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
+  .com-content-categories__children {
+    .com-content-categories__items {
+      padding: 0;
+    }
+
+    .com-content-categories__item {
+      flex-basis: 100%
+    }
+  }
+}
+
+
+//
+// Category List
+// -------------------------
+.category-list {
+}
+
+.content-category {
+  .control-group {
+  }
+
+  .filters {
+  }
+
+  // Sub Cat
+  .cat-children {
+    @include make-row();
+
+    > h3 {
+      flex-basis: 100%;
+      padding-left: calc(var(--t4-gutter-x) / 2);
+      padding-right: calc(var(--t4-gutter-x) / 2);      
+    }
+
+    .cat-child {
+      @include make-col(12);
+      padding-left: calc(var(--t4-gutter-x) / 2);
+      padding-right: calc(var(--t4-gutter-x) / 2);
+
+      @include media-breakpoint-up(sm) {
+        @include make-col(6);
+      }
+
+      @include media-breakpoint-up(md) {
+        @include make-col(4);
+      }
+    }
+
+    .category-desc {
+      border: 1px solid $border-color;
+      border-radius: $border-radius;
+      padding: $spacer;
+    }
+  }
+}
+
+
+//
+// Contact Category
+// -------------------------
+.contact-category {
+  h2 {}
+
+  .category-desc {}
+
+  // T4: Joomla! add ".row" to the <li>. So we need to make <ul> ".container"
+  .category {
+    @include make-container();
+  }
+
+  .list-title {
+    a {
+      font-weight: $font-weight-bold;
+    }
+  }
+}
+
+
+//
+// Contacts
+// -------------------------
+.contact {
+  .page-header {
+  }
+
+  dt {
+  }
+
+  dd {
+  }
+
+  #slide-contact {
+    .card {
+    }
+    
+    .card-header {
+      padding: 0;
+
+      .btn {
+        color: $gray-600;
+        display: block;
+        font-weight: $font-weight-bold;
+        padding: calc($spacer / 1.5) $spacer;
+        text-align: left;
+        width: 100%;
+
+        &:hover, &:focus, &:active {
+          color: var(--body-link-hover-color);
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  // Contact Form
+  #contact-form {
+    fieldset {
+      legend {
+        border: 0;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
+  h3 {
+    border-bottom: 1px solid $border-color;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacer;
+    padding-bottom: calc($spacer / 2);
+  }
+
+  .contact-link {
+    margin-bottom: $spacer;
+  }
+}
+
+
+//
+// Newsfeed
+// -------------------------
+.newsfeed {
+  .feed-description {
+  }
+
+  > ol {
+  }
+
+  > ol > li {
+  }
+
+  .feed-link {
+  }
+
+  .feed-item-description {
+    figure {
+    }
+
+    .lead {
+    }
+    
+    .feedflare {
+    }
+  }
+}
+
+
+//
+// Newsfeed
+// -------------------------
+.newsfeed-category {
+  #filter-search {
+  }
+  
+  .category {
+    li {
+    }
+  }
+
+  div.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+
+    ul.pagination {
+      margin: 0;
+      gap: .5rem;
+    }
+  }
+}
+
+
+// Pagination 
+.pagination-wrap {
+  .counter {
+  }
+}
+
+// Page navigation
+.pagenavigation {
+  .pagination {
+    display: flex;
+
+    .next {
+      margin-left: auto;
+    }
+
+    a.page-link {
+      border-radius: $border-radius-sm;
+    }
+  }
+}
+
+.pagination-wrap,
+.com-content-category-blog__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+
+  @include media-breakpoint-up(md) {
+    padding-top: 2rem;
+    padding-bottom: 0;
+    justify-content: space-between;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .pagination {
+    @include media-breakpoint-up(lg) {
+      margin: 0;
+    }
+
+    .page-link {
+      border-radius: 0;
+    }
+
+    .page-item:first-of-type .page-link {
+      border-radius: var(--t4-pagination-border-radius) 0 0 var(--t4-pagination-border-radius);
+    }
+
+    .page-item:last-of-type .page-link {
+      border-radius: 0 var(--t4-pagination-border-radius) var(--t4-pagination-border-radius) 0;
+    }
+  }
+}
+
+//
+// Search
+// -------------------------
+.search {
+
+  .btn-toolbar {
+    .btn {
+    }
+  }
+
+  .searchintro {}
+
+  fieldset {
+    legend {
+    }
+  }
+
+  .ordering-box {
+    // @extend .d-flex;
+    // @extend .flex-row;
+    // @extend .align-items-baseline;
+   
+    label {}
+
+    select {
+    }
+  }
+
+  .form-limit {}
+
+}
+
+//
+// Search form
+.com-finder__search {
+  .input-group > .js-finder-search-query {
+    border-radius: $border-radius;
+  }
+
+  .input-group-append {
+    margin: 0 0 0 calc($spacer / 4);
+
+    .btn {
+      border-radius: $border-radius !important;
+      margin: 0 calc($spacer / 4);
+    }
+  }
+}
+
+
+//
+// The Results
+#search-results {
+  border-top: 1px solid $border-color;
+
+  .search-results {
+  }
+
+  .result-item {
+    border-bottom: 1px solid $border-color;
+    padding: $spacer 0;
+  }
+
+  .result-title {
+    margin: 0 0 calc($spacer/2);
+  }
+
+  .result-category {}
+  .result-text {
+  }
+
+  .result-taxonomy {
+    margin-bottom: calc($spacer/2);
+  }
+
+  .result-date {
+    margin-bottom: calc($spacer / 4);
+  }
+
+  .result-url {
+    @extend .small;
+    color: $gray-500;
+  }
+
+  .result-created {
+    color: $gray;
+  }
+
+  .search-pagination {
+    padding-top: $spacer;
+
+    .search-pages-counter {
+      @extend .small;
+      color: $gray-600;
+    }
+  }
+}
+
+
+.highlight {
+  background: $yellow; 
+  padding: 1px;
+}
+
+//
+// The Empty Result
+#search-result-empty {
+  background-color: $gray-100;
+  border-radius: $border-radius;
+  color: $gray-700;
+  padding: $spacer;
+  text-align: center;
+
+  h2 {
+    font-weight: $font-weight-bold;
+    font-size: $h3-font-size;
+  }
+
+  p {
+    color: $gray-600;
+  }
+}
+
+// Smart Search
+// -------------------------
+div#finder-filter-window .filter-branch {
+  .control-group {
+    margin-right: $spacer*2;
+
+    .control-label {
+      margin-bottom: calc($spacer / 2);
+    }
+
+    .controls {
+      margin-left: 0;
+    }
+  }
+}
+
+.com-finder .collapse:not(.show) {
+  height: auto;
+}
+
+
+//
+// Tag Category
+// -------------------------
+.tag-category {
+  margin-top: $spacer*2;
+
+  .category h3 {
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    gap: calc($spacer/2);
+    
+    & > .input-group {
+      width: auto;
+    }
+
+    #filter-search {
+      flex: 1;
+    }
+  }
+}
+
+.input-group-btn {
+  .btn + .btn {
+  }
+}
+
+
+//
+// Com users
+// -------------------------
+.login {
+}
+
+.logout {
+  form.form-horizontal {
+    .control-group {
+      > .controls {
+        margin-left: 0;
+        text-align: center;
+      }
+    }
+  }
+}
+
+
+// 
+// Edit Article 
+// --------------------------
+#jform_title {
+}
+
+
+// 
+// User Profile 
+// --------------------------
+.profile {
+  .btn-toolbar {
+    justify-content: flex-end;
+  }
+}
+
+
+// Edit module button
+// --------------------------
+.jmodedit {
+  background-color: $gray-200;
+  border-radius: 3px;
+  padding: 0;
+  height: 30px;
+  width: 30px;
+  line-height: 1;
+
+  span {
+    color: $gray-600;
+    margin: 0 !important;
+    line-height: 27px;
+  }
+
+  &:hover {
+    background-color: $gray-600;
+
+    span {
+      color: $white;
+    }
+  }
+}
+
+
+// Fix modal overlay
+// -----------------
+body.modal-open {
+  .t4-wrapper-inner {
+    z-index: auto;
+    perspective: none;
+  }
+
+  .modal-content {
+    overflow: hidden !important;
+  }
+
+  .modal {
+    background-color: $white;
+    border-radius: 5px;
+    top: 10%;
+    bottom: 10%;
+    left: 50%;
+    margin-left: -40%;
+    overflow: hidden;
+    height: auto;
+    width: 80%;
+    z-index: 1080;
+
+    .modal-header {
+      padding-left: $spacer*1.5;
+      padding-right: $spacer*1.5;
+      position: relative;
+      align-items: center;
+
+      h3 {
+        border: 0;
+        font-weight: normal;
+        font-size: 18px;
+        font-weight: 600;
+        color: $gray-800;
+        margin: 0;
+        padding: 0;
+        width: 100%;    
+      }
+
+      .close {
+        @extend .btn-close;
+        position: absolute;
+        right: $spacer*1.5;
+        top: 50%;
+        margin-top: -$spacer;
+        text-indent: -999rem;
+        overflow: hidden;
+      }
+    }
+
+    .modal-body {
+      height: calc(100% - 56px);
+      padding: 0;
+
+      iframe {
+        border: 0;
+        overflow: auto;
+        height: 100%;
+        min-height: 100%;
+      }
+    }
+  }
+}
+
+body.contentpane {
+  background-color: #fff;
+  padding: $spacer;
+
+  .row-fluid { @include make-row(); }
+
+  .span2  { @include make-col(2); }
+  .span3  { @include make-col(3); }
+  .span4  { @include make-col(4); }
+  .span5  { @include make-col(5); }
+  .span6  { @include make-col(6); }
+  .span7  { @include make-col(7); }
+  .span8  { @include make-col(8); }
+  .span9  { @include make-col(9); }
+  .span10 { @include make-col(10); }
+  .span11 { @include make-col(11); }
+  .span12 { @include make-col(12); }
+
+  .well {
+    background-color: $gray-100;
+    margin-bottom: $spacer;
+    padding: $spacer $spacer*2;
+    @extend .card;
+
+    .row-fluid {
+      margin-bottom: calc($spacer/2);
+    }
+
+    .control-group {
+      .controls {
+        margin-left: 0;
+      }
+    }
+
+    label {
+      min-width: 130px;
+      padding-right: calc($spacer/2);
+      text-align: right;
+    }
+  }
+
+
+  input[type="text"] {
+    border: 1px solid $border-color;
+    padding: calc($spacer / 4) calc($spacer/2);
+  }  
+
+  .js-stools {
+    display: flex;
+    flex-flow: row wrap;
+
+    .js-stools-container-filters {
+      margin-bottom: $spacer;
+    }
+  }
+}
+
+
+// Improve style for MCE Editor
+// ----------------------------
+.mce-panel.mce-window {
+  border-radius: 5px;
+  border: 0 !important;
+  padding: 0 !important;
+
+  .mce-window-head {
+    border-bottom: 1px solid $border-color;
+    padding: $spacer;
+
+    .mce-close {
+      height: 50px;
+      width: 50px;
+    }
+  }
+
+  .mce-foot {
+    border-radius: 0 0 5px 5px;
+    border-top: 1px solid $border-color;
+
+    .mce-btn {
+      border-radius: 5px;
+    }
+  }
+}
+
+// Container popup
+.container-popup {
+  padding: calc($spacer / 2) $spacer !important;
+
+  #uploadform.well {
+    margin-bottom: 0;
+  }
+}
+
+// Revision
+.com_contenthistory {
+  .container-popup {
+    // Joomla 4
+    .subhead {
+      border-bottom: 1px solid $border-color;
+      padding: $spacer $spacer*2;
+    }
+
+    // Joomla 3
+    .btn-group {
+      padding-top: 1rem;
+      padding-bottom: .5rem;
+
+      button.btn {
+        border-radius: 4px;
+        margin: 0 4px;
+      }
+    }
+  }
+}
+
+.js-stools-container-bar {
+  margin-bottom: $spacer;
+
+  .btn-wrapper {
+    input {
+      display: inline-block;
+      width: auto;
+    }
+
+    button {
+      display: inline-block;
+    }
+  }
+
+  .btn {
+    @extend .btn-secondary;
+  }
+}
+
+.js-stools-container-list {
+  margin-bottom: $spacer;
+}
+
+.thumbnails.thumbnails-media {
+  list-style: none;
+  margin: $spacer -8px 0;
+  padding: 0;
+  overflow: hidden;
+
+  li a {
+    color: $gray-600;
+    display: block;
+    padding-top: $spacer*2;
+
+    &:hover, &:focus, &:active {
+      color: var(--link-hover-color);
+    }
+
+    span {
+      font-size: 32px;
+      height: auto;
+      width: auto;
+    }
+  }
+}
+
+//
+// Template Configure page
+// -------------------------
+.com_config {
+  .hr-condensed {
+    display: none;
+  }
+
+  #templates-form {
+    .btn-toolbar {
+      display: none;
+    }
+  }
+
+  #page-site {
+    h1 {
+      font-size: $font-size-lg;
+      @extend .alert;
+      @extend .alert-success;
+    }
+  }
+}

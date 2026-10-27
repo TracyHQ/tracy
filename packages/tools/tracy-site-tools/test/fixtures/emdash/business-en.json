@@ -1,0 +1,2597 @@
+{
+  "_source": "EmDash 0.38 on the stand site ed-ivj9ni (tracy-business). Real MCP answers (the text part, parsed): structure/home_en.json, site_en.json, emd/menu_primary_en.json (24/09); r2 answers from adv/calls.json (25/09): content_update staged (C01), content_publish (C01), content_list contact@en and contact with no locale, menu_list, settings_get, schema_list_collections, schema_get_collection home. investorsGet is SYNTHESISED from dump_en.json (status draft, a draft revision, liveRevisionId null: never live). toolsList: structure/tools.json with inputSchema kept for content_list, content_update, menu_set_items only. Built by $S/impl/p4/build-fixture.mjs.",
+  "toolsList": {
+    "tools": [
+      {
+        "name": "content_list",
+        "description": "List content items in a collection with optional filtering and pagination. Returns items sorted by the specified field. Use the nextCursor value from the response to fetch the next page. Status can be 'draft', 'published', or 'scheduled'. If no status is given, all non-trashed items are returned.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "collection": {
+              "type": "string",
+              "description": "Collection slug (e.g. 'posts', 'pages')"
+            },
+            "status": {
+              "description": "Filter by content status",
+              "type": "string",
+              "enum": ["draft", "published", "scheduled"]
+            },
+            "limit": {
+              "description": "Max items to return (default 50, max 100)",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "cursor": {
+              "description": "Pagination cursor from a previous response",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            },
+            "orderBy": {
+              "description": "Field to sort by (e.g. 'created_at', 'updated_at')",
+              "type": "string"
+            },
+            "order": {
+              "description": "Sort direction (default 'desc')",
+              "type": "string",
+              "enum": ["asc", "desc"]
+            },
+            "locale": {
+              "description": "Filter by locale (e.g. 'en', 'fr'). Only relevant when i18n is enabled.",
+              "type": "string"
+            },
+            "markdown": {
+              "description": "Return rich text (portableText) fields as Markdown strings instead of Portable Text arrays (default false).",
+              "type": "boolean"
+            }
+          },
+          "required": ["collection"]
+        }
+      },
+      {
+        "name": "content_get",
+        "description": "Get a single content item by its ID or slug. Returns the full content data including all field values, metadata, and a _rev token. content_update, content_publish, content_unpublish and content_discard_draft require that token, so read the item here before calling them.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_create",
+        "description": "Create a new content item in a collection. The 'data' object should contain field values matching the collection's schema (use schema_get_collection to check). For rich text (portableText) fields, pass a Markdown string — converted to Portable Text automatically; prefer this. Pass a Portable Text JSON array only for complex content Markdown can't express (custom blocks, embeds). A slug is auto-generated if not provided. Items are created as 'draft' by default — use content_publish to make them live.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_update",
+        "description": "Update an existing content item. Only include fields you want to change in the 'data' object — unspecified fields are left unchanged. Rich text (portableText) fields accept a Markdown string (recommended, converted automatically); use a Portable Text JSON array only for complex content Markdown can't express (custom blocks, embeds). Requires the _rev token from content_get, so read the item before updating it: the update fails if the item changed since that read. When status is not set, a change to a published item is staged as a draft, so the response shows the new values while the live version keeps the old ones until content_publish. `seo` and `bylines` are persisted alongside the field updates in a single transaction. `publishedAt` requires the content:publish_any permission and is useful for migrations or correcting historical dates.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "collection": {
+              "type": "string",
+              "description": "Collection slug"
+            },
+            "id": {
+              "type": "string",
+              "description": "Content item ID or slug"
+            },
+            "locale": {
+              "description": "Locale to scope slug lookup (e.g. 'fr'). Only affects slug resolution; IDs are globally unique.",
+              "type": "string"
+            },
+            "data": {
+              "description": "Field values to update (only include changed fields)",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "slug": {
+              "description": "New URL slug",
+              "type": "string"
+            },
+            "status": {
+              "description": "New status. Setting to 'published' requires publish permission. Setting to 'draft' unpublishes the item and also requires publish permission.",
+              "type": "string",
+              "enum": ["draft", "published"]
+            },
+            "seo": {
+              "description": "Per-content SEO metadata. Only valid for collections with SEO enabled (see schema_get_collection.hasSeo). Fields not included are left unchanged; pass null to clear.",
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ContentSeoInput"
+                }
+              ]
+            },
+            "bylines": {
+              "description": "Replace the byline list for this item. The first entry becomes the primary byline. Pass an empty array to clear all bylines.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ContentBylineInput"
+              }
+            },
+            "taxonomies": {
+              "description": "Replace taxonomy term assignments as { taxonomyName: [termSlug, ...] }. Term slugs are resolved in the entry's locale. Only named taxonomies are touched; other taxonomies are left unchanged. Pass an empty array to clear a taxonomy.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "publishedAt": {
+              "description": "Override the publication timestamp (ISO 8601). Requires content:publish_any permission. Pass null to clear. Useful for content migrations.",
+              "anyOf": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "_rev": {
+              "type": "string",
+              "description": "Revision token proving you have read the current item. Call content_get first and pass back the _rev it returns. If this call fails with CONFLICT the item changed in the meantime: call content_get again and retry with the new token."
+            }
+          },
+          "required": ["collection", "id", "_rev"],
+          "definitions": {
+            "ContentSeoInput": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "image": {
+                  "type": ["string", "null"]
+                },
+                "canonical": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "noIndex": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "ContentBylineInput": {
+              "type": "object",
+              "properties": {
+                "bylineId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roleLabel": {
+                  "type": ["string", "null"]
+                }
+              },
+              "required": ["bylineId"]
+            }
+          }
+        }
+      },
+      {
+        "name": "content_delete",
+        "description": "Soft-delete a content item by moving it to the trash. The item can be restored later with content_restore, or permanently deleted with content_permanent_delete.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_restore",
+        "description": "Restore a soft-deleted content item from the trash back to its previous state.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_permanent_delete",
+        "description": "Permanently and irreversibly delete a trashed content item. The item must be in the trash first (use content_delete). This cannot be undone.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_publish",
+        "description": "Publish a content item, making it live on the site. Creates a published revision from the current draft. Further edits create a new draft without affecting the live version until re-published. Pass `publishedAt` to backdate (e.g. when migrating content from another CMS) — this requires the content:publish_any permission. Without `publishedAt`, the existing `published_at` is preserved on re-publish (idempotent) and falls back to the current time on first publish.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_unpublish",
+        "description": "Unpublish a content item, reverting it to draft status. It will no longer be visible on the live site, but its content and publication date are preserved.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_schedule",
+        "description": "Schedule a content item for future publication. It will be automatically published at the specified date/time. The scheduledAt value must be an ISO 8601 datetime string in the future (e.g. '2025-06-01T09:00:00Z').",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_unschedule",
+        "description": "Cancel a previously scheduled publication. The item remains in its current status (typically 'draft' or 'scheduled'); only the scheduledAt timestamp is cleared. Idempotent — calling on an item that isn't scheduled is a no-op.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_compare",
+        "description": "Compare the published (live) version of a content item with its current draft. Returns both versions and a flag indicating whether there are changes. Useful for reviewing unpublished edits before publishing.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_discard_draft",
+        "description": "Discard the current draft changes and revert to the last published version. Only works on items that have been published at least once.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_list_trashed",
+        "description": "List soft-deleted content items in a collection's trash. These items can be restored with content_restore or permanently deleted with content_permanent_delete.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_duplicate",
+        "description": "Create a copy of an existing content item. The duplicate is created as a draft with '(Copy)' appended to the title and an auto-generated slug.",
+        "inputSchema": {}
+      },
+      {
+        "name": "content_translations",
+        "description": "Get all locale variants of a content item. Returns the translation group and a summary of each locale version (id, locale, slug, status). Only relevant when i18n is enabled on the site.",
+        "inputSchema": {}
+      },
+      {
+        "name": "byline_list",
+        "description": "List bylines (author/contributor credits) with optional filtering and pagination. Bylines are standalone records referenced by content items; use the returned id with content_create/content_update or byline_get. Use the nextCursor value from the response to fetch the next page.",
+        "inputSchema": {}
+      },
+      {
+        "name": "byline_get",
+        "description": "Get a single byline by its ID, including bio, avatar, website, linked user, and any custom fields.",
+        "inputSchema": {}
+      },
+      {
+        "name": "byline_create",
+        "description": "Create a new byline (author/contributor credit). The slug must be unique and contain only lowercase letters, digits, and hyphens. Link the byline to a CMS user via userId, or leave it as a standalone guest credit. The returned id can then be passed to content_create/content_update bylines.",
+        "inputSchema": {}
+      },
+      {
+        "name": "byline_update",
+        "description": "Update an existing byline. Any field can be omitted to leave it unchanged. Renaming the slug must not collide with another byline.",
+        "inputSchema": {}
+      },
+      {
+        "name": "byline_delete",
+        "description": "Permanently delete a byline. Any content crediting this byline loses the association, and it is cleared as a primary byline where set.",
+        "inputSchema": {}
+      },
+      {
+        "name": "byline_translations",
+        "description": "Return every locale variant of a byline, identified via its shared translation_group.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_list_collections",
+        "description": "List all content collections defined in the CMS. Each collection represents a content type (e.g. posts, pages, products) with its own schema and database table. Returns slug, label, supported features, and timestamps.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_get_collection",
+        "description": "Get detailed info about a collection including all field definitions. Fields describe the data model: name, type (string, text, number, boolean, datetime, portableText, image, reference, json, select, multiSelect, slug), constraints, and validation rules. Use this to understand what data content_create and content_update expect.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_create_collection",
+        "description": "Create a new content collection (content type). This creates a database table and schema definition. The slug must be lowercase alphanumeric with underscores, starting with a letter. Supports: 'drafts' (draft/publish workflow), 'revisions' (version history), 'preview' (live preview), 'scheduling' (timed publish), 'search' (full-text indexing), and 'seo' (SEO metadata).",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_delete_collection",
+        "description": "Delete a collection and its database table. This is irreversible and deletes all content in the collection. Use with extreme caution.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_update_collection",
+        "description": "Update an existing collection without deleting its table, fields, or content. Only provided settings change; omitted settings keep their current values. The collection slug cannot be changed.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_create_field",
+        "description": "Add a new field to a collection's schema. This adds a column to the database table. Field types: string (short text), text (long text), number (decimal), integer, boolean, datetime, select (single choice), multiSelect (multiple), portableText (rich text), image, file, reference (link to another collection), json, slug (URL-safe id). For select/multiSelect, provide choices in validation.options array.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_delete_field",
+        "description": "Remove a field from a collection. This drops the column from the database table and deletes all data in that field. Irreversible.",
+        "inputSchema": {}
+      },
+      {
+        "name": "schema_update_field",
+        "description": "Update an existing field without deleting its column or stored values. Only provided settings change; omitted settings keep their current values. Changes that require a content or column migration are rejected with migration guidance.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_list",
+        "description": "List uploaded media files (images, documents, etc.) with optional MIME type filtering and pagination. Returns file metadata including filename, URL, dimensions, and alt text.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_create",
+        "description": "Register a media file that has already been uploaded to storage. The caller is responsible for placing the file at `storageKey` (typically using a signed upload URL obtained from the admin UI or a separate API). This tool persists the metadata record so the file is discoverable via media_list / media_get and can be referenced by content. To upload the file itself, use media_upload (base64 data or a public URL) instead.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_upload",
+        "description": "Upload a media file from base64-encoded data or an external URL and register it in the media library. Returns the media item with id, storageKey, and url — ready to reference from content fields (e.g. featured_image) via content_create / content_update. Uploads are deduplicated by content hash: re-uploading identical bytes returns the existing item with deduplicated: true. URL fetches must resolve to a public http(s) host (SSRF-guarded). Subject to the global upload MIME allowlist and the configured maximum upload size.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_get",
+        "description": "Get details of a single media file by its ID. Returns metadata including filename, MIME type, size, dimensions, alt text, and URL.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_update",
+        "description": "Update the metadata of an uploaded media file. You can change the alt text, caption, and dimensions. The file itself cannot be changed.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_delete",
+        "description": "Permanently delete an uploaded media file. Removes the database record and the file from storage. Content referencing this media will have broken references. Cannot be undone.",
+        "inputSchema": {}
+      },
+      {
+        "name": "media_usage_repair",
+        "description": "Repair content media usage indexes for one collection or every collection. Returns complete, partial, failed, or stale status; inspect the structured result.",
+        "inputSchema": {}
+      },
+      {
+        "name": "search",
+        "description": "Full-text search across content collections. Searches indexed fields for matching content. Collections must have 'search' in their supports list and fields must be marked as searchable. Returns collection, item ID, title, excerpt, and relevance score.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_list",
+        "description": "List all taxonomy definitions (e.g. categories, tags). Taxonomies are classification systems applied to content. Each has a name, label, and can be hierarchical (categories) or flat (tags). Optionally filter by locale.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_get",
+        "description": "Get a single taxonomy definition by name. Taxonomy definitions describe a classification system (e.g. categories or tags), which collections it applies to, and whether it is hierarchical. Pass `locale` to resolve a specific translation; otherwise the lowest matching locale is returned.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_create",
+        "description": "Create a new taxonomy definition. Definitions are per-locale; pass `locale` when the same taxonomy name exists in multiple translations. `collections` names which content types the taxonomy applies to. If `translationOf` is set, the new definition joins the source's translation group and inherits `hierarchical` and `collections` from the source when those fields are omitted.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_update",
+        "description": "Update an existing taxonomy definition. The taxonomy `name` cannot be changed. Pass `locale` to update a specific translation; otherwise the lowest matching locale is updated. Any field may be omitted to leave it unchanged.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_delete",
+        "description": "Delete a taxonomy definition and all of its terms in every locale, along with any content assignments those terms hold. This cannot be undone.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_list_terms",
+        "description": "List terms in a taxonomy with pagination. Terms are individual entries (e.g. specific categories or tags). Hierarchical taxonomies can have parent-child relationships.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_create_term",
+        "description": "Create a new term in a taxonomy. For hierarchical taxonomies like categories, you can specify a parentId to create a child term. The parent must exist and belong to the same taxonomy. The parent's ancestor chain must not exceed 100 levels — attempts to attach a new term beneath a chain of 100+ existing ancestors are rejected.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_update_term",
+        "description": "Update an existing term in a taxonomy. Any field can be omitted to leave it unchanged. Renaming a term's slug must not collide with another term in the same taxonomy. Set parentId to null to detach from a parent. The new parent must exist, belong to the same taxonomy, and not introduce a cycle (a term cannot be its own ancestor). The new parent's ancestor chain must not exceed 100 levels — reparenting under a chain of 100+ ancestors is rejected.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_delete_term",
+        "description": "Permanently delete a term from a taxonomy. Any content tagged with this term loses the association. Cannot delete a term that has children — delete children first.",
+        "inputSchema": {}
+      },
+      {
+        "name": "taxonomy_term_translations",
+        "description": "Return every locale variant of a taxonomy term, identified via its shared translation_group.",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_list",
+        "description": "List navigation menus. Menus are per-locale: filter by `locale` to get just one locale's worth, or omit to list every row (one per locale per menu name).",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_get",
+        "description": "Get a menu by name, including its items. When multiple locales exist, pass `locale` to pick the right one.",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_translations",
+        "description": "Return every locale variant of a menu, identified via the shared translation_group.",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_create",
+        "description": "Create a new navigation menu. The `name` is the stable identifier used by site templates (e.g. 'main', 'footer'); `label` is the human-readable name shown in the admin. Menus are per-locale, so pass `locale` when the same menu name exists in multiple translations. Add items afterwards with menu_set_items. If `translationOf` is set, `locale` must also be set.",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_update",
+        "description": "Update a menu's label. The `name` (stable identifier) cannot be changed. On multi-locale installs, pass `locale` so the correct translation is updated.",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_delete",
+        "description": "Delete a menu. Items are also removed. Cannot be undone. On multi-locale installs, pass `locale` so only the intended translation is removed.",
+        "inputSchema": {}
+      },
+      {
+        "name": "menu_set_items",
+        "description": "Replace the entire item list of a menu in one call. This is atomic: the existing items are deleted and the new list is inserted in the order provided. Use this rather than per-item add/remove tools so the resulting order and parent links are unambiguous. On multi-locale installs, pass `locale` so only the intended translation is rewritten.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Menu name to update"
+            },
+            "locale": {
+              "description": "Locale of the menu to rewrite",
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Item display text"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["custom", "page", "post", "taxonomy", "collection"],
+                    "description": "Item kind"
+                  },
+                  "customUrl": {
+                    "description": "URL for type='custom' items (ignored otherwise)",
+                    "type": "string"
+                  },
+                  "referenceCollection": {
+                    "description": "Target collection slug for content references",
+                    "type": "string"
+                  },
+                  "referenceId": {
+                    "description": "Target content/term ID for references",
+                    "type": "string"
+                  },
+                  "titleAttr": {
+                    "description": "HTML title attribute",
+                    "type": "string"
+                  },
+                  "target": {
+                    "description": "HTML target attribute, e.g. '_blank'",
+                    "type": "string"
+                  },
+                  "cssClasses": {
+                    "description": "Space-separated CSS classes",
+                    "type": "string"
+                  },
+                  "parentIndex": {
+                    "description": "Array index of the parent item (must be earlier in the list). Omit for top-level items.",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": ["label", "type"]
+              },
+              "description": "Ordered list of menu items"
+            }
+          },
+          "required": ["name", "items"]
+        }
+      },
+      {
+        "name": "revision_list",
+        "description": "List revision history for a content item. Revisions are snapshots created on publish or update. Returns newest-first. Requires the collection to support 'revisions'.",
+        "inputSchema": {}
+      },
+      {
+        "name": "revision_restore",
+        "description": "Restore a content item to a previous revision. Replaces the current draft with the specified revision's data. Not automatically published — use content_publish afterward if needed.",
+        "inputSchema": {}
+      },
+      {
+        "name": "settings_get",
+        "description": "Get all site-wide settings (title, tagline, logo, favicon, URL, date/time formatting, social links, SEO defaults). Media references (logo, favicon, defaultOgImage) include resolved URLs. Unset values are omitted from the response.",
+        "inputSchema": {}
+      },
+      {
+        "name": "settings_update",
+        "description": "Update one or more site-wide settings. This is a partial update: only the fields provided are changed; omitted fields are left as-is. Returns the full settings object after the update. To set a media reference (logo, favicon, seo.defaultOgImage), pass an object with `mediaId` (and optional `alt`) — the media item must already exist (use media_create first).",
+        "inputSchema": {}
+      }
+    ]
+  },
+  "answers": {
+    "homeGet": {
+      "item": {
+        "id": "01M36TA83763RSVSN5R28DZ0AZ",
+        "type": "home",
+        "slug": "home",
+        "status": "published",
+        "data": {
+          "title": "Home",
+          "hero_badge": "Hà Nội workshop",
+          "hero_title_a": "Furniture built to fit",
+          "hero_title_b": "your exact space",
+          "hero_text": "We make and fit real wood furniture for homes and offices in Hà Nội, from single pieces to full room sets.",
+          "hero_cta1_label": "See our work",
+          "hero_cta1_url": "/services",
+          "hero_cta2_label": "Visit the workshop",
+          "hero_cta2_url": "/_emdash/api/media/file/01M36TAHR6GX0TMY64W9P4A0P6.01M36TAHRAEH6W54HX60FW5DY6.pdf",
+          "hero_image": {
+            "id": "01M36TAHP97FVD437HD71WGCCF",
+            "provider": "local",
+            "filename": "hero-ru.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+            "dominantColor": "rgb(212,215,216)",
+            "alt": "Drop a site photo here · 4:5",
+            "meta": {
+              "storageKey": "01M36TAHP9AV8VFM9ZM3X5HQYZ.01M36TAHPCTGFTM0EYHQRNKSEK.png",
+              "caption": null,
+              "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+              "dominantColor": "rgb(212,215,216)"
+            }
+          },
+          "stats": [],
+          "services_eyebrow": "Our work",
+          "services_title": "What we make",
+          "services_all_label": "All services →",
+          "services_all_url": "/services",
+          "services_items": [
+            {
+              "number": "01",
+              "title": "Vehicle interior fitting",
+              "text": "Custom upholstery, panelling and trim work carried out for cars, vans and passenger coaches."
+            },
+            {
+              "number": "02",
+              "title": "Seat and cabin restoration",
+              "text": "Replacement covers, foam repair and headliner work that return worn interiors to a clean finish."
+            },
+            {
+              "number": "03",
+              "title": "Materials and finishes",
+              "text": "Leather, fabric, vinyl and wood veneer options chosen to suit the vehicle and the intended use."
+            },
+            {
+              "number": "04",
+              "title": "On-site fitting and repair",
+              "text": "Installation and small repairs at your premises, with scheduling around your vehicle availability."
+            }
+          ],
+          "projects_title": "Selected projects",
+          "project_big": "01M36TA54Q5T8GX215T6151WQC",
+          "project_small_1": "01M36TA54ZZVVZQV8B052S3A3N",
+          "project_small_2": "01M36TA554101Q78GQWT699JYM",
+          "about_image": {
+            "id": "01M36TAHN4Y432FKHJPN5EVD8V",
+            "provider": "local",
+            "filename": "team-crew.png",
+            "mimeType": "image/png",
+            "width": 1000,
+            "height": 880,
+            "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+            "dominantColor": "rgb(167,166,167)",
+            "alt": "Resolutions of the annual general meeting",
+            "meta": {
+              "storageKey": "01M36TAHN4QP3BE6ZNABH1G54F.01M36TAHN78MNH2M5EJAXBYRRC.png",
+              "caption": null,
+              "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+              "dominantColor": "rgb(167,166,167)"
+            }
+          },
+          "why_eyebrow": "Why bán xe nội thật",
+          "why_title": "Made to measure, delivered and installed",
+          "why_items": [
+            {
+              "title": "Built around real materials",
+              "text": "Interiors are made from solid wood, veneer and metal rather than printed foil, so surfaces age with character instead of peeling."
+            },
+            {
+              "title": "Made to fit your space",
+              "text": "Each piece is measured and built for the room it will stand in, which keeps awkward corners and low ceilings from going to waste."
+            },
+            {
+              "title": "One team from start to finish",
+              "text": "The same people who plan the layout also handle the build and the fitting, so nothing is lost between separate contractors."
+            }
+          ],
+          "band_title": "Want a quote for your furniture?",
+          "band_text": "Tell us the room, the sizes and the wood you prefer, and we reply with a price and a lead time.",
+          "band_button": "Ask for a quote",
+          "band_url": "/contact",
+          "news_title": "News & disclosures",
+          "news_all_label": "View all →",
+          "clients_label": "Homes and offices we serve",
+          "client_logos": []
+        },
+        "authorId": null,
+        "primaryBylineId": null,
+        "createdAt": "2026-09-23T09:42:26.151Z",
+        "updatedAt": "2026-09-24T04:36:45.040Z",
+        "publishedAt": "2026-09-23T09:42:26.151Z",
+        "scheduledAt": null,
+        "liveRevisionId": "01M38V77T7D1DPRJBAGJAK604Z",
+        "draftRevisionId": null,
+        "version": 12,
+        "locale": "en",
+        "translationGroup": "01M36TA83763RSVSN5R28DZ0AZ",
+        "seo": {
+          "title": null,
+          "description": null,
+          "image": null,
+          "canonical": null,
+          "noIndex": false
+        },
+        "bylines": [],
+        "byline": null
+      },
+      "_rev": "MTI6MjAyNi0wOS0yNFQwNDozNjo0NS4wNDBa"
+    },
+    "siteGet": {
+      "item": {
+        "id": "01M36TA5254KTX8AKZQMK4BZD0",
+        "type": "site",
+        "slug": "site",
+        "status": "published",
+        "data": {
+          "title": "Site chrome (EN)",
+          "brand_mark": "BXT",
+          "brand_name": "BÁN XE NỘI THẬT",
+          "brand_sub": "Real wood furniture sales",
+          "quote_label": "Ask about a piece",
+          "quote_url": "/contact",
+          "topbar_phone": "Hotline: 0123456789",
+          "topbar_email": "",
+          "topbar_address": "123 Ba Đình, Hà Nội ceo@tracy.ai",
+          "home_label": "Home",
+          "resources_label": "Resources",
+          "kit_title": "Marketing Kit",
+          "recent_projects_title": "Recent projects",
+          "news_column_title": "News & updates",
+          "resources_all_label": "All resources →",
+          "all_projects_label": "All projects",
+          "all_label": "All",
+          "theme_dark_label": "Dark",
+          "theme_light_label": "Light",
+          "language_name": "English",
+          "footer_text": "Bán xe nội thật. Real wood furniture sold in Hà Nội.",
+          "footer_legal_1": "",
+          "footer_legal_2": "123 Ba Đình, Hà Nội ceo@tracy.ai",
+          "footer_services_title": "Services",
+          "footer_company_title": "Company",
+          "footer_contact_title": "Contact",
+          "hotline": "0123456789",
+          "sales_email": "",
+          "hours": "Mon–Fri, 9:00–18:00 (MSK)",
+          "footer_book_label": "See our furniture →",
+          "copyright": "© 2026 bán xe nội thật",
+          "social": [],
+          "search_title": "Search results",
+          "search_placeholder": "Keyword",
+          "search_button": "Search",
+          "search_next": "Next ›",
+          "search_results_line": "{count} results for “{query}” · sorted by relevance",
+          "search_filter_title": "Filter by section",
+          "search_popular_title": "Popular searches",
+          "search_popular": [
+            {
+              "term": "quote"
+            },
+            {
+              "term": "ISO 45001"
+            },
+            {
+              "term": "M&E"
+            },
+            {
+              "term": "careers"
+            }
+          ],
+          "not_found_title": "We could not find that page",
+          "not_found_text": "The link may have changed or the content has been archived. Try a search, or pick one of the sections on the right.",
+          "not_found_placeholder": "Search this website…",
+          "not_found_back": "← Back to home",
+          "not_found_suggestions_title": "You may be looking for",
+          "not_found_suggestions": [
+            {
+              "label": "Capability statement 2026",
+              "url": ""
+            },
+            {
+              "label": "Completed project index",
+              "url": "/projects"
+            },
+            {
+              "label": "Maintenance service rates",
+              "url": ""
+            },
+            {
+              "label": "Site engineer vacancies",
+              "url": "/careers"
+            }
+          ],
+          "slots": [
+            {
+              "key": "hero",
+              "text": "Drop a site photo here · 4:5"
+            },
+            {
+              "key": "project",
+              "text": "Project photo · 16:10"
+            },
+            {
+              "key": "projectSm",
+              "text": "Project photo · 4:3"
+            },
+            {
+              "key": "team",
+              "text": "Team / engineers photo · 1:1"
+            },
+            {
+              "key": "news",
+              "text": "News photo · 16:9"
+            },
+            {
+              "key": "featured",
+              "text": "Featured article photo"
+            },
+            {
+              "key": "article",
+              "text": "Article photo · 16:9"
+            },
+            {
+              "key": "figure",
+              "text": "Supporting figure"
+            },
+            {
+              "key": "map",
+              "text": "Map image / Yandex Maps iframe"
+            },
+            {
+              "key": "ratio16",
+              "text": "16:9 frame · fit cover"
+            },
+            {
+              "key": "contain",
+              "text": "Logo / white background · fit contain"
+            },
+            {
+              "key": "avatar",
+              "text": "Portrait photo"
+            }
+          ]
+        },
+        "authorId": null,
+        "primaryBylineId": null,
+        "createdAt": "2026-09-23T09:42:23.045Z",
+        "updatedAt": "2026-09-24T04:36:44.576Z",
+        "publishedAt": "2026-09-23T09:42:23.045Z",
+        "scheduledAt": null,
+        "liveRevisionId": "01M38V77BFDFMSS111H985CJ3R",
+        "draftRevisionId": null,
+        "version": 6,
+        "locale": "en",
+        "translationGroup": "01M36TA5254KTX8AKZQMK4BZD0",
+        "bylines": [],
+        "byline": null
+      },
+      "_rev": "NjoyMDI2LTA5LTI0VDA0OjM2OjQ0LjU3Nlo="
+    },
+    "investorsGet": {
+      "item": {
+        "id": "01M36TA8GAJWBPXYJKWTCXCSBT",
+        "type": "investors",
+        "slug": "investors",
+        "status": "draft",
+        "data": {
+          "title": "Investor and shareholder information",
+          "breadcrumb": "Investor relations",
+          "ticker": "MOEX · NGIN",
+          "lede": "bán xe nội thật discloses financial and corporate information in line with Russian statutory requirements and exchange listing rules.",
+          "quote": [
+            {
+              "key": "Share price",
+              "value": "RUB 384.50"
+            },
+            {
+              "key": "Daily change",
+              "value": "+1.8%"
+            },
+            {
+              "key": "Market cap",
+              "value": "RUB 28.4bn"
+            },
+            {
+              "key": "Free float",
+              "value": "24%"
+            }
+          ],
+          "fin_title": "Key figures",
+          "fin_note": "Consolidated IFRS figures, RUB bn.",
+          "fin_headers": [
+            {
+              "label": "Metric"
+            },
+            {
+              "label": "2024"
+            },
+            {
+              "label": "2025"
+            },
+            {
+              "label": "Change"
+            }
+          ],
+          "fin_rows": [
+            {
+              "metric": "Revenue",
+              "a": "31.2",
+              "b": "38.7",
+              "change": "+24%"
+            },
+            {
+              "metric": "EBITDA",
+              "a": "4.1",
+              "b": "5.6",
+              "change": "+37%"
+            },
+            {
+              "metric": "Net profit",
+              "a": "2.3",
+              "b": "3.2",
+              "change": "+39%"
+            },
+            {
+              "metric": "Order backlog",
+              "a": "46.8",
+              "b": "61.4",
+              "change": "+31%"
+            },
+            {
+              "metric": "Net debt / EBITDA",
+              "a": "1.4x",
+              "b": "1.1x",
+              "change": "−0.3x"
+            }
+          ],
+          "reports_title": "Reports and presentations",
+          "reports": [
+            {
+              "title": "Annual report 2025",
+              "format": "PDF · 6.4 MB",
+              "date": "28 Mar 2026",
+              "url": ""
+            },
+            {
+              "title": "Consolidated IFRS statements 2025",
+              "format": "PDF · 2.1 MB",
+              "date": "28 Mar 2026",
+              "url": ""
+            },
+            {
+              "title": "Investor presentation, Q2 2026",
+              "format": "PDF · 4.8 MB",
+              "date": "31 Jul 2026",
+              "url": ""
+            },
+            {
+              "title": "Statutory accounts, H1 2026",
+              "format": "PDF · 1.3 MB",
+              "date": "14 Aug 2026",
+              "url": ""
+            }
+          ],
+          "disclosures_title": "Material disclosures",
+          "dividends_title": "Dividends",
+          "dividends_text": "Our policy provides for a payout of at least 30% of IFRS net profit.",
+          "dividends": [
+            {
+              "period": "FY 2025",
+              "value": "RUB 14.20 per share",
+              "status": "Paid 22 Jul 2026"
+            },
+            {
+              "period": "FY 2024",
+              "value": "RUB 10.80 per share",
+              "status": "Paid 19 Jul 2025"
+            },
+            {
+              "period": "FY 2023",
+              "value": "RUB 8.40 per share",
+              "status": "Paid 24 Jul 2024"
+            }
+          ],
+          "calendar_title": "Investor calendar",
+          "calendar": [
+            {
+              "date": "30 Oct 2026",
+              "text": "Q3 2026 results and investor call"
+            },
+            {
+              "date": "12 Dec 2026",
+              "text": "Investor day: strategy to 2030"
+            },
+            {
+              "date": "27 Mar 2027",
+              "text": "Annual report and IFRS statements for 2026"
+            }
+          ],
+          "governance_title": "Corporate governance",
+          "governance": [
+            {
+              "label": "Charter and internal documents",
+              "url": ""
+            },
+            {
+              "label": "Board composition",
+              "url": ""
+            },
+            {
+              "label": "Dividend policy",
+              "url": ""
+            },
+            {
+              "label": "Anti-corruption policy",
+              "url": ""
+            }
+          ],
+          "contact_title": "Investor relations team",
+          "contact_name": "Elena Gurova · IR Director",
+          "contact_mail": "ir@northgate-ind.ru",
+          "contact_phone": "+7 495 382 14 60",
+          "subscribe_button": "Subscribe to disclosure alerts"
+        },
+        "authorId": null,
+        "primaryBylineId": null,
+        "createdAt": "2026-09-23T09:42:26.600Z",
+        "updatedAt": "2026-09-24T04:36:20.101Z",
+        "publishedAt": null,
+        "scheduledAt": null,
+        "liveRevisionId": null,
+        "draftRevisionId": "01M38V6R461NBDMD9JSZ9XRF1D",
+        "version": 4,
+        "locale": "en",
+        "translationGroup": "01M36TA8GAJWBPXYJKWTCXCSBT",
+        "seo": {
+          "title": null,
+          "description": null,
+          "image": null,
+          "canonical": null,
+          "noIndex": false
+        },
+        "bylines": [],
+        "byline": null,
+        "liveData": {
+          "title": "Investor and shareholder information",
+          "breadcrumb": "Investor relations",
+          "ticker": "MOEX · NGIN",
+          "lede": "bán xe nội thật discloses financial and corporate information in line with Russian statutory requirements and exchange listing rules.",
+          "quote": [
+            {
+              "key": "Share price",
+              "value": "RUB 384.50"
+            },
+            {
+              "key": "Daily change",
+              "value": "+1.8%"
+            },
+            {
+              "key": "Market cap",
+              "value": "RUB 28.4bn"
+            },
+            {
+              "key": "Free float",
+              "value": "24%"
+            }
+          ],
+          "fin_title": "Key figures",
+          "fin_note": "Consolidated IFRS figures, RUB bn.",
+          "fin_headers": [
+            {
+              "label": "Metric"
+            },
+            {
+              "label": "2024"
+            },
+            {
+              "label": "2025"
+            },
+            {
+              "label": "Change"
+            }
+          ],
+          "fin_rows": [
+            {
+              "metric": "Revenue",
+              "a": "31.2",
+              "b": "38.7",
+              "change": "+24%"
+            },
+            {
+              "metric": "EBITDA",
+              "a": "4.1",
+              "b": "5.6",
+              "change": "+37%"
+            },
+            {
+              "metric": "Net profit",
+              "a": "2.3",
+              "b": "3.2",
+              "change": "+39%"
+            },
+            {
+              "metric": "Order backlog",
+              "a": "46.8",
+              "b": "61.4",
+              "change": "+31%"
+            },
+            {
+              "metric": "Net debt / EBITDA",
+              "a": "1.4x",
+              "b": "1.1x",
+              "change": "−0.3x"
+            }
+          ],
+          "reports_title": "Reports and presentations",
+          "reports": [
+            {
+              "title": "Annual report 2025",
+              "format": "PDF · 6.4 MB",
+              "date": "28 Mar 2026",
+              "url": ""
+            },
+            {
+              "title": "Consolidated IFRS statements 2025",
+              "format": "PDF · 2.1 MB",
+              "date": "28 Mar 2026",
+              "url": ""
+            },
+            {
+              "title": "Investor presentation, Q2 2026",
+              "format": "PDF · 4.8 MB",
+              "date": "31 Jul 2026",
+              "url": ""
+            },
+            {
+              "title": "Statutory accounts, H1 2026",
+              "format": "PDF · 1.3 MB",
+              "date": "14 Aug 2026",
+              "url": ""
+            }
+          ],
+          "disclosures_title": "Material disclosures",
+          "dividends_title": "Dividends",
+          "dividends_text": "Our policy provides for a payout of at least 30% of IFRS net profit.",
+          "dividends": [
+            {
+              "period": "FY 2025",
+              "value": "RUB 14.20 per share",
+              "status": "Paid 22 Jul 2026"
+            },
+            {
+              "period": "FY 2024",
+              "value": "RUB 10.80 per share",
+              "status": "Paid 19 Jul 2025"
+            },
+            {
+              "period": "FY 2023",
+              "value": "RUB 8.40 per share",
+              "status": "Paid 24 Jul 2024"
+            }
+          ],
+          "calendar_title": "Investor calendar",
+          "calendar": [
+            {
+              "date": "30 Oct 2026",
+              "text": "Q3 2026 results and investor call"
+            },
+            {
+              "date": "12 Dec 2026",
+              "text": "Investor day: strategy to 2030"
+            },
+            {
+              "date": "27 Mar 2027",
+              "text": "Annual report and IFRS statements for 2026"
+            }
+          ],
+          "governance_title": "Corporate governance",
+          "governance": [
+            {
+              "label": "Charter and internal documents",
+              "url": ""
+            },
+            {
+              "label": "Board composition",
+              "url": ""
+            },
+            {
+              "label": "Dividend policy",
+              "url": ""
+            },
+            {
+              "label": "Anti-corruption policy",
+              "url": ""
+            }
+          ],
+          "contact_title": "Investor relations team",
+          "contact_name": "Elena Gurova · IR Director",
+          "contact_mail": "ir@northgate-ind.ru",
+          "contact_phone": "+7 495 382 14 60",
+          "subscribe_button": "Subscribe to disclosure alerts"
+        }
+      },
+      "_rev": "NDoyMDI2LTA5LTI0VDA0OjM2OjIwLjEwMVo="
+    },
+    "homeStagedUpdate": {
+      "item": {
+        "id": "01M36TA83763RSVSN5R28DZ0AZ",
+        "type": "home",
+        "slug": "home",
+        "status": "published",
+        "data": {
+          "title": "Home",
+          "hero_badge": "Hà Nội workshop",
+          "hero_title_a": "Built for the way",
+          "hero_title_b": "you work",
+          "hero_text": "We make and fit real wood furniture for homes and offices in Hà Nội, from single pieces to full room sets.",
+          "hero_cta1_label": "See our work",
+          "hero_cta1_url": "/services",
+          "hero_cta2_label": "Visit the workshop",
+          "hero_cta2_url": "/_emdash/api/media/file/01M36TAHR6GX0TMY64W9P4A0P6.01M36TAHRAEH6W54HX60FW5DY6.pdf",
+          "hero_image": {
+            "id": "01M36TAHP97FVD437HD71WGCCF",
+            "provider": "local",
+            "filename": "hero-ru.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+            "dominantColor": "rgb(212,215,216)",
+            "alt": "Drop a site photo here · 4:5",
+            "meta": {
+              "storageKey": "01M36TAHP9AV8VFM9ZM3X5HQYZ.01M36TAHPCTGFTM0EYHQRNKSEK.png",
+              "caption": null,
+              "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+              "dominantColor": "rgb(212,215,216)"
+            }
+          },
+          "stats": [],
+          "services_eyebrow": "Our work",
+          "services_title": "What we make",
+          "services_all_label": "All services →",
+          "services_all_url": "/services",
+          "services_items": [
+            {
+              "number": "01",
+              "title": "Vehicle interior fitting",
+              "text": "Custom upholstery, panelling and trim work carried out for cars, vans and passenger coaches."
+            },
+            {
+              "number": "02",
+              "title": "Seat and cabin restoration",
+              "text": "Replacement covers, foam repair and headliner work that return worn interiors to a clean finish."
+            },
+            {
+              "number": "03",
+              "title": "Materials and finishes",
+              "text": "Leather, fabric, vinyl and wood veneer options chosen to suit the vehicle and the intended use."
+            },
+            {
+              "number": "04",
+              "title": "On-site fitting and repair",
+              "text": "Installation and small repairs at your premises, with scheduling around your vehicle availability."
+            }
+          ],
+          "projects_title": "Selected projects",
+          "project_big": "01M36TA54Q5T8GX215T6151WQC",
+          "project_small_1": "01M36TA54ZZVVZQV8B052S3A3N",
+          "project_small_2": "01M36TA554101Q78GQWT699JYM",
+          "about_image": {
+            "id": "01M36TAHN4Y432FKHJPN5EVD8V",
+            "provider": "local",
+            "filename": "team-crew.png",
+            "mimeType": "image/png",
+            "width": 1000,
+            "height": 880,
+            "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+            "dominantColor": "rgb(167,166,167)",
+            "alt": "Resolutions of the annual general meeting",
+            "meta": {
+              "storageKey": "01M36TAHN4QP3BE6ZNABH1G54F.01M36TAHN78MNH2M5EJAXBYRRC.png",
+              "caption": null,
+              "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+              "dominantColor": "rgb(167,166,167)"
+            }
+          },
+          "why_eyebrow": "Why bán xe nội thật",
+          "why_title": "Made to measure, delivered and installed",
+          "why_items": [
+            {
+              "title": "Built around real materials",
+              "text": "Interiors are made from solid wood, veneer and metal rather than printed foil, so surfaces age with character instead of peeling."
+            },
+            {
+              "title": "Made to fit your space",
+              "text": "Each piece is measured and built for the room it will stand in, which keeps awkward corners and low ceilings from going to waste."
+            },
+            {
+              "title": "One team from start to finish",
+              "text": "The same people who plan the layout also handle the build and the fitting, so nothing is lost between separate contractors."
+            }
+          ],
+          "band_title": "Want a quote for your furniture?",
+          "band_text": "Tell us the room, the sizes and the wood you prefer, and we reply with a price and a lead time.",
+          "band_button": "Ask for a quote",
+          "band_url": "/contact",
+          "news_title": "News & disclosures",
+          "news_all_label": "View all →",
+          "clients_label": "Homes and offices we serve",
+          "client_logos": []
+        },
+        "authorId": null,
+        "primaryBylineId": null,
+        "createdAt": "2026-09-23T09:42:26.151Z",
+        "updatedAt": "2026-09-24T04:36:45.040Z",
+        "publishedAt": "2026-09-23T09:42:26.151Z",
+        "scheduledAt": null,
+        "liveRevisionId": "01M38V77T7D1DPRJBAGJAK604Z",
+        "draftRevisionId": "01M39RY16WBH4H6F5QBN3Y99D4",
+        "version": 13,
+        "locale": "en",
+        "translationGroup": "01M36TA83763RSVSN5R28DZ0AZ",
+        "seo": {
+          "title": null,
+          "description": null,
+          "image": null,
+          "canonical": null,
+          "noIndex": false
+        },
+        "bylines": [],
+        "byline": null,
+        "liveData": {
+          "title": "Home",
+          "hero_badge": "Hà Nội workshop",
+          "hero_title_a": "Furniture built to fit",
+          "hero_title_b": "your exact space",
+          "hero_text": "We make and fit real wood furniture for homes and offices in Hà Nội, from single pieces to full room sets.",
+          "hero_cta1_label": "See our work",
+          "hero_cta1_url": "/services",
+          "hero_cta2_label": "Visit the workshop",
+          "hero_cta2_url": "/_emdash/api/media/file/01M36TAHR6GX0TMY64W9P4A0P6.01M36TAHRAEH6W54HX60FW5DY6.pdf",
+          "hero_image": {
+            "id": "01M36TAHP97FVD437HD71WGCCF",
+            "provider": "local",
+            "filename": "hero-ru.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+            "dominantColor": "rgb(212,215,216)",
+            "alt": "Drop a site photo here · 4:5",
+            "meta": {
+              "storageKey": "01M36TAHP9AV8VFM9ZM3X5HQYZ.01M36TAHPCTGFTM0EYHQRNKSEK.png",
+              "caption": null,
+              "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+              "dominantColor": "rgb(212,215,216)"
+            }
+          },
+          "stats": [],
+          "services_eyebrow": "Our work",
+          "services_title": "What we make",
+          "services_all_label": "All services →",
+          "services_all_url": "/services",
+          "services_items": [
+            {
+              "number": "01",
+              "title": "Vehicle interior fitting",
+              "text": "Custom upholstery, panelling and trim work carried out for cars, vans and passenger coaches."
+            },
+            {
+              "number": "02",
+              "title": "Seat and cabin restoration",
+              "text": "Replacement covers, foam repair and headliner work that return worn interiors to a clean finish."
+            },
+            {
+              "number": "03",
+              "title": "Materials and finishes",
+              "text": "Leather, fabric, vinyl and wood veneer options chosen to suit the vehicle and the intended use."
+            },
+            {
+              "number": "04",
+              "title": "On-site fitting and repair",
+              "text": "Installation and small repairs at your premises, with scheduling around your vehicle availability."
+            }
+          ],
+          "projects_title": "Selected projects",
+          "project_big": "01M36TA54Q5T8GX215T6151WQC",
+          "project_small_1": "01M36TA54ZZVVZQV8B052S3A3N",
+          "project_small_2": "01M36TA554101Q78GQWT699JYM",
+          "about_image": {
+            "id": "01M36TAHN4Y432FKHJPN5EVD8V",
+            "provider": "local",
+            "filename": "team-crew.png",
+            "mimeType": "image/png",
+            "width": 1000,
+            "height": 880,
+            "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+            "dominantColor": "rgb(167,166,167)",
+            "alt": "Resolutions of the annual general meeting",
+            "meta": {
+              "storageKey": "01M36TAHN4QP3BE6ZNABH1G54F.01M36TAHN78MNH2M5EJAXBYRRC.png",
+              "caption": null,
+              "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+              "dominantColor": "rgb(167,166,167)"
+            }
+          },
+          "why_eyebrow": "Why bán xe nội thật",
+          "why_title": "Made to measure, delivered and installed",
+          "why_items": [
+            {
+              "title": "Built around real materials",
+              "text": "Interiors are made from solid wood, veneer and metal rather than printed foil, so surfaces age with character instead of peeling."
+            },
+            {
+              "title": "Made to fit your space",
+              "text": "Each piece is measured and built for the room it will stand in, which keeps awkward corners and low ceilings from going to waste."
+            },
+            {
+              "title": "One team from start to finish",
+              "text": "The same people who plan the layout also handle the build and the fitting, so nothing is lost between separate contractors."
+            }
+          ],
+          "band_title": "Want a quote for your furniture?",
+          "band_text": "Tell us the room, the sizes and the wood you prefer, and we reply with a price and a lead time.",
+          "band_button": "Ask for a quote",
+          "band_url": "/contact",
+          "news_title": "News & disclosures",
+          "news_all_label": "View all →",
+          "clients_label": "Homes and offices we serve",
+          "client_logos": []
+        }
+      },
+      "_rev": "MTM6MjAyNi0wOS0yNFQwNDozNjo0NS4wNDBa"
+    },
+    "homePublish": {
+      "item": {
+        "id": "01M36TA83763RSVSN5R28DZ0AZ",
+        "type": "home",
+        "slug": "home",
+        "status": "published",
+        "data": {
+          "title": "Home",
+          "hero_badge": "Hà Nội workshop",
+          "hero_title_a": "Built for the way",
+          "hero_title_b": "you work",
+          "hero_text": "We make and fit real wood furniture for homes and offices in Hà Nội, from single pieces to full room sets.",
+          "hero_cta1_label": "See our work",
+          "hero_cta1_url": "/services",
+          "hero_cta2_label": "Visit the workshop",
+          "hero_cta2_url": "/_emdash/api/media/file/01M36TAHR6GX0TMY64W9P4A0P6.01M36TAHRAEH6W54HX60FW5DY6.pdf",
+          "hero_image": {
+            "id": "01M36TAHP97FVD437HD71WGCCF",
+            "provider": "local",
+            "filename": "hero-ru.png",
+            "mimeType": "image/png",
+            "width": 1600,
+            "height": 1000,
+            "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+            "dominantColor": "rgb(212,215,216)",
+            "alt": "Drop a site photo here · 4:5",
+            "meta": {
+              "storageKey": "01M36TAHP9AV8VFM9ZM3X5HQYZ.01M36TAHPCTGFTM0EYHQRNKSEK.png",
+              "caption": null,
+              "blurhash": "LKPQHX-px]%g_Nt7kCR*D*ofR*Rj",
+              "dominantColor": "rgb(212,215,216)"
+            }
+          },
+          "stats": [],
+          "services_eyebrow": "Our work",
+          "services_title": "What we make",
+          "services_all_label": "All services →",
+          "services_all_url": "/services",
+          "services_items": [
+            {
+              "number": "01",
+              "title": "Vehicle interior fitting",
+              "text": "Custom upholstery, panelling and trim work carried out for cars, vans and passenger coaches."
+            },
+            {
+              "number": "02",
+              "title": "Seat and cabin restoration",
+              "text": "Replacement covers, foam repair and headliner work that return worn interiors to a clean finish."
+            },
+            {
+              "number": "03",
+              "title": "Materials and finishes",
+              "text": "Leather, fabric, vinyl and wood veneer options chosen to suit the vehicle and the intended use."
+            },
+            {
+              "number": "04",
+              "title": "On-site fitting and repair",
+              "text": "Installation and small repairs at your premises, with scheduling around your vehicle availability."
+            }
+          ],
+          "projects_title": "Selected projects",
+          "project_big": "01M36TA54Q5T8GX215T6151WQC",
+          "project_small_1": "01M36TA54ZZVVZQV8B052S3A3N",
+          "project_small_2": "01M36TA554101Q78GQWT699JYM",
+          "about_image": {
+            "id": "01M36TAHN4Y432FKHJPN5EVD8V",
+            "provider": "local",
+            "filename": "team-crew.png",
+            "mimeType": "image/png",
+            "width": 1000,
+            "height": 880,
+            "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+            "dominantColor": "rgb(167,166,167)",
+            "alt": "Resolutions of the annual general meeting",
+            "meta": {
+              "storageKey": "01M36TAHN4QP3BE6ZNABH1G54F.01M36TAHN78MNH2M5EJAXBYRRC.png",
+              "caption": null,
+              "blurhash": "LEK-qQR%IU-;~W-:Z~j[%1xuMwa{",
+              "dominantColor": "rgb(167,166,167)"
+            }
+          },
+          "why_eyebrow": "Why bán xe nội thật",
+          "why_title": "Made to measure, delivered and installed",
+          "why_items": [
+            {
+              "title": "Built around real materials",
+              "text": "Interiors are made from solid wood, veneer and metal rather than printed foil, so surfaces age with character instead of peeling."
+            },
+            {
+              "title": "Made to fit your space",
+              "text": "Each piece is measured and built for the room it will stand in, which keeps awkward corners and low ceilings from going to waste."
+            },
+            {
+              "title": "One team from start to finish",
+              "text": "The same people who plan the layout also handle the build and the fitting, so nothing is lost between separate contractors."
+            }
+          ],
+          "band_title": "Want a quote for your furniture?",
+          "band_text": "Tell us the room, the sizes and the wood you prefer, and we reply with a price and a lead time.",
+          "band_button": "Ask for a quote",
+          "band_url": "/contact",
+          "news_title": "News & disclosures",
+          "news_all_label": "View all →",
+          "clients_label": "Homes and offices we serve",
+          "client_logos": []
+        },
+        "authorId": null,
+        "primaryBylineId": null,
+        "createdAt": "2026-09-23T09:42:26.151Z",
+        "updatedAt": "2026-09-24T13:16:03.948Z",
+        "publishedAt": "2026-09-23T09:42:26.151Z",
+        "scheduledAt": null,
+        "liveRevisionId": "01M39RY16WBH4H6F5QBN3Y99D4",
+        "draftRevisionId": null,
+        "version": 14,
+        "locale": "en",
+        "translationGroup": "01M36TA83763RSVSN5R28DZ0AZ",
+        "seo": {
+          "title": null,
+          "description": null,
+          "image": null,
+          "canonical": null,
+          "noIndex": false
+        }
+      },
+      "_rev": "MTQ6MjAyNi0wOS0yNFQxMzoxNjowMy45NDha"
+    },
+    "contactListEn": {
+      "items": [
+        {
+          "id": "01M36TA8JEV4V0EREJD3XQG15C",
+          "type": "contact",
+          "slug": "contact",
+          "status": "published",
+          "data": {
+            "title": "Contact",
+            "lede": "Send a message about your interior furniture needs. We reply within one working day.",
+            "notice": "Include the item, size and material you need so we can answer accurately.",
+            "form": "quote-request-en",
+            "form_id": "01M36TBJJQDWK58CX87DSWH5M2",
+            "reset_label": "Clear form",
+            "hq_title": "Head office",
+            "hq_address_1": "123 Ba Đình, Hà Nội ceo@tracy.ai",
+            "hq_address_2": "",
+            "hotline_label": "Hotline",
+            "sales_label": "Sales",
+            "hours_label": "Office hours",
+            "map_image": {
+              "id": "01M36TAHVVGXKX7FF6KDB6PP2H",
+              "provider": "local",
+              "filename": "map-ru.png",
+              "mimeType": "image/png",
+              "width": 1000,
+              "height": 620,
+              "blurhash": "LDQchs_3x]?H~qa}WCay.8WXRPt7",
+              "dominantColor": "rgb(230,226,217)",
+              "alt": "Map image / Yandex Maps iframe",
+              "meta": {
+                "storageKey": "01M36TAHVVZ4H7HYJHHS7ZWH3N.01M36TAHVY4MQN159VFZQ4YJ75.png",
+                "caption": null,
+                "blurhash": "LDQchs_3x]?H~qa}WCay.8WXRPt7",
+                "dominantColor": "rgb(230,226,217)"
+              }
+            },
+            "branches_title": "Branches",
+            "branches": [],
+            "social_title": "Social profiles",
+            "social_text": "Project progress, corporate disclosures and open roles."
+          },
+          "authorId": null,
+          "primaryBylineId": null,
+          "createdAt": "2026-09-23T09:42:26.638Z",
+          "updatedAt": "2026-09-24T04:36:44.539Z",
+          "publishedAt": "2026-09-23T09:42:26.638Z",
+          "scheduledAt": null,
+          "liveRevisionId": "01M38V779S22M15VET880Y6WHT",
+          "draftRevisionId": null,
+          "version": 10,
+          "locale": "en",
+          "translationGroup": "01M36TA8JEV4V0EREJD3XQG15C",
+          "seo": {
+            "title": null,
+            "description": null,
+            "image": null,
+            "canonical": null,
+            "noIndex": false
+          },
+          "bylines": [],
+          "byline": null
+        }
+      ],
+      "total": 1
+    },
+    "contactListAll": {
+      "items": [
+        {
+          "id": "01M36TA8MRCA0SXJ889PFMPW60",
+          "type": "contact",
+          "slug": "contact",
+          "status": "draft",
+          "data": {
+            "title": "Контакти",
+            "lede": "Замовте комерційну пропозицію або виїзд на об'єкт. Наш відділ продажів відповідає протягом 24 робочих годин.",
+            "notice": "Поля, позначені *, є обов'язковими. Додавання креслень дає змогу зробити значно точніший розрахунок обсягів.",
+            "form": "quote-request-en",
+            "reset_label": "Очистити форму",
+            "hq_title": "Головний офіс",
+            "hq_address_1": "Індустріальний парк Vorsino, ділянка 12",
+            "hq_address_2": "район Borovsk, область Kaluga, 249020",
+            "hotline_label": "Гаряча лінія",
+            "sales_label": "Відділ продажів",
+            "hours_label": "Робочі години",
+            "map_image": {
+              "id": "01M36TAHVVGXKX7FF6KDB6PP2H",
+              "provider": "local",
+              "filename": "map-ru.png",
+              "mimeType": "image/png",
+              "width": 1000,
+              "height": 620,
+              "alt": "Map image / Yandex Maps iframe",
+              "meta": {
+                "storageKey": "01M36TAHVVZ4H7HYJHHS7ZWH3N.01M36TAHVY4MQN159VFZQ4YJ75.png",
+                "caption": null,
+                "blurhash": "LDQchs_3x]?H~qa}WCay.8WXRPt7",
+                "dominantColor": "rgb(230,226,217)"
+              },
+              "blurhash": "LDQchs_3x]?H~qa}WCay.8WXRPt7",
+              "dominantColor": "rgb(230,226,217)"
+            },
+            "branches_title": "Філії",
+            "branches": [
+              {
+                "city": "Moscow",
+                "address": "7/22 Derbenevskaya emb., 8-й поверх · +7 495 382 14 55"
+              },
+              {
+                "city": "Lipetsk",
+                "address": "Lipetsk, СЕЗ, 6 Tekhnologichesky proezd · +7 4742 375 620"
+              },
+              {
+                "city": "Nizhny Novgorod",
+                "address": "Виробничий майданчик, індустріальний парк Zavolzhye · +7 831 371 91 08"
+              }
+            ],
+            "social_title": "Соціальні мережі",
+            "social_text": "Хід проєктів, корпоративні розкриття інформації та відкриті вакансії."
+          },
+          "authorId": null,
+          "primaryBylineId": null,
+          "createdAt": "2026-09-23T09:42:26.712Z",
+          "updatedAt": "2026-09-24T04:36:21.106Z",
+          "publishedAt": "2026-09-23T09:42:26.712Z",
+          "scheduledAt": null,
+          "liveRevisionId": null,
+          "draftRevisionId": "01M38V6GFJFDDRJTGQBZPWKAHT",
+          "version": 5,
+          "locale": "uk",
+          "translationGroup": "01M36TA8JEV4V0EREJD3XQG15C",
+          "seo": {
+            "title": null,
+            "description": null,
+            "image": null,
+            "canonical": null,
+            "noIndex": false
+          },
+          "bylines": [],
+          "byline": null
+        },
+        {
+          "id": "01M36TA8MQEPH96HM7WWC1JRQA",
+          "type": "contact",
+          "slug": "contact",
+          "status": "draft",
+          "data": {
+            "title": "İletişim",
+            "lede": "Teklif isteyin veya saha ziyareti planlayın. Satış ekibimiz 24 iş saati içinde yanıt verir.",
+            "notice": "* ile işaretli alanlar zorunludur. Çizim eklemeniz, size çok daha isabetli bir metraj sunmamızı sağlar.",
+            "form": "quote-request-en",
+            "reset_label": "Formu temizleyin",
+            "hq_title": "Genel merkez",
+            "hq_address_1": "Vorsino Sanayi Parkı, 12 no'lu parsel",
+            "hq_address_2": "Borovsk İlçesi, Kaluga Bölgesi, 249020",
+            "hotline_label": "Çağrı hattı",
+            "sales_label": "Satış",
+            "hours_label": "Çalışma saatleri",
+            "map_image": {
+              "id": "01M36TAHVVGXKX7FF6KDB6PP2H",
+              "provider": "local",
+              "filename": "map-ru.png",
+              "mimeType": "image/png",
+              "width": 1000,
+              "height": 620,
+              "alt": "Map image / Yandex Maps iframe",
+              "meta": {
+                "storageKey": "01M36TAHVVZ4H7HYJHHS7ZWH3N.01M36TAHVY4MQN159VFZQ4YJ75.png",
+                "caption": null,
+                "blurhash": "LDQchs_3x]?H~qa}WCay.8WXRPt7",
+                "dominantColor": "rgb(230,226,217)"
+              },
+              "blurhash": "LDQchs_3x]?H~qa}WCay.8WXRPt7",
+              "dominantColor": "rgb(230,226,217)"
+            },
+            "branches_title": "Şubeler",
+            "branches": [
+              {
+                "city": "Moskova",
+                "address": "7/22 Derbenevskaya emb., 8. kat · +7 495 382 14 55"
+              },
+              {
+                "city": "Lipetsk",
+                "address": "Lipetsk SEZ, 6 Tekhnologichesky Proezd · +7 4742 375 620"
+              },
+              {
+                "city": "Nizhny Novgorod",
+                "address": "İmalat sahası, Zavolzhye IP · +7 831 371 91 08"
+              }
+            ],
+            "social_title": "Sosyal medya hesapları",
+            "social_text": "Proje ilerlemesi, kurumsal duyurular ve açık pozisyonlar."
+          },
+          "authorId": null,
+          "primaryBylineId": null,
+          "createdAt": "2026-09-23T09:42:26.711Z",
+          "updatedAt": "2026-09-24T04:36:21.070Z",
+          "publishedAt": "2026-09-23T09:42:26.711Z",
+          "scheduledAt": null,
+          "liveRevisionId": null,
+          "draftRevisionId": "01M38V6GEEJC5YWXC6AF3KX0Z5",
+          "version": 5,
+          "locale": "tr",
+          "translationGroup": "01M36TA8JEV4V0EREJD3XQG15C",
+          "seo": {
+            "title": null,
+            "description": null,
+            "image": null,
+            "canonical": null,
+            "noIndex": false
+          },
+          "bylines": [],
+          "byline": null
+        }
+      ],
+      "nextCursor": "eyJvcmRlclZhbHVlIjoiMjAyNi0wOS0yM1QwOTo0MjoyNi43MDdaIiwiaWQiOiIwMU0zNlRBOE1LRE44Uks4NkpEQ1RKWVpKRCJ9",
+      "total": 40
+    },
+    "menuPrimary": {
+      "id": "01M36TA42FFA4AZ09THB0JRT4P",
+      "name": "primary",
+      "label": "Primary navigation",
+      "createdAt": "2026-09-23T09:42:22.031Z",
+      "updatedAt": "2026-09-23T09:42:22.031Z",
+      "locale": "en",
+      "translationGroup": "01M36TA42FFA4AZ09THB0JRT4P",
+      "items": [
+        {
+          "id": "01M36TA94N1DVKDCD5R1FBM2JT",
+          "menuId": "01M36TA42FFA4AZ09THB0JRT4P",
+          "parentId": null,
+          "sortOrder": 0,
+          "type": "custom",
+          "referenceCollection": null,
+          "referenceId": null,
+          "customUrl": "/",
+          "label": "Home",
+          "titleAttr": null,
+          "target": null,
+          "cssClasses": null,
+          "createdAt": "2026-09-23T09:42:27.221Z",
+          "locale": "en",
+          "translationGroup": "01M36TA94N1DVKDCD5R1FBM2JT"
+        },
+        {
+          "id": "01M36TA94NAKEGJD4W7Q129KYV",
+          "menuId": "01M36TA42FFA4AZ09THB0JRT4P",
+          "parentId": null,
+          "sortOrder": 1,
+          "type": "custom",
+          "referenceCollection": null,
+          "referenceId": null,
+          "customUrl": "/about",
+          "label": "About",
+          "titleAttr": null,
+          "target": null,
+          "cssClasses": null,
+          "createdAt": "2026-09-23T09:42:27.221Z",
+          "locale": "en",
+          "translationGroup": "01M36TA94NAKEGJD4W7Q129KYV"
+        },
+        {
+          "id": "01M36TA94NNNA5F9YJ868CGRX9",
+          "menuId": "01M36TA42FFA4AZ09THB0JRT4P",
+          "parentId": null,
+          "sortOrder": 2,
+          "type": "custom",
+          "referenceCollection": null,
+          "referenceId": null,
+          "customUrl": "/services",
+          "label": "Services",
+          "titleAttr": null,
+          "target": null,
+          "cssClasses": null,
+          "createdAt": "2026-09-23T09:42:27.221Z",
+          "locale": "en",
+          "translationGroup": "01M36TA94NNNA5F9YJ868CGRX9"
+        },
+        {
+          "id": "01M36TA94PB868P53RCJYQGQA5",
+          "menuId": "01M36TA42FFA4AZ09THB0JRT4P",
+          "parentId": null,
+          "sortOrder": 3,
+          "type": "custom",
+          "referenceCollection": null,
+          "referenceId": null,
+          "customUrl": "/projects",
+          "label": "Projects",
+          "titleAttr": null,
+          "target": null,
+          "cssClasses": null,
+          "createdAt": "2026-09-23T09:42:27.222Z",
+          "locale": "en",
+          "translationGroup": "01M36TA94PB868P53RCJYQGQA5"
+        },
+        {
+          "id": "01M36TA94PNYJJZX33ADXR9E30",
+          "menuId": "01M36TA42FFA4AZ09THB0JRT4P",
+          "parentId": null,
+          "sortOrder": 4,
+          "type": "custom",
+          "referenceCollection": null,
+          "referenceId": null,
+          "customUrl": "/news",
+          "label": "News",
+          "titleAttr": null,
+          "target": null,
+          "cssClasses": null,
+          "createdAt": "2026-09-23T09:42:27.222Z",
+          "locale": "en",
+          "translationGroup": "01M36TA94PNYJJZX33ADXR9E30"
+        },
+        {
+          "id": "01M36TA94Q2TQJ3TKA45ZTP9JE",
+          "menuId": "01M36TA42FFA4AZ09THB0JRT4P",
+          "parentId": null,
+          "sortOrder": 5,
+          "type": "custom",
+          "referenceCollection": null,
+          "referenceId": null,
+          "customUrl": "/contact",
+          "label": "Contact",
+          "titleAttr": null,
+          "target": null,
+          "cssClasses": null,
+          "createdAt": "2026-09-23T09:42:27.223Z",
+          "locale": "en",
+          "translationGroup": "01M36TA94Q2TQJ3TKA45ZTP9JE"
+        }
+      ]
+    },
+    "menuList": [
+      {
+        "itemCount": 4,
+        "id": "01M36TA4318MQNRAK64Z5NMZTE",
+        "name": "footer_company",
+        "label": "Footer: company",
+        "createdAt": "2026-09-23T09:42:22.049Z",
+        "updatedAt": "2026-09-23T09:42:22.049Z",
+        "locale": "en",
+        "translationGroup": "01M36TA4318MQNRAK64Z5NMZTE"
+      },
+      {
+        "itemCount": 1,
+        "id": "01M36TA43686YZ0JA8E74XHET8",
+        "name": "footer_legal",
+        "label": "Footer: legal",
+        "createdAt": "2026-09-23T09:42:22.054Z",
+        "updatedAt": "2026-09-23T09:42:22.054Z",
+        "locale": "en",
+        "translationGroup": "01M36TA43686YZ0JA8E74XHET8"
+      },
+      {
+        "itemCount": 4,
+        "id": "01M36TA42X1KMXJM2GTARHTZH0",
+        "name": "footer_services",
+        "label": "Footer: services",
+        "createdAt": "2026-09-23T09:42:22.045Z",
+        "updatedAt": "2026-09-23T09:42:22.045Z",
+        "locale": "en",
+        "translationGroup": "01M36TA42X1KMXJM2GTARHTZH0"
+      },
+      {
+        "itemCount": 6,
+        "id": "01M36TA42FFA4AZ09THB0JRT4P",
+        "name": "primary",
+        "label": "Primary navigation",
+        "createdAt": "2026-09-23T09:42:22.031Z",
+        "updatedAt": "2026-09-23T09:42:22.031Z",
+        "locale": "en",
+        "translationGroup": "01M36TA42FFA4AZ09THB0JRT4P"
+      },
+      {
+        "itemCount": 6,
+        "id": "01M36TA42Q9ZS23NPNQWE99ZMT",
+        "name": "resources_kit",
+        "label": "Resources: marketing kit",
+        "createdAt": "2026-09-23T09:42:22.039Z",
+        "updatedAt": "2026-09-23T09:42:22.039Z",
+        "locale": "en",
+        "translationGroup": "01M36TA42Q9ZS23NPNQWE99ZMT"
+      },
+      {
+        "itemCount": 1,
+        "id": "01M36TA42N508JNV3NZ2K76R4X",
+        "name": "topbar",
+        "label": "Topbar links",
+        "createdAt": "2026-09-23T09:42:22.037Z",
+        "updatedAt": "2026-09-23T09:42:22.037Z",
+        "locale": "en",
+        "translationGroup": "01M36TA42N508JNV3NZ2K76R4X"
+      }
+    ],
+    "settings": {
+      "title": "bán xe nội thật",
+      "tagline": "Real wood furniture sales",
+      "postsPerPage": 4
+    },
+    "schemaList": {
+      "items": [
+        {
+          "id": "01M36TA3XD7EGB6WZJF1A75F9C",
+          "slug": "site",
+          "label": "Site chrome",
+          "labelSingular": "Site chrome",
+          "description": "Topbar, header, footer, search and 404 copy. One entry per locale.",
+          "supports": ["revisions"],
+          "source": "seed",
+          "hasSeo": false,
+          "routable": false,
+          "hidden": false,
+          "sortOrder": 1,
+          "commentsEnabled": false,
+          "commentsModeration": "first_time",
+          "commentsClosedAfterDays": 90,
+          "commentsAutoApproveUsers": true,
+          "editLocking": false,
+          "createdAt": "2026-09-23 09:42:21",
+          "updatedAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "home",
+          "label": "Home page",
+          "labelSingular": "Home page",
+          "supports": ["revisions", "seo"],
+          "source": "seed",
+          "hasSeo": true,
+          "urlPattern": "/",
+          "routable": false,
+          "hidden": false,
+          "sortOrder": 2,
+          "commentsEnabled": false,
+          "commentsModeration": "first_time",
+          "commentsClosedAfterDays": 90,
+          "commentsAutoApproveUsers": true,
+          "editLocking": false,
+          "createdAt": "2026-09-23 09:42:21",
+          "updatedAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3Y8S8DFHMTWQNMK5050",
+          "slug": "about",
+          "label": "About page",
+          "labelSingular": "About page",
+          "supports": ["revisions", "seo"],
+          "source": "seed",
+          "hasSeo": true,
+          "urlPattern": "/about",
+          "routable": false,
+          "hidden": false,
+          "sortOrder": 3,
+          "commentsEnabled": false,
+          "commentsModeration": "first_time",
+          "commentsClosedAfterDays": 90,
+          "commentsAutoApproveUsers": true,
+          "editLocking": false,
+          "createdAt": "2026-09-23 09:42:21",
+          "updatedAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3YEFQSABXPYXYBD7C03",
+          "slug": "services_page",
+          "label": "Services page",
+          "labelSingular": "Services page",
+          "supports": ["revisions", "seo"],
+          "source": "seed",
+          "hasSeo": true,
+          "urlPattern": "/services",
+          "routable": false,
+          "hidden": false,
+          "sortOrder": 4,
+          "commentsEnabled": false,
+          "commentsModeration": "first_time",
+          "commentsClosedAfterDays": 90,
+          "commentsAutoApproveUsers": true,
+          "editLocking": false,
+          "createdAt": "2026-09-23 09:42:21",
+          "updatedAt": "2026-09-23 09:42:21"
+        }
+      ]
+    },
+    "schemaHome": {
+      "id": "01M36TA3XN8WW29TQ8G64H1RRE",
+      "slug": "home",
+      "label": "Home page",
+      "labelSingular": "Home page",
+      "supports": ["revisions", "seo"],
+      "source": "seed",
+      "hasSeo": true,
+      "urlPattern": "/",
+      "routable": false,
+      "hidden": false,
+      "sortOrder": 2,
+      "commentsEnabled": false,
+      "commentsModeration": "first_time",
+      "commentsClosedAfterDays": 90,
+      "commentsAutoApproveUsers": true,
+      "editLocking": false,
+      "createdAt": "2026-09-23 09:42:21",
+      "updatedAt": "2026-09-23 09:42:21",
+      "fields": [
+        {
+          "id": "01M36TA3XNJR2QS0FSD1KTHWDQ",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": true,
+          "unique": false,
+          "sortOrder": 0,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XN6AD5MFY6FW3GZG8B",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_badge",
+          "label": "Hero badge",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 1,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XN3VP7KT973ZK0BWBH",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_title_a",
+          "label": "Hero title (line 1)",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 2,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XNYQHKWCA9QDEPHB52",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_title_b",
+          "label": "Hero title (accent line)",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 3,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XN9WF8PHN1T1MJ09J3",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_text",
+          "label": "Hero text",
+          "type": "text",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 4,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XNN9E31P6ZHKHFJSA6",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_cta1_label",
+          "label": "Hero CTA 1 label",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 5,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XNMGXAHTRM911M6EP0",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_cta1_url",
+          "label": "Hero CTA 1 URL",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 6,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XNRBB2RTZ51K9Y8RK3",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_cta2_label",
+          "label": "Hero CTA 2 label",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 7,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XN90F7Q6VW6NYVB1W3",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_cta2_url",
+          "label": "Hero CTA 2 URL",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 8,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPD8SX9R7Y23JZ53JC",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 9,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPFJKC1PJQYN170FHY",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "stats",
+          "label": "Stats",
+          "type": "repeater",
+          "columnType": "JSON",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "subFields": [
+              {
+                "slug": "value",
+                "label": "Value",
+                "type": "string"
+              },
+              {
+                "slug": "label",
+                "label": "Label",
+                "type": "string"
+              }
+            ]
+          },
+          "sortOrder": 10,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPR5FA38CQF7D8RBCE",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "services_eyebrow",
+          "label": "Services eyebrow",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 11,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPJ9XGRE54CR0CRRCM",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "services_title",
+          "label": "Services title",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 12,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP98FQJH9GVA3JPEZX",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "services_all_label",
+          "label": "Services link label",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 13,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP20CKGY1B7P92SPA2",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "services_all_url",
+          "label": "Services link URL",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 14,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPJ362DWYBDVGN7F27",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "services_items",
+          "label": "Services cards",
+          "type": "repeater",
+          "columnType": "JSON",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "subFields": [
+              {
+                "slug": "number",
+                "label": "Number",
+                "type": "string"
+              },
+              {
+                "slug": "title",
+                "label": "Title",
+                "type": "string"
+              },
+              {
+                "slug": "text",
+                "label": "Text",
+                "type": "text"
+              }
+            ]
+          },
+          "sortOrder": 15,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP4DSX2CWVNQW57WCG",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "projects_title",
+          "label": "Projects title",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 16,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPE04XP64Z3HR78EXN",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "project_big",
+          "label": "Large project card",
+          "type": "reference",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collection": "projects"
+          },
+          "sortOrder": 17,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPNWTRZRZGFP8R7JA5",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "project_small_1",
+          "label": "Small project card 1",
+          "type": "reference",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collection": "projects"
+          },
+          "sortOrder": 18,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP5FQPWW9VKJHN7DBS",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "project_small_2",
+          "label": "Small project card 2",
+          "type": "reference",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collection": "projects"
+          },
+          "sortOrder": 19,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPZWSK6XHBQVYRPWD2",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "about_image",
+          "label": "About section image",
+          "type": "image",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 20,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP9AKGSZ5BNZGFQV4C",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "why_eyebrow",
+          "label": "Why eyebrow",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 21,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPRWJMJ5S2VX11PEYX",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "why_title",
+          "label": "Why title",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 22,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP35J9NHKZ1TZ3952P",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "why_items",
+          "label": "Why items",
+          "type": "repeater",
+          "columnType": "JSON",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "subFields": [
+              {
+                "slug": "title",
+                "label": "Title",
+                "type": "string"
+              },
+              {
+                "slug": "text",
+                "label": "Text",
+                "type": "text"
+              }
+            ]
+          },
+          "sortOrder": 23,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPJ38KDF2B2C87TQJJ",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "band_title",
+          "label": "CTA band title",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 24,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPHKE9BRYAYQW3QE08",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "band_text",
+          "label": "CTA band text",
+          "type": "text",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 25,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP5NMDG7QYHAYVCDVW",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "band_button",
+          "label": "CTA band button",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 26,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPGX23N6JG5RJ3YC4N",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "band_url",
+          "label": "CTA band URL",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 27,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPCNPSJ7TXGBDDNJAA",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "news_title",
+          "label": "News title",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 28,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XP41SV2X02H6G2XVPF",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "news_all_label",
+          "label": "News link label",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 29,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPB7YXNQ4E7HBXGD2K",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "clients_label",
+          "label": "Clients label",
+          "type": "string",
+          "columnType": "TEXT",
+          "required": false,
+          "unique": false,
+          "sortOrder": 30,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        },
+        {
+          "id": "01M36TA3XPZ2MECYY3MP9J15JA",
+          "collectionId": "01M36TA3XN8WW29TQ8G64H1RRE",
+          "slug": "client_logos",
+          "label": "Client logos",
+          "type": "repeater",
+          "columnType": "JSON",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "subFields": [
+              {
+                "slug": "logo",
+                "label": "Logo",
+                "type": "image"
+              },
+              {
+                "slug": "name",
+                "label": "Name",
+                "type": "string"
+              }
+            ]
+          },
+          "sortOrder": 31,
+          "searchable": false,
+          "indexed": false,
+          "translatable": true,
+          "createdAt": "2026-09-23 09:42:21"
+        }
+      ]
+    }
+  },
+  "r2": {
+    "homeGetChars": 5536,
+    "listChars": 49977,
+    "stagedUpdateChars": 10154
+  }
+}

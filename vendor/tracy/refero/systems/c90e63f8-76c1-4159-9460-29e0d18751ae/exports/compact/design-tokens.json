@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#1f1c1b",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, filled action buttons, dark surfaces — warm near-black replaces pure black so the entire palette feels printed on cream rather than rendered on glass"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, button text on dark fills — the only true white in the system, reserved for elements that need to lift off the warm canvas"
+    },
+    "canvas-cream": {
+      "$value": "#ebe9e1",
+      "$type": "color",
+      "$description": "Canvas Cream — Page background — the dominant warm neutral that makes the entire site feel like uncoated stock paper rather than a screen"
+    },
+    "linen": {
+      "$value": "#f5f4f0",
+      "$type": "color",
+      "$description": "Linen — Nav bar background, subtle section alternation, heading hairlines — a lighter cream that layers on the canvas without breaking warmth"
+    },
+    "stone": {
+      "$value": "#a69b92",
+      "$type": "color",
+      "$description": "Stone — Muted text, input borders, heading underlines — warm gray for secondary information that should recede into the paper"
+    },
+    "hairline": {
+      "$value": "#d9d6ce",
+      "$type": "color",
+      "$description": "Hairline — Link underlines, card borders, subtle dividers — the lightest warm border, almost invisible against the canvas"
+    },
+    "espresso": {
+      "$value": "#2d2724",
+      "$type": "color",
+      "$description": "Espresso — Dark surface accent, input fills — slightly lighter than Ink Black for the announcement bar and secondary dark surfaces"
+    },
+    "charcoal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal — SVG icon fills, pure black instances — used sparingly in vector icons where absolute black is needed"
+    },
+    "cobblestone": {
+      "$value": "#c7c1b7",
+      "$type": "color",
+      "$description": "Cobblestone — Secondary border, decorative dividers — warmer than Hairline, used for borders that need slightly more presence"
+    },
+    "highlighter-orange": {
+      "$value": "#ff7714",
+      "$type": "color",
+      "$description": "Highlighter Orange — Accent for links, icon strokes, outlined callouts — vivid warm orange that only outlines, never fills, keeping the energy of a marker on paper rather than a UI button"
+    }
+  },
+  "font": {
+    "exposure30": {
+      "$value": "Exposure30",
+      "$type": "fontFamily",
+      "$description": "Display serif for all headings — the 350 weight at 82-96px is the signature move: a thin editorial serif at massive scale that whispers authority instead of shouting in bold. Used exclusively for headlines, never for body or UI."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Body and UI grotesque — handles all navigation, buttons, body copy, labels, and metadata. The 300-400 weights dominate; 500-600 are reserved for button labels and emphasis. Tracking opens up at 10-11px (0.02em) for caps metadata, closes at body sizes (0.01em) for density."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.parloa.com",
+      "siteName": "Parloa",
+      "extractedAt": "2026-06-03T19:26:16.141Z",
+      "variant": "compact"
+    }
+  }
+}

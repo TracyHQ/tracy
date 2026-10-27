@@ -1,0 +1,114 @@
+{
+  "color": {
+    "warm-off-white": {
+      "$value": "#faf9f6",
+      "$type": "color",
+      "$description": "Warm Off-White — Primary headlines, body text, nav links — the warm cream reads softer than pure white against the charcoal canvas"
+    },
+    "bone-gray": {
+      "$value": "#868684",
+      "$type": "color",
+      "$description": "Bone Gray — Secondary text, captions, muted labels — the midtone that separates from Off-White without losing warmth"
+    },
+    "pale-stone": {
+      "$value": "#b4b4b2",
+      "$type": "color",
+      "$description": "Pale Stone — Tertiary text, ghost button labels, low-emphasis copy"
+    },
+    "faint-linen": {
+      "$value": "#e3e2e0",
+      "$type": "color",
+      "$description": "Faint Linen — Hairline borders, subtle dividers, selected state outlines"
+    },
+    "smoke-charcoal": {
+      "$value": "#2f2f2f",
+      "$type": "color",
+      "$description": "Smoke Charcoal — Card surfaces, nested panels, terminal window backgrounds"
+    },
+    "iron-veil": {
+      "$value": "#383838",
+      "$type": "color",
+      "$description": "Iron Veil — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "slate-hearth": {
+      "$value": "#40403f",
+      "$type": "color",
+      "$description": "Slate Hearth — Highest surface elevation — modal overlays, floating panels"
+    },
+    "deep-ember": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Deep Ember — Page canvas, section backgrounds — the warm near-black that grounds the whole system"
+    },
+    "smoked-onyx": {
+      "$value": "#1e1e1d",
+      "$type": "color",
+      "$description": "Smoked Onyx — Footer, banded section backgrounds, subtle vertical shifts"
+    },
+    "absolute": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute — Deepest dark, nav text, icon strokes, image masks"
+    },
+    "ink-black": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Ink Black — Deep text, hairline borders that must disappear into the canvas"
+    },
+    "gold-leaf": {
+      "$value": "#bd9f65",
+      "$type": "color",
+      "$description": "Gold Leaf — Code syntax strings, keyword highlights, inline emphasis — appears only inside terminal content, never as a UI button"
+    },
+    "muted-cobalt": {
+      "$value": "#6f839f",
+      "$type": "color",
+      "$description": "Muted Cobalt — Code syntax identifiers, secondary link text, tag accents — the cool counterpoint to the warm gold"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "matter": {
+      "$value": "Matter",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI text — headlines, body, nav, and labels. Custom geometric grotesque with mechanical rhythm; the signature custom font. Letter-spacing tightens aggressively at display sizes (-0.030em at 56-68px) and opens wide for tracked small caps (0.200em at 11px), giving the system two distinct voices from one family."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Command-line strings inside buttons and inline code chips — the only monospace that touches user-facing UI"
+    },
+    "matter-mono": {
+      "$value": "Matter Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced variant of Matter for code blocks and product mockup bodies"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary support face for body copy where Matter licensing is unavailable; rare in the system"
+    },
+    "matter-regular": {
+      "$value": "Matter Regular",
+      "$type": "fontFamily",
+      "$description": "Matter Regular — detected in extracted data but not described by AI"
+    },
+    "matter-sq-regular": {
+      "$value": "Matter SQ Regular",
+      "$type": "fontFamily",
+      "$description": "Matter SQ Regular — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://warp.dev/code",
+      "siteName": "Warp",
+      "extractedAt": "2026-06-03T17:29:14.310Z",
+      "variant": "compact"
+    }
+  }
+}

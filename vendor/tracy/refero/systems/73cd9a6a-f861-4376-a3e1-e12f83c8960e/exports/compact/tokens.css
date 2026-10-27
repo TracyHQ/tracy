@@ -1,0 +1,41 @@
+:root {
+  /* Colors */
+  --color-midnight-ink: #080b12;
+  --color-paper: #ffffff;
+  --color-fog: #f6f7f8;
+  --color-pearl: #edeef1;
+  --color-stone: #d9d9d9;
+  --color-lavender-mist: #dbdbee;
+  --color-mist: #b5b9c4;
+  --color-pewter: #9898ae;
+  --color-steel: #848a9c;
+  --color-smoke: #acacae;
+  --color-ash: #9d9ea1;
+  --color-iron: #606167;
+  --color-graphite: #6c6d73;
+  --color-slate: #4f535e;
+  --color-charcoal: #2b2b2c;
+  --color-electric-iris: #0a33ff;
+  --color-periwinkle: #7f90ce;
+  --color-hero-dawn: #010b18;
+  --gradient-hero-dawn: linear-gradient(180deg, #010b18 0%, #010818 16%, #103b91 49%, #4c7de8 78%, #bad0ff 97%);
+  --color-sky-whisper: #e2efff;
+  --color-sapphire-ink: #061353;
+  --color-mint-whisper: #e4f3e2;
+  --color-forest-ink: #03350f;
+  --color-sprout-whisper: #d6ffe0;
+  --color-saffron-whisper: #faeed1;
+  --color-amber-ink: #423301;
+  --color-blossom-whisper: #ffe6f7;
+  --color-mulberry-ink: #600537;
+  --color-plum-ink: #21034d;
+  --color-crimson-ink: #580101;
+  --color-apricot-whisper: #fee8dd;
+  --color-russet-ink: #581c01;
+
+  /* Typography — Font Families */
+  --font-atacama-var: 'Atacama VAR', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl: 'Suisse Intl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

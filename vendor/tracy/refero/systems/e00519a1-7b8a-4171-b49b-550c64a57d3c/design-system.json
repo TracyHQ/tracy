@@ -1,0 +1,255 @@
+{
+  "dos": [
+    "Use #203b90 as the only chromatic color — it should appear on the logo, headings, borders, and the hero scrim to assert brand identity.",
+    "Use pill-shaped buttons at 41-60px radius for all actions; never use rectangular or slightly-rounded buttons.",
+    "Use full-bleed product photography with a left-to-right gradient scrim for hero sections.",
+    "Use Soehne with wide letter-spacing (0.043-0.063em) for all UI and body text to maintain the editorial cadence.",
+    "Use Integral with tight line-heights (0.92-1.0) for all display headings to create compressed, magazine-style type.",
+    "Keep the page white-dominant — use #f2f2f2 only for the footer band.",
+    "Use 30px horizontal padding and 12-15px vertical padding on all interactive elements."
+  ],
+  "donts": [
+    "Don't introduce additional chromatic colors — the entire system speaks in indigo and neutrals.",
+    "Don't use box-shadows or elevation effects — the design is intentionally flat.",
+    "Don't use rectangular buttons or inputs — the extreme radii (41-60px) are a signature.",
+    "Don't use body fonts for headings or display text — Integral carries the editorial voice exclusively.",
+    "Don't use tight letter-spacing on Soehne — the wide tracking is what gives the UI its boutique feel.",
+    "Don't add decorative gradients or background patterns to non-hero sections.",
+    "Don't use multiple border colors — stick to #203b90 for brand borders, #000000 for utility borders."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#203b90",
+      "name": "Indigo Statement",
+      "role": "Primary brand color — logo, all headings, primary action fills, action borders, and the left-side hero scrim. This is the only chromatic color in the system; it appears on roughly every surface to assert brand presence",
+      "group": "brand"
+    },
+    {
+      "hex": "#7989bc",
+      "name": "Indigo Mist",
+      "role": "Tonal violet for subtle borders and secondary outlines — the softer sibling of Indigo Statement used where full saturation would feel heavy",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Carbon",
+      "role": "Icon strokes, sharp borders, and high-contrast text accents. Used sparingly where the indigo brand color would be too soft",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1b1b1b",
+      "name": "Graphite",
+      "role": "Near-black for button borders and the SHOP NOW text — a softer alternative to pure black for refined edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Fog",
+      "role": "Footer background — the only departure from pure white, creating a quiet band at the page base",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed hero photography dominates the first viewport, followed by a centered content stack on a white canvas. The header is a thin white bar with left-aligned nav, centered logo, and right utility icons — no sticky behavior indicated. Content sections use centered display headings with generous vertical breathing room (50px+ section gaps). The layout is editorial: each section is a statement, not a grid of features. Navigation is minimal — four text links, no mega-menu, no sidebar.",
+  "imagery": "Full-bleed, high-quality product photography in natural, romantic settings — sneakers in a daisy field, products styled against organic environments. The imagery is lush, saturated, and lifestyle-rich, contrasting with the flat, minimal UI chrome. Treatment: edge-to-edge, no rounded corners, gradient scrims for text overlay. The photograph is the hero; the UI is the frame.",
+  "similar": [
+    {
+      "why": "Same single-color brand identity approach — a deep, distinctive hue carried across a white canvas with editorial typography and minimal chrome.",
+      "business": "Aesop"
+    },
+    {
+      "why": "Same boutique fashion aesthetic — wide letter-spacing on UI text, pill-shaped buttons, full-bleed lifestyle product photography, and a single brand color anchoring the entire system.",
+      "business": "Aimé Leon Dore"
+    },
+    {
+      "why": "Same flat, no-shadow design philosophy with a single chromatic brand color and generous white space letting product photography breathe.",
+      "business": "Glossier"
+    },
+    {
+      "why": "Same extreme border-radius system (pill buttons and inputs) and lifestyle product photography treatment with gradient scrims for text overlays.",
+      "business": "On Running"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "41px",
+      "cards": "4px",
+      "inputs": "41px",
+      "buttons": "41px",
+      "buttons-lg": "60px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "50px",
+    "cardPadding": "30px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White Canvas",
+      "level": 1,
+      "purpose": "Primary page background — the white gallery that lets indigo carry the brand."
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Fog Footer",
+      "level": 2,
+      "purpose": "The only non-white surface, used exclusively for the footer band."
+    }
+  ],
+  "northStar": "indigo editorial on white gallery — a single deep-violet voice laid over a paper-white canvas, where the product photograph and the typography do all the talking.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.69
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.53
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.1,
+      "letterSpacing": 0.72
+    },
+    {
+      "role": "heading-sm",
+      "size": 35,
+      "lineHeight": 1,
+      "letterSpacing": 1.23
+    },
+    {
+      "role": "heading",
+      "size": 45,
+      "lineHeight": 1,
+      "letterSpacing": 0.77
+    },
+    {
+      "role": "heading-lg",
+      "size": 52,
+      "lineHeight": 0.92,
+      "letterSpacing": 0.68
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page utility strip for promotions or campaign tags.",
+      "description": "White background, centered text in Soehne 11px weight 700, uppercase, letter-spacing 0.063em, #203b90. Height ~40px. May include a trailing arrow glyph."
+    },
+    {
+      "name": "Header Navigation",
+      "role": "Primary site navigation — left links, centered logo, right utility icons.",
+      "description": "White background, no border or shadow. Left: nav links in Soehne 14px weight 400, #203b90, letter-spacing 0.043em, separated by ~24px gap. Center: logo mark. Right: account and cart icons in #203b90, 20-24px size."
+    },
+    {
+      "name": "Logo Mark",
+      "role": "Wordmark — the brand's single most identifiable element.",
+      "description": "\"FLOWERS FOR SOCIETY\" stacked in two lines, Integral 52px weight 400, #203b90, letter-spacing 0.077em, line-height 0.92. The wide tracking and tight line-height create a compressed, editorial logo block."
+    },
+    {
+      "name": "Hero Banner",
+      "role": "Full-bleed product showcase with text overlay.",
+      "description": "Edge-to-edge product photography (sneaker in a daisy field). Left-to-right gradient scrim from rgba(32,59,144,0.7) to transparent for text legibility. Overlay text: Soehne 14-18px weight 700, uppercase, white, letter-spacing 0.055em. CTA positioned bottom-right."
+    },
+    {
+      "name": "Primary CTA Button (Pill)",
+      "role": "The dominant call-to-action — used for SHOP NOW and primary actions.",
+      "description": "White fill (#ffffff), #1b1b1b text, 41-60px border-radius (pill), Soehne 14px weight 700, uppercase, letter-spacing 0.043em, 30px horizontal padding / 12-15px vertical padding. No border, no shadow. The white-on-image contrast makes it pop against the hero photograph."
+    },
+    {
+      "name": "Indigo Action Button",
+      "role": "Secondary CTA on light surfaces where the brand color should carry the action.",
+      "description": "#203b90 fill, white text, 41px border-radius, Soehne 14px weight 700, uppercase, letter-spacing 0.043em, 30px horizontal padding. Used on white or light-gray sections where a white pill would lack contrast."
+    },
+    {
+      "name": "Section Display Heading",
+      "role": "Centered editorial headlines for content sections below the hero.",
+      "description": "Integral 35-45px weight 400, #203b90, uppercase, centered, letter-spacing 0.017-0.035em, line-height 1.0. Example: \"A BRAND BUILT ON PURPOSE\" — tight, compressed, statement-making."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Header and inline navigation items.",
+      "description": "Soehne 14px weight 400, #203b90, letter-spacing 0.043em, no underline, no hover color change indicated (the indigo is already the brand color). 24px gap between items."
+    },
+    {
+      "name": "Footer",
+      "role": "Page-base utility area.",
+      "description": "#f2f2f2 background, 30px+ padding, Soehne 14px weight 400 in #203b90 for links and body text. The only non-white surface on the site."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form inputs (email, search, etc.).",
+      "description": "41px border-radius (pill), 1px border in #000000 or #203b90, 15-16px padding, Soehne 16px weight 400. The extreme radius matches the button system for visual consistency."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body, navigation, buttons, UI text — the workhorse. The deliberately wide tracking on small sizes (0.063em at 11px, 0.055em at 14px) gives even utility text a boutique, editorial cadence. Weight 700 is reserved for nav items and button labels.",
+      "sizes": "11px, 14px, 16px, 18px",
+      "family": "Soehne",
+      "weight": "400, 700",
+      "lineHeight": "1.20, 1.30, 1.40, 1.50, 1.80",
+      "substitute": "Inter, DM Sans",
+      "letterSpacing": "0.033em at 16-18px, 0.043-0.056em at 14px, 0.063em at 11px"
+    },
+    {
+      "role": "Display and headings — the editorial voice. Used at a single weight (400) that relies on the font's natural density and extreme tight line-heights (0.92-1.0) to create compressed, magazine-style display type. The 0.077em tracking at 52px is a logo-specific treatment.",
+      "sizes": "13px, 15px, 18px, 35px, 37px, 45px, 52px",
+      "family": "Integral",
+      "weight": "400",
+      "lineHeight": "0.92, 1.00, 1.10, 1.28",
+      "substitute": "Druk Wide, Bebas Neue, Anton (for display only)",
+      "letterSpacing": "0.013-0.017em at 45-52px (tight), 0.035-0.048em at 35-37px (moderate), 0.04em at 18px, 0.077em at 52px (logo display)"
+    },
+    {
+      "role": "System fallback for non-brand contexts (email, transactional surfaces). Not used in the main site chrome.",
+      "sizes": "14px",
+      "family": "Arial",
+      "weight": "400, 700",
+      "lineHeight": "1.20",
+      "substitute": "system-ui"
+    },
+    {
+      "role": "Nunito-Sans-Klaviyo-Hosted — detected in extracted data but not described by AI",
+      "sizes": "18px, 20px",
+      "family": "Nunito-Sans-Klaviyo-Hosted",
+      "weight": "400, 700",
+      "lineHeight": "1, 1.2"
+    },
+    {
+      "role": "GTStandard-M — detected in extracted data but not described by AI",
+      "sizes": "18px",
+      "family": "GTStandard-M",
+      "weight": "400",
+      "lineHeight": "1.5",
+      "letterSpacing": "0.033"
+    }
+  ],
+  "description": "Flowers For Society is a fashion house that speaks in a single, assertive voice: deep indigo (#203b90) threading through every surface — logo, headings, buttons, borders, and hero scrims — anchored by a white gallery that breathes. The product is the hero: full-bleed photography with gradient overlays for legibility, oversized pill-shaped CTAs at 41-60px radius, and centered display type that uses Integral's tight line-heights (0.92-1.0) to compress vertical space. The system is deliberately minimal — two custom typefaces, no shadows, extreme border radii, and a single chromatic color. Soehne carries the UI with wide letter-spacing (0.033-0.063em) that gives even small text a boutique, editorial cadence. The result feels like a magazine spread: confident, restrained, and unmistakably branded.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (headings): #203b90\n- text (body): #000000\n- background: #ffffff\n- border (brand): #203b90\n- accent: #7989bc\n- primary action: #203b90 (filled action)\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #203b90 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Section Display Heading**: Centered on white canvas. \"A BRAND BUILT ON PURPOSE\" in Integral 45px weight 400, #203b90, uppercase, letter-spacing 0.017em, line-height 1.0. 50px vertical margin above and below.\n\n3. **Header Navigation**: White background, no border, no shadow. Left: nav links (Footwear, Apparel & Collectables, About us, Stories) in Soehne 14px weight 400, #203b90, letter-spacing 0.043em, 24px gap. Center: logo mark \"FLOWERS FOR SOCIETY\" in Integral 52px weight 400, #203b90, letter-spacing 0.077em, line-height 0.92. Right: account and cart icons in #203b90, 24px size.\n\n4. **Announcement Bar**: White background, centered text \"FEEL THE FLOW →\" in Soehne 11px weight 700, uppercase, #203b90, letter-spacing 0.063em. Height 40px, no border.\n\n5. **Footer Band**: #f2f2f2 background, 40px padding. Links and text in Soehne 14px weight 400, #203b90, letter-spacing 0.043em."
+    }
+  ],
+  "elevationPhilosophy": "The design is intentionally flat — no shadows, no elevation effects. Visual hierarchy is achieved through color (indigo on white), typography (Integral display vs. Soehne body), and the extreme border-radius system, not through depth."
+}

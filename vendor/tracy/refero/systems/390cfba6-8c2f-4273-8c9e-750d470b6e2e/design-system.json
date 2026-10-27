@@ -1,0 +1,341 @@
+{
+  "dos": [
+    "Use #ff5f34 as the filled CTA background, active link color, and brand-emphasis text — it is the only chromatic color permitted for interactive elements",
+    "Render all buttons, badges, and tag-like elements at 9999px radius — pill geometry is a system signature",
+    "Use FontSeasonSans at 400 for body (16px, line-height 1.63) and at 600–700 for display (28–105px) — never substitute the typeface",
+    "Apply the orange-red gradient wash (linear-gradient(90deg, #ff5f34 -100%, #f31010 0%, #ff5f34 100%)) to large display headlines via background-clip: text for brand-superlative moments",
+    "Anchor product imagery on #0c0c0c or full-bleed gradient surfaces — never place photography on light or busy backgrounds",
+    "Maintain 80px section gaps and 16px element gaps for the comfortable density rhythm; tighten to 8px only within inline icon clusters",
+    "Use surface-color shifts (#ffffff → #f7f7f8 → #eff0f3) and 1px Pewter hairlines for hierarchy — avoid adding drop shadows to cards or panels"
+  ],
+  "donts": [
+    "Don't introduce secondary accent colors — the palette is monochrome (black/white/grays) with one orange accent; adding blue, green, or purple as standalone tokens breaks the system",
+    "Don't use negative letter-spacing on display text — the system intentionally widens tracking as type grows (up to +5.25px at 105px and +17px at 340px); tightening it kills the holographic signature",
+    "Don't render the 340px mega-display on small viewports without a fluid clamp — at mobile sizes it will dominate the layout",
+    "Don't add drop shadows to cards, modals, or panels — elevation is reserved for the solid black CTA and modal scrim only",
+    "Don't use square or lightly-rounded corners (4–8px) on primary surfaces — cards are 28px, buttons are pills, and any intermediate radius reads as off-system",
+    "Don't place body text below 16px or above 60px without the corresponding line-height and letter-spacing token — the type scale is strict, not interpolated",
+    "Don't use the orange-to-violet gradient on small UI elements — it is a full-bleed banner treatment only; on chips or buttons it loses its premium effect"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#ff5f34",
+      "name": "VITURE Ember",
+      "role": "Brand accent, filled CTA buttons, active links, emphasis text, input focus — searing orange against matte black creates urgency and ownership of the brand voice",
+      "group": "brand"
+    },
+    {
+      "hex": "#f31010",
+      "name": "Crimson Core",
+      "role": "Gradient midpoint for orange-red text washes and accent streaks",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, #ff5f34 -100%, #f31010 0%, #ff5f34 100%)"
+    },
+    {
+      "hex": "#fe7a60",
+      "name": "Aurora Wash",
+      "role": "Gradient transition color in premium orange-to-violet washes (product banners, hero overlays)",
+      "group": "accent",
+      "gradient": "linear-gradient(to right, #ff2900 0%, #fe7a60 61%, #581dff 100%)"
+    },
+    {
+      "hex": "#581dff",
+      "name": "Ultra Violet",
+      "role": "Gradient terminus for the orange-to-violet premium wash — appears only inside multi-stop gradients, not as a standalone token",
+      "group": "accent"
+    },
+    {
+      "hex": "#1271ff",
+      "name": "Signal Blue",
+      "role": "Gradient start for the cool-tech blue wash (secondary callouts, tech-feature banners)",
+      "group": "accent",
+      "gradient": "linear-gradient(94deg, #1271ff 1.4%, #97dcff 80.11%, #e5f6ff 123.55%)"
+    },
+    {
+      "hex": "#0c0c0c",
+      "name": "Obsidian",
+      "role": "Primary text, dark-section canvas, product showcase background, footer, solid black CTA variant — the structural near-black that frames every screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Light-section canvas, card surface, input background, inverse text on dark surfaces, modal surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7e7e7f",
+      "name": "Ash",
+      "role": "Body secondary text, helper text, placeholder copy, muted borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5b5c5d",
+      "name": "Slate",
+      "role": "Tertiary text, disabled labels, subdued metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#abacae",
+      "name": "Pewter",
+      "role": "Hairline dividers, subtle borders, low-emphasis icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#949597",
+      "name": "Fog",
+      "role": "Disabled button background, muted UI chrome, neutral placeholder fill",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f7f8",
+      "name": "Snow",
+      "role": "Elevated card surface, subtle panel background, light section variation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eff0f3",
+      "name": "Mist",
+      "role": "Inset card surface, nested panel background, alternating row tint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "role": "Deepest dark sections, modal overlay scrim, true-black accents",
+      "group": "neutral"
+    }
+  ],
+  "layout": "VITURE uses a max-width 1200px centered container for content sections, with full-bleed dark product showcases breaking out to the viewport edges. The hero is a split-screen composition: oversized headline (60–105px) on the left in #0c0c0c, product photography on the right filling 50–60% of the viewport width. Below the hero, sections alternate between light (#ffffff) and dark (#0c0c0c) bands at 80px vertical gaps, creating a rhythmic light/dark cadence. Feature sections use 3-column card grids (28px radius cards, 16px gaps) on light backgrounds. Specs and technical detail sections use a 2-column text-plus-image layout, alternating left/right. The navigation is a minimal top bar with a centered logo and pill-shaped links, no mega-menu. Footer is full-width #0c0c0c with multi-column link lists. The subscribe modal is centered in the viewport with a 720px max-width split-pane (form left, product image right). Cookie consent bar pins to the viewport bottom. Overall density is comfortable and product-forward — every section earns its vertical space with either a product reveal, a feature claim, or a visual gradient break.",
+  "imagery": "Photography is the hero content type: dramatic, full-bleed product shots of VITURE AR glasses against pure black, lit with neon orange and electric-blue rim-lights that echo the brand's accent colors. Shots are tight crops — the glasses fill the frame, often angled to catch reflections of neon sources. Lifestyle photography is minimal; the product itself, treated as sculpture, carries the visual weight. No flat illustrations or iconographic graphics — vector content is limited to thin-stroke UI icons (16–24px) in #0c0c0c or #ffffff. Image treatment is consistent: high-contrast, slightly underexposed backgrounds, saturated accent highlights, no duotone overlays or color grading filters — the lighting is baked into the original capture. A second visual layer uses the brand's signature orange-to-violet gradient as a full-bleed background for promotional banners, providing energy between content blocks.",
+  "similar": [
+    {
+      "why": "Same monochrome near-black canvas with a single vivid accent, oversized display numerals, and a dot-matrix typographic attitude — both lean on a custom geometric sans and product-as-sculpture photography",
+      "business": "Nothing (nothing.tech)"
+    },
+    {
+      "why": "Shared product-showcase aesthetic on pure black with neon rim-lighting, pill-shaped CTAs, and bold condensed display type used as visual anchors",
+      "business": "Beats by Dre"
+    },
+    {
+      "why": "Both treat XR hardware as premium jewelry — large hero numbers, cinematic product crops, alternating light/dark bands, and minimal interface chrome",
+      "business": "Apple Vision Pro"
+    },
+    {
+      "why": "Same pill-button geometry, black/white/orange palette logic, and 28px-radius card system for consumer-electronics feature blocks",
+      "business": "Bose"
+    },
+    {
+      "why": "Both use a custom geometric sans with unusually positive letter-spacing on display text, flat surface treatments, and product photography that treats the device as a graphic object",
+      "business": "Teenage Engineering"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "28px",
+      "badges": "9999px",
+      "images": "28px",
+      "inputs": "16px",
+      "buttons": "9999px",
+      "hero-pill": "120px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "28px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Light Canvas",
+      "level": 0,
+      "purpose": "Base page background for content sections, product detail pages, and the light half of split layouts"
+    },
+    {
+      "hex": "#f7f7f8",
+      "name": "Snow Card",
+      "level": 1,
+      "purpose": "First elevation lift — feature cards, spec panels, light promotional blocks"
+    },
+    {
+      "hex": "#eff0f3",
+      "name": "Mist Inset",
+      "level": 2,
+      "purpose": "Nested panel or alternating row tint inside a Snow Card"
+    },
+    {
+      "hex": "#0c0c0c",
+      "name": "Obsidian Stage",
+      "level": 3,
+      "purpose": "Dark product showcase sections, footer, hero backdrops, dramatic product photography canvas"
+    },
+    {
+      "hex": "#000000",
+      "name": "Void Overlay",
+      "level": 4,
+      "purpose": "Modal scrim, image-bordered dark panels, deepest accent surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px",
+      "element": "Filled Black Pill Button"
+    }
+  ],
+  "northStar": "neon product stage behind midnight glass — a blacked-out showroom where one orange beam cuts through the dark to illuminate a pair of glasses on a pedestal.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.14
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.17
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.63,
+      "letterSpacing": 0.19
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 23,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.46
+    },
+    {
+      "role": "heading-lg",
+      "size": 32,
+      "lineHeight": 1.33,
+      "letterSpacing": 0.83
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.56
+    },
+    {
+      "role": "display-lg",
+      "size": 72,
+      "lineHeight": 1.2,
+      "letterSpacing": 3.6
+    },
+    {
+      "role": "hero",
+      "size": 105,
+      "lineHeight": 1,
+      "letterSpacing": 5.25
+    },
+    {
+      "role": "mega",
+      "size": 340,
+      "lineHeight": 1,
+      "letterSpacing": 17
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill CTA Button (Filled — Orange)",
+      "role": "Primary action across the site",
+      "description": "9999px radius pill, background #ff5f34, text #ffffff, FontSeasonSans 500–600 at 16px, padding 22px vertical × 24px horizontal. Hovers darken toward #f31010 or add a subtle inner glow. Used for 'Buy Now', 'Add to Cart', 'Claim Offer' in the brand voice."
+    },
+    {
+      "name": "Pill CTA Button (Filled — Black)",
+      "role": "Alternate solid CTA on light surfaces and inside modals",
+      "description": "9999px radius pill, background #0c0c0c, text #ffffff, FontSeasonSans 600 at 16px, padding 22px × 24px. Appears in the subscribe modal as 'Claim 10% OFF Now'. Carries a single soft shadow: rgba(0,0,0,0.1) 0 4px 6px -1px, rgba(0,0,0,0.1) 0 2px 4px -2px."
+    },
+    {
+      "name": "Ghost / Outlined Button",
+      "role": "Secondary action",
+      "description": "9999px radius pill, 1px border #0c0c0c or #ffffff depending on surface, transparent background, text in matching color, 16px FontSeasonSans 500. Used for 'Learn More', 'Cancel', and tertiary actions."
+    },
+    {
+      "name": "Email Input Field",
+      "role": "Newsletter capture, account email, contact form",
+      "description": "16px border radius, 1px border #e5e5e5 (derived from Pewter), background #ffffff, padding 16px vertical × 24px horizontal. Placeholder text in #7e7e7f at 16px. Focus state shifts border to #ff5f34 with a 2px outer ring at rgba(255,95,52,0.2). A small envelope icon sits flush-right in #7e7e7f."
+    },
+    {
+      "name": "Product Hero Card",
+      "role": "Showcase a single VITURE device or product family",
+      "description": "28px border radius, background #0c0c0c or gradient-wash image, full-bleed product photography with neon rim-lighting. Internal padding 44px. Caption and product name sit at 14–20px FontSeasonSans 500 in #ffffff overlaid on the dark surface."
+    },
+    {
+      "name": "Feature / Spec Card",
+      "role": "Highlight a product feature, spec, or benefit",
+      "description": "28px border radius, background #f7f7f8 or #ffffff with 1px border #eff0f3. Padding 28px. Icon at 24px in #0c0c0c sits above a 20px FontSeasonSans 600 heading and 14px #7e7e7f body copy. No drop shadow — surface differentiation is flat and modern."
+    },
+    {
+      "name": "Subscribe / Newsletter Modal",
+      "role": "Email capture overlay",
+      "description": "Max-width 720px, split-pane layout: left half #ffffff with form, right half dark product image or gradient wash. Overall 16–24px radius (no pill). Close X in top-right at 16px FontSeasonSans 500 #0c0c0c. Carousel dots in the bottom-right of the image half at 8px circles, active = #ff5f34, inactive = rgba(255,255,255,0.4)."
+    },
+    {
+      "name": "Cookie Consent Bar",
+      "role": "GDPR / cookie notice pinned to viewport bottom",
+      "description": "Full-width band, background #0c0c0c, text #ffffff at 14px FontSeasonSans 400, padding 16px vertical. 'Privacy Policy' link rendered in #ff5f34 with underline. Close X in #ffffff at 16px on the far right."
+    },
+    {
+      "name": "Gradient Text Accent",
+      "role": "Headline or keyword emphasis inside hero sections",
+      "description": "FontSeasonSans 700–800 at 32–72px. Background-clip: text with the linear-gradient(90deg, #ff5f34 -100%, #f31010 0%, #ff5f34 100%) wash. Used for 'The Best Just Got Better' and similar brand superlatives on dark image backgrounds."
+    },
+    {
+      "name": "Navigation Pill Link",
+      "role": "Top-bar navigation items",
+      "description": "9999px radius, padding 8px × 16px, FontSeasonSans 500 at 14px, text #0c0c0c on light nav. Hover fills background with #f7f7f8. Active state text shifts to #ff5f34."
+    },
+    {
+      "name": "Carousel Indicator Dots",
+      "role": "Pagination for image carousels and modal slides",
+      "description": "8px circles, 8px gap. Active dot #ff5f34, inactive rgba(255,255,255,0.4) on dark image backgrounds or #abacae on light surfaces. Centered or bottom-right aligned."
+    },
+    {
+      "name": "Product Badge / Tag",
+      "role": "Status, category, or promotional labels",
+      "description": "9999px radius pill, padding 4px × 12px, FontSeasonSans 600 at 12px, uppercase. Variants: 'NEW' (#ff5f34 background, #ffffff text), 'CNET 2024 Award' (#0c0c0c background, #ff5f34 text), 'Limited' (#ffffff background, #0c0c0c text with 1px border)."
+    },
+    {
+      "name": "Feature Highlight Banner",
+      "role": "Full-width promotional or feature strip with gradient",
+      "description": "Full-bleed band, height auto with 60–80px vertical padding, background the orange-to-violet linear-gradient(90deg, #ff2900, #fe7a60, #581dff). Text in #ffffff at 28–60px FontSeasonSans 600–700. Sits between content sections as a brand-energy break."
+    },
+    {
+      "name": "Close Icon Button",
+      "role": "Dismiss modals, banners, and overlays",
+      "description": "32×32px hit target, 16px '×' glyph in FontSeasonSans 500. Color matches surface: #0c0c0c on light, #ffffff on dark. No background or border — pure ghost control."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface across every UI surface — nav, body, headings, display numerals. The 340px size is a brand signature: oversized hero statistics and product superlatives rendered as visual anchors. Weights step from 400 body to 800 display, but display text rarely exceeds 700 because the massive size does the heavy lifting. Positive letter-spacing (0.012–0.050em) widens as type grows — the opposite of the negative-tracking trend, giving display copy an open, holographic, almost broadcast-poster feel appropriate to the XR hardware category.",
+      "sizes": "12, 14, 16, 20, 23, 28, 32, 60, 72, 105, 340",
+      "family": "FontSeasonSans",
+      "weight": "400, 500, 600, 700, 800",
+      "lineHeight": "1.00–1.63 (tight 1.00–1.25 for display, relaxed 1.38–1.63 for body)",
+      "substitute": "Inter, Satoshi, General Sans",
+      "letterSpacing": "0.0120em, 0.0200em, 0.0260em, 0.0500em"
+    }
+  ],
+  "description": "VITURE projects a premium consumer-electronics showroom: near-black canvases, photographic product stages lit with neon rim-lighting, and one searing orange accent (#ff5f34) that acts as the brand's heartbeat across links, emphasis text, and filled CTAs. The interface is intentionally restrained — a single custom geometric sans-serif (FontSeasonSans) carries the entire typographic voice, from 12px captions to 340px hero numerals, with positive letter-spacing that widens as type grows, giving display text an airy, almost holographic openness. Surfaces are flat and confident: pure white and pale grays for content cards, deep #0c0c0c for product showcases, and pill-shaped controls (9999px radius) that feel tactile and modern. Rounded cards (28px) and full-bleed gradient washes (orange-to-purple, blue-to-cyan) inject the futuristic XR energy without cluttering the UI.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #0c0c0c (primary), #7e7e7f (secondary), #ffffff (on dark)\n- background: #ffffff (light canvas), #0c0c0c (dark stage), #f7f7f8 (card surface)\n- border: #abacae (hairline), #eff0f3 (subtle panel)\n- accent: #ff5f34 (brand ember)\n- primary action: #ff5f34 (filled action)\n- gradient text: linear-gradient(90deg, #ff5f34 -100%, #f31010 0%, #ff5f34 100%)\n\n**3-5 Example Component Prompts**\n1. Create a Primary Action Button: #ff5f34 background, #0c0c0c text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n2. Create a product hero card: 28px border radius, background #0c0c0c, full-bleed product photograph with neon rim-lighting, internal padding 44px, product name overlay in #ffffff FontSeasonSans 600 at 20px bottom-left, 'NEW' badge (9999px pill, #ff5f34 background, #ffffff text, 12px FontSeasonSans 600) top-left.\n3. Create an email input: 16px border radius, 1px border #abacae, background #ffffff, padding 16px × 24px, placeholder 'Email' in #7e7e7f FontSeasonSans 400 at 16px, envelope icon flush-right in #7e7e7f, focus state shifts border to #ff5f34 with 2px outer ring at rgba(255,95,52,0.2).\n4. Create a feature spec card: 28px border radius, background #f7f7f8, padding 28px, 24px icon in #0c0c0c top, heading FontSeasonSans 600 at 20px in #0c0c0c, body FontSeasonSans 400 at 14px in #7e7e7f, no drop shadow.\n5. Create a gradient display headline: FontSeasonSans weight 700 at 72px, text fill via background-clip with linear-gradient(90deg, #ff5f34 -100%, #f31010 0%, #ff5f34 100%), letter-spacing 3.6px, on a #0c0c0c full-bleed background section with 80px vertical padding."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is almost entirely absent. The system relies on surface color shifts (#ffffff → #f7f7f8 → #eff0f3) and 1px hairlines for hierarchy rather than drop shadows. The single shadow instance is reserved for the solid black CTA button to give it physical weight on light surfaces. This flatness keeps the photography and gradient washes as the visual focus — shadows would compete with the product imagery."
+}

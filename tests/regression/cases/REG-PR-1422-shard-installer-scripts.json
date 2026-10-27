@@ -1,0 +1,71 @@
+{
+  "id": "REG-PR-1422-shard-installer-scripts",
+  "kind": "feat",
+  "title": "The shard installer, heartbeat, updater and fleet sync keep secrets out of output, sign the real method, never act on a stale, held or refused answer, and the tracy-host image carries every shard file flat",
+  "pr": 1422,
+  "area": "deploy/shard",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` with TEST_DATABASE_URL set to a scratch Postgres (jq and openssl on the PATH). Nothing touches a server: every installer test is a --dry-run against a temp TRACY_ETC.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures and 0 skipped.",
+    "Every test named in run.tests reports ok.",
+    "No secret value appears in any installer or heartbeat output the tests capture."
+  ],
+  "selectors": {
+    "script": "deploy/scripts/install-shard.sh --dry-run; deploy/scripts/sync-fleet-files.sh --list; deploy/scripts/tracy-heartbeat.sh; deploy/scripts/tracy-updater.sh; deploy/scripts/shard-sign.sh",
+    "image": "apps/tracy-host/Dockerfile COPY lines; deploy/scripts/check-fleet-files-in-image.sh FILES",
+    "test": "scripts/test/install-shard.test.mjs, tracy-heartbeat.test.mjs, tracy-updater.test.mjs, shard-sign-interop.test.mjs, shard-env-check.test.mjs, sync-fleet-files.test.mjs, tracy-host-fleet-files-image.test.mjs"
+  },
+  "fence": "No secret reaches installer output; secrets are generated once and a missing key line stops the run; the shard channel signs the real method and the same bytes in bash and in tracy-web; the heartbeat sends the contract body and keeps the master answer whole; the updater never acts on a stale, held or refused answer and backs off after a failure; the firewall keeps 51720 open to the docker networks; a forbidden master-only variable is refused by name; the tracy-host image carries exactly the 33 fleet files the sync script lists. Throwaway Postgres and local doubles, no network, no server.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "scripts/test/shard-sign-interop.test.mjs",
+      "scripts/test/shard-env-check.test.mjs",
+      "scripts/test/shard-env-template.test.mjs",
+      "scripts/test/shard-nginx.test.mjs",
+      "scripts/test/shard-compose.test.mjs",
+      "scripts/test/tracy-heartbeat.test.mjs",
+      "scripts/test/tracy-updater.test.mjs",
+      "scripts/test/tracy-pgdump-r2.test.mjs",
+      "scripts/test/check-shard.test.mjs",
+      "scripts/test/install-shard.test.mjs",
+      "scripts/test/sync-fleet-files.test.mjs",
+      "apps/tracy-web/test/seed-admin-seats.test.mjs",
+      "scripts/test/tracy-host-fleet-files-image.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "W2's lib/shard-channel.js signs the same bytes",
+      "GET /_shard/status signs the real method and the empty body (contract section 2)",
+      "forbidden names and prefixes are refused by NAME, never by value",
+      "the master's shard rows, switches and DNS token are refused; the shard's own SHARD_SECRET is not",
+      "step 2 generates the eight secrets of a new shard, never showing one",
+      "keeping 8: a re-run reuses every secret it generated before (Review Focus 4)",
+      "a key line missing from an existing shard-secrets.env stops the run by name; only --force --rotate-webhook-secret adds GITHUB_WEBHOOK_SECRET back (contract section 9)",
+      "firewall keeps 51720 open to the docker networks, ssh to the bastion, then drops (Review Focus 5)",
+      "SSH_ALLOW_FROM is required, an IPv4 address or CIDR, and never the whole internet (contract section 9)",
+      "a heartbeat signed GET then POST carries the contract body, and the whole answer becomes desired.json",
+      "--dry-run posts nothing, writes nothing and prints no secret",
+      "a 403 leaves desired.json as it was",
+      "hold is obeyed, with the master's reason",
+      "stale: an answer older than 15 min is never carried out",
+      "refusing: a desired tag that is not an image tag never reaches a command",
+      "backing off: any failure of the last hour, whatever its target, even with a slot granted",
+      "the plan runs in the order the spec and amendment 4 require",
+      "every file sync-fleet-files.sh installs is in the image at the same path, and nothing else is (docs/sre/hop-dong-cua-shard.md section 10)",
+      "every COPY source is a tracked git path, never a glob, so image-context.mjs can fingerprint it",
+      "check-fleet-files-in-image.sh fails, with a diff, when the image drifts from the checkout",
+      "a second run says only what changed, replaces by rename, and keeps files it does not know",
+      "a revoked seat stays revoked: reopening it is a person, not a script"
+    ]
+  }
+}

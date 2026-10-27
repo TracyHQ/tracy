@@ -1,0 +1,41 @@
+{
+  "id": "REG-054",
+  "kind": "feat",
+  "title": "Inbox: the left column shows an Inbox row with the server's unread count, and pressing it opens the tracy:inbox tab with Unread selected",
+  "pr": 855,
+  "area": "inbox",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A and seat A's cookie COOKIE_A, api. Case variable: KEY = site key of any site where seat A holds a seat.",
+    "Check the build: docker exec $DSH test -f /desk-home/profiles/native/node_modules/@tracy/dsh-inbox/lib/client.js && docker exec $DSH grep -c 'sidebar.nav' /desk-home/profiles/native/node_modules/@tracy/dsh-sidebar/lib/client.js must print a number >= 1; otherwise stop with BLOCKED note image-without-inbox.",
+    "Doors: api a GET /api/notifications/unread -> record U = the integer in {unread}; curl -s -o /dev/null -w '%{http_code}' $O/api/notifications/unread (no cookie) -> record NOAUTH.",
+    "Unit seam: node --test --test-reporter=tap packages/site/tracy-inbox/test/*.test.mjs",
+    "Browser: connect Playwright over CDP as the README says (never chromium.launch()); NEW context {locale:'en-US', colorScheme:'dark', viewport:{width:1440,height:1000}} with cookie tracy_sess = COOKIE_A; log every request whose URL path is /api/notifications/unread or starts with /api/notifications?. The Inbox polls only while document.visibilityState is 'visible' (it pauses in a hidden tab, by design); if the driven page reports 'hidden' (a CDP or extension tab in the background), make it visible first (bring the page to front, or redefine document.visibilityState/document.hidden to 'visible'/false and dispatch 'visibilitychange') and say so in the evidence.",
+    "page.goto(ORIGIN + '/' + KEY); wait (<= 90 s) for [contenteditable='true']. If the left column is collapsed (.tsb-rail exists), record RAIL_BADGE = text of .tracy-inbox-nav .tracy-inbox-badge (or null when absent); press the column's expand toggle. Then record WIDE_BADGE the same way and NAV_AFTER_NEW = whether the .tracy-inbox-nav element comes after .tsb-new-session in document order.",
+    "Click .tracy-inbox-nav .tracy-inbox-nav-button; wait (<= 30 s) for .tracy-inbox .tracy-inbox-filter (the tab has no title row since 03/10; the filters are its head) and until a list (.tracy-inbox ul) or the empty state (.tracy-inbox svg + p) is shown. Record PRESSED = the text of the .tracy-inbox-filter whose aria-pressed is 'true', MARK_DISABLED = whether the 'Mark all as read' button is disabled, and ROWS = the count of .tracy-inbox [data-notification]."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "U is an integer >= 0 and NOAUTH === '401'.",
+    "The unit seam exits 0 with '# fail 0'.",
+    "NAV_AFTER_NEW === true.",
+    "WIDE_BADGE (and RAIL_BADGE when the rail was seen) is null when U === 0, String(U) when 1 <= U <= 9, and '9+' when U > 9.",
+    "At least one logged GET /api/notifications/unread happened after page load, and one GET /api/notifications?filter=unread after the click.",
+    "PRESSED starts with 'Unread' (followed by U when U > 0); MARK_DISABLED === (U === 0).",
+    "When U === 0, ROWS === 0 and the tab shows 'You’re all caught up'."
+  ],
+  "selectors": {
+    "inboxBuild": "/desk-home/profiles/native/node_modules/@tracy/dsh-inbox/lib/client.js (dsh container)",
+    "navSlot": "'sidebar.nav' in @tracy/dsh-sidebar lib/client.js",
+    "navRow": ".tracy-inbox-nav .tracy-inbox-nav-button",
+    "badge": ".tracy-inbox-nav .tracy-inbox-badge (absent at 0; .is-corner on the rail)",
+    "newSession": ".tsb-new-session",
+    "tab": ".tracy-inbox (tab type tracy:inbox)",
+    "filter": ".tracy-inbox-filter[aria-pressed='true']",
+    "row": ".tracy-inbox [data-notification='<id>']",
+    "doors": "GET /api/notifications/unread · GET /api/notifications?filter=unread|all&before=<ISO> · POST /api/notifications/:id/read · POST /api/notifications/read-all"
+  },
+  "fence": "@tracy/dsh-inbox reads the unread count only from tracy-web's session-signed door and registers its left-column row into the sidebar.nav list slot that @tracy/dsh-sidebar declares below New session; the badge is badgeText(count) (hidden at 0, 9+ above 9)."
+}

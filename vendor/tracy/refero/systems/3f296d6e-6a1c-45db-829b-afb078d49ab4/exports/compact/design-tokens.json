@@ -1,0 +1,69 @@
+{
+  "color": {
+    "pure-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Canvas — Primary page background, modal/dialog background"
+    },
+    "frost-surface": {
+      "$value": "#f7f8fb",
+      "$type": "color",
+      "$description": "Frost Surface — Secondary surface, subtle background containers, nav pill background"
+    },
+    "midnight-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Ink — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "deep-charcoal": {
+      "$value": "#13151b",
+      "$type": "color",
+      "$description": "Deep Charcoal — Near-black text for dense UI labels, active nav tab text"
+    },
+    "graphite": {
+      "$value": "#2d313f",
+      "$type": "color",
+      "$description": "Graphite — Navigation link text, secondary headings, mid-level labels"
+    },
+    "slate": {
+      "$value": "#525769",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, supporting body copy, muted label text"
+    },
+    "ash": {
+      "$value": "#777d90",
+      "$type": "color",
+      "$description": "Ash — Subdued body text, hairline borders, icon strokes, placeholder text — the dominant mid-gray in this system"
+    },
+    "fog": {
+      "$value": "#9fa5ba",
+      "$type": "color",
+      "$description": "Fog — Light borders, icon outlines, de-emphasized link borders, ghost UI outlines"
+    },
+    "modal-veil": {
+      "$value": "#0c2970",
+      "$type": "color",
+      "$description": "Modal Veil — Inset ring shadow on elevated cards/surfaces — blue-tinted at 7% opacity creates structural definition without neutral gray shadows"
+    }
+  },
+  "font": {
+    "title-custom-serif": {
+      "$value": "Title (custom serif)",
+      "$type": "fontFamily",
+      "$description": "All editorial headlines and display text — the expressive backbone of the brand. Weight 400 for a serif at 64px is anti-convention; most product sites use weight 700+, but this regular-weight serif creates authority through ink texture rather than mass. The -0.02em tracking tightens large display lines without condensing smaller ones."
+    },
+    "base-variable-custom-sans": {
+      "$value": "Base-Variable (custom sans)",
+      "$type": "fontFamily",
+      "$description": "All UI text: navigation, buttons, body copy, labels, captions, input text. Variable font exploited for precise weight stepping — 650 for strong UI labels, 600 for subheadings, 500 for body and supporting text. Negative tracking throughout (-0.015em to -0.026em) keeps the sans from spreading loose."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://refero.design/mcp",
+      "siteName": "Refero",
+      "extractedAt": "2026-04-30T15:06:33.442Z",
+      "variant": "compact"
+    }
+  }
+}

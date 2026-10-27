@@ -1,0 +1,1496 @@
+{
+  "kind": "button-dark",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs PREVIEW_DATA=1, the detector's own probe on the plain and the worn page, scripts off as in the preview frame). Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-podcast/j6@1.0.4 (https://ja-podcast-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#868474",
+        "#000000",
+        "#858273",
+        "#f4efd4",
+        "#060605",
+        "#1a1a1a",
+        "#84acfb",
+        "#b7b39f",
+        "#93b6fb",
+        "#9fbefc",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "main:1/div:1/div:1/div:1/div:1/header:1/div:1/div:1/div:3/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Purchase now",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:4/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Subscribe",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:4/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "Start Listening",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-dark",
+            "text": "View more",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-light",
+            "text": "Subscribe",
+            "cls": "btn btn-light",
+            "fill": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "Start Listening",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-dark",
+            "text": "View more",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 6,
+              "g": 6,
+              "b": 5,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "main:1/div:1/div:1/div:1/div:1/header:1/div:1/div:1/div:3/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Purchase now",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 141,
+              "g": 83,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 24,
+              "g": 29,
+              "b": 36,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:4/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Subscribe",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 141,
+              "g": 83,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 24,
+              "g": 29,
+              "b": 36,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:4/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "Start Listening",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 24,
+              "g": 29,
+              "b": 36,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-dark",
+            "text": "View more",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 24,
+              "g": 29,
+              "b": 36,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/a:1",
+            "at": "a.btn.btn-light",
+            "text": "Subscribe",
+            "cls": "btn btn-light",
+            "fill": {
+              "r": 248,
+              "g": 249,
+              "b": 250,
+              "a": 1
+            },
+            "ground": {
+              "r": 141,
+              "g": 83,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "Start Listening",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 141,
+              "g": 83,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:8/div:1/div:1/div:2/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-dark",
+            "text": "View more",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "main:1/div:1/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 141,
+              "g": 83,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 19,
+              "g": 23,
+              "b": 29,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-prodex/j6@1.0.2 (https://ja-prodex-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#b7b39f",
+        "#060605",
+        "#84acfb",
+        "#9fbefc",
+        "#000000",
+        "#868474",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:1/div:3/span:1/div:1/a:1",
+            "at": "a.btn.btn-secondary",
+            "text": "Get started",
+            "cls": "btn btn-secondary",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.video-btn-117.btn.btn-dark",
+            "text": "Play video",
+            "cls": "video-btn-117 btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started free",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "View pricing",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:1/div:3/span:1/div:1/a:1",
+            "at": "a.btn.btn-secondary",
+            "text": "Get started",
+            "cls": "btn btn-secondary",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 236,
+              "g": 242,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 236,
+              "g": 242,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.video-btn-117.btn.btn-dark",
+            "text": "Play video",
+            "cls": "video-btn-117 btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started free",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "View pricing",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-prodex/j6@1.0.2 (https://ja-prodex-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#b7b39f",
+        "#060605",
+        "#84acfb",
+        "#9fbefc",
+        "#000000",
+        "#868474",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:1/div:3/span:1/div:1/a:1",
+            "at": "a.btn.btn-secondary",
+            "text": "Get started",
+            "cls": "btn btn-secondary",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.video-btn-117.btn.btn-dark",
+            "text": "Play video",
+            "cls": "video-btn-117 btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started free",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "View pricing",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 244,
+              "g": 239,
+              "b": 212,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:1/div:3/span:1/div:1/a:1",
+            "at": "a.btn.btn-secondary",
+            "text": "Get started",
+            "cls": "btn btn-secondary",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 236,
+              "g": 242,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 236,
+              "g": 242,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.video-btn-117.btn.btn-dark",
+            "text": "Play video",
+            "cls": "video-btn-117 btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started free",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/a:2",
+            "at": "a.btn.btn-dark",
+            "text": "View pricing",
+            "cls": "btn btn-dark",
+            "fill": {
+              "r": 33,
+              "g": 37,
+              "b": 41,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 81,
+              "g": 55,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 (https://ja-voyara-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1/button:1",
+            "at": "button.acm-hero-search-btn",
+            "text": "Find trips",
+            "cls": "acm-hero-search-btn",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:2",
+            "at": "a.voy-btn.btn.voy-btn-ghost",
+            "text": "Watch the film",
+            "cls": "voy-btn btn voy-btn-ghost",
+            "fill": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet your designer",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.acm-cta-btn",
+            "text": "Start planning free",
+            "cls": "btn btn-primary acm-cta-btn",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 6,
+              "g": 6,
+              "b": 5,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/form:1/div:1/p:1/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 6,
+              "g": 6,
+              "b": 5,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1/button:1",
+            "at": "button.acm-hero-search-btn",
+            "text": "Find trips",
+            "cls": "acm-hero-search-btn",
+            "fill": {
+              "r": 194,
+              "g": 86,
+              "b": 47,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 194,
+              "g": 86,
+              "b": 47,
+              "a": 1
+            },
+            "ground": {
+              "r": 250,
+              "g": 246,
+              "b": 240,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:2",
+            "at": "a.voy-btn.btn.voy-btn-ghost",
+            "text": "Watch the film",
+            "cls": "voy-btn btn voy-btn-ghost",
+            "fill": null,
+            "ground": {
+              "r": 250,
+              "g": 246,
+              "b": 240,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet your designer",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 194,
+              "g": 86,
+              "b": 47,
+              "a": 1
+            },
+            "ground": {
+              "r": 250,
+              "g": 246,
+              "b": 240,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.acm-cta-btn",
+            "text": "Start planning free",
+            "cls": "btn btn-primary acm-cta-btn",
+            "fill": {
+              "r": 194,
+              "g": 86,
+              "b": 47,
+              "a": 1
+            },
+            "ground": {
+              "r": 242,
+              "g": 235,
+              "b": 225,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/form:1/div:1/p:1/input:1",
+            "at": "input.btn.btn-primary.button",
+            "text": "Subscribe",
+            "cls": "btn btn-primary button subbutton",
+            "fill": {
+              "r": 194,
+              "g": 86,
+              "b": 47,
+              "a": 1
+            },
+            "ground": {
+              "r": 242,
+              "g": 235,
+              "b": 225,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-nova/j6@1.0.6 (https://ja-nova-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#1a1a1a",
+        "#858273",
+        "#b7b39f",
+        "#868474",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#f4efd4",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started - For free",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:4/a:1",
+            "at": "a.btn.btn-light",
+            "text": "Contact us",
+            "cls": "btn btn-light",
+            "fill": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:4/a:1",
+            "at": "a.section-actions.btn.btn-primary",
+            "text": "View all services",
+            "cls": "section-actions btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started Now",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-primary",
+            "text": "Join our team",
+            "cls": "section-actions btn btn-primary",
+            "fill": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Choose now",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:3/a:1",
+            "at": "a.section-actions.btn.btn-light",
+            "text": "View all our news",
+            "cls": "section-actions btn btn-light",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 26,
+              "g": 26,
+              "b": 26,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Book an intro call",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-light",
+            "text": "Contact us",
+            "cls": "btn btn-light",
+            "fill": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            },
+            "ground": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started - For free",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:4/a:1",
+            "at": "a.btn.btn-light",
+            "text": "Contact us",
+            "cls": "btn btn-light",
+            "fill": {
+              "r": 250,
+              "g": 250,
+              "b": 250,
+              "a": 1
+            },
+            "ground": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:4/a:1",
+            "at": "a.section-actions.btn.btn-primary",
+            "text": "View all services",
+            "cls": "section-actions btn btn-primary",
+            "fill": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get started Now",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "ground": {
+              "r": 239,
+              "g": 237,
+              "b": 252,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/a:1",
+            "at": "a.section-actions.btn.btn-primary",
+            "text": "Join our team",
+            "cls": "section-actions btn btn-primary",
+            "fill": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "ground": {
+              "r": 248,
+              "g": 171,
+              "b": 17,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Choose now",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "ground": {
+              "r": 247,
+              "g": 247,
+              "b": 247,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:3/a:1",
+            "at": "a.section-actions.btn.btn-light",
+            "text": "View all our news",
+            "cls": "section-actions btn btn-light",
+            "fill": {
+              "r": 250,
+              "g": 250,
+              "b": 250,
+              "a": 1
+            },
+            "ground": {
+              "r": 4,
+              "g": 173,
+              "b": 104,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Book an intro call",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-light",
+            "text": "Contact us",
+            "cls": "btn btn-light",
+            "fill": {
+              "r": 250,
+              "g": 250,
+              "b": 250,
+              "a": 1
+            },
+            "ground": {
+              "r": 94,
+              "g": 72,
+              "b": 219,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-morgan/j6@1.0.5 (https://ja-morgan-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#1a1a1a",
+        "#868474",
+        "#858273",
+        "#7a786a",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "View Demo",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get It Now!",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 132,
+              "g": 172,
+              "b": 251,
+              "a": 1
+            },
+            "ground": {
+              "r": 27,
+              "g": 48,
+              "b": 96,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "View Demo",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 217,
+              "g": 48,
+              "b": 48,
+              "a": 1
+            },
+            "ground": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Get It Now!",
+            "cls": "btn btn-primary",
+            "fill": {
+              "r": 217,
+              "g": 48,
+              "b": 48,
+              "a": 1
+            },
+            "ground": {
+              "r": 27,
+              "g": 48,
+              "b": 96,
+              "a": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-phio/j6@1.0.5 (https://ja-phio-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#858273",
+        "#b7b39f",
+        "#1a1a1a",
+        "#f4efd4",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    }
+  ]
+}

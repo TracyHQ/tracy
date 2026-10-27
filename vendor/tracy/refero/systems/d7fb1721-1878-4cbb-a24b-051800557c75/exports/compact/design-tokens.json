@@ -1,0 +1,104 @@
+{
+  "color": {
+    "canvas-cream": {
+      "$value": "#faf9f7",
+      "$type": "color",
+      "$description": "Canvas Cream — Page background — warm off-white instead of pure white gives the entire system a paper-like, approachable feel"
+    },
+    "surface-ivory": {
+      "$value": "#fbfaf7",
+      "$type": "color",
+      "$description": "Surface Ivory — Card and panel surfaces — one step brighter than canvas to create subtle elevation without shadows"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Elevated surfaces, nav background, button text on filled CTAs"
+    },
+    "lavender-mist": {
+      "$value": "#f4f0ff",
+      "$type": "color",
+      "$description": "Lavender Mist — Decorative wash behind icons or highlight badges — cool counterpoint to the warm cream canvas"
+    },
+    "powder-blue": {
+      "$value": "#d6e4f1",
+      "$type": "color",
+      "$description": "Powder Blue — Outlined/ghost button border, subtle blue-tinted dividers within product UI"
+    },
+    "ink-charcoal": {
+      "$value": "#121722",
+      "$type": "color",
+      "$description": "Ink Charcoal — Primary text, headings, icons — near-black with a cool blue undertone (17.9:1 on white)"
+    },
+    "deep-ink": {
+      "$value": "#1d1d1d",
+      "$type": "color",
+      "$description": "Deep Ink — Secondary text, dark surface fills for footer or dark mode moments"
+    },
+    "mid-graphite": {
+      "$value": "#2d2d2d",
+      "$type": "color",
+      "$description": "Mid Graphite — Dark surface for dark UI moments (footer dark blocks, modal overlays)"
+    },
+    "slate-gray": {
+      "$value": "#777c86",
+      "$type": "color",
+      "$description": "Slate Gray — Secondary body text, card metadata, table labels"
+    },
+    "steel-gray": {
+      "$value": "#a5a5a5",
+      "$type": "color",
+      "$description": "Steel Gray — Muted helper text, placeholder text, disabled states"
+    },
+    "hairline": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Hairline — Borders and dividers — barely-there separation between cards and sections"
+    },
+    "faint-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Faint Gray — Icon strokes in nav, subdued borders on neutral controls"
+    },
+    "electric-cobalt": {
+      "$value": "#0068f9",
+      "$type": "color",
+      "$description": "Electric Cobalt — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-cobalt": {
+      "$value": "#024bb1",
+      "$type": "color",
+      "$description": "Deep Cobalt — Pressed/hover state for Electric Cobalt buttons — darker shade of the brand blue"
+    },
+    "cerulean": {
+      "$value": "#0074dd",
+      "$type": "color",
+      "$description": "Cerulean — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "vivid-violet": {
+      "$value": "#6736eb",
+      "$type": "color",
+      "$description": "Vivid Violet — Decorative accent — secondary brand color for highlight tags, illustrative elements, and customer logo treatments"
+    },
+    "forest": {
+      "$value": "#046645",
+      "$type": "color",
+      "$description": "Forest — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "All text — single typeface carries the entire system. Headlines use 600–700 at 48–84px with extremely tight leading (1.06–1.09) creating dense, confident type blocks. Body and nav use 400–500 at 14–16px with generous 1.50–1.60 leading for readability on the cream background."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dock.us",
+      "siteName": "Dock",
+      "extractedAt": "2026-06-03T17:15:31.006Z",
+      "variant": "compact"
+    }
+  }
+}

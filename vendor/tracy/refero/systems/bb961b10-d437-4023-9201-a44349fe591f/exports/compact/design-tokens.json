@@ -1,0 +1,34 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, all borders, every hairline divider, filled language toggle — the entire structural skeleton of the page"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, card surfaces, pill interiors, button text on dark fills"
+    },
+    "blush-bloom": {
+      "$value": "#ffc8c8",
+      "$type": "color",
+      "$description": "Blush Bloom — Brand mark fill (the ANA CUNA pill in the header) and the sole chromatic accent — a whisper of warmth that marks identity without ever shouting"
+    }
+  },
+  "font": {
+    "abcmonumentgrotesk-regular": {
+      "$value": "ABCMonumentGrotesk-Regular",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for the entire system. One weight — regular — is used at all three sizes: 94px for project titles (display), 31px for secondary headings, 15px for body, nav, tags, and footer. The refusal to introduce a bold or italic weight is a signature editorial choice; hierarchy comes purely from size, not weight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://anacuna.com",
+      "siteName": "Anacuna",
+      "extractedAt": "2026-06-03T21:04:13.667Z",
+      "variant": "compact"
+    }
+  }
+}

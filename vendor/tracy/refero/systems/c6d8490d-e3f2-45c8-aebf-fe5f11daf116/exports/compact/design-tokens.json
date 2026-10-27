@@ -1,0 +1,69 @@
+{
+  "color": {
+    "electric-indigo": {
+      "$value": "#1500ff",
+      "$type": "color",
+      "$description": "Electric Indigo — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "obsidian": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, deepest background — the void that all content sits on"
+    },
+    "charcoal": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Charcoal — Elevated surface, product preview frames, secondary panels"
+    },
+    "graphite": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Graphite — Deeper overlay surface, hover states on dark cards, input fields"
+    },
+    "paper": {
+      "$value": "#fdfdfd",
+      "$type": "color",
+      "$description": "Paper — Primary text, inverted surface, button text, high-contrast foreground"
+    },
+    "silver": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Silver — Hairline borders, dividers, subtle structural edges"
+    },
+    "pearl": {
+      "$value": "#d4d4d4",
+      "$type": "color",
+      "$description": "Pearl — Secondary text, subdued headings, placeholder body copy"
+    },
+    "slate": {
+      "$value": "#2f2f2f",
+      "$type": "color",
+      "$description": "Slate — Footer borders, low-contrast dividers between dark zones"
+    },
+    "ash": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, inactive icons, de-emphasized metadata"
+    },
+    "stone": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Stone — Tertiary text, timestamps, supplementary labels"
+    }
+  },
+  "font": {
+    "savee-font": {
+      "$value": "Savee Font",
+      "$type": "fontFamily",
+      "$description": "The sole typeface — a custom geometric sans used at every scale. Weight 400 carries the editorial body and nav; weight 500 appears on buttons and emphasized labels. The 96px display at 0.96 line-height with -0.04em tracking is the system's signature: it compresses into a dense confident block rather than stretching vertically, making the headline feel sculptural."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://savee.it",
+      "siteName": "Savee",
+      "extractedAt": "2026-06-03T21:12:56.364Z",
+      "variant": "compact"
+    }
+  }
+}

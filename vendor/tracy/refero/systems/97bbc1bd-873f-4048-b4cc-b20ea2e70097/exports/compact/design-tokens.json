@@ -1,0 +1,69 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#fff9f1",
+      "$type": "color",
+      "$description": "Cream Paper — Primary page canvas, card surfaces, nav background — the warm ground tone every screen sits on"
+    },
+    "ink-black": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, body copy, icon strokes, hairline borders — the dominant ink across the system"
+    },
+    "steel-gray": {
+      "$value": "#b5b5b5",
+      "$type": "color",
+      "$description": "Steel Gray — Muted card backgrounds, disabled surfaces, secondary fills"
+    },
+    "graphite": {
+      "$value": "#8b8b8b",
+      "$type": "color",
+      "$description": "Graphite — Tertiary surface, subtle background blocks, inactive dividers"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Hard borders on icons, nav emphasis, button outlines where maximum contrast is needed"
+    },
+    "midnight-indigo": {
+      "$value": "#12122c",
+      "$type": "color",
+      "$description": "Midnight Indigo — Display headings, link text, heading borders — deep violet-black replacing pure black for warmth and brand character"
+    },
+    "golden-amber": {
+      "$value": "#f5a623",
+      "$type": "color",
+      "$description": "Golden Amber — Primary action fill, logo heart mark, highlighter accents — the single warm punctuation color in an otherwise cool monochrome system"
+    },
+    "peach-blush": {
+      "$value": "#fcd2ba",
+      "$type": "color",
+      "$description": "Peach Blush — Accent section band backgrounds (Vibes, features) — warm wash that breaks cream monotony without introducing a new hue"
+    }
+  },
+  "font": {
+    "millik": {
+      "$value": "Millik",
+      "$type": "fontFamily",
+      "$description": "Display and heading font — used only for the hero headline and section titles. Heavy weight (700-800) with -0.025em tracking at 60px creates a poster-like authority. Custom serif-adjacent display cut gives the site its editorial magazine voice; substitute with Recoleta or Tiempos Headline if Millik is unavailable."
+    },
+    "moderat": {
+      "$value": "Moderat",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body font — covers everything from 12px captions to 22px subheads. Geometrical sans with uniformly tight -0.036em tracking that keeps even small text compact and editorial. 400 for body, 500 for nav/links, 600 for labels, 700 for emphasis. Substitute with Inter or General Sans for closest match."
+    },
+    "flutterwave": {
+      "$value": "Flutterwave",
+      "$type": "fontFamily",
+      "$description": "Reserved for the Flutterwave wordmark and icon glyphs — not a general-purpose text face. Limited to brand marks and the small heart logo."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.flutterwave.design",
+      "siteName": "Flutterwave Design",
+      "extractedAt": "2026-06-03T22:08:26.370Z",
+      "variant": "compact"
+    }
+  }
+}

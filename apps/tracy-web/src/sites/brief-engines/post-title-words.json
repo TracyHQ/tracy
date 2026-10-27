@@ -1,0 +1,34 @@
+{
+  "note": "Per site language: 'function' = words that carry no topic (post-title-faults.js namesBusiness: a name's distinctive words are the others); 'filler' = phrases of a placeholder, never words of a post or a category ('coming soon', 'to be updated'), matched inside a line, '|' between phrases; 'lorem' = words of Latin filler text, in any language (blog-translate.js keeps such lines as the demo has them); 'catchall' = whole names a blog category never takes (blog-categories.js): a name that is only one of them files nothing.",
+  "function": {
+    "vi": "và của cho với mỗi các những là để từ tại ở trong hoặc hay nhưng khi được có một theo về như mà thì bởi vì nên đến trên dưới giữa rất đã đang sẽ cùng",
+    "en": "a an the and or but nor of to for with in on at by from as that which who whom whose is are was were be been into onto than then so your our their its my his her this these those very also about over under",
+    "fr": "le la les un une des du de et ou mais pour avec dans sur par en au aux que qui est sont ce cette ces son sa ses notre nos votre vos leur leurs très",
+    "de": "der die das ein eine einer eines dem den des und oder aber für mit in im auf an am bei von vom zu zum zur als dass ist sind sein ihr unser unsere sehr",
+    "es": "el la los las un una unos unas de del y o pero para con en por al que es son su sus nuestro nuestra muy",
+    "it": "il lo la i gli le un una di del della e o ma per con in su da al che è sono suo sua nostro nostra molto",
+    "pt": "o a os as um uma de do da dos das e ou mas para com em no na por ao que é são seu sua nosso nossa muito",
+    "nl": "de het een en of maar voor met in op aan bij van tot als dat is zijn ons onze uw hun zeer"
+  },
+  "filler": {
+    "vi": "sẽ cập nhật|đang cập nhật|cập nhật sau|sắp ra mắt|nội dung đang|nội dung sẽ|đang được cập nhật|chưa có nội dung",
+    "en": "coming soon|to be updated|will be updated|content coming|to be announced|lorem ipsum|more to come|text goes here",
+    "fr": "bientôt disponible|sera mis à jour|contenu à venir|en cours de rédaction",
+    "de": "wird aktualisiert|inhalt folgt|folgt in kürze",
+    "es": "se actualizará|contenido próximamente|en construcción",
+    "it": "sarà aggiornato|contenuto in arrivo",
+    "pt": "será atualizado|conteúdo em breve|em construção",
+    "nl": "wordt bijgewerkt|inhoud volgt"
+  },
+  "lorem": "lorem ipsum dolor sit amet consectetur adipiscing elit sed eiusmod tempor incididunt labore dolore magna aliqua",
+  "catchall": {
+    "en": "general|misc|miscellaneous|other|others|various|default|uncategorized|uncategorised|category|categories|blog|news|posts|articles",
+    "vi": "chung|khác|tổng hợp|danh mục|chưa phân loại|tin tức|bài viết|blog",
+    "fr": "général|divers|autre|autres|catégorie|non classé|actualités|articles|blog",
+    "de": "allgemein|sonstiges|andere|kategorie|unkategorisiert|neuigkeiten|beiträge|artikel|blog",
+    "es": "general|varios|otros|otro|categoría|sin categoría|noticias|artículos|blog",
+    "it": "generale|varie|altro|altri|categoria|senza categoria|notizie|articoli|blog",
+    "pt": "geral|diversos|outros|outro|categoria|sem categoria|notícias|artigos|blog",
+    "nl": "algemeen|overig|overige|diversen|categorie|ongecategoriseerd|nieuws|berichten|artikelen|blog"
+  }
+}

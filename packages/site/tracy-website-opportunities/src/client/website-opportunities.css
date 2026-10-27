@@ -1,0 +1,29 @@
+/* Tailwind source for the Website Opportunities tab and its Settings section. Same recipe as
+   tracy-inbox/src/client/inbox.css: theme + utilities only, NO preflight, because both live inside
+   dsh's page. */
+/* `wo-views` comes after `utilities`: its plain CSS adjusts the @tracy/ui primitives it wraps (TableCell's
+   `whitespace-nowrap p-2 align-middle`, Button padding), which a lower layer could never override. */
+@layer theme, base, components, utilities, wo-views;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@import '@tracy/wo-views/styles.css' layer(wo-views);
+@source './';
+@source '../../node_modules/@tracy/ui/src';
+@source '../../node_modules/@tracy/wo-views/src';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text. Scoped to this plugin's
+   root and placed in `base`, so every utility class on a `@tracy/ui` component still wins. */
+@layer base {
+  .tracy-wo button, .tracy-wo-nav button { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  .tracy-wo, .tracy-wo *, .tracy-wo-nav, .tracy-wo-nav * { box-sizing: border-box; }
+  /* UA margins and list bullets off, below the utilities so an `m-*`/`list-*` class still wins (wo-views leaves this to us;
+     styles.ts is injected unlayered, so it must not carry this reset). */
+  .tracy-wo :where(p, dl, dd, ul, ol, h2, h3) { margin: 0; }
+  .tracy-wo :where(ul, ol) { padding: 0; list-style: none; }
+  /* ComboboxChips' input is meant to sit borderless inside the chips box; mode B has no preflight to strip the UA border. */
+  .tracy-wo [data-slot='combobox-chip-input'] { border-width: 0; background-color: transparent; color: inherit; font: inherit; padding: 0; }
+}

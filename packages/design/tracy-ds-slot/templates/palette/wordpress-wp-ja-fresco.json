@@ -1,0 +1,113 @@
+{
+  "source": "quickstart/ja-fresco/wp7@1.0.0",
+  "pages": ["/", "/home/home-2/", "/home/home-3/", "/menu/"],
+  "page": "#0a0b0a",
+  "rules": [
+    [
+      ".wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container",
+      "background-color",
+      "band",
+      0
+    ],
+    [
+      ".wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container",
+      "color",
+      "muted",
+      0
+    ],
+    [".screen-reader-text:focus", "color", "muted", 0],
+    [".screen-reader-text:focus", "background-color", "band", 0],
+    [".skip-link.screen-reader-text:focus", "color", "muted", 0],
+    [".skip-link.screen-reader-text:focus", "background-color", "band", 0],
+    [
+      "body :where(h1, h2, h3, h4, h5, h6) a:hover, body :where(h1, h2, h3, h4, h5, h6) a:focus-visible",
+      "color",
+      "accent-text",
+      0,
+      "--jf-accent"
+    ],
+    [
+      ".btn-primary > .wp-block-button__link, button.btn-primary",
+      "background-color",
+      "accent",
+      0,
+      "--jf-accent"
+    ],
+    [".jf-topbar-row a", "color", "accent-text", 0, "--jf-accent"],
+    [
+      ".t4-mainnav .wp-block-navigation-item__content:hover, .t4-mainnav .wp-block-navigation-item__content:focus-visible, .t4-mainnav .current-menu-item > .wp-block-navigation-item__content, .t4-mainnav .current-menu-ancestor > .wp-block-navigation-item__content",
+      "color",
+      "accent-text",
+      0,
+      "--jf-accent"
+    ],
+    [
+      ".t4-header .t4-mainnav.wp-block-navigation .has-child .wp-block-navigation__submenu-container .wp-block-navigation-item__content:hover, .t4-header .t4-mainnav.wp-block-navigation .has-child .wp-block-navigation__submenu-container .wp-block-navigation-item__content:focus-visible, .t4-header .t4-mainnav.wp-block-navigation .has-child .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content",
+      "color",
+      "accent-text",
+      0,
+      "--jf-accent"
+    ],
+    [
+      ".t4-mainnav .wp-block-navigation__responsive-container-open",
+      "background-color",
+      "accent",
+      0,
+      "--jf-accent",
+      "(max-width: 991px)"
+    ],
+    [".jf-book-dialog", "background-color", "surface", 0],
+    [".jf-book-intro", "background-color", "accent", 0, "--jf-accent"],
+    [".jf-book-close", "background-color", "surface", 0],
+    [
+      ".back-to-top .btn:hover, .back-to-top .btn:focus-visible",
+      "background-color",
+      "accent",
+      0,
+      "--jf-accent"
+    ],
+    [".section-title-wrap .section-title", "color", "accent-text", 0, "--jf-accent"],
+    [".acm-menu .menu-type::after", "background-color", "accent", 0, "--jf-accent"],
+    [".acm-testimonial.style-1 .testimonial-author", "color", "accent-text", 0, "--jf-accent"],
+    [
+      ".acm-testimonial.style-1 .tracy-motion-prev:hover, .acm-testimonial.style-1 .tracy-motion-next:hover",
+      "color",
+      "accent-text",
+      0,
+      "--jf-accent"
+    ],
+    [".jf-foot-col a:hover, .jf-foot-col a:focus-visible", "color", "accent-text", 0, "--jf-accent"],
+    [".wp-lightbox-overlay .scrim", "background-color", "band", 0],
+    [".acm-menu.style-3 .menu-card .menu-card-price", "color", "accent-text", 0, "--jf-accent"],
+    [".acm-menu.style-3 .menu-card .menu-card-price", "background-color", "surface", 0]
+  ],
+  "vars": [
+    ["--wp-block-synced-color", "accent"],
+    ["--wp-admin-theme-color", "accent"],
+    ["--wp-admin-theme-color-darker-10", "accent"],
+    ["--wp-admin-theme-color-darker-20", "accent"],
+    ["--wp--preset--color--pale-pink", "accent"],
+    ["--wp--preset--color--vivid-red", "accent"],
+    ["--wp--preset--color--luminous-vivid-orange", "accent"],
+    ["--wp--preset--color--luminous-vivid-amber", "accent"],
+    ["--wp--preset--color--light-green-cyan", "accent"],
+    ["--wp--preset--color--vivid-green-cyan", "accent"],
+    ["--wp--preset--color--pale-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-purple", "accent"],
+    ["--jf-c-info", "accent"],
+    ["--jf-brand-facebook", "accent"],
+    ["--jf-brand-x", "accent"],
+    ["--jf-brand-linkedin", "accent"]
+  ],
+  "inline": [],
+  "colours": {
+    "#ffffff": "band",
+    "#000000": "muted",
+    "#444444": "muted",
+    "#dddddd": "band",
+    "#eeeeee": "band",
+    "#e6c9a2": "accent-text",
+    "#212529": "surface"
+  }
+}

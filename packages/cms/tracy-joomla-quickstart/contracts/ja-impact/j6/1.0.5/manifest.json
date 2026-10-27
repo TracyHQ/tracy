@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-impact/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_impact",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-impact",
+    "id": "quickstart/ja-impact/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_impact",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-impact-j6-webroot-1.0.5.tar.gz",
+        "bytes": 56032085,
+        "sha256": "9402d539b56e91322278817711e4cdcb4fcff7ea143c5cd8dba6916bd0ae2964"
+      },
+      "database": {
+        "file": "ja-impact-j6-database-1.0.5.sql.gz",
+        "bytes": 109066,
+        "sha256": "40fedaa61b63c576c001d6f968d1433d200171d3b8cf82b74bc409738161a57e"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T08:32:47.111Z",
+    "builtFrom": {
+      "from": "quickstart/ja-impact/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 2 files replaced (templates/ja_impact/css, templates/ja_impact/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-impact/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

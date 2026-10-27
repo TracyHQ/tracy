@@ -1,0 +1,29 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All text — display headlines, body copy, navigation links, and icon strokes"
+    },
+    "ash-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary and supporting text — link hover or muted labels where visual weight must recede"
+    }
+  },
+  "font": {
+    "lab-grotesque": {
+      "$value": "Lab Grotesque",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for the entire site. Weight 100 at 40px is the signature display treatment for the owner name and year — a near-ultralight stroke that reads as quietly confident against the white void. Weight 400 at 18px handles body and link text. Weight 600 at 20px gives nav links a subtle mechanical weight without crossing into bold territory. No other families appear."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mikematas.com",
+      "siteName": "Mike Matas",
+      "extractedAt": "2026-06-03T14:58:31.833Z",
+      "variant": "compact"
+    }
+  }
+}

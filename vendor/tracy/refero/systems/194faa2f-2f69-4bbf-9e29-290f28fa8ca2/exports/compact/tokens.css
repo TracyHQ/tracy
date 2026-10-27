@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-carbon-ink: #222222;
+  --color-paper-white: #ffffff;
+  --color-newsprint-gray: #f7f7f7;
+  --color-pebble: #ebebeb;
+  --color-fog: #6a6a6a;
+  --color-ash: #a6a6a6;
+
+  /* Typography — Font Families */
+  --font-airbnb-cereal-vf: 'Airbnb Cereal VF', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

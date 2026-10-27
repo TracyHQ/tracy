@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1403-answers-written",
+  "kind": "fix",
+  "title": "With no text model to write the answers, Add site says so on the Customize card before Create and sends no answers, instead of an Apply run that fails minutes after the build",
+  "pr": 1403,
+  "area": "add-site/answers-written",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: GET /api/sites/questions for WordPress, Joomla and EmDash with no text model; then with a provider assigned to seedText; then with that provider disabled.",
+    "S2: servedFrom over an answer with answersWritten false, true, and none.",
+    "S3: In the real Add site form (browser fixture), pick Tracy Business on WordPress while the questions door answers answersWritten: false, then press Create site."
+  ],
+  "expect": [
+    "S1: answersWritten false for all three, true for all three once seedText has a model, false again with the provider disabled.",
+    "S2: false, true, true (a server from before the field is taken at its word).",
+    "S3: [data-questions-card=\"unwritable\"] \"Tracy can’t write answers into a new site right now, so this one is built with the template’s own text.\" with nothing to open; the create request carries no brief."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/route.js, packages/site/tracy-add-site/src/client/{site-brief.mjs,wizard.tsx,questions-sheet.tsx}",
+    "dom": "[data-questions-card=\"unwritable\"]"
+  },
+  "evidence": "Plan #1403 item 7 (code read 16/10/2026): the Apply run reads its text model from the seedText door, then web (app.js seedModels); with neither assigned the answers were still sent with Create, and the run could only fail after the site was built",
+  "fence": "Read the way the run reads it; only availability is said, never which provider",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=600000",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "packages/site/tracy-add-site/test/site-brief.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "GET /api/sites/questions says whether the answers can be written: the seedText, then web, door",
+      "servedFrom reads answersWritten; a server from before the field is taken at its word that it can",
+      "no text model to write the answers: the card says so before Create, nothing opens, and Create sends no brief"
+    ]
+  }
+}

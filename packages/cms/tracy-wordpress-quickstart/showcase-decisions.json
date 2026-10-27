@@ -1,0 +1,241 @@
+{
+  "$comment": "Per-contract showcase-navigation decisions read by scripts/build-wordpress-showcase-nav.mjs, checked against the raw markup in each contract's navigation-source.json. hide/keep name a navigation entry by navigation id (or templatePart for an inline navigation), label, and pageId and path (labels from the top entry down) when the label alone is not unique; subtree: true takes a submenu with everything it holds, except a sign-in, account or search screen not named by its own entry. repoint moves a template part's navigation block from one wp_navigation to another; removeBlock drops the one block of a template part that block {name, anchor, className, ref, contains} matches. Every entry carries the reason. Contracts not listed use the automatic rule alone.",
+  "contracts": {
+    "ja-diner/wp7/1.0.1": {
+      "hide": [
+        {
+          "navigation": 93,
+          "label": "Home - Red",
+          "pageId": 85,
+          "reason": "the red colour variant of the demo home page"
+        },
+        {
+          "navigation": 93,
+          "label": "Home - Pink",
+          "pageId": 86,
+          "reason": "the pink colour variant of the demo home page"
+        },
+        {
+          "navigation": 93,
+          "label": "Home - Green",
+          "pageId": 87,
+          "reason": "the green colour variant of the demo home page"
+        },
+        {
+          "navigation": 93,
+          "label": "Home - Blue",
+          "pageId": 88,
+          "reason": "the blue colour variant of the demo home page"
+        },
+        {
+          "navigation": 278,
+          "label": "All categories",
+          "pageId": 273,
+          "path": ["Content", "All categories"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: its text is the names of the post categories and a heading the blog shows too, its query lists the posts Blog lists, and its links go to Blog and the category archives; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 278,
+          "label": "Fetured Articles",
+          "pageId": 274,
+          "path": ["Content", "Fetured Articles"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: it holds no text of its own and its query lists the posts Blog lists; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 278,
+          "label": "Tagged Items",
+          "pageId": 277,
+          "path": ["Content", "Tagged Items"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: a tag cloud and queries of the posts Blog lists, with no text of its own; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        }
+      ],
+      "keep": [
+        {
+          "navigation": 278,
+          "label": "J! Pages",
+          "path": ["J! Pages"],
+          "reason": "\"J! Pages\" holds the account pages a customer site uses: Login (published with a core/loginout block), Registration, User Profile and Edit User Profile; at install the site's own address replaces the demo one, so they work"
+        }
+      ]
+    },
+    "ja-essence/wp7/1.0.20": {
+      "hide": [
+        {
+          "navigation": 155,
+          "label": "Home 1",
+          "pageId": 133,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its query block lists posts that the front page (a query too) and the kept category entries also list; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 155,
+          "label": "Home 2",
+          "pageId": 125,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its query block lists posts that the front page (a query too) and the kept category entries also list; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 155,
+          "label": "Home 4",
+          "pageId": 131,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its blocks are images, buttons, groups and a pattern, with no heading, text or post list of its own; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 155,
+          "label": "Home 5",
+          "pageId": 132,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its query block lists posts that the front page (a query too) and the kept category entries also list; no submenu or child page under it, and no other entry links it"
+        }
+      ],
+      "keep": []
+    },
+    "ja-fresco/wp7/1.0.1": {
+      "hide": [
+        {
+          "navigation": 80,
+          "label": "Home 2",
+          "pageId": 63,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (51 blocks of headings, images and buttons): another layout of the same demo; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 80,
+          "label": "Home 3",
+          "pageId": 64,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (164 blocks of headings, images and buttons): another layout of the same demo; no submenu or child page under it, and no other entry links it"
+        }
+      ],
+      "keep": []
+    },
+    "ja-morgan/wp7/1.1.16": {
+      "hide": [
+        {
+          "navigation": 158,
+          "label": "Home Style 1",
+          "pageId": 138,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (136 blocks): another layout of the same demo; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 158,
+          "label": "Home Style 2",
+          "pageId": 150,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (135 blocks): another layout of the same demo; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 158,
+          "label": "Home Style 3",
+          "pageId": 151,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (108 blocks): another layout of the same demo; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 158,
+          "label": "Home Style 4",
+          "pageId": 152,
+          "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (76 blocks; its query lists posts that Category Blog and News list too): another layout of the same demo; no submenu or child page under it, and no other entry links it"
+        },
+        {
+          "navigation": 160,
+          "label": "List All Categories",
+          "pageId": 149,
+          "path": ["Content", "List All Categories"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: its text is the names and descriptions of the post categories, and its links go to the category archives, which the cards of Tagged Items (kept) and News & Update link too; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 160,
+          "label": "Featured Articles",
+          "pageId": 145,
+          "path": ["Content", "Featured Articles"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: the page holds no text and no listing; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 160,
+          "label": "Category Blog",
+          "pageId": 154,
+          "path": ["Content", "Category Blog"],
+          "reason": "second link to page 154, which the main menu opens as \"News & Update\"; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 160,
+          "label": "Single Article",
+          "pageId": 204,
+          "path": ["Content", "Single Article"],
+          "reason": "Joomla sample \"single article\" view: a link to one post, which Tagged Items (kept) lists with every other post; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        }
+      ],
+      "keep": [
+        {
+          "navigation": 160,
+          "label": "Tagged Items",
+          "pageId": 155,
+          "path": ["Content", "Tagged Items"],
+          "reason": "its query lists every post; no other menu entry lists the posts outside the Investment Managment category, so it is their only route from the menus"
+        }
+      ]
+    },
+    "ja-restaurant/wp7/1.0.1": {
+      "hide": [
+        {
+          "navigation": 133,
+          "label": "Explore",
+          "path": ["Explore"],
+          "subtree": true,
+          "reason": "\"Explore\" is the template's showcase branch of the main menu (and of the drawer, which shows the same menu): J! Pages sample screens, Bonus Pages (error/offline screens and second links to About Us and Our History, which stay under \"About us\") and Themes, the colour variants of the home page"
+        },
+        {
+          "navigation": 133,
+          "label": "Login",
+          "pageId": 115,
+          "path": ["Explore", "J! Pages", "Login"],
+          "reason": "Joomla sample screen inside the template's \"J! Pages\" showcase branch; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "Registration",
+          "pageId": 116,
+          "path": ["Explore", "J! Pages", "Registration"],
+          "reason": "Joomla sample screen inside the template's \"J! Pages\" showcase branch; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "User Profile",
+          "pageId": 117,
+          "path": ["Explore", "J! Pages", "User Profile"],
+          "reason": "Joomla sample screen inside the template's \"J! Pages\" showcase branch; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "Reminder",
+          "pageId": 121,
+          "path": ["Explore", "J! Pages", "Reminder"],
+          "reason": "Joomla sample screen inside the template's \"J! Pages\" showcase branch; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "Smart Search",
+          "pageId": 129,
+          "path": ["Explore", "J! Pages", "Smart Search"],
+          "reason": "Joomla sample screen inside the template's \"J! Pages\" showcase branch; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "All Categories",
+          "pageId": 123,
+          "path": ["Explore", "J! Pages", "All Categories"],
+          "reason": "Joomla sample listing screen inside the template's \"J! Pages\" showcase branch: its text is the names and descriptions of the post categories, which Blog shows too, and its links go to Blog, Gallery and the category archives, which the home page's category list and the kept Blog and Gallery entries reach; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "Featured Articles",
+          "pageId": 122,
+          "path": ["Explore", "J! Pages", "Featured Articles"],
+          "reason": "Joomla sample listing screen inside the template's \"J! Pages\" showcase branch: it holds only a masthead naming the screen and the subscribe module the home page shows too, and lists no post of its own; the page and its URL keep working"
+        },
+        {
+          "navigation": 133,
+          "label": "Tagged Items",
+          "pageId": 130,
+          "path": ["Explore", "J! Pages", "Tagged Items"],
+          "reason": "Joomla sample listing screen inside the template's \"J! Pages\" showcase branch: a masthead naming the screen, the category descriptions Blog shows too, a tag cloud and a listing of the posts tagged menus, fish or seep, each of which Blog lists; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    }
+  }
+}

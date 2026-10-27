@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-960-tracy-assertion-service",
+  "kind": "fix",
+  "title": "dsh-passwords 2.7.7: the password gate provides tracyAssertion again, so the tabs plugin records a turn's moment and the tools plugin signs the person who typed",
+  "pr": 960,
+  "area": "dsh-passwords/assertion",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/tracy/dsh-passwords run: npm ci",
+    "S2: In vendor/tracy/dsh-passwords run: node --import tsx --test --test-timeout=120000 test/tracy/assertion.test.ts",
+    "S3: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "S2: 0 failures, 0 skipped.",
+    "'a signed assertion lives sixty seconds and names the lower-cased address' passes.",
+    "'an address that is not one is never signed' passes.",
+    "'what this gate signs, tracy-web accepts; another secret or an expired one it refuses' passes: tracy-web's own verifyActor accepts the token.",
+    "'the service is provided as `tracyAssertion` when the fleet secret is set, and not at all when it is not' passes.",
+    "'the plugin entry provides it from the fleet secret, outside the \"gateway configured\" branch' passes."
+  ],
+  "selectors": {
+    "signer": "vendor/tracy/dsh-passwords/src/tracy/assertion.ts mintTracyAssertion, provideTracyAssertion",
+    "entry": "vendor/tracy/dsh-passwords/src/plugin.ts provideTracyAssertion(ctx, cfg.tracy?.actorSecret)",
+    "verifier": "apps/tracy-web/src/lib/actor.js verifyActor"
+  },
+  "run": {
+    "cwd": "vendor/tracy/dsh-passwords",
+    "cmd": ["node", "--import", "tsx", "--test", "--test-reporter=tap", "test/tracy/assertion.test.ts"],
+    "tests": [
+      "a signed assertion lives sixty seconds and names the lower-cased address",
+      "an address that is not one is never signed",
+      "what this gate signs, tracy-web accepts",
+      "the service is provided as `tracyAssertion` when the fleet secret is set",
+      "the plugin entry provides it from the fleet secret"
+    ]
+  }
+}

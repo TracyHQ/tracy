@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c3b34927-0638-463e-bf85-180d73bfc367",
+  "status": "complete",
+  "name": "Fiverr.com",
+  "url": "https://styles.refero.design/style/c3b34927-0638-463e-bf85-180d73bfc367",
+  "sourceWebsite": "https://www.fiverr.com",
+  "extractedAt": "2026-06-03T18:19:06.160Z",
+  "capturedAt": "2026-10-08T05:17:09.688657+00:00",
+  "theme": "mixed",
+  "industry": "saas",
+  "description": "Digital bazaar spotlight — vivid green pulse on dark theatrical stages. One neon-green period anchors the wordmark; everything else is monochrome staging built to make service offerings glow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7eb3093e-603b-4738-b5c0-16a10cf3fbb9.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "af45b219711f7b00249b73299c362ac0ebe1e673254830e8a48dd26c860c85c7",
+      "bytes": 19162
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6e99a65a615a5626a56cfa241da8cd60915c06ef6475606cd4e6cd5308b9bcb9",
+      "bytes": 126665
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9e0db951b84595ce49181c06dd4a11f1389d568dee8566b2725ba1817c28524a",
+      "bytes": 16783
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "15bda3b4d7f12b731248fdaacc0fc4db9e3d1fc9c93ebf602e8b9f566746e60c",
+      "bytes": 8334
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f7f41876307a1c25348d21a35c79384c9f79a71654c968bda65204f7f5f36668",
+      "bytes": 12500
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c7c6037d1a98c332dd5de2a8e9fe3c6c612c141d4f32e521a2fc6be391567614",
+      "bytes": 2653
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "98d437dec4726a8bff0791f2450c9db05a261f2e7600ea7f104c3b8f7b2e3ea6",
+      "bytes": 412
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "38668c33b1f4ff224672fd0952017639d68aaa28cbe16d454cfe9e2db5f567f1",
+      "bytes": 429
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "749b51ca741afde4ece8c0577fa7832d726d56a2ed3c425e370b442561844016",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0b9d266fba09c185474075a286bde3f441492d001ac3cf11e078b6cd70529edc",
+      "bytes": 43223
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "219a0a7041888bfe94f2757ffc9c62c4a4f918bcd357a4b35d4ffcf050b37048",
+      "bytes": 22786
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d765ab794638923c5c8fc8fde266577e2be86d7f4898f842dfc20aeef7f14737",
+      "bytes": 42319
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b45c9588916ba7261176237475c3e67ef7bd56f0cb1a336783c28adebc058fe7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4240250868a5e033d8c6e70d2bbbac5d71c0d46c331998b88600ab18bfebe122",
+      "bytes": 1248
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "86a3acd1984e38cc35cc42a34524a41a4c81fd48bf522369f43e11052dcc4199",
+      "bytes": 1840
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "5fd3b3b4-02ab-456a-87aa-e4395636b671",
+    "6fd5c4e6-7003-4768-bc62-1b9c0c774054",
+    "7be94705-3666-4fb1-a389-0cfd7cb223cd",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "bf5616e4-7bd1-40ce-8b2d-aae84c2e4ebd",
+    "c3b34927-0638-463e-bf85-180d73bfc367",
+    "c5326639-873a-4257-ad1a-7da9111e9286",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "da7c4464-f135-41fc-b635-99c6f4dc58e6",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729",
+    "ef73c742-1c3b-48b9-a174-de365ecc4691",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "kind": "empty-block",
+  "about": "Probe data (empty-block: only the boxes where nothing is seen, the rest can never be a finding) cut from real Add site previews (preview-check.mjs PREVIEW_DATA=1, the detector's own probe on the plain and the worn page, scripts off as in the preview frame). Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-resort/j6@1.0.4 (https://ja-resort-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#b7b39f",
+        "#000000",
+        "#868474",
+        "#93b6fb",
+        "#858273",
+        "#060605",
+        "#84acfb",
+        "#1a1a1a",
+        "#7a786a",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1",
+            "at": "div.t4-section-inner.section",
+            "w": 1440,
+            "h": 288,
+            "top": 4398,
+            "held": 5,
+            "seen": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1",
+            "at": "div.section-inner",
+            "w": 1440,
+            "h": 288,
+            "top": 4398,
+            "held": 4,
+            "seen": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1",
+            "at": "div.section-ct",
+            "w": 1440,
+            "h": 288,
+            "top": 4398,
+            "held": 3,
+            "seen": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1",
+            "at": "div.acm-testimonial.style-1",
+            "w": 1440,
+            "h": 288,
+            "top": 4398,
+            "held": 2,
+            "seen": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1",
+            "at": "div.container",
+            "w": 1200,
+            "h": 288,
+            "top": 4398,
+            "held": 1,
+            "seen": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1",
+            "at": "div.testimonial-item-wrap",
+            "w": 1164,
+            "h": 288,
+            "top": 4398,
+            "held": 0,
+            "seen": null,
+            "ground": {
+              "r": 0,
+              "g": 0,
+              "b": 0,
+              "a": 1
+            }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1",
+            "at": "div.t4-section-inner.section",
+            "w": 1440,
+            "h": 288,
+            "top": 4562,
+            "held": 5,
+            "seen": null,
+            "ground": {
+              "r": 251,
+              "g": 246,
+              "b": 243,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1",
+            "at": "div.section-inner",
+            "w": 1440,
+            "h": 288,
+            "top": 4562,
+            "held": 4,
+            "seen": null,
+            "ground": {
+              "r": 251,
+              "g": 246,
+              "b": 243,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1",
+            "at": "div.section-ct",
+            "w": 1440,
+            "h": 288,
+            "top": 4562,
+            "held": 3,
+            "seen": null,
+            "ground": {
+              "r": 251,
+              "g": 246,
+              "b": 243,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1",
+            "at": "div.acm-testimonial.style-1",
+            "w": 1440,
+            "h": 288,
+            "top": 4562,
+            "held": 2,
+            "seen": null,
+            "ground": {
+              "r": 251,
+              "g": 246,
+              "b": 243,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1",
+            "at": "div.container",
+            "w": 1260,
+            "h": 288,
+            "top": 4562,
+            "held": 1,
+            "seen": null,
+            "ground": {
+              "r": 251,
+              "g": 246,
+              "b": 243,
+              "a": 1
+            }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1",
+            "at": "div.testimonial-item-wrap",
+            "w": 1224,
+            "h": 288,
+            "top": 4562,
+            "held": 0,
+            "seen": null,
+            "ground": {
+              "r": 251,
+              "g": 246,
+              "b": 243,
+              "a": 1
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-essence/wp7@1.0.18 (https://ja-essence-wordpress.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#eae5cc",
+        "#eee9cf",
+        "#000000",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 (https://ja-kinetic-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#1a1a1a",
+        "#060605",
+        "#000000",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-vega/wp7@1.1.15 (https://ja-vega-wordpress.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#eae5cc",
+        "#eee9cf",
+        "#000000",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "worn": {
+        "data": []
+      },
+      "plain": {
+        "data": []
+      }
+    }
+  ]
+}

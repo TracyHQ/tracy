@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b6f2b036-e48e-452f-b003-941c491015c0",
+  "status": "complete",
+  "name": "Liquid Death",
+  "url": "https://styles.refero.design/style/b6f2b036-e48e-452f-b003-941c491015c0",
+  "sourceWebsite": "https://liquiddeath.com",
+  "extractedAt": "2026-04-11T17:51:51.532Z",
+  "capturedAt": "2026-10-08T05:16:35.467746+00:00",
+  "theme": "mixed",
+  "industry": null,
+  "description": "Heavy Metal Vending Machine",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1ef29d2b-4f55-4298-a173-747f8ed77661.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/127d3a5c-7bab-4fa7-8ce4-09ca2088eb3e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/71d18750-7e5d-497a-b995-212e5f2f7c8b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/508998cb-6723-42a2-8465-2f2832c99aea.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ad4cf416-8d82-4e79-91df-2d5a2120767c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8b78d53055175dedbc30c6a042e52e17f8a65114639cadc02d7e80d0ad19e9fd",
+      "bytes": 13497
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9681acb2704c4e543ccf06b066e7cfac096ca48a33cba9cf6b77c50b9c09dc2f",
+      "bytes": 257124
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "78f71930e28ebe9e0b1b26a4e3780e643d689b5cd2b63497ee797e7684665afe",
+      "bytes": 26779
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e050795aaf3478fa50e2623d333221c71a9ff6a4b0a45761537b82e46b73bdfc",
+      "bytes": 14579
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "837a71fba4eff07db749a3f71201b591d1c6e649ec2384515aa0ba1d63814d76",
+      "bytes": 7798
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1fa43f61e46bfd1a4257b07b79557ed4675e0b3a705bd0a7ab2202f23a1ac074",
+      "bytes": 2653
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "243b0a2d66fb028531bf50fea29fe193bce172f60e0a59030be4977f21fb8553",
+      "bytes": 634
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3a66f429481d15bb7e20580a81afd6c65b549cd4265a09ec3c13b3cee80b8400",
+      "bytes": 651
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4f348b209ba600b5f6d290d86c220488680c6639485c2d74a0e3b923ecc5cf95",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "64de7b6e26e5ece68d820964ce2912a3b30358909cd00c558c988192e387794a",
+      "bytes": 43527
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "12dee303d7c4e22751da5e15496659acc1dc2ba08e41b7c419774de13c7cac37",
+      "bytes": 22504
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a0920aaa7075093fdf62d8aba1a22d10ba98e3c8d57928469c4fa290f8c67a66",
+      "bytes": 55048
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c8a2e95f4d2aef4a778f7ee87fe01eb2ba312b9f9937896a7fb91d8a26408b25",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f1b886e9f484120cdc2c908de9d269412b15fdf621f8543424e5f9a1cc38e940",
+      "bytes": 1381
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "05c28971a1be3a515b57752434ce0027da0d15c0839fd4ce9a1e66e103d8d855",
+      "bytes": 1722
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+    "0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "76bfda6b-125f-4d9b-96c0-356de1e9fc10",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b6f2b036-e48e-452f-b003-941c491015c0",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "da087e69-8832-418a-aa1b-42e1acabb39e",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

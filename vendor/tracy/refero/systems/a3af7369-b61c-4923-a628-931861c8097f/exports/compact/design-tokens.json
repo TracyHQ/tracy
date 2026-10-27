@@ -1,0 +1,99 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff4100",
+      "$type": "color",
+      "$description": "Ember Orange — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "signal-blue": {
+      "$value": "#0052ef",
+      "$type": "color",
+      "$description": "Signal Blue — Links, secondary highlights, focus rings, decorative code accents — cool counterpoint to the warm orange, used sparingly"
+    },
+    "plex-green": {
+      "$value": "#19d600",
+      "$type": "color",
+      "$description": "Plex Green — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "plasma-magenta": {
+      "$value": "#f500ff",
+      "$type": "color",
+      "$description": "Plasma Magenta — Decorative code syntax highlight, studio editor token — appears only within code/editor contexts, not general UI"
+    },
+    "acid-lime": {
+      "$value": "#45ff00",
+      "$type": "color",
+      "$description": "Acid Lime — Code syntax token — restricted to developer-facing surfaces like the terminal and JSON editor"
+    },
+    "electric-blue": {
+      "$value": "#027fff",
+      "$type": "color",
+      "$description": "Electric Blue — Code syntax token, inline link variants in editorial copy — secondary to Signal Blue"
+    },
+    "onyx": {
+      "$value": "#0b0b0b",
+      "$type": "color",
+      "$description": "Onyx — Primary text, dark hero backgrounds, dark product surface panels, button text on light fills"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, text on dark sections, input fields"
+    },
+    "smoke": {
+      "$value": "#b9b9b9",
+      "$type": "color",
+      "$description": "Smoke — Borders, dividers, disabled text, muted icon strokes, placeholder text"
+    },
+    "ash": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Ash — Subtle borders on cards, input field outlines in light mode"
+    },
+    "graphite": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Graphite — Elevated dark surface (cards on dark backgrounds), input borders on dark sections"
+    },
+    "charcoal": {
+      "$value": "#353535",
+      "$type": "color",
+      "$description": "Charcoal — Deepest elevated surface, code editor background, terminal panel"
+    },
+    "mid": {
+      "$value": "#797979",
+      "$type": "color",
+      "$description": "Mid — Secondary text, helper text, metadata, low-emphasis icons"
+    },
+    "steel": {
+      "$value": "#4a4a4a",
+      "$type": "color",
+      "$description": "Steel — Tertiary text, icon outlines on light surfaces"
+    },
+    "frost": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Frost — Hover backgrounds, subtle row separators, very light surface tint"
+    }
+  },
+  "font": {
+    "waldenburg": {
+      "$value": "Waldenburg",
+      "$type": "fontFamily",
+      "$description": "Primary display and body typeface. Used for all headings, body text, navigation, buttons, and editorial copy. The weight 425 is distinctive — a true book weight between 400 and 500 that adds warmth. Extremely tight letter-spacing at display sizes (–4.48px at 112px) creates a compressed, architectural feel. Custom stylistic alternates (cv01, cv11, cv12, cv13, ss07) give it a unique character — likely single-story 'a', distinctive 'g', and other bespoke glyphs."
+    },
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace typeface for code blocks, terminal output, JSON schemas, numbered section labels (01–05), and technical metadata. Creates a developer-first identity when paired with Waldenburg's editorial warmth."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sanity.io",
+      "siteName": "Sanity.io",
+      "extractedAt": "2026-06-03T18:00:47.206Z",
+      "variant": "compact"
+    }
+  }
+}

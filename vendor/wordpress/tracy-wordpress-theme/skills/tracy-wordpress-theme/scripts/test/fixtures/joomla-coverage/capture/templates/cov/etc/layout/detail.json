@@ -1,0 +1,25 @@
+{
+  "layout": {
+    "sections": [
+      {
+        "name": "Main",
+        "contents": [
+          {
+            "type": "component",
+            "name": ""
+          }
+        ]
+      },
+      {
+        "name": "Related",
+        "contents": [
+          {
+            "type": "positions",
+            "name": "section-related",
+            "positions": "section-related"
+          }
+        ]
+      }
+    ]
+  }
+}

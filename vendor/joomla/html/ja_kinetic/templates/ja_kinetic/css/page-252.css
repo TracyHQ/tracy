@@ -1,0 +1,170 @@
+/* =============================================================================
+ * ja_kinetic — Authors INDEX view (com_content view=author layout=list)
+ * Scoped to `.hx-authors` (html/com_content/author/list.php + list_items.php).
+ * Loaded by that override via addStyleSheet for EVERY render of the index (not
+ * just Itemid=252). Source of truth: pencil/kinetic.pen frame VsC07.
+ * All colour/type/spacing route through design tokens → light + dark + the
+ * three directions (Terminal/Blueprint/Signal) resolve automatically.
+ * ============================================================================= */
+
+/* avatar tint: primary at low alpha, per theme */
+.hx-authors { --hx-au-avatar-bg: rgba(77, 124, 15, 0.10); }
+html.t4-dark .hx-authors { --hx-au-avatar-bg: rgba(163, 230, 53, 0.13); }
+
+.hx-authors { font-family: "IBM Plex Sans", sans-serif; color: var(--text); }
+
+/* P58: kill the T4 main-body gap above the full-bleed masthead */
+.t4-section.t4-main-body:has(.hx-authors) { padding-top: 0 !important; }
+
+/* ── Masthead (grid + radial, dark endpoint #161B18 like the .pen) ─────────── */
+.hx-authors__head {
+  padding-top: 66px;
+  padding-bottom: 58px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, var(--elevated) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+html.t4-dark .hx-authors__head {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, #161B18 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+.hx-authors__head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* eyebrow pill (shared visual; duplicated in page-254.css) */
+.hx-au-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: rgba(163, 230, 53, 0.08);
+  border: 1px solid rgba(163, 230, 53, 0.25);
+}
+html:not(.t4-dark) .hx-au-pill {
+  background: rgba(77, 124, 15, 0.08);
+  border-color: rgba(77, 124, 15, 0.28);
+}
+.hx-au-pill__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+.hx-au-pill__t {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.hx-authors__title {
+  margin: 0;
+  max-width: 760px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 46px;
+  line-height: 50px;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  text-align: center;
+  color: var(--heading);
+}
+.hx-authors__sub {
+  margin: 0;
+  max-width: 600px;
+  font-size: 17px;
+  line-height: 27px;
+  text-align: center;
+  color: var(--text);
+}
+
+/* ── Card grid ────────────────────────────────────────────────────────────── */
+.hx-authors__body { padding-block: 64px 80px; background: var(--bg); }
+.hx-authors__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.hx-aucard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: border-color .15s, background .15s;
+}
+.hx-aucard:hover { border-color: var(--primary); background: var(--elevated); }
+
+.hx-auav {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--hx-au-avatar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hx-auav__i {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+.hx-auav__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.hx-aucard__nm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 0 8px;
+}
+.hx-aucard__n {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--heading);
+  text-align: center;
+}
+.hx-aucard__r {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+}
+.hx-aucard:hover .hx-aucard__n { color: var(--primary); }
+.hx-aucard__c { font-size: 13px; color: var(--text); }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .hx-authors__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .hx-authors__head { padding-top: 48px; padding-bottom: 28px; }
+  .hx-authors__title { font-size: 34px; line-height: 1.1; letter-spacing: -1px; }
+  .hx-authors__sub { font-size: 16px; }
+  .hx-authors__body { padding-block: 44px 56px; }
+}
+@media (max-width: 520px) {
+  .hx-authors__grid { grid-template-columns: 1fr; }
+}

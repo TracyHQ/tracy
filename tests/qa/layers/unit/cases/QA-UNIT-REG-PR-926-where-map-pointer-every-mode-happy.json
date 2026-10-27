@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-PR-926-where-map-pointer-every-mode-happy",
+  "itemIds": ["regression:REG-PR-926-where-map-pointer-every-mode"],
+  "requirement": "Every mode on a site whose quickstart release has a where-map (sealed, bound, EmDash Tracy Business) ends its 'Where visible text lives' line with the where-map pointer: content.read {describe:true}'s where.<topic> for a form, page, menu, the design or SEO, and how to turn it off and back on, before any CMS, plugin or template source; a site whose release has none gets no pointer (since PR #1071)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-926-where-map-pointer-every-mode.json",
+    "ref": "PR #926 (fix); fix evidence: Flow D of the Apply audit, 05/10/2026 (55 runs on benchwpapply02, benchemdashapply01, benchjoomlaapply01): 6 runs read content.read {describe:true}; 43 calls read CMS or plugin source; the contact form toggle read source for 8-23 steps on all three platforms before its one write. The pointer adds 217 characters to every mode's site context (measured on all five platform rows x four modes).",
+    "invariant": "S2: fail 0, exit 0. S3: no 'not ok', at least 16 'ok' (26 on 10/10/2026: PR #1071 also added ten 'where-map:' tests on which release a folder names). Each of the eleven 'where-map: every mode is pointed at the quickstart's where-map, only on a site whose release has one: <row>' tests is 'ok' once: the four rows whose release has a where-map (wm-jsealed, wm-wprecord, wm-wpbound, wm-emdash) carry the pointer in designer, developer, writer and seo-geo, and the seven without one (wm-joomla, wm-jbase, wm-jderived, wm-wp, wm-wpbase, wm-emdash-open, wm-emdash-base) carry none in any mode (rule changed by PR #1071; before it every row had the pointer). The five 'size:' budgets are 'ok'. Before the fix (PR #926) no row carried the pointer. S4: 2 (the constant and the row that ends with it): the committed lib/index.js carries the change (RULE #3: the image copies lib/ as it is). Every command exits 0.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:1",
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:730",
+      "packages/tools/tracy-site-tools/src/host/legacy-refusal.mjs:11",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:2582",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:3573",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269",
+      "packages/tools/tracy-site-tools/src/host/wp-seo.mjs:19"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-site-build-core/src/host/build.mjs:111 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:263 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:301 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:304 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs:1420 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs:2100 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-926-where-map-pointer-every-mode.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-926-where-map-pointer-every-mode"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-926-where-map-pointer-every-mode",
+    "pr": 926,
+    "kind": "fix",
+    "area": "site-tools/site-context",
+    "file": "tests/regression/cases/REG-PR-926-where-map-pointer-every-mode.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-926-where-map-pointer-every-mode.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

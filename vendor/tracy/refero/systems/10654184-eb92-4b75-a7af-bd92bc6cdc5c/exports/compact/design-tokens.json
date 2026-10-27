@@ -1,0 +1,79 @@
+{
+  "color": {
+    "midnight-plum": {
+      "$value": "#1c1624",
+      "$type": "color",
+      "$description": "Midnight Plum — Page canvas, primary dark surface — the near-black with a violet undertone that gives the UI its cool, secure temperature"
+    },
+    "shadow-plum": {
+      "$value": "#2d2734",
+      "$type": "color",
+      "$description": "Shadow Plum — Elevated card surface, input fields, nested panels — one step lighter than canvas to suggest depth without a shadow"
+    },
+    "bone-white": {
+      "$value": "#f1f0ec",
+      "$type": "color",
+      "$description": "Bone White — Primary text, icon strokes, button labels on dark — warm off-white avoids the sterile feel of pure white against violet-black"
+    },
+    "fog-line": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog Line — Hairline borders, dividers, card outlines — the most-used neutral in the system, defining every container edge"
+    },
+    "ash-veil": {
+      "$value": "#d0c9c4",
+      "$type": "color",
+      "$description": "Ash Veil — Muted secondary text, disabled labels, ghost button text — sits between white and mid-gray for tertiary hierarchy"
+    },
+    "mid-ash": {
+      "$value": "#a5a2a5",
+      "$type": "color",
+      "$description": "Mid Ash — Muted helper text, placeholder copy, secondary metadata — low-priority text that recedes"
+    },
+    "iron-edge": {
+      "$value": "#55505b",
+      "$type": "color",
+      "$description": "Iron Edge — Subtle dividers, input borders in resting state — barely visible structural lines"
+    },
+    "lavender-spark": {
+      "$value": "#b997ff",
+      "$type": "color",
+      "$description": "Lavender Spark — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "signal-green": {
+      "$value": "#00f575",
+      "$type": "color",
+      "$description": "Signal Green — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "neon-violet": {
+      "$value": "#6b13f5",
+      "$type": "color",
+      "$description": "Neon Violet — Radial gradient anchor, deep brand violet used in decorative aurora effects behind hero text"
+    },
+    "ember-orange": {
+      "$value": "#ff5632",
+      "$type": "color",
+      "$description": "Ember Orange — Terminal color in the violet-to-orange hero gradient — adds warmth to the cool palette at the gradient terminus"
+    },
+    "plasma-pink": {
+      "$value": "#ff9efa",
+      "$type": "color",
+      "$description": "Plasma Pink — Radial gradient origin point — the pink hotspot in the aurora glow behind the hero"
+    }
+  },
+  "font": {
+    "doppler-repro": {
+      "$value": "Doppler Repro",
+      "$type": "fontFamily",
+      "$description": "Single-family system — custom geometric sans handling everything from 12px captions to 96px displays. Weight 450 is the signature workhorse (slightly heavier than 400 but lighter than 500), giving text a distinctive medium-confident feel. At 64px+ sizes, letter-spacing tightens to -0.02em for compressed, engineered headlines; at 12px it opens to 0.03em for readable small text. Replaces the visual job that a secondary serif or monospace would do on other sites — consistency over contrast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://doppler.com",
+      "siteName": "Doppler",
+      "extractedAt": "2026-06-03T18:42:16.816Z",
+      "variant": "compact"
+    }
+  }
+}

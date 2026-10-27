@@ -1,0 +1,19 @@
+{
+  "name": "dsh-profile-native",
+  "private": true,
+  "dependencies": {
+    "@linxin666/dsh-client-ui-skill-explorer": "0.3.11"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "dsh-better-sidebar",
+        "@goodandready/dsh-subscriptions",
+        "@tracy/dsh-native-bundle"
+      ]
+    }
+  },
+  "description": "Only ONE dependency is still really installed, and it is on npmjs: the dev overlay `tch/patches/tracy-sidebar.yml` names it. Every other package the bundles list is linked into `node_modules/` by `node scripts/materialize-profile.mjs`, straight from this repository's workspace — the same contract the image Dockerfile fills with COPY."
+}

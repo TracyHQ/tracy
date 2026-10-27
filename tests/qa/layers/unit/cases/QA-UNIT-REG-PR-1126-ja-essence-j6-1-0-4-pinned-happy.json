@@ -1,0 +1,45 @@
+{
+  "id": "QA-UNIT-REG-PR-1126-ja-essence-j6-1-0-4-pinned-happy",
+  "itemIds": ["regression:REG-PR-1126-ja-essence-j6-1-0-4-pinned"],
+  "requirement": "JA Essence (Joomla) 1.0.4 is sealed with the contract and the plugin it was released with: ja-essence/j6/1.0.4 is the contract Claude Cowork for Joomla 0.24.9 carries, and both quickstarts.json pin quickstart/ja-essence/j6 at 1.0.4 on 0.24.9 with the pack's own files",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1126-ja-essence-j6-1-0-4-pinned.json",
+    "ref": "PR #1126 (feat); fix evidence: tasks/nhat-ky/2026-10-10-ja-essence-j6-1-0-4.md",
+    "invariant": "S1: the three hashes are those Claude Cowork for Joomla 0.24.9 carries (14661d62…, 836b332e…, 9e190a61…); floor 0.24.9, quickstart version 1.0.4. S2: version 1.0.4, contract ja-essence/j6/1.0.4, Claude Cowork 0.24.9, webroot and database sha256 equal to the contract manifest's parts with asset ids, every pinned contract file hash equal to the tch file's, contractVersions [1.0.3] with the 1.0.3 hashes equal to tch's. S3: both gates pass.",
+    "productSources": ["scripts/check-all.ts:9"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1126-ja-essence-j6-1-0-4-pinned.mjs:19 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1126-ja-essence-j6-1-0-4-pinned.mjs:40 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1126-ja-essence-j6-1-0-4-pinned.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1126-ja-essence-j6-1-0-4-pinned"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1126-ja-essence-j6-1-0-4-pinned",
+    "pr": 1126,
+    "kind": "feat",
+    "area": "quickstart/contracts",
+    "file": "tests/regression/cases/REG-PR-1126-ja-essence-j6-1-0-4-pinned.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1126-ja-essence-j6-1-0-4-pinned.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

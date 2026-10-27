@@ -1,0 +1,30 @@
+{
+  "name": "@emdash-cms/blocks-playground",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emdash-cms/blocks": "workspace:*",
+    "@cloudflare/kumo": "catalog:",
+    "@phosphor-icons/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "^4.6.0",
+    "tailwindcss": "^4.1.11",
+    "typescript": "catalog:",
+    "vite": "^6.3.5",
+    "wrangler": "^4.63.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {}
+}

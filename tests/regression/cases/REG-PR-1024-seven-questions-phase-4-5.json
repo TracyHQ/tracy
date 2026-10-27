@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1024-seven-questions-phase-4-5",
+  "kind": "feat",
+  "title": "Seven default questions phases 4+5: the dark logo pair lands on WordPress, Joomla and EmDash; no logo shows the site name; uploaded logos are capped at the demo logo's height; a Joomla home with an empty title takes the business name; an unticked WordPress blog page 404s; Joomla bare-number lines never take words; one-edition Joomla and EmDash sites print the written language in html lang",
+  "pr": 1024,
+  "area": "add-site/questions",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/brief-brand.test.mjs apps/tracy-web/test/brief-brand-joomla.test.mjs",
+    "S2: Run: node --test apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/joomla-home-title.test.mjs apps/tracy-web/test/joomla-unticked-blog.test.mjs apps/tracy-web/test/template-profiles.test.mjs",
+    "S3: Run: node --test apps/tracy-host/test/display-locale.test.mjs",
+    "S4: Run: node --test packages/cms/tracy-wordpress-theme/test/brand-logo.test.mjs",
+    "S5: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "The brand step writes the dark logo next to the light one on WordPress (tracy_logo_dark) and Joomla; a profile with nameFallback prints the site name when no logo is uploaded; logoHeight caps the uploaded logo.",
+    "A Joomla line that ships a bare number (a module's article id) only ever takes a number.",
+    "A Joomla home menu item with an empty title takes the business name; an unticked WordPress blog page is not served.",
+    "POST /_host/display-locale writes the label's display-locale file and refuses a bad label or locale."
+  ],
+  "selectors": {
+    "brand_step": "setSiteBrand in apps/tracy-web/src/sites/brief-engines/brand.js",
+    "profiles": "apps/tracy-web/src/lib/template-profiles.json (nameFallback, logoHeight, brandReady)",
+    "host_door": "POST /_host/display-locale in apps/tracy-host",
+    "wp_theme": "packages/cms/tracy-wordpress-theme inc/brand-logo.php"
+  },
+  "evidence": "07/10/2026: seven default questions on every template and every CMS (issue #1013 phases 4 and 5, plan tasks/plan-ten-logo-favicon.md), plus bugs found on cowork.tracy.site folded in per plan 3.0c.",
+  "fence": "Units over fake Apply doors and the WordPress theme PHP harness. Not exercised here: a running Joomla with Claude Cowork 0.24.1, a deployed release, the dev surface.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1024-seven-questions-phase-4-5.mjs"],
+    "needs": []
+  }
+}

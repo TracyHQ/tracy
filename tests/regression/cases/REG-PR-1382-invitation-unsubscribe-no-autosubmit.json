@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1382-invitation-unsubscribe-no-autosubmit",
+  "kind": "fix",
+  "title": "Opening an invitation unsubscribe link changes nothing: the page runs no script and the GET writes nothing",
+  "pr": 1382,
+  "area": "invitations/unsubscribe",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: GET /invitations/unsubscribe/<43-char token> against the invitations unsubscribe routes with a pool that records every query."
+  ],
+  "expect": [
+    "S1: 200; the page holds the POST form to the same token and an Unsubscribe button; no <script> and no .submit(); the pool received no query."
+  ],
+  "selectors": {
+    "door": "GET /invitations/unsubscribe/:token",
+    "form": "#unsubscribe-form"
+  },
+  "evidence": "#1380: the confirmation page auto-submitted its form on load, so a link scanner that ran page scripts unsubscribed the recipient",
+  "fence": "Route-level request with a recording pool; POST and RFC 8058 one-click doors are covered by the existing invitations tests",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/invitations-unsubscribe-get.test.mjs"
+    ],
+    "tests": ["GET /invitations/unsubscribe/:token renders the form"]
+  }
+}

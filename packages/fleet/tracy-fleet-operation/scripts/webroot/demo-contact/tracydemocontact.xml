@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+  <name>Tracy demo contact preview</name>
+  <version>1.0.0</version>
+  <description>Preview the existing contact form when a Website Opportunities demo has no recipient.</description>
+  <files><filename plugin="tracydemocontact">tracydemocontact.php</filename></files>
+</extension>

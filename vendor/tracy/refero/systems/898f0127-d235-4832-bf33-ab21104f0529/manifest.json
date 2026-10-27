@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "898f0127-d235-4832-bf33-ab21104f0529",
+  "status": "complete",
+  "name": "HBO Max",
+  "url": "https://styles.refero.design/style/898f0127-d235-4832-bf33-ab21104f0529",
+  "sourceWebsite": "https://www.hbomax.com",
+  "extractedAt": "2026-06-03T19:06:36.162Z",
+  "capturedAt": "2026-10-08T05:14:31.741412+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "Cinema lobby at midnight. Pure black walls, one cool blue exit sign, and movie posters glowing from every surface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cbcac0ef-005e-4d27-b67f-1cb79aba7679.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d14bc3f8-b0c5-4bd8-a73f-53687755565f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ecb34f56-1c6a-4116-9416-0521cf89b5d1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6a326fc2-7c2d-4056-9ad8-7aad91dbb3fd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0cf1c633-46e2-45b4-b37b-db9831b90ae7.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1828675e073ef330e8364188d8417cf01d3abcf4b34cf2e55eb237f2e3bf5b32",
+      "bytes": 17499
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3fdfa86a8e5376bac12bbb10da7a77047bf88f804043fd8505c2995325565375",
+      "bytes": 192544
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a0db00bc2777e10be2d052a0782e2248cd0d2253a765247c7d66ae7b000c21f6",
+      "bytes": 15070
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "280de3950c740ea6e378c5f2467afc55de79084ad11a20a5be70d9d79f8f5997",
+      "bytes": 14330
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "62f92747de8738ca5e9e3a76419427c2c42117b9c7dd21d62060b2e2445ce5e3",
+      "bytes": 10776
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bdba76c4e39f37f0278e73eb6ee6806ea69c6146e2a7d98972d8ece527ec38e5",
+      "bytes": 2474
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2ec469393627083c5252dbb7958c2a557210090d00f920c8e10db011648b8e69",
+      "bytes": 440
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0f1097cc7fc72525ae6bc84c49aa0f0519c47ce20bd62fd50df1c7616306c0c2",
+      "bytes": 457
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "06459be728d79e75e7f4ca75a96a38257a3780c02a79322311af360a3b2bce46",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4dc6e46522722f7a86faab2b2732cf011c28cff99a31d8f80c3ee30530fcecb3",
+      "bytes": 42172
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "93cc2d79c02febdc5e8e2c4f4e16a262672f7ba6ee93dda9a921be26d31d543e",
+      "bytes": 22202
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1ace2f1b3c16f10d9cf56e00129116e75bec1f6743d2c526907011e65f19370f",
+      "bytes": 48167
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d774059c4f688570de0ec06215b9da2c35b025673ca680435b779661790a8ed7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0c05f6b67e415968a97f6e886acf615ee1bd4b061a677a2f4fb2e5f8189bd198",
+      "bytes": 1257
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a01a9c3031dc9213188c5f57976938f55c39c7065f43731912b0725cc72680cd",
+      "bytes": 1895
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+    "1514a95f-878c-4d4d-bb14-99d1b83f6227",
+    "1775bf6a-afdd-48b1-8435-b92ec585c674",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "32959012-f50d-4465-bb01-2aa4d506e0a8",
+    "35f89ccd-614d-4f8f-9cce-bb94309df237",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "4367b4cd-b002-4719-a418-cbce020f0d33",
+    "502af24a-b765-44b2-828f-dd610f27a125",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "898f0127-d235-4832-bf33-ab21104f0529",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "cc59e195-fed0-4928-96d1-303752786073",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+    "e586b296-bfac-4e93-add2-daa384712b39"
+  ]
+}

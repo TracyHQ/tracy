@@ -1,0 +1,52 @@
+{
+  "id": "REG-034",
+  "kind": "fix",
+  "title": "The dsh gate pages, the whitelist confirmation mail, the @tracy/ui controls and My Sites follow the interface language; the Vietnamese keep-verbatim rule is the one its gate enforces",
+  "pr": 840,
+  "area": "i18n/surfaces",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --import tsx --test --test-timeout=120000 vendor/tracy/dsh-passwords/test/tracy/i18n-surfaces.test.ts apps/tracy-web/test/whitelist-confirmation-i18n.test.mjs scripts/test/dsh-locale-terms.test.ts scripts/test/ui-i18n.test.ts scripts/test/my-sites-i18n.test.ts scripts/test/i18n-surface-provenance.test.mjs",
+    "S2: Run: pnpm --filter @tracy/ui typecheck",
+    "S3: Run: pnpm exec tsx scripts/check-all.ts --only dsh-locale --only interface-languages --only web-languages",
+    "S4: With a Chrome listening for DevTools on 127.0.0.1:9222, run: I18N_SURFACES_CDP_URL=http://127.0.0.1:9222 node --import tsx --test --test-timeout=90000 vendor/tracy/dsh-passwords/test/tracy/i18n-mobile.test.ts",
+    "S5: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "S1: 0 failures, 0 skipped.",
+    "'a browser in any shipped language gets that language, never Chinese' passes: Accept-Language vi, de, it, fr, nl, es each resolve to themselves; nothing usable resolves to en.",
+    "'q=0, a malformed q and a wildcard are not choices' and 'precedence is unchanged: ?lang, then the cookie, then the dsh setting, then the browser' pass.",
+    "'the lane sign-in page follows the browser in every shipped language' passes: <html lang> is the language and no Han character is on a non-zh page.",
+    "'no site key: the lane page still does not exist, in any language' passes: 404, no form.",
+    "'a refusal keeps its status and speaks the reader’s language, with English for what is untranslated' passes: the 403 stays a 403.",
+    "'the door writes the mail in the language of the request' passes for all eight languages, and 'a retry in another language sends the payload stored first, unchanged' passes.",
+    "'refusals come before any side effect, whatever language is asked for' passes: no statement ran, no mail left.",
+    "'no control defaults a label to an English word' and the per-control render tests pass: each control shows the caller's words and none of the first render's words after a second render.",
+    "'a translation that keeps one term and loses another is a problem' passes, and 'the Vietnamese catalogue that ships keeps every term of its sources' finds no dropped term.",
+    "'restore.forbiddenBody names the two roles as every other language does' passes: Owner and Admin are in the vi sentence.",
+    "'the two reported lines no longer say \"seat book\" or \"your seats\"' passes.",
+    "'gateway: every shipped translation is the sentence of the catalogue it names' passes: each of the 198 gateway translations equals its listed source, whose English equals the gateway's English.",
+    "S2: exit 0 (a label left out of a control is a type error; an unused @ts-expect-error would fail here).",
+    "S3: all three gates pass, with known debt 0 in every language.",
+    "S4: 0 failures, 0 skipped. At 320×568 and 375×667, on the sign-in page and the first-run setup page, in nl, vi and zh: the eight language links sit on two rows inside the card and the screen, none overlaps another or the content below, a tap on each lands on it, and the page does not scroll sideways. On a 320×320 screen the card is taller than the screen and both its ends scroll into view.",
+    "'the measurement sees the old layout: one clipped, absolutely positioned row' passes: the same measurement reports links outside the card and a single row when the former rules are put back.",
+    "'Traditional Chinese is never answered in Simplified: the next tag decides, or English' and 'the setting is read as YAML structure: only the top-level locale.preference counts' pass in S1."
+  ],
+  "selectors": {
+    "gatewayResolver": "vendor/tracy/dsh-passwords/src/tracy/i18n/gateway-langs.ts resolveGatewayLang, GATEWAY_LANGS; src/tracy/i18n/index.ts t",
+    "gatewayData": "vendor/tracy/dsh-passwords/src/tracy/i18n/locales/<lang>.json",
+    "mail": "apps/tracy-web/src/beta/confirmation.js confirmationMail (keys mail.confirmation*)",
+    "termRule": "scripts/lib/dsh-locale-terms.ts namespaceProblems, droppedTerms",
+    "typeFixture": "packages/ui/tracy-ui/src/type-tests/required-labels.tsx",
+    "provenance": "scripts/test/fixtures/i18n-surface-provenance.json",
+    "languageSwitch": "vendor/tracy/dsh-passwords/src/tracy/gateway-page.ts .card > .lang-switch a"
+  },
+  "evidence": "Issue #797: a vi/de/it/fr/nl/es browser got the Chinese gate page; the confirmation mail and six @tracy/ui controls were hard-coded English; 128 vi strings translated a keep-verbatim term away while the gate stayed green; My Sites said 'seat book'.",
+  "fence": "Language resolution and per-key English fallback of the gate pages, the catalogue path of the confirmation mail, required label props of the shared controls, the every-term rule of the dsh-locale gate, and the list of strings that read in English because no catalogue translates them. HTTP fixtures on localhost with a scratch database and a fake pool and mailer: no Postgres, no mail provider, no deployed host. The phone layout of the two gate pages is measured in a local Chrome over DevTools (S4); without I18N_SURFACES_CDP_URL that file skips, so a runner with no browser proves only the CSS rule. Not fenced: the WordPress contact forms (F-S7-003) and the Delete confirmation word (F-S3-018, kept by docs/references/i18n.md §5).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-034.mjs"],
+    "needs": ["chrome"]
+  }
+}

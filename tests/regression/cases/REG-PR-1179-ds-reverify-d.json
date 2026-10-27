@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1179-ds-reverify-d",
+  "kind": "fix",
+  "title": "Twenty-two ready Joomla slot contracts (JA Smallbiz to JA Voyara, Purity III, JA Intranet, five GavickPro templates) re-verified with the unified probe on the release their minVersion names: still ready, with the five fixes the re-verify found",
+  "pr": 1179,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-{ja-smallbiz,ja-social-ii,ja-spa,ja-space,ja-spark,ja-stark,ja-symphony,ja-teline-v,ja-titan,ja-tour,ja-trip,ja-vega,ja-vital,ja-vogue,ja-voyara,purity-iii,ja-intranet,gk-appetit,gk-archi,gk-compact,gk-restly,gk-spotlight}.json through loadContract; build the module sheet (joomlaSlot) under Moxie (dark), MotherDuck (light) and Apple (light) for GK Compact, JA Teline V and JA Trip.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for each at its minVersion and at the version before it.",
+    "All of it: node tests/regression/scripts/REG-PR-1179-ds-reverify-d.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: each of the twenty-two is ready, its minVersion is the release re-verified (ja-smallbiz/spark/stark/symphony/teline-v/titan/tour, purity-iii, ja-intranet and the five gk 1.0.1, ja-social-ii/spa 1.0.2, ja-space/vital 1.0.3, ja-trip/vega/vogue 1.0.4, ja-voyara 1.0.5), its maxVersion is at or above it, tasks/evidence/ds-reverify-d-2026-10-12/<slug>/first/ready-rule.json exists, and it judges a running-text kind; gk-appetit, gk-compact, gk-restly, ja-teline-v, ja-trip and ja-space name that evidence in readyNote. GK Compact's .acm-hero takes background-color #161616 and color #828282 under the three systems and its button-primary role is .pricing-table a.btn.btn-primary; GK Compact and GK Restly have no logo kind; GK Appetit's measuredPage is /index.php/news and it has no footer kind; JA Teline V's .magazine-carousel .magazine-item-main .article-aside is #999999 under Moxie, MotherDuck and Apple; JA Trip's .mod-list-layout-1 .item-highlight .content-inner .heading-link takes color var(--ds-c-fg) under the three.",
+    "S3: each at its minVersion -> {contract:'joomla-<slug>'}; the version before -> reason TEMPLATE_NEEDS_UPDATE."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-<slug>.json ready, minVersion, maxVersion, contrast, keepScopes, keepGround, keepColors, sideRules, measuredPage",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf"
+  },
+  "evidence": "tasks/evidence/ds-reverify-d-2026-10-12/README.md — per-template table, ready-rule.json, verdicts.json and report.md of each flow run and the MotherDuck/Apple desktop pairs (12/10/2026).",
+  "fence": "The measures on Docker stands are in the evidence, not re-run here (each takes 10-30 min on the shared VM). Not covered: the probe itself (flow.mjs unchanged on this branch), judging by eye, and the scroll-reveal sampling gap of JA Space at 1440 px (a probe matter, reported).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1179-ds-reverify-d.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

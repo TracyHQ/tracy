@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1675-demo-qa-years-not-phone",
+  "kind": "fix",
+  "title": "Demo QA never reads a run of years (a timeline's \"2024.\\n2026\", \"2019 - 2024\", \"© 2024 2025\") as a phone number, so collected-used no longer fails a demo with COLLECTED_UNSOURCED for one; real phones are still read",
+  "pr": 1675,
+  "area": "demo-qa/facts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-host/test/demo-qa.test.mjs: factsIn on runs of years joined by a dot, a hyphen, a slash, a space or a line break, and on real phones (720) 555-0160, +971 4 123 4567, 04 123 4567, +84 90 123 45 67.",
+    "S2: same file: checkCollectedUsed on a page with the collected phone and a timeline \"Opened 2024.\\n2026 a second floor\"."
+  ],
+  "expect": [
+    "S1: no phone is read from any run of years; a line break ends a phone; each real phone is read with its digits.",
+    "S2: no COLLECTED_UNSOURCED finding."
+  ],
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa.js PHONE YEARS_ONLY factsIn"
+  },
+  "evidence": "Dev 24/10/2026: a real demo failed collected-used with COLLECTED_UNSOURCED phone '2024.\\n2026' read from a timeline; the old PHONE regex ran across the line break and the guard skipped only a single year or a date.",
+  "fence": "A phone's groups sit on one line; a match made only of 19xx/20xx years is no phone; a number that merely starts like a year (\"2024 5678 9\") is still one",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-host/test/demo-qa.test.mjs"],
+    "tests": [
+      "facts: a run of years is no phone, and a phone never runs across a line break",
+      "collected-used: a timeline of years beside the collected phone is no unsourced phone"
+    ]
+  }
+}

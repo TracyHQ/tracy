@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1226-device-poll-transient",
+  "kind": "fix",
+  "title": "A device sign-in (ChatGPT Codex on the web) keeps polling through a tracy-web restart instead of failing with \"Unexpected token '<'\"; a one-shot call that gets the proxy's page says the server did not answer",
+  "pr": 1226,
+  "area": "settings/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-model-plan connect, device-sign-in and accounts-pane tests (node:test; fake seat-plan doors that answer a proxy's HTML 502 page, an injected clock / node's mocked timers)."
+  ],
+  "expect": [
+    "seatPlanApi rejects with TransientError (transient: true) on an HTML 502 page, a 503/504, an HTML body with 200 and a failed fetch; never with a JSON parse error. A 400 with a JSON message keeps that message and is not transient; a 200 JSON body is the data.",
+    "waitForDevice asks again after a TransientError: pending, transient, transient, status resolves with waits 5000, 5000, 5000, 10000; consecutive failures wait 5 s, 10 s, 20 s, 30 s, 30 s (capped), and the normal interval comes back after an answer.",
+    "A non-transient error still ends the attempt with its message; Cancel (abort) still stops; failures past DEVICE_LIMIT_MS end as DeviceTimeout.",
+    "startConnect re-reports the device state with retrying: true while polls fail and without it at the next answer; a transient connect/start fails with reason 'transient' and an empty message.",
+    "Settings > AI accounts keeps the code visible and shows [data-hint='transient'] 'The server is restarting or unreachable. Trying again…' under 'Waiting for {vendor} to confirm…' while polls fail, and removes it at the next good answer; a transient start shows 'The server did not answer. Try again.' with Try again."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-model-plan/test/connect.test.mjs",
+      "packages/ui/tracy-model-plan/test/device-sign-in.test.mjs",
+      "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs"
+    ],
+    "tests": [
+      "seatPlanApi: an HTML error page from the proxy (502) is a TransientError, never a JSON parse error",
+      "seatPlanApi: a 503/504 with a JSON body, an HTML body with 200, and a network failure are all transient",
+      "seatPlanApi: a 400 with a JSON message keeps that message and is not transient",
+      "seatPlanApi: a 200 JSON answer is the data, whatever the content type spells",
+      "a start the server never answered (proxy page, network) fails as transient, not as the parse error",
+      "a device sign-in keeps its code while the server restarts: retrying while polls fail, cleared at the next answer",
+      "a poll the server did not answer is asked again: pending, transient, transient, then the status",
+      "the wait doubles per failure in a row from 5 s, never past 30 s, and falls back once an answer comes",
+      "a network failure of the call itself (fetch rejected) is asked again too",
+      "a refusal that is not transient still ends the attempt with its message",
+      "Cancel during the failures still stops: no more polls, the wait rejects with the reason",
+      "failures that last past the ten minutes end the attempt as a timeout",
+      "a poll the restarting server did not answer keeps the code and says so, then the line goes at the next answer",
+      "a start the restarting server did not answer says so in plain words with Try again, never the parse error"
+    ],
+    "timeout_s": 180
+  },
+  "evidence": "dev cowork.tracy.site 12/10/2026 09:12Z: the web container restarted for a deploy while a tester confirmed a ChatGPT Codex device code; the poll got the proxy's HTML page and the panel showed \"Could not connect ChatGPT Codex — Unexpected token '<', \\\"<!DOCTYPE \\\"... is not valid JSON\". Screens: tasks/evidence/device-poll-transient/codex-device-transient-{light,dark}.png",
+  "fence": "only an answer from tracy-web itself (JSON, not a gateway status) can end a device attempt; a gateway page or a failed fetch is a TransientError the poll waits out",
+  "selectors": {
+    "panel": ".tv-ob-connect[data-connect='device']",
+    "code": ".tv-ob-code",
+    "transient": "[data-hint='transient']",
+    "retry": "[data-action='retry']",
+    "doors": "POST /api/seat-plan/connect/start, POST /api/seat-plan/connect/complete"
+  }
+}

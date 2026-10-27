@@ -1,0 +1,109 @@
+# The vendored dsh's build output, built once per submodule commit and shared through the cache.
+#
+# WHY THIS EXISTS — measured 26/09/2026 on PR #413 (dsh 0.1.7). Every Tracy CI job used to build dsh
+# in its own runner checkout; the stamp in `scripts/build-dsh.mjs` only skips when THAT runner
+# already built THIS commit. dsh 0.1.7's host typecheck (`tsc -b tsconfig.host.json`, 4 GB heap)
+# peaks at 4.5 GB RSS, so the build died with exit 137 on every runner capped at 5–5.6 GB — all but
+# one of the self-hosted runner machines (runs 36252485710, 36255741876, 36258295210). Only the
+# largest survived. Eight jobs per run meant eight chances to land on a small runner.
+#
+# 🔒 ONE DEFINITION OF THE KEY AND OF THE FILES. The cache key is `build-dsh.mjs --print-key` — the
+# very stamp `--skip-if-built` compares — and the cached file is what `--pack` puts in a tar from
+# the submodule's gitignored output. Nothing here lists a path of dsh's build; a glob in YAML would
+# be a second list that drifts from the build (and `**/lib` would also walk into `node_modules`).
+# The tar never carries `*.tsbuildinfo`, and every `build-dsh.mjs` call here deletes the ones a
+# runner's checkout still holds: incremental state must not travel between commits (the script's
+# header has the measurement).
+#
+# TWO MODES:
+#   ensure   restore when cached, otherwise build (`--skip-if-built`) and save. The job `dsh-lib`
+#            in `tracy-ci.yml` (with lookup-only: nothing to download when it is there), and the
+#            dsh step of `build-app-images.yml`.
+#   restore  the cache MUST exist (`fail-on-cache-miss`): the eight `build check` jobs, which run
+#            after `dsh-lib` and must never fall back to building on a small runner.
+#
+# ⚠ CACHE SCOPE IS WHY `build-app-images.yml` ALSO CALLS THIS. A cache saved by a pull-request run
+# is readable only by that pull request; one saved on `develop` or `main` is readable by every pull
+# request into them. Tracy CI runs on pull requests only, so without a push-side writer each PR
+# would build once for itself. `build-app-images.yml` already builds dsh on every push to `develop`
+# and `main` — there it costs nothing new and warms the cache for everyone.
+name: dsh build output
+description: Restore the vendored dsh's build from the cache, or build it once and save it.
+
+inputs:
+  mode:
+    description: "'ensure' (restore or build+save) or 'restore' (the cache must exist)"
+    required: true
+  lookup-only:
+    description: "ensure only: 'true' checks the cache without downloading it"
+    required: false
+    default: 'false'
+
+outputs:
+  key:
+    description: The cache key, dsh-lib-<stamp>
+    value: ${{ steps.key.outputs.key }}
+  cache-hit:
+    description: Whether the cache already held this key
+    value: ${{ steps.probe.outputs.cache-hit || steps.must.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Compute the dsh build key
+      id: key
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "key=dsh-lib-$(node scripts/build-dsh.mjs --print-key)" >> "$GITHUB_OUTPUT"
+
+    - name: Restore the dsh build (must be cached)
+      id: must
+      if: inputs.mode == 'restore'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .dsh-lib/dsh-lib.tar
+        key: ${{ steps.key.outputs.key }}
+        fail-on-cache-miss: true
+
+    - name: Look up the dsh build in the cache
+      id: probe
+      if: inputs.mode == 'ensure'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .dsh-lib/dsh-lib.tar
+        key: ${{ steps.key.outputs.key }}
+        lookup-only: ${{ inputs.lookup-only }}
+
+    - name: Unpack the cached dsh build
+      if: steps.must.outputs.cache-hit == 'true' || (steps.probe.outputs.cache-hit == 'true' && inputs.lookup-only != 'true')
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/build-dsh.mjs --restore .dsh-lib/dsh-lib.tar
+        rm -rf .dsh-lib
+
+    # The clean start is the one `build-dsh.mjs`'s header pins: the submodule install claims the
+    # members, the root install relinks them afterwards. A runner's checkout persists between jobs.
+    - name: Build dsh once for this key (not cached yet)
+      if: inputs.mode == 'ensure' && steps.probe.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
+        node scripts/build-dsh.mjs --skip-if-built
+        mkdir -p .dsh-lib
+        node scripts/build-dsh.mjs --pack .dsh-lib/dsh-lib.tar
+        ls -l .dsh-lib/dsh-lib.tar
+
+    - name: Save the dsh build to the cache
+      if: inputs.mode == 'ensure' && steps.probe.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .dsh-lib/dsh-lib.tar
+        key: ${{ steps.key.outputs.key }}
+
+    - name: Remove the local tar
+      if: always()
+      shell: bash
+      run: rm -rf .dsh-lib

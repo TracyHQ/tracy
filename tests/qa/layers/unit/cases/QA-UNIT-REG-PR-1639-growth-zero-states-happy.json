@@ -1,0 +1,56 @@
+{
+  "id": "QA-UNIT-REG-PR-1639-growth-zero-states-happy",
+  "itemIds": ["regression:REG-PR-1639-growth-zero-states"],
+  "requirement": "Growth zero values retain denominators, counts agree, and the current page stays legible",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1639-growth-zero-states.json",
+    "ref": "PR #1639 (fix); fix evidence: none recorded",
+    "invariant": "Zero values render with their measured denominator and unit, including an empty cohort. Counts use the singular or plural noun that agrees with each count. The current pagination page and its hover state use foreground fill with background text.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/web/tracy-harness/test/statistics-count.test.mjs (argument) is not a file"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "zero counts retain their measured denominator, including an empty cohort",
+    "count nouns agree with their own count and support irregular plurals",
+    "current pagination page uses foreground fill and background text for contrast"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1639-growth-zero-states"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/web/tracy-harness", "tracy-harness"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1639-growth-zero-states",
+    "pr": 1639,
+    "kind": "fix",
+    "area": "ops/growth",
+    "file": "tests/regression/cases/REG-PR-1639-growth-zero-states.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/web/tracy-harness/test/statistics-count.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "zero counts retain their measured denominator, including an empty cohort",
+    "count nouns agree with their own count and support irregular plurals",
+    "current pagination page uses foreground fill and background text for contrast"
+  ],
+  "timeoutS": 600
+}

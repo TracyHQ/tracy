@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "329075e8-97ed-4722-8952-d9bf001de233",
+  "status": "complete",
+  "name": "Craft",
+  "url": "https://styles.refero.design/style/329075e8-97ed-4722-8952-d9bf001de233",
+  "sourceWebsite": "https://itscraft.com",
+  "extractedAt": "2026-06-03T20:55:58.644Z",
+  "capturedAt": "2026-10-08T05:10:01.108571+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "botanical conservatory on warm parchment — cream pages holding vivid green specimens and one quiet forest room.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5e8e703d-7ab6-4bc1-8e25-2ff995900ffc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c81b3b4f-3687-4933-9379-980f26388f87.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c3db65dd-2e38-4e9d-9d36-1bdd8c393b82.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3d05c20f-75fe-4e98-b935-329d9693b701.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e956b019-297e-46dc-9681-dc8e872fa993.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "34cb1d4f7fce92834246ec833c749e34f66a7d04156f8631ef9769d12b560cc1",
+      "bytes": 22431
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c6c76f457f0f326ffa974c0d32840aab794d4bfd38e3cc87326e701f1fe0f85c",
+      "bytes": 79886
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2bd9bc43605bc4237ab45f5034dcfdfb73c6d0b5cd36af948e09cc9f67d75d45",
+      "bytes": 19223
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dc93cd86b2ff275abd6d7eb5a6fbfe33934de6b684009c11b94f83b314cd6479",
+      "bytes": 11124
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "654378b75ba6b6726d2817dab8c47d9f8b5d92d78711835931890efa23ff186c",
+      "bytes": 14118
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1cd2df6e43a11a3ae2e820d876280f0b504fc21d4754cc4f6ea18b6f8b673024",
+      "bytes": 3334
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "23e83058dd11df349a6ee2ac674b96f5ec634436d1db8614afff6a2df3415958",
+      "bytes": 671
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6019e5597a0e8086972e587c76fb28d2740328bb84274aecfe1d2afb10822422",
+      "bytes": 688
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1ea7df1b32293afa26cc241b012ab132c1e1d25366fb0763ac987b9465700001",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5bcca42248810c6105401f23a6b8318010be58df801acce18ea738bcff610cee",
+      "bytes": 46608
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "49e65e0cbb2e5e7c192c272f85fc09338e77f84aba82a0de5d897eaa3eb4c635",
+      "bytes": 24300
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2709e8e83904858bf77a9eeb6fa340c6de4db8a6fbb6893bab83498558cf9171",
+      "bytes": 44417
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "cda280f5427a434a5581a9f539f1f9288ecb81498a4034702f31ae930fee3e50",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "de06d8e44ae847f222f1b224796b412bcbcbfc607f8a9adbfdc378940958a585",
+      "bytes": 1717
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b40d8365ba5312166243405507f8988dfabf2fd66b74aa4452e2a64030eea4cc",
+      "bytes": 2276
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "329075e8-97ed-4722-8952-d9bf001de233",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

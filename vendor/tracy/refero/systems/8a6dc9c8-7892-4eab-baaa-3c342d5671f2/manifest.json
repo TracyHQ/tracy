@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8a6dc9c8-7892-4eab-baaa-3c342d5671f2",
+  "status": "complete",
+  "name": "INVERSA",
+  "url": "https://styles.refero.design/style/8a6dc9c8-7892-4eab-baaa-3c342d5671f2",
+  "sourceWebsite": "https://inversa.com",
+  "extractedAt": "2026-06-03T20:30:47.778Z",
+  "capturedAt": "2026-10-08T05:14:33.327713+00:00",
+  "theme": "dark",
+  "industry": "other",
+  "description": "topographic field terminal at midnight. A dark command surface where massive editorial type and a single neon-lime marker layer over satellite earth photography, every label set in mono as if reading mission coordinates.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7f03550a-29d9-43a9-b98b-fcbc0c5918f7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/376a649f-4b39-41f4-9280-db75bd915313.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a6c19a63-5ebb-424c-8c63-1169e778b324.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/472366ef-e70f-40e4-9d55-c33f3f48d261.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/85674942-d84e-4b4e-967a-95abd119f7ec.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "555e83084adbec41b916d2b95651e310981c9e572c50210202c80e254774dbac",
+      "bytes": 16541
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4c74d409663f3de9fef11710fa2f98ad08f50813ac164024b7ccd0af3ecead59",
+      "bytes": 243092
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8eea9f0b3ebd0bbae480430362cff9527e47dcd36d1e8514f7f86cf92eda583f",
+      "bytes": 13622
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "637041be28fa5cb9201bfa776a5026ef2e846ebdf95940ee917aa738ad2ada13",
+      "bytes": 7241
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3a6416e9510e3b7507fd9c0eab490f02289541f5430cb3a3ce88e3d3e989e2cb",
+      "bytes": 10745
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4d39eed0f21fd3cbcc0b36da776d8739336310a822c1c9182f5d2c1286d38d7d",
+      "bytes": 2453
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f8b4ed62212171db1809bf55e55bbb8302cb07aec1a2ff9abfcc51b2c7b636a8",
+      "bytes": 497
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "eacaa6a10813a3441cd014363fccc0307ebfa0bc82b51dfd9ed75430ea662841",
+      "bytes": 514
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cfc20a4dc70b87ec846a9e06f059a65ce5f6bee16ea853741dfa7d33e07537b0",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "16ca0e17554a9a68ec5a1028a72e3d3fa5a4bd4a46029dc92b24cdd2112aaadf",
+      "bytes": 40352
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ee129eade17398de6d2bb93ee08b298a3e1b485d6dfdd986b0fd26f9829e3768",
+      "bytes": 20781
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "034b574c66c7f835e39e5b3928097300d77fdfa326801064ba6ee6653bcd18c2",
+      "bytes": 26410
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7ebaa83fa96a6c28b7b98f029be534539a1ae75886d2a673a97bb55df9f7a1c4",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5d3cd08f77372a9509193642c0eee26fdbd102dfa3a4578aff431785e2cc5d00",
+      "bytes": 1209
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "356f633abff5dfbed7b3fec6abad7d4933aa85f86765542609cba5ba68cfaef5",
+      "bytes": 1673
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "4ef4a6dc-bee9-420a-b197-f20415b9caaa",
+    "5d210b76-702a-45cf-97ed-ed90c47b1eb0",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "77b723ca-9583-4349-9b5e-2ef8b4fde002",
+    "80099f79-72b7-4367-b2e9-6a3d4a3e9e6a",
+    "8a6dc9c8-7892-4eab-baaa-3c342d5671f2",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "b1e0a894-7440-44b8-9737-0ea4c988fc24",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

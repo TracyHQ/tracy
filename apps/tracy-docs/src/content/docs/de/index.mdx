@@ -1,0 +1,41 @@
+---
+title: "Tracy Cowork — erstelle und bearbeite deine Website mit KI"
+description: "Tracy Cowork erstellt und bearbeitet deine WordPress-, Joomla- oder EmDash-Website, wenn du im Chat darum bittest, zeigt dir jede Änderung und lässt dich sie rückgängig machen."
+template: splash
+hero:
+  title: "Tracy Cowork — erstelle und bearbeite deine Website mit KI"
+  tagline: "Bitte im Chat darum, und Tracy nimmt die Änderung auf deiner echten WordPress-, Joomla- oder EmDash-Site vor — und zeigt dir danach jede Änderung, damit du sie prüfen und rückgängig machen kannst."
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: "Erste Schritte"
+      link: /de/get-started/
+      icon: right-arrow
+    - text: "App herunterladen"
+      link: /de/desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="Erste Schritte" icon="rocket">
+    Melde dich an, füge deine erste Site hinzu und bitte Tracy um eine Änderung. [Erste Schritte](/de/get-started/)
+  </Card>
+  <Card title="Desktop-App" icon="laptop">
+    Tracy für macOS, Windows und Linux. Sie aktualisiert sich selbst. [App herunterladen](/de/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    Verbinde ChatGPT, Claude, Claude Code, Cursor oder Codex mit deiner Tracy-Website. [MCP einrichten](/de/mcp/getting-started/)
+  </Card>
+  <Card title="Mit deiner Site arbeiten" icon="pencil">
+    Chat, Kommentare auf der Seite, Site changes, Rückgängig und Backup. [Tracy verwenden](/de/using-tracy/)
+  </Card>
+  <Card title="Changelog" icon="document">
+    Ein datiertes Protokoll, was sich wann geändert hat: in [Tracy Cowork](/de/changelog/desktop/), im Web und in der App, und in der [API](/de/changelog/).
+  </Card>
+  <Card title="Für Entwickler und Agents" icon="seti:json">
+    Die Tracy-API: eine von Tracy gehostete Site über HTTPS lesen und ändern, mit einem Schlüssel, der an deinen Sitz gebunden ist. [API-Überblick](/de/api/)
+  </Card>
+</CardGrid>

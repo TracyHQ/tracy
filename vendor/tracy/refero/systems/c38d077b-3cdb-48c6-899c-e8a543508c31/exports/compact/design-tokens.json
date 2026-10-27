@@ -1,0 +1,49 @@
+{
+  "color": {
+    "blush-paper": {
+      "$value": "#f1e9e7",
+      "$type": "color",
+      "$description": "Blush Paper — Page canvas, all section backgrounds — the warm rose-tinted ground that gives the entire site its editorial, printed-on-paper feel. Never a flat white, never a cool gray"
+    },
+    "carbon-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, filled buttons, all iconography, form labels, footer rules. The dominant non-canvas color — drives every typographic and interactive element"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Text color inside filled black buttons, reverse-fill surfaces, and form input contrast. Used sparingly as the counter-tone to Carbon Ink"
+    },
+    "fossil-gray": {
+      "$value": "#7b7f83",
+      "$type": "color",
+      "$description": "Fossil Gray — Muted helper text, secondary metadata, subdued form placeholder tones. The only neutral that softens Carbon Ink for non-primary copy"
+    },
+    "signal-blue": {
+      "$value": "#0058fe",
+      "$type": "color",
+      "$description": "Signal Blue — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    }
+  },
+  "font": {
+    "copernicus": {
+      "$value": "Copernicus",
+      "$type": "fontFamily",
+      "$description": "Copernicus carries the entire voice — it is a high-contrast transitional serif whose terminals and sharp serifs make 70–90px display sizes feel literary rather than decorative. The signature move is its aggressive negative tracking: -0.092em at 90px tightens the headline into a near-solid mass of type, which against the warm blush ground reads as a printed editorial pull-quote, not a SaaS H1. Body sizes (15–18px) sit at near-normal tracking, so the tension between tight display and loose running text mirrors a magazine spread."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "A vestigial system-font presence — appears only in minor utility spots (small labels, icons-in-text). Not a typographic voice; effectively a fallback safety net."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.openweb.com",
+      "siteName": "OpenWeb",
+      "extractedAt": "2026-06-03T15:45:05.032Z",
+      "variant": "compact"
+    }
+  }
+}

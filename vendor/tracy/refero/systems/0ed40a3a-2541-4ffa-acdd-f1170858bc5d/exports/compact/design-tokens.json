@@ -1,0 +1,59 @@
+{
+  "color": {
+    "forest-canopy": {
+      "$value": "#203400",
+      "$type": "color",
+      "$description": "Forest Canopy — Primary page background, nav strip, footer canvas — the dominant surface that defines the entire brand atmosphere"
+    },
+    "vault-floor": {
+      "$value": "#1b2d00",
+      "$type": "color",
+      "$description": "Vault Floor — Card surfaces, recessed panels, elevated content blocks within the forest canvas"
+    },
+    "canopy-mid": {
+      "$value": "#335400",
+      "$type": "color",
+      "$description": "Canopy Mid — Elevated card variant, highlighted surface tier above the base canvas"
+    },
+    "lime-phosphor": {
+      "$value": "#bdff00",
+      "$type": "color",
+      "$description": "Lime Phosphor — Primary action buttons, active state indicators, illustrative highlight panels, brand-accent moments — the sole chromatic signal in the system"
+    },
+    "moss-border": {
+      "$value": "#586740",
+      "$type": "color",
+      "$description": "Moss Border — Hairline dividers, list separators, subtle table borders — barely-there green-on-green rules"
+    },
+    "fern": {
+      "$value": "#73a303",
+      "$type": "color",
+      "$description": "Fern — Secondary accent strokes, table emphasis borders, mid-saturation green used sparingly for variety within lime contexts"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Body text, heading text, icon strokes, ghost button borders, link colors, input fields — the only neutral light tone in the palette"
+    }
+  },
+  "font": {
+    "denim-ink": {
+      "$value": "Denim Ink",
+      "$type": "fontFamily",
+      "$description": "All interface text — from tiny labels to massive display headlines. The custom geometric face is the voice of the brand; weight 400 covers body and body-large, 600 for subheadings and emphasized inline, 700 reserved for the largest display moments. Extreme size jumps (40→64→86→94) create a poster-like hierarchy where the largest text dwarfs everything else on the page."
+    },
+    "courier-new": {
+      "$value": "Courier New",
+      "$type": "fontFamily",
+      "$description": "Tiny monospaced labels (8px) for micro-annotations, likely near icons or status indicators. Ultra-tight tracking (-0.14em) at this size reads as a decorative tech-glitch element rather than readable text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.assurestor.com",
+      "siteName": "Assurestor",
+      "extractedAt": "2026-06-03T20:27:34.472Z",
+      "variant": "compact"
+    }
+  }
+}

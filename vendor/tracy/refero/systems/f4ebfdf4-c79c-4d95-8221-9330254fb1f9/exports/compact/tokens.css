@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-hero-violet: #7622d7;
+  --color-lavender-wash: #f9f5ff;
+  --color-lilac-bloom: #f0e6fa;
+  --color-periwinkle-veil: #e6d5fe;
+  --color-ink-black: #000000;
+  --color-carbon: #121214;
+  --color-graphite: #27272a;
+  --color-iron: #5a5b5f;
+  --color-slate: #71717a;
+  --color-mist: #a9a9b2;
+  --color-fog: #e4e4e7;
+  --color-paper: #ffffff;
+  --color-highlight-gold: #ffefa7;
+  --color-lime-pulse: #94e022;
+  --color-aurora-violet: #9a58fc;
+  --gradient-aurora-violet: linear-gradient(90deg, #9a58fc, #70ddff, #e6d5fe, #bafc58, #9a58fc);
+
+  /* Typography — Font Families */
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-saiga: 'Saiga', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

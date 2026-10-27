@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-charcoal-plate: #212121;
+  --color-silver-hairline: #b0b0b0;
+
+  /* Typography — Font Families */
+  --font-haas-grotesk-ds-pro: 'Haas Grotesk DS Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-haas-grotesk-tx-pro: 'Haas Grotesk TX Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

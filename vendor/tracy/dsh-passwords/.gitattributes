@@ -1,0 +1,7 @@
+# dsh-passwords 行尾策略（只约束会因行尾损坏的文件）
+#  - .sh（bash/sh 脚本）必须 LF：CRLF 会污染 shebang，直接执行或 curl | bash 会挂
+#  - .mjs（Node 脚本）统一 LF：与 shell 脚本保持一致
+#  - .bat（Windows 批处理）必须 CRLF：cmd 解析纯 LF 批处理偶尔出问题
+*.sh   text eol=lf
+*.mjs  text eol=lf
+*.bat  text eol=crlf

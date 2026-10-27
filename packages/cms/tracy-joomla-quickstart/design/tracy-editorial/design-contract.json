@@ -1,0 +1,4763 @@
+{
+  "schemaVersion": 1,
+  "id": "tracy-apple-design",
+  "revision": 3,
+  "source": {
+    "reference": "http://127.0.0.1:8212/resources/style-guide",
+    "inspiration": "apple",
+    "version": "live-8212/apple.css-sha256:71ef98c6bff8874394b46c86cc16ef25dbe3c1dff57187d85ff48aa6303c5da9",
+    "capturedAt": "2026-09-12T00:00:00Z"
+  },
+  "theme": {
+    "selector": "html",
+    "attribute": "data-bs-theme",
+    "lightValue": "light",
+    "darkValue": "dark"
+  },
+  "variants": [
+    {
+      "id": "desktop-light",
+      "mode": "light",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "desktop-dark",
+      "mode": "dark",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "mobile-light",
+      "mode": "light",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "mobile-dark",
+      "mode": "dark",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "tokens": {
+    "desktop-light": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "desktop-dark": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "mobile-light": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "mobile-dark": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    }
+  },
+  "rules": [
+    {
+      "id": "body",
+      "category": "typography",
+      "selector": "body",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "fontWeight": "400",
+          "lineHeight": "24.99px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "fontWeight": "400",
+          "lineHeight": "24.99px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "fontWeight": "400",
+          "lineHeight": "24.99px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "fontWeight": "400",
+          "lineHeight": "24.99px"
+        }
+      }
+    },
+    {
+      "id": "page-colors",
+      "category": "color",
+      "selector": "body",
+      "styles": {
+        "desktop-light": {
+          "color": "#1d1d1f",
+          "backgroundColor": "#ffffff"
+        },
+        "desktop-dark": {
+          "color": "#f8f8f8",
+          "backgroundColor": "#000000"
+        },
+        "mobile-light": {
+          "color": "#1d1d1f",
+          "backgroundColor": "#ffffff"
+        },
+        "mobile-dark": {
+          "color": "#f8f8f8",
+          "backgroundColor": "#000000"
+        }
+      }
+    },
+    {
+      "id": "header-container",
+      "category": "layout",
+      "selector": "header .container",
+      "styles": {
+        "desktop-light": {
+          "paddingLeft": "22px",
+          "paddingRight": "22px",
+          "height": "80px"
+        },
+        "desktop-dark": {
+          "paddingLeft": "22px",
+          "paddingRight": "22px",
+          "height": "80px"
+        },
+        "mobile-light": {
+          "paddingLeft": "16px",
+          "paddingRight": "16px",
+          "height": "48px"
+        },
+        "mobile-dark": {
+          "paddingLeft": "16px",
+          "paddingRight": "16px",
+          "height": "48px"
+        }
+      }
+    },
+    {
+      "id": "theme-toggle",
+      "category": "component",
+      "selector": ".tracy-theme-toggle",
+      "styles": {
+        "desktop-light": {
+          "width": "44px",
+          "height": "44px",
+          "borderRadius": "50%"
+        },
+        "desktop-dark": {
+          "width": "44px",
+          "height": "44px",
+          "borderRadius": "50%"
+        },
+        "mobile-light": {
+          "width": "44px",
+          "height": "44px",
+          "borderRadius": "50%"
+        },
+        "mobile-dark": {
+          "width": "44px",
+          "height": "44px",
+          "borderRadius": "50%"
+        }
+      }
+    },
+    {
+      "id": "heading-family",
+      "category": "typography",
+      "selector": ".t4-content :is(h1,h2,h3,h4,h5,h6):not(header *,footer *,#t4-footnav *,.t4-offcanvas *)",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontWeight": "700"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontWeight": "700"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontWeight": "700"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontWeight": "700"
+        }
+      }
+    },
+    {
+      "id": "display",
+      "category": "typography",
+      "selector": ".type-stack h2,.tracy-native-landing h1,.tracy-hero h1,.acm-hero h1",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "80px",
+          "fontWeight": "700",
+          "lineHeight": "84px",
+          "letterSpacing": "-1.2px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "80px",
+          "fontWeight": "700",
+          "lineHeight": "84px",
+          "letterSpacing": "-1.2px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        }
+      }
+    },
+    {
+      "id": "page-title",
+      "category": "typography",
+      "selector": ".page-header h1,.page-subtitle,h1.tracy-chapter__statement,h1.tracy-pricing__heading,.tracy-view-head__title,.t4-masthead-title,.tracy-marketing__intro h1",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "56px",
+          "fontWeight": "700",
+          "lineHeight": "58.800000000000004px",
+          "letterSpacing": "-0.84px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "56px",
+          "fontWeight": "700",
+          "lineHeight": "58.800000000000004px",
+          "letterSpacing": "-0.84px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        }
+      }
+    },
+    {
+      "id": "section",
+      "category": "typography",
+      "selector": ".tracy-native-landing h2,h2.tracy-chapter__statement,.tracy-features-intro__title,.tracy-carousel__heading,.tracy-figures__heading,.tracy-team__heading,.tracy-contact__heading,.tracy-pricing__heading:not(h1),.tracy-cta__statement",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.400000000000002px",
+          "letterSpacing": "-0.42px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.400000000000002px",
+          "letterSpacing": "-0.42px"
+        }
+      }
+    },
+    {
+      "id": "card",
+      "category": "typography",
+      "selector": ".tracy-native-landing h3:not(.op-team h3),.item-title h2,.page-header h2,.blog-item h2,.tracy-features-intro__card-title,.cat-children h3,.categories-list h3,.tracy-cattree__title,.tracy-postcard__intro h2,h3.feed-link,.acm-contact-information .tracy-contact-info__heading",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.400000000000002px",
+          "letterSpacing": "-0.42px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.400000000000002px",
+          "letterSpacing": "-0.42px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "20px",
+          "fontWeight": "700",
+          "lineHeight": "21px",
+          "letterSpacing": "-0.3px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "20px",
+          "fontWeight": "700",
+          "lineHeight": "21px",
+          "letterSpacing": "-0.3px"
+        }
+      }
+    },
+    {
+      "id": "compact-card",
+      "category": "typography",
+      "selector": ".op-team h3,.acm-contact-information .tracy-contact-info__social-heading",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        }
+      }
+    },
+    {
+      "id": "guide-label",
+      "category": "typography",
+      "selector": ".tracy-fixture__title",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        }
+      }
+    },
+    {
+      "id": "lead",
+      "category": "typography",
+      "selector": ".type-stack .lede,.tracy-hero__lead,.tracy-chapter__support,.tracy-features-intro__lead,.tracy-native-landing .section-head p,.tracy-native-landing .op-lead,.tracy-marketing__intro>p:last-child",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "21px",
+          "lineHeight": "30.87px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "21px",
+          "lineHeight": "30.87px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "21px",
+          "lineHeight": "30.87px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "21px",
+          "lineHeight": "30.87px"
+        }
+      }
+    },
+    {
+      "id": "body-copy",
+      "category": "typography",
+      "selector": ".type-stack .body,.tracy-native-landing .op-team p:not(.op-role),.tracy-native-landing .pillars p,.tracy-native-landing .problem-grid p",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "lineHeight": "24.99px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "lineHeight": "24.99px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "lineHeight": "24.99px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "17px",
+          "lineHeight": "24.99px"
+        }
+      }
+    },
+    {
+      "id": "guide-spacing",
+      "category": "layout",
+      "selector": ".type-stack",
+      "styles": {
+        "desktop-light": {
+          "gap": "16px"
+        },
+        "desktop-dark": {
+          "gap": "16px"
+        },
+        "mobile-light": {
+          "gap": "16px"
+        },
+        "mobile-dark": {
+          "gap": "16px"
+        }
+      }
+    },
+    {
+      "id": "guide-swatch",
+      "category": "component",
+      "selector": ".swatch",
+      "styles": {
+        "desktop-light": {
+          "borderRadius": "12px"
+        },
+        "desktop-dark": {
+          "borderRadius": "12px"
+        },
+        "mobile-light": {
+          "borderRadius": "12px"
+        },
+        "mobile-dark": {
+          "borderRadius": "12px"
+        }
+      }
+    },
+    {
+      "id": "artifact-shell",
+      "category": "layout",
+      "selector": "body",
+      "styles": {
+        "desktop-light": {
+          "boxSizing": "border-box"
+        },
+        "desktop-dark": {
+          "boxSizing": "border-box"
+        },
+        "mobile-light": {
+          "boxSizing": "border-box"
+        },
+        "mobile-dark": {
+          "boxSizing": "border-box"
+        }
+      }
+    },
+    {
+      "id": "page-eyebrow",
+      "category": "typography",
+      "selector": ".tracy-marketing__eyebrow",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "17.64px",
+          "letterSpacing": "0.96px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "17.64px",
+          "letterSpacing": "0.96px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "17.64px",
+          "letterSpacing": "0.96px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "17.64px",
+          "letterSpacing": "0.96px"
+        }
+      }
+    },
+    {
+      "id": "page-caption",
+      "category": "typography",
+      "selector": ".tracy-marketing__toolbar>p,.tracy-marketing__note,.tracy-marketing__actions",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "20.58px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "20.58px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "20.58px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "20.58px"
+        }
+      }
+    },
+    {
+      "id": "marketing-muted",
+      "category": "color",
+      "selector": ".tracy-marketing__eyebrow,.tracy-marketing__note,.tracy-marketing__toolbar>p",
+      "styles": {
+        "desktop-light": {
+          "color": "#6e6e73"
+        },
+        "desktop-dark": {
+          "color": "#87878b"
+        },
+        "mobile-light": {
+          "color": "#6e6e73"
+        },
+        "mobile-dark": {
+          "color": "#87878b"
+        }
+      }
+    },
+    {
+      "id": "marketing-canvas",
+      "category": "layout",
+      "selector": ".tracy-marketing",
+      "styles": {
+        "desktop-light": {
+          "paddingTop": "48px",
+          "paddingLeft": "24px"
+        },
+        "desktop-dark": {
+          "paddingTop": "48px",
+          "paddingLeft": "24px"
+        },
+        "mobile-light": {
+          "paddingTop": "32px",
+          "paddingLeft": "12px"
+        },
+        "mobile-dark": {
+          "paddingTop": "32px",
+          "paddingLeft": "12px"
+        }
+      }
+    },
+    {
+      "id": "marketing-tabs",
+      "category": "layout",
+      "selector": ".tracy-marketing__tabs",
+      "styles": {
+        "desktop-light": {
+          "gap": "8px",
+          "paddingBottom": "20px"
+        },
+        "desktop-dark": {
+          "gap": "8px",
+          "paddingBottom": "20px"
+        },
+        "mobile-light": {
+          "gap": "4px",
+          "paddingBottom": "20px"
+        },
+        "mobile-dark": {
+          "gap": "4px",
+          "paddingBottom": "20px"
+        }
+      }
+    },
+    {
+      "id": "marketing-tab",
+      "category": "component",
+      "selector": ".tracy-marketing__tabs a",
+      "styles": {
+        "desktop-light": {
+          "borderRadius": "980px",
+          "fontSize": "17px"
+        },
+        "desktop-dark": {
+          "borderRadius": "980px",
+          "fontSize": "17px"
+        },
+        "mobile-light": {
+          "borderRadius": "980px",
+          "fontSize": "17px"
+        },
+        "mobile-dark": {
+          "borderRadius": "980px",
+          "fontSize": "17px"
+        }
+      }
+    },
+    {
+      "id": "marketing-preview",
+      "category": "component",
+      "selector": ".tracy-marketing__preview",
+      "styles": {
+        "desktop-light": {
+          "borderRadius": "18px"
+        },
+        "desktop-dark": {
+          "borderRadius": "18px"
+        },
+        "mobile-light": {
+          "borderRadius": "8px"
+        },
+        "mobile-dark": {
+          "borderRadius": "8px"
+        }
+      }
+    },
+    {
+      "id": "artifact-headline",
+      "category": "typography",
+      "selector": "h1",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.4px",
+          "letterSpacing": "-0.42px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.4px",
+          "letterSpacing": "-0.42px"
+        }
+      }
+    },
+    {
+      "id": "artifact-subhead",
+      "category": "typography",
+      "selector": "h2",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.4px",
+          "letterSpacing": "-0.42px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.4px",
+          "letterSpacing": "-0.42px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        }
+      }
+    },
+    {
+      "id": "artifact-item",
+      "category": "typography",
+      "selector": "h3",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        }
+      }
+    },
+    {
+      "id": "poster-focal",
+      "category": "typography",
+      "selector": "h1",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "46.9531px",
+          "fontWeight": "700",
+          "lineHeight": "49.3008px",
+          "letterSpacing": "-0.7043px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "46.9531px",
+          "fontWeight": "700",
+          "lineHeight": "49.3008px",
+          "letterSpacing": "-0.7043px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "27.1875px",
+          "fontWeight": "700",
+          "lineHeight": "28.5469px",
+          "letterSpacing": "-0.4078px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "27.1875px",
+          "fontWeight": "700",
+          "lineHeight": "28.5469px",
+          "letterSpacing": "-0.4078px"
+        }
+      }
+    },
+    {
+      "id": "deck-cover",
+      "category": "typography",
+      "selector": "h1",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "99.8438px",
+          "fontWeight": "700",
+          "lineHeight": "104.8359px",
+          "letterSpacing": "-1.4977px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "99.8438px",
+          "fontWeight": "700",
+          "lineHeight": "104.8359px",
+          "letterSpacing": "-1.4977px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "700",
+          "lineHeight": "42px",
+          "letterSpacing": "-0.6px"
+        }
+      }
+    },
+    {
+      "id": "deck-title",
+      "category": "typography",
+      "selector": "h2",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "49.9219px",
+          "fontWeight": "700",
+          "lineHeight": "52.418px",
+          "letterSpacing": "-0.7488px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "49.9219px",
+          "fontWeight": "700",
+          "lineHeight": "52.418px",
+          "letterSpacing": "-0.7488px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.4px",
+          "letterSpacing": "-0.42px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "700",
+          "lineHeight": "29.4px",
+          "letterSpacing": "-0.42px"
+        }
+      }
+    },
+    {
+      "id": "deck-item",
+      "category": "typography",
+      "selector": "h3",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "34.9453px",
+          "fontWeight": "700",
+          "lineHeight": "36.6926px",
+          "letterSpacing": "-0.5242px"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "34.9453px",
+          "fontWeight": "700",
+          "lineHeight": "36.6926px",
+          "letterSpacing": "-0.5242px"
+        },
+        "mobile-light": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "fontSize": "21px",
+          "fontWeight": "700",
+          "lineHeight": "22.05px",
+          "letterSpacing": "-0.315px"
+        }
+      }
+    }
+  ],
+  "coverage": [
+    {
+      "selector": ".t4-content :is(h1,h2,h3,h4,h5,h6):not(header *,footer *,#t4-footnav *,.t4-offcanvas *),html:not(.j6) :is(h1,h2,h3)",
+      "properties": ["fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing"]
+    },
+    {
+      "selector": ".type-stack .lede,.type-stack .body,.tracy-native-landing .section-head p",
+      "properties": ["fontFamily", "fontSize", "lineHeight"]
+    },
+    {
+      "selector": ".tracy-marketing__intro>p:last-child,.tracy-marketing__note,.tracy-marketing__toolbar>p",
+      "properties": ["fontFamily", "fontSize", "lineHeight"]
+    }
+  ],
+  "pages": [
+    {
+      "id": "/",
+      "url": "http://127.0.0.1:8212/",
+      "expectedUrl": "http://127.0.0.1:8212/",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "display",
+        "section",
+        "card"
+      ]
+    },
+    {
+      "id": "/product",
+      "url": "http://127.0.0.1:8212/product",
+      "expectedUrl": "http://127.0.0.1:8212/product",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services",
+      "url": "http://127.0.0.1:8212/services",
+      "expectedUrl": "http://127.0.0.1:8212/services",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/service-detail",
+      "url": "http://127.0.0.1:8212/services/service-detail",
+      "expectedUrl": "http://127.0.0.1:8212/services/service-detail",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/website-strategy",
+      "url": "http://127.0.0.1:8212/services/website-strategy",
+      "expectedUrl": "http://127.0.0.1:8212/services/website-strategy",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/brand-and-interface-design",
+      "url": "http://127.0.0.1:8212/services/brand-and-interface-design",
+      "expectedUrl": "http://127.0.0.1:8212/services/brand-and-interface-design",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/website-development",
+      "url": "http://127.0.0.1:8212/services/website-development",
+      "expectedUrl": "http://127.0.0.1:8212/services/website-development",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/content-and-photography",
+      "url": "http://127.0.0.1:8212/services/content-and-photography",
+      "expectedUrl": "http://127.0.0.1:8212/services/content-and-photography",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pricing",
+      "url": "http://127.0.0.1:8212/pricing",
+      "expectedUrl": "http://127.0.0.1:8212/pricing",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog",
+      "url": "http://127.0.0.1:8212/resources/blog",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/category-list",
+      "url": "http://127.0.0.1:8212/resources/category-list",
+      "expectedUrl": "http://127.0.0.1:8212/resources/category-list",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/archive",
+      "url": "http://127.0.0.1:8212/resources/archive",
+      "expectedUrl": "http://127.0.0.1:8212/resources/archive",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories",
+      "url": "http://127.0.0.1:8212/resources/all-categories",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-procurement",
+      "url": "http://127.0.0.1:8212/resources/mag-procurement",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-procurement",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-datacenter",
+      "url": "http://127.0.0.1:8212/resources/mag-datacenter",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-datacenter",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-world",
+      "url": "http://127.0.0.1:8212/resources/mag-world",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-world",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/style-guide",
+      "url": "http://127.0.0.1:8212/resources/style-guide",
+      "expectedUrl": "http://127.0.0.1:8212/resources/style-guide",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "display",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ]
+    },
+    {
+      "id": "/resources/typography",
+      "url": "http://127.0.0.1:8212/resources/typography",
+      "expectedUrl": "http://127.0.0.1:8212/resources/typography",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/colors",
+      "url": "http://127.0.0.1:8212/resources/colors",
+      "expectedUrl": "http://127.0.0.1:8212/resources/colors",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/spacing",
+      "url": "http://127.0.0.1:8212/resources/spacing",
+      "expectedUrl": "http://127.0.0.1:8212/resources/spacing",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/faq",
+      "url": "http://127.0.0.1:8212/resources/faq",
+      "expectedUrl": "http://127.0.0.1:8212/resources/faq",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/contact",
+      "url": "http://127.0.0.1:8212/resources/contact",
+      "expectedUrl": "http://127.0.0.1:8212/resources/contact",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/search",
+      "url": "http://127.0.0.1:8212/resources/search",
+      "expectedUrl": "http://127.0.0.1:8212/resources/search",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/tags",
+      "url": "http://127.0.0.1:8212/resources/tags",
+      "expectedUrl": "http://127.0.0.1:8212/resources/tags",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/sign-in",
+      "url": "http://127.0.0.1:8212/resources/sign-in",
+      "expectedUrl": "http://127.0.0.1:8212/resources/sign-in",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/home-2",
+      "url": "http://127.0.0.1:8212/resources/home-2",
+      "expectedUrl": "http://127.0.0.1:8212/resources/home-2",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/single-contact",
+      "url": "http://127.0.0.1:8212/resources/single-contact",
+      "expectedUrl": "http://127.0.0.1:8212/resources/single-contact",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/single-tag",
+      "url": "http://127.0.0.1:8212/resources/single-tag",
+      "expectedUrl": "http://127.0.0.1:8212/resources/single-tag",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/marketing-samples",
+      "url": "http://127.0.0.1:8212/resources/marketing-samples",
+      "expectedUrl": "http://127.0.0.1:8212/resources/marketing-samples",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch",
+        "page-eyebrow",
+        "page-caption",
+        "marketing-muted",
+        "marketing-canvas",
+        "marketing-tabs",
+        "marketing-tab",
+        "marketing-preview"
+      ],
+      "requiredRules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "page-title",
+        "lead",
+        "page-eyebrow",
+        "marketing-preview"
+      ]
+    },
+    {
+      "id": "/resources/home-variation",
+      "url": "http://127.0.0.1:8212/resources/home-variation",
+      "expectedUrl": "http://127.0.0.1:8212/resources/home-variation",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/home-onepage",
+      "url": "http://127.0.0.1:8212/resources/home-onepage",
+      "expectedUrl": "http://127.0.0.1:8212/resources/home-onepage",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/about",
+      "url": "http://127.0.0.1:8212/company/about",
+      "expectedUrl": "http://127.0.0.1:8212/company/about",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team",
+      "url": "http://127.0.0.1:8212/company/team",
+      "expectedUrl": "http://127.0.0.1:8212/company/team",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/careers",
+      "url": "http://127.0.0.1:8212/company/careers",
+      "expectedUrl": "http://127.0.0.1:8212/company/careers",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/contact-category",
+      "url": "http://127.0.0.1:8212/pages/contact-category",
+      "expectedUrl": "http://127.0.0.1:8212/pages/contact-category",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/featured-contacts",
+      "url": "http://127.0.0.1:8212/pages/featured-contacts",
+      "expectedUrl": "http://127.0.0.1:8212/pages/featured-contacts",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/news-feeds",
+      "url": "http://127.0.0.1:8212/pages/news-feeds",
+      "expectedUrl": "http://127.0.0.1:8212/pages/news-feeds",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/wrapper",
+      "url": "http://127.0.0.1:8212/pages/wrapper",
+      "expectedUrl": "http://127.0.0.1:8212/pages/wrapper",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors",
+      "url": "http://127.0.0.1:8212/pages/authors",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/account/create-account",
+      "url": "http://127.0.0.1:8212/account/create-account",
+      "expectedUrl": "http://127.0.0.1:8212/account/create-account",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/account/profile",
+      "url": "http://127.0.0.1:8212/account/profile",
+      "expectedUrl": "http://127.0.0.1:8212/resources/sign-in",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/account/reset-password",
+      "url": "http://127.0.0.1:8212/account/reset-password",
+      "expectedUrl": "http://127.0.0.1:8212/account/reset-password",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/account/forgot-username",
+      "url": "http://127.0.0.1:8212/account/forgot-username",
+      "expectedUrl": "http://127.0.0.1:8212/account/forgot-username",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "url": "http://127.0.0.1:8212/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "expectedUrl": "http://127.0.0.1:8212/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/43-22-sure-fire-headline-formulas-that-work",
+      "url": "http://127.0.0.1:8212/services/43-22-sure-fire-headline-formulas-that-work",
+      "expectedUrl": "http://127.0.0.1:8212/services/43-22-sure-fire-headline-formulas-that-work",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "url": "http://127.0.0.1:8212/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "url": "http://127.0.0.1:8212/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/36-how-to-write-like-hemingway",
+      "url": "http://127.0.0.1:8212/resources/blog/36-how-to-write-like-hemingway",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/36-how-to-write-like-hemingway",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/37-how-much-money-do-youtubers-make",
+      "url": "http://127.0.0.1:8212/resources/blog/37-how-much-money-do-youtubers-make",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/37-how-much-money-do-youtubers-make",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "url": "http://127.0.0.1:8212/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/tags/t4-framework",
+      "url": "http://127.0.0.1:8212/resources/tags/t4-framework",
+      "expectedUrl": "http://127.0.0.1:8212/resources/tags/t4-framework",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "url": "http://127.0.0.1:8212/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "url": "http://127.0.0.1:8212/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "url": "http://127.0.0.1:8212/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "url": "http://127.0.0.1:8212/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "expectedUrl": "http://127.0.0.1:8212/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "url": "http://127.0.0.1:8212/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "expectedUrl": "http://127.0.0.1:8212/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "url": "http://127.0.0.1:8212/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "expectedUrl": "http://127.0.0.1:8212/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "url": "http://127.0.0.1:8212/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "expectedUrl": "http://127.0.0.1:8212/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/17-magazine",
+      "url": "http://127.0.0.1:8212/resources/all-categories/17-magazine",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/17-magazine",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "url": "http://127.0.0.1:8212/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/demo",
+      "url": "http://127.0.0.1:8212/pages/authors/author/demo",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/demo",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "url": "http://127.0.0.1:8212/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "url": "http://127.0.0.1:8212/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "url": "http://127.0.0.1:8212/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "url": "http://127.0.0.1:8212/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "url": "http://127.0.0.1:8212/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "url": "http://127.0.0.1:8212/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "url": "http://127.0.0.1:8212/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "url": "http://127.0.0.1:8212/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "url": "http://127.0.0.1:8212/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "url": "http://127.0.0.1:8212/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "url": "http://127.0.0.1:8212/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/Lawrence",
+      "url": "http://127.0.0.1:8212/pages/authors/author/Lawrence",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/Lawrence",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "url": "http://127.0.0.1:8212/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "url": "http://127.0.0.1:8212/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "url": "http://127.0.0.1:8212/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "expectedUrl": "http://127.0.0.1:8212/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/DamonZ",
+      "url": "http://127.0.0.1:8212/pages/authors/author/DamonZ",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/DamonZ",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/tags/jooma-4-x",
+      "url": "http://127.0.0.1:8212/resources/tags/jooma-4-x",
+      "expectedUrl": "http://127.0.0.1:8212/resources/tags/jooma-4-x",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/tags/joomla-3-9",
+      "url": "http://127.0.0.1:8212/resources/tags/joomla-3-9",
+      "expectedUrl": "http://127.0.0.1:8212/resources/tags/joomla-3-9",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "url": "http://127.0.0.1:8212/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "expectedUrl": "http://127.0.0.1:8212/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "url": "http://127.0.0.1:8212/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "expectedUrl": "http://127.0.0.1:8212/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "url": "http://127.0.0.1:8212/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "expectedUrl": "http://127.0.0.1:8212/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "url": "http://127.0.0.1:8212/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "expectedUrl": "http://127.0.0.1:8212/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "url": "http://127.0.0.1:8212/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "expectedUrl": "http://127.0.0.1:8212/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "url": "http://127.0.0.1:8212/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "expectedUrl": "http://127.0.0.1:8212/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised",
+      "url": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised",
+      "expectedUrl": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/margarete69",
+      "url": "http://127.0.0.1:8212/pages/authors/author/margarete69",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/margarete69",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel",
+      "url": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/dion.parker",
+      "url": "http://127.0.0.1:8212/pages/authors/author/dion.parker",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/dion.parker",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/1-about-us",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/1-about-us",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/1-about-us",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=8",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=8",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=8",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=12",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=12",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=12",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=16",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=16",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=16",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=20",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=20",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=20",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=24",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=24",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=24",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=28",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=28",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=28",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=32",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=32",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=32",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=36",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=36",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=36",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=44",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=44",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=44",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/13-full-width",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/13-full-width",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/13-full-width",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "url": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/32-header-1",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/32-header-1",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/32-header-1",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/33-header-2",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/33-header-2",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/33-header-2",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/34-header-3",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/34-header-3",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/34-header-3",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/35-header-4",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/35-header-4",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/35-header-4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/demo?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/demo?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/demo?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/Lawrence?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/Lawrence?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/Lawrence?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/DamonZ?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/DamonZ?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/DamonZ?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "url": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "expectedUrl": "http://127.0.0.1:8212/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/margarete69?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/margarete69?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/margarete69?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/dion.parker?start=4",
+      "url": "http://127.0.0.1:8212/pages/authors/author/dion.parker?start=4",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/dion.parker?start=4",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/16-3-columns",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/16-3-columns",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/16-3-columns",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/17-layouts",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/17-layouts",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/17-layouts",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/31-home-dark",
+      "url": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/31-home-dark",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/2-uncategorised/31-home-dark",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/tracyagent?start=40",
+      "url": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=40",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/tracyagent?start=40",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/65-offline-page",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/65-offline-page",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/65-offline-page",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/demo?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/demo?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/demo?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/Lawrence?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/Lawrence?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/Lawrence?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/DamonZ?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/DamonZ?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/DamonZ?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/margarete69?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/margarete69?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/margarete69?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/deonte.daniel?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/pages/authors/author/dion.parker?start=0",
+      "url": "http://127.0.0.1:8212/pages/authors/author/dion.parker?start=0",
+      "expectedUrl": "http://127.0.0.1:8212/pages/authors/author/dion.parker?start=0",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/46-features-page",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/46-features-page",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/46-features-page",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/48-faqs",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/48-faqs",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/48-faqs",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "/resources/all-categories/14-pages/64-error-page",
+      "url": "http://127.0.0.1:8212/resources/all-categories/14-pages/64-error-page",
+      "expectedUrl": "http://127.0.0.1:8212/resources/all-categories/14-pages/64-error-page",
+      "identity": ".t4-wrapper",
+      "rules": [
+        "body",
+        "page-colors",
+        "header-container",
+        "theme-toggle",
+        "heading-family",
+        "display",
+        "page-title",
+        "section",
+        "card",
+        "compact-card",
+        "guide-label",
+        "lead",
+        "body-copy",
+        "guide-spacing",
+        "guide-swatch"
+      ],
+      "requiredRules": ["body", "page-colors", "header-container", "theme-toggle"]
+    },
+    {
+      "id": "marketing/newsletter",
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-{mode}.html",
+      "expectedUrl": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-{mode}.html",
+      "identity": "body",
+      "rules": [
+        "body",
+        "page-colors",
+        "artifact-shell",
+        "artifact-headline",
+        "artifact-subhead",
+        "artifact-item"
+      ],
+      "requiredRules": ["body", "page-colors", "artifact-shell", "artifact-headline"]
+    },
+    {
+      "id": "marketing/email",
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/email-{mode}.html",
+      "expectedUrl": "http://127.0.0.1:8212/media/tracy-marketing/email-{mode}.html",
+      "identity": "body",
+      "rules": [
+        "body",
+        "page-colors",
+        "artifact-shell",
+        "artifact-headline",
+        "artifact-subhead",
+        "artifact-item"
+      ],
+      "requiredRules": ["body", "page-colors", "artifact-shell", "artifact-headline"]
+    },
+    {
+      "id": "marketing/poster",
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-{mode}.html",
+      "expectedUrl": "http://127.0.0.1:8212/media/tracy-marketing/poster-{mode}.html",
+      "identity": "body",
+      "rules": ["body", "page-colors", "artifact-shell", "poster-focal"],
+      "requiredRules": ["body", "page-colors", "artifact-shell", "poster-focal"]
+    },
+    {
+      "id": "marketing/deck",
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-{mode}.html",
+      "expectedUrl": "http://127.0.0.1:8212/media/tracy-marketing/deck-{mode}.html",
+      "identity": "body",
+      "rules": ["body", "page-colors", "artifact-shell", "deck-cover", "deck-title", "deck-item"],
+      "requiredRules": ["body", "page-colors", "artifact-shell", "deck-cover"]
+    },
+    {
+      "id": "marketing/form",
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/form-{mode}.html",
+      "expectedUrl": "http://127.0.0.1:8212/media/tracy-marketing/form-{mode}.html",
+      "identity": "body",
+      "rules": [
+        "body",
+        "page-colors",
+        "artifact-shell",
+        "artifact-headline",
+        "artifact-subhead",
+        "artifact-item"
+      ],
+      "requiredRules": ["body", "page-colors", "artifact-shell", "artifact-headline"]
+    },
+    {
+      "id": "marketing/typography",
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-{mode}.html",
+      "expectedUrl": "http://127.0.0.1:8212/media/tracy-marketing/typography-{mode}.html",
+      "identity": "body",
+      "rules": [
+        "body",
+        "page-colors",
+        "artifact-shell",
+        "artifact-headline",
+        "artifact-subhead",
+        "artifact-item"
+      ],
+      "requiredRules": ["body", "page-colors", "artifact-shell", "artifact-headline"]
+    }
+  ],
+  "pilotPages": ["/resources/style-guide", "/"],
+  "exceptions": [],
+  "pending": []
+}

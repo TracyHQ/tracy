@@ -1,0 +1,260 @@
+{
+  "dos": [
+    "Use only Soehne (or Inter substitute) at the weights 300/400/500/600 — never introduce a second typeface family",
+    "Set display headings at 48–140px weight 300 with tracking between -0.021em and -0.043em; the whisper-weight is the signature",
+    "Use 5px radius for all controls (buttons, inputs) and 32px radius for all imagery — never mix or round to 8/12/16px",
+    "Alternate between #e5e7eb / #ffffff light bands and #1d1d1 / #031e25 dark bands for section rhythm — no mid-gray bridges",
+    "Reserve uppercase +0.15em–0.185em tracking for labels, meta, nav, and button text only — never for body or headings",
+    "Let full-bleed aerial marine photography carry the visual weight of hero and feature sections; do not compete with overlaid illustrations or graphics",
+    "Use #e5e7eb hairline 1px borders for all dividers and card edges; avoid colored borders"
+  ],
+  "donts": [
+    "Never introduce a chromatic accent color — the system is deliberately monochromatic plus dark teal-navy",
+    "Never use weight 700 or higher — the heaviest weight in the system is 600, and display text stays at 300",
+    "Never add drop shadows, glows, or blur effects to elements beyond the single detected hero shadow",
+    "Never use a border-radius between 6px and 31px — controls stay at 5px, images at 32px, nothing in between",
+    "Never place text directly on a photograph without a darkening overlay or contained card surface",
+    "Never use centered body copy longer than two lines; long-form content goes left-aligned in contained columns",
+    "Never use illustrations, icons-as-decoration, or 3D renders — photography and type are the only visual vocabulary",
+    "Never set body text above 18px or below 14px — the 14–18px range is the readable band"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#e5e7eb",
+      "name": "Bone",
+      "role": "Page canvas, card surfaces, hairline dividers between sections, ghost-button borders — the lightest structural gray carries borders, surface, and the dominant background in a near-white mode",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Charcoal",
+      "role": "Primary body and heading text, nav links, footer text, filled button text — near-black for maximum legibility without the harshness of pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, filled button backgrounds, image overlays, reverse text on dark sections — the brightest structural white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Headings on light canvas where maximum contrast is required, nav background accents — used sparingly only where absolute black is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#031e25",
+      "name": "Deep Current",
+      "role": "Dark feature section backgrounds (alternating bands), large image containers — the navy-black that recedes like deep ocean water",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1d1e",
+      "name": "Slate Depth",
+      "role": "Secondary dark section background, elevated panels over Deep Current — one step lighter to layer depth within dark bands",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Page model is full-bleed for all hero and feature imagery, with max-width 1200px contained for text and component grids. The hero is a 100vh full-bleed dark photograph with text overlaid in the bottom-left quadrant — no centered headline, no split layout. The first scroll section drops to a #ffffff band with a single centered statement (max-width ~720px), creating a moment of silence. The third section is a #031e25 dark band with a 3-column card grid of image-top / text-below cards. Section rhythm alternates: dark photo → white statement → dark feature grid → light detail blocks. Navigation is a minimal top bar with logo-left, links-center, hamburger-right, transparent background over the hero. Spacing is generous — 36–64px between sections, 18–20px between elements, 20px inside cards. No sidebar, no mega-menu, no sticky behavior visible in static frames.",
+  "imagery": "Photography is the primary visual medium and it is always marine and always aerial or high-angle. Shots are full-bleed or 32px-radius framed, never square, never with decoration. Color treatment is naturalistic — the deep teal-green of open water carries the only chromatic energy in the system. No illustration, no iconography beyond the smallest utility glyphs (hamburger, flag), no 3D renders, no abstract graphics. The product itself (boats) is always shown in motion from above, creating wake and speed lines. Screenshots of software interfaces appear as flat product evidence inside feature cards. Density is image-dominant in the hero and feature sections, text-dominant in transition and detail sections.",
+  "similar": [
+    {
+      "why": "Same full-bleed aerial photography of vehicles in natural environments, same monochrome-plus-single-accent restraint, same engineering-precise type voice",
+      "business": "Rivian"
+    },
+    {
+      "why": "Minimalist type-driven layout with oversized headings, alternating light/dark section bands, and product photography as the sole chromatic content",
+      "business": "Polestar"
+    },
+    {
+      "why": "Industrial white gallery aesthetic with skeletal ghost buttons, hairline borders, and near-zero shadow — product-forward without chrome",
+      "business": "Canoo"
+    },
+    {
+      "why": "Direct marine-industry peer using full-bleed ocean photography and minimal text overlays to let the product speak",
+      "business": "Brunswick (marine)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "2.25px",
+      "cards": "0px",
+      "images": "32px",
+      "inputs": "5px",
+      "buttons": "5px"
+    },
+    "elementGap": "18-20px",
+    "sectionGap": "36-64px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#e5e7eb",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Default page background for light sections — a slightly warm light gray that feels industrial rather than clinical"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Section backgrounds, card surfaces, button fills, image frames — the bright neutral that creates breathing room"
+    },
+    {
+      "hex": "#1d1d1",
+      "name": "Deep Section",
+      "level": 2,
+      "purpose": "Dark band background for feature sections and image-forward blocks"
+    },
+    {
+      "hex": "#031e25",
+      "name": "Ocean Floor",
+      "level": 3,
+      "purpose": "Deepest dark surface — the bottom of the elevation stack, used for hero overlays and full-bleed photographic sections"
+    }
+  ],
+  "northStar": "industrial white gallery above midnight water",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.185
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.44
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.44
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.44,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.012
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.016
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.16,
+      "letterSpacing": -0.021
+    },
+    {
+      "role": "display",
+      "size": 140,
+      "lineHeight": 1,
+      "letterSpacing": -0.043
+    }
+  ],
+  "components": [
+    {
+      "name": "Ghost Navigation Button",
+      "role": "Header nav links (SPORT, COAST, COMMERCIAL) and CTAs",
+      "description": "Transparent background, #0a0a0a text at 12–14px weight 500, letter-spacing +0.15em uppercase. No border, no fill. Underline or weight shift on hover. 45px horizontal padding inside nav."
+    },
+    {
+      "name": "Outlined CTA Button",
+      "role": "Primary action on hero (RECREATION, COMMERCIAL) and section CTAs",
+      "description": "Transparent or #ffffff fill, 1px #0a0a0a or #ffffff border, 5px radius, 20px vertical × 20px horizontal padding, 11–12px Soehne weight 500 uppercase at +0.15em tracking. Text color matches border color (reversible on dark sections)."
+    },
+    {
+      "name": "Filled Reversed Button",
+      "role": "Dark-section actions",
+      "description": "#ffffff fill on #031e25 background, #0a0a0a text, 5px radius, identical padding and tracking to outlined variant. Used sparingly — most actions remain outlined."
+    },
+    {
+      "name": "Hero Image Container",
+      "role": "Full-bleed opening section with aerial marine photography",
+      "description": "100vw width, 100vh height, image object-fit cover. Text overlay positioned bottom-left at ~40px from edges. The photograph is the only content — no decorative border, no radius."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Three-column grid in dark feature section (Advanced Software, Quiet power, etc.)",
+      "description": "#031e25 background, 32px radius image at top filling 100% width, 20px padding, white Soehne weight 400 16px body text, white Soehne weight 400 22px heading. No border, no shadow — image and text sit directly on the dark panel."
+    },
+    {
+      "name": "Centered Statement Block",
+      "role": "Section transition moments (e.g., 'Electric power built for everything the water demands.')",
+      "description": "Full-width #ffffff or #e5e7eb band, max-width 720px, centered text, 32–48px Soehne weight 300 heading with tight tracking, 48–64px vertical padding. No supporting copy, no decoration — the statement alone."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section separators and grid lines",
+      "description": "1px #e5e7eb line, full width or column-width. No gradient, no shadow — just the bone-gray rule."
+    },
+    {
+      "name": "Logo Mark",
+      "role": "Brand identity in nav",
+      "description": "Lowercase 'a' or 'arc' wordmark in Soehne weight 300 at 32–48px, #ffffff on dark hero, #0a0a0a on light sections. Tracking -0.021em. The logo IS the display type — no separate logomark."
+    },
+    {
+      "name": "Overlay Image Frame",
+      "role": "In-section photography (product crops, dashboard screenshots)",
+      "description": "32px corner radius, contained within max-width column, no border, no shadow. Photographs are the surface — no card chrome around them."
+    },
+    {
+      "name": "Footer Link Row",
+      "role": "Footer navigation",
+      "description": "12px Soehne weight 400–500, #0a0a0a or #ffffff depending on section, +0.15em uppercase tracking, 20px horizontal gap between items. No dividers, no bullets."
+    },
+    {
+      "name": "Hamburger Menu Trigger",
+      "role": "Mobile or secondary nav",
+      "description": "Two stacked 1px #0a0a0a horizontal lines, 18px wide, 2.25px radius. No background, no animation chrome — the most minimal possible affordance."
+    },
+    {
+      "name": "Meta Label",
+      "role": "Pre-headline tags (e.g., 'DESIGNED AND BUILT IN THE USA')",
+      "description": "11px Soehne weight 500 uppercase, +0.185em tracking, #0a0a0a. Prefixed with a small flag or icon mark. Sets the industrial-engineering tone before the headline."
+    },
+    {
+      "name": "Card Grid Container",
+      "role": "Three-column feature layout in dark section",
+      "description": "Equal-width columns with 18–20px column gap, 36px row gap. No visible grid lines — separation comes from spacing and the dark panel background."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All interface type: weight 300 reserved for display headings (48–140px) to create a quiet engineering voice, 400 for body and subheadings, 500 for nav and meta, 600 for button labels. Soehne's geometric neutrality with the extreme -0.043em tracking on display sizes is the signature — it makes headlines feel architectural rather than editorial. Substitute: Inter (closest free analog with matching weights and tracking) or Untitled Sans.",
+      "sizes": "11px, 12px, 14px, 16px, 18px, 22px, 32px, 48px, 140px",
+      "family": "Soehne",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.00, 1.30, 1.33, 1.44, 1.95",
+      "substitute": "Inter",
+      "letterSpacing": "-0.043em at 140px, -0.021em at 48px, -0.016em at 32px, -0.012em at 22px, -0.01em at 18px, normal at 16px and below, +0.15em–0.185em on uppercase labels at 11–12px",
+      "fontFeatureSettings": "\"ss01\" on, \"tnum\" on"
+    }
+  ],
+  "description": "Arc operates as an industrial white gallery suspended above dark ocean. The page alternates between full-bleed aerial marine photography and monastic white space dominated by type, with a single deep teal-navy band used as a rhythmic counterpoint between sections. Components are deliberately skeletal: thin ghost buttons with hairline borders, 5px corner radii on controls, almost no shadow, and generous negative space that lets the imagery and oversized type do the storytelling. The Soehne family carries a weight-300 display voice at 48–140px that reads as confident and engineering-precise, while body text sits at 16–18px weight 400 with tight tracking. Color is used as restraint — the system is 99% achromatic plus two near-black teals (#031e25, #1d1d1e) for image-driven sections, with no chromatic accent at all. Photography is always contained within generously rounded 32px frames against the flat canvas.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #0a0a0a\n- background: #ffffff (cards/buttons) / #e5e7eb (canvas) / #031e25 (dark bands)\n- border: #e5e7eb (hairline) / #0a0a0a (ghost button)\n- accent: none — monochromatic system\n- primary action: no distinct CTA color\n\n**3 Example Component Prompts**\n\n1. **Hero section with full-bleed photograph**: Full-viewport dark ocean aerial image as background, object-fit cover. Bottom-left overlay text: 11px Soehne weight 500 uppercase at +0.185em tracking in #ffffff with flag icon, reading 'DESIGNED AND BUILT IN THE USA'. Below it, 48px Soehne weight 300 in #ffffff at -0.021em tracking reading 'Electrifying the marine industry'. Two outlined ghost buttons below, each 5px radius, 1px #ffffff border, 11px Soehne weight 500 uppercase +0.15em, 20px padding, reading 'RECREATION' and 'COMMERCIAL'.\n\n2. **Centered statement block**: Full-width #ffffff band, 64px vertical padding. Centered text, max-width 720px: 32px Soehne weight 300 in #0a0a0a at -0.016em tracking, two lines: 'Electric power built for / everything the water demands.' No other elements — statement alone.\n\n3. **Feature card in dark section**: 32px-radius image filling 100% column width at top (aerial boat shot). Below, 20px padding, #031e25 background extending. Heading: 22px Soehne weight 400 in #ffffff at -0.012em tracking. Body: 16px Soehne weight 400 in #ffffff at default tracking, max 2 lines. No border, no shadow, no card chrome beyond the dark surface."
+    },
+    {
+      "title": "Animation Philosophy",
+      "content": "Arc is a static, almost motionless site. The motion profile reads as 'none' — no detected transitions, no hover animations documented in the tokens. The one detected shadow is a static lift, not an animated effect. If animation is needed, it should be: instant or near-instant (0–150ms), no bounce or ease-out curves, no scroll-triggered reveals, no parallax. The stillness is part of the engineering aesthetic — the boats move, the interface does not."
+    }
+  ],
+  "elevationPhilosophy": "Arc avoids shadow almost entirely. The single detected shadow (rgba(0,0,0,0.05) 0 10px 15px -3px) is an isolated instance on the hero — likely a subtle text-lift on the headline. Depth comes from tonal jumps between #e5e7eb, #ffffff, #1d1d1, and #031e25, not from cast shadows. This reinforces the flat, engineering-precise aesthetic: surfaces sit on top of each other through color contrast, not blur."
+}

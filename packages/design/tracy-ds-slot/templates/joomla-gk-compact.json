@@ -1,0 +1,306 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "minVersion": {
+    "quickstart/gavick-gk-compact/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/gavick-gk-compact/j6": "1.0.1"
+  },
+  "applies": "a GavickPro Gavern (gk_*) quickstart: the same site module as the JA families, in the earliest position its layout renders. Gavern has no runtime colour variables: its compiled stylesheets read the slot once tokenized (a JoomlArt re-release), and the slot's own selector rules do the rest",
+  "tokenScope": ":root",
+  "runtime": {},
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "displaySize": "h1.heading",
+    "heading": ["#gkBg h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "bodyFace": ["body"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "bg": "#161616",
+      "fg": "#828282",
+      "fg-2": "#ffffff",
+      "accent": "#c9504a",
+      "accent-hover": "#ad3933",
+      "meta": "#aaaaaa",
+      "border": "#202020",
+      "muted": "#4f4f4f",
+      "surface": "#161616"
+    },
+    {
+      "bg": "#161616",
+      "fg": "#828282",
+      "fg-2": "#ffffff",
+      "accent": "#c9504a",
+      "accent-on": "#ffffff",
+      "surface-warm": "#c9504a"
+    },
+    {
+      "fg": "#ffffff"
+    },
+    {
+      "border-soft": "#eeeeee",
+      "bg": "#202020",
+      "accent-hover": "#99332e"
+    },
+    {
+      "border-soft": "#dddddd",
+      "bg": "#111111",
+      "accent-hover": "#c04039"
+    },
+    {
+      "accent-hover": "#bd362f",
+      "border-soft": "#e5e5e5",
+      "bg": "#222222"
+    },
+    {
+      "bg": "#151515",
+      "accent-hover": "#c43c35"
+    }
+  ],
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here; everything reads --ds-c-*",
+  "classifyText": true,
+  "template": "joomla/gk-compact",
+  "release": "quickstart/gavick-gk-compact/j6@1.0.1",
+  "roles": {
+    "page": "#gkBg",
+    "display": "h1.heading",
+    "heading": "h2.heading",
+    "body": "p",
+    "button-primary": ".pricing-table a.btn.btn-primary",
+    "input": "input.required"
+  },
+  "discovered": {
+    "page": "outermost element painted the page colour (body is not)",
+    "display": "largest heading near the top: 72px",
+    "displayFace": "Barlow Condensed 400, tracking 0em",
+    "heading": "first section heading: 48px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(201, 80, 74)",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 44.8px"
+  },
+  "keepScopes": [".acm-hero"],
+  "keepGround": [".acm-hero"],
+  "keepColors": {
+    ".acm-hero": "#828282"
+  },
+  "keepDefaults": {
+    "--body-bg-color": "#161616"
+  },
+  "keepNote": "kept: the home hero (.acm-hero). Below 768 px its photo (.image-map, opacity 0.8) lies behind the heading, which the template paints white; a worn system painted its own text there (on the phone MotherDuck 2.79:1, Toggl Track 3.24:1, Apple 3.98:1; re-measure 12/10/2026). The band keeps the template's look at every width: its #161616 page ground (keepGround) and #828282 text (keepColors); the heading keeps the template's own white",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on quickstart/gavick-gk-compact/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-gk-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 94%–100% of the page follows; the 1.0.1 build itself (restored from its zip) measured the same: 12/12 (its default look: 0 computed differences against 1.0.0; the pixels differ only where the home page's <marquee> moves); Gavern's widths and section paddings stay the template's, and the pricing columns let their nowrap plan titles wrap (breakWords) so a wider system face does not push the page sideways. The page colours follow only from 1.0.1 (~/tracy-bench-work/RELEASE-DS-GAVICK.sh, not yet uploaded); minVersion keeps 1.0.0 sites out (TEMPLATE_NEEDS_UPDATE). Re-measured 12/10/2026 with the unified probe (fix/ds-reverify-d) on the published 1.0.1: the phone hero heading lies on its photo there and took each system's text (2.79:1 under MotherDuck); the hero is now kept whole (keepNote), the logo kind dropped (an image link: no text to read), the primary-button role read in the pricing table outside the kept hero; then 12/12, controls 0 differences, 94%–100% of the page follows (tasks/evidence/ds-reverify-d-2026-10-12/gk-compact)",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#161616",
+    "--fg": "#828282",
+    "--fg-2": "#ffffff",
+    "--accent": "#c9504a",
+    "--accent-hover": "#ad3933",
+    "--meta": "#aaaaaa",
+    "--border": "#202020",
+    "--muted": "#4f4f4f",
+    "--surface": "#161616",
+    "--font-display": "\"Barlow Condensed\", sans-serif",
+    "--font-body": "\"Barlow\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#c9504a"
+  },
+  "darkTokens": {},
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (64 line colours, 117 text colours seen)",
+  "contrast": {
+    "accent-text": "#gkPageContent a:not([class*=btn]):not(:has(img))",
+    "muted": "#gkBg p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#gkPageContent p, #gkPageContent li",
+    "heading": "#gkBg :is(h1, h2, h3, h4)",
+    "footer": "#gkFooter a, #gkFooterNavWrap a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "header",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 21 tried (byte 11211); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 38,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#202020",
+      "uses": 35,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#161616",
+      "distance": 17
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 27,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#111111",
+      "uses": 15,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#161616",
+      "distance": 9
+    },
+    {
+      "hex": "#99332e",
+      "uses": 15,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#ad3933",
+      "distance": 21
+    },
+    {
+      "hex": "#c04039",
+      "uses": 10,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#ad3933",
+      "distance": 21
+    },
+    {
+      "hex": "#bd362f",
+      "uses": 9,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#ad3933",
+      "distance": 17
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 7,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#222222",
+      "uses": 7,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#161616",
+      "distance": 21
+    },
+    {
+      "hex": "#151515",
+      "uses": 5,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#161616",
+      "distance": 2
+    },
+    {
+      "hex": "#c43c35",
+      "uses": 5,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#ad3933",
+      "distance": 23
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-20", "fg-50", "fg-75", "fg-80"],
+  "breakWords": [".pricing-table .col-body", ".pricing-table h3"],
+  "licence": "gk_compact 1.1.0 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2022 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/ja-products): re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
+  "bands": {
+    ".video-description": {
+      "ground": "#c9504a",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".acm-features.style-5": {
+      "ground": "#c9504a",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".acm-hero": {
+      "ground": "#161616",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".sub-heading": {
+          "color": "accent"
+        },
+        ".sub-heading::before": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; .acm-hero paints its own ground (#161616): the band repaints its root (13/10/2026) — drafted root:false with a path that named nothing, its hero stayed the template's under Stripe",
+  "sideRules": {
+    "light": {
+      "marquee h1": {
+        "-webkit-text-fill-color": "var(--ds-c-bg)",
+        "-webkit-text-stroke-color": "color-mix(in srgb, var(--ds-c-fg) 15%, transparent)"
+      },
+      "marquee h1 span": {
+        "-webkit-text-stroke-color": "var(--ds-c-accent)"
+      }
+    },
+    "dark": {
+      "marquee h1": {
+        "-webkit-text-fill-color": "var(--ds-c-bg)",
+        "-webkit-text-stroke-color": "color-mix(in srgb, var(--ds-c-fg) 15%, transparent)"
+      },
+      "marquee h1 span": {
+        "-webkit-text-stroke-color": "var(--ds-c-accent)"
+      }
+    }
+  },
+  "sideNote": "13/10/2026: the ghost line under the hero (marquee h1, 160px, nowrap) is outline text: filled with the page's own colour (#161616) and stroked white at 15%, its word 'delivering' stroked in the accent. Its fill and stroke are literals, so under a light system it turned solid black on the light page; it now fills with the system's page colour and strokes with its text at 15% (the accent for the word). The display role is the hero heading (h1.heading, 72px; 44.8px at 390), not the marquee: the marquee keeps its own size",
+  "templateVars": {
+    "--ds-c-surface-warm": "var(--ds-c-accent)"
+  },
+  "templateVarsNote": "15/10/2026 (look review v8): the 1.0.x stylesheet reads --ds-c-surface-warm in 41 rules, every one an accent fill (the primary button, active menu and page links, the social and pagination fills, the skill bars and their % badges, the section bars): baseTokens gave surface-warm the accent's own #c9504a, so the tokenizer took the red as surface-warm. Under a system that is a pale surface and the bars and badges went blank (white on white under Notion). The slot points it at the accent; a release made from corrected baseTokens no longer needs it. The about page’s stat cards (.acm-statistics.style-2) are a literal white with #333 words, the first one the accent with the page’s text: under Moxie the words read cream on white (1.16:1). The cards take the page’s surface and words, the first one the accent and its own words (followRules)",
+  "followRules": {
+    ".acm-statistics.style-2 .stats-item-intro": {
+      "background-color": "surface"
+    },
+    ".acm-statistics.style-2 .stats-item-intro .stats-item-subject": {
+      "color": "fg"
+    },
+    ".acm-statistics.style-2 .stats-asset:first-child .stats-item-intro": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".acm-statistics.style-2 .stats-asset:first-child .stats-item-intro :is(.stats-item-subject, .stats-item-meta)": {
+      "color": "accent-on"
+    },
+    ".acm-statistics.style-1 .stats-list span.stats-item-counter .progressbar h5": {
+      "color": "accent-on"
+    },
+    ":is(h1, h2, h3, h4, h5, h6)": {
+      "color": "fg-2"
+    }
+  },
+  "followNote": "13/10/2026: the 1.0.1 release reads its white headings and its grey body copy through the same role (var(--ds-c-fg, #fff) and var(--ds-c-fg, #828282)), so under a system both took the system's body grey and the headings lost their weight (Notion: section headings #6c6c6c, as grey as the text under them). Its headings, all white on the page, take the system's strongest ink (fg-2, textOrder) until a release tokenizes them as fg-2"
+}

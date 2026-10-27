@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1015-model-plan-section",
+  "kind": "feat",
+  "title": "Account model subscriptions share routing across surfaces and fall back to Tracy AI only with account consent before output",
+  "pr": 1015,
+  "area": "model-subscription/account-routing",
+  "cms": ["any"],
+  "needs": ["stand", "postgres", "test-account:a", "test-account:b"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Set REG_COOKIE_A and REG_COOKIE_B to cookie files for two designated test accounts on TRACY_STAND. Run the live routing API probe; it restores the original account preference with compare-and-set.",
+    "S2: Run the account broker, vault, route, model-context and host-adapter suites against a disposable PostgreSQL database in TEST_DATABASE_URL."
+  ],
+  "expect": [
+    "S1: anonymous reads are refused; both accounts can read only safe metadata; changing A does not change B; cross-origin and stale updates are refused; the saved preference is restored.",
+    "S2: fallback defaults on, disabled consent prevents fallback, account and site fences hold, failures retry at most once, partial output and cancellation cannot replay, and the normal Tracy runtime receives the default model and correct identity."
+  ],
+  "selectors": {
+    "doors": "/api/seat-plan/status, /api/seat-plan/routing",
+    "host": "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs"
+  },
+  "fence": "Real HTTP auth, isolation, CSRF and CAS on the named stand plus deterministic broker/runtime failure cases. Provider OAuth sign-in and model output are manual acceptance checks documented in tasks/evidence/seat-plan/local-stand.md.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/regression/scripts/account-subscriptions.mjs",
+      "apps/tracy-web/test/seat-plan-broker.test.mjs",
+      "apps/tracy-web/test/seat-plan-route.test.mjs",
+      "apps/tracy-web/test/seat-plan-vault.test.mjs",
+      "apps/tracy-web/test/seat-plan-model-context.test.mjs",
+      "packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs"
+    ],
+    "needs": ["stand", "postgres"],
+    "timeout_s": 180,
+    "tests": [
+      "live account routing is authenticated, isolated, versioned and restored after the probe",
+      "Tracy AI fallback defaults on, follows account consent and remains account fenced",
+      "partial output is never replayed onto a different subscription"
+    ]
+  }
+}

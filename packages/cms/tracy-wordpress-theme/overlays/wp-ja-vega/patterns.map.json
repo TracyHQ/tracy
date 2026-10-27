@@ -1,0 +1,660 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-vega pattern that renders it, field by field, for the seeder (skills/tracy-wordpress-theme/scripts/seed.mjs renderAcm, `${type}:${style}`). Field names are the Joomla ACM field names VERBATIM (templates-and-patterns.md), plus the fields tasks/ja-vega-wp7 repairs add with a G-number: the T4 module chrome every wrapped section prints above itself (G19: section-title, main-section, bottom-desc, title-btn, link-btn, btn-type), `section-bg` (G22), `<field>-accent` and `intro-text` (G21), `layout` (G24), `video-url` (G25), and the two theme types `articles-category:slider|grid` that stand for the home page's mod_articles_category modules (G20). metadata.name is <type>.<field>[.<n>]; the wrapper of a repeated row is <type>.item.<n> and carries no role; a repeated field drawn outside the wrapper (the hero's copy, which only its first row fills) repeats on its own and the empty copies are removed. A block is located by name, never by position. Motion is markup: every block the source animates carries the motion library's opt-in classes (tracy-motion-reveal, --fade-left/--fade-right/--flip-up, tracy-motion-delay-N) and each carousel tracy-motion-carousel; a repeated row takes its delay from its place in a .jv-stagger group (assets/css/wp-ja-vega.css), since a cloned wrapper cannot carry its own delay class.",
+  "schemaVersion": "tracy-base-patterns-map/v1",
+  "namespace": "wp-ja-vega",
+  "anchorConvention": "acm-<type>-<module id>",
+  "views": {
+    "$comment": "search is com_finder at /smart-search on the source; the theme answers that path with its search view (inc/extra.php wp_ja_vega_search_request), so the seeder adds no redirect for it. single is an article at its listing path on the source (/category-blog/<alias>); the theme answers a published page path followed by a post slug with that post (inc/extra.php wp_ja_vega_listing_post_request), so the route is probed for 200. The seeder still records a redirect rule for it (singleViewRules does not read servedAtPath); the rule is dormant, since the theme runs it only on a 404.",
+    "search": {
+      "servedAtPath": true
+    },
+    "single": {
+      "servedAtPath": true
+    }
+  },
+  "types": {
+    "hero:style-1": {
+      "pattern": "wp-ja-vega/section-hero",
+      "item": "hero.item.<n>",
+      "fields": {
+        "hero-bg": {
+          "block": "core/image",
+          "path": "hero.hero-bg.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "hero.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "button": {
+          "block": "core/button",
+          "path": "hero.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "button-2": {
+          "block": "core/button",
+          "path": "hero.button-2.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link-2": {
+          "block": "core/button",
+          "path": "hero.button-2.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "hero.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "avatar-title-accent": {
+          "block": "core/paragraph",
+          "path": "hero.avatar-title.<n>",
+          "attr": "content",
+          "repeat": true,
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "jv-accent"
+        },
+        "avatar-title": {
+          "block": "core/paragraph",
+          "path": "hero.avatar-title.<n>",
+          "attr": "content",
+          "repeat": true,
+          "part": 2
+        },
+        "image-decor": {
+          "block": "core/image",
+          "path": "hero.image-decor.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "section-title": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "main-section": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none"
+      }
+    },
+    "hero:style-2": {
+      "pattern": "wp-ja-vega/section-why",
+      "item": "hero.item.<n>",
+      "fields": {
+        "section-title": {
+          "block": "core/heading",
+          "path": "hero.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "hero.main-section",
+          "attr": "content"
+        },
+        "image": {
+          "block": "core/image",
+          "path": "hero.image",
+          "attr": "src"
+        },
+        "video-url": {
+          "block": "core/paragraph",
+          "path": "hero.video-url",
+          "attr": "href"
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "hero.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "hero.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "hero.bottom-desc",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "hero.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "hero.title-btn",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "id-video": "kept as video-url (G25), the address the play button opens",
+        "intro": "a Font Awesome class name (fas fa-sitemap …); the theme ships no icon font, so each figure is drawn without its icon (content-gaps G26)",
+        "btn-type": "primary on the one instance; the button is drawn primary"
+      }
+    },
+    "features-intro:style-1": {
+      "pattern": "wp-ja-vega/section-features",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "section-title": {
+          "block": "core/heading",
+          "path": "features-intro.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "features-intro.main-section",
+          "attr": "content"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.grid",
+          "attr": "className"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link-title": {
+          "block": "core/paragraph",
+          "path": "features-intro.link-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "features-intro.link-title.<n>",
+          "attr": "href",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "align": "left on every instance; the cards are drawn left-aligned",
+        "border": "the card border is the design, drawn by the stylesheet"
+      }
+    },
+    "features-intro:style-2": {
+      "pattern": "wp-ja-vega/section-feature-split",
+      "layouts": {
+        "right": "wp-ja-vega/section-feature-split",
+        "left": "wp-ja-vega/section-feature-split-left",
+        "*": "wp-ja-vega/section-feature-split"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "section-title": {
+          "block": "core/heading",
+          "path": "features-intro.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "features-intro.main-section",
+          "attr": "content"
+        },
+        "intro-img": {
+          "block": "core/image",
+          "path": "features-intro.intro-img",
+          "attr": "src"
+        },
+        "info-sub": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-sub",
+          "attr": "content"
+        },
+        "info-title": {
+          "block": "core/heading",
+          "path": "features-intro.info-title",
+          "attr": "content"
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.info-desc",
+          "attr": "content"
+        },
+        "button": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "href"
+        },
+        "intro": {
+          "block": "core/image",
+          "path": "features-intro.intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "intro-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.intro-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "primary on every instance",
+        "align-media": "picks the pattern through `layout` (G24)",
+        "columns": "2 on every instance; the list is drawn in two columns",
+        "list-type": "the layout follows the content: a point with no line under its title is drawn horizontally, as list-type horizontal draws #154"
+      }
+    },
+    "features-intro:style-4": {
+      "pattern": "wp-ja-vega/section-stats",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "logo": {
+          "block": "core/image",
+          "path": "features-intro.logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "section-title": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "main-section": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "slide-bg": "dark on the one instance; the bar is drawn dark"
+      }
+    },
+    "testimonials:style-1": {
+      "pattern": "wp-ja-vega/section-testimonials",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "section-title": {
+          "block": "core/heading",
+          "path": "testimonials.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "testimonials.main-section",
+          "attr": "content"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "testimonials.grid",
+          "attr": "className"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "testimonials.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "testimonials.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/heading",
+          "path": "testimonials.author-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-position": {
+          "block": "core/paragraph",
+          "path": "testimonials.author-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "statics-number": {
+          "block": "core/paragraph",
+          "path": "testimonials.statics-number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "statics-desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.statics-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "vote-brand": {
+          "block": "core/image",
+          "path": "testimonials.vote-brand",
+          "attr": "src"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "testimonials.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "testimonials.title-btn",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "bottom-desc": "empty on every instance",
+        "btn-type": "primary on the one instance that shows a button",
+        "align": "left on every instance"
+      }
+    },
+    "teams:style-1": {
+      "pattern": "wp-ja-vega/section-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "team-title": {
+          "block": "core/heading",
+          "path": "teams.team-title",
+          "attr": "content"
+        },
+        "team-desc": {
+          "block": "core/paragraph",
+          "path": "teams.team-desc",
+          "attr": "content"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.carousel",
+          "attr": "className"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "teams.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "href",
+          "repeat": true
+        },
+        "team-position": {
+          "block": "core/paragraph",
+          "path": "teams.team-position.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "section-title": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "main-section": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none"
+      }
+    },
+    "teams:style-2": {
+      "pattern": "wp-ja-vega/section-teams-grid",
+      "item": "teams.item.<n>",
+      "fields": {
+        "section-title": {
+          "block": "core/heading",
+          "path": "teams.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "teams.main-section",
+          "attr": "content"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.grid",
+          "attr": "className"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "teams.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "team-position": {
+          "block": "core/paragraph",
+          "path": "teams.team-position.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "team-desc": "empty on the one instance",
+        "link": "empty on every row; style-2 prints no link"
+      }
+    },
+    "clients:style-1": {
+      "pattern": "wp-ja-vega/section-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "short-desc-accent": {
+          "block": "core/paragraph",
+          "path": "clients.short-desc",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "jv-accent"
+        },
+        "short-desc": {
+          "block": "core/paragraph",
+          "path": "clients.short-desc",
+          "attr": "content",
+          "part": 2
+        },
+        "client-logo": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "client-name": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "section-title": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "main-section": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "client-link": "empty on every row"
+      }
+    },
+    "cta:style-1": {
+      "pattern": "wp-ja-vega/section-cta",
+      "item": "cta.item.<n>",
+      "fields": {
+        "cta-bg": {
+          "block": "core/image",
+          "path": "cta.cta-bg",
+          "attr": "src"
+        },
+        "cta-title": {
+          "block": "core/paragraph",
+          "path": "cta.cta-title",
+          "attr": "content"
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "cta.item.<n>",
+          "attr": "href",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "section-title": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "main-section": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "btn-light on every row; the button is drawn light"
+      }
+    },
+    "articles-category:slider": {
+      "pattern": "wp-ja-vega/section-stories",
+      "fields": {
+        "section-title": {
+          "block": "core/heading",
+          "path": "articles-category.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "bottom-desc": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "title-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "link-btn": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "btn-type": "module chrome (G19): the source prints none for this module, so the pattern draws none",
+        "category": "the Query Loop names it (wpJaVegaCategory \"portfolio\", inc/extra.php); the seeder fills no query",
+        "count": "the Query Loop shows 4, as the source module does",
+        "ordering": "the Query Loop orders by title, ascending, as a.title does"
+      }
+    },
+    "articles-category:grid": {
+      "pattern": "wp-ja-vega/section-blog",
+      "fields": {
+        "section-title": {
+          "block": "core/heading",
+          "path": "articles-category.section-title",
+          "attr": "content"
+        },
+        "main-section": {
+          "block": "core/paragraph",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "bottom-desc": "empty",
+        "btn-type": "primary",
+        "category": "the Query Loop names it (wpJaVegaCategory \"blogs\", inc/extra.php); the seeder fills no query",
+        "count": "the Query Loop shows 3, as the source module does",
+        "ordering": "the Query Loop orders by title, ascending, as a.title does"
+      }
+    }
+  }
+}

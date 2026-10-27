@@ -1,0 +1,516 @@
+/**
+ * Wire DTOs, operation inputs, and the {@link MikaApiResult} envelope shared across clients and handlers.
+ * DTOs are stable JSON shapes; public operation `*Input` types are derived from Zod schemas in
+ * {@link ./validation} and re-exported here for a single import surface.
+ */
+import type {
+  CartId,
+  CartStatus,
+  CheckoutProviderStatus,
+  CheckoutSessionId,
+  CurrencyCode,
+  EntitlementStatus,
+  FulfillmentKind,
+  ISODateTime,
+  MikaId,
+  OrderId,
+  OrderStatus,
+  PaymentStatus,
+  PriceId,
+  ProviderName,
+  PurchaseMode,
+  SellableId,
+  SubscriptionStatus,
+} from "../types/primitives";
+import type { MikaAgentProofKind, MikaAgentProofRef } from "./agent-types";
+
+/** Public operation input types — Zod schemas in {@link ./validation} are the source of truth. */
+export type {
+  AccountDeleteInput,
+  AccountExportDownloadInput,
+  AccountExportInput,
+  AccountExportStatusInput,
+  AccountPortalInput,
+  AddCartItemInput,
+  ApplyCouponInput,
+  CartQuoteInput,
+  CheckoutCancelInput,
+  CheckoutCustomerInput,
+  CheckoutPreviewInput,
+  CheckoutStatusInput,
+  DownloadIssueInput,
+  EmailResendInput,
+  EntitlementGrantInput,
+  EntitlementRevokeInput,
+  LicenseRevokeInput,
+  MagicLinkRequestInput,
+  MagicLinkVerifyInput,
+  MergeCartInput,
+  MergeWishlistInput,
+  MoveWishlistItemToCartInput,
+  OrderCancelInput,
+  OrderInvoiceInput,
+  OrderRefundInput,
+  ProviderHealthInput,
+  ProviderSyncInput,
+  ReleaseExpiredReservationsInput,
+  RemoveCartItemInput,
+  RemoveCouponInput,
+  RemoveWishlistItemInput,
+  SaveCartLineForLaterInput,
+  StartCheckoutInput,
+  StockAdjustInput,
+  SubscriptionActionInput,
+  UpdateCartItemInput,
+  WebhookReceiveInput,
+  WebhookReplayInput,
+  WishlistItemInput,
+} from "./validation";
+
+/** Stable machine-readable error codes returned in {@link MikaApiResult} failures. */
+export const MIKA_ERROR_CODES = [
+  "VALIDATION_FAILED",
+  "METHOD_NOT_ALLOWED",
+  "CSRF_INVALID",
+  "RATE_LIMITED",
+  "AUTH_REQUIRED",
+  "FORBIDDEN",
+  "NOT_FOUND",
+  "SELLABLE_NOT_FOUND",
+  "SELLABLE_INACTIVE",
+  "PRICE_INACTIVE",
+  "VARIANT_INVALID",
+  "OUT_OF_STOCK",
+  "MAX_PER_ORDER_EXCEEDED",
+  "CHECKOUT_EMPTY",
+  "CHECKOUT_EXPIRED",
+  "CHECKOUT_BINDING_MISMATCH",
+  "PAYMENT_PENDING",
+  "PROVIDER_UNSUPPORTED",
+  "PROVIDER_FAILED",
+  "TOKEN_INVALID",
+  "TOKEN_EXPIRED",
+  "TOKEN_USED",
+  "DOWNLOAD_REVOKED",
+  "WEBHOOK_INVALID",
+  "CONFLICT",
+  /** Idempotency key reused with a different request payload. */
+  "IDEMPOTENCY_MISMATCH",
+  /** Webhook accepted for deferred processing (not a hard failure). */
+  "WEBHOOK_DEFERRED",
+  /** Stock CAS undercut concurrent reservation or adjustment. */
+  "STOCK_CONFLICT",
+  "INTERNAL",
+  "NOT_IMPLEMENTED",
+] as const;
+
+/** Union of stable API failure codes enumerated in {@link MIKA_ERROR_CODES}. */
+export type MikaErrorCode = (typeof MIKA_ERROR_CODES)[number];
+
+/** Structured error payload on failed API responses. */
+export interface MikaError {
+  readonly code: MikaErrorCode;
+  readonly message: string;
+  readonly fieldErrors?: Record<string, string>;
+  readonly retryAfter?: number;
+  readonly correlationId?: string;
+}
+
+/** Discriminated success/failure envelope for every Mika API operation. */
+export type MikaApiResult<TData> =
+  | {
+      readonly ok: true;
+      readonly status: number;
+      readonly data: TData;
+      readonly warnings?: readonly string[];
+      readonly effects?: readonly MikaClientEffect[];
+    }
+  | {
+      readonly ok: false;
+      readonly status: number;
+      readonly error: MikaError;
+      readonly effects?: readonly MikaClientEffect[];
+    };
+
+/** Optional UI hints (redirect, reload, toast) attached to API responses. */
+export type MikaClientEffect =
+  | { readonly type: "redirect"; readonly url: string }
+  | { readonly type: "reload" }
+  | {
+      readonly type: "toast";
+      readonly tone: "success" | "warning" | "error";
+      readonly message: string;
+    };
+
+/** CMS content pointer used to resolve catalog sellables. */
+export interface ContentRefDTO {
+  readonly collection: string;
+  readonly id: string;
+  readonly locale?: string;
+}
+
+/** Minor-unit money amount with ISO currency code. */
+export interface MoneyDTO {
+  readonly amount: number;
+  readonly currency: CurrencyCode;
+}
+
+/** One selectable value within a variant dimension such as size or color. */
+export interface VariantOptionValueDTO {
+  readonly option: string;
+  readonly value: string;
+  readonly label?: string;
+}
+
+/** Labeled variant axis and its values for purchase UI pickers. */
+export interface VariantOptionGroupDTO {
+  readonly option: string;
+  readonly label: string;
+  readonly values: readonly VariantOptionValueDTO[];
+}
+
+/** Stock fulfillment state for a sellable at read time. */
+export type AvailabilityStatus =
+  | "available"
+  | "low_stock"
+  | "out_of_stock"
+  | "backorder"
+  | "untracked"
+  | "manual";
+
+/** Stock availability snapshot for a sellable at read time. */
+export interface AvailabilityDTO {
+  readonly sellableId: SellableId;
+  readonly status: AvailabilityStatus;
+  readonly availableQuantity?: number;
+  readonly maxPerOrder?: number;
+  readonly lowStock?: boolean;
+  readonly reservedByCurrentCheckout?: boolean;
+}
+
+/** Active sellable price with currency, billing mode, and fulfillment kind. */
+export interface PriceDTO {
+  readonly id: PriceId;
+  readonly sellableId: SellableId;
+  readonly amount: number;
+  readonly currency: CurrencyCode;
+  readonly mode: PurchaseMode;
+  readonly fulfillmentKind: FulfillmentKind;
+  readonly interval?: "month" | "year";
+  readonly intervalCount?: number;
+  readonly active: boolean;
+}
+
+/** Purchasable variant with prices and optional live availability. */
+export interface SellableDTO {
+  readonly id: SellableId;
+  readonly contentRef: ContentRefDTO;
+  readonly sku?: string;
+  readonly title: string;
+  readonly active: boolean;
+  readonly variantKey?: string;
+  readonly variantOptions: readonly VariantOptionValueDTO[];
+  readonly variantGroups?: readonly VariantOptionGroupDTO[];
+  readonly imageRef?: string;
+  readonly prices: readonly PriceDTO[];
+  readonly availability?: AvailabilityDTO;
+}
+
+/** Priced cart row with sellable snapshot, quantity, and live availability. */
+export interface CartLineDTO {
+  readonly id: MikaId;
+  readonly sellableId: SellableId;
+  readonly priceId?: PriceId;
+  readonly title: string;
+  readonly sku?: string;
+  readonly variantOptions: readonly VariantOptionValueDTO[];
+  readonly quantity: number;
+  readonly unitAmount: MoneyDTO;
+  readonly subtotal: MoneyDTO;
+  readonly total: MoneyDTO;
+  readonly availability?: AvailabilityDTO;
+}
+
+/** Session- or customer-bound cart with priced lines and checkout linkage. */
+export interface CartDTO {
+  readonly id: CartId;
+  readonly status: CartStatus;
+  readonly currency: CurrencyCode;
+  readonly items: readonly CartLineDTO[];
+  readonly coupon?: AppliedCouponDTO;
+  readonly subtotal: MoneyDTO;
+  readonly discount?: MoneyDTO;
+  readonly tax?: MoneyDTO;
+  readonly shipping?: MoneyDTO;
+  readonly total: MoneyDTO;
+  readonly checkoutSessionId?: CheckoutSessionId;
+  readonly errors?: readonly MikaError[];
+}
+
+/** Coupon metadata and discount applied to the cart total. */
+export interface AppliedCouponDTO {
+  readonly code?: string;
+  readonly label?: string;
+  readonly discount?: MoneyDTO;
+  readonly providerCouponId?: string;
+}
+
+/** Saved sellable snapshot with add time and current availability. */
+export interface WishlistItemDTO {
+  readonly id: MikaId;
+  readonly sellableId: SellableId;
+  readonly priceId?: PriceId;
+  readonly title: string;
+  readonly sku?: string;
+  readonly variantOptions: readonly VariantOptionValueDTO[];
+  readonly addedAt: ISODateTime;
+  readonly availability?: AvailabilityDTO;
+}
+
+/** Saved sellables not yet in the active cart. */
+export interface WishlistDTO {
+  readonly id: MikaId;
+  readonly items: readonly WishlistItemDTO[];
+}
+
+/**
+ * Lifecycle state of a provider-hosted checkout session: the persisted {@link CheckoutStatus}
+ * plus the transport-only `pending` (awaiting provider confirmation) and `binding_mismatch`
+ * (delegated-payment proof failed verification) states.
+ */
+export type CheckoutStatusDTO = CheckoutProviderStatus;
+
+/** Provider checkout session created from cart handoff. */
+export interface CheckoutSessionDTO {
+  readonly id: CheckoutSessionId;
+  readonly status: CheckoutStatusDTO;
+  readonly mode: PurchaseMode;
+  readonly provider: ProviderName;
+  readonly redirectUrl?: string;
+  readonly statusToken?: string;
+  readonly expiresAt?: ISODateTime;
+  readonly paymentPending?: boolean;
+  readonly orderId?: OrderId;
+  readonly errors?: readonly MikaError[];
+}
+
+/** Whether a quoted cart snapshot is still valid for checkout handoff. */
+export type CartQuoteStatusDTO = "valid" | "changed" | "expired" | "unavailable";
+
+/** Quote row with pricing snapshot, quantity, and validation warnings. */
+export interface CartQuoteLineDTO {
+  readonly lineId?: MikaId;
+  readonly sellableId: SellableId;
+  readonly priceId?: PriceId;
+  /** Host-neutral delivery classification; hosts still own the delivery workflow. */
+  readonly fulfillmentKind?: FulfillmentKind;
+  readonly title?: string;
+  readonly sku?: string;
+  readonly variantOptions?: readonly VariantOptionValueDTO[];
+  readonly quantity: number;
+  readonly unitAmount?: MoneyDTO;
+  readonly subtotal?: MoneyDTO;
+  readonly total?: MoneyDTO;
+  readonly availability?: AvailabilityDTO;
+  readonly warnings?: readonly string[];
+}
+
+/** Tax, discount, shipping, or fee line in a quote total breakdown. */
+export interface CartQuoteAdjustmentDTO {
+  readonly type: "discount" | "tax" | "shipping" | "fee";
+  readonly label?: string;
+  readonly code?: string;
+  readonly amount: MoneyDTO;
+}
+
+/** Priced cart snapshot with validation status before checkout. */
+export interface CartQuoteDTO {
+  readonly id?: MikaId;
+  readonly cartId?: CartId;
+  readonly status: CartQuoteStatusDTO;
+  readonly currency: CurrencyCode;
+  readonly items: readonly CartQuoteLineDTO[];
+  readonly subtotal: MoneyDTO;
+  readonly discount?: MoneyDTO;
+  readonly tax?: MoneyDTO;
+  readonly shipping?: MoneyDTO;
+  readonly total: MoneyDTO;
+  readonly adjustments?: readonly CartQuoteAdjustmentDTO[];
+  readonly coupon?: AppliedCouponDTO;
+  readonly expiresAt?: ISODateTime;
+  readonly inputHash?: string;
+  readonly checkoutIntentId?: MikaId;
+  readonly warnings?: readonly string[];
+  readonly errors?: readonly MikaError[];
+}
+
+/** Agent or buyer readiness gate before payment authorization. */
+export type CheckoutPreviewStatusDTO =
+  | "ready"
+  | "requires_confirmation"
+  | "requires_payment_authorization"
+  | "unavailable"
+  | "expired";
+
+/** Required agent proof kind and binding constraints for checkout preview. */
+export interface CheckoutPreviewProofRequirementDTO {
+  readonly kind: MikaAgentProofKind;
+  readonly required: boolean;
+  readonly reason?: string;
+  readonly inputHash?: string;
+  readonly expiresAt?: ISODateTime;
+}
+
+/** Pre-checkout totals and proof requirements before payment handoff. */
+export interface CheckoutPreviewDTO {
+  readonly id?: MikaId;
+  readonly quoteId?: MikaId;
+  readonly status: CheckoutPreviewStatusDTO;
+  readonly mode?: PurchaseMode;
+  readonly provider?: ProviderName;
+  readonly quote?: CartQuoteDTO;
+  readonly requiredProofs: readonly CheckoutPreviewProofRequirementDTO[];
+  readonly acceptedProofs?: readonly MikaAgentProofKind[];
+  readonly proofRefs?: readonly MikaAgentProofRef[];
+  readonly expiresAt?: ISODateTime;
+  readonly inputHash?: string;
+  readonly redirectUrl?: string;
+  readonly warnings?: readonly string[];
+  readonly errors?: readonly MikaError[];
+}
+
+/** Logged-in or checkout-linked buyer profile identifiers. */
+export interface CustomerDTO {
+  readonly id?: MikaId;
+  readonly userId?: string;
+  readonly email?: string;
+  readonly name?: string;
+}
+
+/** Compact order row for account history and order lists. */
+export interface OrderSummaryDTO {
+  readonly id: OrderId;
+  readonly orderNumber: string;
+  readonly status: OrderStatus;
+  readonly paymentStatus: PaymentStatus;
+  readonly total: MoneyDTO;
+  readonly createdAt: ISODateTime;
+  readonly invoiceHref?: string;
+}
+
+/** Recurring purchase with billing period end and self-service actions. */
+export interface SubscriptionDTO {
+  readonly id: MikaId;
+  readonly title: string;
+  readonly status: SubscriptionStatus;
+  readonly currentPeriodEnd?: ISODateTime;
+  readonly cancelAtPeriodEnd: boolean;
+  readonly providerActions?: readonly ("portal" | "cancel" | "renew" | "change")[];
+}
+
+/** Access grant from orders, subscriptions, or manual admin issuance. */
+export interface EntitlementDTO {
+  readonly key: string;
+  readonly status: EntitlementStatus;
+  readonly source: "order" | "subscription" | "manual";
+  readonly expiresAt?: ISODateTime;
+}
+
+/** Customer-facing downloadable asset with time-limited access href. */
+export interface DownloadDTO {
+  readonly id: MikaId;
+  readonly title: string;
+  readonly href: string;
+  readonly expiresAt?: ISODateTime;
+}
+
+/** Token resolution outcome with opaque fulfillment evidence and an optional host-resolved URL. */
+export interface DownloadResolutionDTO {
+  /** Storage-neutral evidence the host may map to a private asset; never a usable URL by itself. */
+  readonly downloadRef?: string;
+  readonly title?: string;
+  /** Short-lived asset URL only when the host has explicitly resolved one. */
+  readonly redirectUrl?: string;
+  readonly expiresAt?: ISODateTime;
+}
+
+/** Async personal data export job status and download link when ready. */
+export interface AccountExportDTO {
+  readonly id: MikaId;
+  readonly status: "queued" | "running" | "ready" | "expired" | "failed";
+  readonly requestedAt: ISODateTime;
+  readonly expiresAt: ISODateTime;
+  readonly downloadHref?: string;
+}
+
+/** Secure export download link resolved from export job and access token. */
+export interface AccountExportDownloadDTO {
+  readonly id: MikaId;
+  readonly href?: string;
+  readonly expiresAt?: ISODateTime;
+  readonly requiresConfirmation?: boolean;
+  readonly confirmMethod?: "POST";
+}
+
+/** Customer account summary with orders, subscriptions, and entitlements. */
+export interface AccountDTO {
+  readonly customer?: CustomerDTO;
+  readonly orders: readonly OrderSummaryDTO[];
+  readonly subscriptions: readonly SubscriptionDTO[];
+  readonly entitlements: readonly EntitlementDTO[];
+  readonly downloads: readonly DownloadDTO[];
+}
+
+/** Hosted invoice URL and expiry for an order. */
+export interface OrderInvoiceDTO {
+  readonly orderId: OrderId;
+  readonly href?: string;
+  readonly expiresAt?: ISODateTime;
+}
+
+/** Provider adapter capability flags surfaced in health checks. */
+export const MIKA_PROVIDER_CAPABILITIES = [
+  "hosted_checkout",
+  "delegated_payment",
+  "payments",
+  "subscriptions",
+  "subscription_renew",
+  "subscription_change",
+  "subscription_cancel",
+  "portal",
+  "invoice_url",
+  "refunds",
+  "coupons",
+  "product_sync",
+  "variant_sync",
+  "stock_sync",
+  "webhook_signatures",
+] as const;
+
+/** Union of payment-provider feature flags in {@link MIKA_PROVIDER_CAPABILITIES}. */
+export type MikaProviderCapability = (typeof MIKA_PROVIDER_CAPABILITIES)[number];
+
+/** Provider adapter liveness with declared capabilities and probe warnings. */
+export interface ProviderHealthDTO {
+  readonly provider: ProviderName;
+  readonly ok: boolean;
+  readonly capabilities: readonly MikaProviderCapability[];
+  readonly warnings?: readonly string[];
+  readonly checkedAt?: ISODateTime;
+}
+
+/** Ingest outcome for an incoming provider webhook event. */
+export interface WebhookReceiveDTO {
+  readonly id?: MikaId;
+  readonly status: "received" | "duplicate" | "failed";
+  readonly replayable?: boolean;
+}
+
+/** Async or immediate outcome envelope for admin mutations. */
+export interface AdminActionResultDTO {
+  readonly id?: MikaId;
+  readonly status: "queued" | "running" | "completed" | "failed" | "unsupported";
+  readonly message?: string;
+  readonly redirectUrl?: string;
+  readonly affected?: Record<string, number>;
+}

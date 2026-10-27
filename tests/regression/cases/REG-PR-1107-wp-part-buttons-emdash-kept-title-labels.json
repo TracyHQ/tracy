@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1107-wp-part-buttons-emdash-kept-title-labels",
+  "kind": "fix",
+  "title": "WordPress: a template part's button labels are written in the site's one language; EmDash: a menu item leading to a page that keeps the template's title is never relabelled",
+  "pr": 1107,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no site. From the TCH checkout run: node --test --test-name-pattern=\"buttons of its parts|title stays the template\" apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/brief-emdash.test.mjs",
+    "S2: brief-wordpress runs the WordPress brief engine against a fake Vietnamese site whose header part holds a named core/button 'Subscribe' (as JA Essence 1.0.10 ships it), and against an English site with the same button.",
+    "S3: brief-emdash runs seedMenus over the real Tracy Business seed, with no language and with vi-VN.",
+    "S4: Read the node:test summary lines (tests / pass / fail) and every failing test name."
+  ],
+  "expect": [
+    "S4: tests 3 or more, fail 0.",
+    "Vietnamese site: 'Subscribe' is among the labels put to the judge, the header part reads the judge's label and the block keeps metadata.name header.subscribe; English site: the button is not judged and keeps 'Subscribe'.",
+    "Tracy Business: topbar 'Investors' and footer 'Investor relations' (page /investors, title not rewritten) are not planned; 'Careers', 'About' and the footer services still are."
+  ],
+  "selectors": {
+    "seam": "judging / sweepWordPress in apps/tracy-web/src/sites/brief-engines/wordpress.js and wp-residue.js (buttonLabels, relabelButtons); seedMenus / leadsToKeptTitle in apps/tracy-web/src/sites/brief-engines/emdash-menus.js",
+    "door": "the menu-label judge (fake model in the tests); content.update of the template part; the EmDash menu planner input"
+  },
+  "evidence": "Dev (cowork.tracy.site), 10/10/2026, step 5.5 re-verify: g56-ess-wp-full (JA Essence WP 1.0.10, Vietnamese) printed the header button 'Subscribe' -> /contact on /, /contact/, /detail/layout-1/, /home/home-2/ (LANG-2); g56-biz-emd-full (Tracy Business EmDash 1.7.4, Vietnamese) labelled the topbar link to /investors 'Gia đình' while the page is titled 'Quan hệ nhà đầu tư' (PAGE-5).",
+  "fence": "Unit tests with a fake site and a fake model over the real Tracy Business seed; no live WordPress or EmDash site and no model ran. Dev sites made before the deploy keep their words.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=buttons of its parts|title stays the template",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-emdash.test.mjs"
+    ]
+  }
+}

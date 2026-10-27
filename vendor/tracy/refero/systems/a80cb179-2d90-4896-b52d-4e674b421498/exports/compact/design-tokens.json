@@ -1,0 +1,84 @@
+{
+  "color": {
+    "glide-teal": {
+      "$value": "#71eaee",
+      "$type": "color",
+      "$description": "Glide Teal — Primary action background, logo mark — the single chromatic accent in an otherwise black-and-white system, creating unmistakable focus on CTAs without warmth or aggression"
+    },
+    "teal-mist": {
+      "$value": "#e4feff",
+      "$type": "color",
+      "$description": "Teal Mist — Tinted wash for announcement pills, hover states on teal actions, and subtle accent backgrounds — extends the brand teal into ambient surface treatments"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, heading text, icon strokes, hairline borders, and the dominant structural element — borders outnumber fills, so black reads as architecture not just type"
+    },
+    "charcoal": {
+      "$value": "#303030",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text, link borders, list dividers — slightly softer than pure black for non-headline copy"
+    },
+    "graphite": {
+      "$value": "#5c5c5c",
+      "$type": "color",
+      "$description": "Graphite — Muted text, button borders, link borders — mid-gray for tertiary information and inactive outlines"
+    },
+    "obsidian": {
+      "$value": "#171715",
+      "$type": "color",
+      "$description": "Obsidian — Input field shadows and deep UI accents — near-black with a barely-perceptible warm undertone"
+    },
+    "slate": {
+      "$value": "#242421",
+      "$type": "color",
+      "$description": "Slate — Icon borders, link text on dark surfaces — another near-black tier for fine-grained contrast control"
+    },
+    "ash-gray": {
+      "$value": "#80807c",
+      "$type": "color",
+      "$description": "Ash Gray — Disabled or placeholder text — the lightest readable gray"
+    },
+    "fog": {
+      "$value": "#999991",
+      "$type": "color",
+      "$description": "Fog — Faint link borders, low-emphasis dividers"
+    },
+    "stone": {
+      "$value": "#d9dad3",
+      "$type": "color",
+      "$description": "Stone — Section background bands, muted surface alternation — warm-leaning neutral that prevents the page from feeling cold"
+    },
+    "bone": {
+      "$value": "#edede8",
+      "$type": "color",
+      "$description": "Bone — Card surfaces, input backgrounds, secondary surface level — sits between white and stone for subtle elevation"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas, card surfaces, button backgrounds — the base layer of the surface stack"
+    }
+  },
+  "font": {
+    "bootonfont-custom-likely-a-neo-grotesque-or-geometric-sans-similar-to-inter-shne-or-gt-america": {
+      "$value": "bootonFont (custom — likely a neo-grotesque or geometric sans similar to Inter, Söhne, or GT America)",
+      "$type": "fontFamily",
+      "$description": "Workhorse family for body, navigation, buttons, inputs, cards, and smaller headings. Weight 575 (a custom semi-bold) carries the brand's confident-but-not-heavy voice across UI. Weight 700 anchors the largest headlines; weight 400 handles everything else."
+    },
+    "affairsfont-custom-a-distinctive-display-face-possibly-a-high-contrast-serif-or-a-wide-neo-grotesque": {
+      "$value": "affairsFont (custom — a distinctive display face, possibly a high-contrast serif or a wide neo-grotesque)",
+      "$type": "fontFamily",
+      "$description": "Reserved exclusively for hero and display headings at 36px and 80px. Used at weight 400 only, which is anti-convention — most display faces use 700+ for impact. This whisper-weight creates drama through restraint and lets the display face carry personality that the workhorse cannot."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.glideapps.com",
+      "siteName": "Glideapps",
+      "extractedAt": "2026-06-03T16:33:17.286Z",
+      "variant": "compact"
+    }
+  }
+}

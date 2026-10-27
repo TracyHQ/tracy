@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-onyx-canvas: #333438;
+  --color-graphite-card: #202124;
+  --color-charcoal-border: #1f1f1f;
+  --color-muted-iron: #9e9e9e;
+  --color-fog: #45474c;
+  --color-snow: #e8e8e8;
+  --color-ice-blue: #99c3ff;
+  --color-crimson-spotlight: #980b0b;
+  --color-royal-blue: #113979;
+  --color-powder-wash: #d2e3fc;
+  --color-forest: #073618;
+  --color-mint: #a8dab5;
+  --color-butter: #ffedb8;
+  --color-sky-tint: #e8f0fe;
+  --color-violet-whisper: #c58af9;
+
+  /* Typography — Font Families */
+  --font-crimson-pro: 'Crimson Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-google-sans: 'Google Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

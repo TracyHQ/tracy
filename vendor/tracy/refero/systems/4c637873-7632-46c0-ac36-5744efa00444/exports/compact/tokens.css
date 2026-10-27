@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-warm-charcoal: #24170f;
+  --color-soft-black: #151515;
+  --color-pure-white: #ffffff;
+  --color-ash-gray: #ececec;
+  --color-signal-blue: #0073ff;
+
+  /* Typography — Font Families */
+  --font-gt-america-mono: 'GT America Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-nimbus-sans-extended: 'Nimbus Sans Extended', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtamericamonoregular: 'GTAmericaMonoRegular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

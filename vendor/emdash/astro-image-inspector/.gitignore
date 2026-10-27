@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+example/node_modules/
+example/.astro/

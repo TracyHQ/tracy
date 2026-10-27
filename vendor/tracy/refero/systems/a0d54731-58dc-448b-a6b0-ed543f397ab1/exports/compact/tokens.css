@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-aubergine-ink: #2a222b;
+  --color-deep-plum: #3e3040;
+  --color-violet-mist: #9454ab;
+  --color-lavender-whisper: #ddb7f0;
+  --color-cream-canvas: #faf9fb;
+  --color-pure-white: #ffffff;
+  --color-charcoal: #222222;
+  --color-slate-mid: #564b58;
+  --color-ash: #655d67;
+  --color-fog: #837a85;
+  --color-mist: #d4d1d5;
+  --color-parchment: #f5f3f6;
+
+  /* Typography — Font Families */
+  --font-tobias: 'Tobias', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-lausanne: 'TWK Lausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

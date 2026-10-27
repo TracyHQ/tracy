@@ -1,0 +1,171 @@
+---
+import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from 'emdash/ui'
+import { createPublicPageContext } from 'emdash/page'
+import { getSiteSettings, getTranslations } from 'emdash'
+import { DEFAULT_LOCALE, LOCALES, href, isLocale, splitPath, type Locale } from '@/lib/i18n'
+import { ALTERNATES_KEY, HEAD_POLICY_KEY, type Alternate, type HeadPolicy } from '@/lib/hreflang'
+import { publicOrigin } from '@/lib/public-origin'
+import { templateIconWanted } from '@/lib/brand'
+import { readDsSlot } from '@/lib/ds-slot'
+import { uiTag } from '@/lib/ui'
+import type { Chrome } from '@/lib/chrome'
+import Header from '@/components/site/Header.astro'
+import Footer from '@/components/site/Footer.astro'
+import { stampFor } from '@/lib/stamps'
+// The only place the storefront stylesheet is imported (Northgate DECISIONS D6).
+import '@/styles/global.css'
+
+interface Props {
+  chrome: Chrome
+  title: string
+  description?: string | null
+  image?: string | null
+  /** Site-relative path (no locale prefix) of the current page. */
+  currentPath: string
+  content?: { collection: string; id: string; slug?: string | null; toPath: (slug: string) => string } | null
+  type?: 'website' | 'article'
+  robots?: string
+  alternates?: Partial<Record<Locale, string>> | null
+  /** Onepage renders its own anchored header/footer instead of the site chrome. */
+  bare?: boolean
+}
+const {
+  chrome,
+  title,
+  description = null,
+  image = null,
+  currentPath,
+  content = null,
+  type = 'website',
+  robots,
+  alternates: alternateOverride = null,
+  bare = false
+} = Astro.props
+const settings = await getSiteSettings()
+const dsSlot = await readDsSlot()
+const siteTitle = settings.title ?? chrome.site.brand_name ?? 'Tracy Base'
+const fullTitle = currentPath === '/' ? `${siteTitle} — ${title}` : `${title} — ${siteTitle}`
+// Canonical policy: path + the query parameters that change WHICH page is shown (`page`, and only
+// when > 1). Filters, search terms and tracking parameters are views of the canonical page.
+const CANONICAL_QUERY = ['page']
+const canonicalParams = new URLSearchParams()
+for (const k of CANONICAL_QUERY) {
+  const v = Astro.url.searchParams.get(k)
+  if (v && v !== '1') canonicalParams.set(k, v)
+}
+const canonicalSuffix = canonicalParams.toString() ? `?${canonicalParams}` : ''
+const origin = publicOrigin(Astro.url)
+const canonical = `${origin}${Astro.url.pathname}${canonicalSuffix}`
+// hreflang policy: every indexable page names one URL per locale plus x-default.
+const noindex = /noindex/.test(robots ?? '')
+const alternates: Alternate[] = []
+if (!noindex) {
+  const paths: Partial<Record<Locale, string>> = {}
+  if (alternateOverride) Object.assign(paths, alternateOverride)
+  else if (content) {
+    paths[chrome.locale] = content.slug ? content.toPath(content.slug) : splitPath(Astro.url.pathname).path
+    const { translations } = await getTranslations(content.collection, content.id)
+    for (const t of translations)
+      if (t.status === 'published' && t.slug && isLocale(t.locale)) paths[t.locale] = content.toPath(t.slug)
+  } else {
+    const own = splitPath(Astro.url.pathname).path
+    for (const l of LOCALES) paths[l] = own
+  }
+  for (const l of LOCALES)
+    if (paths[l])
+      alternates.push({
+        hreflang: uiTag(l),
+        href: `${origin}${href(l, paths[l] as string)}${canonicalSuffix}`
+      })
+  const xDefault = alternates.find((a) => a.hreflang === uiTag(DEFAULT_LOCALE)) ?? alternates[0]
+  if (xDefault) alternates.push({ hreflang: 'x-default', href: xDefault.href })
+}
+const pageCtx = createPublicPageContext({
+  Astro,
+  kind: content ? 'content' : 'custom',
+  pageType: type,
+  title: fullTitle,
+  pageTitle: title,
+  description: description ?? undefined,
+  canonical,
+  image: image ? new URL(image, origin).href : undefined,
+  content: content ? { collection: content.collection, id: content.id, slug: content.slug } : undefined,
+  seo: { robots: robots ?? 'index, follow' },
+  siteName: siteTitle,
+  siteUrl: origin
+})
+;(pageCtx as unknown as Record<string, unknown>)[ALTERNATES_KEY] = alternates
+// What this layout decided for the head, kept so the plugin can restate it over the SEO panel (0.38+).
+const headPolicy: HeadPolicy = {
+  title: title ?? fullTitle,
+  description: description ?? undefined,
+  canonical,
+  image: image ? new URL(image, origin).href : undefined,
+  robots: robots ?? 'index, follow'
+}
+;(pageCtx as unknown as Record<string, unknown>)[HEAD_POLICY_KEY] = headPolicy
+// Provenance stamp of the skip link's label (`src/lib/stamps.ts`); empty on an ordinary request.
+const skipStamp = stampFor(Astro.request, 'site', chrome.site)('skip_label')
+---
+
+<!doctype html>
+<html lang={uiTag(chrome.locale)} data-ds-worn={dsSlot ? '' : undefined} data-theme={dsSlot?.mode === 'dark' ? 'dark' : undefined}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{fullTitle}</title>
+		{/* The template's icon only while the customer has none: EmDashHead prints theirs from settings.favicon. */}
+		{templateIconWanted(settings) && <link rel="icon" href="/favicon.svg" type="image/svg+xml" />}
+		<meta name="color-scheme" content="light dark" />
+		<EmDashHead page={pageCtx} />
+		{dsSlot?.fontsHref && <link rel="stylesheet" href={dsSlot.fontsHref} />}
+		{dsSlot && <style id="tracy-ds-slot" data-ds={dsSlot.id ?? ''} set:html={dsSlot.css} />}
+		<script is:inline>
+			// Resolve the theme before first paint: `?theme=` (a framing preview) wins for this load
+			// without being saved; then the visitor's own choice; then the OS, as the source does.
+			(function () {
+				try {
+					// A worn design system opens on its own side of light (the server set data-theme from the
+					// slot's mode line); the visitor's switch still works, the other side being derived from the
+					// system (TCH #1315). A choice made while a system is worn is stored under that system's own
+					// key ("tracy-base-theme@<id>", the id the slot's <style data-ds> names), and the OS
+					// preference does not flip a worn system, so taking the system off gives the template's own
+					// behaviour back (ADR 0031 decision 12, UNDO-1). The toggles in Header.astro and
+					// OnepageHeader.astro use the same key.
+					const ds = document.getElementById("tracy-ds-slot")?.getAttribute("data-ds");
+					const worn = document.documentElement.hasAttribute("data-ds-worn");
+					const key = worn && ds ? "tracy-base-theme@" + ds : "tracy-base-theme";
+					const asked = new URLSearchParams(location.search).get("theme");
+					let t = asked === "dark" || asked === "light" ? asked : localStorage.getItem(key);
+					if (!t && !worn && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) t = "dark";
+					if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+					else if (t === "light") document.documentElement.removeAttribute("data-theme");
+				} catch (e) {}
+			})();
+		</script>
+	</head>
+	<body>
+		<a id="top"></a>
+		<EmDashBodyStart page={pageCtx} />
+		<script is:inline>
+			// When framed (Tracy's Design inspiration preview), tell the parent how tall this page is.
+			(function () {
+				if (window.parent === window) return;
+				const send = function () {
+					try {
+						window.parent.postMessage({ type: "tracy:frame-height", height: document.documentElement.scrollHeight }, document.referrer ? new URL(document.referrer).origin : "*");
+					} catch (e) {}
+				};
+				new ResizeObserver(send).observe(document.documentElement);
+				addEventListener("load", send);
+			})();
+		</script>
+		<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-[var(--ds-btn-radius,var(--radius-lg))] focus:bg-bg focus:px-4 focus:py-2 focus:shadow-raised" {...skipStamp}>{chrome.site.skip_label}</a>
+		<div class="min-h-screen bg-bg">
+			{!bare && <Header chrome={chrome} currentPath={currentPath} />}
+			<slot />
+			{!bare && <Footer chrome={chrome} />}
+		</div>
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>

@@ -1,0 +1,48 @@
+---
+/**
+ * The ACM `clients` strip: a centred quiet eyebrow and the marks. A mark with an image shows the
+ * image in light and its name in dark (the source's site-repairs rule); a mark without one is a
+ * wordmark. A mark with a URL is a link, otherwise a span.
+ */
+import { mediaUrl } from '@/lib/media'
+import type { Stamp } from '@/lib/stamps'
+interface Props {
+  eyebrow?: string
+  marks: Array<{ image?: any; name?: string; url?: string }>
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; marks?: string }
+}
+const { eyebrow, marks, stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const row = stamp && fields?.marks ? stamp.block(fields.marks) : none
+const sub = (k: string) => (stamp && fields?.marks ? stamp(`${fields.marks}.${k}`) : none)
+const list = marks.filter((m) => m?.name || m?.image).map((m) => ({ ...m, src: mediaUrl(m.image) }))
+---
+
+<div class="wrap" data-block="clients">
+	{eyebrow && <p class="eyebrow eyebrow--acm mb-6 text-center text-fg-meta" {...at("eyebrow")}>{eyebrow}</p>}
+	<ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 sm:gap-x-8 sm:gap-y-5 lg:gap-x-12 lg:gap-y-6">
+		{list.map((m) => {
+			const Tag = m.url ? "a" : "span"
+			return (
+				<li {...row}>
+					<Tag href={m.url || undefined} class="group inline-flex items-center justify-center opacity-55 grayscale transition hover:opacity-100 hover:grayscale-0 dark:opacity-70">
+						{m.src ? (
+							<>
+								<img src={m.src} alt={m.name ?? ""} class="block h-6 w-auto max-w-full sm:h-8 dark:hidden" loading="lazy" decoding="async" {...sub("image")} />
+								<span class="hidden text-[17px] font-semibold leading-none tracking-[-0.015em] text-fg-2 sm:text-[21px] dark:inline" {...sub("name")}>{m.name}</span>
+							</>
+						) : (
+							<span class="text-[17px] font-semibold leading-none tracking-[-0.015em] text-fg-muted group-hover:text-fg sm:text-[21px]" {...sub("name")}>{m.name}</span>
+						)}
+					</Tag>
+				</li>
+			)
+		})}
+	</ul>
+</div>

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1029-site-publish-screen",
+  "kind": "feat",
+  "title": "My Sites: \"Publish\" opens a tab of its own and the Settings tab no longer carries Domains; the DNS record rows line up and the record name can be copied; the two texts about who can open a draft copy say what the router does",
+  "pr": 1029,
+  "area": "my-sites/publish-screen",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout: node --test --test-reporter=tap --test-timeout=120000 --test-force-exit packages/site/tracy-my-sites/test/more-settings.test.mjs packages/site/tracy-my-sites/test/site-publish-dom.test.mjs packages/core/tracy-core/test/site-publish-dom.test.mjs packages/core/tracy-core/test/ui-switches.test.mjs packages/fleet/tracy-fleet-operation/test/site-folder.test.mjs — record EXIT1, FAIL1, SKIP1, and the result line of the tests tagged TABOF, LINE, MENU, NOLINE, RUNNING, SETTINGS, SETTINGSDOMAIN, ARRIVAL, CHIP, OWNTELLING, SETTINGSREAD, DRAFT, OTHERSITE, RECORDS, SWITCH, POLICY, HINT, STAGING, NOADDRESS and AUTHORED in the case script.",
+    "S2: node --test --test-reporter=tap --test-timeout=120000 --test-force-exit packages/site/tracy-site-tabs/test/e2e/site-publish-screen.test.mjs packages/site/tracy-site-tabs/test/e2e/tab-loading.test.mjs (the suites launch Chromium themselves) — record EXIT2, FAIL2, SKIP2, and the result line of the tests tagged BROWSERMENU, OWNTAB, FOLLOW, RETARGET, CONNECT, ROWS, COPYNAME, FOCUS and LOADING.",
+    "S3: node --test --test-reporter=tap --test-timeout=120000 --test-force-exit apps/tracy-web/test/assistant.test.mjs — record EXIT3, FAIL3, and the result line of the test tagged ASSISTANT (the file's other tests need TEST_DATABASE_URL and skip without it; they are not this case's)."
+  ],
+  "expect": [
+    "EXIT1 === 0, FAIL1 === 0, SKIP1 === 0, and every S1 tag is 'ok': the menu has one line 'Publish' right after Settings for a draft, a live site, one being published and every role, and a press opens tracy:site-publish with only the site in its meta; Settings draws the site head and the CMS rows and no Domains section, no publishing or domain action; the chip of Settings follows a publish read by the Publish tab of the same site; each DNS record has a copy button after its name and after its value and none on its type; no switch names tracy:site-settings or tracy:site-publish and the hint of site-connect-domain names the Publish tab; AGENTS.md of an imported copy says anyone who has the address can open it and never 'Private copy'.",
+    "EXIT2 === 0, FAIL2 === 0, SKIP2 === 0, and every S2 tag is 'ok': in a real browser the Publish tab is a pane of its own titled 'Publish · <site>', follows a retarget to another site, shows Connect domain to the Owner only and hides it under the site-connect-domain switch; in every DNS record row the label and its value are the same size and within 0.5px of one baseline, one-line rows are one height, the copy buttons stand within 8px after the text on its first line, and at 360px nothing is drawn outside the record's box, in the light and the dark theme; no control of the tab draws a focus outline wider than 1px or a ring.",
+    "EXIT3 === 0, FAIL3 === 0, and ASSISTANT is 'ok': the links the assistant may offer for a site include its Publish tab."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1029-site-publish-screen.mjs",
+    "publishTab": "tracy:site-publish (root [data-site-screen='publish'])",
+    "settingsTab": "tracy:site-settings (root [data-site-screen='settings'], no [data-section='domains'])",
+    "menuLine": "My Sites row menu: [role='menuitem'] 'Publish', the line after 'Settings'",
+    "recordRows": ".tv-domain-record dt + dd ([data-record-type] | [data-record-name] + [data-copy] | [data-record-value] + [data-copy])",
+    "connectDomainButton": "[data-own-domain-entry] [data-action='connect-domain'] (hidden by the UI switch site-connect-domain)"
+  },
+  "evidence": "Before the change (origin/develop d4968c5b1): the menu line read 'Publish…' for a draft an Owner or Admin holds and 'Domains' otherwise and opened tracy:site-settings with meta.section 'domains'; in a real browser the record rows measured label 12px against value 13px, baselines 1px apart (4px in the Record value row of a one-line record), one-line rows of 17 / 18 / 24px, and Record name had no copy button; AGENTS.md of an imported copy, read through dsh's own instruction loader, said 'signed in with a seat on the site — anyone else gets a \"Private copy\" page'.",
+  "fence": "packages/core/tracy-core/src/site-tabs (SiteScreen, PublishView, SettingsView, SiteDomains DomainRecord), packages/site/tracy-site-tabs (tab registration, site-tabs-rules.css), packages/site/tracy-my-sites (more-actions, MoreMenu), the site-connect-domain hint in catalogue.json, apps/tracy-web/src/assistant/prompt.js, and the staging sentence of siteFolder.mjs. Not covered: the publish and own-domain doors and who may read a draft copy (REG-PR-948-site-publish-flow), a real dsh page around the tabs, and an AGENTS.md already written with the earlier sentence (the top-up leaves it as it is).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1029-site-publish-screen.mjs"],
+    "timeout_s": 1800
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "jet-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Jet Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text on dark canvas, inverted button surface, logo, nav foreground"
+    },
+    "ash": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary captions, subdued metadata"
+    },
+    "fog": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Fog — Hairline borders, low-emphasis dividers, card outlines on dark backgrounds"
+    },
+    "smoke": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Smoke — Light surface variant for inverted sections, light card fills against the dark page"
+    },
+    "highlighter-yellow": {
+      "$value": "#fff050",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "periwinkle-wash": {
+      "$value": "#dfe3ff",
+      "$type": "color",
+      "$description": "Periwinkle Wash — Soft accent surface, tinted card backgrounds, decorative wash behind phone mockups"
+    },
+    "iris-veil": {
+      "$value": "#bec8ff",
+      "$type": "color",
+      "$description": "Iris Veil — Decorative illustration tint, secondary surface accent, cool shadow for hero imagery"
+    }
+  },
+  "font": {
+    "nekst": {
+      "$value": "Nekst",
+      "$type": "fontFamily",
+      "$description": "Display and headline face — used exclusively at 40px and above for hero text, section headers, and oversized editorial statements. Single weight (400) with no bold variant, forcing the size itself to carry emphasis. Custom geometric grotesque with tight apertures that give headlines a sharp, print-poster quality on the black canvas."
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Interface and body workhorse — navigation, body copy, buttons, captions, form labels, and footers. Weight 200 handles light/secondary text, 400–500 for body, 700 for emphasized UI labels. Carries every functional element that isn't editorial display."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://promova.com",
+      "siteName": "Promova",
+      "extractedAt": "2026-06-03T18:53:59.710Z",
+      "variant": "compact"
+    }
+  }
+}

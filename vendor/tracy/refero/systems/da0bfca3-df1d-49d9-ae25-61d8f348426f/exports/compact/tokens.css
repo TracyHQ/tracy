@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-brand-blue: #145fe4;
+  --color-hero-fade: #145fe4;
+  --gradient-hero-fade: linear-gradient(180deg, #1d1d21 25%, #145fe4 70%, #99beff 100%);
+  --color-white: #ffffff;
+  --color-onyx: #000000;
+  --color-deep-space: #1d1d21;
+  --color-void: #242529;
+  --color-graphite: #303136;
+  --color-ash: #d7d7db;
+  --color-warning-tan: #cbb88;
+
+  /* Typography — Font Families */
+  --font-agilesans: 'agileSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

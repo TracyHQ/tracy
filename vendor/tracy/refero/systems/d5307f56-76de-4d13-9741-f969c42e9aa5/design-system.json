@@ -1,0 +1,345 @@
+{
+  "dos": [
+    "Use 9999px radius for all interactive elements — buttons, badges, tags, and nav pills",
+    "Use Figtree at weight 500 for all display text 32px and above with -0.02em tracking",
+    "Use Inter weight 300–400 for body copy; let low weight do the work against the dark canvas",
+    "Apply the aurora gradient pair (purple #625fff + pink #ff7dda) as large soft radial glows on dark hero sections only",
+    "Layer surface colors in order: #0b0c0 → #0e111b → #0d172b → #12244f to indicate elevation without shadows",
+    "Use #2862d7 or #305fbd for link text and code syntax, never for large fills",
+    "Apply 1px borders in #172540 or #151e32 to define cards — avoid using shadows alone for card definition"
+  ],
+  "donts": [
+    "Don't use bright fills on CTA buttons — white (#ffffff) is the primary action color, never a saturated blue or purple",
+    "Don't place radial gradient glows inside content cards or feature sections — reserve for hero and section backgrounds only",
+    "Don't use Inter for headlines 32px and above — Figtree owns the display register",
+    "Don't use #12244f as a page background — it's a highlight surface, not a canvas",
+    "Don't add color to secondary text — keep #abaebb and #c7c9d1 strictly achromatic",
+    "Don't use sharp corners (0px radius) on any interactive element — minimum is 2px for code, 8px for inputs, 12px for cards",
+    "Don't apply elevation shadows to ghost or outline buttons — they should sit flat against the canvas"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#0b0c0e",
+      "name": "Void",
+      "role": "Deepest surface layer, page base under hero — the floor of the dark stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0e111b",
+      "name": "Abyss",
+      "role": "Primary page canvas and most card backgrounds; cool blue-black anchors the whole system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0d172b",
+      "name": "Deep Sea",
+      "role": "Elevated card surface — sits one step above the canvas, used for feature and pricing cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#12244f",
+      "name": "Cobalt Panel",
+      "role": "Highlighted card surface for feature spotlights; a violet-tinted lift that breaks the monochrome rhythm without becoming decorative",
+      "group": "brand"
+    },
+    {
+      "hex": "#85a6e9",
+      "name": "Frosted Lilac",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#2862d7",
+      "name": "Signal Blue",
+      "role": "Vivid blue link and accent text — the sharp chromatic punctuation against all the dark navy",
+      "group": "brand"
+    },
+    {
+      "hex": "#305fbd",
+      "name": "Pulse Violet",
+      "role": "Mid-saturation violet-blue used in code-syntax blocks and gradient stops",
+      "group": "brand"
+    },
+    {
+      "hex": "#625fff",
+      "name": "Aurora Purple",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color",
+      "group": "accent",
+      "gradient": "radial-gradient(79.43% 95.88% at 38.94% -53.46%, rgba(98, 95, 255, 0.38) 0px, rgba(0, 0, 0, 0))"
+    },
+    {
+      "hex": "#ff7dda",
+      "name": "Plasma Pink",
+      "role": "Secondary hero glow bleeding from bottom-right — warm counterpoint to the aurora purple",
+      "group": "accent",
+      "gradient": "radial-gradient(27.99% 22.08% at 72.13% 103.46%, rgba(255, 125, 218, 0.33) 0px, rgba(0, 0, 0, 0))"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Quartz",
+      "role": "Primary text and primary CTA fill — high-contrast white against the dark canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#abaebb",
+      "name": "Ash",
+      "role": "Secondary text and subtle hairline borders — the most-used neutral after white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c7c9d1",
+      "name": "Mist",
+      "role": "Tertiary text, muted descriptions, helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3c3f44",
+      "name": "Slate",
+      "role": "Muted borders and disabled state outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#172540",
+      "name": "Obsidian Edge",
+      "role": "Primary border color on cards and buttons — defines component outlines against the dark canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#151e32",
+      "name": "Inkline",
+      "role": "Subtle card borders, slightly lighter than Obsidian Edge for inner nesting",
+      "group": "neutral"
+    },
+    {
+      "hex": "#24375a",
+      "name": "Sapphire Hairline",
+      "role": "Lighter violet-tinted border for dividers and section separators",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Centered max-width 1200px container, full-bleed dark canvas. The hero is a two-column split: left holds a two-line Figtree 64px headline with subtext and paired CTAs, right holds a multi-layered code-editor mockup that extends to the page edge. Below the hero, sections alternate between two patterns: (1) centered text blocks with a 36–48px heading and supporting copy, and (2) 2-column or 3-column card grids with 12–16px gaps. The integrations section is a full-width card with a 4×N logo grid flush right. The pricing section is a 3-column card grid with the middle column elevated via a violet-tinted fill. Section gaps are generous — 80px between major blocks — and the dark canvas flows seamlessly with no visible section dividers. Navigation is a single sticky transparent bar at the top with a left logo, centered nav links, and right-side social + CTA cluster.",
+  "imagery": "The visual language is code-first: the hero's right side is a layered composition of floating code-editor windows, file tabs, and data lists rendered as if captured from a dark IDE. These are not screenshots but illustrated product mockups with syntax highlighting in purple, blue, and muted pink against #0d172b panels. The hero is split — text-left, code-visual-right — and the code panels overlap with slight rotation and heavy black drop shadows (rgba(0,0,0,0.34) 0px 20px 35px) to create a stacked depth effect. The integration section uses isolated square tiles, each containing a single brand logo on a violet-tinted surface. No photography, no illustration, no 3D — the only 'decoration' is the two large radial gradient glows (purple and pink) bleeding from the hero corners, which double as atmospheric light source and brand identity.",
+  "similar": [
+    {
+      "why": "Same dark canvas with subtle aurora-style radial glows and code-first product mockups as the hero visual",
+      "business": "Replicate"
+    },
+    {
+      "why": "Near-identical aurora purple + pink radial gradient pattern on a near-black canvas with white pill CTAs",
+      "business": "Together AI"
+    },
+    {
+      "why": "Dark IDE-inspired aesthetic with deep blue-black surfaces, Inter body type, and a single chromatic accent reserved for gradients",
+      "business": "Cursor"
+    },
+    {
+      "why": "Same minimalist dark-mode language: heavy use of white text, cool-gray secondary type, and a tightly tracked geometric display font for headlines",
+      "business": "Perplexity"
+    },
+    {
+      "why": "Achromatic dark surfaces with selective violet-blue accent glows and white pill buttons as the primary action pattern",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "8px",
+      "tags": "9999px",
+      "cards": "12px",
+      "small": "2px",
+      "inputs": "8px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#0b0c0",
+      "name": "Void",
+      "level": 0,
+      "purpose": "Absolute base — hero backdrop and outer page background"
+    },
+    {
+      "hex": "#0e111b",
+      "name": "Abyss",
+      "level": 1,
+      "purpose": "Primary canvas for body sections, list backgrounds, and standard cards"
+    },
+    {
+      "hex": "#0d172b",
+      "name": "Deep Sea",
+      "level": 2,
+      "purpose": "Elevated cards — pricing tiers, feature blocks, signup prompts"
+    },
+    {
+      "hex": "#12244f",
+      "name": "Cobalt Panel",
+      "level": 3,
+      "purpose": "Spotlighted feature cards and integration tiles — the violet-tinted highlight tier"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.5) 0px 4px 30px 0px",
+      "element": "Elevated card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.34) 0px 20px 35px 0px, rgba(0, 0, 0, 0.25) 0px 4px 13px 0px",
+      "element": "Floating image / product visual"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.2) 0px 3px 16px 0px",
+      "element": "Link / inline CTA"
+    },
+    {
+      "style": "rgba(255, 255, 255, 0.35) 0px 2px 14px 0px",
+      "element": "Inner glow on dark surface"
+    }
+  ],
+  "northStar": "Aurora glow over a midnight terminal",
+  "typeScale": [
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.38,
+      "letterSpacing": -0.54
+    },
+    {
+      "role": "heading-sm",
+      "size": 28,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.56
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.72
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -1.28
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Highest-priority action — always white-filled pill on dark canvas",
+      "description": "Background #ffffff, text #050606, weight 500 Inter at 15–16px, border-radius 9999px, padding 10px 20px. No shadow, no border. 1px hairline border optional in #161618 for definition. Used for 'Get started', 'Get API key', 'Sign up for free trial', and 'Let's chat!'."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Secondary action — outlined, transparent on dark canvas",
+      "description": "Background transparent, border 1px #777a88, text #ffffff Inter 500 at 15px, border-radius 9999px, padding 10px 20px. Used for 'Sign up' and 'Explore Playground' paired beside a primary CTA."
+    },
+    {
+      "name": "Accent Gradient Button",
+      "role": "Sparingly-used attention action — the only chromatic CTA",
+      "description": "Background linear-gradient(90deg, #305fbd, #625fff), text #ffffff Inter 500 at 14–15px, border-radius 9999px, padding 10px 20px. Used for 'See all examples' — a once-per-page accent."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Standard content block in lists, integrations, and feature grids",
+      "description": "Background #0e111b or #0d172b, border 1px #151e32 or #172540, border-radius 12px, padding 24px. Card lifts with shadow rgba(0,0,0,0.5) 0px 4px 30px 0px when elevated. Contains a small icon, heading, and supporting text."
+    },
+    {
+      "name": "Highlighted Card",
+      "role": "Spotlight variant for featured content — breaks monochrome rhythm",
+      "description": "Background #12244f, border 1px #1e2b48, border-radius 12px, padding 32px. Reserved for the 'Plays well with others' integration block and pricing 'Most Popular' tier. The violet-tinted fill and brighter border create visual priority without a shadow."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Three-column pricing comparison — Starter, Professional, Enterprise",
+      "description": "Background #0d172b, border 1px #172540, border-radius 12px, padding 24px. Professional tier uses background #12244f and a 'Most Popular' pill badge in the top-right. Price rendered in Figtree 48–64px weight 500, feature list uses Inter 14–15px with 4–6px row gaps and checkmark icons."
+    },
+    {
+      "name": "Code Snippet Block",
+      "role": "Product demonstration — the signature component for a devtool site",
+      "description": "Background #0d172b with #151e32 border, border-radius 12px, padding 16px. Header row contains a filename (Inter 13px #abaebb) and copy icon. Code body uses IBM Plex Mono 13px. Syntax colors: keywords in #ff7dda, strings in #28b6ff, comments in #8798c1, plain text in #c7c9d1. Line numbers in #3c3f44."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Sticky top header — compact, transparent on dark canvas",
+      "description": "Background transparent or #0b0c0 at 90% opacity, height 56–64px. Logo on left (Figtree 500), nav links in Inter 14–15px weight 400, social and CTA buttons on right. No visible border, no shadow. Active nav state uses text #ffffff, inactive uses #abaebb."
+    },
+    {
+      "name": "Section Label",
+      "role": "Eyebrow text above section headings",
+      "description": "Inter 12–13px weight 500, uppercase, letter-spacing 0.02em, color #abaebb. Pairs with a 36–48px Figtree heading directly below."
+    },
+    {
+      "name": "Integration Tile",
+      "role": "Logo grid item inside the integrations section",
+      "description": "Individual tile 80–96px square, background #0d172b with gradient overlay, border-radius 12px. Contains a centered brand logo on a slightly violet-tinted surface. Tiles arranged in a 4×N grid with 8–12px gaps."
+    },
+    {
+      "name": "Badge / Tag",
+      "role": "Small pill labels for categories, status, or awards",
+      "description": "Background #12244f or #0d172b, text #85a6e9 or #ffffff, Inter 12px weight 500, border-radius 9999px, padding 4px 12px. Used for '#1 Product of the Day', '#1 Product of the Week', and 'Most Popular'."
+    },
+    {
+      "name": "Feature List Item",
+      "role": "Checklist row inside cards and pricing tiers",
+      "description": "Icon (checkmark or info) in #8798c1 at 16px, text in Inter 14–15px #c7c9d1, row gap 6–8px between items. Info icon triggers a tooltip or small info text."
+    },
+    {
+      "name": "Stat Highlight Row",
+      "role": "Compact fact strip — e.g., '300 free API calls', '10 API calls per minute'",
+      "description": "Icon + label in horizontal row, Inter 14–15px #c7c9d1, icon 16px in #8798c1. Items separated by 16–24px gaps, arranged in a 2-column grid inside signup prompt cards."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Workhorse UI font — body copy, nav, buttons, labels, and subheadings. Weight 300 is the secret weapon: low-weight body text against a dark canvas reads as precision, not weakness.",
+      "sizes": "9px, 12px, 13px, 14px, 15px, 16px, 18px, 20px, 28px, 40px",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.00, 1.13, 1.25, 1.38, 1.50",
+      "substitute": "system-ui, -apple-system, sans-serif",
+      "letterSpacing": "-0.0400em, -0.0270em, -0.0230em, -0.0200em, 0.0200em"
+    },
+    {
+      "role": "Code blocks and inline code only — reinforces the developer-tool identity. Sits at 13px with normal tracking.",
+      "sizes": "13px",
+      "family": "IBM Plex Mono",
+      "weight": "400",
+      "lineHeight": "1.00, 1.25, 1.50",
+      "substitute": "JetBrains Mono, Fira Code, monospace"
+    },
+    {
+      "role": "Display and heading font — geometric, slightly rounded sans used at 32–64px with -0.02em tracking. The rounded counters and tall x-height distinguish it from Inter's functional neutrality, giving headlines a warm confidence.",
+      "sizes": "32px, 36px, 44px, 48px, 64px",
+      "family": "Figtree",
+      "weight": "500, 600",
+      "lineHeight": "1.00, 1.13",
+      "substitute": "DM Sans, Outfit, or Plus Jakarta Sans",
+      "letterSpacing": "-0.0200em"
+    }
+  ],
+  "description": "AgentQL operates in a deep-space command-center register: near-black canvas, tightly letter-spaced Figtree display headlines, and a single pair of violet aurora glows (purple + pink radial gradients) that bleed from the hero into the background. The interface is overwhelmingly achromatic — white type, cool-gray secondary text, hairline borders in dark navy — with color reserved for two specific jobs: product surface highlights (a few cards lift into a slightly violet-tinted dark) and accent CTAs (a single blue→violet gradient pill). Components sit on flat dark surfaces with generous padding, rounded to 12px, and rely on heavy dark drop shadows rather than glow for depth. The overall feel is closer to a dark IDE theme than a marketing site — Inter carries the UI, IBM Plex Mono owns code blocks, and Figtree whispers the headlines at weight 500 with tight tracking.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #ffffff\n- text (secondary): #abaebb\n- text (tertiary): #c7c9d1\n- background (canvas): #0e111b\n- border: #172540\n- accent / link: #2862d7\n- primary action: #0d172b (filled action)\n\n**3-5 Example Component Prompts**\n\n1. **Hero section with headline + code visual**\n   Create a Primary Action Button: #0d172b background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Feature card grid (3-column)**\n   Card: background #0d172b, border 1px #172540, border-radius 12px, padding 24px. Icon: 24px in #2862d7 at top-left. Heading: Inter 20px weight 500, color #ffffff. Body text: Inter 16px weight 400, color #c7c9d1, line-height 1.5. Grid gap: 16px between cards, 80px between grid and next section.\n\n3. **Code snippet block**\n   Container: background #0d172b, border 1px #151e32, border-radius 12px, padding 16px. Header row: filename in Inter 13px #abaebb, copy icon in #8798c1. Code body: IBM Plex Mono 13px, line-height 1.5. Syntax colors — keywords #ff7dda, strings #28b6ff, comments #8798c1, plain text #c7c9d1. Floating drop shadow: rgba(0,0,0,0.34) 0px 20px 35px 0px, rgba(0,0,0,0.25) 0px 4px 13px 0px.\n\n4. **Pricing tier card**\n   Background #0d172b, border 1px #172540, border-radius 12px, padding 24px. Tier name: Inter 20px weight 500 #ffffff. Price: Figtree 48px weight 500 #ffffff with '/monthly' suffix in Inter 16px #abaebb. Feature list: checkmark icon 16px in #8798c1 + Inter 14px #c7c9d1, 8px row gap. CTA at bottom: white pill button (same as hero primary). Middle 'Most Popular' tier: background #12244f, border 1px #1e2b48, with a gradient badge pill at top-right.\n\n5. **Section with eyebrow + heading + supporting copy**\n   Eyebrow: Inter 12px weight 500 uppercase, letter-spacing 0.02em, color #abaebb. Heading: Figtree 48px weight 500, color #ffffff, letter-spacing -0.96px, line-height 1.13, centered. Body: Inter 18px weight 400, color #abaebb, centered, max-width 640px. Followed by a 3-column card grid below with 80px gap."
+    }
+  ]
+}

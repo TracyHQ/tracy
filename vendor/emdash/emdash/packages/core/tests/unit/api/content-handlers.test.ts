@@ -1,0 +1,1166 @@
+import { sql, type Kysely } from "kysely";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+
+import {
+	handleContentCreate,
+	handleContentDuplicate,
+	handleContentGet,
+	handleContentList,
+	handleContentPublish,
+	handleContentSchedule,
+	handleContentUnschedule,
+	handleContentUpdate,
+} from "../../../src/api/index.js";
+import { BylineRepository } from "../../../src/database/repositories/byline.js";
+import { RevisionRepository } from "../../../src/database/repositories/revision.js";
+import { UserRepository } from "../../../src/database/repositories/user.js";
+import type { Database } from "../../../src/database/types.js";
+import { setI18nConfig } from "../../../src/i18n/config.js";
+import { SchemaRegistry } from "../../../src/schema/registry.js";
+import {
+	setupTestDatabase,
+	setupTestDatabaseWithCollections,
+	teardownTestDatabase,
+} from "../../utils/test-db.js";
+
+describe("Content Handlers — auto-slug generation", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabaseWithCollections();
+		// Add a "name" field to the page collection so we can test name-based slug generation
+		const registry = new SchemaRegistry(db);
+		await registry.createField("page", { slug: "name", label: "Name", type: "string" });
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	describe("handleContentCreate", () => {
+		it("should auto-generate slug from title when slug is omitted", async () => {
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("hello-world");
+		});
+
+		it("should auto-generate slug from name when title is absent", async () => {
+			const result = await handleContentCreate(db, "page", {
+				data: { name: "My Widget" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("my-widget");
+		});
+
+		it("should prefer title over name for slug generation", async () => {
+			const result = await handleContentCreate(db, "page", {
+				data: { title: "From Title", name: "From Name" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("from-title");
+		});
+
+		it("should respect explicit slug and not auto-generate", async () => {
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+				slug: "custom-slug",
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("custom-slug");
+		});
+
+		it("should handle slug collisions by appending numeric suffix", async () => {
+			// Create first item with the slug
+			await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+			});
+
+			// Create second item with same title — should get unique slug
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("hello-world-1");
+		});
+
+		it("should preserve Unicode when resolving slug collisions", async () => {
+			await handleContentCreate(db, "post", {
+				data: { title: "你好世界" },
+			});
+
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "你好世界" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("你好世界-1");
+		});
+
+		it("should increment suffix on repeated collisions", async () => {
+			await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+			});
+			await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+			});
+
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "Hello World" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("hello-world-2");
+		});
+
+		it("should leave slug null when no title or name is present", async () => {
+			// `data: {}` — no title, no name. Slug source isn't there, so the
+			// auto-generator has nothing to work with.
+			const result = await handleContentCreate(db, "post", {
+				data: {},
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBeNull();
+		});
+
+		it("should leave slug null when title is empty string", async () => {
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBeNull();
+		});
+
+		it("should handle unicode titles", async () => {
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "Café Naïve" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("café-naïve");
+		});
+
+		it("should generate a stable fallback slug for an emoji-only title", async () => {
+			const first = await handleContentCreate(db, "post", {
+				data: { title: "😀😀" },
+			});
+			const second = await handleContentCreate(db, "post", {
+				data: { title: "😀😀" },
+			});
+
+			expect(first.success).toBe(true);
+			expect(first.data?.item.slug).toMatch(/^untitled-[a-z0-9]+$/);
+			expect(second.success).toBe(true);
+			expect(second.data?.item.slug).toBe(`${first.data?.item.slug}-1`);
+		});
+
+		it("should allow same auto-slug in different collections", async () => {
+			const postResult = await handleContentCreate(db, "post", {
+				data: { title: "About" },
+			});
+			const pageResult = await handleContentCreate(db, "page", {
+				data: { title: "About" },
+			});
+
+			expect(postResult.success).toBe(true);
+			expect(pageResult.success).toBe(true);
+			expect(postResult.data?.item.slug).toBe("about");
+			expect(pageResult.data?.item.slug).toBe("about");
+		});
+
+		it("preserves publishedAt and createdAt when provided — content migration use case", async () => {
+			const originalCreated = "2019-03-15T10:30:00.000Z";
+			const originalPublished = "2019-03-16T09:00:00.000Z";
+
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "Migrated Post" },
+				createdAt: originalCreated,
+				publishedAt: originalPublished,
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.createdAt).toBe(originalCreated);
+			expect(result.data?.item.publishedAt).toBe(originalPublished);
+		});
+
+		// When the caller omits `locale`, the handler must defer to the
+		// configured site defaultLocale rather than falling back to the
+		// repo's hard-coded "en". Otherwise non-English default-locale
+		// sites silently create entries in a locale the editor never chose.
+		it("defaults to configured i18n defaultLocale when body.locale is omitted", async () => {
+			setI18nConfig({ defaultLocale: "es", locales: ["es", "en"] });
+			try {
+				const result = await handleContentCreate(db, "post", {
+					data: { title: "Hola" },
+				});
+
+				expect(result.success).toBe(true);
+				expect(result.data?.item.locale).toBe("es");
+			} finally {
+				setI18nConfig(null);
+			}
+		});
+
+		it("falls back to 'en' when no i18n config is set", async () => {
+			setI18nConfig(null);
+			const result = await handleContentCreate(db, "post", {
+				data: { title: "No i18n" },
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.locale).toBe("en");
+		});
+	});
+
+	describe("direct status publishing", () => {
+		it("rejects creating slugless published content in a routable collection", async () => {
+			const result = await handleContentCreate(db, "post", {
+				data: {},
+				status: "published",
+			});
+
+			expect(result.success).toBe(false);
+			if (result.success) return;
+			expect(result.error.code).toBe("VALIDATION_ERROR");
+		});
+
+		it("allows creating slugless published content in a non-routable collection", async () => {
+			await new SchemaRegistry(db).updateCollection("post", { routable: false });
+
+			const result = await handleContentCreate(db, "post", {
+				data: {},
+				status: "published",
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBeNull();
+		});
+
+		it("rejects updating a slugless routable draft to published", async () => {
+			const created = await handleContentCreate(db, "post", { data: {} });
+			expect(created.success).toBe(true);
+
+			const result = await handleContentUpdate(db, "post", created.data!.item.id, {
+				status: "published",
+			});
+
+			expect(result.success).toBe(false);
+			if (result.success) return;
+			expect(result.error.code).toBe("VALIDATION_ERROR");
+		});
+
+		it("allows publishing a routable draft when the update supplies a slug", async () => {
+			const created = await handleContentCreate(db, "post", { data: {} });
+			expect(created.success).toBe(true);
+
+			const result = await handleContentUpdate(db, "post", created.data!.item.id, {
+				slug: "published-directly",
+				status: "published",
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.slug).toBe("published-directly");
+		});
+
+		it("allows updating a slugless non-routable draft to published", async () => {
+			await new SchemaRegistry(db).updateCollection("post", { routable: false });
+			const created = await handleContentCreate(db, "post", { data: {} });
+			expect(created.success).toBe(true);
+
+			const result = await handleContentUpdate(db, "post", created.data!.item.id, {
+				status: "published",
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data?.item.status).toBe("published");
+		});
+
+		it("rejects clearing the slug of published routable content", async () => {
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Published" },
+				slug: "published",
+				status: "published",
+			});
+			expect(created.success).toBe(true);
+
+			const result = await handleContentUpdate(db, "post", created.data!.item.id, {
+				slug: null,
+			});
+
+			expect(result.success).toBe(false);
+			if (result.success) return;
+			expect(result.error.code).toBe("VALIDATION_ERROR");
+			expect((await handleContentGet(db, "post", created.data!.item.id)).data?.item.slug).toBe(
+				"published",
+			);
+		});
+
+		it("allows clearing a slug when the resulting content is not routable and published", async () => {
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Published" },
+				slug: "published",
+				status: "published",
+			});
+			expect(created.success).toBe(true);
+
+			const draft = await handleContentUpdate(db, "post", created.data!.item.id, {
+				slug: null,
+				status: "draft",
+			});
+			expect(draft.success).toBe(true);
+			expect(draft.data?.item).toMatchObject({ slug: null, status: "draft" });
+
+			await new SchemaRegistry(db).updateCollection("post", { routable: false });
+			const republished = await handleContentUpdate(db, "post", created.data!.item.id, {
+				status: "published",
+			});
+			expect(republished.success).toBe(true);
+			expect(republished.data?.item).toMatchObject({ slug: null, status: "published" });
+		});
+	});
+
+	describe("scheduling", () => {
+		it("rejects scheduling slugless content in a routable collection", async () => {
+			const created = await handleContentCreate(db, "post", { data: {} });
+			expect(created.success).toBe(true);
+
+			const scheduled = await handleContentSchedule(
+				db,
+				"post",
+				created.data!.item.id,
+				new Date(Date.now() + 60_000).toISOString(),
+			);
+
+			expect(scheduled.success).toBe(false);
+			if (scheduled.success) return;
+			expect(scheduled.error.code).toBe("VALIDATION_ERROR");
+			expect(scheduled.error.message).toContain("slug");
+
+			const unchanged = await handleContentGet(db, "post", created.data!.item.id);
+			expect(unchanged.data?.item).toMatchObject({ status: "draft", scheduledAt: null });
+		});
+
+		it("allows scheduling slugless content in a non-routable collection", async () => {
+			await new SchemaRegistry(db).updateCollection("post", { routable: false });
+			const created = await handleContentCreate(db, "post", { data: {} });
+			expect(created.success).toBe(true);
+
+			const scheduled = await handleContentSchedule(
+				db,
+				"post",
+				created.data!.item.id,
+				new Date(Date.now() + 60_000).toISOString(),
+			);
+
+			expect(scheduled.success).toBe(true);
+			expect(scheduled.data?.item).toMatchObject({ slug: null, status: "scheduled" });
+			const scheduledView = await handleContentGet(db, "post", created.data!.item.id);
+			expect(scheduled.data?._rev).toBe(scheduledView.data?._rev);
+
+			const unscheduled = await handleContentUnschedule(db, "post", created.data!.item.id);
+			expect(unscheduled.success).toBe(true);
+			const unscheduledView = await handleContentGet(db, "post", created.data!.item.id);
+			expect(unscheduled.data?._rev).toBe(unscheduledView.data?._rev);
+		});
+	});
+
+	describe("handleContentDuplicate", () => {
+		it("should generate slug from duplicated title", async () => {
+			const original = await handleContentCreate(db, "post", {
+				data: { title: "My Post" },
+				slug: "my-post",
+			});
+
+			const result = await handleContentDuplicate(db, "post", original.data!.item.id);
+
+			expect(result.success).toBe(true);
+			// Title becomes "My Post (Copy)", slug should be generated from it
+			expect(result.data?.item.slug).toBe("my-post-copy");
+		});
+
+		it("should handle duplicate slug collision from copy", async () => {
+			const original = await handleContentCreate(db, "post", {
+				data: { title: "My Post" },
+				slug: "my-post",
+			});
+
+			// First duplicate
+			const dup1 = await handleContentDuplicate(db, "post", original.data!.item.id);
+			expect(dup1.data?.item.slug).toBe("my-post-copy");
+
+			// Second duplicate — "My Post (Copy)" title slugifies to "my-post-copy"
+			// which now collides with the first duplicate
+			const dup2 = await handleContentDuplicate(db, "post", original.data!.item.id);
+			expect(dup2.success).toBe(true);
+			expect(dup2.data?.item.slug).toBe("my-post-copy-1");
+		});
+	});
+
+	describe("handleContentUpdate — locale-aware slug resolution", () => {
+		it("updates the row matching body.locale when the identifier is a shared slug", async () => {
+			const slug = "shared-locale-update";
+			const en = await handleContentCreate(db, "post", {
+				data: { title: "English" },
+				slug,
+				locale: "en",
+			});
+			const fr = await handleContentCreate(db, "post", {
+				data: { title: "French" },
+				slug,
+				locale: "fr",
+			});
+			expect(en.success).toBe(true);
+			expect(fr.success).toBe(true);
+
+			const currentFr = await handleContentGet(db, "post", slug, "fr");
+			expect(currentFr.success).toBe(true);
+
+			const updated = await handleContentUpdate(db, "post", slug, {
+				data: { title: "French Updated" },
+				locale: "fr",
+				_rev: currentFr.data!._rev,
+			});
+
+			expect(updated.success).toBe(true);
+			expect(updated.data?.item.id).toBe(fr.data?.item.id);
+			expect(updated.data?.item.locale).toBe("fr");
+			expect(updated.data?.item.data.title).toBe("French Updated");
+
+			const fetchedEn = await handleContentGet(db, "post", slug, "en");
+			const fetchedFr = await handleContentGet(db, "post", slug, "fr");
+			expect(fetchedEn.data?.item.data.title).toBe("English");
+			expect(fetchedFr.data?.item.data.title).toBe("French Updated");
+		});
+	});
+
+	describe("byline hydration and assignment", () => {
+		it("should assign and return bylines on create", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const byline = await bylineRepo.create({
+				slug: "author-one",
+				displayName: "Author One",
+			});
+
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Bylined" },
+				bylines: [{ bylineId: byline.id, roleLabel: "Writer" }],
+			});
+
+			expect(created.success).toBe(true);
+			expect(created.data?.item.primaryBylineId).toBe(byline.id);
+			expect(created.data?.item.byline?.id).toBe(byline.id);
+			expect(created.data?.item.bylines).toHaveLength(1);
+			expect(created.data?.item.bylines?.[0]?.roleLabel).toBe("Writer");
+		});
+
+		it("should return bylines on get and list", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const first = await bylineRepo.create({ slug: "first", displayName: "First" });
+			const second = await bylineRepo.create({ slug: "second", displayName: "Second" });
+
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Order Test" },
+				bylines: [{ bylineId: second.id }, { bylineId: first.id }],
+			});
+			expect(created.success).toBe(true);
+			const contentId = created.data!.item.id;
+
+			const fetched = await handleContentGet(db, "post", contentId);
+			expect(fetched.success).toBe(true);
+			expect(fetched.data?.item.bylines?.[0]?.byline.id).toBe(second.id);
+			expect(fetched.data?.item.bylines?.[1]?.byline.id).toBe(first.id);
+			expect(fetched.data?.item.byline?.id).toBe(second.id);
+
+			const listed = await handleContentList(db, "post", {});
+			expect(listed.success).toBe(true);
+			const listedItem = listed.data?.items.find((item) => item.id === contentId);
+			expect(listedItem?.byline?.id).toBe(second.id);
+			expect(listedItem?.bylines?.[0]?.byline.id).toBe(second.id);
+		});
+
+		it("should update byline ordering on update", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const first = await bylineRepo.create({ slug: "first-upd", displayName: "First" });
+			const second = await bylineRepo.create({ slug: "second-upd", displayName: "Second" });
+
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Update Bylines" },
+				bylines: [{ bylineId: first.id }, { bylineId: second.id }],
+			});
+			expect(created.success).toBe(true);
+
+			const updated = await handleContentUpdate(db, "post", created.data!.item.id, {
+				bylines: [{ bylineId: second.id }, { bylineId: first.id }],
+			});
+
+			expect(updated.success).toBe(true);
+			expect(updated.data?.item.primaryBylineId).toBe(second.id);
+			expect(updated.data?.item.bylines?.[0]?.byline.id).toBe(second.id);
+			expect(updated.data?.item.bylines?.[1]?.byline.id).toBe(first.id);
+		});
+
+		it("should copy bylines when duplicating", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const byline = await bylineRepo.create({
+				slug: "dup-author",
+				displayName: "Dup Author",
+			});
+
+			const original = await handleContentCreate(db, "post", {
+				data: { title: "Duplicate With Bylines" },
+				bylines: [{ bylineId: byline.id }],
+			});
+			expect(original.success).toBe(true);
+
+			const duplicated = await handleContentDuplicate(db, "post", original.data!.item.id);
+			expect(duplicated.success).toBe(true);
+			expect(duplicated.data?.item.byline?.id).toBe(byline.id);
+			expect(duplicated.data?.item.bylines).toHaveLength(1);
+		});
+	});
+
+	describe("byline i18n (migration 040)", () => {
+		it("sets primaryBylineId to the credited byline's translation_group, not the wire row id", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const anchor = await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jane Doe",
+				locale: "en",
+			});
+			const fr = await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jeanne",
+				locale: "fr",
+				translationOf: anchor.id,
+			});
+
+			// Editor credits the fr row on a fr entry. The wire bylineId is
+			// fr.id but the server should store the translation_group (which
+			// equals anchor.id for the anchor sibling). The in-memory
+			// `primaryBylineId` on the response must match what's now in the
+			// DB column.
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				bylines: [{ bylineId: fr.id }],
+			});
+
+			expect(created.success).toBe(true);
+			expect(created.data?.item.primaryBylineId).toBe(anchor.id);
+			expect(created.data?.item.primaryBylineId).toBe(anchor.translationGroup);
+			// fr post hydrates with the fr sibling.
+			expect(created.data?.item.byline?.id).toBe(fr.id);
+			expect(created.data?.item.byline?.locale).toBe("fr");
+		});
+
+		it("hydrates the locale-matching sibling on a translated entry", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const anchor = await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jane Doe",
+				locale: "en",
+			});
+			await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jeanne",
+				locale: "fr",
+				translationOf: anchor.id,
+			});
+
+			// Credit using the anchor (en) wire id on an EN entry, then
+			// translate the entry. The fr-locale entry should hydrate the fr
+			// byline sibling, not the en one.
+			const enEntry = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				bylines: [{ bylineId: anchor.id }],
+			});
+			expect(enEntry.success).toBe(true);
+			expect(enEntry.data?.item.byline?.locale).toBe("en");
+
+			const frEntry = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				translationOf: enEntry.data!.item.id,
+			});
+			expect(frEntry.success).toBe(true);
+			expect(frEntry.data?.item.byline?.displayName).toBe("Jeanne");
+			expect(frEntry.data?.item.byline?.locale).toBe("fr");
+		});
+
+		it("hydrates strict per locale — credit absent when no sibling exists at the entry's locale", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const anchor = await bylineRepo.create({
+				slug: "marco",
+				displayName: "Marco",
+				locale: "en",
+			});
+
+			const enEntry = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				bylines: [{ bylineId: anchor.id }],
+			});
+			expect(enEntry.success).toBe(true);
+
+			// Translate to fr — no fr sibling exists for marco. The credit is
+			// preserved at the DB level (`copyContentBylines` clones the
+			// junction row pointing at marco's translation_group), but
+			// rendering on the fr entry returns nothing because the byline
+			// has no fr sibling.
+			const frEntry = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				translationOf: enEntry.data!.item.id,
+			});
+			expect(frEntry.success).toBe(true);
+			expect(frEntry.data?.item.bylines).toEqual([]);
+			expect(frEntry.data?.item.byline).toBeNull();
+			// But the DB-level pointer is preserved — the credit will surface
+			// the moment an fr sibling of marco is created.
+			expect(frEntry.data?.item.primaryBylineId).toBe(anchor.id);
+		});
+
+		it("copyContentBylines runs on translationOf when body.bylines is omitted", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const anchor = await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jane Doe",
+				locale: "en",
+			});
+			await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jeanne",
+				locale: "fr",
+				translationOf: anchor.id,
+			});
+
+			const enEntry = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				bylines: [{ bylineId: anchor.id }],
+			});
+			expect(enEntry.success).toBe(true);
+
+			const frEntry = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				translationOf: enEntry.data!.item.id,
+				// No `bylines` field — copy should run.
+			});
+			expect(frEntry.success).toBe(true);
+			expect(frEntry.data?.item.bylines).toHaveLength(1);
+			expect(frEntry.data?.item.byline?.locale).toBe("fr");
+		});
+
+		it("respects explicit body.bylines on translationOf and skips copying", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const a = await bylineRepo.create({ slug: "a", displayName: "A", locale: "en" });
+			const b = await bylineRepo.create({ slug: "b", displayName: "B", locale: "en" });
+			// fr sibling of `b`. The fr entry will be credited with this row.
+			const bFr = await bylineRepo.create({
+				slug: "b",
+				displayName: "B-fr",
+				locale: "fr",
+				translationOf: b.id,
+			});
+
+			const enEntry = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				bylines: [{ bylineId: a.id }],
+			});
+			expect(enEntry.success).toBe(true);
+
+			// Explicit different byline on the translation — should NOT
+			// inherit from source. The fr entry should credit `b`'s fr
+			// sibling, not `a`.
+			const frEntry = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				translationOf: enEntry.data!.item.id,
+				bylines: [{ bylineId: bFr.id }],
+			});
+			expect(frEntry.success).toBe(true);
+			expect(frEntry.data?.item.bylines).toHaveLength(1);
+			expect(frEntry.data?.item.byline?.id).toBe(bFr.id);
+		});
+
+		it("does not fall back to author-linked byline when explicit credits exist at another locale", async () => {
+			// Bug 1 regression: strict per-locale hydration returns [] when a
+			// credit's translation_group has no sibling at the entry's
+			// locale, but the old code treated that as "no explicit
+			// credits" and inferred the author byline. The editor's intent
+			// was explicit ("credit Marco, not the article's author") —
+			// silently overriding with an inferred byline is wrong.
+			const userRepo = new UserRepository(db);
+			const author = await userRepo.create({
+				email: "fallback-test@example.com",
+				displayName: "Author Account",
+				role: "editor",
+			});
+			const bylineRepo = new BylineRepository(db);
+			// Author has a fr byline. If we incorrectly fell back, this
+			// would surface on a fr entry that has an unresolved en-only
+			// credit.
+			await bylineRepo.create({
+				slug: "author-fr",
+				displayName: "Auteur",
+				locale: "fr",
+				userId: author.id,
+			});
+
+			const marco = await bylineRepo.create({
+				slug: "marco",
+				displayName: "Marco",
+				locale: "en",
+			});
+
+			const enEntry = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				authorId: author.id,
+				bylines: [{ bylineId: marco.id }],
+			});
+			expect(enEntry.success).toBe(true);
+
+			const frEntry = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				authorId: author.id,
+				translationOf: enEntry.data!.item.id,
+			});
+			expect(frEntry.success).toBe(true);
+			// The explicit credit was copied to the fr entry (via
+			// `copyContentBylines`). It doesn't render at fr because marco
+			// has no fr sibling. Author inference must NOT step in — the
+			// editor explicitly named marco, not the author.
+			expect(frEntry.data?.item.bylines).toEqual([]);
+			expect(frEntry.data?.item.byline).toBeNull();
+		});
+
+		it("inferred (author-linked) byline still works when the entry has no explicit credits at all", async () => {
+			// Counterpoint to the previous test: when no junction rows
+			// exist, author inference is the right thing to do — Phase 4
+			// hydration must preserve this fallback for entries that were
+			// never explicitly credited.
+			const userRepo = new UserRepository(db);
+			const author = await userRepo.create({
+				email: "implicit-author@example.com",
+				displayName: "Implicit",
+				role: "editor",
+			});
+			const bylineRepo = new BylineRepository(db);
+			await bylineRepo.create({
+				slug: "implicit",
+				displayName: "Implicit EN",
+				locale: "en",
+				userId: author.id,
+			});
+
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				authorId: author.id,
+				// No bylines field — author inference path.
+			});
+			expect(created.success).toBe(true);
+			expect(created.data?.item.bylines).toHaveLength(1);
+			expect(created.data?.item.bylines?.[0]?.source).toBe("inferred");
+			expect(created.data?.item.byline?.displayName).toBe("Implicit EN");
+		});
+
+		it("hydrateBylinesMany resolves each entry against its own locale", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const anchor = await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jane Doe",
+				locale: "en",
+			});
+			await bylineRepo.create({
+				slug: "jane",
+				displayName: "Jeanne",
+				locale: "fr",
+				translationOf: anchor.id,
+			});
+
+			// Two entries at different locales, both credited with the same
+			// translation_group (via the anchor wire id). A list endpoint
+			// returning both at once should hydrate each one against its own
+			// locale.
+			const enEntry = await handleContentCreate(db, "post", {
+				data: { title: "Hello" },
+				locale: "en",
+				bylines: [{ bylineId: anchor.id }],
+			});
+			const frEntry = await handleContentCreate(db, "post", {
+				data: { title: "Bonjour" },
+				locale: "fr",
+				translationOf: enEntry.data!.item.id,
+			});
+			expect(enEntry.success && frEntry.success).toBe(true);
+
+			const listed = await handleContentList(db, "post", {});
+			expect(listed.success).toBe(true);
+			const enItem = listed.data?.items.find((i) => i.id === enEntry.data!.item.id);
+			const frItem = listed.data?.items.find((i) => i.id === frEntry.data!.item.id);
+			expect(enItem?.byline?.locale).toBe("en");
+			expect(frItem?.byline?.locale).toBe("fr");
+		});
+	});
+
+	describe("handleContentUpdate — side-write concurrency", () => {
+		it("advances _rev for byline-only updates", async () => {
+			const bylineRepo = new BylineRepository(db);
+			const firstByline = await bylineRepo.create({
+				slug: "first-byline",
+				displayName: "First Byline",
+			});
+			const secondByline = await bylineRepo.create({
+				slug: "second-byline",
+				displayName: "Second Byline",
+			});
+			const created = await handleContentCreate(db, "post", { data: { title: "Hi" } });
+			expect(created.success).toBe(true);
+			const originalRev = created.data!._rev;
+
+			const first = await handleContentUpdate(db, "post", created.data!.item.id, {
+				bylines: [{ bylineId: firstByline.id }],
+				_rev: originalRev,
+			});
+			const stale = await handleContentUpdate(db, "post", created.data!.item.id, {
+				bylines: [{ bylineId: secondByline.id }],
+				_rev: originalRev,
+			});
+
+			expect(first.success).toBe(true);
+			expect(first.data?._rev).not.toBe(originalRev);
+			expect(stale).toMatchObject({ success: false, error: { code: "CONFLICT" } });
+		});
+	});
+
+	describe("handleContentUpdate — publishedAt override", () => {
+		it("persists publishedAt when provided", async () => {
+			const created = await handleContentCreate(db, "post", { data: { title: "Hi" } });
+			expect(created.success).toBe(true);
+
+			const newPublishedAt = "2019-03-16T09:00:00.000Z";
+			const updated = await handleContentUpdate(db, "post", created.data!.item.id, {
+				publishedAt: newPublishedAt,
+			});
+
+			expect(updated.success).toBe(true);
+			expect(updated.data?.item.publishedAt).toBe(newPublishedAt);
+		});
+
+		it("leaves createdAt untouched on update", async () => {
+			const originalCreated = "2019-03-15T10:30:00.000Z";
+			const created = await handleContentCreate(db, "post", {
+				data: { title: "Hi" },
+				createdAt: originalCreated,
+			});
+			expect(created.success).toBe(true);
+
+			const updated = await handleContentUpdate(db, "post", created.data!.item.id, {
+				data: { title: "Edited" },
+				publishedAt: "2020-01-01T00:00:00.000Z",
+			});
+
+			expect(updated.success).toBe(true);
+			expect(updated.data?.item.createdAt).toBe(originalCreated);
+		});
+	});
+});
+
+describe("Content Handlers — list total", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabaseWithCollections();
+		// Seed enough items that limit-based pagination kicks in and we can
+		// assert total > items.length.
+		for (let i = 0; i < 8; i++) {
+			const result = await handleContentCreate(db, "post", {
+				data: { title: `Post ${i}` },
+			});
+			if (!result.success) throw new Error("seed failed");
+		}
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	it("returns total independent of limit", async () => {
+		const result = await handleContentList(db, "post", { limit: 2 });
+
+		expect(result.success).toBe(true);
+		expect(result.data?.items).toHaveLength(2);
+		expect(result.data?.total).toBe(8);
+	});
+});
+
+describe("Content Handlers — slug-change auto-redirect on publish", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabaseWithCollections();
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	/**
+	 * Stage a slug change the way the runtime does for revision-supporting
+	 * collections: write `_slug` into a draft revision and point the entry's
+	 * `draft_revision_id` at it, leaving the live `slug` column untouched.
+	 */
+	async function stageDraftSlugChange(
+		collection: string,
+		entryId: string,
+		data: Record<string, unknown>,
+		newSlug: string,
+	): Promise<void> {
+		const revisionRepo = new RevisionRepository(db);
+		const revision = await revisionRepo.create({
+			collection,
+			entryId,
+			data: { ...data, _slug: newSlug },
+		});
+		await sql`
+			UPDATE ${sql.ref(`ec_${collection}`)}
+			SET draft_revision_id = ${revision.id}
+			WHERE id = ${entryId}
+		`.execute(db);
+	}
+
+	it("creates a 301 from the old URL when publishing a staged slug change", async () => {
+		const created = await handleContentCreate(db, "post", {
+			data: { title: "Hello" },
+			slug: "hello",
+			status: "published",
+		});
+		expect(created.success).toBe(true);
+		const id = created.data!.item.id;
+
+		await stageDraftSlugChange("post", id, { title: "Hello" }, "hello-world");
+
+		const published = await handleContentPublish(db, "post", id);
+		expect(published.success).toBe(true);
+		expect(published.data?.item.slug).toBe("hello-world");
+
+		const redirects = await db.selectFrom("_emdash_redirects").selectAll().execute();
+		expect(redirects).toHaveLength(1);
+		expect(redirects[0]).toMatchObject({
+			source: "/post/hello",
+			destination: "/post/hello-world",
+			type: 301,
+			auto: 1,
+		});
+	});
+
+	it("does not create a redirect on first publish (draft URL was never live)", async () => {
+		const created = await handleContentCreate(db, "post", {
+			data: { title: "Fresh" },
+			slug: "fresh-draft",
+			status: "draft",
+		});
+		expect(created.success).toBe(true);
+		const id = created.data!.item.id;
+
+		await stageDraftSlugChange("post", id, { title: "Fresh" }, "fresh-final");
+
+		const published = await handleContentPublish(db, "post", id);
+		expect(published.success).toBe(true);
+		expect(published.data?.item.slug).toBe("fresh-final");
+
+		const redirects = await db.selectFrom("_emdash_redirects").selectAll().execute();
+		expect(redirects).toHaveLength(0);
+	});
+
+	it("does not create a redirect when republishing without a slug change", async () => {
+		const created = await handleContentCreate(db, "post", {
+			data: { title: "Stable" },
+			slug: "stable",
+			status: "published",
+		});
+		expect(created.success).toBe(true);
+		const id = created.data!.item.id;
+
+		await stageDraftSlugChange("post", id, { title: "Stable (edited)" }, "stable");
+
+		const published = await handleContentPublish(db, "post", id);
+		expect(published.success).toBe(true);
+
+		const redirects = await db.selectFrom("_emdash_redirects").selectAll().execute();
+		expect(redirects).toHaveLength(0);
+	});
+
+	it("rejects publishing a routable entry without a slug", async () => {
+		const created = await handleContentCreate(db, "post", {
+			data: {},
+			status: "draft",
+		});
+		expect(created.success).toBe(true);
+
+		const published = await handleContentPublish(db, "post", created.data!.item.id);
+
+		expect(published.success).toBe(false);
+		if (published.success) return;
+		expect(published.error.code).toBe("VALIDATION_ERROR");
+		expect(published.error.message).toContain("slug");
+	});
+
+	it("allows a non-routable entry to publish without a slug", async () => {
+		const registry = new SchemaRegistry(db);
+		await registry.updateCollection("post", { routable: false });
+		const created = await handleContentCreate(db, "post", {
+			data: {},
+			status: "draft",
+		});
+		expect(created.success).toBe(true);
+
+		const published = await handleContentPublish(db, "post", created.data!.item.id);
+
+		expect(published.success).toBe(true);
+		expect(published.data?.item.slug).toBeNull();
+		expect(published.data?.item.status).toBe("published");
+	});
+
+	it("rejects a slugless routable publish without revision support", async () => {
+		const registry = new SchemaRegistry(db);
+		await registry.updateCollection("post", { supports: [] });
+		const created = await handleContentCreate(db, "post", {
+			data: {},
+			status: "draft",
+		});
+		expect(created.success).toBe(true);
+
+		const published = await handleContentPublish(db, "post", created.data!.item.id);
+
+		expect(published.success).toBe(false);
+		if (published.success) return;
+		expect(published.error.code).toBe("VALIDATION_ERROR");
+	});
+
+	it("does not replace a live slug with a staged empty slug", async () => {
+		const created = await handleContentCreate(db, "post", {
+			data: { title: "Stable" },
+			slug: "stable",
+			status: "published",
+		});
+		expect(created.success).toBe(true);
+		const id = created.data!.item.id;
+
+		await stageDraftSlugChange("post", id, { title: "Stable" }, "");
+
+		const published = await handleContentPublish(db, "post", id);
+		expect(published.success).toBe(false);
+		if (published.success) return;
+		expect(published.error.code).toBe("VALIDATION_ERROR");
+
+		const unchanged = await handleContentGet(db, "post", id);
+		expect(unchanged.success).toBe(true);
+		expect(unchanged.data?.item.slug).toBe("stable");
+	});
+
+	it("returns SLUG_CONFLICT naming the slug when the staged slug is taken", async () => {
+		const taken = await handleContentCreate(db, "post", {
+			data: { title: "Owner" },
+			slug: "eleven",
+			status: "published",
+		});
+		expect(taken.success).toBe(true);
+
+		const created = await handleContentCreate(db, "post", {
+			data: { title: "Victim" },
+			slug: "victim",
+			status: "published",
+		});
+		expect(created.success).toBe(true);
+		const id = created.data!.item.id;
+
+		await stageDraftSlugChange("post", id, { title: "Victim" }, "eleven");
+
+		const published = await handleContentPublish(db, "post", id);
+		expect(published.success).toBe(false);
+		if (published.success) return;
+		expect(published.error.code).toBe("SLUG_CONFLICT");
+		expect(published.error.message).toContain("eleven");
+		expect(published.error.message).toContain(taken.data!.item.id);
+	});
+});
+
+describe("handleContentList — backing table missing deleted_at column", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabase();
+		await sql`
+			CREATE TABLE ec_repro_test (
+				id TEXT PRIMARY KEY,
+				slug TEXT NOT NULL,
+				title TEXT NOT NULL,
+				content JSON,
+				excerpt TEXT,
+				status TEXT NOT NULL,
+				locale TEXT NOT NULL DEFAULT 'en',
+				published_at TEXT,
+				created_at TEXT NOT NULL,
+				updated_at TEXT NOT NULL
+			)
+		`.execute(db);
+		await sql`
+			INSERT INTO ec_repro_test (id, slug, title, content, excerpt, status, locale, published_at, created_at, updated_at)
+			VALUES ('01KPQZA8J1E206F60QSNFRX3Y2', 'repro', 'Repro entry', '[]', 'x', 'published', 'en',
+				'2026-05-01T00:00:00.000Z', '2026-05-01T00:00:00.000Z', '2026-05-01T00:00:00.000Z')
+		`.execute(db);
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	it("reports a schema mismatch instead of a generic list error", async () => {
+		const res = await handleContentList(db, "repro_test", {});
+		expect(res.success).toBe(false);
+		if (res.success) return;
+		expect(res.error.code).toBe("COLLECTION_SCHEMA_MISMATCH");
+		expect(res.error.message).toContain("repro_test");
+	});
+});
+
+describe("handleContentList — unknown orderBy column on a healthy collection", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabaseWithCollections();
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	it("does not report a schema mismatch when ordering by a field the collection lacks", async () => {
+		const res = await handleContentList(db, "post", { orderBy: "name" });
+		expect(res.success).toBe(false);
+		if (res.success) return;
+		expect(res.error.code).not.toBe("COLLECTION_SCHEMA_MISMATCH");
+	});
+
+	it("keeps the missing-collection error when ordering by a custom field", async () => {
+		const res = await handleContentList(db, "missing", { orderBy: "priority" });
+		expect(res.success).toBe(false);
+		if (res.success) return;
+		expect(res.error.code).toBe("COLLECTION_NOT_FOUND");
+	});
+});

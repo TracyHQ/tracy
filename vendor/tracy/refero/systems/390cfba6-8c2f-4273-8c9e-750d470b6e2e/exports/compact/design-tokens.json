@@ -1,0 +1,89 @@
+{
+  "color": {
+    "viture-ember": {
+      "$value": "#ff5f34",
+      "$type": "color",
+      "$description": "VITURE Ember — Brand accent, filled CTA buttons, active links, emphasis text, input focus — searing orange against matte black creates urgency and ownership of the brand voice"
+    },
+    "crimson-core": {
+      "$value": "#f31010",
+      "$type": "color",
+      "$description": "Crimson Core — Gradient midpoint for orange-red text washes and accent streaks"
+    },
+    "aurora-wash": {
+      "$value": "#fe7a60",
+      "$type": "color",
+      "$description": "Aurora Wash — Gradient transition color in premium orange-to-violet washes (product banners, hero overlays)"
+    },
+    "ultra-violet": {
+      "$value": "#581dff",
+      "$type": "color",
+      "$description": "Ultra Violet — Gradient terminus for the orange-to-violet premium wash — appears only inside multi-stop gradients, not as a standalone token"
+    },
+    "signal-blue": {
+      "$value": "#1271ff",
+      "$type": "color",
+      "$description": "Signal Blue — Gradient start for the cool-tech blue wash (secondary callouts, tech-feature banners)"
+    },
+    "obsidian": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, dark-section canvas, product showcase background, footer, solid black CTA variant — the structural near-black that frames every screen"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Light-section canvas, card surface, input background, inverse text on dark surfaces, modal surface"
+    },
+    "ash": {
+      "$value": "#7e7e7f",
+      "$type": "color",
+      "$description": "Ash — Body secondary text, helper text, placeholder copy, muted borders"
+    },
+    "slate": {
+      "$value": "#5b5c5d",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, disabled labels, subdued metadata"
+    },
+    "pewter": {
+      "$value": "#abacae",
+      "$type": "color",
+      "$description": "Pewter — Hairline dividers, subtle borders, low-emphasis icon strokes"
+    },
+    "fog": {
+      "$value": "#949597",
+      "$type": "color",
+      "$description": "Fog — Disabled button background, muted UI chrome, neutral placeholder fill"
+    },
+    "snow": {
+      "$value": "#f7f7f8",
+      "$type": "color",
+      "$description": "Snow — Elevated card surface, subtle panel background, light section variation"
+    },
+    "mist": {
+      "$value": "#eff0f3",
+      "$type": "color",
+      "$description": "Mist — Inset card surface, nested panel background, alternating row tint"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Deepest dark sections, modal overlay scrim, true-black accents"
+    }
+  },
+  "font": {
+    "fontseasonsans": {
+      "$value": "FontSeasonSans",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across every UI surface — nav, body, headings, display numerals. The 340px size is a brand signature: oversized hero statistics and product superlatives rendered as visual anchors. Weights step from 400 body to 800 display, but display text rarely exceeds 700 because the massive size does the heavy lifting. Positive letter-spacing (0.012–0.050em) widens as type grows — the opposite of the negative-tracking trend, giving display copy an open, holographic, almost broadcast-poster feel appropriate to the XR hardware category."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.viture.com",
+      "siteName": "VITURE",
+      "extractedAt": "2026-06-03T20:33:14.195Z",
+      "variant": "compact"
+    }
+  }
+}

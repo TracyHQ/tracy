@@ -1,0 +1,324 @@
+{
+  "kind": "shape-fill",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs, the detector's own probe on the plain and the worn page). broken: only the entries the detector flags and their plain twins; clean: the whole probe of a page with none. Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-mood/j6@1.0.2 (https://ja-mood-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#06b06d",
+        "#ff6464",
+        "#d9534f",
+        "#6381bc",
+        "#5c58dc"
+      ],
+      "worn": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:2/div:2/div:2/div:1/span:1/svg:1/path:1",
+              "at": "span.section-shape svg path.elementor-shape-fill",
+              "area": 207360,
+              "colours": [{ "r": 244, "g": 245, "b": 246, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      },
+      "plain": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:2/div:2/div:2/div:1/span:1/svg:1/path:1",
+              "at": "span.section-shape svg path.elementor-shape-fill",
+              "area": 207360,
+              "colours": [{ "r": 244, "g": 245, "b": 246, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-prodex/j6@1.0.2 (https://ja-prodex-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#198754",
+        "#fd7e14",
+        "#dc3545",
+        "#ecf2ff",
+        "#4b4a51",
+        "#5137ff",
+        "#084298",
+        "#212529",
+        "#0dcaf0",
+        "#f8f9fa",
+        "#192227"
+      ],
+      "worn": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/svg:2/path:1",
+              "at": "div.svg-decor svg path",
+              "area": 4096,
+              "colours": [{ "r": 4, "g": 249, "b": 224, "a": 1 }]
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/svg:3/path:1",
+              "at": "div.svg-decor svg path",
+              "area": 4356,
+              "colours": [{ "r": 1, "g": 250, "b": 147, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      },
+      "plain": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/svg:2/path:1",
+              "at": "div.svg-decor svg path",
+              "area": 4096,
+              "colours": [{ "r": 4, "g": 249, "b": 224, "a": 1 }]
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/svg:3/path:1",
+              "at": "div.svg-decor svg path",
+              "area": 4356,
+              "colours": [{ "r": 1, "g": 250, "b": 147, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "tracy-base/emdash-0.x@0.5.4 (https://base-emdash.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#9a6700",
+        "#eae5cc",
+        "#eee9cf",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "worn": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:1/div:1/svg:1/rect:1",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 5837,
+              "colours": [{ "r": 210, "g": 206, "b": 182, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:1/div:1/svg:1/rect:2",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 3680,
+              "colours": [{ "r": 210, "g": 206, "b": 182, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:1/div:1/svg:1/rect:3",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 3948,
+              "colours": [{ "r": 103, "g": 134, "b": 196, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:2/div:1/svg:1/rect:1",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 11788,
+              "colours": [{ "r": 210, "g": 206, "b": 182, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:2/div:1/svg:1/rect:2",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 11788,
+              "colours": [{ "r": 103, "g": 134, "b": 196, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:2/div:1/svg:1/rect:3",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 6091,
+              "colours": [{ "r": 210, "g": 206, "b": 182, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:3/div:1/svg:1/path:1",
+              "at": "div.sketch.mb-6 svg path",
+              "area": 14889,
+              "colours": [{ "r": 103, "g": 134, "b": 196, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:3/div:1/svg:1/rect:1",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 2411,
+              "colours": [{ "r": 210, "g": 206, "b": 182, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:3/div:1/svg:1/rect:2",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 1650,
+              "colours": [{ "r": 210, "g": 206, "b": 182, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      },
+      "plain": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:1/div:1/svg:1/rect:1",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 3943,
+              "colours": [{ "r": 210, "g": 210, "b": 215, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:1/div:1/svg:1/rect:2",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 2486,
+              "colours": [{ "r": 210, "g": 210, "b": 215, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:1/div:1/svg:1/rect:3",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 2667,
+              "colours": [{ "r": 0, "g": 113, "b": 227, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:2/div:1/svg:1/rect:1",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 7962,
+              "colours": [{ "r": 210, "g": 210, "b": 215, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:2/div:1/svg:1/rect:2",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 7962,
+              "colours": [{ "r": 0, "g": 113, "b": 227, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:2/div:1/svg:1/rect:3",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 4114,
+              "colours": [{ "r": 210, "g": 210, "b": 215, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:3/div:1/svg:1/path:1",
+              "at": "div.sketch.mb-6 svg path",
+              "area": 10057,
+              "colours": [{ "r": 0, "g": 113, "b": 227, "a": 1 }]
+            },
+            {
+              "path": "div:1/main:1/section:5/div:1/div:2/div:3/div:1/svg:1/rect:1",
+              "at": "div.sketch.mb-6 svg rect",
+              "area": 1629,
+              "colours": [{ "r": 210, "g": 210, "b": 215, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-sensei/j6@1.0.3 (https://ja-sensei-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#4bd173",
+        "#f0ad4e",
+        "#d9534f",
+        "#69747f",
+        "#955cf0"
+      ],
+      "worn": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:2/div:1/div:3/div:2/div:1/div:1/div:1::before",
+              "at": "div.acm-features.style-3::before",
+              "area": 856364,
+              "colours": [{ "r": 0, "g": 0, "b": 0, "a": 1 }]
+            },
+            {
+              "path": "div:2/div:1/div:3/div:3/div:1/div:1/div:1::before",
+              "at": "div.acm-teams.style-1::before",
+              "area": 783000,
+              "colours": [{ "r": 0, "g": 0, "b": 0, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      },
+      "plain": {
+        "data": {
+          "shapes": [
+            {
+              "path": "div:2/div:1/div:3/div:2/div:1/div:1/div:1::before",
+              "at": "div.acm-features.style-3::before",
+              "area": 907200,
+              "colours": [{ "r": 241, "g": 245, "b": 247, "a": 1 }]
+            },
+            {
+              "path": "div:2/div:1/div:3/div:3/div:1/div:1/div:1::before",
+              "at": "div.acm-teams.style-1::before",
+              "area": 826200,
+              "colours": [{ "r": 241, "g": 245, "b": 247, "a": 1 }]
+            }
+          ],
+          "excluded": []
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+---
+title: Content model
+description: How collections, fields, entries, generated types, and seed files describe site content.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A content model describes the information your site stores. In EmDash, the model is made of
+collections and fields. The database stores that model, and the admin panel uses it to build the
+forms editors work with.
+
+## Collections, fields, and entries
+
+A **collection** is a kind of content, such as Posts, Products, or Authors. A **field** is one piece
+of information on that content, such as a title, body, price, or author reference. An **entry** is
+one saved item in a collection.
+
+For example, a Posts collection might have these fields:
+
+```text
+Posts
+├── Title          short text, required
+├── Excerpt        long text, optional
+├── Content        rich text, optional
+└── Featured image image, optional
+```
+
+EmDash also manages information that every entry needs, including its ID, public slug, publishing
+state, author, creation and update times, locale, and revision references. Query results expose this
+standard information alongside the fields defined for the collection.
+
+Deleting an entry moves it to the trash by setting its deletion time. An administrator can restore
+it until someone permanently deletes it from the trash. This entry workflow is different from
+deleting a field or collection, which changes the schema and removes stored data.
+
+## One model, two ways to manage it
+
+Administrators can create and edit collections under **Content Types** in the admin panel. EmDash
+updates the database schema, and the content editor uses the change the next time it loads the
+collection.
+
+A seed file describes a starting model in JSON. Templates use seeds to create collections and other
+site data during setup. Teams can also keep a seed in version control and apply it when creating
+another environment. The admin panel and a seed do not create separate models; both change the
+model stored in the target database.
+
+The following seed fragment defines the four custom fields in the Posts example:
+
+```json title="seed/seed.json"
+{
+	"version": "1",
+	"collections": [
+		{
+			"slug": "posts",
+			"label": "Posts",
+			"labelSingular": "Post",
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true
+				},
+				{ "slug": "excerpt", "label": "Excerpt", "type": "text" },
+				{ "slug": "content", "label": "Content", "type": "portableText" },
+				{ "slug": "featured_image", "label": "Featured Image", "type": "image" }
+			]
+		}
+	]
+}
+```
+
+The [seed file reference](/themes/seed-files/) covers conflict handling and the other objects a seed
+can contain, including settings, taxonomies, menus, widget areas, redirects, and sample content.
+
+## Changing a model with existing content
+
+Adding a collection creates an empty place for new entries. Adding an optional field adds that field
+to every entry, but existing entries have no value until an editor or migration supplies one. A
+default value can provide the initial value when the field is added.
+
+Labels, descriptions, validation rules, search settings, and field order can be updated without
+replacing the field. Collection and field slugs are stable identifiers: the admin panel sets them at
+creation and does not offer a rename later.
+
+<Aside type="caution" title="Deletion and type changes need different plans">
+	Deleting a field drops its database column and removes that value from every entry. Deleting a
+	collection drops its content table and all entries in the collection. These actions are not the
+	same as moving an entry to the trash.
+
+	The admin panel does not let you change the type of an existing field. The schema API only permits
+	in-place changes among `string`, `text`, and `slug`, which share compatible text storage. Other
+	type changes, changes to `required` or `unique`, and changing a translatable field to
+	non-translatable require a content migration.
+
+	Back up production data, test the migration against representative content, and update every
+	query or component that depends on the changed field before applying a destructive change.
+</Aside>
+
+Read [Evolving a deployed site's schema](/deployment/schema-evolution/) before changing a model used
+in production.
+
+## TypeScript declarations
+
+EmDash can generate TypeScript declarations from the model in the database. The declarations add
+your collection names and field shapes to the public query functions, so a query for `posts`
+returns entries whose `data.title`, `data.content`, and other fields are known to TypeScript.
+
+During local development, the Astro integration writes `emdash-env.d.ts` and refreshes it after
+schema changes. The file is generated output; edit the content model rather than the declaration.
+Remote workflows can run `emdash types` to write `.emdash/types.ts` from the selected EmDash site.
+Regenerate that file after changing the model it represents.
+
+Generated types help code match the current schema, but they do not migrate stored content. A model
+change and any required content migration remain separate operations.
+
+## Related concepts
+
+Read [Collections and fields](/concepts/collections/) for collection features and field choices. Read
+[Admin panel](/concepts/admin-panel/) for the editor and permission model.

@@ -1,0 +1,54 @@
+{
+  "color": {
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary canvas, card surfaces, inverted text on black panels"
+    },
+    "absolute-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Black — Primary text, headings, navigation, inverted section bands, footer surfaces — the dominant ink of the system"
+    },
+    "hairline-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline Gray — Structural borders, dividers, card outlines, key-value grid frames — the load-bearing neutral of the entire layout system"
+    },
+    "stone-gray": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Stone Gray — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash — Muted body text, captions, placeholder and helper text — de-emphasized reading copy"
+    },
+    "quartz": {
+      "$value": "#bbbbbb",
+      "$type": "color",
+      "$description": "Quartz — Tertiary text, fine print"
+    },
+    "signal-blue": {
+      "$value": "#2563eb",
+      "$type": "color",
+      "$description": "Signal Blue — Active links, focus state, inline emphasis — the only chromatic note in an otherwise monochrome system, used for switching states on not for fills"
+    }
+  },
+  "font": {
+    "plain": {
+      "$value": "Plain",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for everything. Weight 300 carries the 100px display headlines — a whisper-weight giant that signals editorial confidence over commercial shouting. Weight 400 is the workhorse for body and navigation. Weight 500–600 reserved for micro-labels and emphasis. The aggressive negative tracking at large sizes (–5px at 100px, –2px at 50px) is signature: letters pull together as the type grows, creating a condensed, monumental feel. A neutral geometric sans (Inter, Söhne, or NB International Pro) is the closest free substitute."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://contract.mdfitalia.com/en",
+      "siteName": "Contract",
+      "extractedAt": "2026-06-03T18:07:19.972Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-ink: #231c33;
+  --color-paper: #f9f7f5;
+  --color-white-sheet: #ffffff;
+  --color-quiet-gray: #736c83;
+  --color-blurple: #5522fa;
+  --gradient-blurple: linear-gradient(135deg, #5522fa 0%, #ec8580 100%);
+  --color-mint-note: #b3f4e0;
+  --color-salmon-glow: #ec8580;
+  --gradient-salmon-glow: linear-gradient(135deg, #f95c5c 0%, #ec8580 100%);
+  --color-sky-wash: #b6dbff;
+  --gradient-sky-wash: linear-gradient(135deg, #b6dbff 0%, #eef8ff 100%);
+  --color-canary-note: #fff5ca;
+  --color-stone: #edeae6;
+
+  /* Typography — Font Families */
+  --font-really-sans-large: 'Really Sans Large', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-moniker: 'Moniker', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-shantell-sans: 'Shantell Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

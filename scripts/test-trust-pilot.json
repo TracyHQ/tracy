@@ -1,0 +1,44 @@
+{
+  "schema": "tracy-test-trust-cohort/v1",
+  "cohort": "pilot",
+  "budgetSeconds": 120,
+  "timeoutSeconds": 60,
+  "tests": [
+    "apps/tracy-web/test/session.test.mjs",
+    "packages/tools/tracy-subprocess-docker/test/route.test.mjs"
+  ],
+  "mutants": [
+    {
+      "id": "session-never-expires",
+      "description": "drop the expiry compare of the session token",
+      "file": "apps/tracy-web/src/lib/session.js",
+      "find": "if (typeof body.exp !== 'number' || body.exp * 1000 < now) return null",
+      "replace": "if (typeof body.exp !== 'number') return null",
+      "expect": { "killedBy": ["apps/tracy-web/test/session.test.mjs"] }
+    },
+    {
+      "id": "session-signature-unchecked",
+      "description": "accept a session token whose HMAC does not verify",
+      "file": "apps/tracy-web/src/lib/session.js",
+      "find": "if (!ok) return null",
+      "replace": "if (false) return null",
+      "expect": { "killedBy": ["apps/tracy-web/test/session.test.mjs"] }
+    },
+    {
+      "id": "site-prefix-without-separator",
+      "description": "compare the cwd with the sites root without the trailing '/': a sibling folder whose name starts with the root passes",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "  const root = trimRoot(sitesRoot)\n  if (!cwd.startsWith(`${root}/`)) {",
+      "replace": "  const root = trimRoot(sitesRoot)\n  if (!cwd.startsWith(root)) {",
+      "expect": { "killedBy": ["packages/tools/tracy-subprocess-docker/test/route.test.mjs"] }
+    },
+    {
+      "id": "site-dotdot-allowed",
+      "description": "drop the refusal of a '..' segment after the site label",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "if (segments.includes('..')) {",
+      "replace": "if (false) {",
+      "expect": { "killedBy": ["packages/tools/tracy-subprocess-docker/test/route.test.mjs"] }
+    }
+  ]
+}

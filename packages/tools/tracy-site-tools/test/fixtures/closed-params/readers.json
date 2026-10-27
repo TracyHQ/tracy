@@ -1,0 +1,221 @@
+{
+  "src": "claude-cowork origin/main 2aa7840 (the component the three r2 sites run); each row is the set of params keys the reader reads, plus Tracy's own host parameters where marked",
+  "rows": [
+    {
+      "platform": "wordpress",
+      "action": "content.list",
+      "params": ["kind", "post_type", "name", "limit", "offset", "include_body"],
+      "guarded": ["search"],
+      "source": "wordpress/cowork/lib/Engine.php:837-914 contentList; class-claude-cowork-writers.php:187 list_posts(offset, limit, with_body, name, type). `guarded`: `search` is read since WordPress 0.16.0 (contentList, wordpress-v0.16.0); an older plugin ignores it, so the relay refuses an answer that does not echo it (LIST_SEARCH_UNSUPPORTED)"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.list:pattern",
+      "params": [],
+      "guarded": ["kind", "search", "category", "offset", "limit"],
+      "source": "tasks/todo-wordpress-block-editing.md §3.7 (01/10/2026): contentList with kind \"pattern\" in the plugin release after 0.16.0, not released yet. `guarded`: every key — the plugin of 0.16.0 refuses the kind and a very old one lists its posts, so site-call.mjs trusts only an answer that says kind:\"pattern\" (patternListOrRefused)"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.get",
+      "params": ["kind", "id", "key"],
+      "host": ["outline", "block"],
+      "source": "wordpress/cowork/lib/Engine.php:916-966 contentGet"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.update",
+      "params": ["kind", "id", "key", "fields", "apply_id"],
+      "host": ["removes", "blocks", "rev"],
+      "source": "wordpress/cowork/lib/Engine.php:1074-1127 contentUpdate, :1588 applyId"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.delete",
+      "params": ["kind", "id", "key", "apply_id"],
+      "host": ["locale"],
+      "source": "wordpress/cowork/lib/Engine.php:1146-1210 contentDelete"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.language",
+      "params": ["id", "lang", "translations", "apply_id"],
+      "source": "wordpress/cowork/lib/Engine.php:968-1072 contentLanguage"
+    },
+    {
+      "platform": "wordpress",
+      "action": "apply.list",
+      "params": ["apply_id"],
+      "source": "wordpress/cowork/lib/Engine.php:1481 applyList, :1588 applyId"
+    },
+    {
+      "platform": "wordpress",
+      "action": "apply.revert",
+      "params": ["apply_id"],
+      "source": "wordpress/cowork/lib/Engine.php:1431 applyRevert"
+    },
+    {
+      "platform": "wordpress",
+      "action": "db.dump",
+      "params": ["table", "limit", "cursor", "offset"],
+      "source": "wordpress/cowork/lib/Engine.php:246-262 dbDump"
+    },
+    {
+      "platform": "wordpress",
+      "action": "db.tables",
+      "params": [],
+      "source": "wordpress/cowork/lib/Engine.php:233 dbTables()"
+    },
+    {
+      "platform": "joomla",
+      "action": "content.list",
+      "params": ["kind", "offset", "limit", "include_body"],
+      "guarded": ["search"],
+      "source": "joomla/cowork/lib/Engine.php:1112-1146 contentList. `guarded`: `search` is read since Joomla 0.20.0 (contentList, joomla-v0.20.0); an older plugin ignores it, so the relay refuses an answer that does not echo it (LIST_SEARCH_UNSUPPORTED)"
+    },
+    {
+      "platform": "joomla",
+      "action": "content.get",
+      "params": ["kind", "id"],
+      "source": "joomla/cowork/lib/Engine.php:1151-1175 contentGet"
+    },
+    {
+      "platform": "joomla",
+      "action": "content.update",
+      "params": ["kind", "id", "fields", "apply_id"],
+      "host": ["removes"],
+      "source": "joomla/cowork/lib/Engine.php:2053-2160 contentUpdate, :2451 applyId"
+    },
+    {
+      "platform": "joomla",
+      "action": "content.delete",
+      "params": ["kind", "id", "apply_id"],
+      "host": ["locale"],
+      "source": "joomla/cowork/lib/Engine.php:2166-2220 contentDelete"
+    },
+    {
+      "platform": "joomla",
+      "action": "apply.list",
+      "params": ["apply_id"],
+      "source": "joomla/cowork/lib/Engine.php:2337 applyList"
+    },
+    {
+      "platform": "joomla",
+      "action": "apply.revert",
+      "params": ["apply_id"],
+      "source": "joomla/cowork/lib/Engine.php:2273 applyRevert"
+    },
+    {
+      "platform": "joomla",
+      "action": "db.dump",
+      "params": ["table", "limit", "cursor", "offset"],
+      "source": "joomla/cowork/lib/Engine.php:706-757 dbDump"
+    },
+    {
+      "platform": "joomla",
+      "action": "db.tables",
+      "params": [],
+      "source": "joomla/cowork/lib/Engine.php:284 dbTables()"
+    },
+    {
+      "platform": "joomla",
+      "action": "extension.list",
+      "params": [],
+      "source": "joomla/cowork/lib/Engine.php:1013 extensionList()"
+    },
+    {
+      "platform": "joomla",
+      "action": "content.contract:inspect",
+      "params": ["operation"],
+      "host": ["page", "slots", "match", "entity", "offset"],
+      "source": "joomla/cowork/lib/Engine.php:1204-1208 (inspect reads operation only)"
+    },
+    {
+      "platform": "joomla",
+      "action": "content.contract:apply",
+      "params": [
+        "operation",
+        "apply_id",
+        "request_id",
+        "expected_revision",
+        "expected_content_revisions",
+        "changes",
+        "evidence"
+      ],
+      "source": "joomla/cowork/lib/Engine.php:1216-1224; QuickstartContract.php:565-567 plan(); expected_content_revisions from cowork rc.5 (Content API v2 W2)"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.contract:inspect",
+      "params": ["operation"],
+      "host": ["page", "slots", "match", "entity", "offset"],
+      "source": "claude-cowork a0ab275 (cowork 0.13.2, a site bound since #337): wordpress/cowork/lib/Engine.php:265-310 contentContract (inspect reads operation; contract only on provision's bind)"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.contract:apply",
+      "params": [
+        "operation",
+        "apply_id",
+        "request_id",
+        "expected_revision",
+        "expected_content_revisions",
+        "changes",
+        "evidence"
+      ],
+      "source": "claude-cowork a0ab275: wordpress/cowork/lib/Engine.php:330-346 contractApply; QuickstartContract.php:740 plan(); expected_content_revisions from cowork rc.2 (Content API v2 W2)"
+    },
+    {
+      "platform": "wordpress",
+      "action": "media.upload",
+      "params": ["path", "content_b64", "apply_id", "sha256"],
+      "host": ["file", "attachment", "alt"],
+      "source": "claude-cowork 4351bb4: wordpress/cowork/lib/Engine.php:2379-2451 mediaUpload (sha256 checked against the bytes that arrived, :2407); file, attachment and alt are Tracy's (upload.mjs, 27/09 and 29/09/2026)"
+    },
+    {
+      "platform": "wordpress",
+      "action": "media.delete",
+      "params": ["apply_id", "id", "url", "dry_run"],
+      "host": [],
+      "source": "Claude Cowork Apply media.delete contract: WordPress attachment id or URL, apply id, optional preview-only dry_run"
+    },
+    {
+      "platform": "joomla",
+      "action": "media.upload",
+      "params": ["path", "content_b64", "apply_id", "sha256"],
+      "host": ["file", "attachment", "alt"],
+      "source": "claude-cowork 4351bb4: joomla/cowork/lib/Engine.php:2222-2263 mediaUpload reads path, content_b64, apply_id; sha256 is not read there yet — Tracy sends it on both platforms, so one road serves both; file, attachment and alt are Tracy's (upload.mjs, 27/09 and 29/09/2026)"
+    },
+    {
+      "platform": "joomla",
+      "action": "site.identity",
+      "params": ["operation", "fields", "apply_id"],
+      "source": "claude-cowork c67dd98: joomla/cowork/lib/Engine.php:3521 siteIdentityDoor reads operation and fields, :3920 applyId (Claude Cowork for Joomla 0.22.0, lib/SiteIdentity.php)"
+    },
+    {
+      "platform": "joomla",
+      "action": "media.delete",
+      "params": ["apply_id", "path", "dry_run"],
+      "host": [],
+      "source": "Claude Cowork Apply media.delete contract: Joomla path relative to images/, apply id, optional preview-only dry_run"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.renderedWords:inspect",
+      "params": ["operation", "path", "targets"],
+      "source": "claude-cowork feat/rendered-words: wordpress/cowork/lib/Engine.php renderedWordsInspect"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.renderedWords:apply",
+      "params": ["operation", "apply_id", "request_id", "expected_revision", "proof", "rules"],
+      "source": "claude-cowork feat/rendered-words: wordpress/cowork/lib/Engine.php renderedWordsApply"
+    },
+    {
+      "platform": "wordpress",
+      "action": "content.renderedWords:status",
+      "params": ["operation", "request_id", "post", "locale"],
+      "source": "claude-cowork feat/rendered-words: wordpress/cowork/lib/Engine.php renderedWordsStatus"
+    }
+  ]
+}

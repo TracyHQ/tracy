@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-1668-sync-wordpress-live-busy-happy",
+  "itemIds": ["regression:REG-PR-1668-sync-wordpress-live-busy"],
+  "requirement": "A WordPress live site whose own housekeeping moves rows while it is read (auto-drafts, cron, transients, edit locks, per-user admin settings, plugin queues) still syncs; a live auto-draft never reaches the copy; a sync that stops as busy names the tables and option/meta names that kept changing, never their values",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1668-sync-wordpress-live-busy.json",
+    "ref": "PR #1668 (fix); fix evidence: tasks/nhat-ky/2026-10-24-sync-wordpress-live-busy.md",
+    "invariant": "S1: wp-admin activity during the read is not busy and done in two reads; a real post/option edit that keeps landing answers LIVE_BUSY naming wp_options (blogname) and wp_posts without values; one extra read only for housekeeping-looking names; live auto-drafts stay off the copy until published",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1668-sync-wordpress-live-busy.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1668-sync-wordpress-live-busy"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1668-sync-wordpress-live-busy",
+    "pr": 1668,
+    "kind": "fix",
+    "area": "sync/live",
+    "file": "tests/regression/cases/REG-PR-1668-sync-wordpress-live-busy.json"
+  },
+  "command": [
+    "bash",
+    "-c",
+    "node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs && python3 packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

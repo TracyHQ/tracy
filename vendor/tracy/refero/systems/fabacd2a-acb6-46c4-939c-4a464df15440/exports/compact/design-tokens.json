@@ -1,0 +1,94 @@
+{
+  "color": {
+    "canvas": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Canvas — Page background, default surface — sets the off-white, paper-like base for the entire system"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Product UI panels, card surfaces, elevated content blocks — keeps content crisp against the off-white canvas"
+    },
+    "ink": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Ink — Primary headings and body text — softened black that reads warm rather than harsh"
+    },
+    "graphite": {
+      "$value": "#757577",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, captions, nav labels, muted borders — the everyday gray for supporting copy"
+    },
+    "ash": {
+      "$value": "#aeaeaf",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, disabled labels, faint dividers — the quietest gray in the system"
+    },
+    "outline": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Outline — Hairline borders, icon strokes, divider lines at thin weights — provides structural edges without tonal noise"
+    },
+    "shadow": {
+      "$value": "#cdcdcd",
+      "$type": "color",
+      "$description": "Shadow — Rare single-layer drop-shadow tone used for floating panels and the AI chat popover"
+    },
+    "signal-blue": {
+      "$value": "#008ae8",
+      "$type": "color",
+      "$description": "Signal Blue — Blue outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "sky-tint": {
+      "$value": "#e0f2fe",
+      "$type": "color",
+      "$description": "Sky Tint — Notification pill background, subtle blue wash on interactive surfaces — the muted echo of Signal Blue used for non-action highlights"
+    },
+    "blush": {
+      "$value": "#fbcfe8",
+      "$type": "color",
+      "$description": "Blush — Decorative card surface — warm pink wash that frames product screenshots and feature blocks"
+    },
+    "lavender-mist": {
+      "$value": "#e6dafd",
+      "$type": "color",
+      "$description": "Lavender Mist — Decorative card surface — soft purple wash for variety blocks and callout cards"
+    },
+    "mint-foam": {
+      "$value": "#b6edee",
+      "$type": "color",
+      "$description": "Mint Foam — Decorative card surface — cool teal wash for product mockup containers and accent cards"
+    },
+    "powder-blue": {
+      "$value": "#afe4ff",
+      "$type": "color",
+      "$description": "Powder Blue — Decorative card surface — light blue wash used alongside the other pastels for tonal rhythm"
+    },
+    "butter": {
+      "$value": "#ffe77a",
+      "$type": "color",
+      "$description": "Butter — Decorative card surface — warm yellow wash, the highest-contrast pastel used sparingly for emphasis cards"
+    }
+  },
+  "font": {
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "All UI and editorial copy — body at 16/400, subheadings at 18–20/500, section headings at 24–44/600, hero display at 56–64/600. The stack is system-ui (San Francisco / Segoe UI / Inter fallback) so the brand inherits the OS-native feel without licensing a webfont."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "Caption-level fallback / metadata text at 12px"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://aboardhr.com",
+      "siteName": "Aboard",
+      "extractedAt": "2026-06-03T18:06:00.772Z",
+      "variant": "compact"
+    }
+  }
+}

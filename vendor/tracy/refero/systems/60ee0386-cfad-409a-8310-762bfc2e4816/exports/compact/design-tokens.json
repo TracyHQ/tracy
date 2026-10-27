@@ -1,0 +1,79 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, section backgrounds, maximum-contrast surface"
+    },
+    "carbon": {
+      "$value": "#181818",
+      "$type": "color",
+      "$description": "Carbon — Navigation bar, elevated surface base, footer surface"
+    },
+    "graphite": {
+      "$value": "#1e1f20",
+      "$type": "color",
+      "$description": "Graphite — Card surfaces, elevated panels, contained content blocks"
+    },
+    "iron": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Iron — Hairline borders, dividers, structural separators"
+    },
+    "slate": {
+      "$value": "#807f7f",
+      "$type": "color",
+      "$description": "Slate — Muted secondary text, inactive nav items, subtle metadata"
+    },
+    "fog": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fog — Disabled labels, low-emphasis helper text, tertiary metadata"
+    },
+    "ash": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Ash — Deep-recessed borders, very-low-emphasis outlines"
+    },
+    "chalk": {
+      "$value": "#f1f4f4",
+      "$type": "color",
+      "$description": "Chalk — Alternate light surface, inverted card context"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary headings, body text, icon strokes, button borders, link text — the single chromatic force in the system"
+    },
+    "signal-mint": {
+      "$value": "#22e2a8",
+      "$type": "color",
+      "$description": "Signal Mint — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "deep-navy": {
+      "$value": "#0a2142",
+      "$type": "color",
+      "$description": "Deep Navy — Ambient atmospheric tint, decorative background wash behind globe visualization"
+    },
+    "concentric-teal": {
+      "$value": "#085556",
+      "$type": "color",
+      "$description": "Concentric Teal — Diagram and data-visualization stroke, subtle infographic accent"
+    }
+  },
+  "font": {
+    "the-future": {
+      "$value": "The Future",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system — navigation, body, headings, buttons, and labels. The slight positive tracking (0.02–0.04em) at all sizes creates a measured, architectural quality uncommon in fintech."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cosmos.network",
+      "siteName": "Cosmos Network",
+      "extractedAt": "2026-06-03T19:35:02.413Z",
+      "variant": "compact"
+    }
+  }
+}

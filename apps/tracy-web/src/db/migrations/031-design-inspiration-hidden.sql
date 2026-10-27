@@ -1,0 +1,14 @@
+-- Whether the release carries the mark that takes its card off Design inspiration.
+--
+-- A release cut before 16/09 carries its card as a `card` block inside `tracy_setting.json`, and
+-- that file is never edited after the release is cut (`tracy-setting.mjs`). Unpublish can therefore
+-- not take such a card off by deleting a file: it attaches a second asset,
+-- `tracy_design_inspiration_hidden.json`, and this column is that asset's presence as last read.
+--
+-- 🔒 THE MARK LIVES ON THE RELEASE, NOT HERE. Every server reads the same release, so a mark kept
+-- only in one server's table would hide the card on that server and nowhere else. Like
+-- `inspiration`, the column is overwritten by every read of GitHub (`syncReleases`).
+--
+-- It hides the card from the Design inspiration listing only. The release stays a template for
+-- "Create with Tracy" and for site creation (`templateOfTag`, `isTemplateId`, `templateRelease`).
+alter table quickstart_releases add column if not exists inspiration_hidden boolean not null default false;

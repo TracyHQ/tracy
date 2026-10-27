@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-bumble-honey: #ffdb5b;
+  --color-pollen: #fff386;
+  --color-bumble-ink: #202020;
+  --color-paper-white: #ffffff;
+  --color-mist: #f3f3f3;
+  --color-charcoal: #3b3b3b;
+  --color-graphite: #575656;
+  --color-onyx: #343333;
+
+  /* Typography — Font Families */
+  --font-bumblesans: 'BumbleSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

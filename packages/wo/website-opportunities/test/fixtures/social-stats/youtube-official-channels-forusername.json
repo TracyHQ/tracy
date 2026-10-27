@@ -1,0 +1,27 @@
+{
+  "kind": "youtube#channelListResponse",
+  "etag": "WErW76cJq6fw9gseSxHFRebM_rT",
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#channel",
+      "etag": "mQlxjUrIy1i1xsKyMWIoIhpahkz",
+      "id": "UC_i2IR8ZG9A3fKK2QDX6Eeh",
+      "contentDetails": {
+        "relatedPlaylists": {
+          "likes": "",
+          "uploads": "UU_i2IR8ZG9A3fKK2QDX6Eeh"
+        }
+      },
+      "statistics": {
+        "viewCount": "362200177",
+        "subscriberCount": "2680000",
+        "hiddenSubscriberCount": false,
+        "videoCount": "6118"
+      }
+    }
+  ]
+}

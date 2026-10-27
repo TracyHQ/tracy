@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6d9b6fe6-51f4-4978-82dd-a791c28db5cf",
+  "status": "complete",
+  "name": "Glow",
+  "url": "https://styles.refero.design/style/6d9b6fe6-51f4-4978-82dd-a791c28db5cf",
+  "sourceWebsite": "https://glow.app",
+  "extractedAt": "2026-06-03T17:37:15.370Z",
+  "capturedAt": "2026-10-08T05:13:01.981954+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "Magenta pulse on porcelain white. A single saturated brand color cuts through a quiet, gallery-bright canvas where phone screens are the art and a peach badge is the only warmth.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e9d93e92-8209-4b11-8252-9c59a390cf9b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/85697c38-dd3a-4578-87d5-84a70f366cc6.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/35bec2b7-aa91-48c4-b9af-db0c4cad4fec.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/46ecebf1-655d-4937-a2cf-f1bd295bf757.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ebaab012-098d-4141-8802-d46ac10c0891.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "24086ac2649755c2f0f36f9803e85960e4d05cafa6a43de28bff81ae460df198",
+      "bytes": 17639
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a6d86dbb7006c3919022466548eb2ec77c793d4c971c9815b03968a7773d0267",
+      "bytes": 80964
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d45e08b5e671172113b317cff70424dff4e309d1774455dafb58e6b6852d03ed",
+      "bytes": 15194
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6d71f1cb7f444304013e5651cc8743d142c0c17af5054b33240c67b4d545dc0b",
+      "bytes": 8261
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "54ce2553729183c30c94865f542726fb5cf3fd10abcb60cae2e1aa22e1ba7951",
+      "bytes": 11511
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ef8dd47df73bea3be381f916b3e4c59a4cdcd0658911f0b8d81d9cf8b60348ff",
+      "bytes": 2878
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "30f5d04eaeff801eb75a3f8684fe17e9e64e0f1be2399d485161bb50f0809b99",
+      "bytes": 607
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a1ebd324fea58f4fb59657a0df6f1a4203baad17a8bbe340f9a7ab766eaa4132",
+      "bytes": 758
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "96632bfeb149a394d1829c68a2648a7b2244a4a1b5297b64c32441b4632ee5e2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9465ef122837bbd3cd04463bb7c9310b2961f4cd68b9c3251cc6be60af12e07b",
+      "bytes": 43025
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "89fcaadba0906b281b274d3ffe7f290286b4cdc2b849a77f21887fc1d5a8914f",
+      "bytes": 22536
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d0f5a476ed7330377376e4dbf6e0c160198625759360cdf7a3d60d1c65a679eb",
+      "bytes": 39176
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "75b84685401a762e419b879ce7d8250aae2e3498828693c9944a271d50974bd3",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6c9b23369d451097bfb605a19a49e86379acd0b00ce1beb9d4f00156ea4e6ef6",
+      "bytes": 1434
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e359f3ce05baaca8a1a5d5357c8659e5ed94ccdd38883dd4faa369f92146127f",
+      "bytes": 2143
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1680693c-aed8-47e8-917a-04eb89497b09",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "408d0b89-be7d-4a09-bc29-8a8ce13d0a7b",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "4e10797e-03eb-4efb-a16d-1d93272e1cab",
+    "5e9d8377-e6f2-4063-b678-9f1bbfc24598",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "6d9b6fe6-51f4-4978-82dd-a791c28db5cf",
+    "7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "8d3dc65e-4443-4bb3-b1a9-b0fc98381db9",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729"
+  ]
+}

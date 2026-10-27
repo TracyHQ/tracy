@@ -1,0 +1,8 @@
+Fonts used by the Fernway Studio demo site. All are licensed under the SIL Open Font License 1.1.
+
+space-grotesk-variable.woff2, ibm-plex-sans-variable.woff2, jetbrains-mono-variable.woff2
+  Copied from the JA Kinetic WordPress theme in this repository (packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic/assets/fonts).
+newsreader-latin.woff2
+  Copied from the Tracy Business WordPress theme in this repository (packages/cms/tracy-wordpress-theme/src/wp-tracy-business/assets/fonts).
+inter-variable.woff2
+  Copied from the WordPress Twenty Twenty-Four theme; its license text is in INTER-LICENSE.txt.

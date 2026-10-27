@@ -1,0 +1,47 @@
+{
+  "id": "QA-UNIT-REG-057-happy",
+  "itemIds": ["regression:REG-057"],
+  "requirement": "An invite-only viewer lands on /new/ with the normal first screen and the Inbox open beside it: the invite card body is inert, Accept goes into the site; mail names a person by the local part",
+  "oracle": {
+    "source": "tests/regression/cases/REG-057-invite-only-lands-on-inbox.json",
+    "ref": "PR #863 (fix); fix evidence: On cowork.tracy.site 04/10: an invite-only sign-in landed on the 'An invitation is waiting' page with nothing to press but join links; pressing an invite card's body opened Team ('Could not read this site's team') and marked it read unanswered; the invite mail's title was a raw address Gmail turned into a link.",
+    "invariant": "The unit seams exit 0 with '# fail 0'. NOTIFIED === true. ROOT === '302 /new/?tab=tracy:inbox' (tracy-web answers a root-relative location). URL0 path starts with '/new/' (dsh then writes the session into the path) and its query has tab=tracy:inbox; GREETING === 1 (the normal first screen, decided 04/10 after #863); WHOAMI === 0; ATTR === false; CARD_ROLE === null. URL1 === URL0 (pressing the invite card's body does nothing). URL2 path starts with '/' + KEY + '/'. CLEANUP === 200.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": ["specs/REG-057-invite-only-lands-on-inbox.spec.mjs (argument) is not a file"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:chrome"],
+  "assertionIds": ["REG-057.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-057"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "playwright",
+  "regression": {
+    "id": "REG-057",
+    "pr": 863,
+    "kind": "fix",
+    "area": "inbox/onboarding",
+    "file": "tests/regression/cases/REG-057-invite-only-lands-on-inbox.json"
+  },
+  "command": [
+    "node_modules/.bin/playwright",
+    "test",
+    "-c",
+    "tests/regression/playwright.config.mjs",
+    "specs/REG-057-invite-only-lands-on-inbox.spec.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["stand", "chrome"],
+  "tests": [],
+  "timeoutS": 600
+}

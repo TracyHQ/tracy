@@ -1,0 +1,89 @@
+{
+  "color": {
+    "aubergine-ink": {
+      "$value": "#39364f",
+      "$type": "color",
+      "$description": "Aubergine Ink — Primary text, borders, dividers, icon strokes — the structural backbone of every surface"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, badge fills, nav background — the elevated layer above the canvas"
+    },
+    "warm-linen": {
+      "$value": "#f8f7fa",
+      "$type": "color",
+      "$description": "Warm Linen — Page canvas and page-level background — slightly warm off-white, never sterile"
+    },
+    "soft-mist": {
+      "$value": "#dbdae3",
+      "$type": "color",
+      "$description": "Soft Mist — Hairline borders, list dividers, subtle separators between list items and sections"
+    },
+    "pale-silver": {
+      "$value": "#bec0c6",
+      "$type": "color",
+      "$description": "Pale Silver — Link borders, secondary borders, muted outlines on ghost elements"
+    },
+    "cloud-veil": {
+      "$value": "#eeedf2",
+      "$type": "color",
+      "$description": "Cloud Veil — Secondary card backgrounds, subtle surface differentiation"
+    },
+    "periwinkle-tint": {
+      "$value": "#dee5ff",
+      "$type": "color",
+      "$description": "Periwinkle Tint — Soft blue-tinted card borders — the gentler cousin of the accent"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Icon fills, certain link text — used sparingly where maximum contrast is needed"
+    },
+    "smoke": {
+      "$value": "#6f7287",
+      "$type": "color",
+      "$description": "Smoke — Muted secondary text, nav borders, low-emphasis icon strokes"
+    },
+    "plum-depth": {
+      "$value": "#1e0a3c",
+      "$type": "color",
+      "$description": "Plum Depth — Headlines, event titles, and deep emphasis text — the voice of large type"
+    },
+    "indigo-slate": {
+      "$value": "#585163",
+      "$type": "color",
+      "$description": "Indigo Slate — Nav borders, secondary structural lines, quieter sibling of Aubergine Ink"
+    },
+    "electric-iris": {
+      "$value": "#3659e3",
+      "$type": "color",
+      "$description": "Electric Iris — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "ember-orange": {
+      "$value": "#f05537",
+      "$type": "color",
+      "$description": "Ember Orange — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "neue-plak": {
+      "$value": "Neue Plak",
+      "$type": "fontFamily",
+      "$description": "All UI text — body, headings, buttons, badges, nav, event titles. The custom geometric sans carries the entire interface; no second typeface is needed."
+    },
+    "neue-plak-text": {
+      "$value": "Neue Plak Text",
+      "$type": "fontFamily",
+      "$description": "Semi-bold companion for nav and select UI labels where extra weight is needed at small sizes"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.eventbrite.com",
+      "siteName": "Eventbrite",
+      "extractedAt": "2026-06-03T18:25:04.245Z",
+      "variant": "compact"
+    }
+  }
+}

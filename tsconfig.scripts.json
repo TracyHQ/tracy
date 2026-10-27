@@ -1,0 +1,34 @@
+{
+  // The repo's gates and tools. Kept apart from the packages because they run under `tsx` on Node, not
+  // in a browser, and because they import `.ts` files WITH THE EXTENSION (`check-dsh-locale.ts` reads the
+  // `strings.ts` of the package that owns a namespace directly) — only valid with `allowImportingTsExtensions`,
+  // and only with `noEmit`.
+  //
+  // The locale package's `terms.ts` is listed here rather than in that package's tsconfig: that package has no
+  // other TypeScript `src/`, and `terms.ts` is only consumed by a gate.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // `DOM` added Task 11 fix round 1: `scripts/test/import-address.test.ts` and
+    // `scripts/test/i18n-preference.test.ts` import client `.ts` straight from `packages/*/src/
+    // client/`, and that code touches `document`/`location`/`navigator` — the same reason
+    // `check-language.ts`'s own `SCAN_DIRS` comment gives for treating `apps`+`packages` as one
+    // browser-facing surface. This does NOT turn on checking any NEW file — `checkJs: false`
+    // below still means Worker `.js` stays unchecked; it only adds global type DECLARATIONS the
+    // program already needed once it started reading browser source.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+
+    // `scripts/test/seat-door-interop.test.ts` imports Worker code DIRECTLY
+    // (`workers/seat-door/src/index.js`) to check that the two halves of the seat door still match. The Worker
+    // area is plain JavaScript **on purpose** (§2.1 naming-conventions), so it has no `.d.ts`.
+    //
+    // `allowJs` lets TypeScript READ that file to infer the module's shape — without it the import
+    // is `TS7016: implicitly has an 'any' type`. `checkJs: false` keeps the boundary: we read the
+    // Worker, we do NOT typecheck it. Turning on `checkJs` would implicitly declare that the Worker area must be
+    // type-clean, a much bigger decision than making one test compile.
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": ["scripts/**/*.ts", "packages/locale/tracy-locale-vi/terms.ts"]
+}

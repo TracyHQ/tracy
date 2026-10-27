@@ -1,0 +1,94 @@
+{
+  "color": {
+    "wheat-cream": {
+      "$value": "#e5dccd",
+      "$type": "color",
+      "$description": "Wheat Cream — Page canvas, card surfaces, section backgrounds — the warm off-white that holds every screen"
+    },
+    "harvest-copper": {
+      "$value": "#ab5700",
+      "$type": "color",
+      "$description": "Harvest Copper — Primary text, body copy, list borders, card borders, decorative strokes — the default ink color across all editorial content"
+    },
+    "citron-beam": {
+      "$value": "#e8e359",
+      "$type": "color",
+      "$description": "Citron Beam — Logotype color, hero text overlays, accent borders, icon highlights — the electric chartreuse that makes the brand pop against forest greens and cream"
+    },
+    "morning-glory": {
+      "$value": "#7997ff",
+      "$type": "color",
+      "$description": "Morning Glory — Inline text highlights, links, secondary icon accents, input focus — a cool periwinkle that cools the otherwise warm palette when it enters body copy"
+    },
+    "amber-glow": {
+      "$value": "#d99623",
+      "$type": "color",
+      "$description": "Amber Glow — List borders, secondary heading accents, warm decorative strokes"
+    },
+    "forest-floor": {
+      "$value": "#214534",
+      "$type": "color",
+      "$description": "Forest Floor — Button borders, body text on light accents, deep decorative strokes — a grounded dark green for contrast moments"
+    },
+    "deep-moss": {
+      "$value": "#103d26",
+      "$type": "color",
+      "$description": "Deep Moss — Darkest accent, background fills for contrasted blocks, depth shadows"
+    },
+    "olive-branch": {
+      "$value": "#568037",
+      "$type": "color",
+      "$description": "Olive Branch — List borders, tag accents, organic decorative strokes"
+    },
+    "slate-bloom": {
+      "$value": "#3d549c",
+      "$type": "color",
+      "$description": "Slate Bloom — Heading borders, muted decorative strokes, cool-tone secondary"
+    },
+    "coral-petal": {
+      "$value": "#e99686",
+      "$type": "color",
+      "$description": "Coral Petal — Soft fill washes, list surface tints, warm secondary backgrounds"
+    }
+  },
+  "font": {
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "Body text, UI labels, navigation, buttons, list items, footer copy, input fields — a neutral geometric sans that stays quiet and functional at 12–16px. The 1.4 line-height with weight 400/500 gives body copy a slightly airy, readable feel without competing with the display headlines."
+    },
+    "parafina": {
+      "$value": "Parafina",
+      "$type": "fontFamily",
+      "$description": "Display and headings — a custom rounded retro display sans used at extreme sizes (up to 173px) with crushed line-heights (0.80–0.90). The weight-500 single-weight treatment at oversized scales is signature: the type feels playful, warm, and printed-poster rather than corporate. Appears in hero, section headlines, and the logotype itself."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "exposuretrial": {
+      "$value": "ExposureTrial",
+      "$type": "fontFamily",
+      "$description": "ExposureTrial — detected in extracted data but not described by AI"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    },
+    "itcavantgardegothicmedium": {
+      "$value": "ITC_Avant_Garde_Gothic_Medium",
+      "$type": "fontFamily",
+      "$description": "ITC_Avant_Garde_Gothic_Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.makearte.ca",
+      "siteName": "arte*",
+      "extractedAt": "2026-06-03T19:27:50.712Z",
+      "variant": "compact"
+    }
+  }
+}

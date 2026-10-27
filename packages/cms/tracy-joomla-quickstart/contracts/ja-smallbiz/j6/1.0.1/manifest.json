@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-smallbiz/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_smallbiz",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-smallbiz",
+    "id": "quickstart/ja-smallbiz/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_smallbiz",
+    "parts": {
+      "installer": {
+        "file": "ja-smallbiz-j6-quickstart-1.0.1.zip",
+        "bytes": 43018188,
+        "sha256": "d1f755eacf864291c5cc8a9c2077762c9ce2c0266c520d805fa6b33efee63a4b"
+      }
+    },
+    "release": "quickstart/ja-smallbiz/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-09T16:16:33.253Z",
+    "builtFrom": {
+      "from": "quickstart/ja-smallbiz/j6@1.0.0",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

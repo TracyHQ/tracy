@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a0cb71ee-c2f2-4c37-a527-9e8ff0a0b312",
+  "status": "complete",
+  "name": "Nuri",
+  "url": "https://styles.refero.design/style/a0cb71ee-c2f2-4c37-a527-9e8ff0a0b312",
+  "sourceWebsite": "https://nuri.com",
+  "extractedAt": "2026-06-03T20:42:32.900Z",
+  "capturedAt": "2026-10-08T05:15:30.506179+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Lavender art-deco bank lobby — pill-soft, serif-meets-stencil, cool violet bleeding into warm cream.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4bf70ba3-6438-4105-a24f-a8b30a7f58c6.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7d9818920e7ecf8e75ff34aeef97bab5d90d0b7862e4d9cb4b9caaf517572575",
+      "bytes": 21531
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "44bf76e963a6755fa7f4c273c1bf8f84b82fcfaab0911bb3ab6ccd7d83f7a7d7",
+      "bytes": 115771
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3cce0411e6d98c30db1d17185a4774180b9bf6d918e56e4014ddf4b3ccbb3f9b",
+      "bytes": 17569
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9ed5737f3582c3e9e14ad4f256ca5bd5d7bcbfd51bda1c14c7dafabb43d20f08",
+      "bytes": 13020
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0df370d4f0cc9ca13613b450a650c795c2692588cb35353977a330ecf81449d2",
+      "bytes": 12831
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "eafb7b6e761c60c8d38a847e94b116613692f439a82251cd9384ce6fea118673",
+      "bytes": 4304
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "41b5d4f72983a412b69cbc4bd3dff063b24d1759f9e93edc38dc70ce7334beb5",
+      "bytes": 852
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "56b3bfe0e59a7ab54faef7821cca0c782c969bbf8aec9532a7170ef81beb9cd8",
+      "bytes": 869
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8b7ecefbf18c8d34f1e0b130a090b78e0c051b5e42327b02e485ce567393631b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0c4b6cb1e0d2e6d78e7d0354f11f66fb5059ef64050e6074a97fd750dee5a732",
+      "bytes": 45351
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "271388fba359504a8cd47e1c9edafd6eb10a567052ad95346ba1c18d62213c39",
+      "bytes": 23270
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "851717cf0a51399e0b75357cb2f5cf90b6fc2c4cad0df7fad2dbf097c0074f6b",
+      "bytes": 46953
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a53d9fdd35503128bca12547f0f391c88dd6e790773982993237885b92a0c90f",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cbf07e0f79041120ccd8aab5da52d3186406404d5c45b7f280e03cedb9b07846",
+      "bytes": 1865
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "bfbe74e0921535e22e913d3a327c590097bdf1b14bc3ca089f02a2d51516a795",
+      "bytes": 2534
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "a0cb71ee-c2f2-4c37-a527-9e8ff0a0b312",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "e6b53c1e-644b-4300-b42f-0e64905d1443",
+    "e9f07a27-bdd4-4f6a-8132-329d014aa5f4",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f1a2100a-7cda-4787-b8af-5c5edcfcdff0"
+  ]
+}

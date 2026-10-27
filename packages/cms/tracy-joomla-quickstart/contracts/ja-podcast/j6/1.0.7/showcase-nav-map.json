@@ -1,0 +1,368 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-podcast/j6/1.0.7",
+  "baseHash": "02e69dd706f6fde99c981a31f0c6507c6d612014566afe63e00c35562ecda053",
+  "baseFiles": {
+    "manifest.json": "a82e514171072fd05cb0f3e622f4f122fd484cdf076ff495246010fbf00f7b8d",
+    "content-map.json": "8dd2945e7909c96010bd270dd9182dd8d43acbfeb7b4f5385ddf0427b3ec1ad2",
+    "presentation-lock.json": "b1afa3b8d4c2f38aa2c58fcc3a7055a9e6ea18ef8b4cf21cb1aad061fc781a3a"
+  },
+  "inputs": {},
+  "decisionsHash": "a22c4a1f3e3cfdf77cedd3f5a5675ff3e22ea6699df107efab5c8947add30811",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "pages/j-pages/offline-pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-120",
+      "identity": {
+        "path": "pages/j-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "pages/j-pages/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-125",
+      "identity": {
+        "path": "pages/j-content/featured-article",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Article",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "pages/j-content/blog-detail",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blog Detail",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-130",
+      "identity": {
+        "path": "pages/j-content/author-listing",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Author Listing",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "About",
+      "where": "mainmenu/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "Podcast",
+      "where": "mainmenu/podcast",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Blog",
+      "where": "mainmenu/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-111",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Users",
+      "where": "mainmenu/pages/users",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Login Form",
+      "where": "mainmenu/pages/users/login-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Registration Form",
+      "where": "mainmenu/pages/users/registration-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "User Profile",
+      "where": "mainmenu/pages/users/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Edit Profile",
+      "where": "mainmenu/pages/users/edit-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/j-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-124",
+      "label": "Category Blog",
+      "where": "mainmenu/pages/j-content/category-blog",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:2: a branch hide may not take real content along"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Cookies",
+      "where": "menu-footer/cookies",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Terms of services",
+      "where": "menu-footer/terms-of-services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Privacy policy",
+      "where": "menu-footer/privacy-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Podcast Listing",
+      "where": "mainmenu/podcast/podcast-listing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Podcast Detail",
+      "where": "mainmenu/podcast/podcast-detail",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@position-1",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 23 entries stay (class \"_menu\")"
+    },
+    {
+      "key": "module-91",
+      "label": "User Menu",
+      "where": "mod_menu@position-7",
+      "rule": "keep.default",
+      "reason": "renders usermenu: 5 entries stay (class \"_menu\")"
+    },
+    {
+      "key": "module-101",
+      "label": "Menu Footer",
+      "where": "mod_menu@footer-menu",
+      "rule": "keep.default",
+      "reason": "renders menu-footer: 3 entries stay"
+    },
+    {
+      "key": "module-122",
+      "label": "Menu Off-canvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 23 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-118",
+      "label": "J!Pages",
+      "where": "mainmenu/pages/j-pages",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-121, which stays"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/j-pages/smart-search",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_finder (view=search) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "J! Content",
+      "where": "mainmenu/pages/j-content",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-124, which stays"
+    },
+    {
+      "key": "menuItem-149",
+      "label": "Listing Layout 3",
+      "where": "mainmenu/podcast/podcast-listing/listing-layout-3",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listing Layout 3\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-151",
+      "label": "Listing Layout 2",
+      "where": "mainmenu/podcast/podcast-listing/listing-layout-2",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listing Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-152",
+      "label": "Listing Layout 1",
+      "where": "mainmenu/podcast/podcast-listing/listing-layout-1",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listing Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-153",
+      "label": "Detail Layout 1",
+      "where": "mainmenu/podcast/podcast-detail/podcast-detail-layout-1",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Detail Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-156",
+      "label": "Detail Layout 2",
+      "where": "mainmenu/podcast/podcast-detail/podcast-detail-layout-2",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Detail Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-157",
+      "label": "Detail Layout 3",
+      "where": "mainmenu/podcast/podcast-detail/podcast-detail-layout-3",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Detail Layout 3\" names a showcase branch"
+    }
+  ],
+  "counts": {
+    "menuItems": 6,
+    "modules": 0,
+    "kept": 27,
+    "unresolved": 9
+  }
+}

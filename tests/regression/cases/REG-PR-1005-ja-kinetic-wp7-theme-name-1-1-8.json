@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1005-ja-kinetic-wp7-theme-name-1-1-8",
+  "kind": "fix",
+  "title": "JA Kinetic wp7 1.1.8: the theme is listed in WordPress as WP Kinetic",
+  "pr": 1005,
+  "area": "wordpress-theme/wp-ja-kinetic",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout read the shipped theme packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic/style.css and its overlay style.css under overlays/wp-ja-kinetic.",
+    "S2: Read the release's recorded site sweep tasks/ja-kinetic-wp7/release/fix-measure.json (taken on a clean restore of the 1.0.6 pack against the local Joomla source stand) and tasks/ja-kinetic-wp7/release/SHA256SUMS."
+  ],
+  "expect": [
+    "S1: both style.css files read Theme Name: WP Kinetic and the shipped theme is version 1.1.8.",
+    "S2: the sweep was taken by site-sweep.mjs on the released theme zip and passes 11 of 11 checks."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1005-ja-kinetic-wp7-theme-name-1-1-8.mjs",
+    "evidence": "tasks/ja-kinetic-wp7/release/fix-measure.json"
+  },
+  "evidence": "Release of 07/10/2026 against the local Joomla source, theme 1.1.8: full 11-check site-sweep (30/30 routes) on a clean restore of the 1.0.6 pack passed with 0 open groups; wp theme list on the restore shows wp-ja-kinetic titled WP Kinetic at 1.1.8, active",
+  "fence": "The two style.css headers carry the name and the release's sweep record is the one taken on the shipped zip; the script goes red on the parent of the fix.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1005-ja-kinetic-wp7-theme-name-1-1-8.mjs"]
+  }
+}

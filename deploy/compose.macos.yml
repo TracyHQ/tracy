@@ -1,0 +1,136 @@
+# macOS override — `network_mode: host` does not mean on a Mac what it means on the fleet.
+#
+# 🔒 MEASURED 10/09 ON DOCKER DESKTOP / macOS. `network_mode: host` puts a container in the host
+# namespace of the LINUX VM, not of macOS. So `tracy-host` listening on 51720 is reachable from
+# another host-networked container (`check-local.sh`'s probe answers
+# `{"docker":true,"sitesRoot":true}`), and reachable from NOWHERE ELSE: not from macOS itself
+# (`curl 127.0.0.1:51720` → connection refused), and not from `tracy-web`, which sits on compose's
+# bridge. `host.docker.internal` does not bridge the gap either — it points at the macOS host,
+# which is the one place the listener is NOT.
+#
+# The symptom that costs an afternoon: creating a site answers `502 {"code":"FLEET_REFUSED"}`
+# while every one of the seven services reports healthy, because each health check only probes
+# its OWN port. "The stack is up" and "the parts can talk" are different claims.
+#
+# What this override changes, and why each is safe on a laptop:
+#   - tracy-host joins the compose network instead of the host namespace, so `tracy-web` reaches
+#     it by service name. The two reasons the fleet needs host mode — go-live's iptables rules,
+#     and the loopback ports sites publish — are both off or unnecessary here: go-live answers
+#     501 NOT_CONFIGURED without Cloudflare, and a site container on the `tracy` network is
+#     reachable by name, which is what `siteTarget()` already uses.
+#   - 51720 is published on loopback so a person can curl the host's own doors while debugging.
+#
+#   - a SECOND dnsmasq, for macOS itself. The `dns` service in compose.yml answers
+#     `*.<SITE_DOMAIN>` with `172.30.0.10` — right for a container on the `tracy` network, and
+#     unreachable from macOS, which must hear `127.0.0.1` instead (that is where tracy-web
+#     publishes 8080). One name cannot have two answers in one resolver, so it takes two, and
+#     this one is macOS-only. Published on 5354 rather than 53 so nothing needs root, and NOT on
+#     5353 — that is mDNSResponder's own port and it is always taken on a Mac (`up` fails with
+#     `bind: address already in use`, measured 10/09). `/etc/resolver/test` names the port.
+#
+# 🔒 macOS DOES NOT READ /etc/resolver BY ITSELF FOR A NAME IT CAN ALREADY FAIL TO RESOLVE —
+# it reads it per TLD, from the FILENAME. The file must be named after the last label
+# (`/etc/resolver/test` for `*.tracy.test`), not after the whole domain. One `sudo`, once:
+#
+#   sudo mkdir -p /etc/resolver
+#   printf 'nameserver 127.0.0.1\nport 5354\n' | sudo tee /etc/resolver/test
+#
+# Check it with `scutil --dns | grep -A3 'domain.*test'`, and prove it end to end with
+# `dscacheutil -q host -a name anything.tracy.test` → 127.0.0.1. `ping` and `dig` are BOTH
+# useless here: `dig` talks to a resolver directly and ignores /etc/resolver entirely, so it can
+# say NXDOMAIN while every browser on the machine resolves the name perfectly.
+#
+# Use it: docker compose -f compose.yml -f compose.macos.yml --profile local up -d
+# `check-local.sh` adds both files itself on Darwin (it did NOT until 10/09, while this line
+# claimed it did — and a bare `up -d` on a Mac silently reverts tracy-host to host mode, after
+# which every site creation answers 502 FLEET_REFUSED with all services reporting healthy).
+services:
+  tracy-web:
+    # 🔒 ONE ADDRESS, INSIDE AND OUT — the container listens on the SAME port it is published on.
+    #
+    # The base file publishes `127.0.0.1:${WEB_PORT}:8080`, so the address the browser uses
+    # (`TRACY_ORIGIN`, e.g. `tracy.test:51710`) names a port nothing listens on inside the compose
+    # network. That address is not only the browser's: `relayPlan` (tracy-site-tools) sends a write
+    # with no prompter behind it — every Build started from the Build tab — to the VIEWER's own
+    # origin, deliberately, because a cookie belongs to the origin that issued it (the 09/09 note in
+    # `prompter.mjs`: pinning that route to the configured origin sent a local build's first call to
+    # production). So on a Mac stand `check`, the FIRST stage of every Build, died in ~200 ms with
+    # `fetch failed`, six stages left `pending`, while all nine services reported healthy. Measured
+    # 20/09/2026 on `site-lr1m0l`: from the host `tracy.test:51710` answered 200 and from inside
+    # `tracy-dsh` the same URL answered 000.
+    #
+    # ⚠ FIXING IT BY MOVING THE HOST PORT TO 8080 IS WORSE, and was tried first the same day: the
+    # addresses already written into `site.address` at provision time still name the old port, so
+    # every site link in the UI dies the moment the port moves. Keeping the number and moving the
+    # LISTENER leaves every stored address valid.
+    environment:
+      NODE_ENV: development
+      LOCAL_LOGIN_PREVIEW: "${LOCAL_LOGIN_PREVIEW:-1}"
+      PORT: ${WEB_PORT:-51710}
+    # Quickstart packs not published yet (`TRACY_LOCAL_RELEASES_DIR`, apps/tracy-web/src/lib/
+    # local-releases.js): read-only, at the SAME path on both sides, like the two data roots — the
+    # `file:` address tracy-web writes into an install entry is opened by tracy-host at that path.
+    # Unset, an empty scratch folder is mounted instead and nothing reads it (the variable is empty).
+    volumes:
+      - ${TRACY_LOCAL_RELEASES_DIR:-/tmp/tracy-local-releases-off}:${TRACY_LOCAL_RELEASES_DIR:-/tmp/tracy-local-releases-off}:ro
+    ports: !override ["127.0.0.1:${WEB_PORT:-51710}:${WEB_PORT:-51710}"]
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:${WEB_PORT:-51710}/").then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dns-host:
+    image: 4km3/dnsmasq:2.90-r3
+    command:
+      [
+        '-k',
+        '--log-facility=-',
+        '--address=/${SITE_DOMAIN:-tracy.test}/127.0.0.1',
+        '--server=1.1.1.1'
+      ]
+    ports: ["127.0.0.1:${HOST_DNS_PORT:-5354}:53/udp"]
+    healthcheck:
+      test: ["CMD", "nslookup", "healthcheck.${SITE_DOMAIN:-tracy.test}", "127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    profiles: [local]
+
+  tracy-host:
+    network_mode: ""
+    networks: [default, tracy, docker-api]
+    ports: ["127.0.0.1:${TRACY_HOST_PORT:-51720}:${TRACY_HOST_PORT:-51720}"]
+    environment:
+      # On the bridge, tracy-web is a service name again — 127.0.0.1 here would be this
+      # container's own loopback, not the host's.
+      TRACY_WEB_ORIGIN: http://tracy-web:${WEB_PORT:-51710}
+      # Sync from live reads an imported test site's live original at `<label>.tracy.test`, which
+      # this container resolves to its own loopback: the read goes through tracy-web with the
+      # site's name in Host (`scripts/lib/live-pull.mjs` `route`). Only `.tracy.test` names.
+      TRACY_SYNC_CONNECT_VIA: tracy-web:${WEB_PORT:-51710}
+      # The one runtime `config.js` lets read TRACY_LOCAL_RELEASES_DIR: the image sets no NODE_ENV,
+      # so a server host with that variable set refuses to boot instead of reading local packs.
+      NODE_ENV: development
+    # Same mount as tracy-web above, same path: `quickstart.py` reads a `file:` quickstart only from
+    # under TRACY_LOCAL_RELEASES_DIR.
+    volumes:
+      - ${TRACY_LOCAL_RELEASES_DIR:-/tmp/tracy-local-releases-off}:${TRACY_LOCAL_RELEASES_DIR:-/tmp/tracy-local-releases-off}:ro
+
+  tracy-dsh:
+    environment:
+      # 🔒 THE APPLY DOOR'S ROAD BACK. `tracy-site-tools` relays every CMS write and read
+      # (`core.manifest`, `content.update`, the seeder's writes) to `${MCP_TRACY_ORIGIN}/api/sites/
+      # <key>/apply`. The base file sets it to `TRACY_ORIGIN` — the address the BROWSER uses — and
+      # inside this container that is `tracy.test:51710`: the name resolves to tracy-web through
+      # the local dnsmasq, but 51710 is the HOST publish, not a port the container listens on
+      # (`ports: ["127.0.0.1:${WEB_PORT}:8080"]`). Measured 13/09: `check`, the first stage of every
+      # Build, died with `COWORK_WEB_UNREACHABLE: fetch failed` while all nine services were healthy,
+      # and no Build had ever run to its end on this stack. Same reason `tracy-host` above names
+      # `http://tracy-web:8080`. The server file needs nothing: there `TRACY_ORIGIN` is the public
+      # address and the tunnel answers it from inside too.
+      MCP_TRACY_ORIGIN: http://tracy-web:${WEB_PORT:-51710}

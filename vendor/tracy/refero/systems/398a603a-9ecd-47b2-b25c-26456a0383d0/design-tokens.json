@@ -1,0 +1,244 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary page canvas, header background, and bright media surround"
+    },
+    "milk-paper": {
+      "$value": "#fff4ec",
+      "$type": "color",
+      "$description": "Milk Paper — Warm light surface for talent pages, partner labels, and soft text on dark sections"
+    },
+    "cocoa-ink": {
+      "$value": "#1b0800",
+      "$type": "color",
+      "$description": "Cocoa Ink — Primary text, navigation, outlined controls, logo treatment, and dark surface"
+    },
+    "talent-peach": {
+      "$value": "#f6c9a1",
+      "$type": "color",
+      "$description": "Talent Peach — Talent-section display text and supporting copy on Cocoa Ink — the muted peach makes dark editorial panels feel human rather than corporate"
+    },
+    "home-umber": {
+      "$value": "#381a06",
+      "$type": "color",
+      "$description": "Home Umber — Deep brown feature-section surface for high-contrast editorial statements"
+    },
+    "join-blush": {
+      "$value": "#fae3cf",
+      "$type": "color",
+      "$description": "Join Blush — Pale peach participation and joining surface"
+    },
+    "shortlist-clay": {
+      "$value": "#78492d",
+      "$type": "color",
+      "$description": "Shortlist Clay — Shortlist area surface and dark-on-light warm brown emphasis"
+    },
+    "shortlist-cream": {
+      "$value": "#fdf4ed",
+      "$type": "color",
+      "$description": "Shortlist Cream — Text on Shortlist Clay surfaces"
+    },
+    "peach-wash": {
+      "$value": "#ffe2cc",
+      "$type": "color",
+      "$description": "Peach Wash — Secondary pale warm surface"
+    },
+    "profile-copper": {
+      "$value": "#db9a68",
+      "$type": "color",
+      "$description": "Profile Copper — Profile dark-theme text and small warm highlight"
+    },
+    "fine-grey": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fine Grey — Hairline decorative circles and subdued interface marks"
+    }
+  },
+  "font": {
+    "die-grotesk-b-semibold": {
+      "$value": "Die Grotesk B SemiBold",
+      "$type": "fontFamily",
+      "$description": "Workhorse reading and utility face for compact body copy, links, skip navigation, and partner names. Its 12px and 16px settings retain a blunt, compact texture instead of expanding into conventional airy sans-serif body text."
+    },
+    "die-grotesk-b-bold": {
+      "$value": "Die Grotesk B Bold",
+      "$type": "fontFamily",
+      "$description": "Navigation, text controls, brand links, and the 22px introductory heading. Keep the nominal 400 weight mapping: visual boldness comes from the bespoke face rather than a CSS 700 value."
+    },
+    "die-grotesk-b-black": {
+      "$value": "Die Grotesk B Black",
+      "$type": "fontFamily",
+      "$description": "Rare 12px emphatic micro-label treatment."
+    },
+    "die-grotesk-c-black": {
+      "$value": "Die Grotesk C Black",
+      "$type": "fontFamily",
+      "$description": "30px statement heading for dark, warm-toned editorial panels. The black cut gives short declarations a dense, carved texture."
+    },
+    "bonto": {
+      "$value": "Bonto",
+      "$type": "fontFamily",
+      "$description": "Display face for the 66px Talent title and major identity-scale words. The tight tracking and single-line leading make the lettering read as a graphic slab rather than ordinary headline text."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Die Grotesk B Bold",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Die Grotesk B SemiBold",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Die Grotesk B Black",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Die Grotesk B SemiBold",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Die Grotesk B SemiBold",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Die Grotesk B SemiBold",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Die Grotesk B Bold",
+        "fontSize": "22px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 22px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Die Grotesk C Black",
+        "fontSize": "30px",
+        "fontWeight": 400,
+        "lineHeight": 1.18,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 30px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Bonto",
+        "fontSize": "66px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 66px"
+    }
+  },
+  "spacing": {
+    "6": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Spacing 6px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "unit": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "surface": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page canvas and header surface."
+    },
+    "milk-paper": {
+      "$value": "#fff4ec",
+      "$type": "color",
+      "$description": "Surface level 1: Warm talent-area and light editorial surface."
+    },
+    "join-blush": {
+      "$value": "#fae3cf",
+      "$type": "color",
+      "$description": "Surface level 2: Pale peach participation surface."
+    },
+    "cocoa-ink": {
+      "$value": "#1b0800",
+      "$type": "color",
+      "$description": "Surface level 3: Dark text field and high-contrast surface."
+    },
+    "home-umber": {
+      "$value": "#381a06",
+      "$type": "color",
+      "$description": "Surface level 4: Deep editorial statement-panel surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://beings.co",
+      "siteName": "Beings",
+      "extractedAt": "2026-09-20T19:30:28.623Z",
+      "variant": "extended"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# Build output — `apps/tracy-web/Dockerfile` COPYs it into the image as `static/docs`; the CI build
+# job, `scripts/rebuild-local.sh` and `pnpm --filter @tracy/docs build` write it. Never committed,
+# same reasoning as `packages/web/tracy-harness/dist`.
+dist/
+# Astro's own cache (generated types, settings), written on the first `astro dev`/`astro build`.
+.astro/
+# The three pages `scripts/generate.mjs` writes from the reference tables before every build. The
+# tables (`apps/tracy-web/src/api-reference/*.js`, `docs/references/api-changelog.md`) are the
+# source; a committed copy would be a second truth that drifts.
+src/content/docs/reference/errors.md
+src/content/docs/reference/compatibility.md
+src/content/docs/changelog.md

@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-linen-canvas: #edede8;
+  --color-frosted-white: #ffffff;
+  --color-warm-stone: #dbdbd2;
+  --color-pebble: #c0c0c0;
+  --color-graphite-ink: #141414;
+  --color-charcoal-body: #292929;
+  --color-slate-caption: #6f6f6e;
+  --color-ash-subheading: #8f8f8e;
+  --color-iron-nav: #353535;
+  --color-onyx-border: #000000;
+  --color-quartz: #d0d0c8;
+  --color-lime-pulse: #4cc02b;
+
+  /* Typography — Font Families */
+  --font-switzer: 'Switzer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui: 'system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

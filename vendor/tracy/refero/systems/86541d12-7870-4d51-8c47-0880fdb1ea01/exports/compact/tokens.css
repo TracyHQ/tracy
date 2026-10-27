@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-slate-canvas: #1c1e21;
+  --color-ink-well: #121317;
+  --color-graphite-hairline: #3b3e45;
+  --color-steel-border: #272a2e;
+  --color-ash-text: #b5b8c0;
+  --color-fog-text: #878c99;
+  --color-cloud-text: #d7d9dd;
+  --color-bone-text: #e5e7eb;
+  --color-signal-lime: #a8ff53;
+  --color-syntax-violet: #9c9af2;
+  --color-syntax-pink: #fa3abf;
+  --color-event-violet: #7655fd;
+  --color-loop-green: #afec73;
+  --color-key-lime: #d9f07c;
+  --color-tag-magenta: #e888f8;
+  --color-mute-red: #f43f5e;
+
+  /* Typography — Font Families */
+  --font-satoshi: 'Satoshi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

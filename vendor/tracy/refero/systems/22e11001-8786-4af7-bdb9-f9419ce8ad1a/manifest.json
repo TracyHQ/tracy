@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+  "status": "complete",
+  "name": "Gigantic",
+  "url": "https://styles.refero.design/style/22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+  "sourceWebsite": "https://giganticcandy.com",
+  "extractedAt": "2026-06-03T20:52:07.575Z",
+  "capturedAt": "2026-10-08T05:09:20.732344+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "punk-rock candy wrapper shouting on cream paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/67fc4596-f1ab-4ee4-a7f4-416d1ed79017.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/bf58fabb-5ba7-41d0-87ee-96e42f007be4.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2a11813b-b303-4719-b857-7ab268887fbf.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b602838b-00db-44c1-8bdf-5f7ab95f0e79.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2cfad922-8401-45cc-bcef-53a38c79180f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1ae5ef2e122006e7146bbd77b6f89635bf162af586d1a0a11a5f6c78ee4a4816",
+      "bytes": 20791
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7f6025da2303f53f270f75b57e752518e7efd384838e99da9d1a1660f8076682",
+      "bytes": 52870
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "316cc1794caae43a9c6e58b19ef16da7ddaa8019f8bee0065ba1606a94f6e011",
+      "bytes": 17574
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c8bd1be4f10856d4dc76680250b13695d09cb281f2522b4e49342d6e4297fe7d",
+      "bytes": 12545
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c7243d35127ed0d3b99fa42301510147a58d4e22fccd4235ab06ba5be385c8fa",
+      "bytes": 13132
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ab166867f5c0b0e07ae3e78e8ef7c4e35ede20ac7cfd63707f06a752305f889c",
+      "bytes": 2067
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c7672e31e7be4dc92e825a88b10148a2809879b3be508cb21f6f86f8dd99d131",
+      "bytes": 607
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1083e2d25672d2dbe128f7c64f73da7a7c293d3b281df450ab8598c6c3fe5487",
+      "bytes": 624
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7a7411e221778d55510bfba16e77af38811920e3daac909ff7ac27256f2a945d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8cddfb5629cb8b855411686068c48b4331fe896eaf0eb5e865cd8d89e26abf83",
+      "bytes": 43550
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "95cce865abe733101161f8e30244c378f6cd835ced09dfa05b43d724a95e2535",
+      "bytes": 22836
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b466a4df91c0dae51691cf1afe5ae1fd819a0de9808744af953c64f4b46750c0",
+      "bytes": 43891
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3f1b4d194861efb8dc3f1789772e4451a8bcbb5da7dc00c1581df53f3b100dd2",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b43adedd25042345fbbb52ca0a23e170bc27c6b40303989bacba805d10fcddd0",
+      "bytes": 1496
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7a81f8402c6a5f4903104204c5822aafefc7a5a2da0d7755b6a1d7603bbb1bff",
+      "bytes": 2036
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "045e9f2b-91d3-44cc-bc99-1ce5f3fd4ed6",
+    "04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "47f15da7-8905-45b3-bcab-06a4277c6168",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "8efa9029-b39c-48db-a8ec-c97c645a7a58",
+    "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "b22f68eb-7ed1-47b6-995e-2c0afc79ac7e",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "customTemplates": [
+    {
+      "name": "page-article",
+      "title": "Article",
+      "postTypes": [
+        "page",
+        "post"
+      ]
+    }
+  ]
+}

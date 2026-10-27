@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-phio/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_phio",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-phio",
+    "id": "quickstart/ja-phio/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_phio",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-phio-j6-webroot-1.0.7.tar.gz",
+        "bytes": 57415503,
+        "sha256": "b6edc64371bc93f997ff0b2b1ec51269df0eef401fc2546cbc9783ec63d468ef"
+      },
+      "database": {
+        "file": "ja-phio-j6-database-1.0.7.sql.gz",
+        "bytes": 130277,
+        "sha256": "b361f3f44aaa2a78d1298ef9c960d562dd49201d3e01b8f0cab06e0902466cd6"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-17T22:40:30.717Z",
+    "builtFrom": {
+      "from": "quickstart/ja-phio/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 783 files replaced (templates/ja_phio/AGENTS.md, templates/ja_phio/CLAUDE.md, templates/ja_phio/README.md, templates/ja_phio/component.php, templates/ja_phio/error-t4.php, templates/ja_phio/error.php, templates/ja_phio/favicon.ico, templates/ja_phio/index.php, templates/ja_phio/layout.json, templates/ja_phio/offline.php, templates/ja_phio/templateDetails.xml, templates/ja_phio/templateInfo.php, templates/ja_phio/template_preview.png, templates/ja_phio/template_thumbnail.png, templates/ja_phio/css, templates/ja_phio/docs, templates/ja_phio/etc, templates/ja_phio/fonts, templates/ja_phio/html, templates/ja_phio/images, templates/ja_phio/js, templates/ja_phio/scss, templates/ja_phio/acm, templates/ja_phio/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-phio/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

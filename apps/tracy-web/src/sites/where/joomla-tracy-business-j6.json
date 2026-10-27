@@ -1,0 +1,819 @@
+{
+  "$comment": "Where Tracy Business j6 (tracy_business, a JoomlArt T4 template) keeps each topic, read off its contract profiles (1.2.0, and 1.2.1: the same content map and database, with the dark-logo template patch) (content-map, presentation-lock, multilingual-map), the quickstart's own patches and plugins, and the seeder that writes these records; every entry carries its proof and test/content-where.test.mjs re-reads them. Left out, not provable here: Open Graph and canonical tags, JSON-LD, an analytics place, menu-item meta description and robots params, whether an article's metadata robots reaches the page, and the colour keys inside the T4 theme files (their bytes are only hashed in the lock).",
+  "schemaVersion": "tracy-content-where/v1",
+  "platform": "joomla",
+  "quickstart": "tracy-business/j6",
+  "versions": ["1.2.0", "1.2.1"],
+  "topics": {
+    "pages": [
+      {
+        "what": "A new page: an article in the 'pages' category (263; Russian 275), its headings and paragraphs as HTML in fulltext, then its menu item. Plain text needs no module and no template file.",
+        "where": {
+          "kind": "article",
+          "field": "fulltext",
+          "catid": 263
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "article",
+              "id": 0,
+              "fields": {
+                "title": "<title>",
+                "catid": 263,
+                "state": 1,
+                "language": "en-GB",
+                "fulltext": "<h3><question></h3><p><answer></p>"
+              },
+              "apply_id": "<new id>"
+            }
+          },
+          "then": {
+            "tool": "tracy_site",
+            "call": {
+              "action": "content.update",
+              "params": {
+                "kind": "menuItem",
+                "id": 0,
+                "fields": {
+                  "title": "<title>",
+                  "menutype": "tb-main-en",
+                  "type": "component",
+                  "component_id": 22,
+                  "link": "index.php?option=com_content&view=article&id=<article id>",
+                  "published": 1,
+                  "language": "en-GB"
+                },
+                "apply_id": "<new id>"
+              }
+            }
+          }
+        },
+        "languages": "One article and one menu item per language: Russian is category 275, menutype tb-main-ru, language ru-RU.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/article-555/catid",
+            "equals": "263"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/article-555/catid",
+            "equals": "263"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-600/link",
+            "equals": "index.php?option=com_content&view=article&id=555"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-600/link",
+            "equals": "index.php?option=com_content&view=article&id=555"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-600/component_id",
+            "equals": "22"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-600/component_id",
+            "equals": "22"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-600/type",
+            "equals": "component"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-600/type",
+            "equals": "component"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "id left out (or 0) CREATES one"
+          }
+        ]
+      },
+      {
+        "what": "Its place in the menu: a THIRD write once it exists. move_after on a new item is not honoured; on an existing item it moves it (with its children) to sit after the item named.",
+        "where": {
+          "kind": "menuItem",
+          "field": "move_after"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "menuItem",
+              "id": "<the new item's id>",
+              "fields": {
+                "move_after": "<id of the item it follows>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "Per language menu; the item follows one in its own menutype.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "on an existing record parent_id / move_after MOVE it"
+          }
+        ]
+      }
+    ],
+    "seo": [
+      {
+        "what": "Site name at the end of every <title> (and the mail sender name): one slot of the [Tracy] Site identity module, which sets Joomla's runtime sitename.",
+        "where": {
+          "slot": "module-4369.0",
+          "kind": "module"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "module-4369.0": "<new site name>"
+              }
+            }
+          }
+        },
+        "languages": "One value for every language: the identity module's language is *.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/plugins/plg_system_tracyidentity/src/Extension/TracyIdentity.php",
+            "has": "`onAfterInitialise` sets the runtime `sitename` (the page `<title>` and mail sender name)."
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+            "has": "\"label\": \"[Tracy] Site identity / site-name\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/content-map.json",
+            "has": "\"label\": \"[Tracy] Site identity / site-name\""
+          }
+        ]
+      },
+      {
+        "what": "A page's own part of <title>: the title of the menu item that opens it, one slot each (About is menuItem-600.0).",
+        "where": {
+          "slot": "menuItem-600.0",
+          "kind": "menuItem",
+          "field": "title"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "menuItem-600.0": "<new title>"
+              }
+            }
+          }
+        },
+        "languages": "en-GB and ru-RU are their own menu items; another language's copy of a slot is '<edition>::<key>'.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+            "has": "\"key\": \"menuItem-600.0\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/content-map.json",
+            "has": "\"key\": \"menuItem-600.0\""
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/site.mjs",
+            "has": "another language's copy is \"<edition>::<key>\""
+          }
+        ]
+      },
+      {
+        "what": "A page title set apart from its menu label: the menu item's params page_title (only About and Investor relations set one); params is written whole.",
+        "where": {
+          "kind": "menuItem",
+          "id": 600,
+          "param": "page_title"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "menuItem",
+              "id": 600,
+              "fields": {
+                "params": "<the whole params JSON content.get answers, page_title changed>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One menu item per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "has": "\"params\": \"{\\\"page_title\\\":\\\"About us\\\"}\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "has": "\"params\": \"{\\\"page_title\\\":\\\"About us\\\"}\""
+          }
+        ]
+      },
+      {
+        "what": "An article's meta description: the article's metadesc (the machine-foundation article sets one, en and ru).",
+        "where": {
+          "kind": "article",
+          "field": "metadesc"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "article",
+              "id": "<article id>",
+              "fields": {
+                "metadesc": "<up to 160 characters>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One article per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "has": "\"metadesc\": \"Get one dynamic load parameter wrong"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "has": "\"metadesc\": \"Get one dynamic load parameter wrong"
+          }
+        ]
+      },
+      {
+        "what": "hreflang and x-default links: the Language Filter plugin's params alternate_meta, xdefault and xdefault_language (en-GB).",
+        "where": {
+          "kind": "languageFilter",
+          "param": "alternate_meta"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "languageFilter",
+              "id": "<its id from content.list {kind:\"languageFilter\"}>",
+              "fields": {
+                "params": "<the whole params JSON, changed>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One plugin for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/multilingual-map.json",
+            "has": "\"alternate_meta\": 1,"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/multilingual-map.json",
+            "has": "\"alternate_meta\": 1,"
+          },
+          {
+            "file": "packages/cms/tracy-seeder/src/apply-joomla-t4.mjs",
+            "has": "const filters = await list('languageFilter')"
+          }
+        ]
+      }
+    ],
+    "design": [
+      {
+        "what": "Which design preset and layouts the two template styles use: params typelist-theme, typelist-site, typelist-navigation, typelist-layout of style 119 (Home) and 120 (Inner).",
+        "where": {
+          "kind": "templateStyle",
+          "id": 119,
+          "param": "typelist-theme"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "templateStyle",
+              "id": 119,
+              "fields": {
+                "params": "<the whole params JSON content.get answers, changed>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "has": "\\\"typelist-theme\\\":\\\"tracy-business\\\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "has": "\\\"typelist-theme\\\":\\\"tracy-business\\\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/multilingual-map.json",
+            "has": "A template style is presentation, shared by every language"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/multilingual-map.json",
+            "has": "A template style is presentation, shared by every language"
+          }
+        ]
+      },
+      {
+        "what": "Colours: the tokens (--tb-signal, --tb-forest, dark remap) in css/styles/tracy-business.css, loaded after T4's bundle, so they win over etc/theme. No compile; never delete media/t4 or cache.",
+        "where": {
+          "file": ".webroot/templates/tracy_business/css/styles/tracy-business.css"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/templates/tracy_business/css/styles/tracy-business.css"
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/tracy_business/css/styles/tracy-business.css",
+            "has": "--tb-signal:  var(--ds-c-accent-text, #DA5A2A);"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/tracy_business/css/styles/tracy-business.css",
+            "has": "--color-secondary: var(--tb-signal);"
+          },
+          {
+            "file": "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-template-activate.php",
+            "has": "is compiled from the style's own parameters the first time a route"
+          }
+        ]
+      },
+      {
+        "what": "Fonts: --font-display in css/styles/tracy-business.css and heading_font_family in etc/site/tracy-business.json; etc/theme has no font keys. T4 re-renders on the next request.",
+        "where": {
+          "file": ".webroot/templates/tracy_business/etc/site/tracy-business.json"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/templates/tracy_business/etc/site/tracy-business.json"
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/files/templates~1tracy_business~1etc~1site~1tracy-business.json"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/files/templates~1tracy_business~1etc~1site~1tracy-business.json"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/tracy_business/css/styles/tracy-business.css",
+            "has": "--font-display"
+          }
+        ]
+      },
+      {
+        "what": "Header and footer CSS: css/styles/tracy-business.css is the file pages load; scss/_tracy-business-chrome.scss is its source. A file edit needs php cli/joomla.php cache:clean.",
+        "where": {
+          "file": ".webroot/templates/tracy_business/css/styles/tracy-business.css"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/templates/tracy_business/css/styles/tracy-business.css"
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/README.md",
+            "has": "`css/styles/tracy-business.css`"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/README.md",
+            "has": "`scss/_tracy-business-chrome.scss`"
+          }
+        ]
+      },
+      {
+        "what": "The header lockup (name, slogan, monogram) is words, printed from the Site identity slots .0, .2 and .3.",
+        "where": {
+          "slot": ["module-4369.0", "module-4369.2", "module-4369.3"]
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "module-4369.2": "<new slogan>"
+              }
+            }
+          }
+        },
+        "languages": "One value for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/tracy_business/html/layouts/t4/element/logo.php",
+            "has": "{site.slogan}",
+            "release": {
+              "lock": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+              "as": "templates/tracy_business/html/layouts/t4/element/logo.php"
+            }
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/files/templates~1tracy_business~1html~1layouts~1t4~1element~1logo.php",
+            "equals": "45c153c67b1cdc52f0a2e9d937d988dcbef62c0bb77f8241d674677a44358a20"
+          }
+        ]
+      }
+    ],
+    "menus": [
+      {
+        "what": "A menu label: the menu item's title slot (About is menuItem-600.0). Main menus are tb-main-en and tb-main-ru; footer, top and legal menus have their own menutypes.",
+        "where": {
+          "slot": "menuItem-600.0",
+          "kind": "menuItem",
+          "menutype": "tb-main-en"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "menuItem-600.0": "<new label>"
+              }
+            }
+          }
+        },
+        "languages": "One menu per language; another language's copy of a slot is '<edition>::<key>'.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+            "has": "\"menutype\": \"tb-main-en\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/content-map.json",
+            "has": "\"menutype\": \"tb-main-en\""
+          }
+        ]
+      },
+      {
+        "what": "Add, move or hide a menu item: id 0 adds one; parent_id or move_after moves it with everything under it; published 0 hides it.",
+        "where": {
+          "kind": "menuItem"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "menuItem",
+              "id": "<its id, or 0 to add>",
+              "fields": {
+                "<title, link, menutype, published, parent_id or move_after>": "<value>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One item per language menu.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "id left out (or 0) CREATES one; on an existing record parent_id / move_after MOVE it"
+          }
+        ]
+      },
+      {
+        "what": "Footer menu columns are mod_menu modules; the column heading is the module title (Services is module 436 in English, 456 in Russian).",
+        "where": {
+          "kind": "module",
+          "id": 436,
+          "field": "title"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "module",
+              "id": 436,
+              "fields": {
+                "title": "<new heading>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One module per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "has": "\\\"menutype\\\":\\\"tb-footer-services-en\\\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "has": "\\\"menutype\\\":\\\"tb-footer-services-en\\\""
+          }
+        ]
+      },
+      {
+        "what": "The desktop mega menu is set in the T4 navigation file (mega_settings per menutype tb-main-<language>), not in a module.",
+        "where": {
+          "file": ".webroot/templates/tracy_business/etc/navigation/tracy-business.json"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/templates/tracy_business/etc/navigation/tracy-business.json"
+          }
+        },
+        "languages": "One block per language menutype in the file.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/README.md",
+            "has": "`etc/navigation/tracy-business.json`"
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/template-patches/README.md",
+            "has": "`<menu_type>-<language sef>`"
+          }
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "what": "Who receives the contact form: the contact record's email_to (contact 14 in English, 15 in Russian).",
+        "where": {
+          "kind": "contact",
+          "id": 14,
+          "field": "email_to"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "contact",
+              "id": 14,
+              "fields": {
+                "email_to": "<address>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One contact record per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+            "has": "\"link\": \"index.php?option=com_contact&view=contact&id=14\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/content-map.json",
+            "has": "\"link\": \"index.php?option=com_contact&view=contact&id=14\""
+          },
+          {
+            "file": "packages/cms/tracy-seeder/src/apply-joomla-door.mjs",
+            "has": "email_to: String(plan.contact.email)"
+          }
+        ]
+      },
+      {
+        "what": "The contact form's words (lede, notice, placeholders, labels, submit, reset, request types): slots .0 to .12 of module 809 (English) and 823 (Russian).",
+        "where": {
+          "slot": ["module-809.0", "module-809.7"],
+          "kind": "module"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "module-809.7": "<new submit label>"
+              }
+            }
+          }
+        },
+        "languages": "One module per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+            "has": "\"label\": \"[Tracy Business] Contact - Intro and form labels (en) / submit\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/content-map.json",
+            "has": "\"label\": \"[Tracy Business] Contact - Intro and form labels (en) / submit\""
+          }
+        ]
+      },
+      {
+        "what": "Turn the contact form off on every contact page: com_contact's params show_email_form 0 (extensionParams 8); no contact menu item sets its own. Back on: apply.revert with that write's apply_id.",
+        "where": {
+          "kind": "extensionParams",
+          "id": 8,
+          "param": "show_email_form"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "extensionParams",
+              "id": 8,
+              "fields": {
+                "params": {
+                  "patch": {
+                    "show_email_form": 0
+                  }
+                }
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One switch for every language: the contact menu items (604 English, 637 Russian) open contacts 14 and 15 and carry no params of their own.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-604/component_id",
+            "equals": "8"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-604/component_id",
+            "equals": "8"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-604/link",
+            "equals": "index.php?option=com_contact&view=contact&id=14"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-604/link",
+            "equals": "index.php?option=com_contact&view=contact&id=14"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-604/params",
+            "equals": "[]"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-604/params",
+            "equals": "[]"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-637/link",
+            "equals": "index.php?option=com_contact&view=contact&id=15"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-637/link",
+            "equals": "index.php?option=com_contact&view=contact&id=15"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/presentation-lock.json",
+            "at": "/entities/menuItem-637/params",
+            "equals": "[]"
+          },
+          {
+            "json": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/presentation-lock.json",
+            "at": "/entities/menuItem-637/params",
+            "equals": "[]"
+          },
+          {
+            "file": "packages/cms/tracy-seeder/php/seed-joomla.php",
+            "has": "['show_email_form' => '1', 'show_email' => '1', 'show_page_heading' => '0']"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "fields.params (or attribs, images, urls, metadata) as {patch:{…}} merges into the stored column"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "apply.revert {apply_id} undoes that item"
+          }
+        ]
+      }
+    ],
+    "robots": [
+      {
+        "what": "robots.txt is a file in the webroot (created if absent); while the site is a draft Tracy answers /robots.txt itself.",
+        "where": {
+          "file": ".webroot/robots.txt",
+          "new": true
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/robots.txt"
+          }
+        },
+        "languages": "One file for every language.",
+        "proof": [
+          {
+            "file": "apps/tracy-web/src/bar/route.js",
+            "has": "url.pathname === '/robots.txt' && site.publish !== 'published'"
+          },
+          {
+            "file": "packages/fleet/tracy-fleet-operation/scripts/lib/roots.sh",
+            "has": "tracy_webroot_dir() { printf '%s/%s/.webroot' \"$TRACY_SITES_ROOT\" \"$1\"; }"
+          }
+        ]
+      }
+    ],
+    "strings": [
+      {
+        "what": "Words the template or Joomla prints (TPL_TRACY_BUSINESS_*, Joomla's own phrases): one KEY=\"value\" line in the language's override file, then php cli/joomla.php cache:clean.",
+        "where": {
+          "file": ".webroot/language/overrides/<tag>.override.ini"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/language/overrides/<tag>.override.ini"
+          }
+        },
+        "languages": "One override file per language tag (en-GB, ru-RU…).",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/site-context.mjs",
+            "has": "one `KEY=\\\"value\\\"` line in `language/overrides/<tag>.override.ini`"
+          },
+          {
+            "file": "apps/tracy-web/src/sites/content-strings.js",
+            "has": "override"
+          }
+        ]
+      },
+      {
+        "what": "Site identity words printed as {site.*}, {contact.*} and {social.*} tokens (name, legal name, slogan, monogram, e-mail, phone, address, hours, social links): slots .0 to .12 of module 4369.",
+        "where": {
+          "slot": ["module-4369.4", "module-4369.5"],
+          "kind": "module"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "module-4369.5": "<new phone>"
+              }
+            }
+          }
+        },
+        "languages": "One value for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+            "has": "\"label\": \"[Tracy] Site identity / phone\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1/content-map.json",
+            "has": "\"label\": \"[Tracy] Site identity / phone\""
+          },
+          {
+            "file": "packages/cms/tracy-joomla-quickstart/plugins/plg_system_tracyidentity/src/Extension/TracyIdentity.php",
+            "has": "`onAfterRender` replaces the tokens"
+          }
+        ]
+      }
+    ]
+  }
+}

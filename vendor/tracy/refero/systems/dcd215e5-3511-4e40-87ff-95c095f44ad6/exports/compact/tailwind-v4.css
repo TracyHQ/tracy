@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #070708;
+  --color-paper: #ffffff;
+  --color-ash: #808080;
+
+  /* Typography */
+  --font-instrument-sans: 'Instrument-Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-instrument-serif: 'Instrument-Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-instrument-serif-italic: 'Instrument-Serif-Italic', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

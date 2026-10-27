@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8b6b547f-a357-4f1b-9842-4579c62dd42b",
+  "status": "complete",
+  "name": "Slush",
+  "url": "https://styles.refero.design/style/8b6b547f-a357-4f1b-9842-4579c62dd42b",
+  "sourceWebsite": "https://slush.app",
+  "extractedAt": "2026-06-03T19:22:20.717Z",
+  "capturedAt": "2026-10-08T05:14:36.567071+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "inflatable sticker universe on pastel paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/a745070b-03dd-452c-81fe-e8f5577dd858.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/b1eeb068-d7f5-4a3d-973f-2005e84d8960.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/85ceb027-9e26-4066-8ef1-5323169be1c5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/45251ff4-cbde-44fe-84f7-24fb525acadd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5bb564c4-e5ce-47c4-b5d5-fd0371d83d8c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a4ae23f42bab473e37c6b28ef95084cd7fcfc883f7f762cd4862e0610ff1fa61",
+      "bytes": 20825
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "57ac986fcea722bd02e97ece4530ca6b0840e7ceee78694eacbce681ef591e01",
+      "bytes": 209110
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b027257dfeea28c28e04cc7f79321bd1b85b3c1170acc649562222d07b507ada",
+      "bytes": 16968
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "08e200b9c0a6f26593f131d1ec3bfcae1285b7c9541591373c631f58cf25a655",
+      "bytes": 12453
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "81af3b300b92df3a97b4a767ca1fd40e0e14bfa08265c67d223d9624ee9f7be2",
+      "bytes": 11879
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b878169e06f15c5fc875f9fb95b28a9dfa2079bc716602dc18569952e23736b9",
+      "bytes": 3406
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "346c00852e22aca627f47232958a8ad33587bf2285bcf91bfadca88907d6519f",
+      "bytes": 629
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1452fbbcd1b7c2f34fe7c479b7785db052a63bd00ba31a4b7179177162af25c2",
+      "bytes": 646
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3da581902ab2faf455bac0b7ad266247e91b9520e86e6cdb15ff7dc3086db487",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "948cbb1e0b8656fc576e183d3c08d7b9f503fc0239ade095606ae9361ede38fa",
+      "bytes": 45112
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6742864d4c29dfa7283f8566898b4f7708cc13ef93adc30fca744b69f3404387",
+      "bytes": 23920
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fccfd74492dc11170ed0b40ce6bf26914b7be70599461e290e05cef22f932513",
+      "bytes": 53098
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d76db3a66204365b46c566f1e54241752b7d5623b625d505636c52c363facb00",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6bd9f87904c56c3897da30bb683917937e1ffd26f988b6f08843f0daa2628bb9",
+      "bytes": 1813
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "55e2f60310dc02b9a37104fadf6d89743df593db8da67e3fba97a591440c203f",
+      "bytes": 2456
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1680693c-aed8-47e8-917a-04eb89497b09",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "680cf16b-0093-473b-854f-f1de9af5e698",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "88b02f2c-d82e-495a-8fb6-e750a0fb1211",
+    "8b6b547f-a357-4f1b-9842-4579c62dd42b",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cfd0fec1-f25a-4b9b-9bd0-d5b66960f2f2",
+    "d51a3a30-965c-427e-9e40-ff177786889f"
+  ]
+}

@@ -1,0 +1,1154 @@
+/*
+  theme.css — Bravada for EmDash.
+
+  Derived from the Bravada WordPress theme stylesheet,
+  © 2020–25 Cryout Creations, GPL-3.0-or-later.
+  Modifications © 2026 vhs. Distributed under the same licence; see LICENSE.
+
+  A faithful port of the Bravada WordPress theme (Cryout Creations),
+  matched against https://demos.cryoutcreations.eu/wp/bravada/ and the
+  theme's shipped stylesheet + customizer output. Token overrides here
+  beat the @layer base defaults in tokens.css.
+
+  Original palette, kept as-is (per the original, not WCAG-adjusted):
+    accent1 gold  #E9B44C — links, buttons, highlights
+    accent2 teal  #0F8B8D — hovers, icons, secondary accents
+    headings      #162521
+    body text     #707070 on site background #F3F7F6
+    footer        #1E3231
+    submenus      #066664
+*/
+
+:root {
+	/* --- Bravada palette --- */
+	--color-bg: light-dark(#f3f7f6, #101817); /* theme_sitebackground */
+	--color-bg-subtle: light-dark(#f9f7f5, #15201f);
+	--color-text: light-dark(#707070, #b9c3c1); /* Bravada body text */
+	--color-text-secondary: light-dark(#707070, #a3b0ad);
+	--color-muted: light-dark(#a7a7a7, #74827f); /* entry meta */
+	--color-border: light-dark(#ebebeb, #29403e);
+	--color-border-subtle: light-dark(#f0f0f0, #1d2f2e);
+	--color-surface: light-dark(#ffffff, #162423); /* content background */
+
+	/* Links are GOLD in Bravada; hovers go teal. */
+	--color-brand: light-dark(#e9b44c, #e9b44c); /* theme_accent1 */
+	--color-brand-hover: light-dark(#0f8b8d, #3db9bb); /* theme_accent2 */
+	--color-on-brand: #ffffff;
+
+	/* Bravada-specific tokens */
+	--color-gold: #e9b44c; /* theme_accent1 */
+	--color-teal: light-dark(#0f8b8d, #3db9bb); /* theme_accent2 */
+	--color-teal-solid: #0f8b8d;
+	--color-heading: light-dark(#162521, #eef4f3); /* theme_headingstext */
+	--color-menu-link: light-dark(#444444, #d6dedc); /* top menu items */
+	--color-submenu-bg: #066664; /* dropdown background */
+	/* Wordmark ribbon: demo teal in light; Bravada's deeper submenu
+	   teal in dark so the gold Playfair wordmark keeps AA (large text)
+	   against it — #E9B44C on #0F8B8D is ~2.1:1, on #066664 ~3.4:1. */
+	--color-ribbon: light-dark(#0f8b8d, #066664);
+	--color-footer-bg: #1e3231; /* theme_footerbackground */
+	--color-footer-text: #dbdbdb;
+	--color-footer-muted: #96a19e;
+	--gold-strip: rgba(233, 180, 76, 0.4); /* highlight strips */
+	/* The signature gold highlighter gradient. Reference this for the
+	   background-image; each site keeps its own background-size (strip
+	   thickness) and background-position. */
+	--gold-scrim: linear-gradient(to bottom, var(--gold-strip) 0%, var(--gold-strip) 100%);
+
+	/* Landing band tints (Plus customizer values), with matched dark
+	   twins so the bands follow the color scheme */
+	--tint-slider: light-dark(#f9f7f5, #15201f);
+	--tint-blocks1: light-dark(#f9f7f5, #15201f);
+	--tint-boxes: light-dark(#f8f8f8, #131c1b);
+	--tint-boxes-alt: light-dark(#f6f3f6, #171f21);
+	--tint-warm: light-dark(#eeebe9, #1a1f1d); /* portfolio, testimonials */
+	--tint-cool: light-dark(#eeeeee, #141a19); /* text-five */
+
+	/* Playfair Display headings over Muli body — the Bravada pairing */
+	--font-heading: var(--font-display);
+	--font-weight-heading: 700;
+	--font-weight-display: 700;
+
+	/* Bravada types at 16px with a very airy 1.8 line height */
+	--leading-relaxed: 1.8;
+	--tracking-tight: 0;
+	--tracking-snug: 0;
+
+	/* Bravada containers: 1240px shell */
+	--wide-width: 1240px;
+	--nav-height: 75px;
+}
+
+/* light-dark() fallback (Safari < 17.5, Chrome < 123): light values */
+@supports not (color: light-dark(#000, #fff)) {
+	:root {
+		--color-bg: #f3f7f6;
+		--color-bg-subtle: #f9f7f5;
+		--color-text: #707070;
+		--color-text-secondary: #707070;
+		--color-muted: #a7a7a7;
+		--color-border: #ebebeb;
+		--color-border-subtle: #f0f0f0;
+		--color-surface: #ffffff;
+		--color-brand: #e9b44c;
+		--color-brand-hover: #0f8b8d;
+		--color-teal: #0f8b8d;
+		--color-heading: #162521;
+		--color-menu-link: #444444;
+	}
+}
+
+/* Footer theme switcher (light/dark/system): plain overrides, NOT
+   light-dark(). light-dark() wrapped in a custom property and read via
+   var() elsewhere does not reliably re-resolve when color-scheme
+   changes dynamically on :root (reproduced in both Safari and Chromium
+   engines) -- toggling the .light/.dark class alone left every token
+   frozen on whatever the OS scheme was at first paint. These pin each
+   token to a concrete value instead, sidestepping that entirely. The
+   "system" state (no class) is unaffected and keeps following the OS
+   via light-dark() as before. */
+:root.light {
+	--color-bg: #f3f7f6;
+	--color-bg-subtle: #f9f7f5;
+	--color-text: #707070;
+	--color-text-secondary: #707070;
+	--color-muted: #a7a7a7;
+	--color-border: #ebebeb;
+	--color-border-subtle: #f0f0f0;
+	--color-surface: #ffffff;
+	--color-brand-hover: #0f8b8d;
+	--color-teal: #0f8b8d;
+	--color-heading: #162521;
+	--color-menu-link: #444444;
+	--color-ribbon: #0f8b8d;
+	--tint-slider: #f9f7f5;
+	--tint-blocks1: #f9f7f5;
+	--tint-boxes: #f8f8f8;
+	--tint-boxes-alt: #f6f3f6;
+	--tint-warm: #eeebe9;
+	--tint-cool: #eeeeee;
+}
+
+:root.dark {
+	--color-bg: #101817;
+	--color-bg-subtle: #15201f;
+	--color-text: #b9c3c1;
+	--color-text-secondary: #a3b0ad;
+	--color-muted: #74827f;
+	--color-border: #29403e;
+	--color-border-subtle: #1d2f2e;
+	--color-surface: #162423;
+	--color-brand-hover: #3db9bb;
+	--color-teal: #3db9bb;
+	--color-heading: #eef4f3;
+	--color-menu-link: #d6dedc;
+	--color-ribbon: #066664;
+	--tint-slider: #15201f;
+	--tint-blocks1: #15201f;
+	--tint-boxes: #131c1b;
+	--tint-boxes-alt: #171f21;
+	--tint-warm: #1a1f1d;
+	--tint-cool: #141a19;
+}
+
+/* Headings: Playfair Display 700, Bravada's near-black */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--color-heading);
+}
+
+::selection {
+	background: var(--color-gold);
+	color: #162521;
+}
+
+/* Translate-based reveals shift elements past the viewport edge before
+   they animate in; clip (not hidden) preserves position: sticky. This
+   also doubles as the last-resort backstop against horizontal overflow
+   from oversized content (e.g. injected embeds/ads in content areas —
+   see the iframe/embed guard below) that isn't caught closer to source. */
+html,
+body {
+	overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+	html,
+	body {
+		overflow-x: hidden;
+	}
+}
+
+/* ============================================================
+   Header — Bravada's fixed menu (bravada-fixed-menu / over-menu)
+   ============================================================ */
+
+/* Site title: Playfair wordmark on an accent ribbon (#site-title
+   a::before). The ribbon is right-anchored and stops 1.2em short on
+   the LEFT, so the first letter pokes off it; on hover it grows to
+   full width (.15s ease-out) and on :active it collapses to nothing —
+   Bravada's signature wordmark animation. Normal state: teal ribbon,
+   gold text; over a hero: gold ribbon, white text. */
+.site-title {
+	position: relative;
+	z-index: 1;
+	padding: 0 6px;
+	font-family: var(--font-heading);
+	font-weight: 700;
+	/* Demo: 1.3em against the 16px root — rem so the nav's smaller
+	   inherited size doesn't shrink the wordmark */
+	font-size: 1.3rem;
+	line-height: 1.55;
+	letter-spacing: 0.05em;
+	color: var(--color-gold) !important;
+	transition: 0.15s ease-out all;
+}
+
+.site-title::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: calc(100% - 1.2em);
+	background: var(--color-ribbon);
+	transition: 0.15s ease-out all;
+}
+
+.site-title:hover::before {
+	width: 100%;
+}
+
+.site-title:active::before {
+	width: 0;
+}
+
+/* Menu links: plain Muli, #444, generously spaced */
+.nav-links a {
+	font-weight: 400;
+	font-size: 1em;
+	color: var(--color-menu-link);
+	transition: color 0.2s ease-out;
+}
+
+/* Top-level hover: a translucent wash pill grows out behind the label
+   (#access > div > ul > li > a > span::before in the demo). Dark wash
+   on the solid header, white wash when floating over the hero. */
+.nav-links > .menu-item > a > span {
+	position: relative;
+	display: inline-block;
+	/* Demo: the label span has its own 2.5em line box, so the wash
+	   pill is a slim strip — not the full 75px header height */
+	line-height: 2.5em;
+	vertical-align: middle;
+}
+
+.nav-links > .menu-item > a > span::before {
+	content: "";
+	position: absolute;
+	left: -15px;
+	right: 0;
+	width: 0;
+	height: 100%;
+	padding: 0 15px;
+	background: light-dark(#000000, #ffffff);
+	opacity: 0;
+	transition: 0.2s ease-out all;
+}
+
+.nav-links > .menu-item > a:hover > span::before,
+.nav-links > .menu-item > a:focus-visible > span::before {
+	opacity: 0.1;
+	width: calc(100% + 30px);
+}
+
+.site-header.over-hero:not(.header-fixed)
+	.nav-links
+	> .menu-item
+	> a
+	> span::before {
+	background: #ffffff;
+}
+
+/* Dropdown-parent indicator: small chevron at half opacity, full on
+   hover (Bravada's iconmeta arrow) */
+.nav-links > .menu-item.has-children > a > span::after {
+	content: "";
+	display: inline-block;
+	width: 0.45em;
+	height: 0.45em;
+	margin-left: 0.5em;
+	margin-bottom: 0.15em;
+	border-right: 1.5px solid currentColor;
+	border-bottom: 1.5px solid currentColor;
+	transform: rotate(45deg);
+	opacity: 0.5;
+	transition: 0.3s ease-out opacity;
+	vertical-align: middle;
+}
+
+.nav-links > .menu-item.has-children:hover > a > span::after {
+	opacity: 1;
+}
+
+/* Over-hero (transparent) header state, toggled off once scrolled */
+.site-header.over-hero:not(.header-fixed) {
+	background: transparent;
+	border-bottom: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+.site-header.over-hero:not(.header-fixed) .site-title {
+	color: #ffffff !important;
+}
+
+.site-header.over-hero:not(.header-fixed) .site-title::before {
+	background: var(--color-gold);
+}
+
+.site-header.over-hero:not(.header-fixed) .nav-links > .menu-item > a {
+	color: #ffffff;
+}
+
+/* Hover keeps the label color (demo: wash pill only); the current
+   section stays gold in both header states */
+.site-header.over-hero:not(.header-fixed) .nav-links > .menu-item.current > a {
+	color: var(--color-gold);
+}
+
+/* ============================================================
+   Buttons — gold with white text; hover swaps to teal, and an
+   arrow slides in from the left (Bravada's signature hover)
+   ============================================================ */
+
+.btn-gold {
+	display: inline-block;
+	padding: 15px 30px 15px 40px;
+	padding-right: calc(50px - 1em);
+	background: var(--color-gold);
+	color: #ffffff !important;
+	font-weight: 700;
+	font-size: 1em;
+	text-decoration: none;
+	border: 3px solid transparent;
+	transition: 0.3s ease-in-out all;
+}
+
+.btn-gold::after {
+	content: "→";
+	display: inline-block;
+	margin-left: -20px;
+	padding-left: 10px;
+	opacity: 0;
+	transition: 0.3s ease-in-out all;
+}
+
+.btn-gold:hover {
+	background: var(--color-teal-solid);
+	padding-right: calc(45px - 1em);
+	padding-left: 25px;
+}
+
+.btn-gold:hover::after {
+	opacity: 1;
+	margin-left: 0;
+}
+
+/* Outline variant (the slider's odd buttons): white border on media */
+.btn-outline-white {
+	display: inline-block;
+	padding: 15px 30px 15px 40px;
+	padding-right: calc(50px - 1em);
+	background: transparent;
+	border: 3px solid #ffffff;
+	color: #ffffff !important;
+	font-weight: 700;
+	font-size: 1em;
+	text-decoration: none;
+	transition: 0.3s ease-in-out all;
+}
+
+.btn-outline-white::after {
+	content: "→";
+	display: inline-block;
+	margin-left: -20px;
+	padding-left: 10px;
+	opacity: 0;
+	transition: 0.3s ease-in-out all;
+}
+
+.btn-outline-white:hover {
+	background: rgba(0, 0, 0, 0.2);
+	padding-right: calc(45px - 1em);
+	padding-left: 25px;
+}
+
+.btn-outline-white:hover::after {
+	opacity: 1;
+	margin-left: 0;
+}
+
+/* Text-band buttons (short-cry btn): colored text in a 2px outline
+   that scales away on hover (lp-port-readmore treatment) */
+.btn-cry {
+	position: relative;
+	display: inline-block;
+	margin-right: 1.5em;
+	outline: 2px solid;
+	padding: 0.55em 1.6em;
+	font-size: 0.9em;
+	font-weight: 700;
+	text-align: center;
+	text-decoration: none;
+	transition: all 0.35s ease-out;
+}
+
+.btn-cry::after {
+	content: "";
+	position: absolute;
+	z-index: 3;
+	inset: 0;
+	outline: 2px solid;
+	opacity: 1;
+	transition: 0.3s ease-out all;
+}
+
+.btn-cry:hover {
+	opacity: 0.8;
+}
+
+.btn-cry:hover::after {
+	transform: scale(1.25, 1.4);
+	opacity: 0;
+}
+
+.btn-cry.btn-cry-primary {
+	color: var(--color-gold) !important;
+}
+
+.btn-cry.btn-cry-primary:hover {
+	color: #c7922a !important;
+}
+
+.btn-cry.btn-cry-secondary {
+	color: var(--color-teal) !important;
+}
+
+.btn-cry.btn-cry-secondary:hover {
+	color: #00696b !important;
+}
+
+/* ============================================================
+   Ghost section header (.lp-section-header): a giant 900-weight
+   Muli title at 10% opacity, with the Playfair description
+   overlapping it from below
+   ============================================================ */
+
+.ghost-header {
+	display: flex;
+	flex-flow: column wrap-reverse;
+	align-items: center;
+	text-align: center;
+	/* Demo .lp-section-header: 5em auto 2em */
+	margin: 5em auto 2em;
+	padding: 0 1em;
+}
+
+@media (max-width: 800px) {
+	.ghost-header {
+		margin: 3em auto 1.5em;
+	}
+}
+
+@media (max-width: 480px) {
+	.ghost-header {
+		margin: 2em auto 1em;
+	}
+}
+
+.ghost-header .ghost-title {
+	order: 1;
+	margin: 0;
+	max-width: 90%;
+	font-family: var(--font-body);
+	font-size: clamp(2.5em, 10vw, 5em);
+	line-height: 1;
+	font-weight: 900;
+	opacity: 0.1;
+	color: var(--color-heading);
+}
+
+.ghost-header .ghost-sub {
+	position: relative;
+	order: 2;
+	margin: 0;
+	max-width: 45%;
+	font-size: 1.4em;
+	line-height: 1.2;
+	font-family: var(--font-heading);
+	/* Demo .lp-section-desc keeps the body gray, even on dark bands */
+	color: var(--color-text);
+}
+
+@media (max-width: 960px) {
+	/* Demo: both the ghost title and description go full-width below
+	   960px (from 90%/45%) — was flat here, so the description wrapped
+	   a line tighter than source and read as more cramped against the
+	   title than intended. */
+	.ghost-header .ghost-title,
+	.ghost-header .ghost-sub {
+		max-width: 100%;
+	}
+}
+
+/* The overlap pull only makes sense when there IS a ghost title to
+   overlap — a description-only header would get hoisted out of the
+   section entirely. */
+.ghost-header .ghost-title ~ .ghost-sub {
+	margin-top: -1.4em;
+}
+
+/* The theme holds this pull-up flat at every width -- measured on it,
+   .lp-section-desc is -1.4em at 390pt and at 760pt alike, overlapping
+   72% and 39% of the title as the title scales. Easing it to -0.7em
+   under 800px and -0.35em under 480px left the description sitting
+   almost clear of the ghost title on a phone (20% against the theme's
+   72%). The overshoot that easing guarded against doesn't happen: at
+   390, 480 and 760 the description still starts below the header's own
+   top edge. */
+
+/* ============================================================
+   Gold highlighter strips (widget titles, text-band titles,
+   animated box titles) — Bravada's signature underline
+   ============================================================ */
+
+.hl-gold {
+	display: inline;
+	background-image: var(--gold-scrim);
+	background-repeat: no-repeat;
+	background-size: 100% 0.4em;
+	background-position: 0 100%;
+}
+
+/* ============================================================
+   Letter break-up titles (bravada-animated-title) — shared by the
+   landing slider and inner-page headers. initTitleBreakup() stacks
+   two copies per letter; .animated-letter turns gold and swaps.
+   ============================================================ */
+
+.breakup-title .caption-title-word {
+	display: inline-block;
+	font-style: normal;
+}
+
+.breakup-title .caption-title-word > span {
+	position: relative;
+	display: inline-block;
+}
+
+.breakup-title span.cry-single {
+	position: relative;
+}
+
+.breakup-title span.cry-double {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+}
+
+.breakup-title span.cry-single,
+.breakup-title span.cry-double {
+	transition: color 0.5s ease-out;
+}
+
+.breakup-title span.animated-letter {
+	color: var(--letter-accent, var(--color-gold));
+}
+
+.breakup-title .caption-title-word > span:nth-child(n) span.cry-single.animated-letter {
+	animation: 1.5s 0.25s bk-slide-left-hide ease-in-out forwards;
+}
+
+.breakup-title .caption-title-word > span:nth-child(2n) span.cry-single.animated-letter {
+	animation: 1.5s 0.25s bk-slide-right-hide ease-in-out forwards;
+}
+
+.breakup-title .caption-title-word > span:nth-child(n) span.cry-double.animated-letter {
+	animation: 1s bk-slide-right-show ease-in-out forwards;
+}
+
+.breakup-title .caption-title-word > span:nth-child(2n) span.cry-double.animated-letter {
+	animation: 1s bk-slide-left-show ease-in-out forwards;
+}
+
+@keyframes bk-slide-left-hide {
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	to {
+		opacity: 0;
+		transform: translateX(-150%);
+	}
+}
+
+@keyframes bk-slide-right-hide {
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	to {
+		opacity: 0;
+		transform: translateX(150%);
+	}
+}
+
+@keyframes bk-slide-right-show {
+	from {
+		opacity: 0;
+		transform: translateX(150%);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes bk-slide-left-show {
+	from {
+		opacity: 0;
+		transform: translateX(-150%);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* --- Full-bleed helper for landing bands rendered inside a content
+   column (slider, blocks, boxes, text bands, portfolio, reviews) --- */
+
+.full-bleed {
+	width: 100vw;
+	margin-inline: calc(50% - 50vw);
+}
+
+/* ============================================================
+   Bravada on-scroll reveals (.animated-onscroll-lp system)
+   Elements carry .aos + a direction class; the observer in
+   Base.astro removes .aos when they enter the viewport. Only
+   hidden when JS is running (html.js).
+   ============================================================ */
+
+.aos-left,
+.aos-right,
+.aos-up,
+.aos-down,
+.aos-fade {
+	transition:
+		transform 0.4s ease,
+		opacity 0.5s ease-out;
+}
+
+html.js .aos.aos-left {
+	transform: translateX(-50px);
+	opacity: 0;
+}
+
+html.js .aos.aos-right {
+	transform: translateX(50px);
+	opacity: 0;
+}
+
+html.js .aos.aos-up {
+	transform: translateY(50px);
+	opacity: 0;
+}
+
+html.js .aos.aos-down {
+	transform: translateY(-50px);
+	opacity: 0;
+}
+
+html.js .aos.aos-fade {
+	opacity: 0;
+}
+
+/* --- Demo-exact landing reveals (bravada-plus "LP ONSCROLL"):
+   each element keeps .aos until it scrolls into view, then the
+   transition below plays. Timings/offsets match the shipped CSS. --- */
+
+/* Ghost section headers: the giant title rises while the Playfair
+   subtext drifts DOWN over it. Demo only transitions transform —
+   opacity snaps instantly rather than fading; matched here (was `all`,
+   which faded opacity smoothly and read as softer than source). */
+.ghost-title,
+.ghost-sub {
+	transition: 0.4s 0.2s ease-out transform;
+}
+
+html.js .ghost-title.aos {
+	opacity: 0;
+	transform: translateY(20px);
+}
+
+html.js .ghost-sub.aos {
+	opacity: 0;
+	transform: translateY(-20px);
+}
+
+/* Text areas: the photo slides down into place; title (with its gold
+   strip growing out) and copy rise up after it */
+.lp-text-image {
+	transition:
+		0.4s 0.2s ease-out opacity,
+		0.4s 0.2s ease-out transform;
+}
+
+html.js .lp-text-image.aos {
+	opacity: 0;
+	transform: translateY(-50px);
+}
+
+.lp-text-title {
+	transition: 0.3s 0.4s ease-out all;
+}
+
+html.js .lp-text-title.aos {
+	opacity: 0;
+	background-size: 0 0.4em;
+	transform: translateY(50px);
+}
+
+.lp-text-content {
+	transition:
+		0.4s 0.4s ease transform,
+		0.4s 0.4s ease opacity;
+}
+
+html.js .lp-text-content.aos {
+	opacity: 0;
+	transform: translateY(50px);
+}
+
+/* Icon blocks: columns arrive from alternating directions. The card
+   itself only translates (demo keeps its white background opaque —
+   important on the dark blocks2 band); the icon/title/text inside
+   fade in separately. */
+.lp-blocks .lp-block {
+	transition: 0.4s ease transform;
+}
+
+.lp-block .lp-block-icon,
+.lp-block .lp-block-title,
+.lp-block .lp-block-text {
+	transition: opacity 0.4s ease-out;
+}
+
+html.js .lp-blocks .lp-block.aos {
+	transform: translateX(-50px);
+}
+
+html.js .lp-block.aos .lp-block-icon,
+html.js .lp-block.aos .lp-block-title,
+html.js .lp-block.aos .lp-block-text {
+	opacity: 0;
+}
+
+html.js .lp-rows-3 .lp-block.aos:nth-child(3n + 2),
+html.js .lp-rows-4 .lp-block.aos:nth-child(4n + 2) {
+	transform: translateY(-50px);
+}
+
+html.js .lp-rows-3 .lp-block.aos:nth-child(3n + 3),
+html.js .lp-rows-4 .lp-block.aos:nth-child(4n + 3) {
+	transform: translateY(50px);
+}
+
+html.js .lp-rows-4 .lp-block.aos:nth-child(4n + 4) {
+	transform: translateX(50px);
+}
+
+/* Boxes: static/overlay fade in; animated boxes slide in from
+   alternating directions with the demo's staggered delays */
+.lp-boxes .lp-box {
+	transition:
+		0.5s ease-out opacity,
+		0.4s ease-out transform,
+		0.25s ease-out top;
+}
+
+html.js .lp-boxes-static .lp-box.aos,
+html.js .lp-boxes-overlay .lp-box.aos {
+	opacity: 0;
+}
+
+html.js .lp-boxes-animated .lp-box.aos {
+	opacity: 0;
+	transform: translateX(-50px);
+}
+
+html.js .lp-boxes-animated .lp-rows-3 .lp-box.aos:nth-child(3n + 2),
+html.js .lp-boxes-animated .lp-rows-4 .lp-box.aos:nth-child(4n + 2) {
+	transform: translateY(-50px);
+}
+
+html.js .lp-boxes-animated .lp-rows-3 .lp-box.aos:nth-child(3n + 3),
+html.js .lp-boxes-animated .lp-rows-4 .lp-box.aos:nth-child(4n + 3) {
+	transform: translateY(50px);
+}
+
+html.js .lp-boxes-animated .lp-rows-4 .lp-box.aos:nth-child(4n + 4) {
+	transform: translateX(50px);
+}
+
+.lp-rows-3 .lp-box:nth-child(3n + 2),
+.lp-rows-4 .lp-box:nth-child(4n + 2) {
+	transition-delay: 0.3s, 0.3s, 0s;
+}
+
+.lp-rows-3 .lp-box:nth-child(3n + 3),
+.lp-rows-4 .lp-box:nth-child(4n + 3) {
+	transition-delay: 0.15s, 0.15s, 0s;
+}
+
+.lp-rows-4 .lp-box:nth-child(4n + 4) {
+	transition-delay: 0.45s, 0.45s, 0s;
+}
+
+/* Portfolio: pieces scale up from 85% in the demo's shuffled order */
+.lp-port > a {
+	transition:
+		0.75s ease transform,
+		0.75s ease opacity;
+}
+
+html.js .lp-port.aos > a {
+	opacity: 0;
+	transform: scale(0.85);
+}
+
+.lp-port:nth-child(4n + 2) > a {
+	transition-delay: 0.4s;
+}
+
+.lp-port:nth-child(4n + 3) > a {
+	transition-delay: 0.2s;
+}
+
+.lp-port:nth-child(4n + 4) > a {
+	transition-delay: 0.6s;
+}
+
+/* Testimonials: the gold cards float up one after another */
+.lp-tt .lp-tt-text {
+	transition: 0.5s ease-out all;
+	transform-origin: 40px bottom;
+}
+
+html.js .lp-tt.aos .lp-tt-text {
+	opacity: 0;
+	transform: translateY(35px);
+}
+
+.lp-testimonials-inside .lp-tt:nth-child(3n + 2) .lp-tt-text {
+	transition-delay: 0.5s;
+}
+
+.lp-testimonials-inside .lp-tt:nth-child(3n + 3) .lp-tt-text {
+	transition-delay: 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.aos-left,
+	.aos-right,
+	.aos-up,
+	.aos-down,
+	.aos-fade {
+		transition: none;
+	}
+
+	html.js .aos,
+	html.js .aos.lp-port > a,
+	html.js .aos.lp-tt .lp-tt-text,
+	html.js .aos.lp-block .lp-block-icon,
+	html.js .aos.lp-block .lp-block-title,
+	html.js .aos.lp-block .lp-block-text {
+		transform: none !important;
+		opacity: 1 !important;
+	}
+}
+
+/* ============================================================
+   Dark Bravada footer — retarget the tokens the template footer
+   consumes so its scoped styles pick up the dark treatment
+   ============================================================ */
+
+.site-footer {
+	--color-bg-subtle: var(--color-footer-bg);
+	--color-bg: color-mix(in srgb, var(--color-footer-bg) 80%, black);
+	--color-surface: color-mix(in srgb, var(--color-footer-bg) 88%, white);
+	--color-border: rgba(255, 255, 255, 0.075);
+	--color-border-subtle: rgba(255, 255, 255, 0.075);
+	--color-text: var(--color-footer-text);
+	--color-text-secondary: var(--color-footer-text);
+	--color-muted: var(--color-footer-muted);
+	--color-heading: #ffffff;
+}
+
+/* ============================================================
+   Portable Text content — Bravada .entry-content signatures
+   ============================================================ */
+
+.page-content h1,
+.article-content h1,
+.page-content h2,
+.article-content h2,
+.page-content h3,
+.article-content h3,
+.page-content h4,
+.article-content h4 {
+	color: var(--color-heading);
+}
+
+.page-content h5,
+.article-content h5,
+.page-content h6,
+.article-content h6 {
+	color: var(--color-teal);
+}
+
+/* Centered italic blockquote with a giant faded quote mark above.
+   display: table sizes to content, so long unbroken text (or a bare
+   URL) can exceed the viewport at narrow widths without these. */
+.page-content blockquote,
+.article-content blockquote {
+	position: relative;
+	display: table;
+	width: auto;
+	max-width: 100%;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	margin: 2em auto 0;
+	padding: 2em;
+	font-style: italic;
+	font-weight: 400;
+	border: none;
+}
+
+.page-content blockquote::before,
+.article-content blockquote::before {
+	content: "”";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	transform: translateY(-30%);
+	font-family: var(--font-heading);
+	font-size: 3em;
+	line-height: 1;
+	text-align: center;
+	color: color-mix(in srgb, var(--color-text) 20%, transparent);
+}
+
+/* Guard against injected content (embeds, ads, third-party widgets) that
+   editors paste into posts/pages without theme-controlled sizing. Generic
+   on purpose — no ad-network-specific selectors — so it holds regardless
+   of which embed or ad provider a site uses. */
+.page-content iframe,
+.article-content iframe,
+.page-content embed,
+.article-content embed,
+.page-content object,
+.article-content object {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+/* Visually-hidden utility (screen readers only) */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Social icon-swap (demo .socials a): the gold glyph flies down and a
+   teal duplicate drops in from above on hover (.3s ease-out). Shared by
+   the footer social row and the mobile menu's socials. */
+.social-swap {
+	position: relative;
+	display: inline-flex;
+}
+
+.social-swap .icon-a,
+.social-swap .icon-b {
+	display: inline-flex;
+	transition: all 0.3s ease-out;
+}
+
+.social-swap .icon-b {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transform: translateY(-20px) scale(0.5);
+	color: var(--color-teal);
+}
+
+a:hover > .social-swap .icon-a,
+a:focus-visible > .social-swap .icon-a {
+	opacity: 0;
+	transform: translateY(20px) scale(0.5);
+}
+
+a:hover > .social-swap .icon-b,
+a:focus-visible > .social-swap .icon-b {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
+/* Demo lazy-image fade (cryoutAnimateLazyImages): content/sidebar lazy
+   images start transparent and fade in on load. JS-gated so no-JS
+   visitors always see images; landing-page blocks keep their own
+   reveal animations instead. */
+/* :where() keeps these preludes at minimal specificity: the
+   .animate-lazy reveal must beat the hide rule, and any component
+   that styles its own lazy images (e.g. the shop grid's hover
+   zoom/dim transitions) must beat both — otherwise this transition
+   declaration replaces theirs and transforms snap */
+:where(html.js .page-content) img[loading="lazy"]:where(:not(.lp-portfolio img)),
+:where(html.js .bravada-sidebar) img[loading="lazy"] {
+	opacity: 0;
+	transition: 0.2s ease-out opacity;
+}
+
+:where(html.js .page-content) img[loading="lazy"].animate-lazy,
+:where(html.js .bravada-sidebar) img[loading="lazy"].animate-lazy {
+	opacity: 1;
+}
+
+/* Demo layout pages set body copy justified */
+.page-content p {
+	text-align: justify;
+}
+
+/* Demo float margins on aligned images: 0 32px 16px 0 (left) mirrored */
+.page-content .emdash-image--align-left {
+	margin: 0 32px 16px 0;
+}
+
+.page-content .emdash-image--align-right {
+	margin: 0 0 16px 32px;
+}
+
+/* Demo layout-page headings are plain full-width Playfair blocks —
+   no highlighter strip, weight 700 (sizes live in the page template) */
+.page-content h2,
+.page-content h3 {
+	display: block;
+	width: 100%;
+	font-weight: 700;
+}
+
+/* Bravada underlines unclassed links inside content */
+.page-content a:not([class]),
+.article-content a:not([class]) {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: 0.2s ease-out all;
+}
+
+.page-content a:not([class]):hover,
+.article-content a:not([class]):hover {
+	text-decoration-thickness: 2px;
+}
+
+/* ============================================================
+   Back-to-top — demo #footer #toTop: white square with a soft
+   shadow; teal chevron that swaps for a gold one on hover (the
+   resting icon slides up and out, the second slides in below)
+   ============================================================ */
+
+#toTop {
+	position: fixed;
+	right: 2em;
+	bottom: 2em;
+	z-index: 250;
+	width: 52px;
+	height: 52px;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	background: var(--color-surface);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+	color: var(--color-teal);
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.2s ease-out all;
+}
+
+#toTop.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+#toTop svg {
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	transform: translateY(0) scale(1);
+	transition: all 0.4s ease-out;
+}
+
+#toTop svg + svg {
+	color: var(--color-gold);
+	opacity: 0;
+	transform: translateY(20px) scale(0.25);
+}
+
+#toTop:hover svg:first-child {
+	opacity: 0;
+	transform: translateY(-20px) scale(0.25);
+}
+
+#toTop:hover svg + svg {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
+/* Theme base reset: search inputs never show the native WebKit clear
+   (X) or decoration — clearing is manual, everywhere. */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+/* Chevron scroll targets (MetaArrow): rest with the fixed bar's bottom
+   exactly on the hero's last pixel */
+.after-hero-anchor {
+	scroll-margin-top: var(--nav-height);
+}

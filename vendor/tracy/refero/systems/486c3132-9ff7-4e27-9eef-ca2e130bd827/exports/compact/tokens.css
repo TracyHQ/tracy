@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-grid-line: #e5e7eb;
+  --color-body-text: #d4d4d4;
+  --color-muted-text: #737373;
+  --color-subtle-divider: #171717;
+
+  /* Typography — Font Families */
+  --font-commit-mono: 'Commit Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

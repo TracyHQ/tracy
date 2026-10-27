@@ -1,0 +1,79 @@
+{
+  "color": {
+    "slate-ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate Ink — Primary text, dominant borders, nav links — the workhorse dark that replaces pure black everywhere a softer edge is wanted"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "onyx-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx Black — Icon strokes, input borders, and hard-edge accents where maximum contrast is required"
+    },
+    "warm-bone": {
+      "$value": "#faf7ef",
+      "$type": "color",
+      "$description": "Warm Bone — Secondary surface — a barely-warm cream that lifts cards off pure white without introducing visible color"
+    },
+    "ash-gray": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Ash Gray — Muted helper text, secondary borders, disabled states — quieter than Slate Ink by two stops"
+    },
+    "cobalt-signal": {
+      "$value": "#0048ff",
+      "$type": "color",
+      "$description": "Cobalt Signal — Primary action fill — the only chromatic color in the system, reserved for CTA buttons and live action moments"
+    },
+    "stone-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Stone Gray — Tertiary borders and inactive icon strokes — the quietest neutral, used only when Ash is still too loud"
+    }
+  },
+  "font": {
+    "sigma-sans": {
+      "$value": "Sigma Sans",
+      "$type": "fontFamily",
+      "$description": "Navigation links, buttons, form labels, and utility micro-copy — the functional voice, compact and quiet"
+    },
+    "sigma-serif-head": {
+      "$value": "Sigma Serif Head",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines — a high-contrast didone-style serif at regular weight only, creating editorial authority without boldness"
+    },
+    "sigma-serif": {
+      "$value": "Sigma Serif",
+      "$type": "fontFamily",
+      "$description": "Subheadings, body paragraphs, and mid-size editorial text — the reading voice of the site, set at regular weight with generous line-height"
+    },
+    "metropolis": {
+      "$value": "Metropolis",
+      "$type": "fontFamily",
+      "$description": "Rare medium-weight sans for emphasized micro-labels — the only weight above 400 in the system, used sparingly"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.sigmaphoto.com",
+      "siteName": "Sigmaphoto",
+      "extractedAt": "2026-06-03T19:04:34.120Z",
+      "variant": "compact"
+    }
+  }
+}

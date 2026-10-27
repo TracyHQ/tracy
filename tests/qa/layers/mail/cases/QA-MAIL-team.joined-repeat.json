@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.joined-repeat",
+  "itemIds": [
+    "letter:team.joined:en",
+    "letter:team.joined:vi",
+    "letter:team.joined:de",
+    "letter:team.joined:it",
+    "letter:team.joined:fr",
+    "letter:team.joined:nl",
+    "letter:team.joined:zh",
+    "letter:team.joined:es"
+  ],
+  "requirement": "team.joined renders identically twice and leaves its input unchanged",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7",
+    "invariant": "a held or retried letter is rendered again at send time and must read the same"
+  },
+  "edgeTags": ["repeat"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.repeat#team.joined:"],
+  "redProof": null,
+  "legacyIds": []
+}

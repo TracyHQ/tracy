@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-newsprint: #ececea;
+  --color-bright-white: #ffffff;
+  --color-bone: #f5f5f4;
+  --color-stone-200: #d4d2d1;
+  --color-stone-400: #a6a09b;
+  --color-stone-500: #87827d;
+  --color-stone-600: #57534d;
+  --color-stone-700: #44403b;
+  --color-stone-800: #292524;
+  --color-ink-black: #1c1917;
+  --color-char: #0c0a09;
+  --color-volt-blue: #0b64e9;
+  --color-amber-signal: #f9b703;
+  --color-alert-coral: #f24149;
+  --color-ember-orange: #f97006;
+  --color-iris-violet: #6b4aff;
+
+  /* Typography — Font Families */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fh-total-display: 'FH Total Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui: 'system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

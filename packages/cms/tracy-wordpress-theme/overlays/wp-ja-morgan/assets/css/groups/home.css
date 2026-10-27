@@ -1,0 +1,840 @@
+/* Group A pages: home-style-2 / -3 / -4, about-us, services-page.
+ * Every value below was measured on the source (:8281) with computed styles, 1440 px, light. */
+
+/* ---- Per-style palette: each home style is a T3 style with its own brand colours ---- */
+body.jm-route-home-style-2 {
+	--jm-red: var(--ds-c-accent, #21c674);
+	--ja-accent: var(--ds-c-accent, #21c674);
+	--jm-secondary: var(--ds-c-ink, #1e375c);
+}
+body.jm-route-home-style-3 {
+	--jm-red: var(--ds-c-accent, #c5b48f);
+	--ja-accent: var(--ds-c-accent, #c5b48f);
+	--jm-secondary: var(--ds-c-ink, #67615c);
+}
+body.jm-route-home-style-4 {
+	--jm-red: var(--ds-c-accent, #21c674);
+	--ja-accent: var(--ds-c-accent, #21c674);
+	--jm-secondary: var(--ds-c-ink, #333399);
+	--jm-text: var(--ds-c-fg, #aaaaaa);
+	--jm-lead: var(--ds-c-fg, #aaaaaa);
+	color: var(--ds-c-fg, #aaaaaa);
+}
+body.jm-route-home-style-2 :is(.mod-bg-secondary, .t3-off-canvas-header, .acm-accordion .panel[open] summary, .acm-testimonial.style-1 .label-highlight),
+body.jm-route-home-style-3 :is(.mod-bg-secondary, .t3-off-canvas-header, .acm-accordion .panel[open] summary, .acm-testimonial.style-1 .label-highlight),
+body.jm-route-home-style-4 :is(.mod-bg-secondary, .t3-off-canvas-header, .acm-accordion .panel[open] summary, .acm-testimonial.style-1 .label-highlight) {
+	background: var(--jm-secondary);
+}
+
+/* ---- Section titles at 36 px on these pages ---- */
+body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4, .jm-route-about-us, .jm-route-services-page) .jm-acm h3.jm-module-title {
+	font-size: 36px;
+	line-height: 45px;
+	letter-spacing: -0.6px;
+	color: var(--wp--preset--color--fg-2, var(--ds-c-fg-2, #333333));
+}
+body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4, .jm-route-about-us, .jm-route-services-page) .jm-acm.mod-bg-secondary h3.jm-module-title {
+	color: var(--ds-c-on-ink, #ffffff);
+}
+
+/* ---- Masthead of about-us and services-page: centred, 690 px ---- */
+:is(.jm-route-about-us, .jm-route-services-page) .ja-masthead-detail {
+	max-width: 690px;
+	text-align: center;
+}
+:is(.jm-route-about-us, .jm-route-services-page) .ja-masthead-title {
+	font-size: 60px;
+	line-height: 90px;
+	font-weight: 600;
+	letter-spacing: -0.6px;
+	margin: 0 0 12.5px;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+:is(.jm-route-about-us, .jm-route-services-page) .ja-masthead-description {
+	margin: 25px 0 0;
+	opacity: 0.75;
+}
+
+/* ---- features-intro style-4: colour tiles ---- */
+.acm-features.style-4 {
+	width: auto;
+}
+.acm-features.style-4 > .section-title {
+	max-width: 810px;
+	margin: 0 auto 150px;
+	padding-inline: 15px;
+	text-align: center;
+}
+.acm-features.style-4 .jm-ft-desc {
+	margin: 0;
+}
+.acm-features.style-4 .jm-ft-sign {
+	margin: 48px 0 0;
+	font-size: 36px;
+	line-height: 45px;
+	letter-spacing: -0.6px;
+}
+.acm-features.style-4 .jm-ft-sign img {
+	display: inline;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+}
+.acm-features.style-4 .jm-tiles {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+}
+.acm-features.style-4 .col {
+	flex: 0 0 50%;
+	display: flex;
+	box-sizing: border-box;
+}
+.acm-features.style-4 .features-item {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-features.style-4 .col:nth-child(-n + 2) .features-item {
+	flex-direction: row-reverse;
+}
+.acm-features.style-4 .img-intro {
+	position: relative;
+	flex: 0 0 50%;
+	margin: 0;
+}
+.acm-features.style-4 .img-intro img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.acm-features.style-4 .content-wrap {
+	flex: 0 0 50%;
+	box-sizing: border-box;
+	padding: 90px;
+}
+.acm-features.style-4 .img-icon {
+	height: 60px;
+	margin: 0 0 30px;
+}
+.acm-features.style-4 .img-icon img {
+	width: 60px;
+	height: 60px;
+}
+.acm-features.style-4 .font-icon {
+	margin: 0 0 30px;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-features.style-4 h4 {
+	margin: 0 0 25px;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-features.style-4 .jm-description {
+	margin: 0 0 25px;
+	color: var(--ds-c-on-ink, #ffffff);
+	opacity: 0.75;
+}
+.acm-features.style-4 .jm-tile-link {
+	/* The source's link sits on a 28 px line box under its description; 2 px more than the paragraph's own 25 px keeps every tile 442 px tall. */
+	margin: 0 0 2px;
+}
+.acm-features.style-4 .jm-tile-link a {
+	color: var(--ds-c-on-ink, #ffffff);
+	font-weight: 700;
+	text-decoration: none;
+	border-bottom: 1px solid var(--jm-mix-on-ink-10, var(--ds-c-on-ink, rgba(255, 255, 255, 0.1)));
+}
+.acm-features.style-4 .jm-tile-link a::after {
+	content: "\f119";
+	font-family: "Ionicons";
+	font-weight: 400;
+	margin-left: 6.25px;
+}
+/* Tile colour levels bg-lv-1..4, by tile position on each page (level 1 is the style's primary colour). */
+.acm-features.style-4 .col .features-item {
+	background: var(--ds-c-ink, var(--jm-red));
+}
+body.jm-route-home-style-3 .acm-features.style-4 .col:nth-child(1) .features-item {
+	background: var(--ds-c-ink, var(--jm-red));
+}
+body.jm-route-home-style-3 .acm-features.style-4 .col:nth-child(2) .features-item {
+	background: var(--ds-c-ink, #336666);
+}
+body.jm-route-home-style-3 .acm-features.style-4 .col:nth-child(3) .features-item {
+	background: var(--ds-c-ink, #67615c);
+}
+body.jm-route-home-style-3 .acm-features.style-4 .col:nth-child(4) .features-item {
+	background: var(--ds-c-ink, #979eb1);
+}
+body.jm-route-services-page .acm-features.style-4 .col:nth-child(1) .features-item,
+body.jm-route-services-page .acm-features.style-4 .col:nth-child(4) .features-item {
+	background: var(--ds-c-ink, #67615c);
+}
+body.jm-route-services-page .acm-features.style-4 .col:nth-child(2) .features-item {
+	background: var(--ds-c-ink, #336666);
+}
+body.jm-route-services-page .acm-features.style-4 .col:nth-child(3) .features-item {
+	background: var(--ds-c-ink, #979eb1);
+}
+
+/* ---- features-intro style-5: a white panel over a picture ---- */
+.acm-features.style-5 .features-item {
+	position: relative;
+	padding: 150px 0;
+}
+.acm-features.style-5 .jm-item-bg {
+	position: absolute;
+	inset: 0;
+	margin: 0;
+}
+.acm-features.style-5 .jm-item-bg img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.acm-features.style-5 .container {
+	position: relative;
+	z-index: 1;
+}
+.acm-features.style-5 .group-item {
+	box-sizing: border-box;
+	width: 570px;
+	max-width: 100%;
+	margin-left: auto;
+	padding: 90px 120px 90px 90px;
+	border-radius: var(--ds-card-radius, 4px);
+	background: var(--jm-bg);
+	text-align: left;
+}
+.acm-features.style-5 .sub-heading {
+	margin: 0 0 25px;
+	font-weight: 500;
+	color: var(--ds-c-accent-text, var(--jm-red));
+}
+.acm-features.style-5 h2 {
+	margin: 0 0 25px;
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 45px;
+	letter-spacing: -0.6px;
+	color: var(--wp--preset--color--fg-2, var(--ds-c-fg-2, #333333));
+}
+.acm-features.style-5 .lead,
+.acm-features.style-6 .lead {
+	margin: 0 0 60px;
+	font-size: 18px;
+	line-height: 30px;
+}
+/* The source's style-5 lead keeps 30 px under it below 768 px and 60 px from there up (style-6 keeps 60 at every width). */
+@media (max-width: 767px) {
+	.acm-features.style-5 .lead {
+		margin-bottom: 30px;
+	}
+}
+.acm-features.style-5 .btn-action,
+.acm-features.style-6 .btn-action {
+	margin: 0;
+}
+
+/* ---- features-intro style-6: a coloured statement band ---- */
+.acm-features.style-6 {
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-features.style-6 .row {
+	display: flex;
+	margin: 0 -15px;
+}
+.acm-features.style-6 .col-md-4 {
+	flex: 0 0 33.3333%;
+	box-sizing: border-box;
+	padding: 0 15px;
+}
+.acm-features.style-6 .col-md-8 {
+	flex: 0 0 66.6667%;
+	box-sizing: border-box;
+	padding: 0 105px 0 15px;
+}
+.acm-features.style-6 .sub-heading {
+	margin: 0 0 25px;
+	font-weight: 500;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-features.style-6 h2 {
+	margin: 0 0 25px;
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 45px;
+	letter-spacing: -0.6px;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-features.style-6 .lead {
+	color: var(--ds-c-on-ink, #ffffff);
+	opacity: 0.7;
+}
+
+/* ---- statics: number counters ---- */
+.acm-statics.style-1 .row {
+	display: flex;
+	margin: 0;
+}
+.acm-statics.style-1 .col {
+	flex: 0 0 25%;
+	box-sizing: border-box;
+}
+.acm-statics.style-1 .statics-item {
+	border-right: 1px solid var(--jm-mix-on-ink-20, var(--ds-c-on-ink, rgba(255, 255, 255, 0.2)));
+	padding: 180px 0;
+	text-align: center;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-statics.style-1 .number {
+	margin: 0;
+	font-size: 60px;
+	font-weight: 500;
+	line-height: 75px;
+	letter-spacing: -0.6px;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-statics.style-1 h5 {
+	margin: 10px 0 0;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 20px;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+
+/* ---- testimonials style-3: quote cards ---- */
+.acm-testimonial.style-3 > .section-title {
+	max-width: 520px;
+	margin: 0 auto 60px;
+	text-align: center;
+}
+.acm-testimonial.style-3 .section-title h3 {
+	margin: 0;
+}
+.acm-testimonial.style-3 .testimonial-content {
+	overflow: hidden;
+}
+.acm-testimonial.style-3 .tracy-motion-track {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 30px;
+}
+.acm-testimonial.style-3 .testimonial-item {
+	flex: 0 0 390px;
+	box-sizing: border-box;
+	text-align: center;
+}
+.acm-testimonial.style-3 .lead-desc {
+	box-sizing: border-box;
+	min-height: 200px;
+	margin: 0 0 30px;
+	padding: 50px;
+	border-radius: var(--ds-card-radius, 4px);
+	background: var(--jm-card);
+	box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+}
+.acm-testimonial.style-3 .testimonial-img {
+	height: 60px;
+	margin: 0;
+}
+.acm-testimonial.style-3 .testimonial-img img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+.acm-testimonial.style-3 .testimonial-name {
+	margin: 15px 0 6px;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 20px;
+	color: var(--jm-heading);
+}
+.acm-testimonial.style-3 .testimonial-position {
+	margin: 0;
+}
+
+/* ---- about-us and services-page: page-masthead template wraps the sections in a boxed .container; the source
+ * sections are full width (measured 1440 at 1440). ---- */
+body:is(.jm-route-about-us, .jm-route-services-page) .t3-mainbody.container {
+	width: auto;
+	max-width: none;
+	padding: 0;
+}
+body:is(.jm-route-about-us, .jm-route-services-page) .item-page .acm-teams .jm-cards {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 30px;
+	margin: 0;
+}
+@media (max-width: 1199px) {
+	body:is(.jm-route-about-us, .jm-route-services-page) .item-page .acm-teams .jm-cards {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (max-width: 767px) {
+	body:is(.jm-route-about-us, .jm-route-services-page) .item-page .acm-teams .jm-cards {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ---- Statement heading of features-intro (style-4, style-3 intro): 36 px on every group A page ---- */
+body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4, .jm-route-about-us, .jm-route-services-page) .jm-acm h3.jm-ft-desc {
+	font-size: 36px;
+	line-height: 45px;
+	letter-spacing: -0.6px;
+	font-weight: 400;
+}
+
+/* ---- Hero call-to-action band on home-style-3 keeps the brand red although the page palette is sand ---- */
+body.jm-route-home-style-3 .acm-hero.t3-section .wp-block-button__link {
+	background: var(--ds-c-accent, #d93030);
+	border-color: var(--ds-c-accent, #d93030);
+}
+
+/* ---- features-intro style-1 with slide=0 (home-style-4, about-us): a 2 x 2 grid of icon items, not a carousel ---- */
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 {
+	grid-template-columns: 405px 1fr;
+	column-gap: 0;
+	align-items: start;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 > .section-title {
+	max-width: 520px;
+	box-sizing: border-box;
+	padding-right: 30px;
+	margin-bottom: 60px;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .acm-feature-slide.tracy-motion-carousel {
+	margin: 0 -15px 0 0;
+	overflow: visible;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .tracy-motion-track {
+	flex-wrap: wrap;
+	transform: none !important;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-item {
+	min-height: 309.5px;
+	flex: 0 0 50%;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-img img {
+	width: 75px;
+	height: 75px;
+	object-fit: fill;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-feature-slide h4 {
+	margin: 12.5px 0 12.5px !important;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-feature-slide p:not(.action-link-icon) {
+	padding-right: 0;
+	margin: 0 0 25px;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .tracy-motion-nav {
+	display: none;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .t3-section:has(.acm-features.style-1) {
+	padding-bottom: 90px;
+}
+
+/* ---- teams on about-us: item 400 px tall, 15 px of row margin below the last row ---- */
+body:is(.jm-route-about-us, .jm-route-home-style-2, .jm-route-home-style-3) .acm-teams .teams-item {
+	min-height: 400px;
+	box-sizing: border-box;
+}
+body.jm-route-about-us .acm-teams {
+	padding-bottom: 15px;
+}
+body.jm-route-about-us .t3-section:has(.acm-teams) {
+	padding-bottom: 120px;
+}
+
+/* Latest articles (mod_articles_latest of Home style 4): "view all" link over the title row, four cards. */
+.jm-acm .wrap-last-article {
+	position: relative;
+}
+.jm-acm .wrap-last-article > .view-all {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: -90px 0 0;
+	text-align: right;
+	line-height: 25px;
+}
+.jm-acm .wrap-last-article > .view-all .wp-block-button {
+	display: inline;
+}
+.jm-acm .wrap-last-article > .view-all .wp-block-button__link {
+	padding: 0;
+	background: none;
+	border: 0;
+	border-bottom: 1px solid var(--ds-c-border, #eaeaea);
+	border-radius: 0; /* ds-keep: a ruled text link (an underline, no box), not a button corner */
+	color: var(--ds-c-fg-2, #333333);
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 25px;
+	text-decoration: none;
+}
+.jm-acm .wrap-last-article > .view-all .wp-block-button__link::after {
+	content: "\f119";
+	font-family: "Ionicons";
+	font-weight: 400;
+	margin-left: 6.25px;
+}
+.latest-news .wp-block-post-template {
+	display: flex;
+	flex-wrap: wrap;
+	width: calc(100% + 30px);
+	max-width: none;
+	margin: 0 -15px;
+	padding: 0;
+	list-style: none;
+}
+.latest-news .wp-block-post-template > li {
+	width: 25%;
+	margin: 0;
+	padding: 0 15px;
+	box-sizing: border-box;
+}
+.latest-news .wp-block-post-template > li {
+	display: flex;
+}
+.latest-news .article-detail {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.latest-news .article-detail,
+.latest-news .article-content {
+	margin: 0;
+	padding: 0;
+}
+.latest-news .intro-image {
+	/* The source's picture box is always 3:2 (190 px at the widest, 142 px in a narrow column). */
+	aspect-ratio: 3 / 2;
+	margin: 0;
+	overflow: hidden;
+}
+.latest-news .intro-image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+	border-radius: var(--ds-card-radius, 4px);
+}
+.jm-acm .wrap-last-article > .view-all .wp-block-button__link {
+	display: inline;
+	text-align: right;
+}
+.latest-news .date-create {
+	margin: 20px 0 10px;
+	font-size: 13px;
+	line-height: 20.3125px;
+	color: var(--ds-c-meta, #aaaaaa);
+}
+.latest-news .heading-link {
+	margin: 0 0 25px;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 27.6px;
+	letter-spacing: -0.6px;
+}
+.latest-news .heading-link a {
+	display: inline;
+	font-size: 20px;
+	line-height: 23px;
+	color: var(--ds-c-fg-2, #333333);
+	text-decoration: none;
+}
+.latest-news .articles-introtext {
+	margin: 0;
+	font-size: 16px;
+	line-height: 25px;
+	color: var(--ds-c-fg, #aaaaaa);
+}
+@media (max-width: 991px) {
+	.latest-news .wp-block-post-template > li {
+		width: 50%;
+		margin-bottom: 30px;
+	}
+}
+/* The source's col-sm-6 starts at 768 px, so the latest-news cards stay one per row below it. */
+@media (max-width: 767px) {
+	.latest-news .wp-block-post-template > li {
+		width: 100%;
+		margin-bottom: 30px;
+	}
+	/* Below 768 px the source's "view all" link is a block under the title (30 px above the cards), not a link over the title row. */
+	.jm-acm .wrap-last-article > .view-all {
+		position: static;
+		margin: 0 0 30px;
+		text-align: left;
+	}
+}
+
+/* The closing call to action of the team section in the danger colour (its "color-link" parameter). */
+.jm-link-danger .teams-action .wp-block-button__link {
+	background: var(--ds-c-accent, #d93030);
+	border-color: var(--ds-c-accent, #d93030);
+}
+
+/* The lead of a features section may be two paragraphs (the source: a <p> and a bare text line). */
+.acm-features.style-3 .lead.jm-lead-more {
+	margin-top: 0;
+}
+
+/* ---- Feature slide arrows: the source shows them only where the slide pages (one item per view, under 768 px): 50 px squares, grey, 13 px apart ---- */
+.acm-feature-slide .tracy-motion-nav {
+	display: none;
+}
+@media (max-width: 767px) {
+	.acm-feature-slide .tracy-motion-nav {
+		display: flex;
+		gap: 13px;
+		margin: 25px 0 0 15px;
+	}
+	.acm-feature-slide .tracy-motion-nav button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 50px;
+		height: 50px;
+		padding: 0;
+		border: 0;
+		border-radius: var(--ds-btn-radius, 0);
+		background: light-dark(var(--ds-c-surface, #f2f3f7), var(--ds-c-surface, #1d2434));
+		color: var(--jm-navy-fg);
+		font-size: 0;
+		cursor: pointer;
+	}
+	.acm-feature-slide .tracy-motion-nav button::before {
+		content: "";
+		width: 10px;
+		height: 10px;
+		border: solid currentColor;
+		border-width: 0 0 2px 2px;
+		transform: translateX(2px) rotate(45deg);
+	}
+	.acm-feature-slide .tracy-motion-nav .tracy-motion-next::before {
+		transform: translateX(-2px) rotate(-135deg);
+	}
+}
+
+/* A carousel whose slides all fit has one page: the source draws no dots then (the runtime draws one). */
+.tracy-motion-dots:has(> .tracy-motion-dot:only-child) {
+	display: none;
+}
+
+/* ---- from 992: the source's title column is col-md-4 (one third, 15 px padding) beside two cards (col-md-8) ---- */
+@media (min-width: 992px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 {
+		grid-template-columns: 33.3333% 66.6667%;
+	}
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 > .section-title {
+		max-width: none;
+		padding: 0 45px 0 15px;
+	}
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .acm-feature-slide.tracy-motion-carousel {
+		margin: 0;
+	}
+}
+
+/* ---- features style-1 cards as the source builds them: 30 px under the icon, 30 px of padding right of the text, 60 px below ---- */
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-item {
+	min-height: 0;
+	padding: 0 45px 60px 15px;
+	box-sizing: border-box;
+}
+body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-img {
+	margin-bottom: 30px !important;
+}
+/* The source's cards share one height across both rows (equal-height script): a grid with equal rows does the same. */
+@media (min-width: 992px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .tracy-motion-track {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-auto-rows: 1fr;
+	}
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-item {
+		flex: none;
+	}
+}
+
+/* ---- Home style 3 and 4 hero: 350/350 px on desktop, 150/75 px below 992 (the source's hero-item paddings) ---- */
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .jm-sections > .acm-hero.hero-extra-large:first-child {
+	padding-bottom: 75px;
+}
+@media (min-width: 992px) {
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .jm-sections > .acm-hero.hero-extra-large:first-child {
+		padding-top: 350px;
+		padding-bottom: 350px;
+	}
+}
+@media (max-width: 991px) {
+	body.jm-route-home-style-4 .jm-sections > .acm-hero:first-child .wrap-content {
+		padding-top: 90px;
+	}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	body.jm-route-home-style-3 .jm-sections > .acm-hero:first-child .lead {
+		padding: 0 90px;
+	}
+}
+
+/* ---- features style-5 (call to action): 75 px above and below, 30 px inside the box below 992 ---- */
+@media (max-width: 991px) {
+	body .acm-features.style-5 .features-item {
+		padding-block: 75px;
+	}
+	body .acm-features.style-5 .group-item {
+		padding: 30px;
+	}
+}
+
+/* ---- features style-4 tiles: the source's equal-height script gives every tile the height of the tallest one ---- */
+@media (min-width: 768px) {
+	.acm-features.style-4 .jm-tiles {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		grid-auto-rows: 1fr;
+	}
+	.acm-features.style-4 .jm-tiles > .col {
+		flex: none;
+		max-width: none;
+	}
+}
+@media (min-width: 1200px) {
+	.acm-features.style-4 .jm-tiles {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+/* Features style 4 title: 60 px under it below 1200 px (150 px above that). */
+@media (max-width: 1199px) {
+	.acm-features.style-4 > .section-title {
+		margin-bottom: 60px;
+	}
+}
+
+/* ---- features style-1 below 992: one card to a row, the title block 520 px wide ---- */
+@media (max-width: 991px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-item {
+		flex: 0 0 100%;
+	}
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 > .section-title {
+		max-width: 535px !important;
+		padding: 0 30px 0 15px !important;
+	}
+}
+@media (max-width: 767px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 > .section-title {
+		max-width: none !important;
+		padding: 0 15px !important;
+		margin-bottom: 30px;
+	}
+}
+/* 481-767 px: the source keeps the title column at 520 px of text (450 px below that) */
+@media (min-width: 481px) and (max-width: 767px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 > .section-title {
+		max-width: 535px !important;
+		padding: 0 0 0 15px !important;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.acm-features.style-5 h2.jm-module-title {
+		font-size: 28px;
+		line-height: 35px;
+	}
+}
+
+/* Features style 3 picture: the source draws it at its own 960 x 880 and grows it only to cover the half's height; the port's file is 3000 x 2750, so the size is stated, not inherited. */
+@media (min-width: 992px) {
+	body .acm-features.style-3 .features-image img {
+		width: auto;
+		height: max(880px, 100%);
+	}
+}
+
+/* ---- clients: six cells to a row from 768 px, two below (the source's col-xs-6 / col-sm-2) ---- */
+.acm-cliens.style-1 .client-item {
+	flex: 0 0 50%;
+	min-width: 0;
+}
+@media (min-width: 768px) {
+	.acm-cliens.style-1 .client-item {
+		flex-basis: 16.6667%;
+	}
+}
+
+/* ---- Home style 3 and 4, closing call to action (second hero): 90 px of space under the text that the source's group item carries ---- */
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .jm-sections > .acm-hero:not(:first-child) .wrap-content {
+	margin-bottom: 90px;
+}
+@media (max-width: 767px) {
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .jm-sections > .acm-hero:not(:first-child) {
+		padding-block: 75px;
+	}
+}
+
+/* Latest articles: the title block is 520 px wide with 60 px under it, so a long title takes two lines as in the source. */
+.jm-acm .section-title:has(+ .wrap-last-article) {
+	max-width: 520px;
+	margin-bottom: 60px;
+}
+@media (max-width: 767px) {
+	.jm-acm .section-title:has(+ .wrap-last-article) {
+		margin-bottom: 15px;
+	}
+}
+
+/* An accordion wrapper with nothing in it takes no room; the call-to-action then sits 30 px under the lead as in the source. */
+.acm-features.style-3 .features-module-wrap:not(:has(*)) {
+	display: none;
+}
+.acm-features.style-3 .features-module-wrap:not(:has(*)) + .features-action {
+	margin-top: 30px;
+}
+
+/* Features style 3 is as tall as its text (570 px at 992-1199 in the source), not a fixed 600 px. */
+@media (min-width: 992px) {
+	body .acm-features.style-3 {
+		min-height: 0;
+	}
+}
+
+/* 768 px and up: the source's feature column is 2 px taller than its inner box */
+@media (min-width: 768px) {
+	body:is(.jm-route-about-us, .jm-route-home-style-4) .acm-features.style-1 .features-item {
+		margin-bottom: 2px;
+	}
+}
+
+/* Up to 767 px: the source's link line takes no 2 px tail under it in the home-style-3 tile text block */
+@media (max-width: 767px) {
+	body.jm-route-home-style-3 .acm-features.style-4 .content-wrap .jm-tile-link {
+		margin-bottom: 0;
+	}
+}
+
+/* home-style-3: the source's team cards end with a 1 px rule under the member info */
+body.jm-route-home-style-3 .acm-teams .member-info {
+	border-bottom: 1px solid var(--jm-line);
+}
+
+/* home-style-3 at 768 px and up: the source's carousel card is 1 px shorter under the link */
+@media (min-width: 768px) {
+	body.jm-route-home-style-3 .acm-testimonial.style-1 .testimonial-item:has(.action-link-icon) {
+		padding-bottom: 97px;
+	}
+}
+
+/* The navy line icons of the icon grids (item-1.png to item-4.png: about-us, Home Styles 1, 2 and 4) take the tint
+   filter of inc/extra.php: their own navy without a system, the system's accent text under one. Named by file, since
+   the same grids carry other, many-coloured pictures that must keep their colours. */
+:is(.img-icon, .features-img) > img:is([src$="/item-1.png"], [src$="/item-2.png"], [src$="/item-3.png"], [src$="/item-4.png"]) {
+	filter: url(#jm-icon-tint);
+}

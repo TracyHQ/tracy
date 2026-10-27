@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1100-p4-wp-page-h1",
+  "kind": "fix",
+  "title": "WordPress page.create opens a plain-blocks page with its h1 when the page template prints no title, and only then",
+  "pr": 1100,
+  "area": "site-tools/page-create",
+  "cms": ["wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/page-create.test.mjs",
+    "S2: Record the exit code, the '# pass', '# fail', '# skipped' lines and the result of the WordPress tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0'.",
+    "'WordPress: plain blocks open with the page’s h1 when its template prints no title, and only then' is ok: with tracy-base's page.html (no core/post-title), or only an index template like it, the written post_content starts with '<!-- wp:heading {\"level\":1} -->\\n<h1 class=\"wp-block-heading\">Common questions</h1>' and holds one h1; with a page template that prints core/post-title, or one that hands its body to a pattern, the body holds no h1.",
+    "'WordPress: no map pins page markup → plain blocks, and the answer says so' and 'WordPress: the FAQ page in the theme's own section markup …' stay ok (a component without the template kind, and a pinned recipe, are left as they were)."
+  ],
+  "selectors": {
+    "read": "content.get {kind:'template', key:'page'|'singular'|'index'}",
+    "write": "content.update {kind:'post', fields:{post_type:'page', post_content}}"
+  },
+  "evidence": "dskeepwp (tracy-base wp7), 10/10/2026: the page 'Dịch vụ' (post 264) made by page.create in plain blocks had no h1: its first heading is an h3, and tracy-base's templates/page.html is header + post-content + footer with no core/post-title.",
+  "fence": "Mechanism only, over the WordPress component fake with theme template files: whether the plain body opens with an h1. The theme is not changed.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/page-create.test.mjs"
+    ],
+    "tests": [
+      "WordPress: plain blocks open with the page’s h1 when its template prints no title, and only then",
+      "WordPress: no map pins page markup → plain blocks, and the answer says so",
+      "WordPress: the FAQ page in the theme's own section markup"
+    ]
+  }
+}

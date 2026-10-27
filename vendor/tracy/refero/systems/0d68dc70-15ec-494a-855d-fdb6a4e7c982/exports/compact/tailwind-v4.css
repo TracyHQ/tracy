@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-bone-white: #eaeaea;
+  --color-paper-white: #ffffff;
+  --color-ash: #878787;
+  --color-iron-gray: #1e1e1e;
+  --color-graphite: #373737;
+  --color-signal-lime: #86ff00;
+  --color-cobalt-bar: #1a3cff;
+
+  /* Typography */
+  --font-neue-haas-grotesk: 'Neue Haas Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

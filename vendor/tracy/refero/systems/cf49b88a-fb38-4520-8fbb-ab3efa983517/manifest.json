@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cf49b88a-fb38-4520-8fbb-ab3efa983517",
+  "status": "complete",
+  "name": "OFF WHITE",
+  "url": "https://styles.refero.design/style/cf49b88a-fb38-4520-8fbb-ab3efa983517",
+  "sourceWebsite": "https://off-white.valeriafrancis.com",
+  "extractedAt": "2026-06-03T21:19:15.455Z",
+  "capturedAt": "2026-10-08T05:17:43.414664+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Glitched editorial monolith on midnight — a wall of pixelated green typography in which portrait photographs of a single human face are pressed into the negative space between monumental letterforms, all on absolute black.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/40176ead-1613-44d1-86cb-169a9bf95761.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "eed4437e5d72526edccf68e593db6321579f5a9536a26b830e4a09a3b43530c1",
+      "bytes": 20270
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b033f7d3e831b7efcb831df3fc4cdd0a37a761573effa86b6a967f6a3247010d",
+      "bytes": 157720
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a803f2d85373e7233cfbd8fa716c90dc49e706c5aae7f7638025e72e245b5af1",
+      "bytes": 17396
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "bed9e18ff6882ea18e48e4ae70e6368cd08a665c5fdea9dfe965eb37519e7457",
+      "bytes": 12702
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ddd99515cd00c8f32573a893a1763d4009518892760a40dea60113c765eaaf76",
+      "bytes": 12948
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ba133da48940eeba20f24ec6b159e91876f2d7529761a11f01819de15759e5a9",
+      "bytes": 2770
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e25cc93b861e0aa15d4552bc592b3774106338d28cfc5c240c64b651909b4871",
+      "bytes": 601
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a8d1e263758894bdfe316bc937d313b88bb41d06e4fa92ae504e43c7d2f8e13b",
+      "bytes": 618
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3ca82093d5bc1cf75df790ccf90283a1c8b1c066734c80251aaa163517d13f40",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0eb2d957cba0c3f2abe6c5666430bd76d68fd5762b5e615ba504d48c0937c6b9",
+      "bytes": 42279
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "50c006fd9acbf12f7aa1371e670a79bf624d34ec9ff3dfb93e13713e0c936392",
+      "bytes": 21560
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6b4475bd9fb391af04dea3da82cbaf8fbfa91110e8750506b8188d1d4bf24ad5",
+      "bytes": 35833
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2a011f020aceb98b3acf24285c2d0d79009fb409e86f8a59e30a63f1178a8e73",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6e0cfd37e61b593cfe0235318bd2c5594ad921480e5ffd09696937483e38126c",
+      "bytes": 1300
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "138936607a6d028f53428ed4760d4005fd3169e89edfa46a1e5ae47c2e02b2dc",
+      "bytes": 1905
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "190d4a0b-0353-4fc8-be09-affa6e977146",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "cf49b88a-fb38-4520-8fbb-ab3efa983517",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

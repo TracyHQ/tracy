@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "tracy-contract-design/v1",
+  "design": {
+    "id": "airbnb",
+    "source": "catalog"
+  }
+}

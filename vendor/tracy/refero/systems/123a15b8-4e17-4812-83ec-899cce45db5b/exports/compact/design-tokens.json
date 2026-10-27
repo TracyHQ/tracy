@@ -1,0 +1,104 @@
+{
+  "color": {
+    "royal-violet": {
+      "$value": "#5423e7",
+      "$type": "color",
+      "$description": "Royal Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "electric-iris": {
+      "$value": "#7047eb",
+      "$type": "color",
+      "$description": "Electric Iris — Icon strokes, secondary accents on violet backgrounds, chart highlights — a slightly lighter companion to Royal Violet"
+    },
+    "lemon-zest": {
+      "$value": "#ffc233",
+      "$type": "color",
+      "$description": "Lemon Zest — Top announcement banners, brand lemon accent, key highlight moments — a sharp citrus spike against the violet/white system"
+    },
+    "orchid": {
+      "$value": "#cf75ff",
+      "$type": "color",
+      "$description": "Orchid — Decorative pastel accent on violet sections, soft highlight washes, pill badge fills"
+    },
+    "lilac-mist": {
+      "$value": "#e5b5fe",
+      "$type": "color",
+      "$description": "Lilac Mist — Soft pastel background fills, subtle card highlights, eyebrow tag backgrounds"
+    },
+    "blush": {
+      "$value": "#fcc7f3",
+      "$type": "color",
+      "$description": "Blush — Pale wash backgrounds, secondary pastel accent"
+    },
+    "cobalt": {
+      "$value": "#0075ad",
+      "$type": "color",
+      "$description": "Cobalt — Brand icon accents, chart data lines, secondary illustration color"
+    },
+    "emerald": {
+      "$value": "#1e874c",
+      "$type": "color",
+      "$description": "Emerald — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "magenta": {
+      "$value": "#db0bb9",
+      "$type": "color",
+      "$description": "Magenta — Decorative accent, illustration color, highlight moments"
+    },
+    "crimson": {
+      "$value": "#d50b3e",
+      "$type": "color",
+      "$description": "Crimson — Decorative accent, illustration color, highlight moments"
+    },
+    "ember": {
+      "$value": "#eb3a00",
+      "$type": "color",
+      "$description": "Ember — Decorative accent, illustration color, warm highlight moments"
+    },
+    "obsidian": {
+      "$value": "#121217",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, dark filled buttons, nav text, headings — the near-black that carries all foreground content"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "fog": {
+      "$value": "#f7f7f8",
+      "$type": "color",
+      "$description": "Fog — Page canvas, subtle section backgrounds, surface level beneath cards"
+    },
+    "slate": {
+      "$value": "#6c6c89",
+      "$type": "color",
+      "$description": "Slate — Muted body text, secondary descriptions, nav links, helper copy"
+    },
+    "ash": {
+      "$value": "#d1d1db",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, dividers, subtle separation lines"
+    }
+  },
+  "font": {
+    "circularpro-book": {
+      "$value": "Circularpro Book",
+      "$type": "fontFamily",
+      "$description": "Display and heading family — used for all headlines from 18px sub-labels up to 80px hero display. Custom geometric sans with tight negative tracking creates a blocky, confident presence. The ss04 alternate set should be enabled for brand character."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body and UI text — nav links at 15px, body copy at 16-18px, uppercase labels at 14px with wide tracking. The 0.143em letter-spacing at 14px signals the eyebrow/label style for section headers."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lemonsqueezy.com",
+      "siteName": "Payments",
+      "extractedAt": "2026-06-03T18:46:23.577Z",
+      "variant": "compact"
+    }
+  }
+}

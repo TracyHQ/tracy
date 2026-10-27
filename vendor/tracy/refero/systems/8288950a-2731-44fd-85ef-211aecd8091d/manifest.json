@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8288950a-2731-44fd-85ef-211aecd8091d",
+  "status": "complete",
+  "name": "Assembly Coffee London",
+  "url": "https://styles.refero.design/style/8288950a-2731-44fd-85ef-211aecd8091d",
+  "sourceWebsite": "https://assemblycoffee.co.uk",
+  "extractedAt": "2026-06-03T18:15:44.656Z",
+  "capturedAt": "2026-10-08T05:14:14.614740+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Embers in a dark roastery. A near-black canvas with warm, low-lit product photography and italic serif labels — the feeling of a specialty coffee menu printed in a midnight zine.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8765a1de-348c-46ad-8cae-0ce3fd44f17f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1275781a-2157-4193-8de2-478254ba0c92.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b83232d3-a603-4d39-be80-5d5a036d6d0b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/37012ca8-64c8-48ea-b9a7-351f57e2c481.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7827703a-409b-4969-b33b-f15ebb8eeb45.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d124ce983b0f927c0a16e2d96e9cf1413a5bbb115b5bf7e04cd7464221aea484",
+      "bytes": 22845
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9bd312e359bb98e5e4ed2e33256a907043225a427a53c07dc4451d8f4e4335c1",
+      "bytes": 81488
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "631af03220c17194672210a91ce11d9da7734429457a1e378a009299738d6751",
+      "bytes": 18919
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "36b81202497d2d031991c7ab70f6b5738d8185046a88e2b4808e970ccda9e40d",
+      "bytes": 16628
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6fe072122f29e313727e33ec246bdd6b04479b14bf2696fa9190ab4907808aa0",
+      "bytes": 14446
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "41b195fbaf42b59af730059afe70697b3de829f7cf09ed14966cd0118001f9fc",
+      "bytes": 4371
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7ce67b258e6208e4ecc38e185631a3d00206c662e5fa3dbdbaf03c512e4966cf",
+      "bytes": 935
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6c3d2eb75af777348a1916aad100707bd18171f85b499aec24b18f7a45231f09",
+      "bytes": 952
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0ae9c1d775b65dc4b0c7bdd68134e7d22e223c5d78da3ce9c0a61c9514eea839",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "bceb1b7031693df63d1699b8f4b9e7780534b34b18e9754e452c4513a8b3b375",
+      "bytes": 47513
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9137231973035c4ca1154c072fd20db278d83cd2f02dd95753e5d2e267826083",
+      "bytes": 24997
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "626b0f35257bdc231014a278d4c6a935d394c7cb54d1383dc16ea253b82362ea",
+      "bytes": 63103
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f1df843f896a8962a72b90d721e8f64a10633c08291f31d399dce55d3897e665",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e30cee8a7d8b4ddc6fb71e65a68a4922b9b62b537cc446f4a0a7fab8cbe7365e",
+      "bytes": 1909
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9823b45207b1b112dc854a5d170e7d93478745ef6cf23411462dc3d22c808a84",
+      "bytes": 2573
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "14f6777e-1f6e-4b33-a7ed-d89c33f35722",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "297f65f7-0fbd-4521-ab91-a5f6e17175d9",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6a5f9438-7ae6-4743-a0bd-f9087d467eff",
+    "6da76890-6e04-452a-834d-ff019e232c2b",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "8288950a-2731-44fd-85ef-211aecd8091d",
+    "9307193e-7ce3-48c1-b650-8ab77aa83c3f",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b5532c58-620a-4d69-8861-35b2b6443956",
+    "ca522706-03ed-48cb-acb3-1bb2a22f2eda",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "fb6ac216-c11a-47c3-88e8-0423541da69c"
+  ]
+}

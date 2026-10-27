@@ -1,0 +1,196 @@
+/* Kinetic — Teams ACM block (self-contained, block-scoped).
+   All color/type/spacing route through the template design tokens, so light +
+   dark resolve automatically with the active [data-style]/[data-theme] / html.t4-dark. */
+
+.acm-teams {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+.acm-teams .hx-section {
+  padding: 80px 0;
+}
+.acm-teams .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ---- head ---- */
+.acm-teams .hx-team-head {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+.acm-teams .hx-eyebrow {
+  margin: 0 0 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.acm-teams .hx-h2 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--heading);
+}
+.acm-teams .hx-team-sub {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- grid ---- */
+.acm-teams .hx-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* ---- member card (micro-interactions.md §3a CARD gesture) ---- */
+.acm-teams .hx-team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+  padding: 28px 26px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  transition: border-color .15s ease, transform .2s ease, box-shadow .2s ease;
+}
+.acm-teams .hx-team-card:hover,
+.acm-teams .hx-team-card:focus-within {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+/* avatar / initials chip — reacts to the card hover (never on its own) */
+.acm-teams .hx-team-avatar {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  transition: border-color .15s ease;
+}
+.acm-teams .hx-team-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border-radius: 12px;
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  transition: border-color .15s ease;
+}
+.acm-teams .hx-team-card:hover .hx-team-avatar,
+.acm-teams .hx-team-card:hover .hx-team-chip {
+  border-color: var(--primary);
+}
+
+/* name + role */
+.acm-teams .hx-team-id {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.acm-teams .hx-team-name {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+}
+.acm-teams .hx-team-role {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+/* bio */
+.acm-teams .hx-team-bio {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* social row (pinned to card bottom) */
+.acm-teams .hx-team-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.acm-teams .hx-team-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  color: var(--muted);
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+.acm-teams .hx-team-social-link:hover,
+.acm-teams .hx-team-social-link:focus-visible {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.acm-teams .hx-team-social-link svg {
+  display: block;
+}
+
+/* ---- responsive ---- */
+@media (max-width: 980px) {
+  .acm-teams .hx-cols {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+@media (max-width: 620px) {
+  .acm-teams .hx-cols {
+    grid-template-columns: 1fr !important;
+  }
+  /* ease the 38px section title on small phones (no prior clamp) */
+  .acm-teams .hx-h2 {
+    font-size: 27px;
+    letter-spacing: -0.5px;
+  }
+  .acm-teams .hx-section {
+    padding: 56px 0;
+  }
+  .acm-teams .hx-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+  .acm-teams .hx-team-card:hover { transform: none; }
+}

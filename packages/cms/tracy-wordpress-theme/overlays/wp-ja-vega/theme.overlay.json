@@ -1,0 +1,44 @@
+{
+  "styles": {
+    "css": "/* wp-ja-vega: dark mode. The source (JA Vega, T4) follows the OS until the visitor picks: its head script sets html[data-theme] from prefers-color-scheme, the .t4-theme-toggle button switches it (css/darkmode.css, js/darkmode.js). Here every colour preset carries both halves through light-dark(): light = tokens.css (measured 26/09 on :8261), dark = the source's --dm-* block (css/darkmode.css:4-5: bg #0f141c, surface #161d28, border #2a323d, text #c7ccd4, heading #f1f3f6, muted #8b94a3, primary #3b8bff, link hover #5fa0ff), each read back as computed style in the M2 design contract (desktop-dark). The footer band is #121316 in both modes, as measured. No attribute = auto, the OS decides; assets/js/wp-ja-vega.js writes data-theme light|dark from the tracy_theme cookie before the first paint. */ :root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #ffffff),var(--ds-c-bg, #0f141c));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #fafafa),var(--ds-c-surface, #161d28));--wp--preset--color--surface-warm:light-dark(var(--ds-c-ink, #121316),var(--ds-c-ink, #121316));--wp--preset--color--fg:light-dark(var(--ds-c-fg, #757575),var(--ds-c-fg, #c7ccd4));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #050505),var(--ds-c-heading, #f1f3f6));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #757575),var(--ds-c-muted, #8b94a3));--wp--preset--color--meta:light-dark(var(--ds-c-meta, #86868b),var(--ds-c-meta, #8b94a3));--wp--preset--color--border:light-dark(var(--ds-c-border, #ced4da),var(--ds-c-border, #2a323d));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, #e8e8ed),var(--ds-c-border-soft, #2a323d));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #1d4ed8),var(--ds-c-accent, #3b8bff));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #ffffff),var(--ds-c-accent-on, #ffffff));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #0077ed),var(--ds-c-accent-hover, #5fa0ff));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #0066cc),var(--ds-c-accent-active, #3b8bff));}:root[data-theme=\"light\"]{color-scheme:light}:root[data-theme=\"dark\"]{color-scheme:dark}"
+  },
+  "customTemplates": [
+    {
+      "name": "page-landing",
+      "title": "Landing (masthead and sections)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-service",
+      "title": "Service (centred title, other services)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "post-project",
+      "title": "Project (masthead, stats, about, gallery, more projects)",
+      "postTypes": ["post"]
+    },
+    {
+      "name": "page-article",
+      "title": "Article (category and date, centred title, related posts)",
+      "postTypes": ["page", "post"]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    }
+  ]
+}

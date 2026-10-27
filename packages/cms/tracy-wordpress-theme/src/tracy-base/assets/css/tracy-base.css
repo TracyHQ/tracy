@@ -1,0 +1,1754 @@
+/* tracy-base — the chrome the source theme has no rule for: the header's brand, menu and action
+ * groups, the mega menu panel, the theme toggle, the footer columns. Loaded after tracy.css and
+ * layout.css on every page kind but the design pages. Every colour, size and shadow is a
+ * WordPress variable of the active variation; there is no literal value here to go out of step
+ * with the dark set in theme.json. */
+
+
+/* ---- header: three groups on one row, the menu group stretched to the header's full height so
+   a mega panel hung from the header's bottom edge starts exactly where its trigger box ends.
+   The row is the source's: brand start, six links centred, the Contact button and the theme
+   toggle at the end, one line, the height of the Joomla header bar (80px on the apple set). ---- */
+
+.tracy-header {
+  position: relative;
+}
+
+/* The chrome shares the sections' box: the container max is the CONTENT width and the gutter
+   sits outside it, so the brand, the footer columns and every section start on one line. The
+   library's .tracy-container puts the gutter inside the max instead; the header and footer
+   inners restate the section convention here. */
+.tracy-header__inner,
+.tracy-footer__inner,
+.tracy-mega__inner {
+  max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-desktop) * 2));
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+}
+
+.tracy-header__inner {
+  min-height: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--8));
+  gap: var(--wp--preset--spacing--4);
+  flex-wrap: nowrap;
+}
+
+.tracy-header__brand {
+  align-items: center;
+  gap: var(--wp--preset--spacing--2);
+  flex: 0 0 auto;
+}
+
+.tracy-header__brand .tracy-logo img {
+  display: block;
+  height: 32px;
+  width: auto;
+}
+
+.tracy-header__menu {
+  align-self: stretch;
+  align-items: stretch;
+  gap: var(--wp--preset--spacing--1);
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* The navigation block is the overlay (hamburger) menu only: `overlayMenu: always` in the part,
+   shown below the tablet width. The desktop row is .tracy-header__links — plain links and the
+   mega blocks in the source's order, every one a block of its own in the Site Editor. */
+.tracy-header__menu .tracy-nav {
+  align-self: center;
+  display: none;
+}
+
+.tracy-header__links {
+  align-items: stretch;
+  gap: var(--wp--preset--spacing--1);
+  flex-wrap: nowrap;
+}
+
+.tracy-header__link {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+/* Menu items are plain text, as in the Joomla source: 14 px, regular weight, the page's text
+   colour; hover turns the text accent with no background, and keyboard focus draws a 2 px accent
+   outline with 16 px corners. No pill, no bold. */
+.tracy-header__link a {
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 400;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+  border-radius: var(--ds-btn-radius, 16px);
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-header__link a:hover {
+  background: none;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy-header__link a:focus-visible {
+  outline: 2px solid var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+.tracy-header__actions {
+  align-items: center;
+  gap: var(--wp--preset--spacing--3);
+  flex: 0 0 auto;
+}
+
+.tracy-header__cta .wp-block-button__link {
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+  font-size: var(--wp--preset--font-size--base);
+  border-radius: var(--wp--custom--radius--pill);
+}
+
+/* ---- buttons: the source's shape — a pill, body size, regular weight, 12px × 20px. The
+   secondary is accent text in a border ring. tracy.css draws the design system's default
+   (radius md, 600); these restate what the Joomla source actually renders. ---- */
+
+.tracy .wp-block-button__link {
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 400;
+  line-height: 1.2;
+  border-width: 0;
+  border-radius: var(--wp--custom--radius--pill);
+}
+
+/* The secondary's edge is a ring (box-shadow), as the source draws it, so both buttons are the
+   same 44px tall — a border would add its width to the box. */
+.tracy .wp-block-button.is-style-outline .wp-block-button__link,
+.tracy .tracy-btn--ghost .wp-block-button__link {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  box-shadow: var(--wp--custom--elev--ring);
+}
+
+.tracy .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.tracy .tracy-btn--ghost .wp-block-button__link:hover {
+  box-shadow: var(--wp--custom--elev--ring), var(--wp--custom--elev--raised);
+}
+
+/* ---- mega menu ---- */
+
+.tracy-mega {
+  position: static;
+  display: flex;
+  align-items: center;
+}
+
+.tracy-mega__trigger {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--1);
+  padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+  border-radius: var(--ds-btn-radius, 16px);
+  color: var(--wp--preset--color--fg);
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+/* Same plain-text states as the menu links above (the Joomla source). */
+.tracy-mega__trigger:hover,
+.tracy-mega.is-open > .tracy-mega__trigger {
+  background: none;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy-mega__trigger:focus-visible {
+  outline: 2px solid var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+.tracy-mega__caret::before {
+  content: '';
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-0.15em) rotate(45deg);
+  transition: transform var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-mega.is-open > .tracy-mega__trigger .tracy-mega__caret::before {
+  transform: translateY(0.1em) rotate(225deg);
+}
+
+/* The panel: the Joomla source's floating card (Tracy Base j6 `.tracy-mega-editorial`), centred
+   under the header and hung from its bottom edge, the page ground inside a soft rim with the card
+   corner at the bottom. 760px for Service, 880px for Resources, 920px for Company (keyed on the
+   columns' modifier class). Painted only while the block carries `is-open` (tracy-base-mega.js);
+   no :hover rule, so what opens it is one contract. It fades and drops 6px in, as the source. */
+.tracy-mega__panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 30;
+  box-sizing: border-box;
+  inline-size: min(760px, calc(100vw - 48px));
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 28px;
+  background: var(--wp--preset--color--bg);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: 0 0 var(--ds-card-radius, 20px) var(--ds-card-radius, 20px);
+  color: var(--wp--preset--color--fg);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -6px);
+  transition: opacity 180ms, transform 180ms, visibility 0s linear 180ms;
+}
+
+.tracy-mega__panel:has(.tracy-mega__columns--resources) {
+  inline-size: min(880px, calc(100vw - 48px));
+}
+
+.tracy-mega__panel:has(.tracy-mega__columns--company) {
+  inline-size: min(920px, calc(100vw - 48px));
+}
+
+.tracy-mega.is-open > .tracy-mega__panel {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+}
+
+/* The page under an open panel is veiled and softly blurred, as the source's wrapper veil. On
+   body, not the header: the header's backdrop filter would trap a fixed child inside the bar. */
+body.tracy::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1020;
+  background: color-mix(in srgb, var(--wp--preset--color--bg) 30%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms;
+}
+
+body.tracy:has(.tracy-mega.is-open)::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracy-mega__panel,
+  body.tracy::after {
+    transition-duration: 1ms;
+    transition-delay: 0s;
+  }
+}
+
+.tracy .tracy-mega .tracy-mega__inner {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Columns: a links column and a 300px feature card (Service), three equal link columns
+   (Resources), a 190px links column and the people (Company). */
+.tracy .tracy-mega .tracy-mega__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 32px;
+  margin: 0;
+}
+
+.tracy .tracy-mega .tracy-mega__columns--resources {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+
+.tracy .tracy-mega .tracy-mega__columns--company {
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 40px;
+}
+
+.tracy .tracy-mega .tracy-mega__columns > .wp-block-column {
+  min-width: 0;
+  margin: 0;
+}
+
+/* The source's column title is an 11px caps line in the meta colour with 8px under it, then 16px. */
+.tracy .tracy-mega__title {
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy .tracy-mega__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.tracy .tracy-mega__links li {
+  margin: 0;
+  padding: 0;
+}
+
+/* 42px rows of 15px links; the Service and Company lists are the source's 24px headline links. */
+.tracy .tracy-mega__links a {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 9px 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.tracy .tracy-mega__columns:not(.tracy-mega__columns--resources) .tracy-mega__links a {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.tracy-mega__links a,
+.tracy-mega__latest .wp-block-post-title a {
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-mega__links a:hover,
+.tracy-mega__latest .wp-block-post-title a:hover {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy-mega__latest .wp-block-post-title {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.tracy-mega__latest .wp-block-post-date {
+  display: block;
+  margin-bottom: var(--wp--preset--spacing--3);
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy-mega__feature {
+  margin: 0 0 var(--wp--preset--spacing--3);
+  color: var(--wp--preset--color--muted);
+}
+
+/* Service: the feature card — a 16:9 picture over the surface, eyebrow, title, line and action.
+   The title's link covers the whole card (one link, as the source's card). */
+.tracy .tracy-mega__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--ds-card-radius, 12px);
+  background: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-mega__card > * {
+  margin: 0;
+}
+
+.tracy .tracy-mega__card-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.tracy .tracy-mega__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+}
+
+.tracy .tracy-mega__card-body > * {
+  margin: 0;
+}
+
+.tracy .tracy-mega__card-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .tracy-mega__card-title {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-mega__card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy .tracy-mega__card-title a::after,
+.tracy .tracy-mega__person-name a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.tracy .tracy-mega__card:hover .tracy-mega__card-title {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy .tracy-mega__card-title a:focus-visible,
+.tracy .tracy-mega__person-name a:focus-visible,
+.tracy .tracy-mega__all a:focus-visible {
+  outline: 2px solid var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  outline-offset: 4px;
+}
+
+.tracy .tracy-mega__card-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .tracy-mega__card-action {
+  padding-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+/* Company: the people behind the work — four square portraits with name and role, each card one
+   link (the name's), and "View all team". */
+.tracy .tracy-mega__team-heading {
+  margin: 0 0 16px;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .tracy-mega .tracy-mega__people {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.tracy .tracy-mega__person {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+}
+
+.tracy .tracy-mega__person > * {
+  margin: 0;
+}
+
+.tracy .tracy-mega__person .wp-block-image {
+  margin: 0 0 12px;
+}
+
+.tracy .tracy-mega__person img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--ds-card-radius, 4px);
+}
+
+.tracy .tracy-mega__person-name {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-mega__person-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy .tracy-mega__person:hover .tracy-mega__person-name {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy .tracy-mega__person .tracy-mega__person-role {
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .tracy-mega__all {
+  margin: 20px 0 0;
+  font-size: 14px;
+}
+
+.tracy .tracy-mega__all a {
+  display: inline-flex;
+  gap: 8px;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+/* In the Site Editor the panel is always open and sits in the flow, so its columns can be edited. */
+.tracy-mega--editing > .tracy-mega__panel {
+  position: static;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  inline-size: auto;
+  max-height: none;
+}
+
+/* ---- theme toggle: a circle, half-filled for "auto", filled for dark, empty for light ---- */
+
+.tracy-theme-toggle {
+  appearance: none;
+  /* A <button> takes the UA font (Arial) unless told otherwise; the design check found it (29/09). */
+  font: inherit;
+  display: inline-grid;
+  place-items: center;
+  width: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--3));
+  height: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--3));
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--wp--custom--radius--pill);
+  background: transparent;
+  color: var(--wp--preset--color--fg-2);
+  cursor: pointer;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard),
+    border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-theme-toggle:hover {
+  color: var(--wp--preset--color--fg);
+  border-color: var(--wp--preset--color--fg-2);
+}
+
+.tracy-theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+.tracy-theme-toggle__icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+}
+
+.tracy-theme-toggle[data-theme-state='light'] .tracy-theme-toggle__icon {
+  background: transparent;
+}
+
+.tracy-theme-toggle[data-theme-state='dark'] .tracy-theme-toggle__icon {
+  background: currentColor;
+}
+
+/* ---- footer: a surface band holding the four link columns, then a thin strip with the demo
+   notice — the two rows of the source footer. The footer element itself has no padding or rule;
+   each row carries its own. ---- */
+
+.tracy .tracy-footer {
+  padding-block: 0;
+  border-top: 0;
+}
+
+.tracy-footer__band {
+  background: var(--wp--preset--color--surface);
+  padding-block: var(--wp--preset--spacing--12);
+}
+
+.tracy-footer__columns {
+  gap: var(--wp--preset--spacing--8);
+  margin: 0;
+}
+
+.tracy-footer__title,
+.tracy-footer__social .wp-block-heading {
+  margin: 0 0 var(--wp--preset--spacing--4);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0;
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy-footer__links .wp-block-navigation__container {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--wp--preset--spacing--3);
+}
+
+.tracy-footer__links .wp-block-navigation-item__content {
+  padding: 0;
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+  text-decoration: none;
+}
+
+.tracy-footer__links .wp-block-navigation-item__content:hover {
+  color: var(--wp--preset--color--fg);
+}
+
+/* The social column: the handle once, then the marks in the link colour, no service tint. */
+.tracy-footer__social .acm-social-links__handle {
+  margin: 0 0 var(--wp--preset--spacing--3);
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy-footer__social .wp-block-social-links {
+  gap: var(--wp--preset--spacing--3);
+}
+
+/* Core's logos-only style paints each mark in its service colour on the item, and the anchor
+   inside takes currentcolor at four classes (.wp-block-social-links .wp-block-social-link
+   .wp-social-link .wp-block-social-link-anchor). The source's marks are all the muted text
+   colour; the same four names, printed after core's sheet, put it on the anchor. */
+.tracy-footer__social .wp-block-social-links .wp-social-link .wp-block-social-link-anchor {
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy-footer__social .wp-block-social-links .wp-social-link .wp-block-social-link-anchor:hover {
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy-footer__strip {
+  background: var(--wp--preset--color--surface);
+  border-top: 1px solid var(--wp--preset--color--border-soft);
+}
+
+.tracy-footer__strip .acm-site-notice {
+  padding-block: var(--wp--preset--spacing--6);
+}
+
+.tracy-footer__strip .tracy-site-notice {
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--muted);
+}
+
+/* ---- the sidebar-left page template: a "Latest" list and the topics beside the page ---- */
+
+.tracy-page__columns {
+  gap: var(--wp--preset--spacing--12);
+}
+
+.tracy-page__sidebar .tracy-eyebrow {
+  margin-bottom: var(--wp--preset--spacing--3);
+}
+
+.tracy-page__latest .wp-block-post-title {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.tracy-page__latest .wp-block-post-title a {
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-page__latest .wp-block-post-title a:hover {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy-page__latest .wp-block-post-date {
+  display: block;
+  margin-bottom: var(--wp--preset--spacing--4);
+  font-size: var(--wp--preset--font-size--xs);
+}
+
+.tracy-page__sidebar .wp-block-categories {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--wp--preset--spacing--2);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+.tracy-page__sidebar .wp-block-categories a {
+  color: var(--wp--preset--color--fg-2);
+  text-decoration: none;
+}
+
+.tracy-page__sidebar .wp-block-categories a:hover {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+/* ---- small screens: below the tablet width the desktop row goes and the navigation block's
+   overlay button takes its place at the end of the bar; its menu tree carries the links. ---- */
+
+@media (max-width: 1024px) {
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-mega__inner {
+    max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-tablet) * 2));
+    padding-inline: var(--wp--custom--container--gutter-tablet);
+  }
+
+  .tracy-footer__band {
+    padding-block: var(--wp--preset--spacing--8);
+  }
+}
+
+@media (max-width: 781px) {
+  /* A customer's site name must share the row with the actions and menu button. */
+  .tracy-header__brand {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .tracy-header__brand .tracy-brand {
+    min-width: 0;
+  }
+
+  .tracy-header__brand .tracy-brand a {
+    overflow-wrap: anywhere;
+  }
+
+  /* Two classes: the block's own layout class (.is-layout-flex) also says display, at one class. */
+  .tracy-header__menu .tracy-header__links {
+    display: none;
+  }
+
+  .tracy-header__menu .tracy-nav {
+    display: block;
+  }
+
+  .tracy-header__menu {
+    flex: 0 0 auto;
+    order: 3;
+  }
+
+  .tracy-header__actions {
+    margin-inline-start: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-mega__inner {
+    max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-phone) * 2));
+    padding-inline: var(--wp--custom--container--gutter-phone);
+  }
+
+  .tracy-header__inner {
+    gap: var(--wp--preset--spacing--2);
+  }
+
+  .tracy-header__cta .wp-block-button__link {
+    padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--4);
+    font-size: var(--wp--preset--font-size--sm);
+  }
+}
+
+/* ---- parity with the Joomla source, measured by visual QA (25/09/2026, tasks/tracy-base-wp7/
+   RUN-2026-09-25.md). Each value below is the computed style the tracy-base/j6 1.0.0 release
+   renders for the same words at 1440 px; the variation's generic roles (a mono eyebrow, a bold
+   heading, an 80 px display) are the design system's, not this site's. ---- */
+
+/* Headings: T4 draws every level at weight 600 (template.css `h1…h6`). */
+.tracy h1,
+.tracy h2,
+.tracy h3,
+.tracy h4,
+.tracy h5,
+.tracy h6,
+.tracy .wp-block-post-title {
+  font-weight: 600;
+}
+
+/* Eyebrow: the section label of the ACM modules — display family, 600, one line tall, the quiet
+   text colour; the hero's label is in the accent. */
+.tracy .tracy-eyebrow {
+  font-family: var(--wp--preset--font-family--display);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy .acm-hero .tracy-eyebrow,
+.tracy .acm-features-intro .tracy-eyebrow {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+/* The front page is the OpenDesign landing: its labels are body-family and accent. */
+.tracy.home .tracy-eyebrow {
+  font-family: var(--wp--preset--font-family--body);
+  line-height: var(--wp--custom--leading--body);
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+.tracy.home .tracy-social-proof__label {
+  color: var(--wp--preset--color--muted);
+}
+
+/* The landing hero's label is a small bordered chip, sentence case, not a spaced caps line —
+   centred over the heading as in the source (a flex box its own width, 1.1.1: the inline chip
+   stood at the column's left edge). */
+.tracy.home .tracy-hero .tracy-eyebrow {
+  display: flex;
+  width: fit-content;
+  margin-inline: auto;
+  align-items: center;
+  height: 24px;
+  padding: 0 var(--wp--preset--spacing--2);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--sm);
+}
+
+/* Display headline: 56 px in the page heroes; the centred ACM hero keeps the 80 px size. */
+.tracy .tracy-hero .tracy-display,
+.tracy .acm-marketing-samples .tracy-display {
+  font-size: var(--wp--preset--font-size--xxxl);
+  font-weight: 600;
+}
+
+.tracy .acm-hero--centered .tracy-display {
+  font-size: var(--wp--preset--font-size--xxxxl);
+}
+
+.tracy.home .tracy-hero .tracy-display {
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+/* The step labels under the statistics render in the muted grey. */
+.tracy .tracy-stat__label {
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy .tracy-stat__n,
+.tracy .tracy-plan__price {
+  font-weight: 600;
+}
+
+.tracy p.tracy-plan__price {
+  font-size: var(--wp--preset--font-size--xxl);
+}
+
+.tracy .acm-testimonials__name {
+  font-weight: 600;
+}
+
+/* Feature lists of the plan and features modules: small, secondary text. */
+.tracy li.border-border-soft {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--fg-2);
+}
+
+/* Listing cards: the category blog of T4 — a 1.5× body title in the text colour, body-size
+   excerpt, the "Read more" link in the accent. */
+.tracy .tracy-card__title {
+  font-size: calc(var(--wp--preset--font-size--base) * 1.5);
+  font-weight: 600;
+  line-height: var(--wp--custom--leading--tight);
+}
+
+.tracy .tracy-card__title a {
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-card__text,
+.tracy .wp-block-post-excerpt__excerpt {
+  font-size: var(--wp--preset--font-size--base);
+  line-height: var(--wp--custom--leading--body);
+}
+
+.tracy .wp-block-post-excerpt__more-link {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+.tracy .tracy-card .tracy-eyebrow a {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--sm);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Small print under heroes, plans and testimonials: 12 px meta. */
+.tracy .tracy-hero__note,
+.tracy .tracy-plans__note,
+.tracy .acm-testimonials__role {
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy .tracy-cta-final__note {
+  font-size: var(--wp--preset--font-size--xs);
+}
+
+/* 404: the source's standalone error page — the code large, the message muted, one button home. */
+.tracy .tracy-404__inner {
+  padding-block: var(--wp--preset--spacing--12);
+  text-align: center;
+}
+
+.tracy .tracy-404__code {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--xxxxl);
+  line-height: var(--wp--custom--leading--tight);
+  letter-spacing: var(--wp--custom--tracking--display);
+  margin: 0 0 var(--wp--preset--spacing--4);
+}
+
+.tracy .tracy-404__msg {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--lg);
+  font-weight: 400;
+  line-height: var(--wp--custom--leading--body);
+  color: var(--wp--preset--color--muted);
+  margin: 0 auto var(--wp--preset--spacing--8);
+}
+
+/* Brand mark: the source logo is a ringed square with an accent dot beside the site name. With no
+   site logo set, the site title carries the mark itself, so the wordmark stays editable text. */
+.tracy .tracy-header__brand .wp-block-site-logo:empty + .tracy-brand,
+.tracy .tracy-header__brand .tracy-brand:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tracy .tracy-header__brand .tracy-brand::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px; /* ds-keep: the logo mark tile, its corner is part of the mark */
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor, transparent 78%);
+  background: radial-gradient(circle, var(--wp--preset--color--accent) 0 6px, transparent 6.5px);
+}
+
+.tracy .tracy-header__brand .tracy-brand,
+.tracy .tracy-header__brand .tracy-brand a {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+/* ---- front-page hero (the OpenDesign landing): the second action is the secondary button, and
+   the "illustrative preview" caption is the title bar of the product mock the source draws in
+   HTML under the hero — a window with three dots, a sidebar and a bar chart. The mock is
+   decoration drawn here; its caption stays an editable paragraph. ---- */
+
+.tracy.home .tracy-hero .wp-block-button + .wp-block-button .wp-block-button__link {
+  color: var(--wp--preset--color--fg);
+  background: var(--wp--preset--color--bg);
+  box-shadow: inset 0 0 0 1px var(--wp--preset--color--border);
+}
+
+.tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-']) {
+  position: relative;
+  box-sizing: border-box;
+  width: min(980px, 100%);
+  height: 349px;
+  margin: 68px auto 0;
+  padding: 14px 16px 0 110px;
+  font-size: 11px;
+  line-height: 20px;
+  text-align: start;
+  color: var(--wp--preset--color--meta);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--ds-card-radius, 14px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 21px 24px, color-mix(in oklab, var(--wp--preset--color--danger), transparent 45%) 0 5px, transparent 5.5px),
+    radial-gradient(circle at 39px 24px, color-mix(in oklab, var(--wp--preset--color--warn), transparent 45%) 0 5px, transparent 5.5px),
+    radial-gradient(circle at 57px 24px, color-mix(in oklab, var(--wp--preset--color--success), transparent 45%) 0 5px, transparent 5.5px),
+    linear-gradient(var(--wp--preset--color--surface-warm), var(--wp--preset--color--surface-warm)) 0 0 / 100% 47px no-repeat,
+    linear-gradient(var(--wp--preset--color--border-soft), var(--wp--preset--color--border-soft)) 0 47px / 100% 1px no-repeat,
+    linear-gradient(var(--wp--preset--color--border-soft), var(--wp--preset--color--border-soft)) 200px 48px / 1px 100% no-repeat,
+    var(--wp--preset--color--bg);
+  box-shadow: 0 32px 80px -24px var(--wp--preset--color--surface);
+}
+
+.tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-'])::after {
+  content: '';
+  position: absolute;
+  left: 236px;
+  bottom: 40px;
+  width: 360px;
+  height: 180px;
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--md);
+  background:
+    linear-gradient(to top, color-mix(in oklab, var(--wp--preset--color--accent), transparent 35%) 0 40%, transparent 40%) 16px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, color-mix(in oklab, var(--wp--preset--color--accent), transparent 15%) 0 65%, transparent 65%) 56px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, var(--wp--preset--color--accent) 0 55%, transparent 55%) 96px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, var(--wp--preset--color--accent-active) 0 80%, transparent 80%) 136px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, color-mix(in oklab, var(--wp--preset--color--accent), transparent 35%) 0 60%, transparent 60%) 176px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, color-mix(in oklab, var(--wp--preset--color--accent), transparent 15%) 0 95%, transparent 95%) 216px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, var(--wp--preset--color--accent) 0 70%, transparent 70%) 256px 100% / 28px 88% no-repeat,
+    linear-gradient(to top, var(--wp--preset--color--accent-active) 0 55%, transparent 55%) 296px 100% / 28px 88% no-repeat;
+  background-origin: content-box;
+  padding: 16px 0 12px;
+}
+
+/* Narrow screens: the card needs a window at least 598px wide (236px offset, 360px card, two
+   borders). The window is the viewport less 32px up to 640px and less 72px above that, so it is
+   narrower up to a 669px viewport and the card ran past the frame, its last bars clipped. There
+   the sidebar rule goes, the card spans the window with a 16px inset, and the eight bars are laid
+   out in fractions of the card (8% wide, 12% apart, 4% margins) instead of fixed pixels. From
+   670px the layout above is unchanged. */
+@media (max-width: 669px) {
+  .tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-']) {
+    background-size: auto, auto, auto, 100% 47px, 100% 1px, 0 0;
+  }
+
+  .tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*='tracy-'])::after {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    background-size: 8% 88%;
+    background-position:
+      4.348% 100%,
+      17.391% 100%,
+      30.435% 100%,
+      43.478% 100%,
+      56.522% 100%,
+      69.565% 100%,
+      82.609% 100%,
+      95.652% 100%;
+  }
+}
+
+/* ---- listing pages (a category blog in the source): the seeded category name opens the page. T4
+   prints it as the page heading — display family, 56 px, ink — not as a small label. ---- */
+.tracy .tracy-page__body > h2.tracy-eyebrow:first-child,
+.tracy .tracy-page-stack > .wp-block-post-content > h2.tracy-eyebrow:first-child {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--xxxl);
+  font-weight: 600;
+  line-height: var(--wp--custom--leading--tight);
+  letter-spacing: var(--wp--custom--tracking--display);
+  text-transform: none;
+  color: var(--wp--preset--color--fg);
+  margin: 0 0 var(--wp--preset--spacing--6);
+}
+
+/* Article and fixture headings: T4's article view draws its title and the style-guide headings
+   at 700, unlike the section modules. */
+.tracy .tracy-page__title,
+.tracy .tracy-fixture__title {
+  font-weight: 700;
+}
+
+.tracy h1.tracy-fixture__title {
+  font-size: var(--wp--preset--font-size--xxl);
+}
+
+/* Team member role under the name: regular weight, body line height. */
+.tracy .acm-team__member .tracy-eyebrow {
+  font-weight: 400;
+  line-height: 20.58px;
+}
+
+/* ---- one-to-one values from the visual QA parity report of round 1: every selector below failed
+   with the same expected value on every page it appears on (tasks/tracy-base-wp7/RUN-2026-09-25.md). ---- */
+
+/* button.wp-block-search__button.wp-element-button — 1 on resources-search */
+.tracy button.wp-block-search__button.wp-element-button {
+  font-weight: 400;
+}
+
+/* h1.tracy-display.tracy-page__title.wp-block-post-title — 6 on resources-faq, services-service-detail, services-website-strategy, services-brand-and-interface-design, services-website-development, services-content-and-photography */
+.tracy h1.tracy-display.tracy-page__title.wp-block-post-title {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* h1.tracy-fixture__title — 2 on resources-colors, resources-spacing */
+.tracy h1.tracy-fixture__title {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* h1.wp-block-heading.tracy-fixture__title — 1 on resources-typography */
+.tracy h1.wp-block-heading.tracy-fixture__title {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* h2.tracy-fixture__title — 2 on resources-style-guide */
+.tracy h2.tracy-fixture__title {
+  font-weight: 700;
+}
+
+/* h2.wp-block-heading.tracy-fixture__title — 1 on resources-style-guide */
+.tracy h2.wp-block-heading.tracy-fixture__title {
+  font-weight: 700;
+}
+
+/* h3.wp-block-heading.tracy-plan__price.text-3xl — 3 on home */
+.tracy h3.wp-block-heading.tracy-plan__price.text-3xl {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 32px;
+  line-height: 1;
+}
+
+/* li.acm-tabs__tab — 3 on product */
+.tracy li.acm-tabs__tab {
+  font-weight: 500;
+}
+
+/* p.acm-contact-information__email.font-display.text-xl — 1 on resources-contact */
+.tracy p.acm-contact-information__email.font-display.text-xl {
+  color: var(--wp--preset--color--muted);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 17px;
+  line-height: 1.47;
+}
+
+/* p.acm-contact-information__notice.tracy-meta.max-w-[62ch] — 1 on resources-contact */
+.tracy p.acm-contact-information__notice.tracy-meta.max-w-\[62ch\] {
+  color: var(--wp--preset--color--fg-2);
+}
+
+/* p.acm-timeline__marker.tracy-eyebrow.wp-block-paragraph — 4 on company-careers */
+.tracy p.acm-timeline__marker.tracy-eyebrow.wp-block-paragraph {
+  font-size: 14px;
+  line-height: 1.47;
+}
+
+/* p.body.wp-block-paragraph — 2 on resources-typography, resources-style-guide */
+.tracy p.body.wp-block-paragraph {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.eyebrow.wp-block-paragraph — 2 on resources-typography, resources-style-guide */
+.tracy p.eyebrow.wp-block-paragraph {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  font-size: 12px;
+}
+
+/* p.lede.wp-block-paragraph — 2 on resources-typography, resources-style-guide */
+.tracy p.lede.wp-block-paragraph {
+  color: var(--wp--preset--color--fg-2);
+  font-size: 21px;
+  line-height: 1.47;
+}
+
+/* p.text-fg-2.flex-1.wp-block-paragraph — 4 on resources-home-variation */
+.tracy p.text-fg-2.flex-1.wp-block-paragraph {
+  color: var(--wp--preset--color--fg-2);
+}
+
+/* p.text-fg-2.mb-0.wp-block-paragraph — 12 on product, company-careers */
+.tracy p.text-fg-2.mb-0.wp-block-paragraph {
+  color: var(--wp--preset--color--fg-2);
+}
+
+/* p.tracy-eyebrow.tracy-social-proof__label.has-text-align-center — 1 on home */
+.tracy p.tracy-eyebrow.tracy-social-proof__label.has-text-align-center {
+  font-weight: 400;
+}
+
+/* p.tracy-meta.mb-0.wp-block-paragraph — 1 on home */
+.tracy p.tracy-meta.mb-0.wp-block-paragraph {
+  font-size: 17px;
+  line-height: 1.47;
+}
+
+/* p.tracy-meta.text-center.mt-6 — 1 on home */
+.tracy p.tracy-meta.text-center.mt-6 {
+  color: var(--wp--preset--color--fg);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* p.tracy-social-proof__rating.tracy-meta.text-fg-2 — 1 on home */
+.tracy p.tracy-social-proof__rating.tracy-meta.text-fg-2 {
+  color: var(--wp--preset--color--warn);
+  font-size: 17px;
+  line-height: 1.47;
+}
+
+/* p.tracy-stat__label.text-sm.opacity-85 — 4 on home */
+.tracy p.tracy-stat__label.text-sm.opacity-85 {
+  font-size: 12px;
+  line-height: 1.47;
+}
+
+
+/* Round 2 (25/09), generated by synth-css from visual-qa run ld-0: one declaration per class signature whose parity findings agree on the source value across every page it appears on. */
+/* a.op-wordmark — 1 on resources-home-onepage */
+.tracy a.op-wordmark {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.47;
+}
+
+/* li.acm-tabs__tab — 2 on product */
+.tracy li.acm-tabs__tab {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.acm-contact-information__notice.tracy-meta.max-w-[62ch] — 1 on resources-contact */
+.tracy p.acm-contact-information__notice.tracy-meta.max-w-\[62ch\] {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* p.acm-cta-capsule__support.text-fg-2.mb-0 — 7 on resources-home-variation, resources-home-2, company-about, pricing, services-service-detail, product, company-careers */
+.tracy p.acm-cta-capsule__support.text-fg-2.mb-0 {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.acm-marketing-samples__note.tracy-meta.max-w-[62ch] — 1 on resources-marketing-samples */
+.tracy p.acm-marketing-samples__note.tracy-meta.max-w-\[62ch\] {
+  font-size: 14px;
+  line-height: 1.47;
+}
+
+/* p.op-lead — 1 on resources-home-onepage */
+.tracy p.op-lead {
+  color: var(--wp--preset--color--muted);
+  font-size: 21px;
+  line-height: 1.47;
+}
+
+/* p.text-sm.text-fg-2.mb-0 — 13 on resources-home-2, company-about, resources-marketing-samples, resources-home-onepage */
+.tracy p.text-sm.text-fg-2.mb-0 {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.text-sm.text-fg-2.mb-4 — 6 on resources-home-variation, pricing */
+.tracy p.text-sm.text-fg-2.mb-4 {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.tracy-lead.has-text-align-center.wp-block-paragraph — 1 on home */
+.tracy p.tracy-lead.has-text-align-center.wp-block-paragraph {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.tracy-lead.mb-0.has-text-align-center — 5 on home */
+.tracy p.tracy-lead.mb-0.has-text-align-center {
+  color: var(--wp--preset--color--muted);
+}
+
+/* p.tracy-meta.tracy-cta-final__note.text-inherit — 1 on home */
+.tracy p.tracy-meta.tracy-cta-final__note.text-inherit {
+  font-size: 12px;
+  line-height: 1.47;
+}
+
+/* p.tracy-meta.tracy-plans__note.text-center — 1 on home */
+.tracy p.tracy-meta.tracy-plans__note.text-center {
+  color: var(--wp--preset--color--meta);
+}
+
+/* p.tracy-stat__label.text-sm.text-fg-2 — 15 on resources-home-variation, resources-home-2, company-about, product */
+.tracy p.tracy-stat__label.text-sm.text-fg-2 {
+  color: var(--wp--preset--color--muted);
+}
+
+/* Round 2 guard: the generated rules above match any element that carries AT LEAST their classes.
+   The final call to action's lead inherits the band's colour, and the active tab keeps the body colour. */
+.tracy p.tracy-lead.text-inherit.opacity-90 {
+  color: color-mix(in srgb, currentColor 88%, transparent);
+}
+
+.tracy li.acm-tabs__tab.is-active {
+  color: var(--wp--preset--color--fg);
+}
+
+/* ---- Round 2, measured against the source home page at 1440 (25/09). ---- */
+
+/* The source hero is one centred column: the split grid left an empty media column, which squeezed
+   the copy and the product mock into the left 497 px. Lead 724 px wide, mock 980 px, both centred. */
+.tracy.home .tracy-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.tracy.home .tracy-hero__copy {
+  width: 100%;
+}
+
+.tracy.home .tracy-hero h1 {
+  margin-inline: auto;
+}
+
+.tracy.home .tracy-hero .tracy-lead {
+  max-width: 724px;
+  margin-inline: auto;
+}
+
+/* Bands are the page colour with a soft rule in the source, not the grey surface. */
+.tracy .tracy-section--band.bg-surface:not(.acm-carousel--gray) {
+  background-color: var(--wp--preset--color--bg);
+  border-color: var(--wp--preset--color--border-soft);
+}
+
+/* Section heads the source centres: testimonials. */
+.tracy .tracy-testimonials .tracy-section__head {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.tracy .tracy-testimonials .tracy-section__head > * {
+  text-align: center;
+}
+
+/* Final call to action: the heading kept to two lines (the box stays the page width, 1024 px —
+   an earlier 896 px here was a hand measurement of an inner div, caught by layout-boxes). */
+.tracy .tracy-cta-final__box h2 {
+  max-width: 460px;
+  margin-inline: auto;
+}
+
+/* Plan cards (home): the action spans the card under the feature list; the middle plan is the
+   highlighted one in the source (filled button). */
+.tracy .tracy-plan .tracy-actions .wp-block-button {
+  flex: 1 1 100%;
+}
+
+.tracy .tracy-plan .tracy-actions .wp-block-button__link {
+  display: block;
+  width: 100%;
+  color: var(--wp--preset--color--fg);
+  background: var(--wp--preset--color--bg);
+  box-shadow: inset 0 0 0 1px var(--wp--preset--color--border);
+}
+
+.tracy .tracy-plan:nth-child(2) .tracy-actions .wp-block-button__link {
+  color: var(--wp--preset--color--accent-on);
+  background: var(--wp--preset--color--accent);
+  box-shadow: none;
+}
+
+/* Every hero without a media column is one centred column in the source (product: the heading is
+   800 px wide at 80 px, two lines); the split grid squeezed it into one of two columns. */
+.tracy .tracy-hero__inner:not(:has(.tracy-hero__media)) {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.tracy .tracy-hero__inner:not(:has(.tracy-hero__media)) > .tracy-hero__copy {
+  width: 100%;
+}
+
+.tracy .tracy-hero-centered h1 {
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+/* Statistics head (product): centred, heading at 28 px. */
+.tracy .acm-statistics .tracy-section__head {
+  max-width: none;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.tracy .acm-statistics .tracy-section__head > * {
+  text-align: center;
+}
+
+.tracy .acm-statistics .tracy-section__head h2 {
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+/* The library caps a centred hero's copy at 60ch (567 px here); the source's product heading is
+   800 px wide, so the copy takes the page width and the heading carries the cap. */
+.tracy .tracy-hero-centered .tracy-hero__copy {
+  max-width: none;
+}
+
+/* ---- Round 2, from layout-boxes (source vs site, 1440): ---- */
+
+/* Section heads are 492 px in the source (62ch here was 586 px: a heading one line short). */
+.tracy .tracy-section__head {
+  max-width: 492px;
+}
+
+/* A section head whose heading is centred sits in the middle at 680 px, as in the source; the
+   library's 62ch head started at the container's left edge. */
+.tracy .tracy-section__head:has(> h2.has-text-align-center) {
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+/* The question list under such a centred head sits in the middle too, as in the source (its
+   accordion is centred under the heading); without this the 62ch list started at the container's
+   left edge while the head above it was centred. */
+.tracy .tracy-section__head:has(> h2.has-text-align-center) ~ .tracy-faq__list,
+.tracy .acm-accordion .tracy-faq__list {
+  margin-inline: auto;
+}
+
+/* Team (about): a 720 px head, its heading at 28 px. */
+.tracy .acm-team .tracy-section__head {
+  max-width: 720px;
+}
+
+.tracy .acm-team .tracy-section__head h2 {
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+/* Pricing page: a centred head; plan cards on the page colour with a rule, the middle one warm. */
+.tracy .acm-pricing .tracy-section__head {
+  max-width: 492px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.tracy .acm-pricing .tracy-section__head > * {
+  text-align: center;
+}
+
+.tracy .acm-pricing .tracy-plan {
+  background: var(--wp--preset--color--bg);
+}
+
+.tracy .acm-pricing .tracy-plan:nth-child(2) {
+  background: var(--wp--preset--color--surface-warm);
+}
+
+/* Pricing page questions: one grey 1024 px panel with a centred head. */
+.tracy .acm-accordion > .tracy-section__inner {
+  box-sizing: border-box;
+  max-width: 1024px;
+  padding: 32px;
+  border-radius: var(--ds-card-radius, 18px);
+  background: var(--wp--preset--color--surface);
+}
+
+.tracy .acm-accordion .tracy-section__head {
+  max-width: none;
+  text-align: center;
+}
+
+.tracy .acm-accordion .tracy-section__head > * {
+  text-align: center;
+}
+
+/* Content pages: the source's container is 1068 px with a 22 px gutter, so its content is 1024 px;
+   here the container itself was 1024 px, content 980 px (every page heading 44 px narrower).
+   Wide screens only — the phone and tablet gutters are measured in their own tiers. */
+@media (min-width: 1100px) {
+  .tracy .tracy-container:has(> .tracy-page__body) {
+    max-width: calc(var(--wp--custom--container--max) + 44px);
+  }
+}
+
+/* Titled pages (service articles): the source prints the article body in a 720 px column in the
+   middle, its section headings at 28 px (layout-boxes: "Putting it into practice" 720 px at x 360). */
+@media (min-width: 1100px) {
+  .tracy.page-template-page-titled .tracy-page__body {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+}
+
+.tracy.page-template-page-titled .tracy-page__body h2 {
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+/* Contact page (the source's contact view, layout-boxes 25/09): the heading on top at 48 px and
+   760 px, then the form (591 px) beside a grey 369 px column that carries the contact details.
+   The page is recognised by what it holds — a form and the contact-information section — not by
+   its database id. */
+@media (min-width: 1100px) {
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) {
+    display: grid;
+    grid-template-columns: 591px 369px;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) > h2.wp-block-heading {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    max-width: 760px;
+    margin: 0 0 var(--wp--preset--spacing--10);
+    font-size: 48px;
+    line-height: 1.1;
+  }
+
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) > .wpcf7 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) > .acm-contact-information {
+    grid-column: 2;
+    grid-row: 2;
+    box-sizing: border-box;
+    padding: 29px;
+    border-radius: var(--wp--custom--radius--lg);
+    background: var(--wp--preset--color--surface);
+  }
+
+  .tracy .tracy-page__body:has(> .wpcf7) > .acm-contact-information h2 {
+    font-size: 22px;
+    line-height: 1.05;
+  }
+}
+
+/* Listing pages on the page stack (layout-boxes 25/09): the heading keeps the stack's centred
+   container (the shared rule's margin reset had pinned it to x 0). A category LIST — the page that
+   also lists its sub-categories — prints its heading at 40 px in the source; a category blog at 56. */
+.tracy .tracy-page-stack > .wp-block-post-content > h2.tracy-eyebrow:first-child {
+  margin-inline: auto;
+}
+
+.tracy .tracy-page-stack > .wp-block-post-content:has(> h3.wp-block-heading) > h2.tracy-eyebrow:first-child {
+  font-size: 40px;
+}
+
+/* The date archive (the page that carries the archives block) is a one-column list of titles at
+   28 px in the source, not a card grid. */
+.tracy .wp-block-post-content:has(> .wp-block-archives) .wp-block-post-template {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.tracy .wp-block-post-content:has(> .wp-block-archives) .wp-block-post-template .tracy-card {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.tracy .wp-block-post-content:has(> .wp-block-archives) .tracy-card__media {
+  display: none;
+}
+
+.tracy .wp-block-post-content:has(> .wp-block-archives) .wp-block-post-title {
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+/* ---- Phone (390 px, layout-boxes 25/09): the source steps every heading down; the port kept the
+   desktop sizes, so a two-line heading became three to ten lines. ---- */
+@media (max-width: 640px) {
+  .tracy .tracy-hero h1.tracy-display {
+    font-size: 40px;
+    line-height: 1.05;
+  }
+
+  .tracy .tracy-section__head :is(h1, h2),
+  .tracy h2.wp-block-heading.text-2xl,
+  .tracy .acm-story-chapter :is(h1, h2) {
+    font-size: 28px;
+    line-height: 1.05;
+  }
+
+  /* The hero's inner box added its own 16 px to the section's gutter (heading at x 48, source 16). */
+  .tracy .tracy-hero__inner {
+    padding-inline: 0;
+  }
+
+  /* Carousel: the head takes the row (the step buttons go under it) and a slide is the panel's
+     width, 310 px, drawn without a card of its own. */
+  /* sections-extra.css loads after this file: the doubled class outranks its two-column rule. */
+  .tracy .acm-carousel.acm-carousel.has-steps > .tracy-section__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tracy .acm-carousel .acm-carousel__track > .acm-carousel__slide {
+    flex: 0 0 100%;
+    padding: 0;
+  }
+
+  /* Contact: the details stack under the form on the grey panel, heading 22 px. */
+  .tracy .tracy-page__body:has(> .wpcf7) > .acm-contact-information {
+    box-sizing: border-box;
+    padding: 25px;
+    border-radius: var(--wp--custom--radius--lg);
+    background: var(--wp--preset--color--surface);
+  }
+
+  .tracy .tracy-page__body:has(> .wpcf7) > .acm-contact-information h2 {
+    font-size: 22px;
+    line-height: 1.05;
+  }
+
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) > h2.wp-block-heading {
+    font-size: 32px;
+    line-height: 1.1;
+  }
+
+  /* Listing heading on the page stack keeps the phone gutter. */
+  .tracy .tracy-page-stack > .wp-block-post-content > h2.tracy-eyebrow:first-child {
+    margin-inline: var(--wp--custom--container--gutter-phone);
+  }
+}
+
+/* Pillars (home "The essentials"): the source draws each as a card — 1 px soft rule, 18 px radius,
+   32 px inset, page-colour fill — not a column under an accent bar (measured 25/09; layout-boxes
+   does not compare borders, the side-by-side picture showed it). */
+.tracy .tracy-pillars .tracy-pillar {
+  box-sizing: border-box;
+  padding: 32px;
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--ds-card-radius, 18px);
+  background: var(--wp--preset--color--bg);
+  box-shadow: 0 1px 2px 0 var(--wp--preset--color--surface-warm);
+}
+
+/* Statistics on the accent band (home): the labels take the band's own colour. The generated rule
+   for `tracy-stat__label` (muted, from pages where the statistics sit on the page colour) drew
+   1.19:1 grey on blue in dark (visual-qa dd-0 scan:contrast). */
+.tracy .tracy-stats p.tracy-stat__label {
+  color: inherit;
+}
+
+/* Form fields in the content (sign-in, contact, search): the palette's rule and fill, not the
+   browser's 1–2 px grey (dark tiers: 20 scan:bright-border on sign-in, 16 on contact and search). */
+.tracy main
+  :is(
+    input[type='text'],
+    input[type='password'],
+    input[type='email'],
+    input[type='search'],
+    input[type='tel'],
+    input[type='url'],
+    textarea,
+    select
+  ) {
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+}
+
+/* ---- 1.1.1 (QC on cowork.tracy.site, 26/09) ---- */
+
+/* A centred eyebrow pill sits in the middle of its column: the home hero's pill stood at the
+   column's left edge (x 230) under a centred heading. */
+.tracy p.tracy-eyebrow.has-text-align-center {
+  display: flex;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+/* Card titles are not underlined in the source listings. */
+.tracy .tracy-card__title a {
+  text-decoration: none;
+}
+
+/* A category that lists its pages and then its posts (Services) is ONE grid in the source: six
+   cards, three a row. Here the two queries were two grids, so the posts opened a new row beside
+   empty space, and wore a category label the page cards do not. */
+@media (min-width: 782px) {
+  .tracy .tracy-page__body:has(> .wp-block-query + .wp-block-query) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--wp--preset--spacing--6);
+    align-items: stretch;
+  }
+
+  .tracy .tracy-page__body:has(> .wp-block-query + .wp-block-query) > :not(.wp-block-query),
+  .tracy .tracy-page__body:has(> .wp-block-query + .wp-block-query) > .wp-block-query > :not(.wp-block-post-template) {
+    grid-column: 1 / -1;
+  }
+
+  .tracy .tracy-page__body:has(> .wp-block-query + .wp-block-query) > .wp-block-query,
+  .tracy .tracy-page__body:has(> .wp-block-query + .wp-block-query) > .wp-block-query > .wp-block-post-template {
+    display: contents;
+  }
+}
+
+.tracy .tracy-page__body:has(> .wp-block-query + .wp-block-query) .wp-block-post-terms {
+  display: none;
+}
+
+/* The label above a plan's name (pricing page, "Example package") is a pill in the source: text
+   font at 12/500, sentence case, 4 × 12 px inset, full radius, the muted colour at 12 % behind it
+   (layout-boxes label centre 642 → 720: here it spanned the card as a caps line). */
+.tracy .acm-pricing .tracy-plan > p.tracy-eyebrow:has(+ h3) {
+  width: fit-content;
+  margin: 0;
+  padding: 4px 12px;
+  border-radius: 980px;
+  background: color-mix(in oklab, var(--wp--preset--color--muted) 12%, transparent);
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 500;
+  letter-spacing: -0.12px;
+  text-transform: none;
+}
+
+/* Two Site Logo blocks (1.1.5): the site logo on the light header, the dark-background logo (option tracy_logo_dark) on
+   the dark one. A dark header with no dark logo shows only the Site Title beside the empty spot. */
+.tracy-header__brand .tracy-logo-dark { display: none; }
+:root[data-theme='dark'] .tracy-header__brand .tracy-logo-light { display: none; }
+:root[data-theme='dark'] .tracy-header__brand .tracy-logo-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .tracy-header__brand .tracy-logo-light { display: none; }
+  :root:not([data-theme]) .tracy-header__brand .tracy-logo-dark { display: block; }
+}
+/* The copyright line under the site notice, in its small print. */
+.tracy-footer__strip .tracy-footer__copyright { padding-bottom: var(--wp--preset--spacing--6); font-size: var(--wp--preset--font-size--xs); color: var(--wp--preset--color--muted); }
+.tracy-footer__strip .acm-site-notice:has(+ .tracy-footer__copyright) { padding-bottom: var(--wp--preset--spacing--2); }

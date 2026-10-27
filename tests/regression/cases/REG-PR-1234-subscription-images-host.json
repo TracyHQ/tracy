@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1234-subscription-images-host",
+  "kind": "feat",
+  "title": "The dsh host sends a Model Subscription request's pictures inline, within one request budget, and declares what the pinned model reads",
+  "pr": 1234,
+  "area": "seat-plan/images",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/ui/tracy-mode-picker/test/account-subscriptions-images.test.mjs packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "The run request carries {type:'image', source:{type:'base64'}} after a text handle, and no 'attachment' reference; the caller's messages are not mutated.",
+    "25 pictures of 512 KiB base64 each fail with IMAGE_OFFLOAD_REQUIRED and failure.offloadImages = 9; the retry with 9 offloaded reads 16 pictures, sends 16 images and 9 placeholders.",
+    "The same reference twice is read once and counted twice; 21 occurrences need 1 offload.",
+    "A picture above 1 MiB is asked again at 1536 then 1024, and kept at 1024.",
+    "A fallback to the deployment default streams the original reference messages.",
+    "A pin with route.inputModalities ['text','image'] makes seat-plan-claude declare image before the route reaches dsh; glm, a silent or malformed pin, and a cold host declare ['text'].",
+    "view.mjs agentReadsImages and look.mjs readsImages are true on a Claude route and false on GLM."
+  ],
+  "selectors": {
+    "function": "packages/ui/tracy-mode-picker/src/host/request-images.mjs inlineRequestImages; account-subscriptions.mjs AccountAdapter.resolveModel/stream, forSession",
+    "test": "packages/ui/tracy-mode-picker/test/account-subscriptions-images.test.mjs"
+  },
+  "evidence": "Review 09/10/2026: a pasted screenshot or page picture never reached a subscription model; the host posted store references tracy-web cannot read.",
+  "fence": "REQUEST_IMAGE_BUDGET (8 MiB base64, 20 occurrences) via requiredImageOffload; the pin-filled modality cache",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-mode-picker/test/account-subscriptions-images.test.mjs",
+      "packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs"
+    ],
+    "tests": [
+      "a pasted picture reaches tracy-web as base64 bytes, never as a store reference",
+      "a tool result picture (page.look) is sent inline too, in its place",
+      "25 pictures over 8 MiB of base64 ask dsh to offload the oldest; the retry sends the rest without reading the offloaded",
+      "the same picture twice is read once and counted twice",
+      "a picture still above 1 MiB after compression is asked again smaller: 1536, then 1024",
+      "a fallback to the deployment default re-sends the original store references, not the inline copy",
+      "a pinned vendor model declares what tracy-web says it reads: Claude pictures, GLM text",
+      "after a host restart a model reads pictures again from its first pin",
+      "Tracy's own picture checks (page picture, page.look) see a Claude route read pictures, and a GLM route not"
+    ]
+  }
+}

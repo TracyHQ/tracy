@@ -1,0 +1,56 @@
+@tracy/od-skill
+===============
+
+The `skills/` folder is third-party work, copied verbatim from
+
+    OpenDesign — https://github.com/nexu-io/open-design
+    Apache License 2.0 (see the accompanying LICENSE)
+    Copied on 2026-08-31 · 162 skills
+
+Tracy does not modify a single line in it. A few skills were themselves curated by OpenDesign from elsewhere
+(`brand-guidelines` names Anthropic's skills repo as its upstream) — that attribution chain lives in the
+frontmatter of each `SKILL.md` and must be kept intact.
+
+Tracy adds exactly one file: `tracy-enabled.txt`.
+
+On 2026-09-05, additionally copied, from the same source, under the same licence, at commit
+`3d0d15fc55031e8e6cead709491e7b82565c4dee` (upstream `main`, 2026-09-05 12:57 UTC), ONLY the following
+paths and not the whole of `design-templates/` (747 files, mostly ppt/video):
+
+    design-templates/AGENTS.md
+    design-templates/web-prototype/     seed template.html + 8 section skeletons (layouts.md) — the SOURCE
+                                        for Tracy's page types (spec-huong-thiet-ke.md §4c-ter);
+                                        not enabled as a skill because Tracy's step two does not generate pages
+    design-templates/saas-landing/      three page-generating workflows for step four, enabled in
+    design-templates/pricing-page/      tracy-enabled.txt — the image's copy loop looks up both skills/
+    design-templates/blog-post/         and design-templates/ against the same list
+    craft/                              13 brand-independent craft-rule files; upstream injects them into the prompt
+                                        via `od.craft.requires` using their daemon, dsh has no
+                                        such daemon so Tracy copies them to /opt/tracy/craft for the agent
+                                        to read when needed
+
+Source: https://github.com/nexu-io/open-design/tree/3d0d15fc55031e8e6cead709491e7b82565c4dee
+
+WHY THERE IS AN ENABLE LIST, AND WHY IT MATTERS MORE THAN IT LOOKS
+------------------------------------------------------------------
+This package is light (3.8 MB), so carrying all 162 skills costs nothing on disk. But a skill does not cost disk space,
+it costs CONTEXT space: the descriptions of 162 skills add up to ≈ 113 KB ≈ 29 thousand tokens, and that is what the
+model rereads on every turn, for every user, on every lane.
+
+And most of them have nothing to do with what Tracy does: 24 image-generation skills, 12 animation skills, 8 slide
+skills, 8 video skills, 7 Figma skills — while a Tracy customer has a WordPress or Joomla website that needs
+to look better.
+
+`tracy-enabled.txt` is the 20 skills related to web, brand and interface design. The image copies only the ones
+named there into the folder that `skill-filesystem` scans, so the other 142 skills sit idle in the
+package: readable, reviewable, enabled later with one line — but eating no one's context.
+
+Measured 05/09/2026: of the 52 skills enabled at first, 33 were only stubs — `SKILL.md` opens with "This catalogue
+entry advertises the skill…" and tells the agent to install the upstream version into its own skill folder, something
+no one can do in a customer lane. They spent the description budget every turn without carrying any
+method, so they were dropped; `design-brief` was enabled in addition because it is the only skill that both has real content and
+knows about the `design-systems` folder. Machine check: every name in `tracy-enabled.txt` must NOT
+match `grep "This catalogue entry advertises"`.
+
+Changing the list means changing one file and building a new image. No one can change it quietly on a server, and its
+history is the git history.

@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1640-build-runs-to-last-check",
+  "kind": "feat",
+  "title": "A one-press build runs to its last check: a saved plan answers the many-places question, places named in at are written, a planned build has room for a whole site, and the demo check says what to repair",
+  "pr": 1640,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: content.replace with all:true over nine places of the EmDash fixture: no saved plan; a plan that is not agreed; a saved plan.",
+    "S2: content.replace with at naming two places of one find, in the core locate and on an open Joomla page that did not answer.",
+    "S3: loopNotices on 45 and 55 steps of looking and 150 and 205 steps of repairing, as a single change and as a planned build.",
+    "S4: cta-real on a nav item opening its own submenu with an empty href, one opening nothing, and a real page read with a Facebook link.",
+    "S5: runCapture given the address that answered.",
+    "S6: compareAgentInventory after a record's publication, relations, rows or routes changed, and with one record gone."
+  ],
+  "expect": [
+    "S1: CONFIRM_FIRST and nothing written; CONFIRM_FIRST and nothing written; written.",
+    "S2: both places are targets; both records written, no AMBIGUOUS.",
+    "S3: a single change gets the turn-length and step-budget notices at 45; a planned build gets none at 45 or 150, the turn-length at 205 and the step budget at 55.",
+    "S4: the submenu parent passes, the other goes nowhere; Facebook is no booking and no call to action.",
+    "S5: every shot is taken at that address.",
+    "S6: the failure names the record and the part that moved; a gone record is named missing."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/replace-road.mjs packages/tools/tracy-site-tools/src/host/replace.mjs packages/tools/tracy-site-tools/src/host/site-context.mjs apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js apps/tracy-host/src/capture.js apps/tracy-web/src/sites/agent-demo-inventory.js",
+    "dom": ""
+  },
+  "fence": "the many-places ask in runReplace, the AMBIGUOUS rule in locate, BUILD_SCALE in loopNotices, cta-real's nav rule, runCapture's base, compareAgentInventory's detail",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/replace-road.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-core.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-joomla.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-host/test/capture.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs"
+    ],
+    "tests": [
+      "many places at once: asked without a saved build plan, written with one, asked again when the plan is not agreed",
+      "locate: two places and no where/at/all → AMBIGUOUS, nothing written, each place with its at",
+      "🔒 part of a stored text in SEVERAL places, page unread",
+      "loopNotices: a planned build has five times the room of a single change, then the same notices",
+      "cta-real: dead, demo-service and off-site buttons fail",
+      "a capture given the address that answered shoots there, not at the first rule",
+      "Joomla inventory pages beyond100 and retains unpublished modules plus native menu assignments"
+    ]
+  }
+}

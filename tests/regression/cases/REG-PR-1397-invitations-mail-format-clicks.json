@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1397-invitations-mail-format-clicks",
+  "kind": "fix",
+  "title": "Saving Email format over HTTP keeps Estimated clicks, so the switch actually turns on",
+  "pr": 1397,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": ["Run the send ledger suite against a private PostgreSQL (TEST_DATABASE_URL) from this branch."],
+  "expect": [
+    "POST /api/ops/invitations/real/mail-format with all six fields, clickTracking true, answers 200 and the next read returns clickTracking true.",
+    "A body with a field the format does not have answers 400."
+  ],
+  "selectors": {
+    "mailFormat": "/api/ops/invitations/real/mail-format"
+  },
+  "evidence": "On dev on 16/10/2026, saving Email format with Estimated clicks on answered 400 REAL_INVALID_INPUT: the door still listed the five older fields, so the switch stayed off and test sends carried no tracked links.",
+  "fence": "Private test database only; no mailbox, no customer address.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs"
+    ],
+    "tests": ["over HTTP: Email format saves every field it has, including clickTracking, and refuses others"]
+  }
+}

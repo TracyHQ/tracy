@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2a830d03-cebc-48f0-a50f-ad78168c5026",
+  "status": "complete",
+  "name": "Forner",
+  "url": "https://styles.refero.design/style/2a830d03-cebc-48f0-a50f-ad78168c5026",
+  "sourceWebsite": "https://forner.studio",
+  "extractedAt": "2026-06-03T22:41:05.223Z",
+  "capturedAt": "2026-10-08T05:09:36.517038+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Warm earthen atelier — imagine a ceramics studio at golden hour, where every surface is clay, bone, or roasted coffee, and the only chrome is the potter's hand-lettered note pinned to the wall.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c0269be0-a754-47ee-9a3d-a99b5eba91d3.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "30f71d3944af1328b4387aef488d67ac416e5839581364ff3731c53989d24b20",
+      "bytes": 21709
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "53f36afc1f1ddeef18bfffa1044d6cc05457ca9e3c6959d982b2a66fac18d854",
+      "bytes": 73071
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "abde1bcfdbaaf1a3c3b786372bce1ffb7e475d0df8228e0856a416e05d657e14",
+      "bytes": 18027
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "072ac28deac09b35f9ffed3f1b833bcdbf52f7c097e682cc81652b97d7ac3975",
+      "bytes": 10338
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2d80507a25050959955f1fd80ae1d0499d5d956641764ba16c87995ae8acb695",
+      "bytes": 13671
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2e995697f574a554fb542d4dd048f130bbd6ac78492a28742692f9fefce3be2a",
+      "bytes": 3781
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0fe995686cc4495e85399a908fd372023fa10af90773ddc6a1cca81338a865c0",
+      "bytes": 711
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "487dd9bd79ad98e8de7aef83ab8b56ae0cdda4e33818992b9816b695eb03bb79",
+      "bytes": 728
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "641d5de709e9bd951c055d3278a5f3461ef45c6a92adc4af86d37f1919a02faa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f0162d87263c2d21ae175d99bae188e9d7f7b3d3b4688184cfa6975d4a34475c",
+      "bytes": 44791
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3c823382127dc5af8b8162d2e1222b1c0881c2ad27899d3d93fcf6cdedc55bd7",
+      "bytes": 22769
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ea119af70c6dd182181fcc6882c1179a6fffe052eaa01126cd133e1368792486",
+      "bytes": 39933
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3e0f230d5809f9596c36763e18c4155a6fcd794c91a991ee4f284f7c5243e898",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5bdf19c7d072a4941e3e1072b491b4b85e4f5b24f1a6ab3e03fc29e1dce7fbf2",
+      "bytes": 1575
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e8a05b639a53da2666cf553424c7df959b469a324d3ed8a83f44b1d42ac27c50",
+      "bytes": 2059
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "51734338-9046-47eb-a595-77ffa37b4725",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6262b0bb-ea6f-481b-b706-65df29507b6c",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

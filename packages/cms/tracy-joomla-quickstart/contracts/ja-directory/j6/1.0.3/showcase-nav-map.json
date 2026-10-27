@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-directory/j6/1.0.3",
+  "baseHash": "f30a000e71b006f523e14db57a624041c60d543a78b2015fe245d017b3b8aaa9",
+  "baseFiles": {
+    "manifest.json": "b5e9987cb8720374271aafa1e672418357c69cd914dd46f864330ea7d03a6099",
+    "content-map.json": "3e9b32527d97255fdb26edd88ea57409c6c7384199e241004e1038454a6b48f1",
+    "presentation-lock.json": "4982cbed0999fa9aa2fb7bd03f045bd17bde05f544b6b84970fbc6eddc412974"
+  },
+  "inputs": {},
+  "decisionsHash": "0c9b251357f453a4e533188cf7079fda5d956640286a7328978f6cd31a7ca7f2",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-163",
+      "identity": {
+        "path": "2015-05-27-03-13-06/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-164",
+      "identity": {
+        "path": "2015-05-27-03-13-06/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-165",
+      "identity": {
+        "path": "2015-05-27-03-13-06/404-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "404 page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-174",
+      "identity": {
+        "path": "features/shortcodes",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Shortcodes",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Shortcodes\" demonstrates the template's content shortcodes; it is not a page of the business"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "Features",
+      "where": "mainmenu/features",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "About Us",
+      "where": "mainmenu/features/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "User",
+      "where": "mainmenu/user",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "Login Form",
+      "where": "mainmenu/user/login-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Register",
+      "where": "mainmenu/user/register-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-148",
+      "label": "News",
+      "where": "mainmenu/news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-162",
+      "label": "Advanced Search",
+      "where": "mainmenu/2015-05-27-03-13-06/advanced-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-171",
+      "label": "Logout",
+      "where": "mainmenu/user/logout",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-399",
+      "label": "Password Reset",
+      "where": "mainmenu/user/password-reset",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=reset): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-400",
+      "label": "Username Reminder",
+      "where": "mainmenu/user/username-reminder",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "module-128",
+      "label": "Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 13 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-160",
+      "label": "J! Pages",
+      "where": "mainmenu/2015-05-27-03-13-06",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-162, which stays"
+    },
+    {
+      "key": "menuItem-162",
+      "label": "Advanced Search",
+      "where": "mainmenu/2015-05-27-03-13-06/advanced-search",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_finder (view=search) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    }
+  ],
+  "counts": {
+    "menuItems": 4,
+    "modules": 0,
+    "kept": 13,
+    "unresolved": 2
+  }
+}

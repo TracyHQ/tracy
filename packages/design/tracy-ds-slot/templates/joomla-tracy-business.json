@@ -1,0 +1,446 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "joomla/tracy-business",
+  "minVersion": {
+    "tracy-business/j6": "1.2.1"
+  },
+  "maxVersion": {
+    "tracy-business/j6": "1.2.5"
+  },
+  "maxVersionNote": "16/10/2026 (feat/ds-role-variables): 1.2.5 = 1.2.4 with six template files repaired for the Add site preview (the ink button reads the system text and page colours, a button glued to its field takes the field corner, the palette swatches draw through their roles), same database; verified from its own archive against 1.2.4 (0 computed differences, same pixels). 13/10/2026 (readiness, TracyHQ/tch#1318): 1.2.3 = 1.2.2 with three template stylesheets repaired (css/template.css, css/styles/tracy-business.css, scss/_tracy-business-chrome.scss: the topbar contacts wrap on a phone) and tokenized again by release-joomla.mjs (101 more literals read the slot), same database; verified from its own archive (VERIFICATION-1.2.3.json on the release); contract tracy-business/j6/1.2.3 carried by Claude Cowork for Joomla 0.24.27. 16/10/2026 (feat/ds-role-variables): 1.2.4 = 1.2.3 with the template read the standard role variables at its source (template-patches/role-variables laid over it, tokenized with this contract: 50 Bootstrap/T4 literals), the four Northgate pictures trimmed, same database; the role scan clean (design-system-roles.json, 0 unresolved), verified from its own archive against 1.2.3 as released.",
+  "release": "tracy-business/j6@1.2.1",
+  "applies": "one site module (mod_custom, position off-canvas, first, every page, chrome none) holding the slot sheet and its font link, created and changed like tracy-base's (Claude Cowork content.update kind module + moduleAssignment, or the Design system door); no template file is touched, so no quickstart release. The template paints from its own variables (css/styles/tracy-business.css: the 16 short roles --bg … --danger and its --tb-* family), so the slot points those at the worn colours (templateVars) and writes no 56-token set (genericTokens false): sizes, spacing and radii the system is silent on stay the template's",
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "off-canvas is the first module position this template renders on every page (the drawer block comes before the topbar in <body>, both layouts, measured 11/10/2026 on tracy-business/j6 1.2.1): the slot is parsed before any element it styles, and the drawer is hidden until opened, so the module's own wrapper never shows. header-r does not exist here; topbar-l would put an empty flex item (24px gap) before the contacts"
+  },
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#f5f3ee",
+    "--surface": "#edeae2",
+    "--surface-warm": "#ffffff",
+    "--fg": "#14171a",
+    "--fg-2": "#3d4045",
+    "--muted": "#5a5952",
+    "--meta": "#6b6a64",
+    "--border": "#dcd7cc",
+    "--border-soft": "#e4dfd6",
+    "--accent": "#14483a",
+    "--accent-on": "#ffffff",
+    "--accent-hover": "#da5a2a",
+    "--accent-active": "#0e3b2f",
+    "--success": "#1f4a22",
+    "--warn": "#6b4a0e",
+    "--danger": "#7a2016",
+    "--font-display": "Newsreader, Georgia, \"Times New Roman\", serif",
+    "--font-body": "Archivo, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+    "--font-mono": "ui-monospace, \"SF Mono\", Menlo, Consolas, monospace",
+    "--container-max": "1240px"
+  },
+  "baseNote": "the template's own values, read on the running home page (getComputedStyle of :root, 11/10/2026) — what stays where a system is silent",
+  "roles": {
+    "page": "body",
+    "display": "h1.tb-hero__title",
+    "heading": "section.tb-section h2.tb-section__title",
+    "body": "section.tb-services p.tb-services__desc",
+    "button-primary": ".tb-header__cta a.tb-btn",
+    "card": "article.tb-pcard",
+    "container": "section.tb-services .tb-container",
+    "section": "section.tb-section.tb-services"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 64px (the hero's title)",
+    "displayFace": "Newsreader 400, tracking -0.025em",
+    "heading": "first section heading: 40px",
+    "body": "first body paragraph outside a kept band",
+    "button-primary": "the header's call to action (\"Request a quote\", tb-btn--forest), chosen by hand as on WordPress: the filled orange calls to action sit in the hero and the closing band, both kept",
+    "card": "repeated bordered box ×3 (projects)",
+    "container": "first content container, max-width 1240px",
+    "section": "first padded full-width section, padding-top 72px"
+  },
+  "keepScopes": [".tb-topbar", ".acm-tb-hero", ".tb-footer"],
+  "keepNote": "the template's inverse bands — forest topbar, ink hero, ink footer — keep their whole look (discover.mjs `inverse`, as on WordPress); the forest closing call left them 15/10/2026 for the accent-band pair (followRulesNote)",
+  "keptButtons": {
+    ".acm-tb-hero": {
+      "ground": "#14171a",
+      "buttons": [".tb-btn--signal", ".tb-btn--forest"]
+    }
+  },
+  "keptButtonsNote": "the filled calls to action of the kept bands (the hero's and the closing band's 'See our capabilities' / 'Talk to our sales team', tb-btn--signal) wear the system's accent and its text while the band keeps its ink or forest ground, picture and text (decision 11/10/2026, as on WordPress); ground = the fill each band shows behind its buttons, measured on a tracy-business/j6 1.2.1 stand 11/10/2026 (hero #14171a, closing band #14483a: a kept band is the same under every system). tb-btn--outline-light is drawn in the band's own text colour and stays",
+  "keepDefaults": {
+    "--bg": "#f5f3ee",
+    "--surface": "#edeae2",
+    "--surface-warm": "#ffffff",
+    "--fg": "#14171a",
+    "--fg-2": "#3d4045",
+    "--muted": "#5a5952",
+    "--meta": "#6b6a64",
+    "--border": "#dcd7cc",
+    "--border-soft": "#e4dfd6",
+    "--accent": "#14483a",
+    "--accent-on": "#ffffff",
+    "--accent-hover": "#da5a2a",
+    "--accent-active": "#0e3b2f",
+    "--success": "#1f4a22",
+    "--warn": "#6b4a0e",
+    "--danger": "#7a2016",
+    "--tb-signal": "#da5a2a",
+    "--tb-meta": "#a8a49b",
+    "--tb-muted-2": "#6b6a64",
+    "--tb-meta-2": "#b4afa4",
+    "--tb-line-3": "#c9c3b6",
+    "--tb-ink": "#14171a",
+    "--tb-ink-2": "#242830",
+    "--tb-paper": "#f5f3ee",
+    "--tb-chrome-bg": "#f5f3ee",
+    "--tb-forest-deep": "#0e3b2f",
+    "--tb-band-forest-bg": "#14483a",
+    "--tb-band-forest-white": "#ffffff",
+    "--tb-band-signal-bg": "#da5a2a",
+    "--body-bg-color": "#f5f3ee",
+    "--body-text-color": "#14171a",
+    "--body-link-color": "#14483a",
+    "--body-link-hover-color": "#da5a2a",
+    "--color-primary": "#14483a",
+    "--color-secondary": "#da5a2a",
+    "--color-success": "#1f4a22",
+    "--color-info": "#14483a",
+    "--color-warning": "#6b4a0e",
+    "--color-danger": "#7a2016",
+    "--color-light": "#f5f3ee",
+    "--color-dark": "#14171a",
+    "--mainnav-text-color": "#3d4045",
+    "--mainnav-link-color": "#3d4045",
+    "--mainnav-link-hover-color": "#14483a",
+    "--mainnav-link-active-color": "#14171a",
+    "--t4-link-color-rgb": "0,113,227",
+    "--t4-link-hover-color-rgb": "0,119,237",
+    "--t4-primary-rgb": "0,113,227",
+    "--t4-body-color-rgb": "29,29,31",
+    "--t4-body-bg-rgb": "255,255,255",
+    "--tb-band-forest-fg": "#cfe0d8",
+    "--tb-forest-text": "#cfe0d8",
+    "--tb-forest-sep": "#5e8a79",
+    "--tb-forest-caret": "#9fc3b4",
+    "--tb-success-fg": "#1f4a22",
+    "--tb-warn-fg": "#6b4a0e",
+    "--tb-danger-fg": "#7a2016",
+    "--tb-info-fg": "#22453a",
+    "--tb-success-bg": "#e9f2e9",
+    "--tb-warn-bg": "#fbf2e2",
+    "--tb-danger-bg": "#fcf3f2",
+    "--tb-info-bg": "#e8f0eb"
+  },
+  "keepDefaultsNote": "what the released page computes on :root before any slot (light; a worn system is one look), for every variable the slot repoints — given back inside a kept band",
+  "keepFollows": [
+    "--tb-ink-band",
+    "--tb-ink-band-text",
+    "--tb-ink-band-meta",
+    "--tb-ds-on-ink-meta",
+    "--tb-ink-band-chip",
+    "--tb-ink-band-line",
+    "--tb-ink-band-line-2",
+    "--tb-ink-band-line-3"
+  ],
+  "keepFollowsNote": "15/10/2026: the ink family is not given back inside the kept bands. The footer is a kept band whose ground follows the system's ink; given back, its link, chip and line colours returned to the template's literals (#b9b5ac, #e4dfd6, #2a2e32) while its legal line and bottom links read the root's on-ink shades, so one footer showed two families. Left out, every word and line of the footer is the root's on-ink mix over --ds-c-ink, and the footer paints its own ground from --tb-ink-band (bands['.tb-footer'].root false), on the published 1.2.3 stylesheet as on the one that reads the roles. The hero reads only --tb-ink-band here, under its band ground",
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"]",
+  "genericTokens": false,
+  "genericNote": "the template defines the short names itself (--accent is its forest, used 103 times as TEXT): the slot writes --ds-c-* and points the template's own names at them (templateVars)",
+  "templateVars": {
+    "--bg": "var(--ds-c-bg)",
+    "--surface": "var(--ds-c-surface)",
+    "--surface-warm": "var(--ds-c-bg)",
+    "--fg": "var(--ds-c-fg)",
+    "--fg-2": "var(--ds-c-fg-2)",
+    "--muted": "var(--ds-c-muted)",
+    "--meta": "var(--ds-c-meta)",
+    "--border": "var(--ds-c-border)",
+    "--border-soft": "var(--ds-c-border-soft)",
+    "--accent": "var(--ds-c-accent-text)",
+    "--accent-on": "var(--ds-c-accent-on)",
+    "--accent-hover": "var(--ds-c-accent-text-hover)",
+    "--accent-active": "var(--ds-c-accent-active)",
+    "--success": "var(--ds-c-success)",
+    "--warn": "var(--ds-c-warn)",
+    "--danger": "var(--ds-c-danger)",
+    "--tb-signal": "var(--ds-c-accent-text)",
+    "--tb-meta": "var(--ds-c-meta)",
+    "--tb-muted-2": "var(--ds-c-meta)",
+    "--tb-meta-2": "var(--ds-c-border)",
+    "--tb-line-3": "var(--ds-c-border)",
+    "--tb-ink": "var(--ds-c-fg)",
+    "--tb-ink-2": "var(--ds-c-fg-2)",
+    "--tb-paper": "var(--ds-c-bg)",
+    "--tb-chrome-bg": "var(--ds-c-bg)",
+    "--tb-forest-deep": "var(--ds-c-accent-active)",
+    "--tb-band-forest-bg": "var(--ds-c-accent)",
+    "--tb-band-forest-white": "var(--ds-c-accent-on)",
+    "--tb-band-signal-bg": "var(--ds-c-accent)",
+    "--font-body": "var(--ds-font-body)",
+    "--font-display": "var(--ds-font-display-face)",
+    "--font-mono": "var(--ds-font-mono)",
+    "--container-max": "var(--ds-container)",
+    "--tb-ink-band": "var(--ds-c-ink)",
+    "--tb-ink-band-text": "color-mix(in srgb, var(--ds-c-on-ink) 84%, var(--ds-c-ink))",
+    "--tb-ink-band-meta": "color-mix(in srgb, var(--ds-c-on-ink) 90%, var(--ds-c-ink))",
+    "--tb-ds-on-ink-meta": "color-mix(in srgb, var(--ds-c-on-ink) 90%, var(--ds-c-ink))",
+    "--tb-ink-band-chip": "color-mix(in srgb, var(--ds-c-on-ink) 88%, var(--ds-c-ink))",
+    "--tb-ink-band-line": "color-mix(in srgb, var(--ds-c-on-ink) 12%, var(--ds-c-ink))",
+    "--tb-ink-band-line-2": "color-mix(in srgb, var(--ds-c-on-ink) 18%, var(--ds-c-ink))",
+    "--tb-ink-band-line-3": "color-mix(in srgb, var(--ds-c-on-ink) 26%, var(--ds-c-ink))",
+    "--tb-band-forest-fg": "var(--ds-c-accent-on)",
+    "--tb-forest-text": "var(--ds-c-accent-on)",
+    "--tb-forest-sep": "color-mix(in srgb, var(--ds-c-accent-on) 40%, var(--ds-c-accent))",
+    "--tb-forest-caret": "color-mix(in srgb, var(--ds-c-accent-on) 70%, var(--ds-c-accent))",
+    "--tb-success-fg": "var(--ds-c-success)",
+    "--tb-warn-fg": "var(--ds-c-warn)",
+    "--tb-danger-fg": "var(--ds-c-danger)",
+    "--tb-info-fg": "var(--ds-c-info-text)",
+    "--tb-success-bg": "color-mix(in srgb, var(--ds-c-success) 8%, var(--ds-c-bg))",
+    "--tb-warn-bg": "color-mix(in srgb, var(--ds-c-warn) 8%, var(--ds-c-bg))",
+    "--tb-danger-bg": "color-mix(in srgb, var(--ds-c-danger) 8%, var(--ds-c-bg))",
+    "--tb-info-bg": "var(--ds-c-info-bg)"
+  },
+  "templateVarsNote1315": "15/10/2026 (every declared page measured): the sub-page ink blocks (leadership, life and investor bands, the call boxes, the contact HQ card, the ink signup) read --tb-ink-band and its text/meta/line family, which stayed the template's #14171a / #B9B5AC under every system; they take the system's ink role (--ds-c-ink, as the EmDash twin and as the home page's hero and footer already wear) and its words mixed into it at the template's own steps. The forest family's words (--tb-band-forest-fg and friends, #CFE0D8 on the green) take the accent's own text, since the green becomes the system's accent. 15/10/2026: the info message reads the info pair (--ds-c-info-text on --ds-c-info-bg, which the emitter proves at 4.5:1) instead of the accent text on an 8% tint of it (4.48:1 under Moxie light) 16/10/2026 (1.2.4, measured under the 15 featured systems): the footer's legal line and bottom links read --tb-ds-on-ink-meta, the template's own 70% mix of on-ink into ink, 4.25:1 on the mid-grey ink of Airbnb, Eddie and ElevenLabs (the template's own pair reads 5.3:1); under a system both meta mixes take 90% (80% still read 3.99:1 on Airbnb's #6d6d6d ink), 4.65:1 there.",
+  "followRules": {
+    ".tb-btn--signal": {
+      "color": "accent-on"
+    },
+    ".tb-btn--signal:hover": {
+      "background-color": "accent-active",
+      "border-color": "accent-active",
+      "color": "accent-on"
+    },
+    ".tb-btn--forest:hover": {
+      "color": "accent-on"
+    },
+    ".tb-pos--signal": {
+      "color": "accent-on"
+    },
+    ".tb-pos--forest": {
+      "color": "accent-on"
+    },
+    ".tb-chipradio__input:checked + .tb-chipradio__chip": {
+      "color": "accent-on"
+    },
+    ".tb-sidenl": {
+      "color": "accent-on"
+    },
+    ".tb-sidenl__title": {
+      "color": "accent-on"
+    },
+    ".tb-kitsignup--forest .tb-kitsignup__title": {
+      "color": "accent-on"
+    },
+    ".tb-kitsignup--forest .tb-kitsignup__text": {
+      "color": "accent-on"
+    },
+    ".tb-kitslide__draw--contact .tb-kitslide__sub": {
+      "color": "accent-on"
+    },
+    ".tb-sidenl__btn": {
+      "background-color": "bg",
+      "border-color": "bg",
+      "color": "fg"
+    },
+    ".tb-kitsignup--forest .tb-kitsignup__btn": {
+      "background-color": "bg",
+      "border-color": "bg",
+      "color": "fg"
+    },
+    ".tb-hq": {
+      "color": "on-ink"
+    },
+    ".tb-kitsignup--ink .tb-kitsignup__title": {
+      "color": "on-ink"
+    },
+    ".tb-kitslide__draw--cover .tb-kitslide__sub": {
+      "color": "on-ink"
+    },
+    ".tb-btn--outline": {
+      "border-color": "border"
+    },
+    ".tb-kitsignup--ink .tb-kitsignup__field": {
+      "background-color": "ink",
+      "color": "on-ink"
+    },
+    ".tb-kitslide__draw--stats": {
+      "background-color": "border"
+    },
+    ".tb-kitslide__draw--stats > .is-forest b": {
+      "color": "accent-on"
+    },
+    ".tb-kitslide__draw--stats > .is-forest small": {
+      "color": "accent-on"
+    },
+    ".tb-kitslide__draw--case .tb-kitslide__photo": {
+      "background-color": "surface"
+    },
+    ".tb-kitslide__draw--map": {
+      "background-color": "surface"
+    },
+    ".tb-kitslide__draw--contact .tb-kitslide__cta": {
+      "background-color": "bg",
+      "color": "fg"
+    },
+    ".tb-crumbs__sep": {
+      "color": "muted"
+    },
+    ".tb-ctabox__actions": {
+      "color": "accent-on!"
+    },
+    ".acm-tb-cta-band": {
+      "background-color": "accent-band!",
+      "color": "on-accent-band!"
+    },
+    ".acm-tb-cta-band .tb-ctaband__title": {
+      "color": "on-accent-band!"
+    },
+    ".acm-tb-cta-band .tb-ctaband__desc": {
+      "color": "on-accent-band!"
+    }
+  },
+  "followRulesNote": "15/10/2026: words and fills the template writes as literals on its green and ink blocks (white #fff on the orange and green calls to action, #F5F3EE and #BFD4CB on the sidebar and kit sign-ups, #8A8780 on the cover slide) take the text of the ground they sit on under a system; the green sign-ups' orange button and the drawn contact slide's orange call would sit on the same accent as their box, so they take the page's pair (the box's inverse); the outline button's soft border vanished on the page (#e3dfc5 on #f4efd4 under Moxie) and takes the system's border; the slide library's drawn slides (stats, case photo, map) paint their stone #DCD7CC as literals and take the system's border and surface. The status family (--tb-*-fg / -bg, literals in the template's dark remap: #F0A296 on #2B1A19…) reads the worn status colours (tokens56: the template's hue tuned to the system, readable on its page) and a tint of them on the page. 15/10/2026: the closing call band (.acm-tb-cta-band) is no longer kept: it wears the accent-band pair, the accent moved 3:1 off itself so the accent-filled 'Talk to our sales team' stands out on it, as the EmDash twin and the release that reads the roles paint it. The published 1.2.3 writes the title as a literal #F5F3EE, so the band, its title and its line are named (accent-band, on-accent-band); measured with Moxie, Figma, Stripe and Spotify, light and dark: words 5.88:1 or more, button on band 3.01:1 or more",
+  "templateNote": "the template's own names, each by the role it plays: --accent and --tb-signal are TEXT here (links, eyebrows) and take the accent made readable on the page; the filled calls to action read --tb-band-forest-bg / --tb-band-signal-bg and take the accent fill with its own text; cards (--surface-warm, white on paper) take the page colour, which every text of the system is proven to read on",
+  "runtime": {
+    "--body-bg-color": "var(--ds-c-bg)",
+    "--body-text-color": "var(--ds-c-fg)",
+    "--body-link-color": "var(--ds-c-accent-text)",
+    "--body-link-hover-color": "var(--ds-c-accent-text-hover)",
+    "--color-primary": "var(--ds-c-accent)",
+    "--color-secondary": "var(--ds-c-accent)",
+    "--color-success": "var(--ds-c-success)",
+    "--color-info": "var(--ds-c-accent)",
+    "--color-warning": "var(--ds-c-warn)",
+    "--color-danger": "var(--ds-c-danger)",
+    "--color-light": "var(--ds-c-surface)",
+    "--color-dark": "var(--ds-c-fg)",
+    "--mainnav-text-color": "var(--ds-c-fg-2)",
+    "--mainnav-link-color": "var(--ds-c-fg-2)",
+    "--mainnav-link-hover-color": "var(--ds-c-accent-text)",
+    "--mainnav-link-active-color": "var(--ds-c-fg)"
+  },
+  "runtimeNote": "T4 writes these as literals from etc/theme; the footer's (--footer-*) are left alone: the footer is a kept band",
+  "runtimeRgb": {
+    "--t4-link-color-rgb": "accent-text",
+    "--t4-link-hover-color-rgb": "accent-text-hover",
+    "--bs-link-color-rgb": "accent-text",
+    "--bs-link-hover-color-rgb": "accent-text-hover",
+    "--t4-primary-rgb": "accent-text",
+    "--bs-primary-rgb": "accent-text",
+    "--t4-body-color-rgb": "fg",
+    "--bs-body-color-rgb": "fg",
+    "--t4-body-bg-rgb": "bg",
+    "--bs-body-bg-rgb": "bg"
+  },
+  "modes": true,
+  "modesNote": "the template has a light/dark switch (layouts/t4/element/header-theme-toggle.php, [data-tracy-theme-toggle] in .tb-topbar__slot--theme; js/darkmode.js sets data-theme on html): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs), and does not hide the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2). With the switch shown, the topbar's theme switch and its phone language button keep their own white on the band the system fills (1.92:1 on Spotify's green, 2.26:1 on Moxie's blue, 14/10/2026): they take the band's text colour (bands['.tb-topbar'].paint)",
+  "modesAuto": false,
+  "modesAutoNote": "the template's pre-paint script in the page head always sets data-theme (light or dark, from the OS preference; light when it fails) before the page paints, so no 'auto' state is left to the OS (measured on the 1.2.3 demo, 15/10/2026): the OS-dark copy is not written, as for JA Kinetic Joomla, and the module stays under its 64 KB column (about 71 KB with it once the batch's followRules and templateVars met the framework rules of #1298)",
+  "selectors": {
+    "themeToggle": "[data-tracy-theme-toggle], .tb-topbar__slot--theme",
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1.tb-hero__title",
+    "displaySize": "h1.tb-hero__title",
+    "heading": [".tb-section__title", ".tb-ctaband__title"],
+    "body": ["body"],
+    "button": [".tb-btn"],
+    "iconButton": [".tb-iconbtn"],
+    "card": [".tb-pcard", ".tb-ncard"],
+    "section": ["section.tb-section"],
+    "bodyFace": ["body"],
+    "eyebrow": [".tb-services__num", ".tb-pcard__tag", ".tb-eyebrow", ".tb-hero__eyebrow"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "contrast": {
+    "accent-text": ".tb-section .tb-eyebrow, .tb-section a:not(.tb-btn):not(:has(img))",
+    "muted": ".tb-section p.tb-services__desc, .tb-section p.tb-pcard__desc",
+    "meta": ".tb-section p.tb-ncard__meta",
+    "body": ".tb-section p",
+    "card-text": "article.tb-pcard p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-tracy-business): 12/12 on every release measured, controls 0 differences, lowest text 4.72:1, 86% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on a stand of tracy-business/j6 1.2.1 as released (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-tracy-business): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, kept bands unchanged, 86% or more of the page follows, lowest text 4.72:1 over 59 samples per view, none worse than the template's own. Before: kept-band buttons re-measured 11/10/2026 on a tracy-business/j6 1.2.1 stand (tasks/evidence/ds-kept-buttons-2026-10-11): 10 systems 24/24, both buttons follow under each, fill on band >= 3.32:1, text on fill >= 4.7:1. First measured 11/10/2026 on a new tracy-business/j6 1.2.1 site through the Design system door's write path (tasks/evidence/ds-contracts-business-2026-10-11): default and clear 0 differences, 10 systems 28/28 — 9/9 role checks each, no text below 4.5:1, the four kept bands unchanged, worn on the first request; under a system the dark state is the same look",
+  "bands": {
+    ".tb-topbar": {
+      "ground": "#14483a",
+      "texts": ["#cfe0d8", "#ffffff", "#9fc3b4"],
+      "important": true,
+      "kind": "brand",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(.tb-lang__name, .menu-item-title)": {
+          "color": "text"
+        },
+        ".tb-lang__caret": {
+          "color": "text-2"
+        },
+        ".tb-lang--modal": {
+          "color": "text"
+        },
+        "a:hover": {
+          "color": "text"
+        },
+        ":is(.tb-topbar__slot--theme, .tb-theme-toggle, .tb-lang__toggle)": {
+          "color": "text"
+        }
+      }
+    },
+    ".acm-tb-hero": {
+      "ground": "#14171a",
+      "texts": ["#f5f3ee", "#96938c", "#c7c4bd", "#b9b5ac", "#ffffff"],
+      "paint": {
+        ".tb-hero__dot": {
+          "background-color": "accent-fill"
+        },
+        ".tb-hero__accent": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text"
+        },
+        ":is(.tb-hero__lead, .tb-hero__stat-label, .tb-hero__eyebrow)": {
+          "color": "text-2"
+        },
+        ".tb-hero__visual": {
+          "border-color": "card"
+        }
+      },
+      "important": true,
+      "kind": "ink",
+      "repaint": true
+    },
+    ".tb-footer": {
+      "ground": "#14171a",
+      "texts": ["#b9b5ac", "#8a8780", "#ffffff"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "root": false
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "contractNotes1317": "13/10/2026 (#1317): the four bands (topbar, hero, call band, footer) kept their paper and stone words (#b9b5ac, #cfe0d8, #96938c, #8a8780: 190 of the left paints) while their ground followed, so the page followed 78-81%; they repaint their words with the system text, as the WordPress twin does through its theme variables. Second run (21:46): words with a colour rule of their own were not reached by the band rule: the language caret (#9fc3b4, 1:1 under Spotify), the phone language modal, the call band title (#f5f3ee on the accent, 1.73:1) and the copyright line (4.22:1 under BMW) are named; the brand mark keeps its own white on its terracotta (its lockup took the system text, 3.31:1 under Moxie).",
+  "sideRules": {
+    "light": {
+      ".tb-footer .tb-footlink:hover": { "border-bottom-color": "var(--ds-c-accent)" }
+    },
+    "dark": {
+      "body": { "--tb-ink-band": "var(--ds-c-surface-warm)" },
+      ".acm-tb-hero": { "background-color": "var(--tb-ink-band)!important" },
+      ".tb-footer .tb-footlink:hover": { "border-bottom-color": "var(--ds-c-accent)" }
+    }
+  },
+  "sideRulesNote": "16/10/2026 (GROUND-2, BORDER-1 on tracy-business/j6 1.2.4 under Moxie's dark side): in its dark mode the template keeps its ink bands a hair off the page (#0A0C0D on #101214, 1.04:1), while a dark side's ink is its card surface (Moxie #1a1a1a on #000000, 1.21:1): the hero, the footer and every block reading --tb-ink-band stood as grey blocks. On the dark side they take the system's quiet raised surface (--ds-c-surface-warm, set as --tb-ink-band on the body, outside the kept bands that reset --ds-c-*; the footer already paints --tb-ink-band, which keepFollows leaves to the worn value, and the hero takes it as its ground), as JA Kinetic's elevated bands do; the light side keeps the system's ink. The hero picture's frame was painted with the band's secondary TEXT (#b7b3a0 on Moxie's dark ink, 8.26:1, far harder than any line of the system); it takes the band's card shade, a tenth toward its words, as the template's own line mixes 12% of on-ink into ink. 18/10/2026 (ACCENT-LEAK, probe v10, tracy-business/j6 1.2.5): the footer's 'Book a site survey' link (a.tb-footlink, _tracy-business-chrome.scss) underlines on hover in --tb-signal, which the kept footer gives back as the template's orange #da5a2a under every system; followRules stop at a kept band's edge, so on both sides the hover underline takes the system's accent here.",
+  "followNote": "15/10/2026 (final measure, /en/about): the breadcrumb separators (.tb-crumbs__sep) are drawn in a line colour, 1.25-1.43:1 on the page under every system; they take the muted text. The call box's action line (.tb-ctabox__actions, on the accent) writes its words in a literal white: 2.26:1 on Moxie's light accent; it takes the accent's own text"
+}

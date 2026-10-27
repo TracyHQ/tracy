@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1698-pd-connect-device-flow",
+  "kind": "feat",
+  "title": "Connect Tracy: the OAuth device flow issues an account token (scope demos) that reads /v1/me, never opens a site door, and can be refreshed, replay-revoked and disconnected",
+  "pr": 1698,
+  "area": "api/account-token",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: TEST_DATABASE_URL=<any Postgres whose user may create databases or schemas> node --test --test-reporter=tap apps/tracy-web/test/account-connect.test.mjs packages/ui/tracy-settings/test/connected-apps-section.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail', '# skipped' lines and the result of each case named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0', and '# pass' equal to '# tests'.",
+    "Every named case is 'ok': /oauth/device/code answers an eight-consonant XXXX-XXXX user code, verification_uri <origin>/connect, interval 5, expires_in 600 and refuses another client or scope; discovery names the device endpoint and grant; /connect sends a signed-out visitor to /login and back, shows the account and the code to compare, and a cross-origin POST decides nothing; polls answer authorization_pending, slow_down (+5 s each), access_denied, expired_token, and a spent device code is invalid_grant and revokes its grant; ten tries per account and address then 429; a demos token reads /v1/me as {email, displayName} and gets 403 ACCOUNT_TOKEN_NOT_ALLOWED on /v1/sites routes, while requireAccountToken refuses a seat key 403 ACCOUNT_TOKEN_REQUIRED; refresh keeps the token id and rotates both secrets, a replayed refresh revokes the grant (KEY_REVOKED); /oauth/revoke and DELETE /api/me/connected-apps/:id both end the connection and another account can neither list nor delete it; the Settings section lists the app with Create demo sites and Disconnect."
+  ],
+  "selectors": {
+    "door": "POST /oauth/device/code, GET/POST /connect, POST /oauth/token (device_code grant), POST /oauth/revoke, GET/DELETE /api/me/connected-apps, GET /v1/me",
+    "resolver": "accountTokenResolver in apps/tracy-web/src/lib/account-token.js",
+    "rows": "account_grant, account_token, account_refresh, oauth_device_code (migration 174)",
+    "section": "[data-connected-app] in packages/ui/tracy-settings/src/client/connected-apps-section.tsx"
+  },
+  "evidence": "Plan tasks/todo-wo-public-demos.md part A and the council review A2-A4: a self-hosted Website Opportunities needs an account-level credential, and seat keys must keep their one-site fence.",
+  "fence": "Mechanism only: device codes, the account-token resolver and both audience fences, refresh rotation and revocation. Not covered: the open repo's Connect screen and the /v1/demos door (part B).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/account-connect.test.mjs",
+      "packages/ui/tracy-settings/test/connected-apps-section.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the device door hands out a readable user code",
+      "a signed-in person compares the code, allows",
+      "a demos token is refused on every site door",
+      "polling faster than the interval is told slow_down",
+      "Deny tells the app access_denied",
+      "wrong codes are limited per account and address",
+      "refresh rotates both tokens on one id",
+      "/oauth/revoke and Settings › Connected apps both end a connection",
+      "each connected app is named with what it may do",
+      "a disconnected app leaves the list at once"
+    ]
+  }
+}

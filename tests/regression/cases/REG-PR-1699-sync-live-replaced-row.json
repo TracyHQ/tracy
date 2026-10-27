@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-1699-sync-live-replaced-row",
+  "kind": "fix",
+  "title": "Sync from live: a row the live site deleted and inserted again under a new number with the same unique key (Joomla's installer rewriting a component's administrator menu items on an extension update) replaces the copy's untouched row instead of being listed as Tracy's version kept; a copy row Tracy changed, or one the live site did not delete, is still a conflict",
+  "pr": 1699,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"],
+  "expect": [
+    "S1: every test passes, among them the three #1699 tests: the replaced administrator menu items (101, 102 → 2358, 2359) come over with no kept and no conflict, 101/102 gone, the child pointing at 2358 and Tracy's own menu edit kept; when the copy changed 101 both 101 (delete-modify) and 2358 (unique-key) are kept; a live row clashing with a copy row the live site did not delete stays a unique-key conflict"
+  ],
+  "selectors": {
+    "host": "live_sync.py DbMerge.merge_rows unique-key clash (k.cls = 'U', LEFT JOIN kd on rows the live site deleted)"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-woocommerce-scheduler-noise.md",
+  "fence": "A sync never reports as a conflict a change only one side made",
+  "run": {
+    "cmd": ["node", "--test", "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"]
+  }
+}

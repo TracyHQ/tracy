@@ -1,0 +1,310 @@
+{
+  "dos": [
+    "Use #004038 Forest Teal as the only filled CTA color — buttons are either teal-filled (primary) or teal-outlined (ghost), never a third color",
+    "Set card border-radius to 16px and button border-radius to 8px consistently — the 8px difference is intentional, cards feel soft, buttons feel crisp",
+    "Apply the warm #fbfaf8 canvas to all section backgrounds and let #ffffff cards float on top — the cream-to-white surface contrast creates depth without shadows",
+    "Use display weight 700 at 56–72px with tight 1.14–1.22 line-height for headlines — heavy weight + tight leading is the editorial signature",
+    "Set body copy at 18px with 1.56 line-height in #3d3e45 Body Graphite — never use #0f161 ink for long-form paragraphs, the contrast is too aggressive",
+    "Rotate pastel cards through #e5d3f7, #fef1e1, #fde8ce, #c6c4f4, #bee9f4 within a grid — the pastel rotation signals feature grouping without needing borders",
+    "Use 12px all-caps #6f7073 Muted Slate for section eyebrow labels with 8px margin to the heading below"
+  ],
+  "donts": [
+    "Don't add drop shadows to cards or buttons — the system is intentionally flat, depth comes from surface color contrast only",
+    "Don't use #1d0953 Midnight Violet as a general CTA — it's reserved for the announcement bar pill and number callouts, not buttons",
+    "Don't apply the teal→lime→violet gradient to buttons, backgrounds, or text — it's only for the Workable 'w' app icon and AI-agent visuals",
+    "Don't use #0f161 ink for body paragraphs — reserve it for headlines, icons, and UI chrome; use #3d3e45 for readable prose",
+    "Don't introduce additional saturated accent colors — the system is built on teal + pastel rotation; adding a new hue breaks the restrained palette",
+    "Don't use sharp 0px or 4px radius on cards — the 16px softness is a signature, all elevated surfaces should feel rounded",
+    "Don't set body line-height below 1.5 — the generous 1.56 line-height at 18px is what makes the dense type feel airy"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#0f161e",
+      "name": "Workable Ink",
+      "role": "Headlines, body copy, icon fills, dark UI surfaces — near-black with a blue-ink undertone, softer than pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fbfaf8",
+      "name": "Page Canvas",
+      "role": "Default page background and warm card surface — slightly cream-tinted off-white that gives the whole site a paper-like warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Elevated card surfaces on warm canvas, nav background — true white used sparingly for crisp product panels against the cream page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3d3e45",
+      "name": "Body Graphite",
+      "role": "Body paragraph text, secondary link color — softened dark gray for readable prose without the weight of ink-black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6f7073",
+      "name": "Muted Slate",
+      "role": "Eyebrow labels, helper text, metadata — medium gray for de-emphasized copy like section kickers and timestamps",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Hairline Gray",
+      "role": "Disabled button background, subtle dividers — the lightest neutral surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#004038",
+      "name": "Forest Teal",
+      "role": "Teal text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#1d0953",
+      "name": "Midnight Violet",
+      "role": "Secondary action (Check it out pill), stat callout headings — deep indigo-violet used sparingly for the announcement bar and number highlights",
+      "group": "brand"
+    },
+    {
+      "hex": "#e5d3f7",
+      "name": "Lavender Wash",
+      "role": "Soft feature card background — pastel lavender for the most prominent colored card surface, gives sections a calm purple identity",
+      "group": "accent"
+    },
+    {
+      "hex": "#fef1e1",
+      "name": "Peach Cream",
+      "role": "Section background wash, hero-adjacent panels — warm peach-cream used as a large surface band, the dominant chromatic neutral",
+      "group": "accent"
+    },
+    {
+      "hex": "#fde8ce",
+      "name": "Butter Yellow",
+      "role": "Card background for warm-themed feature panels — muted butter for secondary colored cards",
+      "group": "accent"
+    },
+    {
+      "hex": "#c6c4f4",
+      "name": "Periwinkle",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content.",
+      "group": "accent"
+    },
+    {
+      "hex": "#bee9f4",
+      "name": "Sky Tint",
+      "role": "Cool-tone card background — pale sky blue for variety in the pastel card rotation",
+      "group": "accent"
+    },
+    {
+      "hex": "#00f5dc",
+      "name": "Agent Spectrum",
+      "role": "Gradient brand accent for the AI agent visual identity — the mint→lime→violet spectrum used in product illustration and the Workable 'w' logo glow",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, rgb(0,245,220), rgb(213,255,77) 48.5%, rgb(192,135,255))"
+    }
+  ],
+  "layout": "Full-bleed page with centered max-width ~1200px content container. Hero is asymmetric: text-left / product-visual-right split, with headline at 56px on the left and a rounded product UI screenshot on the right. Section rhythm alternates between cream canvas (#fbfaf8) and white panels, with occasional pastel (lavender, peach) section bands that signal a new content area. Centered stacked layouts for section headlines with single-column body copy below. Feature grids are 2-column or 3-column card rows with 32px gaps. Logo strip is a full-width marquee band separating sections. Navigation is a sticky top bar with brand wordmark left, links center, and dual CTAs right (ghost outline + filled teal). The announcement banner sits above the nav as a separate lavender band.",
+  "imagery": "Imagery is dominated by product UI screenshots framed as floating panels — the ATS interface, candidate profile cards, mobile screens — with 16px rounded corners. The Workable 'w' app icon appears as a glowing squircle filled with the teal→lime→violet gradient. Photography is minimal: only human avatars in product screenshots (small circular crops). Illustrations are absent — the gradient on the app icon is the brand's only graphical flourish. Client logos appear as monochrome gray marks in a scrolling marquee for social proof. Overall image density is low: product UI shots carry the visual weight, text and whitespace dominate the layout.",
+  "similar": [
+    {
+      "why": "Same warm-cream page canvas, bold sans-serif headlines at 56px+, flat pastel feature cards with 16px radius, and a single chromatic CTA color that acts as the only saturated element on an otherwise achromatic page",
+      "business": "Greenhouse"
+    },
+    {
+      "why": "Similar editorial layout — large confident display headlines, asymmetric hero splits, product UI screenshots as right-side visuals, and a restrained pastel card palette for feature sections",
+      "business": "Lever"
+    },
+    {
+      "why": "Same shadowless flat aesthetic with heavy-weight display type (700 at 56px), warm off-white canvas, and feature cards distinguished by soft pastel fills rather than borders or elevation",
+      "business": "Ashby"
+    },
+    {
+      "why": "Same approach of single-brand-color saturation against warm neutrals, 16px card radius, and the avoidance of drop shadows in favor of surface color contrast for depth",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "pills": "16px",
+      "images": "16px",
+      "buttons": "8px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#fbfaf8",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Warm off-white default background for all sections — gives the entire site its paper-like warmth"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White Card",
+      "level": 1,
+      "purpose": "Elevated product surfaces and feature cards — true white for crispest contrast against the cream canvas"
+    },
+    {
+      "hex": "#e5d3f7",
+      "name": "Lavender Surface",
+      "level": 2,
+      "purpose": "AI/agent-themed section backgrounds and announcement bar"
+    },
+    {
+      "hex": "#fef1e1",
+      "name": "Peach Surface",
+      "level": 3,
+      "purpose": "Warm HR/evaluation-themed section backgrounds"
+    },
+    {
+      "hex": "#fde8ce",
+      "name": "Butter Surface",
+      "level": 4,
+      "purpose": "Secondary warm card surface for visual variety"
+    }
+  ],
+  "northStar": "warm newsroom with teal ink",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.67
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.38
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.13
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.14
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1.22
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Teal CTA (Filled)",
+      "role": "Main conversion button — Request a demo",
+      "description": "Fill #004038 Forest Teal, white text, 8px radius, 16px vertical / 16px horizontal padding, Proxima Nova 700 at 16px. White text on deep teal creates the strongest contrast pair on the page (AAA). This is the dominant action — always filled, never outlined."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action — Start a free trial, Log in",
+      "description": "Transparent fill, #004038 teal text, 1px #004038 border, 8px radius, 16px×16px padding. Outlined variant of the primary action for lower-emphasis CTAs in the nav bar and hero."
+    },
+    {
+      "name": "Underline Link Button",
+      "role": "Tertiary action — Start a free trial (text link variant)",
+      "description": "No fill, no border, 0px radius, 32px left padding for arrow icon. #0f161 ink text with right-arrow glyph. Used for inline hero CTAs that don't need button chrome."
+    },
+    {
+      "name": "Midnight Pill (Announcement)",
+      "role": "Top-bar release announcement — Check it out",
+      "description": "Fill #1d0953 Midnight Violet, white text, 8px radius, 16px×16px padding. Used exclusively in the lavender announcement bar. The only violet action — pairs with lavender pill background."
+    },
+    {
+      "name": "White Product Card",
+      "role": "Feature showcase card on white canvas",
+      "description": "Fill #ffffff, 16px radius, 32px padding all sides, no shadow, 1px hairline border optional. The default card surface — pure white against the warm #fbfaf8 page canvas provides the cleanest product preview panels."
+    },
+    {
+      "name": "Lavender Feature Card",
+      "role": "Pastel card for AI/agent feature blocks",
+      "description": "Fill #e5d3f7, 16px radius, 32px padding, no shadow. The signature pastel card — paired with midnight-violet headings for the AI agent sections."
+    },
+    {
+      "name": "Peach Feature Card",
+      "role": "Warm-tone card for evaluation/HR feature blocks",
+      "description": "Fill #fef1e1, 16px radius, 32px padding, no shadow. Used for warm-themed feature groupings like evaluation tools."
+    },
+    {
+      "name": "Butter Feature Card",
+      "role": "Secondary warm card",
+      "description": "Fill #fde8ce, 16px radius, 32px padding, no shadow. Lighter variant of peach for variety in card rotations."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Sticky header with brand wordmark and primary actions",
+      "description": "Transparent or white background, Workable 'w' wordmark in #004038, nav links in #004038, right-aligned Log in (text), Start a free trial (ghost outline), Request a demo (filled teal). Sticky on scroll."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Lavender pill above nav for product news",
+      "description": "Full-width #e5d3f7 lavender band, centered content with brand icon, announcement text, and a #1d0953 filled 'Check it out' pill button, dismiss '×' on the right."
+    },
+    {
+      "name": "Section Eyebrow Label",
+      "role": "Kicker text above section headings",
+      "description": "All-caps Proxima Nova 400 at 12–16px in #6f7073 Muted Slate, 8px margin-bottom before heading. Examples: 'MEET THE WORKABLE AGENT', 'A TALENT MANAGEMENT PLATFORM FOR AN AGENTIC WORLD'."
+    },
+    {
+      "name": "Hero Product Visual",
+      "role": "Right-side product screenshot with gradient framing",
+      "description": "Product UI screenshot with rounded 16px corners, framed by the teal→lime→violet gradient glow on the Workable app icon. The icon is a 16px-radius squircle with the spectrum gradient."
+    },
+    {
+      "name": "Client Logo Strip",
+      "role": "Social proof band — trusted companies",
+      "description": "Horizontal marquee of monochrome gray (#6f7073 or faded) client logos on warm cream background, logos-carousel animation scrolls continuously. Logos are low-prominence — never compete with the wordmark."
+    },
+    {
+      "name": "Play Button (Video CTA)",
+      "role": "Watch demo trigger",
+      "description": "Ghost outline button with #004038 border, 8px radius, circular play icon in dark teal inside. Used for 'See Workable Agent in action' — combines outline chrome with a filled icon."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single sans family carries all UI — bold 700 at 56–72px with tight 1.14 line-height creates editorial display weight, while 400 at 18–20px with 1.56–1.67 line-height keeps body comfortable. The Minor Third scale (1.2 ratio, 16px base) produces a restrained 8-step hierarchy.",
+      "sizes": "12, 16, 18, 20, 24, 32, 56, 72",
+      "family": "Proxima Nova",
+      "weight": "400, 700",
+      "lineHeight": "1.0–1.67",
+      "substitute": "Source Sans 3 or Nunito Sans (both share Proxima Nova's humanist warmth with similar x-height and weight contrast)"
+    }
+  ],
+  "description": "Workable uses a warm, editorial HR-platform language: off-white canvas with deep-ink typography and a single confident teal-green that doubles as the primary action and brand voice. Soft pastel cards (lavender, peach, butter, sky) create section-level color rhythm instead of flat gray alternation, giving every band a quiet identity without competing with copy. Typography is heavy at display sizes (700 weight, tight 1.14 line-height) and relaxes to a comfortable 400/1.56 for body — a clear editorial hierarchy that reads as confident rather than decorative. The teal CTA is the only saturated action color on the page; everything else is surface, illustration, or chrome, so buttons always feel switched on against the warm neutral field.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #0f161e (Workable Ink)\n- background: #fbfaf8 (Page Canvas) / #ffffff (cards)\n- border: #efefef hairline / #004038 chromatic\n- accent: #004038 (Forest Teal)\n- primary action: #1d0953 (filled action)\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #1d0953 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Create a ghost outline button**: transparent background, text and border #004038, 1px border, 8px radius, 16px×24px padding, Proxima Nova 700 at 16px. Use for secondary CTAs in nav bars and hero sections (e.g. 'Start a free trial').\n\n\n4. **Create a pastel feature card**: fill #e5d3f7 lavender (or rotate through #fef1e1, #fde8ce, #c6c4f4), 16px border-radius, 32px padding all sides, no shadow. Heading at 24px Proxima Nova 400 in #0f161e, body at 16px in #3d3e45. Use in 2-column or 3-column card grids.\n\n5. **Create a white product card on cream canvas**: fill #ffffff, 16px radius, 32px padding, optional 1px #efefef border. This is the cleanest product preview surface — use for UI screenshots, feature showcases, and the talent CRM panels."
+    },
+    {
+      "title": "Gradient System",
+      "content": "The Agent Spectrum gradient (linear: rgb(0,245,220) → rgb(213,255,77) 48.5% → rgb(192,135,255)) is reserved exclusively for the Workable 'w' app icon and AI-agent visual identity. It is the only multicolor gradient in the system — never apply it to buttons, backgrounds, or text. The gradient signals 'AI agent' in the visual language: when you see the spectrum, you see the agent."
+    }
+  ],
+  "elevationPhilosophy": "Workable deliberately avoids shadows — every card is flat with a 16px radius and no drop shadow. Depth comes from surface color contrast (white card on cream canvas, pastel cards on cream) rather than elevation. This keeps the design feeling light and editorial rather than heavy or product-app-like."
+}

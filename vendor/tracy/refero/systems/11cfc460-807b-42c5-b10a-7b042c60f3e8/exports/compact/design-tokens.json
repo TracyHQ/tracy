@@ -1,0 +1,59 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#f8f8f2",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas and base surface — warm off-white that softens the starkness of pure white, giving the whole site a printed-editorial warmth"
+    },
+    "card-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Card White — Elevated card surfaces and the nav bar — sits one step above the cream canvas to create subtle layering without shadows; White text and button labels — used on dark backgrounds and as the light-mode border on neutral card edges"
+    },
+    "studio-ink": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Studio Ink — Primary text, icons, and the filled button — near-black rather than pure black, softer on the warm canvas and used as the sole dark element in the system"
+    },
+    "deep-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Deep Black — Reserved for SVG icon fills — logo glyph and nav icon strokes; rarely surfaces as a background"
+    },
+    "powder-blue": {
+      "$value": "#bedbff",
+      "$type": "color",
+      "$description": "Powder Blue — Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "mint-wash": {
+      "$value": "#a4f4cf",
+      "$type": "color",
+      "$description": "Mint Wash — Feature card surface — pastel green used as a category tint in the services grid, always paired with near-black text and an icon"
+    },
+    "blush-tint": {
+      "$value": "#ffc9c9",
+      "$type": "color",
+      "$description": "Blush Tint — Feature card surface — soft coral used as the third category tint; the warmest of the three pastels, slightly louder on the cream canvas"
+    },
+    "signal-green": {
+      "$value": "#00c950",
+      "$type": "color",
+      "$description": "Signal Green — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    }
+  },
+  "font": {
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Sole typeface used across the system — the page commits fully to a single geometric system stack at a 96px display size with tight -0.025em tracking, which is the signature move: most agency sites use a serif display; Websmith uses a 96px geometric sans at negative tracking to create a flat, architectural, almost-Futura authority. Substitute with Inter at the same tracking."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://websmith.studio",
+      "siteName": "Websmith Studio",
+      "extractedAt": "2026-06-03T18:58:58.630Z",
+      "variant": "compact"
+    }
+  }
+}

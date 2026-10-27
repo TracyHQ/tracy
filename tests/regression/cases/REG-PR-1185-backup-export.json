@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1185-backup-export",
+  "kind": "feat",
+  "title": "An Owner downloads a backup point as one zip; the doors are off unless BACKUP_EXPORT=on",
+  "pr": 1185,
+  "area": "sites/backup",
+  "cms": ["wp", "jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/fleet/tracy-fleet-operation/test/backup-export.test.mjs — the host packs a verified point into one zip (config DB settings replaced by placeholders, dump byte for byte, SHA256SUMS, locks let go before the upload) and refuses a tampered dump, a package too large, a refused upload; no container.",
+    "S2: run apps/tracy-host/test/webroot.test.mjs + config.test.mjs (pattern export) — kind webroot-export takes an https upload address through the environment only, never on argv.",
+    "S3: run apps/tracy-web/test/backup-export.test.mjs — Owner only on both doors, 404 EXPORT_OFF when the deployment leaves BACKUP_EXPORT unset and may.export=false, one export per site at a time, caps per account, ready only once the store holds the size, five-minute link, expiry + sweep, delete with the site, the generic artifact doors refuse backup-exports/ and dot segments.",
+    "S4: run packages/core/tracy-core/test/backup-download.test.mjs — Download… is offered to an Owner on a full backup only."
+  ],
+  "expect": [
+    "S1: exit 0, 0 failures, 9 pass; 'export: a full WordPress point becomes one zip' passes.",
+    "S2: exit 0, 0 failures; 'runWebrootJob: webroot-export hands the upload address in the environment' passes.",
+    "S3: exit 0, 0 failures, 0 skipped, 12 pass; 'artifact doors: no key in the export namespace' passes.",
+    "S4: exit 0, 0 failures, 4 pass."
+  ],
+  "selectors": {
+    "doors": "POST /api/sites/:key/backups/:version/export, GET /api/sites/:key/backups/:version/export/:exportId, GET /api/sites/:key/backups (may.export)",
+    "tool": "tests/regression/scripts/REG-PR-1185-backup-export.mjs"
+  },
+  "fence": "ADR 0024 forbids returning a raw dump; this line ships behind BACKUP_EXPORT (default off) and as amendment 3 awaiting owner approval. The bytes never pass through tracy-web: the host uploads to the artifact store through a presigned PUT and tracy-web signs a five-minute GET. Web and desktop get the same door on the same site tab (ADR 0030).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1185-backup-export.mjs"],
+    "needs": ["postgres"]
+  }
+}

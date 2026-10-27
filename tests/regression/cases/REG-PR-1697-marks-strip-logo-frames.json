@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1697-marks-strip-logo-frames",
+  "kind": "fix",
+  "title": "A strip of other organisations marks may shrink to the business own (never to none), the business logo in more than two frames of a page is misplaced, and the brief keeps decorative backdrops",
+  "pr": 1697,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: compareAgentInventory with an EmDash client_logos list of five shrunk to one, emptied, and a gallery shrunk.",
+    "S2: checkCollectedUsed with the business logo in two frames of a page, then in four."
+  ],
+  "expect": [
+    "S1: shrunk passes; emptied and the gallery fail.",
+    "S2: two pass; four give COLLECTED_MISPLACED logo."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/agent-demo-inventory.js apps/tracy-host/src/demo-qa.js apps/tracy-web/src/opportunities-build/agent-demo.js",
+    "dom": ""
+  },
+  "fence": "marksLists; LOGO_FRAMES",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "a list of other organisations’ marks may shrink to the business’s own, never to none; other lists keep their count",
+      "collected-used: the name, phone, email, street, an opening time, a review and own photos must all show"
+    ],
+    "needs": []
+  }
+}

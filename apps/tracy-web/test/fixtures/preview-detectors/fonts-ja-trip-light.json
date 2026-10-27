@@ -1,0 +1,60 @@
+{
+  "source": "quickstart/ja-trip/j6@1.0.5 https://ja-trip-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "light",
+  "capturedAt": "2026-10-14",
+  "note": "section headings keep the template DM Sans while the system sets IBM Plex",
+  "plain": {
+    "families": {
+      "dm sans": {
+        "blocks": 105,
+        "chars": 2934,
+        "at": [
+          "p",
+          "a.ms-1",
+          "span.menu-item-title",
+          "div.text-animation",
+          "div.section-title-wrap",
+          "button.btn.btn-primary"
+        ]
+      },
+      "cookie": {
+        "blocks": 7,
+        "chars": 89,
+        "at": ["span", "div.sub-title.font-special-family", "div.sub-title.h3"]
+      }
+    }
+  },
+  "worn": {
+    "families": {
+      "ibm plex sans": {
+        "blocks": 81,
+        "chars": 2131,
+        "at": [
+          "p",
+          "a.ms-1",
+          "span.menu-item-title",
+          "div.text-animation",
+          "div.section-title-wrap",
+          "button.btn.btn-primary"
+        ]
+      },
+      "ibm plex serif": {
+        "blocks": 23,
+        "chars": 694,
+        "at": ["span", "a.heading-link", "h4", "h4.cta-title.h1"]
+      },
+      "dm sans": {
+        "blocks": 6,
+        "chars": 170,
+        "at": ["span.h1.main-title", "div.info-title.h1"]
+      },
+      "cookie": {
+        "blocks": 2,
+        "chars": 28,
+        "at": ["div.sub-title.font-special-family", "div.sub-title.h3"]
+      }
+    }
+  },
+  "slot": "<style id=\"tracy-ds-slot\">/* tracy-ds-slot: refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 */\n:root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"]{--body-bg-color:var(--ds-c-bg);--body-text-color:var(--ds-c-fg);--body-link-color:var(--ds-c-accent-text);--body-link-hover-color:var(--ds-c-accent-text-hover);--color-primary:var(--ds-c-accent);--color-secondary:var(--ds-c-surface);--color-success:var(--ds-c-success);--color-info:var(--ds-c-accent);--color-warning:var(--ds-c-warn);--color-danger:var(--ds-c-danger);--color-light:var(--ds-c-surface);--color-dark:var(--ds-c-fg);--mainnav-text-color:var(--ds-c-fg);--mainnav-link-color:var(--ds-c-fg);--mainnav-link-hover-color:var(--ds-c-accent-text);--mainnav-link-active-color:var(--ds-c-accent-text);--footer-bg-color:var(--ds-c-surface);--footer-text-color:var(--ds-c-meta);--footer-link-color:var(--ds-c-muted);--footer-link-hover-color:var(--ds-c-fg);--ds-c-bg:#000000;--ds-c-surface:#1a1a1a;--ds-c-surface-warm:#060605;--ds-c-fg:#f4efd4;--ds-c-fg-2:#b7b39f;--ds-c-muted:#858273;--ds-c-meta:#868474;--ds-c-border:#f4efd4;--ds-c-border-soft:#7a786a;--ds-c-accent:#84acfb;--ds-c-accent-on:#000000;--ds-c-accent-hover:#93b6fb;--ds-c-accent-active:#9fbefc;--ds-c-success:#198754;--ds-c-warn:#fd7e14;--ds-c-danger:#ef4444;--ds-c-accent-text:#84acfb;--ds-c-accent-text-hover:#93b6fb;--ds-font-body:\"IBM Plex Sans\", sans-serif;--ds-font-display-face:\"IBM Plex Serif\", serif;--ds-font-mono:\"SF Mono\", ui-monospace, \"JetBrains Mono\", Menlo, Monaco, Consolas, monospace;--ds-container:1200px;--t4-link-color-rgb:132, 172, 251;--t4-link-hover-color-rgb:147, 182, 251;--bs-link-color-rgb:132, 172, 251;--bs-link-hover-color-rgb:147, 182, 251;--t4-primary-rgb:132, 172, 251;--bs-primary-rgb:132, 172, 251;--t4-body-color-rgb:244, 239, 212;--bs-body-color-rgb:244, 239, 212;--t4-body-bg-rgb:0, 0, 0;--bs-body-bg-rgb:0, 0, 0;--heading-color:var(--ds-c-fg-2);--tracy-capsule-pad:7px 21px}\n[data-tracy-theme-toggle]{display:none!important}\n:root:root:root:root:root:root{color-scheme:dark}\n:root:root:root:root:root:root .t4-topbar{--ds-c-bg:initial;--ds-c-surface:initial;--ds-c-surface-warm:initial;--ds-c-fg:initial;--ds-c-fg-2:initial;--ds-c-muted:initial;--ds-c-meta:initial;--ds-c-border:initial;--ds-c-border-soft:initial;--ds-c-accent:initial;--ds-c-accent-on:initial;--ds-c-accent-hover:initial;--ds-c-accent-active:initial;--ds-c-success:initial;--ds-c-warn:initial;--ds-c-danger:initial;--ds-c-accent-text:initial;--ds-c-accent-text-hover:initial;--body-bg-color:#ffffff;--body-text-color:#585c63;--body-link-color:#ff6b00;--body-link-hover-color:#df5e00;--color-primary:#ff6b00;--color-secondary:#111111;--color-success:#198754;--color-info:#0dcaf0;--color-warning:#fd7e14;--color-danger:#ef4444;--color-light:#f8f5f0;--color-dark:#212529;--mainnav-text-color:#111111;--mainnav-link-color:#111111;--mainnav-link-hover-color:#ff6b00;--mainnav-link-active-color:#df5e00;--footer-bg-color:#ffffff;--footer-text-color:#585c63;--footer-link-color:#585c63;--footer-link-hover-color:#ff6b00;--heading-color:#111111}\n:root:root:root:root:root:root .t4-topbar{background-color:#1a1a1a!important}\n:root:root:root:root:root:root .t4-topbar .ms-1:not(.btn, .btn *, [class*=button], [class*=button] *){color:#84acfb!important}\n:root:root:root:root:root:root :is(h1, h2, h3, h4){font-weight:300;font-family:\"IBM Plex Serif\", serif}\n:root:root:root:root:root:root h1:not(.tracy-ds-display){font-weight:300;font-family:\"IBM Plex Serif\", serif}\n:root:root:root:root:root:root body{font-weight:400;font-family:var(--font-body)}\n:root:root:root:root:root:root body :is(p, li):not([class*=btn], [class*=button]){font-weight:400}\n:root:root:root:root:root:root .t4-section h2,:root:root:root:root:root:root main h2{font-size:43px}\n@media (max-width:639px){:root:root:root:root:root:root .t4-section h2,:root:root:root:root:root:root main h2{font-size:30px}}\n:root:root:root:root:root:root .btn,:root:root:root:root:root:root a.btn.btn-primary{border-radius:1000px;font-weight:500;padding-top:7px;padding-bottom:7px;padding-left:21px;padding-right:21px}\n:root:root:root:root:root:root .btn-primary:not(.t4-topbar, .t4-topbar *),:root:root:root:root:root:root a.btn.btn-primary:not(.t4-topbar, .t4-topbar *){background-color:var(--ds-c-accent);background-image:none;border-color:var(--ds-c-accent);color:var(--ds-c-accent-on)}\n:root:root:root:root:root:root .t4-topbar .btn-primary,:root:root:root:root:root:root .t4-topbar a.btn.btn-primary,:root:root:root:root:root:root .t4-topbar .btn-white,:root:root:root:root:root:root .t4-topbar .btn-light{background-color:#84acfb!important;background-image:none!important;border-color:#84acfb!important;color:#000000!important}\n:root:root:root:root:root:root .t4-topbar .btn-primary:hover,:root:root:root:root:root:root .t4-topbar a.btn.btn-primary:hover,:root:root:root:root:root:root .t4-topbar .btn-white:hover,:root:root:root:root:root:root .t4-topbar .btn-light:hover{background-color:#93b6fb!important;border-color:#93b6fb!important;color:#000000!important}\n:root:root:root:root:root:root .t4-topbar .btn-primary *,:root:root:root:root:root:root .t4-topbar a.btn.btn-primary *,:root:root:root:root:root:root .t4-topbar .btn-white *,:root:root:root:root:root:root .t4-topbar .btn-light *{color:#000000!important}\n:root:root:root:root:root:root div.item-inner.tour-item,:root:root:root:root:root:root .card{border-radius:8px}\n:root:root:root:root:root:root body{font-family:\"IBM Plex Sans\", sans-serif;font-weight:400}\n:root:root:root:root:root:root .t4-section .container,:root:root:root:root:root:root div.container-fluid.container-md{max-width:1200px}\n@media (min-width:640px){:root:root:root:root:root:root .t4-section .container,:root:root:root:root:root:root div.container-fluid.container-md{max-width:min(1200px, calc(100vw - 64px))}}\n:root{overflow-x:clip}\n:root:root:root:root:root:root #Mod126{padding-top:100px;padding-bottom:100px}\n@media (max-width:639px){:root:root:root:root:root:root #Mod126{padding-top:40px;padding-bottom:40px}}\n:root:root:root:root:root:root h1:not(.tracy-ds-display){font-family:\"IBM Plex Serif\", serif;font-weight:300}\n:root:root:root:root:root:root .info-article,:root:root:root:root:root:root .features-item{border-radius:8px}\n:root:root:root:root:root:root .t4-footer .link-border:not(.t4-topbar, .t4-topbar *){color:var(--ds-c-accent-text)}\n:root:root:root:root:root:root .mod-list-layout-1 .item-highlight .content-inner .heading-link:not(.t4-topbar, .t4-topbar *){color:var(--ds-c-fg)}\n:root:root:root:root:root:root .categories-module.mod-slide .item-wrap .item-inner{background-color:color-mix(in srgb, var(--ds-c-bg) 70%, transparent)}\n:root:root:root:root:root:root .logo-img{filter:invert(1) hue-rotate(180deg)}\n:root:root:root:root:root:root .mod-list-layout-1 .item-highlight .item-article .article-content .content-inner{background-color:color-mix(in srgb, var(--ds-c-bg) 80%, transparent)}</style>"
+}

@@ -1,0 +1,360 @@
+{
+  "dos": [
+    "Build dark hero and media stages with Gallery Black (#000000) and set their principal copy in Porcelain (#f5f5f7).",
+    "Use 28px radius for media cards, comparison modules, and white merchandising cards.",
+    "Use 9999px or 980px radius for pills, purchase controls, and select inputs.",
+    "Keep purchase fills Apple Blue (#0071e3) with white text; use Link Blue (#0066cc) only for inline text links.",
+    "Use SF Pro Display 80px/600, 84px line-height, and -1.2px tracking for the largest launch statement.",
+    "Use a 4px base rhythm; apply 16px padding to black feature tiles and 24px section gaps between adjacent module groups.",
+    "Reserve Pulse Red (#ff3037) and Vital Green (#00d959) for quantified health and battery content inside product demonstrations."
+  ],
+  "donts": [
+    "Do not use shadows to lift cards; use #000000 and #111111 surface changes with 28px corners.",
+    "Do not apply Apple Blue (#0071e3) to navigation, decorative graphics, or every control.",
+    "Do not replace the dark pill select with a rectangular white input; retain the 980px radius and #6e6e73 outline.",
+    "Do not use 8px or 12px card corners; cards and contained media use 28px radius.",
+    "Do not set large display headlines in a heavy 700-900 weight; use SF Pro Display 600.",
+    "Do not place Pulse Red (#ff3037), Vital Green (#00d959), or Signal Orange (#ff791b) in generic decorative gradients.",
+    "Do not crowd feature tiles with more than 16px internal padding or replace their black fill with elevated gray."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Gallery Black",
+      "role": "Full-bleed hero backgrounds, black media cards, product-stage canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111111",
+      "name": "Charcoal Stage",
+      "role": "Dark section backgrounds and contained comparison modules",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1d1f",
+      "name": "Ink",
+      "role": "Primary text on white surfaces, dark control text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f7",
+      "name": "Porcelain",
+      "role": "Primary text on dark surfaces, pale alternate section fill",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "White merchandising surfaces, card fills, bright button and text treatment",
+      "group": "neutral"
+    },
+    {
+      "hex": "#86868b",
+      "name": "Steel",
+      "role": "Secondary copy, subdued control fills, inactive interface details",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6e6e73",
+      "name": "Graphite",
+      "role": "Muted helper text and 1px input outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333336",
+      "name": "Control Charcoal",
+      "role": "Dark translucent-looking utility control fills and navigation details",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e8e8ed",
+      "name": "Cloud Gray",
+      "role": "Light neutral fills for quiet supporting surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0071e3",
+      "name": "Apple Blue",
+      "role": "Filled purchase buttons and focus treatment — the single vivid purchase signal within the monochrome stage",
+      "group": "brand"
+    },
+    {
+      "hex": "#0066cc",
+      "name": "Link Blue",
+      "role": "Inline product links and informational navigation",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff3037",
+      "name": "Pulse Red",
+      "role": "Heart-rate numerals and health-performance emphasis inside watch content",
+      "group": "accent"
+    },
+    {
+      "hex": "#00d959",
+      "name": "Vital Green",
+      "role": "Battery-duration metrics and glowing health-sensor readouts",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff791b",
+      "name": "Signal Orange",
+      "role": "Availability-status badge text",
+      "group": "semantic"
+    },
+    {
+      "hex": "#b64400",
+      "name": "New Orange",
+      "role": "Compact new-item badge text on light contexts",
+      "group": "semantic"
+    },
+    {
+      "hex": "#311400",
+      "name": "Burnt Badge Wash",
+      "role": "Dark orange availability badge background behind Signal Orange",
+      "group": "semantic"
+    }
+  ],
+  "layout": "The page opens with a 44px global navigation bar and a 52px local product bar over a full-bleed black hero. The hero places a huge isolated watch render centrally toward the right, while the 80px launch line occupies the lower left and a floating purchase capsule sits low on the opposite side. Subsequent dark sections use a centered content field with large section headings, then broad 28px-radius black media cards; feature imagery and short copy are often arranged side by side within those cards. Later commerce and comparison content breaks the black sequence with a white page field holding a large #111111 rounded module, followed by dense three-column metric-tile grids and lower informational sections.",
+  "imagery": "Imagery is product-first 3D hardware photography and close-cropped watch-interface visualization, not lifestyle photography. Watches float or stand against pure black with dramatic bronze-metal highlights, raw black-edge blending, and no visible framed image boundary beyond the 28px media-card mask. Health screens provide explanatory content through red heart graphics, green sensor glow, and readable watch UI; imagery occupies more visual area than surrounding copy. Navigation icons are small monochrome glyphs, while the pause control appears as a compact circular dark overlay.",
+  "similar": [
+    {
+      "why": "Shares the full-bleed product-render hero, SF Pro display typography, black launch stage, and restrained blue purchase pills.",
+      "business": "Apple iPhone"
+    },
+    {
+      "why": "Uses isolated hardware as the dominant visual object against uninterrupted dark or light product-gallery backgrounds.",
+      "business": "Apple AirPods Pro"
+    },
+    {
+      "why": "Combines large wearable hardware photography with health-dashboard color accents and contained feature storytelling.",
+      "business": "Google Pixel Watch"
+    },
+    {
+      "why": "Shares quantified health and fitness visualization, especially vivid metric colors embedded within wearable product screens.",
+      "business": "Garmin"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "28px",
+      "links": "10px",
+      "badges": "5px",
+      "inputs": "980px",
+      "buttons": "9999px",
+      "utilityControls": "36px"
+    },
+    "elementGap": "4px",
+    "sectionGap": "24px",
+    "cardPadding": "16px",
+    "pageMaxWidth": null
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Gallery Black",
+      "level": 0,
+      "purpose": "Hero canvas and black feature-media panels"
+    },
+    {
+      "hex": "#111111",
+      "name": "Charcoal Stage",
+      "level": 1,
+      "purpose": "Dark section bands and comparison-module backgrounds"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 2,
+      "purpose": "Light merchandising canvas and white card surfaces"
+    },
+    {
+      "hex": "#f5f5f7",
+      "name": "Porcelain",
+      "level": 3,
+      "purpose": "Pale alternate fill and primary copy on dark surfaces"
+    }
+  ],
+  "northStar": "Bronze sensor in darkness. Treat the watch hardware and its health readings as illuminated objects suspended in a near-black gallery.",
+  "typeScale": [
+    {
+      "role": "nav",
+      "size": 12,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "utility-button",
+      "size": 12,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-strong",
+      "size": 14,
+      "family": "SF Pro Text",
+      "weight": 600,
+      "lineHeight": 1.29,
+      "letterSpacing": -0.224
+    },
+    {
+      "role": "body",
+      "size": 17,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1.47,
+      "letterSpacing": -0.374
+    },
+    {
+      "role": "feature-label",
+      "size": 17,
+      "family": "SF Pro Text",
+      "weight": 600,
+      "lineHeight": 1.24,
+      "letterSpacing": -0.374
+    },
+    {
+      "role": "card-heading",
+      "size": 28,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1.14,
+      "letterSpacing": 0.196
+    },
+    {
+      "role": "metric-display",
+      "size": 48,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1,
+      "letterSpacing": -0.144
+    },
+    {
+      "role": "section-heading",
+      "size": 56,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "feature-display",
+      "size": 64,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1.06,
+      "letterSpacing": -0.576
+    },
+    {
+      "role": "hero-display",
+      "size": 80,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1.05,
+      "letterSpacing": -1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Global Navigation Bar",
+      "role": "Persistent top-level product navigation",
+      "description": "Use a 44px-tall #111111 bar with compact SF Pro Text 12px/400 navigation labels at -0.12px tracking, rendered at 80% white. Keep brand identification in SF Pro Text 17px/600 and use #cccccc for glyph icons."
+    },
+    {
+      "name": "Local Product Navigation",
+      "role": "Product-level navigation below the global bar",
+      "description": "Use a 52px bar beneath global navigation. Keep its field dark, with restrained #f5f5f7 product text and a single Apple Blue purchase pill reserved for the buy route."
+    },
+    {
+      "name": "Blue Purchase Pill",
+      "role": "Filled purchase action",
+      "description": "Fill with Apple Blue (#0071e3), set text in white, and use a 980px pill radius. The compact product purchase treatment uses SF Pro Text 12px/400, 16px line-height, and -0.12px tracking."
+    },
+    {
+      "name": "White Outline Pill",
+      "role": "Dark-stage secondary product control",
+      "description": "Use transparent fill, white text and border, 999px radius, and 16px horizontal padding. Do not convert this treatment into a filled neutral button."
+    },
+    {
+      "name": "Dark Utility Capsule",
+      "role": "Floating price and financing summary",
+      "description": "Use a #333336 capsule on the black hero with a 36px radius. Set pricing lines in #f5f5f7 SF Pro Text 14px/600 with 18px line-height; attach the Apple Blue 980px-radius purchase pill at the trailing edge."
+    },
+    {
+      "name": "Hero Product Stage",
+      "role": "Full-bleed launch statement and hardware showcase",
+      "description": "Set the stage on Gallery Black (#000000), with a large isolated hardware render and #f5f5f7 SF Pro Display 80px/600 headline at 84px line-height and -1.2px tracking. Keep ancillary labels small and avoid container borders or shadows."
+    },
+    {
+      "name": "Black Feature Media Card",
+      "role": "Health-feature storytelling panel",
+      "description": "Use a #000000 fill with a 28px radius and no shadow. Combine a contained watch render or interface animation with #f5f5f7 SF Pro Text 17px/600 labels; reserve Pulse Red (#ff3037) and Vital Green (#00d959) for the demonstrated metric."
+    },
+    {
+      "name": "White Merchandising Card",
+      "role": "Light-surface product or commerce panel",
+      "description": "Use Paper (#ffffff) with a 28px radius and no shadow. Set headline and control text in Ink (#1d1d1f); card outer spacing is carried by the page rather than an invented internal padding system."
+    },
+    {
+      "name": "Upgrade Comparison Module",
+      "role": "Contained upgrade selector and feature matrix",
+      "description": "Place on Charcoal Stage (#111111) with a 28px radius. Use #f5f5f7 SF Pro Display 56px/600 at 60px line-height for the statement, then arrange compact black feature tiles in a three-column grid with 16px card padding."
+    },
+    {
+      "name": "Feature Metric Tile",
+      "role": "Small benefit card within dark comparison modules",
+      "description": "Use Gallery Black (#000000), 28px radius, no shadow, and 16px padding. Set supporting labels in Steel (#86868b); health or battery values may use Vital Green (#00d959) or Pulse Red (#ff3037) only when the metric itself warrants color."
+    },
+    {
+      "name": "Pill Select Input",
+      "role": "Device-model selector",
+      "description": "Use rgba(255,255,255,0.04) fill, a 1px Graphite (#6e6e73) outline, #f5f5f7 value text, 980px radius, 24px left padding, and 45px right padding. Preserve the low-contrast dark control rather than using a white form field."
+    },
+    {
+      "name": "Availability Badge",
+      "role": "Future-release status marker",
+      "description": "Use Burnt Badge Wash (#311400) with Signal Orange (#ff791b) text, a 5px radius, and 4px 6px padding. Typography is SF Pro Text 12px/600 with 16px line-height and -0.12px tracking."
+    },
+    {
+      "name": "Inline Product Link",
+      "role": "Textual detail navigation",
+      "description": "Set in Link Blue (#0066cc) without a filled background. Keep link treatment embedded in SF Pro Text body copy rather than promoting it to a pill or button."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Large product statements, section headlines, and health metrics. The 80px hero line uses -1.2px tracking; the 56-64px headlines keep a much tighter-than-normal display rhythm, so product claims read as a single sculpted silhouette rather than stacked editorial type.",
+      "sizes": "19px, 21px, 28px, 48px, 56px, 64px, 80px",
+      "family": "SF Pro Display",
+      "weight": "600",
+      "lineHeight": "1.00-1.38",
+      "substitute": "Inter",
+      "letterSpacing": "-1.2px at 80px, -0.576px at 64px, -0.28px at 56px, -0.144px at 48px; slight positive tracking appears at smaller display sizes",
+      "fontFeatureSettings": "\"numr\""
+    },
+    {
+      "role": "Navigation, links, body copy, product-card labels, pricing, badges, and compact feature titles. Small UI copy remains optically compact with negative tracking, while 17px body copy opens to a 1.47 line-height for explanatory text.",
+      "sizes": "10px, 12px, 14px, 17px, 20px, 26px, 34px, 44px",
+      "family": "SF Pro Text",
+      "weight": "400, 600",
+      "lineHeight": "1.00-1.83",
+      "substitute": "Inter",
+      "letterSpacing": "-0.444px at 12px, -0.374px at 17px, -0.224px at 14px; -0.037em at 10px",
+      "fontFeatureSettings": "\"numr\""
+    }
+  ],
+  "description": "Apple Watch Series 12 uses a cinematic black field interrupted by contained white merchandising panels and large, softly rounded product modules. Monumental SF Pro Display headlines sit directly against product imagery, while small SF Pro Text labels, pricing, and navigation stay tightly tracked and subdued. Saturated blue is reserved for purchase controls and deep links; red and luminous green belong to health metrics inside product demonstrations rather than general interface chrome.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Gallery Black: #000000 — Full-bleed hero backgrounds, black media cards, product-stage canvas\n- Charcoal Stage: #111111 — Dark section backgrounds and contained comparison modules\n- Ink: #1d1d1f — Primary text on white surfaces, dark control text\n- Porcelain: #f5f5f7 — Primary text on dark surfaces, pale alternate section fill\n- Paper: #ffffff — White merchandising surfaces, card fills, bright button and text treatment\n- Steel: #86868b — Secondary copy, subdued control fills, inactive interface details\n- Graphite: #6e6e73 — Muted helper text and 1px input outlines\n- Control Charcoal: #333336 — Dark translucent-looking utility control fills and navigation details\n- Cloud Gray: #e8e8ed — Light neutral fills for quiet supporting surfaces\n- Apple Blue: #0071e3 — Filled purchase buttons and focus treatment — the single vivid purchase signal within the monochrome stage\n- Link Blue: #0066cc — Inline product links and informational navigation\n- Pulse Red: #ff3037 — Heart-rate numerals and health-performance emphasis inside watch content\n- Vital Green: #00d959 — Battery-duration metrics and glowing health-sensor readouts\n- Signal Orange: #ff791b — Availability-status badge text\n- New Orange: #b64400 — Compact new-item badge text on light contexts\n- Burnt Badge Wash: #311400 — Dark orange availability badge background behind Signal Orange\n\nCreate a full-bleed Gallery Black hero with a bronze Apple Watch hardware render cropped large at center-right; place a Porcelain headline in SF Pro Display 80px/600, 84px line-height, -1.2px tracking at lower left, and attach a Control Charcoal financing capsule with an Apple Blue purchase pill.\nCreate a Charcoal Stage comparison module with 28px corners; set its lead statement in Porcelain SF Pro Display 56px/600, 60px line-height, then place three Gallery Black 28px metric tiles per row with 16px padding.\nCreate a Gallery Black health-feature media card with 28px corners: pair Porcelain SF Pro Text 17px/600 copy with two large watch renders, using Pulse Red for heart-rate readouts and Vital Green for the sensor graphic.\nCreate a Paper commerce section around a single Charcoal Stage 28px-radius module; set all module copy in Porcelain and use the Pill Select Input with its #6e6e73 outline and 980px radius."
+    }
+  ],
+  "elevationPhilosophy": "Avoid drop shadows entirely. Product hierarchy comes from full-bleed black stages, the #000000-to-#111111 surface step, large 28px corner cuts, and occasional 1px #f5f5f7 top-edge separation."
+}

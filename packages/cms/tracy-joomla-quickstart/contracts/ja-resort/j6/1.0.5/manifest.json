@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resort/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_resort",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resort",
+    "id": "quickstart/ja-resort/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_resort",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resort-j6-webroot-1.0.5.tar.gz",
+        "bytes": 114061458,
+        "sha256": "cb36d902a8b79922de4fab94d58a5d9795f20db17b0132e717edc031180a0e1f"
+      },
+      "database": {
+        "file": "ja-resort-j6-database-1.0.5.sql.gz",
+        "bytes": 174481,
+        "sha256": "b197e49c2aa0f268df18588a4b4fabd84a8e77a2394baff7957ff498905ab6eb"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T21:38:44.174950+00:00",
+    "builtFrom": {
+      "release": "quickstart/ja-resort/j6",
+      "version": "1.0.4",
+      "sourceCommit": "d3a4b41b1",
+      "method": "canonical archive repack; exactly two T4 files changed; database identical"
+    },
+    "release": "quickstart/ja-resort/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.23",
+  "mode": "content-recommendation"
+}

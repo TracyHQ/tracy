@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d56508d7-c307-47f7-ad30-052e5a69f01f",
+  "status": "complete",
+  "name": "Spring/Summer",
+  "url": "https://styles.refero.design/style/d56508d7-c307-47f7-ad30-052e5a69f01f",
+  "sourceWebsite": "https://springsummer.dk",
+  "extractedAt": "2026-06-03T17:47:28.357Z",
+  "capturedAt": "2026-10-08T05:17:58.604380+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Scandinavian design annual on celadon paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6f4e5baf-0da1-4c34-85b8-c2d472c5cd52.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6125cf2b-c84f-4de1-b319-49b975c598a6.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ad74e7d6-697b-4aeb-8be1-53c6db5f3bc2.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/55a342e9-e55d-4f8d-af65-288c57ba1bb3.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/d4dc1078-0ac2-4b01-8775-1350c1b942b2.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6732f61d7afa552f7ab2c16897b27446a8c0920d517cd36dce44c909775df0b0",
+      "bytes": 18329
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7eec056b2261e34f27fe7b10e43ba15f9dded8ec4175408037ceda42f55f4121",
+      "bytes": 97450
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "55cdff0cd7196d22b8f9cb3eac08d72f97789b7418d325c29f97d06457745940",
+      "bytes": 14882
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3b630fb4735734ea586fac0a3eb506206e46c8dc3ddde3b24874dbec80b97881",
+      "bytes": 8333
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a099e350550a6483ff75484e4f781b5416a0be2b4830b691c91da710656ea0c7",
+      "bytes": 11542
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3ca7386106fe73fefb47b6d02cf9ce803672393f5f9889c2a2fa8a0001d7a53b",
+      "bytes": 2436
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b71ebc691c8d6e39fd2a10a2323dab80a69eb2ddc12615c336b0660a5dc8a108",
+      "bytes": 447
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "880d504517c6ac2c8b6b22fce9989d1287db6c6c27b0f50bd5fbf6695cdcc351",
+      "bytes": 464
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "88f09df5f81891e08b60d9e66223bdaed60c469133ccc6ab5a81017c297009e1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "eb6d8a4572e3be682afac6f24ed1059e012b3e59fabc91a270a58fb61da713b4",
+      "bytes": 39873
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "92ff8bb987cb86a3b2909fd32d7f781a703eb9d443dc89faab50aadfdffb2e01",
+      "bytes": 20155
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d6967ae2e5e4176091dccc68cd15d06de269be46ade7d94baea147231743fe88",
+      "bytes": 30218
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4cb45bae6f98942c3fae67e902953398d8bdf99f7d0637102adaa571b0ca0fe2",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "307fa415135660d89f9c4481ce5d57ef039df78bba2e01d9d98e713f21043c06",
+      "bytes": 1461
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cd63f089dcc6ab6f4d0172b5219b61323571d17134593f5f93f4bd30ed6270d4",
+      "bytes": 1846
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d56508d7-c307-47f7-ad30-052e5a69f01f",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

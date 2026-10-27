@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1492-ds-dot3-a2-measured-clean",
+  "kind": "feat",
+  "title": "Design system dot 3 group A + step 3: the committed probe-v10 measurements of JA Resort J 1.0.7, JA Essence/Impact/Nova/Vega WP, JA Kinetic J 1.0.9, Tracy Business J 1.2.6, JA Kinetic WP 1.0.11 and Tracy Business EmDash 1.7.23 judge clean; MODE-3 ignores a dark stylesheet nothing loads",
+  "pr": 1492,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Judge the committed design-system-measurement.json of the nine releases with judgeMeasurement and preview-system-issues.json, as /ops judges them (PREVIEW-PARITY on Joomla only).",
+    "S2: Run the MODE-3 readiness test, the design-system door test, the slot emitter test (cms.test.mjs) and the wp-ja-kinetic theme test."
+  ],
+  "expect": [
+    "S1: every one of the 9 releases leaves 0 rules failing; only SCREEN-1 may warn.",
+    "S2: a dormant dark stylesheet is not applicable to MODE-3 while a loaded one still needs both modes measured; the door pins the new releases; the emitter and theme tests pass."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1492-ds-dot3-a2-measured-clean.mjs",
+    "evidence": "packages/cms/*/contracts/**/design-system-measurement.json"
+  },
+  "evidence": "Committed v10 measurements of the nine releases plus the unit tests over readiness, the door and the slot emitter",
+  "fence": "Measurement judging and readiness logic in tracy-web and tracy-ds-slot; does not drive a stand or a browser",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1492-ds-dot3-a2-measured-clean.mjs"],
+    "timeout_s": 600
+  }
+}

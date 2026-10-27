@@ -1,0 +1,212 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-morgan",
+  "minVersion": {
+    "quickstart/ja-morgan/j6": "1.0.3"
+  },
+  "maxVersion": {
+    "quickstart/ja-morgan/j6": "1.0.9"
+  },
+  "maxVersionNote": "1.0.9 21/10/2026 (TEXT-1 batch 3): built from 1.0.8 (release-batch.mjs --overlay); only css/template.css, css/darkmode.css, css/themes/style-{2,3,4,5}/template.css differ (and their SCSS/LESS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); unworn the page is the release's own (VERIFICATION.json). 1.0.4 = 1.0.3 re-tokenized by release-batch.mjs (09/10/2026; 4986 var(--ds-c- reads in templates/ja_morgan css vs 4224, none dropped in any file), and the release readyNote measured; checked 11/10/2026 (ds-minversion-audit); the round-3 re-measure with its module-side fixes re-run on the published 1.0.4 too, 11/10/2026 (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-morgan-j6/release-1.0.4): 12/12, controls 0, no text worse than the template's own, 100% follows, checked by eye on all four systems 1.0.6 16/10/2026 (#1375): re-cut of 1.0.5 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.8 18/10/2026: 1.0.7 with the Joomla 3 system stylesheet linked only where it exists (Joomla 4+ ship none) and the PT Root UI faces listing the WOFF files the template ships (the EOT/TTF/SVG links answered 404, PREV-1 on dev), and the same family draws the Vietnamese letters PT Root UI lacks from Be Vietnam Pro faces limited by unicode-range (LANG-2); nothing the page wears changed (verify 0 differences).",
+  "release": "quickstart/ja-morgan/j6@1.0.3",
+  "roles": {
+    "page": "body",
+    "display": "h1",
+    "body": "div.features-item > p",
+    "button-primary": "a.btn.btn-primary",
+    "card": "div.avatar",
+    "section": "#Section170"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "PTRootUI 700, tracking -0.01em",
+    "body": "first body paragraph of the page's own size (16px); re-probed 10/10/2026: discover.mjs took the hero's p.lead, a lead paragraph whose weight the template sets itself (.lead { font-weight: 400 }); under Toggl Track the six body paragraphs take 500, the lead keeps 400",
+    "button-primary": "first filled, coloured call to action: rgb(217, 48, 48)",
+    "card": "repeated rounded box ×9",
+    "section": "first padded full-width section, padding-top 150px",
+    "displayPhone": "the same heading at 390 on the published release: 28px"
+  },
+  "keepScopes": [".mod-bg-secondary", ".t3-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#777777",
+    "--fg-2": "#333333",
+    "--accent": "#d93030",
+    "--accent-hover": "#9f1d1d",
+    "--surface": "#f2f3f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#ffbb22",
+    "--danger": "#d93030",
+    "--border": "#eaeaea",
+    "--muted": "#555555",
+    "--font-display": "\"PTRootUI\", sans-serif",
+    "--font-body": "\"PTRootUI\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#f2f3f7"
+  },
+  "darkTokens": {},
+  "modes": true,
+  "modesNote": "the template has a light/dark switch (tpls/blocks/header*.php .theme-toggle, js/theme-switch.js; css/darkmode.css paints html[data-theme=\"dark\"]): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs), and keeps the switch shown (MODE-2; MODE-3 on the local /ops 16/10/2026: one look offered no Light | Dark choice)",
+  "modesAuto": false,
+  "modesAutoNote": "the template's pre-paint script in the head (tpls/blocks/head.php, head-prepaint.php) always sets data-theme before the page paints (?theme=, the stored choice, else the OS preference; light when it fails), so no 'auto' state is left to the OS and the OS-dark copy is not written, as for Tracy Business Joomla",
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#777777",
+      "fg-2": "#333333",
+      "accent": "#d93030",
+      "accent-hover": "#9f1d1d",
+      "surface": "#f2f3f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#ffbb22",
+      "danger": "#d93030",
+      "border": "#eaeaea",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#777777",
+      "fg-2": "#333333",
+      "accent": "#d93030",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f2f3f7"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "border": "#e7e7e7"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (81 line colours, 110 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.avatar", ".card"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section170"],
+    "bodyFace": ["body"],
+    "cardLike": [".teams-item", ".avatar", ".features-item"],
+    "pill": [".label-highlight"],
+    "inkImages": [".features-item .img-icon img", ".features-item-inner .features-img img"]
+  },
+  "contrast": {
+    "accent-text": "body a:not([class*=btn]):not(:has(img))",
+    "muted": "body p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "body :is(p, li)",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-right",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 5392); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#e7e7e7",
+      "uses": 15,
+      "kind": "line",
+      "role": "border",
+      "near": "#eaeaea",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the 1.0.3 build its minVersion names, T4 sheets regenerated (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-morgan-j6): 12/12, controls 0, no text worse than the template's own, 100% of the page follows; the eye saw the logo word, feature icons and category titles left in the template's navy text on a dark system page: fixed module-side (followRules, fg-2), no new release; then 12/12 again and checked by eye on all four systems, desktop and phone; earlier: measured 10/10/2026 on ja-morgan/j6 1.0.4 (tasks/evidence/followups-2026-10-10/p6-dsdata/ready-templates.txt): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 100% or more of the page follows; its body probe now reads the running text, not the hero lead paragraph Re-verified 12/10/2026 on the unified probe (fix/ds-remeasure) on quickstart/ja-morgan/j6 1.0.3: before, its accent-text, muted and body kinds measured nothing on the home page; they now read the whole page, with heading and text added. After: 12/12, controls 0, regressed 0, every kind sampled in every view, 100% follows (tasks/evidence/ds-reverify-c-2026-10-12/ja-morgan)",
+  "followRules": {
+    ".logo-text a:not(.has-hero *)": {
+      "color": "fg-2"
+    },
+    ".acm-features.style-2 .font-icon": {
+      "color": "fg-2"
+    },
+    ".category-item .page-header a": {
+      "color": "fg-2"
+    },
+    ".t3-header:not(.has-hero) .theme-toggle:not(.head-menu *)": {
+      "color": "fg-2"
+    },
+    ":is(.section-title, .features-item, .member-info, .testimonial-item-inner, .panel-heading, .title) :is(h1, h2, h3, h4, h5, h6)": {
+      "color": "fg-2"
+    }
+  },
+  "followNote": "the template paints its logo word, the feature icons and category titles with its secondary navy #1b3060 as TEXT (a literal outside the tokenized palette): under a dark system they stayed navy on black/purple (seen by eye 11/10/2026, round-3 re-measure; the probe kinds do not cover the header). They take the system strongest text colour; the navy FILLS (topbar, accordion, back-to-top) keep white on navy; the dark-mode toggle (.theme-toggle, navy on the white header) likewise, except where darkmode.css makes it white on a navy bar or a dark hero; 14/10/2026 (visual review, round 3): the released stylesheet paints every heading through var(--ds-c-fg, #333333), while this contract reads the template’s text pair as fg #777 (body) and fg-2 #333 (headings): the heading role therefore took the system’s SECOND text colour, so section headings (“Check Out All The Pages”), feature, member and testimonial titles and accordion titles came out a grey weaker than or equal to the lead under Moxie and Stripe. The template’s content headings (.section-title, .features-item, .member-info, .testimonial-item-inner, .panel-heading, .title) take fg-2, the system’s strongest text, as the template sets them in its strongest; headings in kept bands and the call band’s words keep theirs; 16/10/2026 (batch 2 finisher): the logo word of a header laid over the hero photo (.t3-header.has-hero, Home Style 3 and 4) is white on the photo, as the template paints it, and keeps it: fg-2 made it black on the dark photo under a light system",
+  "contrastNote": "re-verified 12/10/2026 on the unified probe: the home page has no #t3-mainbody and no .t3-sl, so accent-text, muted and body measured nothing (the ready rule needs samples in every view) — they now read the whole page, with the page-wide heading and text kinds of the remeasure-1 rule",
+  "bands": {
+    ".mod-bg-secondary": {
+      "ground": "#1b3060",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#111111",
+      "texts": ["#888888", "#ffffff", "#777777"],
+      "paint": {
+        ".facebook": {
+          "background-color": "accent-fill"
+        },
+        ".twitter": {
+          "background-color": "accent-fill"
+        },
+        ".instagram": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".t3-section.section.mod-bg-secondary": {
+      "ground": "#1b3060",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [
+        ".sub-heading span",
+        ".section-title h3",
+        ".lead",
+        ".acm-hero h1",
+        ".inputbox",
+        ".inputbox::placeholder",
+        ".title h2",
+        ".content-right p",
+        ".statics-item .number",
+        ".statics-item .number span",
+        ".statics-item h5"
+      ],
+      "paint": {
+        ".inputbox": {
+          "border-bottom-color": "text-2"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; the navy sections (.mod-bg-secondary: the home call band over a dotted map picture, Home Style 1’s consultation panel) were a kept picture band and stayed the template navy; the 14/10 draft made them a fill of the system’s (.t3-section.section.mod-bg-secondary), whose words are its sub-heading, title, lead, the home band’s heading (.acm-hero h1) and the consultation form’s fields and their placeholders (.inputbox), white made for the navy (white on Mailchimp’s yellow before). The round portraits with white corners the review saw are not in the released quickstart (its pictures here are square photos; the sweep stand served another template’s pictures, as for JA Justitia)",
+  "inkNote": "the service icons (.features-item .img-icon img on the home pages, .features-item-inner .features-img img on About) are one-tone navy line drawings made for the white page: under a dark system they all but vanished on the black (visual review 14/10/2026); they are shown inverted with their hues kept (selectors.inkImages). This template has no logo picture, so the general flipped-logo rule loses nothing",
+  "batch2Note": "16/10/2026 (batch 2, role variables): the words of the navy fill band that a system turns into its accent (the statistics numbers and labels, the About title and lead of the home variants) are repainted with it, as its kickers already were; the template now reads its role variables (VARS-1), its home variants load css/themes/style-2..4."
+}

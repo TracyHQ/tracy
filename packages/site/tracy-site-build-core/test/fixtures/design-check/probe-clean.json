@@ -1,0 +1,26 @@
+{
+  "href": "http://dsgn.tracy.test:8080/",
+  "seen": 40,
+  "samples": [
+    { "prop": "color", "value": "rgb(29, 29, 31)", "count": 20, "where": ["body", "p", "h1"] },
+    { "prop": "background-color", "value": "rgb(255, 255, 255)", "count": 12, "where": ["body", "main"] },
+    { "prop": "background-color", "value": "rgb(0, 113, 227)", "count": 2, "where": [".btn"] },
+    { "prop": "color", "value": "rgb(255, 255, 255)", "count": 2, "where": [".btn"] },
+    { "prop": "border-top-color", "value": "rgb(211, 211, 216)", "count": 3, "where": ["hr"] },
+    { "prop": "color", "value": "rgba(0, 0, 0, 0)", "count": 1, "where": [".sr"] },
+    { "prop": "background-color", "value": "rgba(0, 0, 0, 0.5)", "count": 1, "where": [".scrim"] },
+    {
+      "prop": "font-family",
+      "value": "\"SF Pro Text\", system-ui, sans-serif",
+      "count": 30,
+      "where": ["body"]
+    },
+    {
+      "prop": "font-family",
+      "value": "\"SF Pro Display\", system-ui, sans-serif",
+      "count": 4,
+      "where": ["h1", "h2"]
+    },
+    { "prop": "font-family", "value": "ui-monospace, \"SF Mono\", monospace", "count": 1, "where": ["code"] }
+  ]
+}

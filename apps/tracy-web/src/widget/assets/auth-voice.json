@@ -1,0 +1,54 @@
+{
+  "en": {
+    "email": "Please say your email address. I’ll fill it in and read it back for you to confirm before sending a code. You can also type it, or choose Continue with Google.",
+    "code": "Your sign-in code has been requested. When it arrives, read the six digits and I’ll verify them for you. You can also type them in the panel.",
+    "retry": "That code could not be verified. Please check it and read the six digits again, or type them.",
+    "google": "Choose your account in the Google window. I’ll be here when you return.",
+    "verified": "You’re signed in. Let’s continue with your website. Your conversation and choices are kept.",
+    "cancelled": "We can sign in later. I’m still here. Let’s continue with your website.",
+    "confirmEmail": "I heard {email}. {spelling} Is that correct? Say yes to send the code, or edit the email below.",
+    "emailAgain": "Please read your email again, or correct it in the panel. I will check it with you before sending a code.",
+    "lexicon": {
+      "emailPrefix": ["my email is", "my email address is"],
+      "yes": ["yes", "yes please", "correct", "that is correct", "confirm", "ok", "okay"],
+      "no": ["no", "wrong", "incorrect"],
+      "cancel": ["cancel", "cancel sign in", "go back"],
+      "digits": ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],
+      "symbols": {
+        "@": "at",
+        ".": "dot",
+        "_": "underscore",
+        "-": "dash",
+        "+": "plus",
+        "%": "percent"
+      },
+      "letterPattern": "{letter} as in {word}"
+    }
+  },
+  "vi": {
+    "email": "Bạn đọc địa chỉ email cho mình nhé. Mình sẽ tự điền rồi đọc lại để bạn xác nhận trước khi gửi mã. Bạn cũng có thể gõ email hoặc chọn đăng nhập bằng Google.",
+    "code": "Mình đã yêu cầu gửi mã đăng nhập. Khi nhận được email, bạn đọc sáu chữ số để mình tự xác minh nhé. Bạn cũng có thể nhập mã trong panel.",
+    "retry": "Mã chưa xác minh được. Bạn kiểm tra rồi đọc lại sáu chữ số hoặc nhập mã nhé.",
+    "google": "Bạn chọn tài khoản trong cửa sổ Google nhé. Mình vẫn ở đây chờ bạn quay lại.",
+    "verified": "Bạn đăng nhập xong rồi. Mình tiếp tục làm website nhé. Hội thoại và các lựa chọn của bạn vẫn được giữ nguyên.",
+    "cancelled": "Mình có thể đăng nhập sau nhé. Mình vẫn ở đây, mình tiếp tục nói chuyện về website của bạn.",
+    "confirmEmail": "Mình nghe email là {email}. {spelling} Đúng email của bạn chưa? Bạn nói đúng để gửi mã, hoặc sửa email trong panel nhé.",
+    "emailAgain": "Bạn đọc lại email hoặc sửa trong panel nhé. Mình sẽ xác nhận lại với bạn trước khi gửi mã.",
+    "lexicon": {
+      "emailPrefix": ["email của tôi là", "địa chỉ email của tôi là"],
+      "yes": ["đúng", "đúng rồi", "chính xác"],
+      "no": ["không", "sai", "không đúng"],
+      "cancel": ["hủy", "hủy đăng nhập", "quay lại"],
+      "digits": ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"],
+      "symbols": {
+        "@": "a còng",
+        ".": "chấm",
+        "_": "gạch dưới",
+        "-": "gạch ngang",
+        "+": "dấu cộng",
+        "%": "phần trăm"
+      },
+      "letterPattern": "{letter} as in {word}"
+    }
+  }
+}

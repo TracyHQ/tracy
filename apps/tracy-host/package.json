@@ -1,0 +1,21 @@
+{
+  "name": "@tracy/host",
+  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The per-host service that runs the agent's shell commands — ADR 0014's \"one dsh per host\", the other half of the signed channel @tracy/web opens from workspace/host/client.js.",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../scripts/ci/turbo-setup.mjs --check --task-part owner=apps/tracy-host"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.1",
+    "hono": "4.13.11",
+    "playwright": "1.63.0"
+  }
+}

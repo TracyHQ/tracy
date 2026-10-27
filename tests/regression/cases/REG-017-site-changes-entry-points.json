@@ -1,0 +1,46 @@
+{
+  "id": "REG-017",
+  "kind": "feat",
+  "title": "Site changes opens from the Browser tab's site menu (no History row) and from the + menu when launch-changes is on; /ops lists no retired switch",
+  "pr": 812,
+  "area": "site-tabs/entry-points",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "seat:tracy-admin"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, api, pq (SELECT/WITH only). Case variable: KEY = site key of a site where seat A is owner and the agent is on (e.g. scv2wp.scv2.tracy.test).",
+    "Check the builds: (a) docker exec $DSH node -p \"require('/desk-home/profiles/native/node_modules/dsh-better-sidebar/package.json').version\" prints 0.21.1-tracy.65 or a later -tracy.N; (b) docker exec $DSH sh -c 'grep -rl browserSiteChanges /desk-home/profiles/native/node_modules/dsh-better-sidebar/lib | head -1' prints a path; (c) docker exec $WEB grep -c '\"tab-history\"' /opt/tracy-web/src/ui-switches/catalogue.json prints 0. Any of the three not so → stop with BLOCKED note image-older-than-retire-release.",
+    "Unit seams: node --test --test-reporter=tap packages/core/tracy-core/test/ui-switches.test.mjs",
+    "Operator doors, nothing written: R1 = api a GET /api/ops/ui (HTTP 403 → stop with BLOCKED note no-tracy-admin-seat; body.writable false → BLOCKED note seat-not-owner-or-admin); ON0 = the 'on' of the switch whose id is 'launch-changes'. R2 = api a GET /api/ui. R3 = api a PUT /api/ops/ui '{\"switches\":{\"tab-history\":true}}'; then R3b = api a GET /api/ops/ui. R4 = pq \"select overrides from ui_setting\" (record it as it is; no row is fine).",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); use a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser.",
+    "Ops page: page.goto(O + '/ops/ui?area=right-column'); wait (<= 30 s) for [data-slot='switch'][aria-label='Site changes'] and [data-slot='switch'][aria-label='Site changes tab']; for each, from the closest ancestor that holds a [data-slot='item-description'], record the trimmed text of its [data-slot='item-title'] and [data-slot='item-description']; record RETIRED = the aria-label of every [data-slot='switch'] on the page that is 'Releases', 'Releases tab' or 'History tab'.",
+    "Site menu: page.goto(O + '/' + KEY); wait (<= 90 s) until page.url() contains '/s/session-' and the first [contenteditable='true'] is visible; SESSION_URL = page.url() without its query; page.goto(SESSION_URL + '?tab=tracy:browser&site=' + KEY); wait (<= 30 s) for a visible button[aria-label='Switch site'] (none → BLOCKED note no-browser-tab); click it; wait (<= 15 s) for an enabled button[role='menuitem'][data-menu-item='<KEY>']; hover it (the row opens its submenu on pointer enter; a click on the row would pick the site instead); wait (<= 5 s) until that row's aria-expanded is 'true' and a [role='menu'] nested in the open [role='menu'] is visible — dsh's Menu portals the submenu INTO the open menu's own list (collisionAvoidance), not into the row's parent element; record LABELS = the trimmed text of every button[role='menuitem'] of that nested menu ([role='menu'] [role='menu'] button[role='menuitem']), in order.",
+    "Record PAGES0 = context.pages().length; click the button[role='menuitem'] of that nested menu whose text is 'Site changes' (a locator click goes straight to it); wait (<= 30 s) for a visible [data-site-changes-v2]; record U = new URL(page.url()).searchParams (its 'tab' and 'site') and PAGES1 = context.pages().length.",
+    "Launcher with the switch on: R5 = api a PUT /api/ops/ui '{\"switches\":{\"launch-changes\":true}}'; R6 = api a GET /api/ui; page.goto(SESSION_URL + '?tab=tracy:team&site=' + KEY); wait (<= 30 s) for a visible [data-sidebar-right-launcher]; click the first visible one; wait (<= 10 s) for a [role='menu'] holding button[role='menuitem'][data-menu-item]; record IDS_ON = the data-menu-item of every such button and TEXT_ON = the trimmed text of button[data-menu-item='tracy:changes'] (if present); click that button; wait (<= 30 s) for a visible [data-site-changes-v2].",
+    "Put the switch back — ALWAYS, even when a step above failed: R7 = api a PUT /api/ops/ui with body {\"switches\":{\"launch-changes\": ON0}}; R8 = api a GET /api/ui. When ON0 is false: page.goto(SESSION_URL + '?tab=tracy:team&site=' + KEY), open the launcher as above and record IDS_OFF the same way."
+  ],
+  "expect": [
+    "The three build checks pass.",
+    "The unit seam exits 0 and its TAP ends with '# fail 0'.",
+    "R1: HTTP 200; no switch id is 'launch-releases', 'tab-releases' or 'tab-history'; the switch 'launch-changes' has label 'Site changes', defaultOn false, tabs ['tracy:changes'] and hint 'In the + menu and the Start guide. Off, it still opens from My sites, the Browser tab's site menu, the Start cards and links.'; the switch 'tab-changes' has label 'Site changes tab' and hint 'What changed on the site, by whom and from where, with its backups: create one, restore files or everything.'",
+    "R2: HTTP 200 and hidden contains none of 'launch-releases', 'tab-releases', 'tab-history' — whatever R4 holds (an id the catalogue dropped is ignored, not an answer).",
+    "R3: HTTP 400 with error 'UNKNOWN_SWITCH' and id 'tab-history'; R3b lists the same [id, on] pairs as R1 (nothing written).",
+    "Ops page: the two item titles start with 'Site changes' and 'Site changes tab', their descriptions equal the two hints above; RETIRED is empty.",
+    "LABELS deep-equals ['Live Edit', 'Settings', 'Team', 'Site changes'] (before this change the last row was 'History' and opened nothing).",
+    "After the Site changes row: [data-site-changes-v2] visible; U.tab === 'tracy:changes' and U.site === KEY; PAGES1 === PAGES0 (the site in sight opens in the same window).",
+    "R5: HTTP 200 and R6.hidden does not contain 'launch-changes'; IDS_ON contains 'tracy:changes' and TEXT_ON === 'Site changes'; its click opens [data-site-changes-v2].",
+    "R7: HTTP 200; R8.hidden contains 'launch-changes' exactly when ON0 is false; when ON0 is false, IDS_OFF does not contain 'tracy:changes'."
+  ],
+  "selectors": {
+    "betterSidebarVersion": "/desk-home/profiles/native/node_modules/dsh-better-sidebar/package.json (dsh container)",
+    "webCatalogue": "/opt/tracy-web/src/ui-switches/catalogue.json (web container)",
+    "opsUiDoor": "GET|PUT /api/ops/ui (owner/admin seat in the tracy_admin workspace, same Origin); GET /api/ui → {hidden}",
+    "opsPage": "/ops/ui?area=right-column; switch: [data-slot='switch'][aria-label='<label>']; [data-slot='item-title'], [data-slot='item-description']",
+    "siteMenuTrigger": "button[aria-label='Switch site'] on the Browser tab chip (en-US)",
+    "siteMenuRow": "button[role='menuitem'][data-menu-item='<siteKey>'] (aria-haspopup='menu', aria-expanded once open); its submenu: [role='menu'] [role='menu'] — portaled into the open menu's list (vendor/tracy/deepseek-harness packages/client/ui-primitives/src/Menu.tsx, collisionAvoidance), its rows carry no data-menu-item",
+    "launcher": "[data-sidebar-right-launcher]; rows: button[role='menuitem'][data-menu-item='<tab kind>']",
+    "siteChanges": "[data-site-changes-v2]"
+  },
+  "evidence": "packages/core/tracy-core/test/ui-switches.test.mjs, apps/tracy-web/test/ops-ui.test.mjs, vendor/tracy/dsh-better-sidebar/tests/tracy-browser.spec.tsx",
+  "fence": "catalogue.json (packages/core/tracy-core/src/ui-switches) no longer lists launch-releases/tab-releases/tab-history: readUiOverrides (apps/tracy-web/src/lib/ui-setting.js) keeps only catalogue ids, parseUiPress refuses others with UNKNOWN_SWITCH; tracy:changes is registered without hidden, so launch-changes alone decides its place in the + menu; the fork's BrowserTabTitle maps the site menu's changes:<site> row to tracy:changes (openLocal for the site in sight)."
+}

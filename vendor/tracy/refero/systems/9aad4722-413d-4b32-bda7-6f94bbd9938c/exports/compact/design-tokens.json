@@ -1,0 +1,49 @@
+{
+  "color": {
+    "periwinkle-field": {
+      "$value": "#8e93ff",
+      "$type": "color",
+      "$description": "Periwinkle Field — Page canvas, hero background, full-bleed section fills — the single defining brand color, a mid-saturation lavender that swallows the viewport and against which all type is set in black ink"
+    },
+    "carbon-ink": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, display type, hairline borders, dark panels, nav links — near-black rather than pure black, keeps the lavender from vibrating too hard"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Hairline borders, dividers, input outlines, and card edges on light surfaces."
+    },
+    "signal-green": {
+      "$value": "#47f654",
+      "$type": "color",
+      "$description": "Signal Green — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    }
+  },
+  "font": {
+    "beastly-clauworks": {
+      "$value": "Beastly clauworks",
+      "$type": "fontFamily",
+      "$description": "Display / wordmark — the proprietary display face, used only at monumental scale (288–504px) for the brand wordmark and hero sculpture. Chunky, almost stencil-cut geometric forms that read as a graphic object rather than readable text. Single weight, no italic. Substitute: a heavy display grotesque like Druk Wide or a custom commission. Do not use at small sizes — this face is architecture, not communication."
+    },
+    "suisse-intl-clauworks": {
+      "$value": "Suisse Intl clauworks",
+      "$type": "fontFamily",
+      "$description": "Headlines, subheads, and long-form body — a custom-cut Suisse International (Swiss grotesque) in a single weight. Used at three distinct scales: 20px for body and nav, 30px for section subheads, 144px for editorial display headings like 'Art direction – Dig…'. The absence of bold/medium weights is the signature: everything is the same quiet weight, hierarchy comes from size alone. Substitute: Suisse Int'l, Inter, or Neue Haas Grotesk."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Smallest body fallback / metadata — appears as system Times at 16px, likely the serif default for tiny labels and captions. Single weight, system face. Substitute: any system serif."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://clauaskee.com",
+      "siteName": "clau.as.kee",
+      "extractedAt": "2026-06-03T20:48:55.234Z",
+      "variant": "compact"
+    }
+  }
+}

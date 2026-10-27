@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+  "status": "complete",
+  "name": "Apple",
+  "url": "https://styles.refero.design/style/40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+  "sourceWebsite": "https://www.apple.com/iphone-18-pro",
+  "extractedAt": "2026-09-20T21:33:20.234Z",
+  "capturedAt": "2026-10-08T05:10:49.556798+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Midnight hardware gallery. Treat each section as a dark, museum-like plinth for one precisely lit product detail, with typography and blue controls operating as restrained labels around it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e27e1dbf-9eba-4920-9d4e-3cf510bc3974.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/804282ed-fb45-4761-9351-388f172dd563.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a8495782-28c8-43b9-a978-0b38a638a915.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a8fb3bd6-a4c5-4366-8acc-574818cff782.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/58a8341e-4933-4d8d-9f4c-349c9021e4a5.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e5df489269d380f9ae3d01e5d45f16f52196ce1b57be4f41538abf05041f7db4",
+      "bytes": 21867
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "80bb2cac53b46ff6c4d34297113846dff9f7b7c8e549d7235e83895bec7a1499",
+      "bytes": 65947
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0ffac192dcf4dc1027756bab7c0fd0129df7cfb6dcccb1b771aece1ed6656a7a",
+      "bytes": 17649
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "69bc84399bb517670cd85f77de751601c104c13e968a48455f114cc76fa124b4",
+      "bytes": 17179
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fd1574def18b0ee99963f4bd8cfeb407479490701e6422db26dacd5ac1b2c20b",
+      "bytes": 12263
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9a8016a2b08f78dd5dcae3823828ae2d0326e27c3eb5999b7053bdedc22eeb0a",
+      "bytes": 3330
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0c4dcb2a16afaf433c7f35af782f7692f40b7b5a5baa358c330cb7757694a384",
+      "bytes": 691
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "154bc3c9c4d892282eba267865f9f4933b7665c1ad29d353b8e9a957ccf534a6",
+      "bytes": 770
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b31551a2ec0c49fba04abf10b0fec940a9b7e3463c0fcecd82e19498115b0c5a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4398c9f4bb517073547d0682367bff78d32fb2d5b63f3010df9db1c4a45db489",
+      "bytes": 45362
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0f522b69e0698b5ed2cb5f83f67afc793c6016092876104a1ebbb42bcef3474a",
+      "bytes": 24625
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3e9cb4cab9fb68438e57580e2a59acd3c635e0e44c8fe6056228f20162180ff0",
+      "bytes": 77957
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e0ab846099dc8854f42e06cc560ed4948836acc25e64762054120f9848bfbf8f",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0dc1402e1cc14daa7ccb9097e97a73a7d23dd9bbd441a29dfcc6264c567dde07",
+      "bytes": 2333
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "29ce3fef7abb12d825b0b0db950e794b8009ce7af9500bc5fbe1f853d7c24fb5",
+      "bytes": 3021
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "375e255f-6e7b-4091-bf73-6df42a094263",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "679f08af-741f-4b04-bb44-0a9b97e96ad3",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "ec0f5bca-8367-49e7-b8aa-73b3fa09a4a0"
+  ]
+}

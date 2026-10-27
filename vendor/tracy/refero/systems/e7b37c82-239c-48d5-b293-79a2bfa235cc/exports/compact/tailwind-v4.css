@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-ikea-yellow: #ffdb00;
+  --color-ink-black: #111111;
+  --color-pure-white: #ffffff;
+  --color-warm-white: #fffefb;
+  --color-steel-gray: #818181;
+  --color-true-black: #000000;
+  --color-link-blue: #0159a3;
+  --color-soft-pink: #ffa6da;
+
+  /* Typography */
+  --font-noto-ikea: 'Noto IKEA', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

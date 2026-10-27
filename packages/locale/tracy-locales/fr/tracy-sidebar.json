@@ -1,0 +1,14 @@
+{
+  "community.label": "Communauté",
+  "help.body": "Vous avez trouvé un bug ou souhaitez donner votre avis ? Échangez avec l’équipe Tracy et d’autres utilisateurs dans notre communauté Discord.",
+  "help.button": "Besoin d’aide ?",
+  "help.close": "Fermer",
+  "help.hidden": "Masqué. « Communauté » reste dans le menu sous votre photo, en bas de la barre latérale.",
+  "help.hide": "Masquer ce bouton",
+  "help.open": "Ouvrir Discord",
+  "session.new": "Nouvelle session",
+  "toggle.collapse": "Réduire la barre latérale",
+  "toggle.open": "Déployer la barre latérale",
+  "workspaces.open": "Ouvrir le workspace",
+  "workspaces.title": "Sitespaces"
+}

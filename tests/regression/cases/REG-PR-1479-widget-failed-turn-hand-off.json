@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1479-widget-failed-turn-hand-off",
+  "kind": "fix",
+  "title": "A widget turn or create that failed does not block the hand-off to the site's chat, and a lost create never makes a second site",
+  "pr": 1479,
+  "area": "widget/hand-off",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: widgetRoutes with a model that throws (503): send a turn, sign in, open the native hand-off.",
+    "S2: a stored turn inflight older than 5 min, then a fresh one: open native.",
+    "S3: a create whose first POST /api/sites throws, then a second press with another label.",
+    "S4: bootstrap the page (live.js harness) with native open refused."
+  ],
+  "expect": [
+    "S1: the turn answers its error; native open succeeds; the words are offered back as an unsent draft.",
+    "S2: the stale one does not block; the fresh one still answers WIDGET_NATIVE_WAIT_FOR_TURN.",
+    "S3: the second press re-sends the first request under the same buildId and adopts its site; one site.",
+    "S4: discovery renders with its state, not the retry screen."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/widget-inflight-recovery.test.mjs, apps/tracy-web/test/widget-bootstrap.test.mjs",
+    "code": "widget/route.js settleFailedTurn and create replay, native-session.js INFLIGHT_STALE_MS, assets/live.js bootstrap"
+  },
+  "evidence": "Review 19/10/2026: v.inflight was saved before the model call and cleared only on success; native open refused it forever and the bootstrap showed 'could not connect' on every Retry",
+  "fence": "inflight is settled on every definite failure and goes stale after a restart",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget-inflight-recovery.test.mjs",
+      "apps/tracy-web/test/widget-bootstrap.test.mjs"
+    ],
+    "tests": [
+      "a turn the model failed leaves its words for review and does not block the native hand-off",
+      "a turn stored by a process that restarted mid-run blocks only while it could still be running",
+      "a create whose answer was lost is sent again as it was, under the same buildId, and adopted",
+      "a refused native hand-off at bootstrap (a turn still settling) renders discovery with its state"
+    ]
+  }
+}

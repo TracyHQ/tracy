@@ -1,0 +1,109 @@
+{
+  "color": {
+    "midnight-canvas": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Canvas — Primary page background, hero canvas, footer base"
+    },
+    "obsidian-surface": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Obsidian Surface — Elevated surface, nav backdrop, deep overlay wash"
+    },
+    "charcoal-card": {
+      "$value": "#353535",
+      "$type": "color",
+      "$description": "Charcoal Card — Card surface, image card background, raised panel"
+    },
+    "fog": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Fog — Light surface inversion, subtle highlight wash"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary text, filled primary action background, high-contrast iconography"
+    },
+    "mist": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, dividers, subtle structural lines across all surfaces"
+    },
+    "ash-text": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash Text — Muted body text, list items, secondary link color"
+    },
+    "charcoal-mute": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Charcoal Mute — De-emphasized text, disabled states, tertiary metadata"
+    },
+    "ink-black": {
+      "$value": "#030303",
+      "$type": "color",
+      "$description": "Ink Black — SVG decorative fills, near-black accent inside dark composition"
+    },
+    "leonardo-violet": {
+      "$value": "#6e60ee",
+      "$type": "color",
+      "$description": "Leonardo Violet — Brand identity color — logo mark, active tab indicator, brand surface highlights, signature wordmark"
+    },
+    "toxic-lime": {
+      "$value": "#03e65b",
+      "$type": "color",
+      "$description": "Toxic Lime — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "voltage-yellow": {
+      "$value": "#ffc533",
+      "$type": "color",
+      "$description": "Voltage Yellow — Warm accent for category tags, feature highlight chips, energy-coded badges"
+    },
+    "shock-pink": {
+      "$value": "#ff3386",
+      "$type": "color",
+      "$description": "Shock Pink — Hot accent for tag chips, creator-type badges, vibrant category markers"
+    },
+    "ember-coral": {
+      "$value": "#ff5d4b",
+      "$type": "color",
+      "$description": "Ember Coral — Warm accent for tag chips, plan indicators, red-orange category coding"
+    },
+    "plasma-pink": {
+      "$value": "#d25fff",
+      "$type": "color",
+      "$description": "Plasma Pink — Magenta-violet accent for card backgrounds, secondary brand surface treatment"
+    },
+    "arc-blue": {
+      "$value": "#33d0ff",
+      "$type": "color",
+      "$description": "Arc Blue — Cool accent for tag chips, informational category markers, data-state indicators"
+    }
+  },
+  "font": {
+    "leosans": {
+      "$value": "leoSans",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines. The signature font — used at massive scale (up to 165px) for brand wordmarks, section heroes, and sculptural typography. Weights 800–900 create the compressed, almost-condensed poster feel; the extremely tight line-heights (0.80–0.90) let words stack into blocks. Letter-spacing tightens to -0.02em on the largest sizes to optically close the gaps between heavy strokes."
+    },
+    "canvasans": {
+      "$value": "canvaSans",
+      "$type": "fontFamily",
+      "$description": "UI and body text — navigation, buttons, tab labels, captions, list items, card metadata. Clean geometric sans across 10–19px. Weight 500 carries the most UI presence; 700 is reserved for emphasis in tabs and active states. The narrow 10–19px range keeps the type system disciplined and UI-focused."
+    },
+    "ufficiodisplay": {
+      "$value": "ufficioDisplay",
+      "$type": "fontFamily",
+      "$description": "Specialty editorial accent — used sparingly for a single mid-scale heading where a different personality is needed"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://leonardo.ai",
+      "siteName": "Leonardo.ai",
+      "extractedAt": "2026-06-03T15:13:21.475Z",
+      "variant": "compact"
+    }
+  }
+}

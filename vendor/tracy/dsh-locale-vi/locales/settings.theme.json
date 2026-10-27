@@ -1,0 +1,11 @@
+{
+  "appearance.dark": "Tối",
+  "appearance.light": "Sáng",
+  "appearance.system": "Theo hệ thống",
+  "appearance.title": "Giao diện",
+  "fontSize.decrease": "Giảm cỡ chữ",
+  "fontSize.description": "Chỉ ảnh hưởng nội dung hội thoại",
+  "fontSize.increase": "Tăng cỡ chữ",
+  "fontSize.title": "Cỡ chữ",
+  "fontSize.unit": "px"
+}

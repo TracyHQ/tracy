@@ -1,0 +1,23 @@
+---
+import { getWidgetAreaWithCacheHint } from "../widgets/index.js";
+import WidgetRenderer from "./WidgetRenderer.astro";
+
+interface Props {
+	name: string;
+	class?: string;
+}
+
+const { name, class: className } = Astro.props;
+const { data: area, cacheHint } = await getWidgetAreaWithCacheHint(name);
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+{
+	area && area.widgets.length > 0 && (
+		<div class:list={["widget-area", className]} data-widget-area={name}>
+			{area.widgets.map((widget) => (
+				<WidgetRenderer widget={widget} />
+			))}
+		</div>
+	)
+}

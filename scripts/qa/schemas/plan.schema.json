@@ -1,0 +1,38 @@
+{
+  "$comment": "Opus test plan for one PR (plan §4.7). Strict shape: every property required, no extras, so the same file works as a structured-output schema. Written once to state/plans/pr-<n>.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cases"],
+  "properties": {
+    "cases": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "quote",
+          "statement",
+          "seam",
+          "expected",
+          "needsChat",
+          "needsSite",
+          "checkable",
+          "reason"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^(pr[0-9]+|calib-(true|false))-k[0-9]+$" },
+          "quote": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
+          "seam": { "type": "integer", "minimum": 1, "maximum": 6 },
+          "expected": { "type": "string", "minLength": 1 },
+          "needsChat": { "type": "boolean" },
+          "needsSite": { "type": "string", "enum": ["none", "existing", "new"] },
+          "checkable": { "type": "boolean" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

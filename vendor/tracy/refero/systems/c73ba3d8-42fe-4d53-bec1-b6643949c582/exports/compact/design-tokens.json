@@ -1,0 +1,54 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary page canvas, card surfaces, button text on dark fills"
+    },
+    "warm-parchment": {
+      "$value": "#f6f4f1",
+      "$type": "color",
+      "$description": "Warm Parchment — Alternate section surface — gives the cream/ivory warmth that stops the page from feeling clinical"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dark feature card surfaces, filled pill button background, hairline borders — the structural backbone of every screen"
+    },
+    "soft-graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Soft Graphite — Secondary text, muted helper copy, quiet borders on neutral sections"
+    },
+    "mid-ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Mid Ash — Tertiary metadata, section subtitles, low-emphasis text"
+    },
+    "pale-mist": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Pale Mist — Disabled badge fill, very low-emphasis surface washes"
+    },
+    "broadcast-gradient": {
+      "$value": "#ff8308",
+      "$type": "color",
+      "$description": "Broadcast Gradient — Signature accent — used only for product screenshot frames, feature pill backgrounds, and the one full-width section wash; the gradient itself carries the brand voice, so the orange leading stop represents it in solid form"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across nav, body, headings, and buttons. Weight 400 carries body and most copy; weight 500 is reserved for subheadings, labels, and emphasis. The Geist stylistic sets ss01, ss03, ss04 are enabled — these alter the alternate single-storey 'a', the geometric 'g', and the modernist '$' to give the type a custom editorial feel. Substitute with Inter at the same weights if Geist is unavailable."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://beau.to",
+      "siteName": "Beau",
+      "extractedAt": "2026-06-03T21:59:55.809Z",
+      "variant": "compact"
+    }
+  }
+}

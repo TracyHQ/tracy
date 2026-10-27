@@ -1,0 +1,536 @@
+//
+// Tracy Business — home page sections (the tb-* ACM blocks)
+// -----------------------------------------------------
+// Measured from Home.html at 1440 and 390. The source has no media queries and relies on
+// `repeat(auto-fit, minmax(...))`; the same grids are written here with explicit breakpoints so
+// the tablet step (992–1199) is deliberate rather than accidental.
+//
+
+// ---------------------------------------------------------------- shared pieces
+.tb-eyebrow {
+  color: var(--tb-signal);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+.tb-section {
+  padding: var(--section-y-desktop) 0;
+
+  @include media-breakpoint-down(md) { padding: var(--section-y-phone) 0; }
+
+  &__head {
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+
+    @include media-breakpoint-down(md) { margin-bottom: 28px; }
+  }
+
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    margin: 0;
+
+    @include media-breakpoint-down(md) { font-size: var(--text-2xl-phone); }
+  }
+}
+
+.tb-textlink {
+  border-bottom: 1px solid var(--accent);
+  color: var(--accent);
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding-bottom: 2px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover { border-bottom-color: var(--tb-signal); color: var(--tb-signal); }
+
+  &--sm { font-size: 13.5px; }
+}
+
+.tb-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tb-chip {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-2);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 7px 12px;
+  text-decoration: none;
+
+  &:hover { border-color: var(--accent); color: var(--accent); }
+
+  // Active: a worn system fills it with the accent pair (its ink can be the dark page itself);
+  // no system keeps the template's ink fill.
+  &.is-active {
+    background: var(--ds-c-accent, var(--tb-ink-fill));
+    border-color: var(--ds-c-accent, var(--tb-ink-fill));
+    color: var(--ds-c-accent-on, var(--tb-on-ink-fill));
+
+    html[data-theme="dark"] & { background: var(--ds-c-accent, var(--tb-ink-fill)); border-color: var(--ds-c-accent, var(--tb-ink-fill)); color: var(--ds-c-accent-on, var(--tb-on-ink-fill)); }
+  }
+}
+
+// the ACM wrapper T4 adds
+.tb-row .t4-module,
+.tb-row .module-inner,
+.tb-row .module-ct { background: none; margin: 0; padding: 0; }
+
+// ---------------------------------------------------------------- hero (ink band)
+.tb-hero {
+  background: var(--tb-ink-band);
+  color: var(--ds-c-on-ink, #ECEAE4);
+  padding: 72px 0 0;
+
+  @include media-breakpoint-down(md) { padding-top: 40px; }
+
+  &__grid {
+    align-items: center;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: 560px 560px;            // measured: two 560px columns, 56px gap
+    padding-bottom: 56px;
+
+    @include media-breakpoint-down(xl) { grid-template-columns: minmax(0, 1fr) 460px; gap: 48px; }
+    @include media-breakpoint-down(lg) { gap: 32px; grid-template-columns: minmax(0, 1fr) 380px; }
+    @include media-breakpoint-down(md) { grid-template-columns: 1fr; padding-bottom: 36px; }
+  }
+
+  &__eyebrow {
+    align-items: center;
+    border: 1px solid var(--tb-ds-on-ink-line-2, var(--ds-c-on-ink, #3A3F43));
+    color: var(--tb-ds-on-ink-muted, var(--ds-c-on-ink, #C7C4BD));
+    display: inline-flex;
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-weight: 600;
+    gap: 8px;
+    letter-spacing: .16em;
+    line-height: 1;
+    margin: 0 0 28px;
+    padding: 8px 12px;
+    text-transform: uppercase;
+  }
+
+  &__dot {
+    background: var(--tb-band-signal-bg);
+    border-radius: 50%;
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+  }
+
+  &__title {
+    color: var(--ds-c-on-ink, #F5F3EE);
+    font-family: var(--font-display);
+    font-size: 64px;            // measured on Home.html — larger than the style guide's 52px H1
+    font-weight: 400;
+    letter-spacing: -.025em;
+    line-height: 1.02;
+    margin: 0 0 24px;
+
+    @include media-breakpoint-down(lg) { font-size: 48px; }
+    @include media-breakpoint-down(md) { font-size: var(--text-3xl-phone); }
+  }
+
+  &__accent {
+    color: var(--ds-c-accent-text, #F0865A);
+    font-style: italic;
+  }
+
+  &__lead {
+    color: var(--tb-ds-on-ink-muted, var(--ds-c-on-ink, #B9B5AC));
+    font-size: 18px;
+    line-height: 1.65;
+    margin: 0 0 32px;
+    max-width: 34em;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  &__visual {
+    aspect-ratio: 56 / 46;      // 560×460 as rendered by the source, not the slot's "4:5" hint
+    border: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2C3033));
+    margin: 0;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__stats {
+    border-top: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2C3033));
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+
+    @include media-breakpoint-down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  &__stat {
+    border-right: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2C3033));
+    padding: 24px 24px 24px 0;
+
+    &:last-child { border-right: 0; }
+    & + & { padding-left: 24px; }
+
+    @include media-breakpoint-down(md) {
+      border-bottom: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2C3033));
+      padding: 18px 16px 18px 0;
+
+      &:nth-child(2n) { border-right: 0; padding-left: 16px; }
+      &:nth-child(2n + 1) { padding-left: 0; }
+      &:nth-last-child(-n + 2) { border-bottom: 0; }
+    }
+  }
+
+  &__stat-value {
+    color: var(--ds-c-on-ink, #F5F3EE);
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    margin: 0 0 6px;
+
+    @include media-breakpoint-down(md) { font-size: 30px; }
+  }
+
+  &__stat-label {
+    color: var(--tb-ds-on-ink-meta, var(--ds-c-on-ink, #96938C));
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------- services
+.tb-services {
+  background: var(--bg);
+
+  &__grid {
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+
+  &__card {
+    background: var(--surface-warm);
+    border: 1px solid var(--border);
+    margin: 0 0 0 -1px;
+    padding: 28px 24px 32px;
+
+    &:first-child { margin-left: 0; }
+
+    @include media-breakpoint-down(lg) {
+      margin: -1px 0 0 -1px;
+      &:nth-child(2n + 1) { margin-left: 0; }
+      &:nth-child(-n + 2) { margin-top: 0; }
+    }
+
+    @include media-breakpoint-down(sm) {
+      margin: -1px 0 0;
+      &:first-child { margin-top: 0; }
+    }
+  }
+
+  &__num {
+    color: var(--tb-signal);
+    display: block;
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: .04em;
+    margin-bottom: 22px;
+  }
+
+  &__title {
+    font-family: var(--font-body);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -.012em;
+    line-height: 1.3;
+    margin: 0 0 10px;
+
+    a { color: var(--fg); text-decoration: none; &:hover { color: var(--accent); } }
+  }
+
+  &__desc {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------- projects
+.tb-projects {
+  background: var(--surface);
+
+  &__tools {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+}
+
+.tb-pcard {
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+
+  &__media {
+    aspect-ratio: 16 / 10;
+    display: block;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; transition: transform var(--motion-base) var(--ease-standard); width: 100%; }
+  }
+
+  &:hover .tb-pcard__media img { transform: scale(1.02); }
+
+  &__body { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 22px 24px 26px; }
+
+  &__tag {
+    color: var(--tb-signal);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.012em;
+    line-height: 1.3;
+    margin: 0;
+
+    a { color: var(--accent); text-decoration: none; &:hover { color: var(--tb-signal); } }
+  }
+
+  &__desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0; }
+
+  .tb-textlink { align-self: flex-start; margin-top: auto; }
+
+  &--featured {
+    .tb-pcard__media { aspect-ratio: 16 / 10; }
+    .tb-pcard__title { font-size: 20px; a { color: var(--fg); &:hover { color: var(--accent); } } }
+    .tb-pcard__body { padding: 26px 28px 30px; }
+  }
+}
+
+// ---------------------------------------------------------------- why
+.tb-why {
+  background: var(--bg);
+
+  &__grid {
+    align-items: center;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+
+    @include media-breakpoint-down(lg) { gap: 36px; }
+    @include media-breakpoint-down(md) { grid-template-columns: 1fr; }
+  }
+
+  &__visual {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    margin: 0;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+  }
+
+  &__item {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+  }
+
+  &__arrow { color: var(--tb-signal); flex-shrink: 0; font-size: 18px; line-height: 1.2; }
+
+  &__item-title { color: var(--fg); display: block; font-size: 16px; font-weight: 600; line-height: 1.3; }
+  &__item-desc  { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 4px 0 0; }
+}
+
+// ---------------------------------------------------------------- CTA band
+.tb-ctaband {
+  // a whole band in the accent reads the accent-band pair (as the EmDash twin); no system: forest
+  background: var(--ds-c-accent-band, var(--tb-band-forest-bg));
+  color: var(--ds-c-on-accent-band, var(--tb-band-forest-fg));
+  padding: 44px 0;
+
+  &__inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 40px;
+    justify-content: space-between;
+  }
+
+  &__title {
+    color: var(--ds-c-on-accent-band, var(--ds-c-accent-on, #F5F3EE));
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    margin: 0 0 8px;
+
+    @include media-breakpoint-down(md) { font-size: 28px; }
+  }
+
+  &__desc { font-size: 15px; line-height: 1.55; margin: 0; max-width: 40em; }
+}
+
+// ---------------------------------------------------------------- news
+.tb-news {
+  background: var(--bg);
+
+  &__grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+}
+
+.tb-ncard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__media {
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    display: block;
+    margin-bottom: 8px;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &__meta { color: var(--tb-muted-2); font-size: 12.5px; margin: 0; }
+
+  &__title {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.012em;
+    line-height: 1.3;
+    margin: 0;
+
+    a { color: var(--accent); text-decoration: none; &:hover { color: var(--tb-signal); } }
+  }
+
+  &__desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0; }
+}
+
+// ---------------------------------------------------------------- clients strip
+.tb-clients {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 28px 0;
+
+  &__inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    justify-content: space-between;
+  }
+
+  &__title { margin: 0; }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__frame {
+    align-items: center;
+    background: var(--ds-c-bg, #fff);
+    border: 1px solid var(--border);
+    display: flex;
+    height: 44px;
+    justify-content: center;
+    margin: 0;
+    padding: 8px 14px;
+    width: 128px;
+
+    img { display: block; max-height: 100%; max-width: 100%; object-fit: contain; }
+
+    html[data-theme="dark"] & { background: var(--ds-c-bg, #191C1F); }
+  }
+}
+
+// the source dims every photo under the dark theme (html[data-theme=dark] image-slot)
+html[data-theme="dark"] {
+  .tb-hero__visual img,
+  .tb-why__visual img,
+  .tb-pcard__media img,
+  .tb-ncard__media img,
+  .tb-mega-tiles img { filter: brightness(.82) saturate(.88); }
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "soft-indigo": {
+      "$value": "#6798ff",
+      "$type": "color",
+      "$description": "Soft Indigo — Brand accent — iconography, stat markers, chart series, link states; the single chromatic note in an otherwise achromatic system"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Deepest surface — modal backdrops, full-bleed image fills, inline SVG fills"
+    },
+    "carbon": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Carbon — Page canvas — the primary background; near-black with no warmth"
+    },
+    "graphite": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Graphite — Card surface — one step above the canvas to delineate content blocks"
+    },
+    "iron": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Iron — Elevated surface and border — secondary cards, table rows, subtle dividers"
+    },
+    "slate-edge": {
+      "$value": "#313131",
+      "$type": "color",
+      "$description": "Slate Edge — Hairline borders on imagery and nested elements — visible but recessive"
+    },
+    "smoke": {
+      "$value": "#454545",
+      "$type": "color",
+      "$description": "Smoke — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "mist": {
+      "$value": "#7c7c7c",
+      "$type": "color",
+      "$description": "Mist — Disabled or low-emphasis button text"
+    },
+    "ash": {
+      "$value": "#a7a7a7",
+      "$type": "color",
+      "$description": "Ash — Secondary text — captions, metadata, helper text, muted labels"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Primary text, icons, filled CTA background, card surface inverts; the dominant light element in the dark system"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for headings, body, navigation, and buttons. Used at 64px/56px for display headlines with tight tracking, 40px for section headings, 24px/20px for subheadings, 16px for body and nav, 14px for captions. Weight 400 is the reading default; 500–600 for labels and emphasis. Negative letter-spacing tightens at scale (–0.036em at 64px tapering to –0.012em at 20px) — the optical correction keeps large display type from feeling airy."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "All-caps category labels, section eyebrows (e.g. \"HOW IT WORKS\"), beta tags, and micro-text. Wide tracking (+0.071em to +0.083em) gives the type a stamped, technical feel — it reads as metadata, not copy. Sets it apart from Inter's proportional rhythm and signals the product's data/analytics domain."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dovetail.com",
+      "siteName": "Dovetail",
+      "extractedAt": "2026-06-03T16:24:24.796Z",
+      "variant": "compact"
+    }
+  }
+}

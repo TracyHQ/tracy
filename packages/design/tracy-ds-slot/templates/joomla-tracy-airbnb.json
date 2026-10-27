@@ -1,0 +1,18 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-tracy-base",
+  "template": "joomla/tracy-airbnb",
+  "release": "tracy-airbnb/j6@1.2.0 on tracy-apple/j6@1.3.0",
+  "applies": "the Airbnb design pack: the tracy T4 template copied under the element tracy_airbnb with its own theme profile (design-templates.json activation: fromTemplate tracy, replaceDirectory templates/tracy_airbnb), installed on a Tracy Apple base. Same code, same module positions as tracy-base, so the same slot module",
+  "baseSystem": "od:airbnb",
+  "baseSystemNote": "the pack's own look is OpenDesign airbnb, not tracy-base's apple: the slot writes a face, colour or size only where the worn system differs from the base, so under Apple (whose faces tracy-base already wears) the body kept Airbnb Cereal (re-measured 11/10/2026: page.fontFamily missed under Apple, desktop and phone)",
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-tracy-airbnb): 12/12 on every release measured, controls 0 differences, lowest text 4.51:1, 97% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on Tracy Apple 1.3.0 with the Airbnb pack 1.2.0 activated by the fleet's own script (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-tracy-airbnb): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, lowest text 4.51:1, 97-100% of the page follows, screenshots read by a person. The first pass of this round missed the body face under Apple (the pack kept Airbnb Cereal, since the slot compared against tracy-base's Apple faces): baseSystem od:airbnb. First measured 11/10/2026 in tasks/evidence/ds-contracts-batch1-2026-10-11/tracy-airbnb-j6. Its home is not the native landing, so only the page roles and the footer are probed",
+  "minVersion": {
+    "tracy-apple/j6": "1.3.0"
+  },
+  "maxVersion": {
+    "tracy-apple/j6": "1.3.0"
+  },
+  "minVersionNote": "a site wearing the Airbnb design is built from the Tracy Apple base (design-templates.json base.quickstart, route.js baseQuickstart): its quickstart tag and version are tracy-apple/j6 1.3.0"
+}

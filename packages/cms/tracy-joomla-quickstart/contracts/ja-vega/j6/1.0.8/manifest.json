@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vega/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_vega",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vega",
+    "id": "quickstart/ja-vega/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_vega",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vega-j6-webroot-1.0.8.tar.gz",
+        "bytes": 62056648,
+        "sha256": "5573d5042b03d73a8d9a18f8fc1ea83fcb76c0e39b45c9f2f67a3f6698a838df"
+      },
+      "database": {
+        "file": "ja-vega-j6-database-1.0.8.sql.gz",
+        "bytes": 125138,
+        "sha256": "ac70048954d9c435b6f7d8da66c0d69e129e97deb6d856ddb5f5e62f6910a793"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:05:36.708Z",
+    "builtFrom": {
+      "from": "quickstart/ja-vega/j6@1.0.7",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 2 files replaced (templates/ja_vega/css, templates/ja_vega/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-vega/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

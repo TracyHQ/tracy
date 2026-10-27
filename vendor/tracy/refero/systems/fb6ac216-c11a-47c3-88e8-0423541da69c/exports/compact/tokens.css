@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-corten: #b84b30;
+  --color-bordeaux: #5f1d1a;
+  --color-sandstone: #f8f4e9;
+  --color-driftwood: #e5e7eb;
+  --color-charcoal: #000000;
+  --color-bone: #ffffff;
+  --color-smoke: #666666;
+  --color-ash: #999999;
+  --color-espresso: #3e3d3a;
+
+  /* Typography — Font Families */
+  --font-riposte: 'Riposte', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apercu-mono: 'Apercu Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

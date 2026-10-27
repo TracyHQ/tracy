@@ -1,0 +1,73 @@
+/* Scenes 7 and 8 (site-tab-scene.js): a site tab of the Tracy app (Site changes, Publish) over the
+   browser panel under the tab strip. Tracy tokens only (tch packages/ui/tracy-ui/src/tokens.css),
+   resolved to the values the dsh host gives them (the same values the Add site replay uses,
+   addsite/replay.css), light and dark. Never --dsw-alias-*. */
+.hs-win .stp {
+  --background: #fff; --foreground: #0a0a0a; --card: #fff; --card-foreground: #0a0a0a; --popover: #fff;
+  --primary: #bf5b3d; --primary-foreground: oklch(0.985 0 0); --ring: #bf5b3d;
+  --muted: #f5f5f5; --muted-foreground: #737373; --border: #e5e5e5; --input: #e5e5e5;
+  --destructive: oklch(0.577 0.245 27.325); --warning: oklch(0.769 0.188 70.08); --success: oklch(0.696 0.17 162.48);
+  --radius: 0.625rem; --tsb-surface: var(--card);
+  position: absolute; inset: 38px 0 0; z-index: 20; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--card); color: var(--foreground); font-family: var(--a-sans); font-size: 14px; line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+:root[data-theme="dark"] .hs-win .stp {
+  --background: #0a0a0a; --foreground: #fafafa; --card: #171717; --card-foreground: #fafafa; --popover: #1f1f1f;
+  --muted: #262626; --muted-foreground: #a1a1a1; --border: #2e2e2e; --input: #3a3a3a;
+  --destructive: oklch(0.704 0.191 22.216); --warning: oklch(0.828 0.189 84.429);
+}
+.hs-win .stp[hidden], .hs-win .stp [hidden] { display: none !important; }
+.hs-win .stp *, .hs-win .stp *::before, .hs-win .stp *::after { box-sizing: border-box; }
+.hs-win .stp svg { display: block; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hs-win .stp p, .hs-win .stp h2, .hs-win .stp h3, .hs-win .stp h4 { margin: 0; }
+.hs-win .stp .stp-mono { font-family: var(--a-mono); }
+
+/* TabHeader (tch site-tabs/pieces.tsx:65): the site picker, the tab's action, a hairline under it. */
+.hs-win .stp-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); background: var(--tsb-surface); }
+.hs-win .stp-picker { display: inline-flex; align-items: center; gap: 6px; height: 28px; margin-left: -4px; padding: 0 8px; border-radius: 8px; font-size: 12.8px; font-weight: 600; }
+.hs-win .stp-picker svg { width: 14px; height: 14px; color: var(--muted-foreground); }
+
+/* @tracy/ui Button (tch packages/ui/tracy-ui/src/components/ui/button.tsx): default h-8 px-2.5 rounded-lg
+   14px/500; sm h-7 px-2.5 rounded-md 0.8rem with 14px icons; outline and ghost variants. */
+.hs-win .stp-btn { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 10px; background: var(--primary); color: var(--primary-foreground); font: 500 14px/20px var(--a-sans); white-space: nowrap; }
+.hs-win .stp-btn svg { width: 16px; height: 16px; }
+.hs-win .stp-btn.is-sm { gap: 4px; height: 28px; border-radius: 8px; font-size: 12.8px; }
+.hs-win .stp-btn.is-sm svg { width: 14px; height: 14px; }
+.hs-win .stp-btn.is-outline { border-color: var(--border); background: var(--background); color: var(--foreground); }
+:root[data-theme="dark"] .hs-win .stp-btn.is-outline { border-color: var(--input); background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hs-win .stp-btn.is-ghost { background: transparent; color: var(--foreground); }
+.hs-win .stp-btn.is-hover { background: color-mix(in oklab, var(--primary) 80%, transparent); }
+.hs-win .stp-btn.is-outline.is-hover, .hs-win .stp-btn.is-ghost.is-hover { background: var(--muted); }
+:root[data-theme="dark"] .hs-win .stp-btn.is-outline.is-hover { background: color-mix(in oklab, var(--input) 50%, transparent); }
+.hs-win .stp-btn.is-busy, .hs-win .stp-btn:disabled { opacity: .5; }
+.hs-win .stp-btn.is-press { transform: translateY(1px); }
+
+/* Badge outline + the state chip (tch badge.tsx; site-tabs-rules.css:163-170). */
+.hs-win .stp-chip { display: inline-flex; flex: none; align-items: center; gap: 6px; height: 20px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 26px; color: var(--foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+.hs-win .stp-chip i { width: 6px; height: 6px; border-radius: 9999px; background: var(--muted-foreground); }
+.hs-win .stp-chip[data-status="live"], .hs-win .stp-chip[data-status="verified"] { border-color: color-mix(in oklab, var(--success) 50%, transparent); background: color-mix(in oklab, var(--success) 10%, transparent); }
+.hs-win .stp-chip[data-status="live"] i, .hs-win .stp-chip[data-status="verified"] i { background: var(--success); }
+.hs-win .stp-chip[data-status="publishing"], .hs-win .stp-chip[data-status="connecting"] { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background: color-mix(in oklab, var(--primary) 10%, transparent); }
+.hs-win .stp-chip[data-status="publishing"] i, .hs-win .stp-chip[data-status="connecting"] i { background: var(--primary); }
+.hs-win .stp-chip.is-pulse i { animation: stp-pulse 2s cubic-bezier(.4, 0, .6, 1) infinite; }
+@keyframes stp-pulse { 50% { opacity: .5; } }
+/* The Spinner (Loader2, animate-spin). */
+.hs-win .stp-spin { animation: stp-spin 1s linear infinite; }
+@keyframes stp-spin { to { transform: rotate(360deg); } }
+:root[data-reduced="true"] .hs-win .stp .stp-spin, :root[data-reduced="true"] .hs-win .stp .is-pulse i,
+.is-seeking .hs-win .stp .stp-spin, .is-seeking .hs-win .stp .is-pulse i { animation: none; }
+
+/* The page shell under the header (tch wizard-shell/wizard-css.ts, root-css.ts): 32px gutters at this
+   panel width (979px, container >= 900px), a 20px title and a 13px muted lead. */
+.hs-win .stp .tas-wizard-head { margin-bottom: 20px; }
+.hs-win .stp .tas-wizard-title { font-size: 20px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--foreground); }
+.hs-win .stp .tas-wizard-desc { margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--muted-foreground); }
+/* The hover look of the app's own Site changes card, browser toolbar button and tabs while the pointer rests on them. */
+.is-site-tab-scene .hs3-card.stp-hover { border-color: var(--a-primary); background: var(--a-muted-bg); }
+.is-site-tab-scene .hs3-tbt.stp-hover { background: var(--a-muted-bg); border-radius: 8px; }
+.is-site-tab-scene [data-site-tab] { gap: 16px; min-width: 172px; }
+.is-site-tab-scene [data-site-tab] [data-welcome-tab-icon] svg { width: 14px; height: 14px; }
+.is-site-tab-scene [data-site-tab] button { border: 0; background: none; font: inherit; color: inherit; }
+.is-site-tab-scene [data-site-tab] button svg { width: 12px; height: 12px; }
+.is-site-tab-scene .stp-pointer { z-index: 1300; transition: none !important; }

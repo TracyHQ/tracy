@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.0" type="template" method="upgrade" group="template" client="site">
+  <name>tracy_business</name>
+  <version>1.0.1</version>
+  <creationDate>Sep 13, 2026</creationDate>
+  <author>Tracy</author>
+  <authorUrl>tracy.ai</authorUrl>
+  <copyright>Copyright (C) 2026 Tracy. All rights reserved.</copyright>
+  <license>license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
+  <description>TPL_TRACY_BUSINESS_XML_DESCRIPTION</description>
+
+  <files>
+    <filename>component.php</filename>
+    <filename>error.php</filename>
+    <filename>error-t4.php</filename>
+    <filename>favicon.ico</filename>
+    <filename>index.php</filename>
+    <filename>offline.php</filename>
+    <filename>templateDetails.xml</filename>
+    <filename>template_preview.png</filename>
+    <filename>template_thumbnail.png</filename>
+    <filename>templateInfo.php</filename>
+    <filename>theme-resolve.php</filename>
+    <folder>acm</folder>
+    <folder>css</folder>
+    <folder>etc</folder>
+    <folder>fonts</folder>
+    <folder>html</folder>
+    <folder>images</folder>
+    <folder>js</folder>
+    <folder>language</folder>
+    <folder>params</folder>
+    <folder>scss</folder>
+  </files>
+  <positions>
+    <position>topbar-l</position>
+    <position>topbar-r</position>
+    <position>language-switcher</position>
+    <position>menu</position>
+    <position>header-cta</position>
+    <position>search</position>
+    <position>off-canvas</position>
+    <position>mega-1</position>
+    <position>mega-2</position>
+    <position>mega-3</position>
+    <position>mega-4</position>
+    <position>banner</position>
+    <position>breadcrumbs</position>
+    <position>top-a</position>
+    <position>top-b</position>
+    <position>top-c</position>
+    <position>top-d</position>
+    <position>sidebar-l</position>
+    <position>sidebar-r</position>
+    <position>bottom-a</position>
+    <position>bottom-b</position>
+    <position>bottom-c</position>
+    <position>about-page</position>
+    <position>services-page</position>
+    <position>careers-page</position>
+    <position>investors-page</position>
+    <position>contact-page</position>
+    <position>search-page</position>
+    <position>newsletter-page</position>
+    <position>email-page</position>
+    <position>form-page</position>
+    <position>slide-page</position>
+    <position>styleguide-page</position>
+    <position>sitemap-page</position>
+    <position>terms-page</position>
+    <position>privacy-page</position>
+    <position>newsletter-top</position>
+    <position>newsletter-body</position>
+    <position>error-page</position>
+    <position>footer-a</position>
+    <position>footer-b</position>
+    <position>footer-c</position>
+    <position>footer-d</position>
+    <position>copyright</position>
+    <position>projects-band</position>
+    <position>projects-page</position>
+    <position>news-sidebar</position>
+    <position>about-page-split</position>
+    <position>about-page-end</position>
+    <position>services-page-split</position>
+    <position>services-page-end</position>
+    <position>careers-page-split</position>
+    <position>careers-page-end</position>
+    <position>investors-page-split</position>
+    <position>investors-page-end</position>
+    <position>debug</position>
+  </positions>
+  <languages folder="language">
+    <language tag="en-GB">en-GB/en-GB.tpl_tracy_business.ini</language>
+    <language tag="en-GB">en-GB/en-GB.tpl_tracy_business.sys.ini</language>
+    <language tag="ru-RU">ru-RU/ru-RU.tpl_tracy_business.ini</language>
+  </languages>
+  <t4>
+    <basetheme>base</basetheme>
+    <bootstrap>bs5</bootstrap>
+  </t4>
+	<!-- T4 merges subgroup="1" fieldsets into the matching base group of the Site settings -->
+	<site>
+		<fields name="typelist-site">
+			<!-- Dark-mode logos (appended to the "Logo" settings group; printed by html/layouts/t4/element/logo.php) -->
+			<fieldset name="site-logo" subgroup="1">
+				<field name="site_logo_dark" type="media" class="t4-input-media" default="" label="TPL_T4_SITE_DARK_LOGO" description="TPL_T4_SITE_LOGO_DARK_DESC" />
+				<field name="site_logo_dark_small" type="media" class="t4-input-media" default="" label="TPL_T4_SITE_LOGO_DARK_SMALL" description="TPL_T4_SITE_LOGO_DARK_SMALL_DESC" />
+			</fieldset>
+		</fields>
+	</site>
+</extension>

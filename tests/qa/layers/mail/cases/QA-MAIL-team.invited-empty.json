@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.invited-empty",
+  "itemIds": [
+    "direct:team.invited:en",
+    "direct:team.invited:vi",
+    "direct:team.invited:de",
+    "direct:team.invited:it",
+    "direct:team.invited:fr",
+    "direct:team.invited:nl",
+    "direct:team.invited:zh",
+    "direct:team.invited:es"
+  ],
+  "requirement": "the invitation letter (T1) with names, sites or a website missing steps down to a plainer sentence",
+  "oracle": {
+    "source": "emails.js docblocks (steps down through what is known)",
+    "ref": "emails.js docblocks (steps down through what is known)",
+    "invariant": "no hole, no \"undefined\""
+  },
+  "edgeTags": ["empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.empty:team.invited"],
+  "redProof": null,
+  "legacyIds": []
+}

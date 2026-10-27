@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-whitelist-beta-happy-links",
+  "itemIds": [
+    "direct:whitelist-beta:en",
+    "direct:whitelist-beta:vi",
+    "direct:whitelist-beta:de",
+    "direct:whitelist-beta:it",
+    "direct:whitelist-beta:fr",
+    "direct:whitelist-beta:nl",
+    "direct:whitelist-beta:zh",
+    "direct:whitelist-beta:es"
+  ],
+  "requirement": "the whitelist (beta) letter carries only absolute links",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7",
+    "invariant": "a mail keeps only the links that do something"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.links:whitelist-beta"],
+  "redProof": null,
+  "legacyIds": []
+}

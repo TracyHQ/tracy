@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-midnight-ink: #151523;
+  --color-signature-violet: #4e64df;
+  --color-signal-red: #ff0000;
+  --color-periwinkle-tint: #99a7f5;
+  --color-lavender-mist: #d0d6fb;
+  --color-deep-iris: #6c7ee4;
+  --color-graphite: #49495a;
+  --color-paper-white: #ffffff;
+  --color-fog: #e9e9ec;
+  --color-ash: #d7d7db;
+  --color-stone: #c7c7cb;
+  --color-steel: #b9b9c1;
+  --color-lavender-wash: #f1f3fe;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sharpgrotesk: 'SharpGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

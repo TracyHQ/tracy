@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "03e03554-d7aa-40da-9764-79320ecfa1d0",
+  "status": "complete",
+  "name": "OHZI Interactive Studio / Dive into digital magic.",
+  "url": "https://styles.refero.design/style/03e03554-d7aa-40da-9764-79320ecfa1d0",
+  "sourceWebsite": "https://ohzi.io",
+  "extractedAt": "2026-06-03T19:35:15.938Z",
+  "capturedAt": "2026-10-08T05:07:52.699431+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "A glowing cube suspended in a dark gallery",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e8ad18d2-6f55-486d-ae91-6d5368b7e7eb.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6f5598feb64074f1ec7a7979de342066a987b41b67b4fc8a5379a91b0a3fb282",
+      "bytes": 15128
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "89e4e31fe55992733134a02b67d2fbdcca4d77412d2ad3fbd2a0a71f99f5b3e0",
+      "bytes": 61611
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e758fcd4bf6fd6e767911ce266cbe5c17e8b8a8de4caa6e273226b756f050bb3",
+      "bytes": 12758
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d95626b1cbf75f3c7b5143a853f7ada3c40e14d5c2d6272dcea5b014cc8f8a09",
+      "bytes": 7141
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1ff766688af60d7be364162a0ea1a5133ed9506663b4246e251c1fda710e30b0",
+      "bytes": 9467
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b62b12a5cf68b6d064f67461dd4b3cf1a3c567a255b7423559b662c33d1883c0",
+      "bytes": 1917
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9a99a4a77b281fc658ac33ceeac5b37f9e90c627ea8231634e4816ebc522b5e7",
+      "bytes": 308
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "283a85d8edaa52631b0be52c207f9c97a46eebc34ac377b9e311691a348d3a0a",
+      "bytes": 325
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d99143587fe47c05b5022cb86c7eeb827855cae97e72c01a7ea38aa4e2b5f15e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0a905887ea82650e1051519d7f11590a344c01d11e6e1ad84088eb50a701e4c7",
+      "bytes": 37703
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "211a8614f22ddd6006a1f9f564f4078dcfbd0e7f6ed5d36d06b35df943226d35",
+      "bytes": 19891
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "73a7b2f1b194e0a66b3fe4d0203a5cfd62646517095172705d09e9623f7856f7",
+      "bytes": 26107
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d83fefbb9c9bad772cad010597a48206deaabd0da0d3fe0e8a7be99d0f7c7831",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5653fc9ffcfb223271c90db97af2581c3058ed1c09051c2666f83de6335aa6bc",
+      "bytes": 1098
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e230c1cd4ac6e4ba2df515e8bcd70d8e6efb6b63405cf1042675a1727b80fb5a",
+      "bytes": 1645
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03e03554-d7aa-40da-9764-79320ecfa1d0",
+    "09e43758-12c5-4a2b-8ae8-ded156ef66bf",
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "1b44386e-31a8-40b0-a577-27c088b51264",
+    "1f204e95-454a-437e-845b-c1b169d35607",
+    "3416bd14-96bb-4c23-bd01-b2ea178ba5ce",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "a7891223-a93e-4731-a1aa-4079f1ee928b",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "c406697b-677f-40c7-a3a2-10ea545278f1",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "e5f5f8cf-e68d-4ed1-bbf5-6b67569af648",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

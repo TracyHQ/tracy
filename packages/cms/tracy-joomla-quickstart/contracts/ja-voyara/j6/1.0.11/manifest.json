@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.11",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-voyara",
+    "id": "quickstart/ja-voyara/j6",
+    "version": "1.0.11",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_voyara",
+    "framework": "t4",
+    "prefix": "jav_",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.11.tar.gz",
+        "bytes": 195186207,
+        "sha256": "059885dba96d05cced030c8d2371d552129516b50b9c756104c6713975e8dc46"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.11.sql.gz",
+        "bytes": 356059,
+        "sha256": "6482a528fd611110262708ab96825259545000096a2fc2e95d166bc3eb632351"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:04:12.541Z",
+    "builtFrom": {
+      "from": "quickstart/ja-voyara/j6@1.0.10",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 5 files replaced (templates/ja_voyara/css, templates/ja_voyara/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-voyara/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

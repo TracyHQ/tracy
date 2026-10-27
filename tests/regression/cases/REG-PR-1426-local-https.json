@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1426-local-https",
+  "kind": "fix",
+  "title": "Local HTTPS microphone setup keeps preview and redirects only app browser navigation",
+  "pr": 1426,
+  "area": "local/https",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run focused redirect and login-preview tests; TLS certificate, private key and user trust stay outside git."
+  ],
+  "expect": [
+    "HTTPS tracy.test accepts explicit console-mail non-production login preview; public hosts and HTTPS subdomains remain refused.",
+    "Only GET/HEAD app-host browser document navigation redirects to configured HTTPS origin; internal calls, writes, customer hosts and existing HTTP deployments remain unchanged.",
+    "Redirect preserves path/query and cannot change target authority."
+  ],
+  "selectors": {
+    "routes": "/widget, /login"
+  },
+  "fence": "Exact local hostname, explicit preview opt-in, console mail and non-production; no system CA or browser certificate bypass.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=local HTTPS|login preview|local preview is still refused",
+      "apps/tracy-web/test/local-https.test.mjs",
+      "apps/tracy-web/test/config.test.mjs",
+      "apps/tracy-web/test/mail-unavailable.test.mjs"
+    ],
+    "tests": [
+      "local HTTPS redirects only browser document GETs and preserves path/query without changing authority",
+      "local HTTPS leaves internal API calls, writes, customer hosts and existing HTTP deployments unchanged",
+      "login preview requires explicit opt-in, local origin and console mail",
+      "F-S1-009: local preview is still refused in production, off a local origin, or beside Resend"
+    ]
+  }
+}

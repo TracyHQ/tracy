@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1358-cowork-joomla-0-24-29",
+  "kind": "fix",
+  "title": "Every Joomla quickstart pins Claude Cowork for Joomla 0.24.29 (extension.install streams the package to a file), with the published asset's bytes and sha256, in both catalogues",
+  "pr": 1358,
+  "area": "quickstarts/cowork-pins",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read every Joomla entry with a cowork pin in apps/tracy-web/src/quickstarts.json and packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json."
+  ],
+  "expect": [
+    "S1: every Joomla pin is file pkg_claudecowork-0.24.29.zip, version 0.24.29, bytes 42593192, sha256 14080d2b…12050dee, url of release joomla-v0.24.29; the provision copy pins the same."
+  ],
+  "selectors": {
+    "pins": "apps/tracy-web/src/quickstarts.json + packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json cowork"
+  },
+  "evidence": "Before this PR every Joomla quickstart pinned 0.24.28, whose extension.install read the whole package into PHP memory: installing the 42.6 MB pkg_claudecowork through the API peaked at 127.9M on a Joomla 6 stand locked at 128M and was a memory fatal (HTML 500) at 96M",
+  "fence": "Every contract of 0.24.28 is carried unchanged: pin-joomla-cowork.mjs refuses a release whose zip does not carry the recorded contract files byte for byte",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1358-cowork-joomla-0-24-29.mjs"]
+  }
+}

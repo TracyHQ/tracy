@@ -1,0 +1,43 @@
+{
+  "id": "QA-UNIT-REG-PR-1286-wordpress-mobile-header-happy",
+  "itemIds": ["regression:REG-PR-1286-wordpress-mobile-header"],
+  "requirement": "Long business names keep the WordPress mobile menu inside the viewport",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1286-wordpress-mobile-header.json",
+    "ref": "PR #1286 (fix); fix evidence: tasks/evidence/akemi-user-acceptance-2026-10-13: original public QA header overflowed to 404 px at 320/390; fixed CSS and the clean 1.1.5 archive were measured, including actual menu open and close.",
+    "invariant": "All twelve combinations have document.scrollWidth <= viewport width. At mobile widths the hamburger bounds remain inside the viewport. An assertion failure or unavailable CDP browser fails or blocks the case.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/wordpress-header-mobile.mjs:8 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:chrome"],
+  "assertionIds": ["REG-PR-1286-wordpress-mobile-header.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1286-wordpress-mobile-header"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1286-wordpress-mobile-header",
+    "pr": 1286,
+    "kind": "fix",
+    "area": "site-editing/mobile-header",
+    "file": "tests/regression/cases/REG-PR-1286-wordpress-mobile-header.json"
+  },
+  "command": ["node", "tests/regression/scripts/wordpress-header-mobile.mjs"],
+  "cwd": ".",
+  "needs": ["chrome"],
+  "tests": [],
+  "timeoutS": 120
+}

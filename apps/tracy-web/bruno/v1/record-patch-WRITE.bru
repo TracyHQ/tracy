@@ -1,0 +1,35 @@
+meta {
+  name: record patch WRITE
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/v1/sites/{{site}}/records/article/{{recordId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "fields": { "title": "Changed from Bruno" }
+  }
+}
+
+headers {
+  Tracy-Apply-Id: bruno-record-1
+}
+
+vars:pre-request {
+  recordId: 1
+}
+
+docs {
+  # WRITES: change the fields of one record
+
+  `content.update` with `Tracy-Apply-Id` as the receipt (leave the header out and Tracy makes
+  `api-<keyId>-<ms>`; see it in "applies"). `If-Match: "<body_revision>"` (the ETag of `GET` on the
+  record) writes only over that body on a WordPress post, template part or template with plugin
+  0.17.0+: changed since → `409 REVISION_STALE`; a site that answers no body_revision (Joomla, as
+  here, or an older plugin) → `400 IF_MATCH_NOT_SUPPORTED`. Point at a test site.
+}

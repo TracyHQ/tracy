@@ -1,0 +1,155 @@
+---
+// Copy with a check list and a CTA beside the direction's query panel.
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { panelImage, rows } from './a/panel'
+import { stampFor, type Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the inner-page 760px column (views/Sections.astro). */
+  narrow?: boolean
+}
+const { data, style } = Astro.props
+const panel = panelImage(data, style)
+// The panel shows the image field of the page's colour direction, so its stamp names that field.
+const panelField = `image_${style}`
+const bullets = rows(data.items).filter((row) => row.bullet_text)
+const hasCopy = Boolean(data.eyebrow || data.title || data.sub || bullets.length || data.cta_label)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'kineticql_split', null)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [data.cta_link])
+---
+
+{
+	(hasCopy || panel) && (
+		<section class="split" {...s()}>
+			<div class:list={['k-container', 'split-grid', !panel && 'is-copy-only']}>
+				<div class="split-copy">
+					{data.eyebrow && <p class="k-eyebrow split-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+					{data.title && <h2 class="k-h2 split-title" {...s('title')}>{data.title}</h2>}
+					{data.sub && <p class="split-sub" {...s('sub')}>{data.sub}</p>}
+					{bullets.length > 0 && (
+						<ul class="split-checks" role="list">
+							{bullets.map((row) => (
+								<li {...s.block('items')}>
+									<span class="split-check" aria-hidden="true">
+										<Icon name="check" size={18} strokeWidth={2.2} />
+									</span>
+									<span {...s('items.bullet_text')}>{row.bullet_text}</span>
+								</li>
+							))}
+						</ul>
+					)}
+					{data.cta_label && live(data.cta_link) && (
+						<a class="k-btn k-btn-primary split-cta" href={data.cta_link || '#'} {...s('cta_label')}>
+							{data.cta_label}
+						</a>
+					)}
+				</div>
+				{panel && (
+					<div class="split-panel">
+						<img src={panel.src} width={panel.width} height={panel.height} alt={panel.alt} loading="lazy" decoding="async" {...s(panelField)} />
+					</div>
+				)}
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.split-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 56px;
+		align-items: center;
+		padding-block: 80px;
+	}
+	/* Bottom line only. The source also draws a top line, but it sits on the same pixel row as the
+	   timeline band's bottom edge above it (y=1973 at 1440); drawing both here would double the seam. */
+	.split {
+		border-bottom: 1px solid var(--k-border);
+	}
+	.split-grid.is-copy-only {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.split-eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+	}
+	/* Measured on the source: 34px from 861px, 30px from 621 to 860px, 27px at 620px and below; line 1.12. */
+	.split-title {
+		margin: 0 0 16px;
+		font-size: var(--ds-size-heading, 34px);
+		line-height: 1.12;
+		letter-spacing: -0.8px;
+	}
+	@media (max-width: 860px) {
+		.split-title {
+			font-size: var(--ds-size-heading, 30px);
+		}
+	}
+	@media (max-width: 620px) {
+		.split-title {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, 27px));
+		}
+	}
+	.split-sub {
+		margin: 0 0 22px;
+		font-size: 16px;
+		line-height: 1.65;
+		color: var(--k-text);
+	}
+	.split-checks {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.split-checks li {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		font-size: 15px;
+		line-height: 1.5;
+		color: var(--k-text);
+	}
+	.split-check {
+		display: flex;
+		flex: none;
+		margin-top: 2px;
+		color: var(--k-primary);
+	}
+	.split-cta {
+		margin-top: 26px;
+		padding-inline: 20px;
+		font-family: var(--font-mono);
+		font-weight: 500;
+	}
+	.split-panel img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		box-shadow: var(--k-shadow);
+	}
+	@media (max-width: 991px) {
+		.split-grid {
+			grid-template-columns: minmax(0, 1fr);
+			row-gap: 36px;
+		}
+	}
+	@media (max-width: 767px) {
+		.split-grid {
+			padding-block: 56px;
+		}
+	}
+</style>

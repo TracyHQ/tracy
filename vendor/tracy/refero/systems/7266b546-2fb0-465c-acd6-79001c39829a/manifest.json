@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7266b546-2fb0-465c-acd6-79001c39829a",
+  "status": "complete",
+  "name": "Tesla",
+  "url": "https://styles.refero.design/style/7266b546-2fb0-465c-acd6-79001c39829a",
+  "sourceWebsite": "https://tesla.com",
+  "extractedAt": "2026-04-11T17:46:47.791Z",
+  "capturedAt": "2026-10-08T05:13:20.426758+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Automotive Showroom on Screen. High-fidelity product visuals dominate, framed by a minimal, functional interface that gets out of the way.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4bc7b538-3e84-421a-9318-35b864bac5c5.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2f4d7b9a655298c6cc311877f328eddc02b59f1b9cecdefb1ab468cb0bb0cb2f",
+      "bytes": 14007
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "827bda38b6e7e2e6722745eeefeb93c8d8953c705b5ca7ac2d439915892057f4",
+      "bytes": 149027
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e9889a3d89ebf4f9a336fd66c8d52bc53227284d9d0dcba40da0eff969d17a81",
+      "bytes": 18196
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "624d93fe696c2e31e376a631c961bf47a131779658df81e37a0746ccdcd84a2c",
+      "bytes": 8872
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "68814f5ac3ffb2f53c8fd5f61410f2fcefdba4fd7842fb270c75bb48592f358a",
+      "bytes": 7506
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f516dec90569374bdd740fb57e515e035a36bd0dba422dab387891f425fcaf74",
+      "bytes": 2822
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7b2332c08cdb91ef8193b6a898e1b3418cf80247beecec5a8d5fbc222f91df1a",
+      "bytes": 756
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "888547c7477e511b36629e7d5f4a7d8fba3665cde37f00058242cad16a74615e",
+      "bytes": 773
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ca86e3dc3e753bb9ddded4fe670e9473d727080f188ab37ad101b2093c80bf80",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "887745d08514a3eda06b23e538f9ff30ff02e60d53af1fc8efb58f711cb54efc",
+      "bytes": 41475
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b9d629f86768c1a647c726f02a24778835070a234379efff50e67624d03ecbca",
+      "bytes": 20777
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "dc54ba1505e7da4c195d026a977c5d54429d916ea698d3006989b935bc731337",
+      "bytes": 37774
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c9c8469802372e6d0f60b22338041284530c32724e89017188d6b1998006cc18",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1cdb3238a1557365187eae350278b515e0b86dacac83b25140805d8446825d82",
+      "bytes": 1450
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "768d03c1fd7e26247ca0319bbf8db9fa767161366484fcab71db19058ba40c87",
+      "bytes": 1763
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "13b74e34-b824-4d1d-bd2c-bb9bfbc2d6e1",
+    "355e8465-df7d-486a-9d76-2ace37d076a2",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "7aa1dbff-f5f1-4a64-9dba-f4caad7f1ebf",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "fe7b8533-f56b-46bd-8713-f18886a1e986"
+  ]
+}

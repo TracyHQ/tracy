@@ -1,0 +1,45 @@
+{
+  "id": "QA-UNIT-REG-PR-1671-logo-findings-key-order-happy",
+  "itemIds": ["regression:REG-PR-1671-logo-findings-key-order"],
+  "requirement": "Logo findings read back from jsonb with reordered keys count as the same findings, so a Retry that finds nothing new keeps the logo research",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1671-logo-findings-key-order.json",
+    "ref": "PR #1671 (fix); fix evidence: e2e dev 24/10/2026: a Retry that changed nothing still wrote new logo research because JSON.stringify compared a fresh object with one read back from jsonb",
+    "invariant": "S1: sameLogoFindings is true. S2: sameLogoFindings is false.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["the same logo findings read back from jsonb with keys reordered are the same findings"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1671-logo-findings-key-order"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1671-logo-findings-key-order",
+    "pr": 1671,
+    "kind": "fix",
+    "area": "website-opportunities/place-logo",
+    "file": "tests/regression/cases/REG-PR-1671-logo-findings-key-order.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/wo-logo-findings-key-order.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": ["the same logo findings read back from jsonb with keys reordered are the same findings"],
+  "timeoutS": 600
+}

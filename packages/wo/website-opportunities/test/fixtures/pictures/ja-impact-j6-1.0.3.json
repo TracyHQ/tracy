@@ -1,0 +1,2319 @@
+{
+  "source": "ja-impact/j6/1.0.3/content-map.json",
+  "slots": [
+    {
+      "key": "module-110.0",
+      "entity": "module-110",
+      "type": "image",
+      "sample": "images/joomlart/hero/item-1.jpg#joomlaImage://local-images/joomlart/hero/item-1.jpg?width=1920&height=824",
+      "label": "How to engage help our planet / image-hero",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-110.1",
+      "entity": "module-110",
+      "type": "image",
+      "sample": "images/joomlart/hero/item-2.jpg#joomlaImage://local-images/joomlart/hero/item-2.jpg?width=3500&height=2388",
+      "label": "How to engage help our planet / image-hero",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-111.0",
+      "entity": "module-111",
+      "type": "image",
+      "sample": "images/joomlart/acm/activities-1.jpg#joomlaImage://local-images/joomlart/acm/activities-1.jpg?width=756&height=756",
+      "label": "Our Activities / feature-main-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-111.4",
+      "entity": "module-111",
+      "type": "image",
+      "sample": "images/joomlart/acm/activities-2.jpg#joomlaImage://local-images/joomlart/acm/activities-2.jpg?width=280&height=220",
+      "label": "Our Activities / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-116.0",
+      "entity": "module-116",
+      "type": "image",
+      "sample": "",
+      "label": "What makes us different? / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-116.1",
+      "entity": "module-116",
+      "type": "image",
+      "sample": "",
+      "label": "What makes us different? / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-116.2",
+      "entity": "module-116",
+      "type": "image",
+      "sample": "images/joomlart/acm/out-mission.jpg#joomlaImage://local-images/joomlart/acm/out-mission.jpg?width=656&height=386",
+      "label": "What makes us different? / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-117.2",
+      "entity": "module-117",
+      "type": "image",
+      "sample": "images/joomlart/logo/logo.png",
+      "label": "About Impact",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-125.3",
+      "entity": "module-125",
+      "type": "image",
+      "sample": "images/joomlart/acm/assistance_1.png#joomlaImage://local-images/joomlart/acm/assistance_1.png?width=65&height=65",
+      "label": "Meet us / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-125.4",
+      "entity": "module-125",
+      "type": "image",
+      "sample": "images/joomlart/acm/assistance_2.png#joomlaImage://local-images/joomlart/acm/assistance_2.png?width=65&height=65",
+      "label": "Meet us / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-125.5",
+      "entity": "module-125",
+      "type": "image",
+      "sample": "images/joomlart/acm/assistance_3.png#joomlaImage://local-images/joomlart/acm/assistance_3.png?width=65&height=65",
+      "label": "Meet us / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-128.0",
+      "entity": "module-128",
+      "type": "image",
+      "sample": "images/joomlart/features/avatar-1.png#joomlaImage://local-images/joomlart/features/avatar-1.png?width=260&height=402",
+      "label": "Helpline is open 24/7 / feature-main-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-128.4",
+      "entity": "module-128",
+      "type": "image",
+      "sample": "",
+      "label": "Helpline is open 24/7 / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-129.0",
+      "entity": "module-129",
+      "type": "image",
+      "sample": "",
+      "label": "Let's retain & grow  your donor base / feature-main-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-129.4",
+      "entity": "module-129",
+      "type": "image",
+      "sample": "images/joomlart/acm/activities-2.jpg#joomlaImage://local-images/joomlart/acm/activities-2.jpg?width=280&height=220",
+      "label": "Let's retain & grow  your donor base / sub-feature-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-131.0",
+      "entity": "module-131",
+      "type": "image",
+      "sample": "images/joomlart/features/section-2-demo.png",
+      "label": "Section2 Content Right Demo",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.0",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "",
+      "label": "Saving endangered species is crucial / image-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.1",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "",
+      "label": "Saving endangered species is crucial / image-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.2",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "",
+      "label": "Saving endangered species is crucial / image-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.3",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "",
+      "label": "Saving endangered species is crucial / image-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.4",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "",
+      "label": "Saving endangered species is crucial / image-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.5",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "",
+      "label": "Saving endangered species is crucial / image-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-133.30",
+      "entity": "module-133",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-4.png#joomlaImage://local-images/joomlart/features/icon-4.png?width=67&height=69",
+      "label": "Saving endangered species is crucial / block-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-146.3",
+      "entity": "module-146",
+      "type": "image",
+      "sample": "images/joomlart/gallery/contact-1.jpg#joomlaImage://local-images/joomlart/gallery/contact-1.jpg?width=960&height=768",
+      "label": "Stay connected / ft-video",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-157.0",
+      "entity": "module-157",
+      "type": "image",
+      "sample": "images/joomlart/cta/avatar-1.png#joomlaImage://local-images/joomlart/cta/avatar-1.png?width=520&height=804",
+      "label": "Helpline is open 24/7 / cta-media",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-158.0",
+      "entity": "module-158",
+      "type": "image",
+      "sample": "images/joomlart/acm/activities-1.jpg#joomlaImage://local-images/joomlart/acm/activities-1.jpg?width=756&height=756",
+      "label": "Join together for charity / cta-media",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-161.5",
+      "entity": "module-161",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png#joomlaImage://local-images/joomlart/features/icon-8.png?width=65&height=65",
+      "label": "Raise fund for clean & healthy food / sub-feature-media",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-161.6",
+      "entity": "module-161",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-9.png#joomlaImage://local-images/joomlart/features/icon-9.png?width=65&height=65",
+      "label": "Raise fund for clean & healthy food / sub-feature-media",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-1.5",
+      "entity": "article-1",
+      "type": "image",
+      "sample": "images/joomlart/others/offline.jpg",
+      "label": "Offline Page",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-2.5",
+      "entity": "article-2",
+      "type": "image",
+      "sample": "images/joomlart/others/404.jpg",
+      "label": "Error Page",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-10.9",
+      "entity": "article-10",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Tracking the trash: Are your plastic bags really being recycled?",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-10.10",
+      "entity": "article-10",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Tracking the trash: Are your plastic bags really being recycled?",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-11.9",
+      "entity": "article-11",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Outdoor behavioral healthcare services to youth and young adults",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-11.10",
+      "entity": "article-11",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Outdoor behavioral healthcare services to youth and young adults",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-12.9",
+      "entity": "article-12",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Charity of the month plan international UK",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-12.10",
+      "entity": "article-12",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Charity of the month plan international UK",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-13.9",
+      "entity": "article-13",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "We’ve reached 1 million indonations and counting",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-13.10",
+      "entity": "article-13",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "We’ve reached 1 million indonations and counting",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-14.9",
+      "entity": "article-14",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Building empathy throughremote user research",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-14.10",
+      "entity": "article-14",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Building empathy throughremote user research",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-15.9",
+      "entity": "article-15",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Framingham: The study and the town that changed the health of a generation",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-15.10",
+      "entity": "article-15",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Framingham: The study and the town that changed the health of a generation",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-16.9",
+      "entity": "article-16",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "'I'm thankful for today': Philadelphia shelter feeds homeless and hungry during",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-16.10",
+      "entity": "article-16",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "'I'm thankful for today': Philadelphia shelter feeds homeless and hungry during",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-17.9",
+      "entity": "article-17",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Charity branding: is yourbrand digital ready?",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-17.10",
+      "entity": "article-17",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Charity branding: is yourbrand digital ready?",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-18.9",
+      "entity": "article-18",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Donation and cleaning program foundation",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-18.10",
+      "entity": "article-18",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Donation and cleaning program foundation",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-19.9",
+      "entity": "article-19",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-4.jpg",
+      "label": "Charity of the month plan international UK",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-19.10",
+      "entity": "article-19",
+      "type": "image",
+      "sample": "images/joomlart/blog/animal/detail-7.jpg",
+      "label": "Charity of the month plan international UK",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-20.2",
+      "entity": "article-20",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Water treatment projects",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-20.3",
+      "entity": "article-20",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Water treatment projects",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-28.2",
+      "entity": "article-28",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Saving ensdangered species",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-28.3",
+      "entity": "article-28",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Saving ensdangered species",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-29.2",
+      "entity": "article-29",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Sea pollution",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-29.3",
+      "entity": "article-29",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Sea pollution",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-30.2",
+      "entity": "article-30",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Community center",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-30.3",
+      "entity": "article-30",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Community center",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-31.2",
+      "entity": "article-31",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Endangered species",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-31.3",
+      "entity": "article-31",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Endangered species",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-32.2",
+      "entity": "article-32",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Oil pollution",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-32.3",
+      "entity": "article-32",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Oil pollution",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-33.2",
+      "entity": "article-33",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Save rainforests",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-33.3",
+      "entity": "article-33",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Save rainforests",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-34.2",
+      "entity": "article-34",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Indigenous people",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-34.3",
+      "entity": "article-34",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Indigenous people",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-35.2",
+      "entity": "article-35",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Saving animal preserve",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-35.3",
+      "entity": "article-35",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Saving animal preserve",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-36.2",
+      "entity": "article-36",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "The Mysteries of the Jungle Creatures",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-36.3",
+      "entity": "article-36",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "The Mysteries of the Jungle Creatures",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-37.2",
+      "entity": "article-37",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Exploring the World of Feline Friends",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-37.3",
+      "entity": "article-37",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Exploring the World of Feline Friends",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-38.2",
+      "entity": "article-38",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "Surviving the Harsh Polar Realms",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-38.3",
+      "entity": "article-38",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "Surviving the Harsh Polar Realms",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-39.2",
+      "entity": "article-39",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-1.jpg",
+      "label": "The African Wildlife Chronicles",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-39.3",
+      "entity": "article-39",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-donate-2.jpg",
+      "label": "The African Wildlife Chronicles",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-40.9",
+      "entity": "article-40",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "Afforestation program",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-40.13",
+      "entity": "article-40",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "Afforestation program",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-40.16",
+      "entity": "article-40",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "Afforestation program",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-40.19",
+      "entity": "article-40",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "Afforestation program",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-40.22",
+      "entity": "article-40",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "Afforestation program",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-56.9",
+      "entity": "article-56",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "Feed the world",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-56.13",
+      "entity": "article-56",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "Feed the world",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-56.16",
+      "entity": "article-56",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "Feed the world",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-56.19",
+      "entity": "article-56",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "Feed the world",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-56.22",
+      "entity": "article-56",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "Feed the world",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-58.9",
+      "entity": "article-58",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "Charity journey to Africa",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-58.13",
+      "entity": "article-58",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "Charity journey to Africa",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-58.16",
+      "entity": "article-58",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "Charity journey to Africa",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-58.19",
+      "entity": "article-58",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "Charity journey to Africa",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-58.22",
+      "entity": "article-58",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "Charity journey to Africa",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-59.9",
+      "entity": "article-59",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "The day of the African child",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-59.13",
+      "entity": "article-59",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "The day of the African child",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-59.16",
+      "entity": "article-59",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "The day of the African child",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-59.19",
+      "entity": "article-59",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "The day of the African child",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-59.22",
+      "entity": "article-59",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "The day of the African child",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-60.9",
+      "entity": "article-60",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "Saving nature",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-60.13",
+      "entity": "article-60",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "Saving nature",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-60.16",
+      "entity": "article-60",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "Saving nature",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-60.19",
+      "entity": "article-60",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "Saving nature",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-60.22",
+      "entity": "article-60",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "Saving nature",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-61.9",
+      "entity": "article-61",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "A Microscopic Marvel",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-61.13",
+      "entity": "article-61",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "A Microscopic Marvel",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-61.16",
+      "entity": "article-61",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "A Microscopic Marvel",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-61.19",
+      "entity": "article-61",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "A Microscopic Marvel",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-61.22",
+      "entity": "article-61",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "A Microscopic Marvel",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-62.9",
+      "entity": "article-62",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "Unveiling Nature's Best ",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-62.13",
+      "entity": "article-62",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "Unveiling Nature's Best ",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-62.16",
+      "entity": "article-62",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "Unveiling Nature's Best ",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-62.19",
+      "entity": "article-62",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "Unveiling Nature's Best ",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-62.22",
+      "entity": "article-62",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "Unveiling Nature's Best ",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-63.9",
+      "entity": "article-63",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "An Adventure with Animals",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-63.13",
+      "entity": "article-63",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "An Adventure with Animals",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-63.16",
+      "entity": "article-63",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "An Adventure with Animals",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-63.19",
+      "entity": "article-63",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "An Adventure with Animals",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-63.22",
+      "entity": "article-63",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "An Adventure with Animals",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-64.9",
+      "entity": "article-64",
+      "type": "image",
+      "sample": "images/joomlart/gallery/detail-event-1.jpg",
+      "label": "Nature's Hidden Gems",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-64.13",
+      "entity": "article-64",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-5.png",
+      "label": "Nature's Hidden Gems",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-64.16",
+      "entity": "article-64",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-6.png",
+      "label": "Nature's Hidden Gems",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-64.19",
+      "entity": "article-64",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-7.png",
+      "label": "Nature's Hidden Gems",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-64.22",
+      "entity": "article-64",
+      "type": "image",
+      "sample": "images/joomlart/features/icon-8.png",
+      "label": "Nature's Hidden Gems",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-67.9",
+      "entity": "article-67",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "How many people in Africa don’t have food?",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-67.10",
+      "entity": "article-67",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "How many people in Africa don’t have food?",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-68.9",
+      "entity": "article-68",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "A Journey Through Enchanted Lands",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-68.10",
+      "entity": "article-68",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "A Journey Through Enchanted Lands",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-69.9",
+      "entity": "article-69",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "Exploring Magical Worlds",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-69.10",
+      "entity": "article-69",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "Exploring Magical Worlds",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-70.9",
+      "entity": "article-70",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "A Journey of Discovery and Learning",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-70.10",
+      "entity": "article-70",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "A Journey of Discovery and Learning",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-71.9",
+      "entity": "article-71",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "Silly Stories and Jokes for Young Readers",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-71.10",
+      "entity": "article-71",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "Silly Stories and Jokes for Young Readers",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-72.9",
+      "entity": "article-72",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "Exploring the Beauty of the Animal Kingdom",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-72.10",
+      "entity": "article-72",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "Exploring the Beauty of the Animal Kingdom",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-73.9",
+      "entity": "article-73",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "Legends and Folktales from Around the World",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-73.10",
+      "entity": "article-73",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "Legends and Folktales from Around the World",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-74.9",
+      "entity": "article-74",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": "Heartwarming Tales of Kindness and Togetherness",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-74.10",
+      "entity": "article-74",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": "Heartwarming Tales of Kindness and Togetherness",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-75.9",
+      "entity": "article-75",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-1.jpg",
+      "label": " Exciting Adventures to the Past and Future",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-75.10",
+      "entity": "article-75",
+      "type": "image",
+      "sample": "images/joomlart/blog/children/detail-2.jpg",
+      "label": " Exciting Adventures to the Past and Future",
+      "requiresEvidence": false
+    }
+  ],
+  "pages": [
+    {
+      "entity": "menuItem-101",
+      "route": "home",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-110", "position": "hero", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-115", "position": "section-3", "published": "-2" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-125", "position": "section-6", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-128", "position": "content-left", "published": "-2" },
+        { "entity": "module-129", "position": "content-left", "published": "1" },
+        { "entity": "module-130", "position": "content-right", "published": "-2" },
+        { "entity": "module-131", "position": "content-right", "published": "-2" },
+        { "entity": "module-133", "position": "section-4", "published": "1" },
+        { "entity": "module-135", "position": "section-5", "published": "1" },
+        { "entity": "module-136", "position": "section-7", "published": "-2" },
+        { "entity": "module-139", "position": "section-9", "published": "-2" },
+        { "entity": "module-140", "position": "section-9", "published": "1" },
+        { "entity": "module-141", "position": "acym", "published": "1" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-146", "position": "section-8", "published": "1" },
+        { "entity": "module-147", "position": "follow", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-156", "position": "section-7", "published": "1" },
+        { "entity": "module-157", "position": "content-left", "published": "1" },
+        { "entity": "module-161", "position": "content-right", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-102",
+      "route": "about",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-111", "position": "section-2", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-116", "position": "section-3", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-125", "position": "section-6", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-132", "position": "section-10", "published": "1" },
+        { "entity": "module-133", "position": "section-4", "published": "1" },
+        { "entity": "module-138", "position": "section-2", "published": "-2" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-103",
+      "route": "donations",
+      "link": "index.php?option=com_content&view=category&layout=ja_impact:donation&id=13",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-148", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-149", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-150", "position": "sidebar-r", "published": "0" },
+        { "entity": "module-151", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-162", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-104",
+      "route": "events",
+      "link": "index.php?option=com_content&view=category&layout=ja_impact:events&id=10",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-158", "position": "sidebar-single", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-105",
+      "route": "pages",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-106",
+      "route": "pages/user",
+      "link": "index.php?option=com_users&view=login",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-107",
+      "route": "pages/user/login-form",
+      "link": "index.php?option=com_users&view=login",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-108",
+      "route": "pages/user/registration-form",
+      "link": "index.php?option=com_users&view=registration",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-109",
+      "route": "pages/user/user-profile",
+      "link": "index.php?option=com_users&view=profile",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-110",
+      "route": "pages/j-page",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-111",
+      "route": "pages/j-page/offline-page",
+      "link": "index.php?option=com_content&view=article&id=1",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-112",
+      "route": "pages/j-page/error-page",
+      "link": "index.php?option=com_content&view=article&id=2",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-113",
+      "route": "pages/j-page/smart-search",
+      "link": "index.php?option=com_finder&view=search",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-16", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-159", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-114",
+      "route": "pages/j-page/typography",
+      "link": "index.php?option=com_content&view=article&id=3",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-115",
+      "route": "pages/j-content",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-116",
+      "route": "category-blog",
+      "link": "index.php?option=com_content&view=category&layout=blog&id=8",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-111", "position": "section-2", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-137", "position": "section-related", "published": "1" },
+        { "entity": "module-138", "position": "section-2", "published": "-2" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-148", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-149", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-150", "position": "sidebar-r", "published": "0" },
+        { "entity": "module-151", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-162", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-117",
+      "route": "pages/j-content/featured-articles",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-118",
+      "route": "pages/j-content/author-listting",
+      "link": "index.php?option=com_content&view=author&layout=list&gid[0]=2",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-119",
+      "route": "contact",
+      "link": "index.php?option=com_contact&view=contact&id=1",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-153", "position": "google-map", "published": "1" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-120",
+      "route": "help-faqs",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-149", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-160", "position": "section-3", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-121",
+      "route": "your-account",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-122",
+      "route": "track-your-order",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-123",
+      "route": "contact-info",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-124",
+      "route": "store-locations",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-125",
+      "route": "registry",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-126",
+      "route": "blog",
+      "link": "index.php?option=com_content&view=category&layout=blog&id=8",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-127",
+      "route": "shipping-info",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-128",
+      "route": "about-us",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-129",
+      "route": "term-of-service",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-130",
+      "route": "careers",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-131",
+      "route": "affiliates",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-132",
+      "route": "twitter",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-133",
+      "route": "facebook",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-134",
+      "route": "instagram",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-135",
+      "route": "threads",
+      "link": "#",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-136",
+      "route": "pages/j-content/blog-detail",
+      "link": "index.php?option=com_content&view=article&id=12",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-137", "position": "section-related", "published": "1" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-148", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-149", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-150", "position": "sidebar-r", "published": "0" },
+        { "entity": "module-151", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-162", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-151",
+      "route": "tagged-items",
+      "link": "index.php?option=com_tags&view=tag&id[0]=2&id[1]=3&id[2]=4&id[3]=5&id[4]=6",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-152",
+      "route": "category-list",
+      "link": "index.php?option=com_content&view=category&id=8",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-153",
+      "route": "list-all-categories",
+      "link": "index.php?option=com_contact&view=form&layout=edit",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-154",
+      "route": "pages/j-content/category-blog",
+      "link": "index.php?option=com_content&view=category&layout=blog&id=9",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-137", "position": "section-related", "published": "1" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-148", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-149", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-151", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-162", "position": "sidebar-r", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-155",
+      "route": "test-event",
+      "link": "index.php?option=com_content&view=category&layout=blog&id=10",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-156",
+      "route": "test",
+      "link": "index.php?option=com_content&view=category&layout=ja_impact:events&id=10&filter_tag[0]=2&filter_tag[1]=3&filter_tag[2]=4&filter_tag[3]=5&filter_tag[4]=6",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-157",
+      "route": "donations-2",
+      "link": "index.php?option=com_content&view=category&layout=ja_impact:donation&id=13",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-158",
+      "route": "password-reset",
+      "link": "index.php?option=com_users&view=reset",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-159",
+      "route": "username-reminder-request",
+      "link": "index.php?option=com_users&view=remind",
+      "assignedModules": [
+        { "entity": "module-1", "position": "sidebar-right", "published": "1" },
+        { "entity": "module-17", "position": "breadcrumbs", "published": "1" },
+        { "entity": "module-112", "position": "topbar", "published": "1" },
+        { "entity": "module-117", "position": "footnav-1", "published": "1" },
+        { "entity": "module-118", "position": "footnav-2", "published": "1" },
+        { "entity": "module-119", "position": "footnav-3", "published": "1" },
+        { "entity": "module-120", "position": "footnav-4", "published": "1" },
+        { "entity": "module-121", "position": "footnav-5", "published": "1" },
+        { "entity": "module-122", "position": "footer", "published": "1" },
+        { "entity": "module-126", "position": "header-cta", "published": "1" },
+        { "entity": "module-127", "position": "footer-r", "published": "0" },
+        { "entity": "module-142", "position": "", "published": "1" },
+        { "entity": "module-143", "position": "section-8", "published": "-2" },
+        { "entity": "module-144", "position": "masthead", "published": "0" },
+        { "entity": "module-145", "position": "masthead", "published": "1" },
+        { "entity": "module-152", "position": "testimonials", "published": "-2" },
+        { "entity": "module-154", "position": "off-canvas", "published": "1" },
+        { "entity": "module-155", "position": "contact", "published": "1" },
+        { "entity": "module-163", "position": "footer-r", "published": "1" }
+      ]
+    }
+  ]
+}

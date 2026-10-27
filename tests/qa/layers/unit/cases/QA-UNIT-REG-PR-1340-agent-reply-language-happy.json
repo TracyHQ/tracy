@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1340-agent-reply-language-happy",
+  "itemIds": ["regression:REG-PR-1340-agent-reply-language"],
+  "requirement": "The assembled main chat turn names Dutch as the reply language for a Dutch prompt",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1340-agent-reply-language.json",
+    "ref": "PR #1340 (fix); fix evidence: Issue #1303 reproduced on the dev Joomla QA site with the Dutch home-page and main-menu question.",
+    "invariant": "0 failures. 'a Dutch main-turn prompt names the user’s language instead of English' passes. 'reply language (bug 30/09): a step that claims a person's message names the reply's language after it, last; a step claiming none says nothing' passes and the assembled notice begins with ‘Reply in Dutch’.",
+    "productSources": [
+      "packages/core/tracy-core/src/language/index.mjs:246",
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:133",
+      "packages/tools/tracy-site-tools/src/host/look-undo.mjs:634",
+      "packages/tools/tracy-site-tools/src/host/normalize.mjs:2476",
+      "packages/tools/tracy-site-tools/src/host/prompter.mjs:3",
+      "packages/tools/tracy-site-tools/src/host/replace-joomla.mjs:2258",
+      "packages/tools/tracy-site-tools/src/host/site-call.mjs:627",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269",
+      "packages/ui/tracy-chat-input/src/client/comment-turn.mjs:1511"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a Dutch main-turn prompt names the user’s language instead of English",
+    "reply language (bug 30/09): a step that claims a person's message names the reply's language after it, last; a step claiming none says nothing",
+    "a Dutch request with English-overlapping words is Dutch"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1340-agent-reply-language"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1340-agent-reply-language",
+    "pr": 1340,
+    "kind": "fix",
+    "area": "site-tools/reply-language",
+    "file": "tests/regression/cases/REG-PR-1340-agent-reply-language.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/prompter.test.mjs",
+    "packages/tools/tracy-site-tools/test/handler.test.mjs",
+    "packages/core/tracy-core/test/language.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a Dutch main-turn prompt names the user’s language instead of English",
+    "reply language (bug 30/09): a step that claims a person's message names the reply's language after it, last; a step claiming none says nothing",
+    "a Dutch request with English-overlapping words is Dutch"
+  ],
+  "timeoutS": 600
+}

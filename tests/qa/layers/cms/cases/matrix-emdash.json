@@ -1,0 +1,1430 @@
+[
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "backup",
+      "variant": "emdash:tracy-base-fresh-backup"
+    },
+    "edgeTags": ["fresh-install", "restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-backup",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "content-edit",
+      "variant": "emdash:tracy-base-fresh-content-edit"
+    },
+    "edgeTags": ["fresh-install", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-content-edit",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "delete",
+      "variant": "emdash:tracy-base-fresh-delete"
+    },
+    "edgeTags": ["fresh-install", "cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-delete",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "file-edit",
+      "variant": "emdash:tracy-base-fresh-file-edit"
+    },
+    "edgeTags": ["fresh-install", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-file-edit",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "publish",
+      "variant": "emdash:tracy-base-fresh-publish"
+    },
+    "edgeTags": ["fresh-install", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-publish",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "read",
+      "variant": "emdash:tracy-base-fresh-read"
+    },
+    "edgeTags": ["fresh-install", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-read",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "restore",
+      "variant": "emdash:tracy-base-fresh-restore"
+    },
+    "edgeTags": ["fresh-install", "restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-fresh-install-restore",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "backup",
+      "variant": "emdash:tracy-base-restore-backup"
+    },
+    "edgeTags": ["restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-backup",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "content-edit",
+      "variant": "emdash:tracy-base-restore-content-edit"
+    },
+    "edgeTags": ["restore", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-content-edit",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "delete",
+      "variant": "emdash:tracy-base-restore-delete"
+    },
+    "edgeTags": ["restore", "cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-delete",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "file-edit",
+      "variant": "emdash:tracy-base-restore-file-edit"
+    },
+    "edgeTags": ["restore", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-file-edit",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "publish",
+      "variant": "emdash:tracy-base-restore-publish"
+    },
+    "edgeTags": ["restore", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-publish",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "read",
+      "variant": "emdash:tracy-base-restore-read"
+    },
+    "edgeTags": ["restore", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-read",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-base",
+      "label": "emdash:tracy-base",
+      "operation": "restore",
+      "variant": "emdash:tracy-base-restore-restore"
+    },
+    "edgeTags": ["restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-base-restore-restore",
+    "itemIds": ["emdash:tracy-base"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "backup",
+      "variant": "emdash:tracy-business-fresh-backup"
+    },
+    "edgeTags": ["fresh-install", "restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-backup",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "content-edit",
+      "variant": "emdash:tracy-business-fresh-content-edit"
+    },
+    "edgeTags": ["fresh-install", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-content-edit",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "delete",
+      "variant": "emdash:tracy-business-fresh-delete"
+    },
+    "edgeTags": ["fresh-install", "cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-delete",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "file-edit",
+      "variant": "emdash:tracy-business-fresh-file-edit"
+    },
+    "edgeTags": ["fresh-install", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-file-edit",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "publish",
+      "variant": "emdash:tracy-business-fresh-publish"
+    },
+    "edgeTags": ["fresh-install", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-publish",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "read",
+      "variant": "emdash:tracy-business-fresh-read"
+    },
+    "edgeTags": ["fresh-install", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-read",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "restore",
+      "variant": "emdash:tracy-business-fresh-restore"
+    },
+    "edgeTags": ["fresh-install", "restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-fresh-install-restore",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "backup",
+      "variant": "emdash:tracy-business-restore-backup"
+    },
+    "edgeTags": ["restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-backup",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "content-edit",
+      "variant": "emdash:tracy-business-restore-content-edit"
+    },
+    "edgeTags": ["restore", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-content-edit",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "delete",
+      "variant": "emdash:tracy-business-restore-delete"
+    },
+    "edgeTags": ["restore", "cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-delete",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "file-edit",
+      "variant": "emdash:tracy-business-restore-file-edit"
+    },
+    "edgeTags": ["restore", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-file-edit",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "publish",
+      "variant": "emdash:tracy-business-restore-publish"
+    },
+    "edgeTags": ["restore", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-publish",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "read",
+      "variant": "emdash:tracy-business-restore-read"
+    },
+    "edgeTags": ["restore", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-read",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-business",
+      "label": "emdash:tracy-business",
+      "operation": "restore",
+      "variant": "emdash:tracy-business-restore-restore"
+    },
+    "edgeTags": ["restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-business-restore-restore",
+    "itemIds": ["emdash:tracy-business"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "backup",
+      "variant": "emdash:tracy-saas-fresh-backup"
+    },
+    "edgeTags": ["fresh-install", "restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-backup",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "content-edit",
+      "variant": "emdash:tracy-saas-fresh-content-edit"
+    },
+    "edgeTags": ["fresh-install", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-content-edit",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "delete",
+      "variant": "emdash:tracy-saas-fresh-delete"
+    },
+    "edgeTags": ["fresh-install", "cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-delete",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "file-edit",
+      "variant": "emdash:tracy-saas-fresh-file-edit"
+    },
+    "edgeTags": ["fresh-install", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-file-edit",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "publish",
+      "variant": "emdash:tracy-saas-fresh-publish"
+    },
+    "edgeTags": ["fresh-install", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-publish",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "read",
+      "variant": "emdash:tracy-saas-fresh-read"
+    },
+    "edgeTags": ["fresh-install", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-read",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "fresh",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "restore",
+      "variant": "emdash:tracy-saas-fresh-restore"
+    },
+    "edgeTags": ["fresh-install", "restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-fresh-install-restore",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "backup",
+      "variant": "emdash:tracy-saas-restore-backup"
+    },
+    "edgeTags": ["restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-backup",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "content-edit",
+      "variant": "emdash:tracy-saas-restore-content-edit"
+    },
+    "edgeTags": ["restore", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-content-edit",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "delete",
+      "variant": "emdash:tracy-saas-restore-delete"
+    },
+    "edgeTags": ["restore", "cleanup"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-delete",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "file-edit",
+      "variant": "emdash:tracy-saas-restore-file-edit"
+    },
+    "edgeTags": ["restore", "edit-readback"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-file-edit",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "publish",
+      "variant": "emdash:tracy-saas-restore-publish"
+    },
+    "edgeTags": ["restore", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-publish",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "read",
+      "variant": "emdash:tracy-saas-restore-read"
+    },
+    "edgeTags": ["restore", "happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-read",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  },
+  {
+    "area": "matrix",
+    "assertionIds": ["stand.cms-operation"],
+    "dimensions": {
+      "assertion": "stand.cms-operation",
+      "cms": "emdash",
+      "install": "restore",
+      "item": "emdash:tracy-saas",
+      "label": "emdash:tracy-saas",
+      "operation": "restore",
+      "variant": "emdash:tracy-saas-restore-restore"
+    },
+    "edgeTags": ["restore"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["QA_STAND_URL"],
+      "writes": ["stand site (owned by the QA run)"]
+    },
+    "fixtures": [],
+    "id": "QA-CMS-emdash:tracy-saas-restore-restore",
+    "itemIds": ["emdash:tracy-saas"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "readback of content/file/database equals what was written or restored",
+      "ref": "CMS x release x install x operation matrix | CONTEXT.md@sha256:8e25aaf92a4f",
+      "source": "CONTEXT.md + docs/adr/0014 (agent commands run in the site's own container) + ADR 0017 §4 (install shapes)"
+    },
+    "prerequisites": ["stand:url"],
+    "redProof": null,
+    "requirement": "On a live stand, a site built from this template/release by this install way supports this operation, proven by an independent read-back (content, files, database).",
+    "targets": ["local", "dev"]
+  }
+]

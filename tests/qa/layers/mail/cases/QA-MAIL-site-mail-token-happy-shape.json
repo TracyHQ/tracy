@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-site-mail-token-happy-shape",
+  "itemIds": ["site-mail:token"],
+  "requirement": "the token is 64 lowercase hex characters and stable",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/site-mail/token.js header",
+    "ref": "apps/tracy-web/src/mail/site-mail/token.js header",
+    "invariant": "hex(HMAC-SHA256(host secret, \"site-mail:v1:\" + label)); nothing stores it"
+  },
+  "edgeTags": ["happy", "repeat"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.sitemail.token#shape-and-determinism"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,104 @@
+/* Kinetic — Social ACM block (self-contained, block-scoped).
+   A row of square, bordered icon-tiles. Colour/spacing route through block-local
+   vars that default to the design tokens, so the block resolves light + dark
+   automatically AND can be remapped to chrome vars when dropped in the dark
+   footer (set --soc-border/--soc-icon/--soc-accent on an ancestor). Self-
+   contained — NOT @imported into the template's global _all.scss. */
+
+.acm-social {
+  --soc-border: var(--border);
+  --soc-icon: var(--text);
+  --soc-accent: var(--primary);
+  --soc-size: 34px;
+  --soc-icon-size: 16px;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+.acm-social.size-md {
+  --soc-size: 40px;
+  --soc-icon-size: 18px;
+}
+
+/* optional heading / "Follow" label */
+.acm-social .hx-social-label {
+  margin: 0 0 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* tile row */
+.acm-social .hx-social-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.acm-social .hx-social-item {
+  display: inline-flex;
+}
+.acm-social.align-center {
+  text-align: center;
+}
+.acm-social.align-center .hx-social-row {
+  justify-content: center;
+}
+
+/* tile (micro-interactions.md §3e LOGO/AVATAR gesture: muted -> full/accent on hover) */
+.acm-social .hx-social-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--soc-size);
+  height: var(--soc-size);
+  border: 1px solid var(--soc-border);
+  border-radius: 9px;
+  color: var(--soc-icon);
+  background: transparent;
+  text-decoration: none;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+.acm-social .hx-social-tile:hover,
+.acm-social .hx-social-tile:focus-visible {
+  color: var(--soc-accent);
+  border-color: var(--soc-accent);
+  outline: none;
+}
+.acm-social .hx-social-svg {
+  width: var(--soc-icon-size);
+  height: var(--soc-icon-size);
+  display: block;
+}
+
+/* brand lock (logo + wordmark link) — same LOGO/LINK gesture as the icon tiles */
+.acm-social .hx-brand-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--soc-icon);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+.acm-social .hx-brand-lock:hover,
+.acm-social .hx-brand-lock:focus-visible {
+  color: var(--soc-accent);
+  outline: none;
+}
+.acm-social .hx-brand-img,
+.acm-social .hx-brand-glyph {
+  transition: opacity .2s ease;
+}
+.acm-social .hx-brand-lock:hover .hx-brand-img,
+.acm-social .hx-brand-lock:focus-visible .hx-brand-img {
+  opacity: .85;
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-symphony/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_symphony",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-symphony",
+    "id": "quickstart/ja-symphony/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_symphony",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-symphony-j6-webroot-1.0.4.tar.gz",
+        "bytes": 47286919,
+        "sha256": "b7e65ad91bf4cd8fe8a4e484e7a8c5322cae7936d75b7421a9dac385f41e9f23"
+      },
+      "database": {
+        "file": "ja-symphony-j6-database-1.0.4.sql.gz",
+        "bytes": 82202,
+        "sha256": "30c92a64b77649d769979a198c45e6cdd6ae948390fb76151703085e6c3bedd8"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T19:27:14.397Z",
+    "builtFrom": {
+      "from": "quickstart/ja-symphony/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 228 files replaced (templates/ja_symphony/AGENTS.md, templates/ja_symphony/CLAUDE.md, templates/ja_symphony/README.md, templates/ja_symphony/component.php, templates/ja_symphony/error-t4.php, templates/ja_symphony/error.php, templates/ja_symphony/favicon.ico, templates/ja_symphony/helper.php, templates/ja_symphony/index.php, templates/ja_symphony/layout.json, templates/ja_symphony/offline.php, templates/ja_symphony/templateDetails.xml, templates/ja_symphony/templateInfo.php, templates/ja_symphony/template_preview.png, templates/ja_symphony/template_thumbnail.png, templates/ja_symphony/css, templates/ja_symphony/docs, templates/ja_symphony/etc, templates/ja_symphony/html, templates/ja_symphony/images, templates/ja_symphony/js, templates/ja_symphony/scss, templates/ja_symphony/acm, templates/ja_symphony/contenttype, templates/ja_symphony/fonts, templates/ja_symphony/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-symphony/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

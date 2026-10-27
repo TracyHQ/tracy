@@ -1,0 +1,69 @@
+{
+  "color": {
+    "x-blue": {
+      "$value": "#1d9bf0",
+      "$type": "color",
+      "$description": "X Blue — Follow buttons, link text, verified badges, active nav icons, bottom CTA accents — the only chromatic color in the system, used sparingly to mark anything interactive or trustworthy"
+    },
+    "ink-black": {
+      "$value": "#0f1419",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, button text, icon fills — the dominant readable foreground on light surfaces"
+    },
+    "graphite": {
+      "$value": "#536471",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, metadata, timestamps, muted icon fills, helper labels"
+    },
+    "fog-gray": {
+      "$value": "#829aab",
+      "$type": "color",
+      "$description": "Fog Gray — Tertiary text and disabled-state foreground"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, card surfaces, modal surfaces, button text on chromatic fills"
+    },
+    "mist-gray": {
+      "$value": "#eff3f4",
+      "$type": "color",
+      "$description": "Mist Gray — Hover states, secondary surface fills, subtle dividers, input backgrounds"
+    },
+    "hairline-gray": {
+      "$value": "#cfd9de",
+      "$type": "color",
+      "$description": "Hairline Gray — 1px border strokes separating cards, inputs, nav sections, and buttons"
+    },
+    "shadow-dust": {
+      "$value": "#e0e4e7",
+      "$type": "color",
+      "$description": "Shadow Dust — Inset shadow base for inputs and select surfaces — 3% opacity black on this tone"
+    },
+    "charcoal": {
+      "$value": "#4b4f53",
+      "$type": "color",
+      "$description": "Charcoal — Dark-mode surface fill (previews, code blocks, dim button state)"
+    }
+  },
+  "font": {
+    "twitterchirp": {
+      "$value": "TwitterChirp",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface across all UI — feeds, nav, buttons, headings, body. The custom letterforms with ss01 stylistic set create X's distinctive voice; the tightly compressed 0.80 lineHeight on small sizes maximizes information density in the feed."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "System fallback for legacy rendering paths; not a design choice but a technical fallback that should never appear in production UI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://create.video",
+      "siteName": "X (formerly Twitter)",
+      "extractedAt": "2026-06-03T19:32:01.467Z",
+      "variant": "compact"
+    }
+  }
+}

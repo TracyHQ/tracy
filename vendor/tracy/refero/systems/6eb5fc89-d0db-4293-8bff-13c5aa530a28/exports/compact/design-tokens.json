@@ -1,0 +1,74 @@
+{
+  "color": {
+    "motto-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Motto Ink — Primary text, headlines, logo wordmark, borders, decorative marks — the only ink in the system"
+    },
+    "soft-carbon": {
+      "$value": "#1b1b1c",
+      "$type": "color",
+      "$description": "Soft Carbon — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "bone-paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone Paper — Card surfaces, testimonial panels, text on dark fills, inverted nav state"
+    },
+    "parchment": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Parchment — Page canvas — the default background; sections sit on this without a card wrapper"
+    },
+    "ash-rule": {
+      "$value": "#d8d8d8",
+      "$type": "color",
+      "$description": "Ash Rule — Hairline dividers between sections, subtle separators, secondary surface"
+    },
+    "slate": {
+      "$value": "#717476",
+      "$type": "color",
+      "$description": "Slate — Body secondary text, helper copy, muted annotations"
+    },
+    "graphite": {
+      "$value": "#4d5153",
+      "$type": "color",
+      "$description": "Graphite — Body text on inverted or elevated surfaces, slightly stronger than Slate"
+    },
+    "smoke": {
+      "$value": "#848484",
+      "$type": "color",
+      "$description": "Smoke — Disabled nav items, list bullets, low-priority metadata, scroll cues"
+    },
+    "fog-border": {
+      "$value": "#c8cacd",
+      "$type": "color",
+      "$description": "Fog Border — Input field borders, form control edges"
+    },
+    "pewter": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Pewter — Tertiary text, footnote-level annotations"
+    }
+  },
+  "font": {
+    "disp-custom-display-face": {
+      "$value": "disp (custom display face)",
+      "$type": "fontFamily",
+      "$description": "Reserved exclusively for hero statements and display headlines. The display face operates at 61–154px with line-height locked near 1.0–1.1, so lines almost touch and the type forms a wall. Weight 500 here is anti-convention — most display faces use 700–900; this medium weight gives the headlines editorial gravity without the shouting, which is the signature move of the system."
+    },
+    "sans-custom-sans-face": {
+      "$value": "sans (custom sans face)",
+      "$type": "fontFamily",
+      "$description": "Used for all body copy, navigation, buttons, labels, captions, card content, and footers. A single weight — 500 — runs through the entire secondary type system, so visual hierarchy comes from size and leading, never from bold or light. This creates an evenness that lets the display font dominate without competition."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wearemotto.com",
+      "siteName": "Motto®",
+      "extractedAt": "2026-06-03T16:17:14.466Z",
+      "variant": "compact"
+    }
+  }
+}

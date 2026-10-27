@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-024-pending",
+  "itemIds": ["regression:REG-024"],
+  "requirement": "JA Morgan wp7: toggle, touch menu, drawer, registration, footers, social icons, overflow, tag filters, carousel arrows, back-to-top, account links behave like the source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-024-ja-morgan-wp7-audit-fixes.json",
+    "ref": "PR #825 (fix); fix evidence: Independent audit 03/10/2026; measure115 14/14 on 1.1.5 bound to wp-ja-morgan-1.1.5.zip ac4f8daa (tasks/ja-morgan-wp7/release/BROWSER.json)",
+    "invariant": "TOTAL 14/14 pass. toggle: the first click on the theme toggle changes the page background on a light OS and on a dark OS (390, 768 and 1440). touch-nav: at 1024 and 1180 with touch, the first tap on a parent menu item opens its submenu and keeps the URL; the second tap navigates. registration: the registration form creates a subscriber account. nav-lit, drawer-dark, drawer-close, footer, social, overflow, filters, carousel, backtop, wording, contact: each PASS with an empty bad list.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-024"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-024",
+    "pr": 825,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-morgan",
+    "file": "tests/regression/cases/REG-024-ja-morgan-wp7-audit-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

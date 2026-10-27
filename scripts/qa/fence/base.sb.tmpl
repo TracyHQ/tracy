@@ -1,0 +1,21 @@
+(version 1)
+(allow default)
+;; Studio fence for one QA lane ({{LANE}} / {{KIND}}). Rendered by scripts/qa/fence/render.mjs; do not edit
+;; the rendered copy. Files and network are deny-by-default; other operation classes stay open (plan §3.2).
+(deny file-read* file-write*)
+(allow file-read-metadata)
+(allow file-read* (literal "/") (subpath "/System") (subpath "/usr") (subpath "/bin") (subpath "/sbin")
+  (subpath "/Library/Apple") (subpath "/Library/Fonts") (subpath "/Library/Preferences")
+  (subpath "/private/etc") (subpath "/private/var/db/timezone") (subpath "/private/var/db/dyld")
+  (subpath "/dev"){{READ}})
+{{DENY_READ}}
+(allow file-write*{{WRITE}} (literal "/dev/null") (literal "/dev/tty") (literal "/dev/dtracehelper")
+  (regex #"^/dev/ttys[0-9]+$"))
+(deny network*)
+{{OUT}}
+{{CHROME_ONLY}}
+(deny process-info* (target others))
+(deny signal (target others))
+(deny appleevent-send)
+(deny lsopen)
+(deny mach-lookup (global-name "com.apple.pasteboard.1"))

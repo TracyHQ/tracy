@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-tangerine: #f15a24;
+  --color-sun-yellow: #ffed8c;
+  --color-blush-pink: #ffcccc;
+  --color-midnight-navy: #050133;
+  --color-coral-wash: #f4a398;
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-graphite: #333333;
+  --color-mist-blue: #cce1e2;
+
+  /* Typography — Font Families */
+  --font-manrope: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

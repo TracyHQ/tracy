@@ -1,0 +1,332 @@
+{
+  "dos": [
+    "Use #ffffff as the default product-story canvas and reserve #f5f5f7 for full-width feature bands and footer regions.",
+    "Set display hero statements in SF Pro Display 80px/600, 84px line height, and -1.2px tracking.",
+    "Use SF Pro Text 17px/400 with -0.374px tracking for feature paragraphs and in-page navigation at 17px/500.",
+    "Use 28px radius for feature cards and contained media; keep those cards shadowless.",
+    "Use #0071e3 only for compact filled conversion pills with #ffffff 12px SF Pro Text.",
+    "Use #0066cc for inline links and textual section links rather than turning every navigation item blue.",
+    "Space major storytelling sections by 90px and use 20px gaps between related interface elements."
+  ],
+  "donts": [
+    "Do not add gradients; product imagery supplies the page’s color and visual depth.",
+    "Do not use shadows on feature cards, editorial blocks, or floating pricing capsules.",
+    "Do not replace the 28px feature-card radius with 8px, 12px, or square corners.",
+    "Do not use #0071e3 as a large hero background or a universal filled button color.",
+    "Do not set hero headlines in bold 700 or wider tracking than -1.2px at 80px.",
+    "Do not introduce colored status pills for launch labels; use bare #b64400 12px text.",
+    "Do not place dense boxed UI panels over the product renders; keep #ffffff space around hardware imagery."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Gallery White",
+      "role": "Primary page canvas, hero background, product story sections, and feature-card surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f7",
+      "name": "Studio Mist",
+      "role": "Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafc",
+      "name": "Paper Frost",
+      "role": "Opened global-navigation surface and secondary pale fill",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d6d6d6",
+      "name": "Hairline Silver",
+      "role": "1px dividers, restrained control outlines, and subtle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e6e8",
+      "name": "Control Gray",
+      "role": "Disabled control fills, subdued utility surfaces, and single-pixel navigation edge treatment",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1d1f",
+      "name": "Ink",
+      "role": "Headlines, primary body copy, navigation labels, and dark utility icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#707070",
+      "name": "Slate",
+      "role": "Secondary copy, legal text, subdued navigation content, and low-emphasis glyphs",
+      "group": "neutral"
+    },
+    {
+      "hex": "#86868b",
+      "name": "Steel",
+      "role": "Input outlines, inactive indicators, and fine outlined-control edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0066cc",
+      "name": "Apple Blue",
+      "role": "Inline links, section links, and blue text controls — a precise blue punctuation against monochrome product storytelling",
+      "group": "brand"
+    },
+    {
+      "hex": "#0071e3",
+      "name": "Pricing Blue",
+      "role": "Filled pricing and learn-more controls — the brighter blue reserves visual urgency for compact conversion moments",
+      "group": "brand"
+    },
+    {
+      "hex": "#b64400",
+      "name": "Launch Orange",
+      "role": "Small launch-status labels such as new-product markers",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page begins with a compact global store navigation above a product-local navigation bar, then opens into a centered white hero with stacked product label, oversized headline, preorder copy, a dominant foldable-phone render, and a floating pricing capsule. Storytelling proceeds through a light-gray #f5f5f7 highlights band with a horizontally advancing set of large white 28px-radius media cards, followed by wide white editorial sections that pair left-aligned text blocks with oversized product imagery entering from the right or below. Section headers introduce each chapter, while an in-page horizontal anchor navigation supports long-form scrolling; the page is spacious, image-led, and does not rely on visible grid lines or conventional card stacks.",
+  "imagery": "The page is dominated by high-resolution product photography and device renders rather than illustration. Hardware is isolated against pure white or warm neutral image backdrops, often cropped at an oversized scale so the fold and thin profile become the composition; hands appear in the hero to demonstrate physical scale. Images are either edge-free on the white hero canvas or contained in large 28px-radius white cards against #f5f5f7. Product UI appears inside device screens as explanatory evidence, while icons remain small, monochrome global-navigation glyphs.",
+  "similar": [
+    {
+      "why": "Product-led landing pages pair isolated hardware renders with generous white space and compact blue conversion controls.",
+      "business": "Google Pixel"
+    },
+    {
+      "why": "Large hardware photography and restrained editorial feature chapters make the product, rather than decorative interface chrome, carry the page.",
+      "business": "Sony"
+    },
+    {
+      "why": "Uses oversized device imagery and sparse product storytelling, though Apple’s palette is more monochrome and its controls are smaller.",
+      "business": "Nothing"
+    },
+    {
+      "why": "Full-width product visual stages and minimal surrounding UI create a similarly showroom-like conversion flow.",
+      "business": "Tesla"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "28px",
+      "links": "10px",
+      "pills": "36px",
+      "badges": "0px",
+      "images": "28px",
+      "inputs": "980px",
+      "buttons": "9999px",
+      "navigation": "20px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "90px",
+    "cardPadding": "28px",
+    "pageMaxWidth": null
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Gallery White",
+      "level": 0,
+      "purpose": "Primary hero, editorial canvas, local navigation, and feature-card surface."
+    },
+    {
+      "hex": "#f5f5f7",
+      "name": "Studio Mist",
+      "level": 1,
+      "purpose": "Alternate section band, carousel backdrop, muted content area, and footer."
+    },
+    {
+      "hex": "#fafafc",
+      "name": "Paper Frost",
+      "level": 2,
+      "purpose": "Opened global-navigation layer."
+    },
+    {
+      "hex": "#e6e6e8",
+      "name": "Control Gray",
+      "level": 3,
+      "purpose": "Disabled or subdued utility-control fill and thin navigation edge."
+    }
+  ],
+  "northStar": "foldable device in a white gallery. Center product renders as the visual event, with typography and blue controls kept deliberately quiet around it.",
+  "typeScale": [
+    {
+      "role": "global-nav",
+      "size": 12,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "compact-control",
+      "size": 12,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-small",
+      "size": 14,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1.29,
+      "letterSpacing": -0.224
+    },
+    {
+      "role": "body",
+      "size": 17,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1.47,
+      "letterSpacing": -0.374
+    },
+    {
+      "role": "feature-copy",
+      "size": 17,
+      "family": "SF Pro Text",
+      "weight": 400,
+      "lineHeight": 1.24,
+      "letterSpacing": -0.374
+    },
+    {
+      "role": "product-nav-title",
+      "size": 19,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1.21,
+      "letterSpacing": 0.228
+    },
+    {
+      "role": "product-kicker",
+      "size": 21,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1,
+      "letterSpacing": 0.231
+    },
+    {
+      "role": "feature-heading",
+      "size": 40,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "hero-display",
+      "size": 80,
+      "family": "SF Pro Display",
+      "weight": 600,
+      "lineHeight": 1.05,
+      "letterSpacing": -1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Global Store Navigation",
+      "role": "Persistent utility navigation",
+      "description": "A 44px-tall white navigation bar with Apple glyph, compact SF Pro Text 12px/400 links, and rgba(0,0,0,0.8) labels. Keep controls unboxed; opened navigation uses #fafafc with a 1px #e6e6e8 edge and blur(20px)."
+    },
+    {
+      "name": "Product Local Navigation",
+      "role": "Product-page header and conversion controls",
+      "description": "A white local bar carries the product name in SF Pro Display 19px/600 and compact right-aligned pill controls. Use a 20px container radius where the local bar is floated over the page, with #d6d6d6 as the hairline boundary."
+    },
+    {
+      "name": "Outlined Explore Pill",
+      "role": "Secondary product-navigation control",
+      "description": "Use transparent fill, #1d1d1f text, a 1px #86868b outline, and a 9999px radius. Set compact SF Pro Text 12px/400 type with 16px line height; do not give this secondary control a colored fill."
+    },
+    {
+      "name": "Pricing Blue Pill",
+      "role": "Filled conversion control",
+      "description": "Use #0071e3 fill with #ffffff SF Pro Text 12px/400 at 16px line height and -0.12px tracking. Set a 9999px radius; this blue treatment stays compact inside the product bar and floating pricing callout."
+    },
+    {
+      "name": "Hero Product Stage",
+      "role": "Launch introduction",
+      "description": "Set a #ffffff full-bleed visual stage with centered product name in SF Pro Display 21px/600, then an 80px/600 display statement at 84px line height and -1.2px tracking. Place the foldable-device render directly beneath the text without a containing card."
+    },
+    {
+      "name": "Floating Pricing Callout",
+      "role": "Purchase context over product imagery",
+      "description": "Float a #ffffff rounded 28px capsule near the lower product render with 14px/600 #1d1d1f pricing text and compact secondary copy. Keep the blue Pricing Blue pill inside the callout; do not use drop shadows."
+    },
+    {
+      "name": "Section Anchor Navigation",
+      "role": "In-page feature navigation",
+      "description": "Render a horizontal list of SF Pro Text 17px/500 labels at 25px line height and -0.374px tracking in #1d1d1f. Use transparent backgrounds, 28px vertical padding, and no card or underline treatment."
+    },
+    {
+      "name": "Highlights Stage",
+      "role": "Feature-carousel section",
+      "description": "Use #f5f5f7 as the full section background, with a large #1d1d1f section heading and an Apple Blue text link aligned opposite it. Feature slides are #ffffff 28px-radius cards with no shadow."
+    },
+    {
+      "name": "Feature Media Card",
+      "role": "Product-detail showcase",
+      "description": "Use a #ffffff surface, 28px radius, no border, and no shadow. Center the device render with an SF Pro Display 24px/600 or 40px/600 feature statement above it; media may crop beyond the card edge."
+    },
+    {
+      "name": "Carousel Playback Control",
+      "role": "Highlights media control",
+      "description": "Use a translucent control track based on rgba(210,210,215,0.64), 36px radius, and subdued rgba(0,0,0,0.56) glyphs. Keep slide dots and pause control grouped in a small pill rather than adding visible card chrome."
+    },
+    {
+      "name": "Editorial Feature Block",
+      "role": "Long-form product story",
+      "description": "Place a small #1d1d1f SF Pro Display kicker above a large left-aligned display statement, followed by SF Pro Text 17px/400 body copy at approximately 21px line height and -0.374px tracking. The accompanying hardware image is oversized and allowed to enter from the opposite side."
+    },
+    {
+      "name": "Rounded Search Input",
+      "role": "Global navigation search",
+      "description": "Use #ffffff fill, #1d1d1f 13px Arial text, 24px left padding, 45px right padding, a 1px #86868b outline, and a 980px radius. Keep the default field visually absent until expanded from navigation."
+    },
+    {
+      "name": "Launch Status Label",
+      "role": "New-product annotation",
+      "description": "Use #b64400 SF Pro Text 12px/600 with 16px line height and -0.12px tracking. Leave it as plain text with no pill background or border."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Product names, display headlines, large feature statements, and section-level product claims. The 80px/600 hero treatment tightens to -1.2px, making the largest type feel compact rather than promotional.",
+      "sizes": "19px, 21px, 24px, 28px, 40px, 48px, 80px",
+      "family": "SF Pro Display",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.05, 1.08, 1.14, 1.17, 1.21, 1.33, 1.38",
+      "substitute": "Inter, Helvetica Neue, Arial",
+      "letterSpacing": "-1.2px at 80px; normal at 40px; +0.23px at 19-21px; profile range -0.015em to 0.012em",
+      "fontFeatureSettings": "\"numr\""
+    },
+    {
+      "role": "Navigation, body copy, links, compact buttons, pricing details, labels, and footnotes. The consistently negative tracking lets small interface text remain dense and Apple-specific instead of looking like generic system UI.",
+      "sizes": "10px, 12px, 14px, 17px, 20px, 26px, 44px",
+      "family": "SF Pro Text",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.18, 1.24, 1.29, 1.33, 1.43, 1.47",
+      "substitute": "Inter, Helvetica Neue, Arial",
+      "letterSpacing": "-0.37px at 10px, -0.12px at 12px, -0.22px at 14px, -0.37px at 17px; profile range -0.037em to -0.003em",
+      "fontFeatureSettings": "\"numr\""
+    },
+    {
+      "role": "Fallback text inside the observed search/input control only.",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "Arial"
+    }
+  ],
+  "description": "Apple treats the product page as a white gallery: enormous product photography occupies the center while compact black typography gives each claim a controlled, almost editorial weight. The page alternates seamless white storytelling sections with #f5f5f7 feature bands containing oversized #ffffff cards, using one saturated blue only for links and compact conversion controls. Rounded 28px media frames soften the hardware-led composition without turning the page into a card dashboard; nearly every surface stays flat and shadowless.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Gallery White: #ffffff — Primary page canvas, hero background, product story sections, and feature-card surfaces\n- Studio Mist: #f5f5f7 — Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks\n- Paper Frost: #fafafc — Opened global-navigation surface and secondary pale fill\n- Hairline Silver: #d6d6d6 — 1px dividers, restrained control outlines, and subtle separators\n- Control Gray: #e6e6e8 — Disabled control fills, subdued utility surfaces, and single-pixel navigation edge treatment\n- Ink: #1d1d1f — Headlines, primary body copy, navigation labels, and dark utility icons\n- Slate: #707070 — Secondary copy, legal text, subdued navigation content, and low-emphasis glyphs\n- Steel: #86868b — Input outlines, inactive indicators, and fine outlined-control edges\n- Apple Blue: #0066cc — Inline links, section links, and blue text controls — a precise blue punctuation against monochrome product storytelling\n- Pricing Blue: #0071e3 — Filled pricing and learn-more controls — the brighter blue reserves visual urgency for compact conversion moments\n- Launch Orange: #b64400 — Small launch-status labels such as new-product markers\n\nCreate a #ffffff launch hero with centered SF Pro Display 21px/600 product label and a centered 80px/600, 84px-line-height headline in Ink (#1d1d1f); place an oversized foldable-device render directly below with no enclosing card.\nCreate a Product Local Navigation bar with an SF Pro Display 19px/600 Ink product title, an outlined Explore Pill, and a Pricing Blue (#0071e3) 9999px-radius pricing pill using #ffffff SF Pro Text 12px/400.\nCreate a Studio Mist (#f5f5f7) highlights section with an Ink heading and Apple Blue (#0066cc) text link; use a #ffffff 28px-radius feature media card with no shadow and an SF Pro Display 40px/600 feature statement.\nCreate a white editorial product section with a left-aligned Ink feature statement and SF Pro Text 17px/400 body copy at 21px line height and -0.374px tracking; crop a large product photograph into the right side.\nCreate a floating #ffffff 28px-radius pricing callout over a product render using Ink 14px/600 pricing copy and a compact Pricing Blue 9999px-radius pill."
+    }
+  ],
+  "elevationPhilosophy": "Surfaces gain separation through #ffffff against #f5f5f7, 28px media corners, and sparse 1px #d6d6d6 edges rather than cast shadows. The only elevation-like marks are 0 0 0 1px outlines on navigation and selected controls."
+}

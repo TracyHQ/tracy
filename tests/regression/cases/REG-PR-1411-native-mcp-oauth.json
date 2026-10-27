@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1411-native-mcp-oauth",
+  "kind": "feat",
+  "title": "Native MCP clients use exact callbacks and site-bound OAuth grants",
+  "pr": 1411,
+  "area": "mcp/oauth",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run static callback and signed-out authorize cases for Claude Code, Cursor and Codex.",
+    "Submit Allow and Cancel in Chromium from an HTTPS consent page to actual loopback listeners.",
+    "With TEST_DATABASE_URL set to a disposable PostgreSQL database, run the MCP OAuth composition-root suite."
+  ],
+  "expect": [
+    "Only each client’s registered callbacks reach sign-in; altered hosts, ports, paths, queries and other clients’ callbacks are rejected.",
+    "Both decisions arrive at the exact callback with state and issuer. Allow stores one site-bound code; Cancel stores none.",
+    "Authorization codes require S256, the exact stored callback, client and resource. Cross-client refresh/revoke cannot affect a connection. Rotation keeps the key id; revocation ends access and refresh; cross-site calls return 403."
+  ],
+  "selectors": {
+    "door": "GET/POST /oauth/authorize",
+    "token": "POST /oauth/token",
+    "revoke": "POST /oauth/revoke"
+  },
+  "fence": "Fixed public client IDs and exact redirect lists; signed consent, S256 PKCE, resource/client/grant and single-site binding.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/mcp-clients.test.mjs",
+      "apps/tracy-web/test/mcp-callback.test.mjs",
+      "apps/tracy-web/test/mcp-oauth.test.mjs",
+      "apps/tracy-web/test/e2e/mcp-consent.test.mjs"
+    ],
+    "tests": [
+      "native public clients accept only their exact callbacks without fetching metadata",
+      "native callback discovery reaches sign-in and binds the request to the exact client",
+      "native tracy-codex allow: browser follows CSP through to the exact loopback callback",
+      "tracy-codex http://127.0.0.1:17833/callback: consent, PKCE, resource, client/grant isolation, rotation and revoke",
+      "tracy-claude-code http://localhost:17832/callback: consent, PKCE, resource, client/grant isolation, rotation and revoke",
+      "tracy-cursor http://localhost:8787/callback: consent, PKCE, resource, client/grant isolation, rotation and revoke",
+      "tracy-cursor https://www.cursor.com/agents/mcp/oauth/callback: consent, PKCE, resource, client/grant isolation, rotation and revoke"
+    ],
+    "needs": ["postgres"]
+  }
+}

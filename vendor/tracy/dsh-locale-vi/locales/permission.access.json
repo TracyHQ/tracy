@@ -1,0 +1,7 @@
+{
+  "confirm.acknowledge": "Tôi đã hiểu rủi ro và vẫn muốn tiếp tục",
+  "confirm.cancel": "Huỷ",
+  "confirm.description": "Khi bật Full access, agent sẽ bớt các bước xác nhận và được trực tiếp thực hiện nhiều hành động hơn, kể cả thao tác nhạy cảm, sửa tệp hoặc chạy lệnh bên ngoài. Chỉ nên dùng khi bạn tin tưởng công việc hiện tại.",
+  "confirm.enable": "Bật Full access",
+  "confirm.title": "Bật Full access?"
+}

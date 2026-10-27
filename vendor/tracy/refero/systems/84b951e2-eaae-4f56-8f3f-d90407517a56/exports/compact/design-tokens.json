@@ -1,0 +1,54 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Navigation bar, filled primary buttons, primary headlines, hairline borders, icon strokes — the structural ink of the entire system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, nav text, button text on dark — the negative space that makes the whisper-thin type readable"
+    },
+    "slate": {
+      "$value": "#737582",
+      "$type": "color",
+      "$description": "Slate — Body copy, secondary text, link text, thin borders — the only mid-tone in the palette carries all helper and supporting information"
+    },
+    "iron": {
+      "$value": "#4e525e",
+      "$type": "color",
+      "$description": "Iron — Heavier borders, dividers in dense areas, secondary structural edges"
+    },
+    "mist": {
+      "$value": "#ebeff2",
+      "$type": "color",
+      "$description": "Mist — Input field fills, subtle recessed surfaces, hover wash on form fields"
+    },
+    "current-spectrum": {
+      "$value": "#f4cb45",
+      "$type": "color",
+      "$description": "Current Spectrum — Brand gradient (yellow → orange → purple → transparent) used on the wordmark and brand-mark expressions — the only chromatic surface in the system"
+    }
+  },
+  "font": {
+    "soehne": {
+      "$value": "soehne",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system. Weight 100–300 at large sizes (48–90px) is the signature choice — headlines whisper at ultra-thin weight with negative tracking, producing a fashion-editorial cadence rarely seen in fintech. Weight 400 handles body and UI, weight 700 for button labels and bold feature titles."
+    },
+    "proxima-nova": {
+      "$value": "proxima-nova",
+      "$type": "fontFamily",
+      "$description": "proxima-nova — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://current.com",
+      "siteName": "Current",
+      "extractedAt": "2026-06-03T22:10:38.631Z",
+      "variant": "compact"
+    }
+  }
+}

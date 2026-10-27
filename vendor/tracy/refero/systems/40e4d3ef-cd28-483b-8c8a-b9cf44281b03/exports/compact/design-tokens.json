@@ -1,0 +1,69 @@
+{
+  "color": {
+    "midnight-violet": {
+      "$value": "#2a2a63",
+      "$type": "color",
+      "$description": "Midnight Violet — Headings, body text, link text, and border accents — the signature ink color"
+    },
+    "deep-ink": {
+      "$value": "#151531",
+      "$type": "color",
+      "$description": "Deep Ink — Primary text, icon strokes, link color, and high-emphasis surface elements"
+    },
+    "periwinkle-accent": {
+      "$value": "#6868f7",
+      "$type": "color",
+      "$description": "Periwinkle Accent — Rare vivid accent surface for highlighted cards or callout blocks — a single bright note against the monochrome body"
+    },
+    "cream-canvas": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Cream Canvas — Page background and elevated card surface — the warm white base layer"
+    },
+    "lavender-mist": {
+      "$value": "#f0f0fe",
+      "$type": "color",
+      "$description": "Lavender Mist — Soft tinted card surface for content blocks and feature containers"
+    },
+    "mist-border": {
+      "$value": "#e9ecef",
+      "$type": "color",
+      "$description": "Mist Border — Hairline borders, dividers, card edges, and structural separators"
+    },
+    "graphite": {
+      "$value": "#343a40",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and muted surface details"
+    },
+    "smoke": {
+      "$value": "#cfd0d1",
+      "$type": "color",
+      "$description": "Smoke — Subtle shadow base and low-contrast surface tone"
+    },
+    "fog": {
+      "$value": "#c3c4c6",
+      "$type": "color",
+      "$description": "Fog — Tertiary shadow tint for layered elevation"
+    }
+  },
+  "font": {
+    "sf-pro-rounded": {
+      "$value": "SF Pro Rounded",
+      "$type": "fontFamily",
+      "$description": "Primary typeface — headings, body, links, UI chrome. The rounded terminals give text a soft, bookish warmth that defines the brand's voice."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary typeface — used sparingly for body text blocks"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.june.so",
+      "siteName": "June",
+      "extractedAt": "2026-06-03T21:46:25.936Z",
+      "variant": "compact"
+    }
+  }
+}

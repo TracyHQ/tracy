@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1015-plan-signin-fleet-refused",
+  "kind": "feat",
+  "title": "On a shared host no seat, owner included, can start a model-plan sign-in or touch a plan credential through dsh-subscriptions",
+  "pr": 1015,
+  "area": "desktop/plan-connect",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "seat:editor", "chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (README.md for a local stand). For each seat in REG_SEATS (default a,b — the site owner and an editor), a NEW browser context signed in as that seat opens $O/<site>/ (REG_SITE, default the stand's WordPress site).",
+    "S2: From the page, fetch every dsh-subscriptions route except GET status and GET config under $O/<site>/ (34 routes: oauth start/device/callback/complete, import-token, import, import-local, export, export-backup, import-backup, vault export/import, logout, PUT config, check, smoke, proxy-check, proxy, quarantine park/probe, reset-credits prepare/consume/list, analyze-session, update, discover-local, diagnostics, history, telemetry, alerts, subscriptions, health, ui) with an invalid body.",
+    "S3: From the page, GET status and GET config."
+  ],
+  "expect": [
+    "S2: every route answers 403 with the gate's text `This feature is only available to the owner account`, for both seats.",
+    "S3: both retired plugin reads answer 404; the account broker GET /api/seat-plan/status answers 200 for the signed-in seat."
+  ],
+  "selectors": {
+    "doors": "$O/<site>/dsh-subscriptions/*",
+    "gate": "vendor/tracy/dsh-passwords/src/tracy/routes.ts (only GET status|config is a seat route)"
+  },
+  "evidence": "Account subscriptions replace the host-wide plugin. The fleet overlay disables dsh-subscriptions; its two formerly readable doors return 404 on tracy-rc2 (08/10/2026), while the seat gate continues refusing host credential mutations.",
+  "fence": "The seat gateway's route table. Not covered: the gateway's master (operator) account, which is not a seat.",
+  "run": {
+    "cmd": [
+      "../../node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.config.mjs",
+      "specs/REG-PR-1015-plan-signin-fleet-refused.spec.mjs"
+    ],
+    "cwd": "tests/regression",
+    "needs": ["stand", "chrome"]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#2c6bed",
+      "$type": "color",
+      "$description": "Signal Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-signal": {
+      "$value": "#2942ff",
+      "$type": "color",
+      "$description": "Deep Signal — Navigation links and brand mark anchors — slightly cooler and more electric than Signal Blue, reserved for chrome-level interaction"
+    },
+    "signal-sky": {
+      "$value": "#9dbbf8",
+      "$type": "color",
+      "$description": "Signal Sky — Hero section wash, large decorative panels — soft periwinkle that bathes the page in brand color without overwhelming"
+    },
+    "signal-mist": {
+      "$value": "#a5cad5",
+      "$type": "color",
+      "$description": "Signal Mist — Secondary feature panel backgrounds — desaturated teal that recedes behind content, used to break the page rhythm without adding chroma"
+    },
+    "ink": {
+      "$value": "#1b1b1b",
+      "$type": "color",
+      "$description": "Ink — Primary body and heading text — soft black at AAA contrast on every surface, the dominant typographic color"
+    },
+    "slate": {
+      "$value": "#404654",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, subdued paragraphs — cool gray with a faint violet cast that echoes the brand blue"
+    },
+    "twilight": {
+      "$value": "#3c3744",
+      "$type": "color",
+      "$description": "Twilight — Footer background — muted purple-black that grounds the page in a warm dark wash without pure black harshness"
+    },
+    "fog": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Fog — Hairline borders, dividers, footer text — the structural neutral that separates content bands"
+    },
+    "paper": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Paper — Page canvas — off-white that warms the stark white without going cream"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire site. Weight 800 headlines are anti-soft — paired with tight 1.07–1.14 line-heights they create near-solid blocks of type that anchor the page. Weight 600 handles buttons and subheadings with a confident mid-weight. Weight 400 body at 1.50 line-height provides generous reading rhythm. The extreme contrast between 800 display and 400 body is the typographic signature."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "system-ui — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://signal.org",
+      "siteName": "Signal Messenger",
+      "extractedAt": "2026-06-03T19:38:05.159Z",
+      "variant": "compact"
+    }
+  }
+}

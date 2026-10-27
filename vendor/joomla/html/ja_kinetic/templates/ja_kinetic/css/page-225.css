@@ -1,0 +1,391 @@
+/* =============================================================
+   page-225.css — About page (body.item-225) pixel-perfect
+   fixes vs Pencil kinetic.pen dark-desktop frame qJQC1 /
+   light-desktop A33dvX / mobile-dark wAJDy / mobile-light q11st.
+   Auto-loaded last; every rule scoped to body.item-225.
+   No optimize cache clear needed (cache-busted via ?cb param).
+   ============================================================= */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. MASTHEAD  (acm-page-masthead)
+   Design: bg #161B18 dark (transparent/--bg in light); radial lime glow;
+           pt 66 / pb 58; h1 46px -1.3px lh1.08; sub = --text
+   Current ACM CSS: transparent bg; pt/pb 96px; h1 52px -1.5px lh1.04; sub --muted
+   ───────────────────────────────────────────────────────────── */
+
+/* Dark mode: masthead needs #161B18 bg (design); currently shows body #0A0D0C */
+html.t4-dark body.item-225 .acm-page-masthead .hx-section {
+  background-color: #161B18 !important;
+  /* Preserve grid lines + add subtle radial lime glow from design */
+  background-image:
+    radial-gradient(ellipse 60% 80% at 50% 0%, rgba(163, 230, 53, 0.06) 0%, transparent 100%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+  background-size: auto, 30px 30px, 30px 30px !important;
+}
+
+body.item-225 .acm-page-masthead .hx-section {
+  padding-top:    66px !important;
+  padding-bottom: 58px !important;
+}
+
+body.item-225 .acm-page-masthead .hx-h1 {
+  font-size:      46px !important;
+  letter-spacing: -1.3px !important;
+  line-height:    1.08 !important;
+}
+
+body.item-225 .acm-page-masthead .hx-mast-sub {
+  color: var(--text) !important;   /* was var(--muted) */
+}
+
+/* Mobile masthead: ACM CSS already sets 64px; restore it over our override */
+@media (max-width: 620px) {
+  body.item-225 .acm-page-masthead .hx-section {
+    padding-top:    64px !important;
+    padding-bottom: 64px !important;
+  }
+  body.item-225 .acm-page-masthead .hx-h1 {
+    font-size: 34px !important;
+    letter-spacing: -1px !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2b. STATS BAND  (acm-features-ledger metrics — module 233)
+   NO card border/radius (Home uses the bordered card — About is a band).
+   --chrome-elevated == design $elevated in BOTH themes (body --elevated #0F1311 too dark).
+   ───────────────────────────────────────────────────────────── */
+body.item-225 .acm-features-ledger.layout-metrics .hx-section {
+  background:     var(--chrome-elevated) !important;
+  border-top:     1px solid var(--border) !important;
+  border-bottom:  1px solid var(--border) !important;
+}
+@media (min-width: 768px) {
+  body.item-225 .acm-features-ledger.layout-metrics .hx-section {
+    padding: 72px 0 !important;
+  }
+  /* band, not card: strip the Home card chrome */
+  body.item-225 .acm-features-ledger .hx-metrics-card {
+    background:    transparent !important;
+    border:        0 !important;
+    border-radius: 0 !important;
+    max-width:     1240px !important;
+    overflow:      visible !important;
+  }
+  /* header strip sits directly on the band (no separate fill / divider) */
+  body.item-225 .acm-features-ledger .hx-metrics-head {
+    background:     transparent !important;
+    border-bottom:  0 !important;
+    padding:        0 0 28px 0 !important;
+  }
+  /* value columns align to the capped content edges; keep inter-col dividers */
+  body.item-225 .acm-features-ledger .hx-metric-col {
+    padding: 0 28px !important;
+  }
+  body.item-225 .acm-features-ledger .hx-metric-col:first-child { padding-left:  0 !important; }
+  body.item-225 .acm-features-ledger .hx-metric-col:last-child  { padding-right: 0 !important; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. STORY  (acm-prose-quote)
+   Design: pad 72px; col 820px left-aligned; bq 24px pad-l24 lh1.4 ls0
+   Current ACM CSS: pad 80px; col 720px centred; bq 27px pad-l28 lh1.32 ls-0.6
+   ───────────────────────────────────────────────────────────── */
+body.item-225 .acm-prose-quote .hx-section {
+  padding-top:    72px !important;
+  padding-bottom: 72px !important;
+}
+
+body.item-225 .acm-prose-quote .hx-prose-col {
+  max-width:  820px !important;
+  text-align: left !important;    /* design: left-aligned prose, not centred */
+}
+
+body.item-225 .acm-prose-quote .hx-prose-quote {
+  font-size:      24px !important;
+  padding-top:    4px !important;
+  padding-bottom: 4px !important;
+  padding-left:   24px !important;
+  line-height:    1.4 !important;
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 620px) {
+  body.item-225 .acm-prose-quote .hx-section {
+    padding-block: 56px !important;
+  }
+  body.item-225 .acm-prose-quote .hx-prose-quote {
+    font-size:   20px !important;
+    padding-left: 20px !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. VALUES  (acm-features-intro)
+   Design (dark): bg #161B18; borders var(--border); pad 72px;
+                  2-col grid gap 20; cards: bg var(--surface), border
+                  var(--border)/1px, r14, p26; first card: border --primary;
+                  icon box: lime-tint bg (rgba 163 230 53 / 0.094), r10, 44px.
+   Design (light): bg var(--elevated) = #F2F5EE; borders var(--border).
+   Current ACM CSS: no bg/border; 3-col grid gap 24; cards: borderless pad 4px;
+                    icon box: var(--elevated) bg, border, r11, 46px.
+   ───────────────────────────────────────────────────────────── */
+
+/* Light mode default: elevated section */
+body.item-225 .acm-features-intro .hx-section {
+  background-color: var(--elevated) !important;
+  border-top:       1px solid var(--border) !important;
+  border-bottom:    1px solid var(--border) !important;
+  padding-top:      72px !important;
+  padding-bottom:   72px !important;
+}
+
+/* Dark mode: exact .pen hex (#161B18 — not equal to --elevated dark #0F1311) */
+html.t4-dark body.item-225 .acm-features-intro .hx-section {
+  background-color: #161B18 !important;
+}
+
+/* 2-column grid (overrides inline style="grid-template-columns:repeat(3,1fr)") */
+body.item-225 .acm-features-intro .hx-fi-grid {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 20px !important;
+}
+
+/* Card styling: border-box card, was borderless.
+   Reset the base block's negative margin (-10px -12px, meant for the borderless
+   hover variant) — otherwise cards bleed into the 20px grid gap and touch. */
+body.item-225 .acm-features-intro .hx-feat {
+  background-color: var(--surface) !important;
+  border:           1px solid var(--border) !important;
+  border-radius:    14px !important;
+  padding:          26px !important;
+  margin:           0 !important;
+}
+
+/* Cards: neutral by default, lime border on HOVER only (no stuck first card) */
+body.item-225 .acm-features-intro .hx-feat {
+  transition: border-color .15s ease;
+}
+body.item-225 .acm-features-intro .hx-feat:hover {
+  border-color: var(--primary) !important;
+}
+
+body.item-225 .acm-features-intro .hx-feat-icon {
+  background:   rgba(163, 230, 53, 0.094) !important;
+  border:       none !important;
+  border-radius: 10px !important;
+  width:        44px !important;
+  height:       44px !important;
+  margin-bottom: 20px !important;
+}
+
+@media (max-width: 880px) {
+  /* already 2-col at 880; keep it consistent */
+  body.item-225 .acm-features-intro .hx-fi-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+@media (max-width: 620px) {
+  body.item-225 .acm-features-intro .hx-section {
+    padding-block: 56px !important;
+  }
+  body.item-225 .acm-features-intro .hx-fi-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4. TEAM  (acm-teams)
+   Design: pad 72px; card r14 p24; chip: lime-tint bg, r32 circular,
+           font 20px 700, no border; name 17px; role: JetBrains Mono
+           12.5px var(--muted) (not primary).
+   Current ACM CSS: pad 80px; card r12 p28 p26; chip: var(--elevated)
+           bg border r12 font 19px; name 18px; role: IBM 13.5px primary.
+   ───────────────────────────────────────────────────────────── */
+body.item-225 .acm-teams .hx-section {
+  padding-top:    72px !important;
+  padding-bottom: 72px !important;
+}
+
+body.item-225 .acm-teams .hx-team-card {
+  border-radius: 14px !important;
+  padding:       24px !important;
+}
+
+body.item-225 .acm-teams .hx-team-chip {
+  background:   rgba(163, 230, 53, 0.145) !important;
+  border:       none !important;
+  border-radius: 50% !important;
+  font-size:    20px !important;
+}
+
+/* Avatar photo: circular to match the chip (real headshots, object-fit cover) */
+body.item-225 .acm-teams .hx-team-avatar {
+  border-radius: 50% !important;
+}
+
+body.item-225 .acm-teams .hx-team-name {
+  font-size: 17px !important;
+}
+
+body.item-225 .acm-teams .hx-team-role {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size:   12.5px !important;
+  font-weight: 400 !important;
+  color:       var(--muted) !important;  /* was var(--primary) */
+}
+
+@media (max-width: 620px) {
+  body.item-225 .acm-teams .hx-section {
+    padding-block: 56px !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. JOURNEY  (acm-incident-timeline)
+   Design: bg var(--bg); no borders; outer pad 72px; inner pad 0;
+           inner max-width 820px; VERTICAL timeline: left col 60px
+           (12px lime dot + 2px connector), right col 1fr (year mono
+           14px 600 primary; title Space 18px 600; desc IBM 14.5px text).
+   Current ACM CSS: bg var(--elevated); borders; outer pad 80px;
+                    inner pad 80px (double!); inner 1240px;
+                    HORIZONTAL 4-col grid.
+   ───────────────────────────────────────────────────────────── */
+
+body.item-225 .acm-incident-timeline .hx-section {
+  background:    var(--bg) !important;
+  border-top:    none !important;
+  border-bottom: none !important;
+  padding-top:   72px !important;
+  padding-bottom: 72px !important;
+}
+
+/* Inner container: remove double-padding, narrow to 820px */
+body.item-225 .acm-incident-timeline .acm-incident-inner {
+  max-width:      820px !important;
+  padding-top:    0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ── Vertical timeline layout ── */
+
+body.item-225 .acm-incident-timeline .hx-incident {
+  display:        flex !important;
+  flex-direction: column !important;
+  gap:            0 !important;
+}
+
+/* position: relative for the connector ::after */
+body.item-225 .acm-incident-timeline .hx-inc-cell {
+  display:               grid !important;
+  grid-template-columns: 60px 1fr !important;
+  grid-auto-rows:        auto !important;
+  position:              relative !important;
+  padding:               0 0 40px 0 !important;
+  /* cancel horizontal padding from ACM CSS */
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-cell:last-child {
+  padding-bottom: 0 !important;
+}
+
+/* Hide the original horizontal connector line */
+body.item-225 .acm-incident-timeline .hx-inc-line {
+  display: none !important;
+}
+
+/* Make hx-inc-head "display:contents" so its children
+   (hx-inc-node, hx-inc-time) participate directly in the cell grid */
+body.item-225 .acm-incident-timeline .hx-inc-head {
+  display: contents !important;
+}
+
+/* ── Explicit grid placement for each child element ── */
+
+/* Node (dot): replaces the icon with a 12px lime circle */
+body.item-225 .acm-incident-timeline .hx-inc-node {
+  grid-column:   1 !important;
+  grid-row:      1 !important;
+  align-self:    start !important;
+  justify-self:  center !important;
+  width:         12px !important;
+  height:        12px !important;
+  border-radius: 50% !important;
+  background:    var(--primary) !important;
+  border:        none !important;
+  flex:          none !important;
+  z-index:       1 !important;
+  margin-top:    4px !important; /* align vertically with year text */
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-node svg {
+  display: none !important;    /* hide the SVG icon; dot replaces it */
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-time {
+  grid-column:    2 !important;
+  grid-row:       1 !important;
+  align-self:     start !important;
+  font-size:      14px !important;
+  font-weight:    600 !important;
+  letter-spacing: 0 !important;
+  margin-bottom:  6px !important;
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-phase {
+  grid-column: 2 !important;
+  grid-row:    2 !important;
+  margin-bottom: 6px !important;
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-title {
+  grid-column: 2 !important;
+  grid-row:    3 !important;
+  font-size:   18px !important;
+  margin: 0 0 8px !important;
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-text {
+  grid-column:  2 !important;
+  grid-row:     4 !important;
+  font-size:    14.5px !important;
+  padding-right: 0 !important;  /* cancel ACM CSS padding-right: 14px */
+}
+
+/* Vertical connector line: from below dot to cell bottom */
+body.item-225 .acm-incident-timeline .hx-inc-cell::after {
+  content:    '' !important;
+  position:   absolute !important;
+  left:       29px !important;   /* center of 60px col = 30px, line 2px → 29px */
+  top:        20px !important;   /* 4px margin + 12px dot + 4px gap = 20px */
+  bottom:     0 !important;
+  width:      2px !important;
+  background: var(--border) !important;
+}
+
+body.item-225 .acm-incident-timeline .hx-inc-cell:last-child::after {
+  display: none !important;
+}
+
+@media (max-width: 620px) {
+  body.item-225 .acm-incident-timeline .hx-section {
+    padding-block: 56px !important;
+  }
+  body.item-225 .acm-incident-timeline .acm-incident-inner {
+    padding-left:  0 !important;
+    padding-right: 0 !important;
+  }
+  body.item-225 .acm-incident-timeline .hx-inc-cell {
+    grid-template-columns: 44px 1fr !important;
+  }
+  body.item-225 .acm-incident-timeline .hx-inc-cell::after {
+    left: 21px !important;    /* center of 44px col */
+  }
+}

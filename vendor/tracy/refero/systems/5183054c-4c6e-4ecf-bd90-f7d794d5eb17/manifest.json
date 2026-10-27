@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+  "status": "complete",
+  "name": "Telepathic Instruments",
+  "url": "https://styles.refero.design/style/5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+  "sourceWebsite": "https://telepathicinstruments.com",
+  "extractedAt": "2026-06-03T16:57:35.355Z",
+  "capturedAt": "2026-10-08T05:11:37.346509+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "broadcast control room at golden hour — obsidian screens, warm cream paper, one tungsten bulb",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e7b4eb1b-499b-47bc-a727-1abe5405f374.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a19b3c16470735413cbdfcd5f302e5c49d798212da0b356e0514ddc8c3bdd80e",
+      "bytes": 22736
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4a7d40c674968fbe8b220e84a6f133fb4361fe6b727f7547096dc2a3f6106fe2",
+      "bytes": 198451
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b4638e0cf985043af5ebe7004a3f06700ca07e1e8f0e59e292dae7a3bd201f16",
+      "bytes": 19698
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8e4b60d8ff3ab1ee1158b985049e7d8c2b5aa73df07062425a648e2b1966473a",
+      "bytes": 11482
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "392cb6a290f64c8a054595a60e85f4a6e3159d0f83529c34e1170559219a032c",
+      "bytes": 13914
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2ce6343f889455c7fe85be84a8ad9779a08bed1d014e01186f2cf90d32d4505e",
+      "bytes": 3409
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "21241832da814dc975d9c1141e14ed4ed7bf14631115b33b1341c9b0b89a0625",
+      "bytes": 556
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0165a297f568d230bcb321a3d98872302dc6c33e455c22fb6b3e1614b35e0587",
+      "bytes": 573
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b5aa9b1e989c2977bf3ec3796cd3cbe46a520539ca950dfb36d5ff010aaa11ff",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b462dcc01ba524bc72b56d61cfb33fbd044e292e025dc492ebe33b09191a5aba",
+      "bytes": 46839
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "23096499a9e72153025debce9429fa2ed99b3c2a9297a8d846f4ea235c59ad98",
+      "bytes": 24934
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "960167ad3e09d46e5972bba805eebef31e5d62412e66acb99fc251ab8a42ad10",
+      "bytes": 56308
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e8a522f918a6ba6088833dbc8219707d67d89121dc5cbbab07babc73be327216",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a6af3c7cad6fc08ac7af777222335d072e69aa2d9e51713b8b2da0223d86121c",
+      "bytes": 1450
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "73eafc3acaef54c8c832a11c454b973ab429ec55aaca1c6a07e105b9fa083468",
+      "bytes": 2060
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10ab6120-3d03-48ff-aebe-0b4910edc046",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "1f69df96-675d-4ee0-aa85-e085d9d39981",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6b5a0bf4-3d2a-4c3b-aa2e-652f1acb82c0",
+    "6ffe7b61-a418-4cbd-9e7a-a5129db6c589",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "c363a216-873c-4112-b960-8e823db76f74",
+    "d1f5ece3-ec6c-467d-8a59-51ee259cc023",
+    "e5081033-bd79-479a-aef6-8b002df6086a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

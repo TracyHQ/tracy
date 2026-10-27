@@ -1,0 +1,91 @@
+{
+  "id": "QA-UNIT-REG-PR-893-wp-demo-contact-links-lead-to-customer-happy",
+  "itemIds": ["regression:REG-PR-893-wp-demo-contact-links-lead-to-customer"],
+  "requirement": "WordPress Apply: the demo company's mailto and tel links lead to the customer's typed mailbox and phone",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-wp-demo-contact-links-lead-to-customer.json",
+    "ref": "PR #893 (fix); fix evidence: Ledger L17, 05/10/2026: after Apply on ja-kinetic (WordPress) the Contact page still invited mail to the demo company (mailto:sales@kinetic.dev, support@..., security@...) and the customer's typed email and phone were on no page. Reds afbe7714f, 1b9ce6e02, 2a389803b, 8815b8f1e; fixes 756c1c8c5, 907052ca9, ce3341830, 3022ab631.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 96). Every named case is 'ok' (none 'not ok', none '# SKIP'): every mailto:/tel: link to the template's company in every part the sweep reads points at (and shows) the first typed mailbox/phone, read decoded as a dialler reads it; with nothing typed a demo link that is all its block says goes with the block, one in a sentence, a row of icons or a linked picture is left and said; a block's own url is found however its comment spells it; the account that receives form mail never replaces the demo tile.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:62",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-engines/wordpress.js:340",
+      "apps/tracy-web/src/sites/brief-engines/wp-blocks.js:243",
+      "apps/tracy-web/src/sites/brief-engines/wp-residue.js:818",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/wordpress.js:161 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:1278 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:21 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:2869 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:3072 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the mailbox and phone the customer typed are where the template's company had its own, in every part the sweep reads",
+    "with no mailbox typed, the demo's e-mail tile goes, and the account that receives the forms' mail is not put in its place",
+    "a link that mails or calls the template's company leads to the customer's own mailbox and phone, and shows them where it showed the demo's",
+    "with no mailbox and no phone typed, a link to the demo that is all its block says goes with the block; one inside a sentence is left and said",
+    "a sweep asked nothing about contacts leaves every mail and phone link as it is",
+    "a raw HTML row of icon links, or a linked picture, is never cut whole for the one demo link in it",
+    "a phone link is read as a dialler reads it, every number or address a contact link shows becomes the typed one, and only the first typed one is used",
+    "a block's own contact link is found however its comment spells it, and the note says why a link was left"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-wp-demo-contact-links-lead-to-customer"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-wp-demo-contact-links-lead-to-customer",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply/wordpress",
+    "file": "tests/regression/cases/REG-PR-893-wp-demo-contact-links-lead-to-customer.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/brief-wordpress.test.mjs",
+    "apps/tracy-web/test/brief-wp-residue.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the mailbox and phone the customer typed are where the template's company had its own, in every part the sweep reads",
+    "with no mailbox typed, the demo's e-mail tile goes, and the account that receives the forms' mail is not put in its place",
+    "a link that mails or calls the template's company leads to the customer's own mailbox and phone, and shows them where it showed the demo's",
+    "with no mailbox and no phone typed, a link to the demo that is all its block says goes with the block; one inside a sentence is left and said",
+    "a sweep asked nothing about contacts leaves every mail and phone link as it is",
+    "a raw HTML row of icon links, or a linked picture, is never cut whole for the one demo link in it",
+    "a phone link is read as a dialler reads it, every number or address a contact link shows becomes the typed one, and only the first typed one is used",
+    "a block's own contact link is found however its comment spells it, and the note says why a link was left"
+  ],
+  "timeoutS": 600
+}

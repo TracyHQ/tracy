@@ -1,0 +1,69 @@
+{
+  "color": {
+    "tabloid-orange": {
+      "$value": "#ff9e00",
+      "$type": "color",
+      "$description": "Tabloid Orange — Full-bleed section backgrounds (announcement bar, statistic panels) — the only chromatic brand color, used at maximum saturation to break the otherwise monochrome flow"
+    },
+    "deep-capsule-navy": {
+      "$value": "#020507",
+      "$type": "color",
+      "$description": "Deep Capsule Navy — Hero gradient terminal color and product photograph backgrounds — near-black with a blue undertone, not a pure black"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, navigation dividers, card outlines, button text — the dominant structural color across the entire interface"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, card surfaces, product image overlays, button fills, and text on dark or orange panels"
+    },
+    "cool-gray": {
+      "$value": "#d2dce1",
+      "$type": "color",
+      "$description": "Cool Gray — Muted UI surface for disabled controls, low-emphasis panels, and placeholder blocks."
+    },
+    "iron-gray": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Iron Gray — Secondary body text and low-emphasis borders — the mid-tone of the neutral scale"
+    },
+    "ash": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash — Tertiary borders, disabled state outlines, muted icon strokes"
+    },
+    "smoke": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Smoke — Dividers, dashed-border accent on feature cards, subtle separator lines"
+    }
+  },
+  "font": {
+    "px-grotesk": {
+      "$value": "Px Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — body copy at 15–17px/400, subheadings at 21–31px/700, display headlines at 52–74px/700. Geometric grotesque with squared terminals gives a clinical, diagram-like feel. The 74px hero weight is set very tight (1.05) so multi-line headlines stack into a solid block."
+    },
+    "apercu-mono-pro": {
+      "$value": "Apercu Mono Pro",
+      "$type": "fontFamily",
+      "$description": "Monospace micro-copy — navigation links, section labels, input placeholders, ingredient lists, and small data captions. Set at small sizes (15–17px) with a 0.02em positive letter-spacing so uppercase strings read as printed stamps or specimen labels rather than running text."
+    },
+    "swimclub-custom-pixelbitmap-face": {
+      "$value": "Swimclub (custom pixel/bitmap face)",
+      "$type": "fontFamily",
+      "$description": "Signature display face used exclusively for the wordmark and the three giant statistic numerals (60%, 50%, 1/4). The blocky, pixelated construction makes numbers look like LCD or 7-segment readouts — a deliberate retro-digital contrast against the clean grotesque body. Never set below 90px; its identity depends on scale."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://swimclub.co",
+      "siteName": "SwimClub",
+      "extractedAt": "2026-06-03T20:51:41.003Z",
+      "variant": "compact"
+    }
+  }
+}

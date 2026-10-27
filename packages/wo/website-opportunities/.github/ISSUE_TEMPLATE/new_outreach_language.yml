@@ -1,0 +1,37 @@
+name: New outreach language
+description: Add or improve outreach templates for a language.
+labels: [plugin:outreach, good first issue, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Outreach templates are five short strings with the placeholders {place}, {url} and {expires}.
+        See docs/plugins.md, section "Outreach templates". Please write as a native speaker would.
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      description: Name and code (BCP 47), e.g. Dutch (nl), Brazilian Portuguese (pt-BR).
+    validations:
+      required: true
+  - type: input
+    id: countries
+    attributes:
+      label: Countries where it should be used
+      description: ISO 3166 country codes, e.g. NL, BE.
+  - type: dropdown
+    id: fluency
+    attributes:
+      label: Your fluency
+      options:
+        - Native speaker
+        - Fluent
+        - Learning (please ask a native speaker to review)
+    validations:
+      required: true
+  - type: textarea
+    id: draft
+    attributes:
+      label: Draft (optional)
+      description: The five strings greeting, body, expiry, kept, subject.
+      render: json

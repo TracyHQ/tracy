@@ -1,0 +1,2299 @@
+{
+  "format": 1,
+  "scope": "Read from theme files, the spec-pack and the seed report only. No live site, no database, no ids. Counts under \"seed\" are at seed time, not live.",
+  "theme": {
+    "slug": "wp-ja-diner",
+    "dir": "wp-ja-diner",
+    "header": {
+      "License": "GNU General Public License v3",
+      "Requires at least": "7.0",
+      "Requires PHP": "8.1",
+      "Tested up to": "7.1",
+      "Text Domain": "wp-ja-diner",
+      "Theme Name": "WP Diner",
+      "Update URI": "https://github.com/TracyHQ/claude-cowork",
+      "Version": "1.0.0"
+    },
+    "themeJson": {
+      "version": 3,
+      "customTemplates": [
+        {
+          "name": "landing",
+          "title": "Landing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "fixture",
+          "title": "Design system page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "artifact",
+          "title": "Design page (engine)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "pricing",
+          "title": "Pricing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-landing",
+          "title": "Landing (sections only)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-account",
+          "title": "Account page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-login",
+          "title": "Sign-in page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-register",
+          "title": "Registration page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-password",
+          "title": "Password page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-contact",
+          "title": "Contact page",
+          "postTypes": [
+            "page"
+          ]
+        }
+      ],
+      "templateParts": [
+        {
+          "name": "header",
+          "title": "Header",
+          "area": "header"
+        },
+        {
+          "name": "footer",
+          "title": "Footer",
+          "area": "footer"
+        },
+        {
+          "name": "sidebar",
+          "title": "Sidebar",
+          "area": "uncategorized"
+        },
+        {
+          "name": "search-description",
+          "title": "Search page description",
+          "area": "uncategorized"
+        },
+        {
+          "name": "search-form",
+          "title": "Search page form and tips",
+          "area": "uncategorized"
+        }
+      ]
+    },
+    "presets": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta"
+        },
+        {
+          "slug": "border",
+          "name": "Border"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active"
+        },
+        {
+          "slug": "success",
+          "name": "Success"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger"
+        }
+      ],
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display"
+        },
+        {
+          "slug": "body",
+          "name": "Body"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono"
+        }
+      ],
+      "fontSizes": [
+        "xs",
+        "sm",
+        "base",
+        "lg",
+        "xl",
+        "xxl",
+        "xxxl",
+        "xxxxl"
+      ],
+      "spacingSizes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "8",
+        "12"
+      ],
+      "layout": {
+        "contentSize": "1260px",
+        "wideSize": "1260px"
+      },
+      "customKeys": [
+        "container",
+        "ease",
+        "elev",
+        "focusRing",
+        "leading",
+        "motion",
+        "radius",
+        "sectionY",
+        "tracking",
+        "tracy"
+      ],
+      "inspiration": "wp-ja-diner",
+      "stylesCss": 2054
+    },
+    "templates": [
+      {
+        "name": "404",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-diner/part-404"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "archive",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-diner/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "artifact",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "category",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-diner/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "fixture",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "front-page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "home",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-diner/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "index",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-diner/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "landing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-account",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-contact",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-landing",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-login",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-password",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-register",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "pricing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/section-cta-final"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "search-form",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-diner/blog-search-results"
+        ]
+      },
+      {
+        "name": "single",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": [
+          "wp-ja-diner/blog-article-info",
+          "wp-ja-diner/blog-pagenav"
+        ]
+      },
+      {
+        "name": "tag",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [
+          "wp-ja-diner/blog-list"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "parts": [
+      {
+        "name": "footer",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "header",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 2,
+        "customBlocks": []
+      },
+      {
+        "name": "search-description",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-diner/part-search-description"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search-form",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-diner/part-search-form"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "sidebar",
+        "own": true,
+        "parts": [],
+        "patterns": [
+          "wp-ja-diner/part-sidebar"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "patterns": [
+      {
+        "file": "patterns/cards.php",
+        "slug": "tracy/cards",
+        "title": "Cards",
+        "categories": [
+          "query"
+        ],
+        "blockTypes": [
+          "core/query"
+        ],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/landing.php",
+        "slug": "tracy/landing",
+        "title": "Landing page",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/pricing.php",
+        "slug": "tracy/pricing",
+        "title": "Pricing table",
+        "categories": [
+          "text"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-contact.php",
+        "slug": "tracy/section-contact",
+        "title": "Contact",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-final.php",
+        "slug": "tracy/section-cta-final",
+        "title": "Call to action, final",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/section-cta-inline.php",
+        "slug": "tracy/section-cta-inline",
+        "title": "Call to action, inline",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-faq.php",
+        "slug": "tracy/section-faq",
+        "title": "FAQ",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-features.php",
+        "slug": "tracy/section-features",
+        "title": "Features",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-gallery.php",
+        "slug": "tracy/section-gallery",
+        "title": "Gallery",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-hero.php",
+        "slug": "tracy/section-hero",
+        "title": "Hero",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-how-it-works.php",
+        "slug": "tracy/section-how-it-works",
+        "title": "How it works",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-listing.php",
+        "slug": "tracy/section-listing",
+        "title": "Listing",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pillars.php",
+        "slug": "tracy/section-pillars",
+        "title": "Value pillars",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pricing.php",
+        "slug": "tracy/section-pricing",
+        "title": "Pricing plans",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-problem.php",
+        "slug": "tracy/section-problem",
+        "title": "Problem",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-proof.php",
+        "slug": "tracy/section-proof",
+        "title": "Proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-social-proof.php",
+        "slug": "tracy/section-social-proof",
+        "title": "Social proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-styleguide.php",
+        "slug": "tracy/section-styleguide",
+        "title": "Style guide",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-team.php",
+        "slug": "tracy/section-team",
+        "title": "Team",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/account-login.php",
+        "slug": "wp-ja-diner/account-login",
+        "title": "Login form",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-register.php",
+        "slug": "wp-ja-diner/account-register",
+        "title": "Registration form",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 2,
+        "own": true
+      },
+      {
+        "file": "patterns/account-remind.php",
+        "slug": "wp-ja-diner/account-remind",
+        "title": "Username reminder form",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-reset.php",
+        "slug": "wp-ja-diner/account-reset",
+        "title": "Password reset form",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-container-tabs-style-1.php",
+        "slug": "wp-ja-diner/acm-container-tabs-style-1",
+        "title": "Container tabs",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 7,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-1.php",
+        "slug": "wp-ja-diner/acm-features-intro-style-1",
+        "title": "Features intro: story and two cards",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 8,
+        "namedBlocks": 10,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-2.php",
+        "slug": "wp-ja-diner/acm-features-intro-style-2",
+        "title": "Features intro: dishes carousel",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 9,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-3.php",
+        "slug": "wp-ja-diner/acm-features-intro-style-3",
+        "title": "Features intro: chef",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-4.php",
+        "slug": "wp-ja-diner/acm-features-intro-style-4",
+        "title": "Features intro: style 4",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-intro-style-5.php",
+        "slug": "wp-ja-diner/acm-features-intro-style-5",
+        "title": "Features intro: style 5",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-happyhours-style-1.php",
+        "slug": "wp-ja-diner/acm-happyhours-style-1",
+        "title": "Happy hours: style 1",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-happyhours-style-2.php",
+        "slug": "wp-ja-diner/acm-happyhours-style-2",
+        "title": "Happy hours: style 2",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-happyhours-style-3.php",
+        "slug": "wp-ja-diner/acm-happyhours-style-3",
+        "title": "Happy hours: style 3",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-latest-news-default.php",
+        "slug": "wp-ja-diner/acm-latest-news-default",
+        "title": "Latest news",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-masthead-default.php",
+        "slug": "wp-ja-diner/acm-masthead-default",
+        "title": "Masthead",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-menu-style-1.php",
+        "slug": "wp-ja-diner/acm-menu-style-1",
+        "title": "Menu: style 1",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 7,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-menu-style-2.php",
+        "slug": "wp-ja-diner/acm-menu-style-2",
+        "title": "Menu: style 2",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 12,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-menu-style-3.php",
+        "slug": "wp-ja-diner/acm-menu-style-3",
+        "title": "Menu: style 3",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 13,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-slideshow-style-owl.php",
+        "slug": "wp-ja-diner/acm-slideshow-style-owl",
+        "title": "Slideshow: owl",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-subscribe-default.php",
+        "slug": "wp-ja-diner/acm-subscribe-default",
+        "title": "Subscribe",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-teams-style-1.php",
+        "slug": "wp-ja-diner/acm-teams-style-1",
+        "title": "Teams (chefs)",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 9,
+        "own": true
+      },
+      {
+        "file": "patterns/blog-list.php",
+        "slug": "wp-ja-diner/blog-list",
+        "title": "Article list",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/contact-form.php",
+        "slug": "wp-ja-diner/contact-form",
+        "title": "Contact",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/heading-smart-search.php",
+        "slug": "wp-ja-diner/heading-smart-search",
+        "title": "Smart Search heading",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-404.php",
+        "slug": "wp-ja-diner/part-404",
+        "title": "Page not found",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-search-description.php",
+        "slug": "wp-ja-diner/part-search-description",
+        "title": "Search page description",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-search-form.php",
+        "slug": "wp-ja-diner/part-search-form",
+        "title": "Search page form and tips",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/part-sidebar.php",
+        "slug": "wp-ja-diner/part-sidebar",
+        "title": "Blog sidebar",
+        "categories": [
+          "wp-ja-diner",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      }
+    ],
+    "variations": [
+      {
+        "id": "wp-ja-diner",
+        "title": "WP Diner",
+        "inspiration": "wp-ja-diner"
+      }
+    ],
+    "blocks": [],
+    "enqueued": [
+      {
+        "kind": "style",
+        "handle": "tracy",
+        "path": "assets/css/tracy.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy",
+        "path": "assets/js/tracy.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-fixture-page",
+        "path": "assets/css/fixture-page.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-layout",
+        "path": "assets/css/layout.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-motion",
+        "path": "assets/css/tracy-motion.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-motion",
+        "path": "assets/js/tracy-motion.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-preview",
+        "path": "assets/js/tracy-preview.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-sections",
+        "path": "assets/css/sections.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-diner",
+        "path": "assets/css/wp-ja-diner.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-diner",
+        "path": "assets/js/wp-ja-diner.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-diner-base",
+        "path": "assets/css/base.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-diner-dark",
+        "path": "assets/js/wp-ja-diner-dark.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-diner-fonts",
+        "path": "assets/css/fonts.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-diner-icons",
+        "path": "assets/css/icons.css",
+        "file": "inc/extra.php"
+      }
+    ],
+    "optionsRead": [
+      "tracy_contact_to",
+      "tracy_hero",
+      "tracy_inspiration",
+      "tracy_motion",
+      "tracy_nav",
+      "wp_ja_diner_404_page",
+      "wp_ja_diner_redirects"
+    ],
+    "hooks": [
+      {
+        "kind": "action",
+        "hook": "admin_post_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "admin_post_nopriv_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "auto_update_theme",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "default_option_tracy_motion",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "do_redirect_guess_404_permalink",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "parse_query",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "pre_option_site_logo",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_loop_block_query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/categories",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/group",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/group",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/html",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/html",
+        "file": "inc/identity.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/image",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/image",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/paragraph",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/paragraph",
+        "file": "inc/identity.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/search",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/site-logo",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/social-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/tag-cloud",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_data",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "run_wptexturize",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "style_loader_src",
+        "file": "inc/asset-version.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_content",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "update_themes_github.com",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "wp_content_img_tag",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_footer",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_footer",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "inc/brand-logo.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "wp_theme_json_data_theme",
+        "file": "inc/role-reads.php"
+      }
+    ],
+    "overlay": {
+      "dir": "wp-ja-diner",
+      "files": [
+        "assets/css/base.css",
+        "assets/css/fonts.css",
+        "assets/css/groups/about.css",
+        "assets/css/groups/account.css",
+        "assets/css/groups/article.css",
+        "assets/css/groups/blog.css",
+        "assets/css/groups/g1.css",
+        "assets/css/groups/g2.css",
+        "assets/css/groups/g3.css",
+        "assets/css/groups/home.css",
+        "assets/css/groups/menus.css",
+        "assets/css/icons.css",
+        "assets/css/source/bootstrap.css",
+        "assets/css/source/megamenu.css",
+        "assets/css/source/off-canvas.css",
+        "assets/css/source/template.css",
+        "assets/css/wp-ja-diner.css",
+        "assets/fonts/OFL.txt",
+        "assets/fonts/alegreya-latin-ext.woff2",
+        "assets/fonts/alegreya-latin.woff2",
+        "assets/fonts/alegreya-vietnamese.woff2",
+        "assets/fonts/eczar-latin-ext.woff2",
+        "assets/fonts/eczar-latin.woff2",
+        "assets/fonts/fontawesome-webfont.woff2",
+        "assets/fonts/ionicons.woff",
+        "assets/fonts/work-sans-latin-ext.woff2",
+        "assets/fonts/work-sans-latin.woff2",
+        "assets/fonts/work-sans-vietnamese.woff2",
+        "assets/img/arrow-up.gif",
+        "assets/img/arrow.png",
+        "assets/img/bg-masthead.jpg",
+        "assets/img/decor/decor_blue.png",
+        "assets/img/decor/decor_green.png",
+        "assets/img/decor/decor_orange.png",
+        "assets/img/decor/decor_pink.png",
+        "assets/img/decor/decor_red.png",
+        "assets/img/dot.png",
+        "assets/img/ico/search.png",
+        "assets/img/logo.png",
+        "assets/img/mask-slideshow.png",
+        "assets/img/masthead-default.jpg",
+        "assets/img/pattern.png",
+        "assets/img/placeholder.svg",
+        "assets/js/groups/about.js",
+        "assets/js/groups/account.js",
+        "assets/js/groups/blog.js",
+        "assets/js/groups/menus.js",
+        "assets/js/wp-ja-diner-dark.js",
+        "assets/js/wp-ja-diner.js",
+        "inc/extra.php",
+        "inc/groups/account.php",
+        "inc/groups/blog.php",
+        "inc/groups/chrome.php",
+        "inc/groups/content.php",
+        "inc/groups/g1.php",
+        "inc/groups/home.php",
+        "inc/groups/pages.php",
+        "inc/identity.php",
+        "parts/footer.html",
+        "parts/header.html",
+        "parts/search-description.html",
+        "parts/search-form.html",
+        "parts/sidebar.html",
+        "patterns.map.json",
+        "patterns/account-login.php",
+        "patterns/account-register.php",
+        "patterns/account-remind.php",
+        "patterns/account-reset.php",
+        "patterns/acm-container-tabs-style-1.php",
+        "patterns/acm-features-intro-style-1.php",
+        "patterns/acm-features-intro-style-2.php",
+        "patterns/acm-features-intro-style-3.php",
+        "patterns/acm-features-intro-style-4.php",
+        "patterns/acm-features-intro-style-5.php",
+        "patterns/acm-happyhours-style-1.php",
+        "patterns/acm-happyhours-style-2.php",
+        "patterns/acm-happyhours-style-3.php",
+        "patterns/acm-latest-news-default.php",
+        "patterns/acm-masthead-default.php",
+        "patterns/acm-menu-style-1.php",
+        "patterns/acm-menu-style-2.php",
+        "patterns/acm-menu-style-3.php",
+        "patterns/acm-slideshow-style-owl.php",
+        "patterns/acm-subscribe-default.php",
+        "patterns/acm-teams-style-1.php",
+        "patterns/blog-list.php",
+        "patterns/contact-form.php",
+        "patterns/heading-smart-search.php",
+        "patterns/part-404.php",
+        "patterns/part-search-description.php",
+        "patterns/part-search-form.php",
+        "patterns/part-sidebar.php",
+        "patterns/section-cta-final.php",
+        "readme.txt",
+        "style.css",
+        "templates/404.html",
+        "templates/archive.html",
+        "templates/category.html",
+        "templates/front-page.html",
+        "templates/home.html",
+        "templates/index.html",
+        "templates/page-account.html",
+        "templates/page-contact.html",
+        "templates/page-landing.html",
+        "templates/page-login.html",
+        "templates/page-password.html",
+        "templates/page-register.html",
+        "templates/page.html",
+        "templates/search.html",
+        "templates/single.html",
+        "templates/tag.html",
+        "theme.config.json",
+        "theme.overlay.json",
+        "tokens.css"
+      ]
+    },
+    "fileCount": 152,
+    "fingerprints": {
+      "assets/css/base.css": "sha256:fff043be3e7dfeb5ed0149eded2203176622bad8b2cc9e8ab0999f855c240a00",
+      "assets/css/fixture-page.css": "sha256:d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+      "assets/css/fonts.css": "sha256:e18c327d82e6c0edb766583bae08deb17107db58da59f1fc621fd976b9964c40",
+      "assets/css/groups/about.css": "sha256:d7a333190e2dc687cb2e4bb0b017aae4282c6f0c4bdee65ca15ef464b8fdac7c",
+      "assets/css/groups/account.css": "sha256:58bc2d8817126ba94714403ee47546df6277ffa0e78e2dacec6337476f849eca",
+      "assets/css/groups/article.css": "sha256:e75e3195badd5bac6cc56bae8e64b14757242792b46a5f8838cb3f0d1c5d0b5a",
+      "assets/css/groups/blog.css": "sha256:bb98a0b9b8ac0126d7f336ff500a4bed8b86e61e961fc1469b1a1bddd63d11e8",
+      "assets/css/groups/g1.css": "sha256:97631042950f5934b8c5a675561a15b0270ad4ac9bbee542986309c76fe95edf",
+      "assets/css/groups/g2.css": "sha256:6372bc0225d65da753e0b2ece2996d4f19f94bc1f054e2b4b94801216ac68226",
+      "assets/css/groups/g3.css": "sha256:61b094d9d643e6a1e1170403aed2f911ae83bff0bec2c8dfc1cd12e540b3ccf4",
+      "assets/css/groups/home.css": "sha256:a55c3e7d3c1c392358184deb11655fcbe67f48f887e30bf74f3c244532cb0db5",
+      "assets/css/groups/menus.css": "sha256:bd8cad58256dff2f9b1a0db2fccc3826c49b920957a879ff92c729d02b6d6a0a",
+      "assets/css/icons.css": "sha256:b67a4782391d24f6f9aa1adf1390d1ee5052821c47f391085705fef8f85e3664",
+      "assets/css/layout.css": "sha256:25c3c8bfca0c51297162ae0d5af711de62bff154b71659b8d182efb34b13bb77",
+      "assets/css/sections.css": "sha256:4400735807262b53479e4b92770252fd683f3788b433c83ae46df0afd593591f",
+      "assets/css/source/bootstrap.css": "sha256:4323abeaaa56c174e74722e5a4642ebcc23faa3c3713c6691b8dd7c2697efa1f",
+      "assets/css/source/megamenu.css": "sha256:98527fc9858c94f64ddf092f92fd27bfc15d9faf47f0ea41bf084cc545f08a1f",
+      "assets/css/source/off-canvas.css": "sha256:25c90cd4c6e350573757b503a249e4f24572057fd720abe6543f586cbac9d2a4",
+      "assets/css/source/template.css": "sha256:9a496bf3dff2cd0108546e0c2fd94605d88eb2fdabf85ad45795b70e0d1d4a9a",
+      "assets/css/tracy-motion.css": "sha256:656642b63d46e2cb41fcd5af3437e25fed38175280bfcf14e9a1f6da5efb6bec",
+      "assets/css/tracy.css": "sha256:e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+      "assets/css/wp-ja-diner.css": "sha256:56b5c6d728fc47dc27e68e315288c46ef06d5a618bf2f81524fbbd051a5c554a",
+      "assets/fonts/alegreya-latin-ext.woff2": "sha256:aab1eaa177d60b215b4dfa6cbe75316c2b8d27fd785f9c3604a58b3c0166aac9",
+      "assets/fonts/alegreya-latin.woff2": "sha256:34d902fd33b23ea3205daf8dd7696e6c49b50165e70165655e361f243dd3e083",
+      "assets/fonts/alegreya-vietnamese.woff2": "sha256:673368c90f29a0a0f28b9ca4544cd11ae433bb1c79058da6b954a332ddbe37dc",
+      "assets/fonts/eczar-latin-ext.woff2": "sha256:a368534d96c89e3b992370758f1197c23c5c5f61101a46297777ea39e8c11fa9",
+      "assets/fonts/eczar-latin.woff2": "sha256:043c8b0b2d35baf4ed66940625bcb1164aae6b0e9179b2a8fd3370bb9b37cacb",
+      "assets/fonts/fontawesome-webfont.woff2": "sha256:7dacf83f51179de8d7980a513e67ab3a08f2c6272bb5946df8fd77c0d1763b73",
+      "assets/fonts/ionicons.woff": "sha256:709f2789daaff440820ebb975d3ae409af45121bdec47e39e83523490b1bc0fc",
+      "assets/fonts/OFL.txt": "sha256:3fa5cbc8117368eb659323e7b5215d402e52276b57d3e13ea4c75634296fa42b",
+      "assets/fonts/work-sans-latin-ext.woff2": "sha256:fe0af300ce56932381af82ed960d8582dc8308ac2b7b48dd505dd49573a83ada",
+      "assets/fonts/work-sans-latin.woff2": "sha256:72cd8f67849cc714f3364eeeb378df9a49f4aff00e6a3640fad36c9c93a9b197",
+      "assets/fonts/work-sans-vietnamese.woff2": "sha256:a7685ec477b23edc368efaa59d8f717a1e01208b68f52982673552a04f9398d3",
+      "assets/img/arrow-up.gif": "sha256:3845efd3114c80c9b01bc0c1405ac77cec1496ac6170036252c6d203d9474381",
+      "assets/img/arrow.png": "sha256:898fe59385f697a261e556914e76bce41bc5c9582d22dbeb7446067b3791fc88",
+      "assets/img/bg-masthead.jpg": "sha256:5af3ed5a19f470177e0dd210dccdb765b42f5d4b6fd0acb6792783d345085e17",
+      "assets/img/decor/decor_blue.png": "sha256:d5685bde295d8c3fcb6af54d6cf95bdc97a52c98fedcf602add4c114f25342d9",
+      "assets/img/decor/decor_green.png": "sha256:0162f4f87f2cbe40c1f37bbbbf85d477f02d6c20739b2e2ac0a1386da045bafa",
+      "assets/img/decor/decor_orange.png": "sha256:632a6657f9910bbbce2af83c9e3fdc44a86422050a4b2cbd2188188058a925ed",
+      "assets/img/decor/decor_pink.png": "sha256:81d9bd86d8874602293357ad69b8ec9733d65394ab58235ef92d681f16aab8d6",
+      "assets/img/decor/decor_red.png": "sha256:513f30c19c91a6023afd3770c0e8ebe06ea67d51e1b454d7a2e70baed38dcf27",
+      "assets/img/dot.png": "sha256:c0b75e60a8299b1eb5d42387babdb252b4d4f60ab2c7509b65daf96baa303ae7",
+      "assets/img/hero-placeholder.svg": "sha256:76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+      "assets/img/ico/search.png": "sha256:d80a1bd333a8d69909e5bb571fa7c483617558f43ae519d22a9d5ca59e2d6226",
+      "assets/img/logo.png": "sha256:e701831090a4154df01a0f964bedb6ce1f09e359545c0d6cf48f929c06146a57",
+      "assets/img/mask-slideshow.png": "sha256:11ca71ba1c1dc2549482ba7bcf79602d669a7c6851684904df2e14c28a6fae04",
+      "assets/img/masthead-default.jpg": "sha256:66d203711e83ff5fa6e884a06c67a9fbb304181777453e9ff1f9b3cde5cce5b4",
+      "assets/img/pattern.png": "sha256:64186a60c2992f4d106cedccc6e16398ad117362f2ca41c5cf8b5abde267e48b",
+      "assets/img/placeholder.svg": "sha256:d27d72e99e7f2bfe3152c3e477a57a6cd39434de2ef7e638354c3e6fea7a3541",
+      "assets/js/groups/about.js": "sha256:d315a9b1576b89a425794f657e7b94ef18c99d352817b9a0f672eaebe613017c",
+      "assets/js/groups/account.js": "sha256:038bffaa9436447a61c91fc0f4f221814d9e33c551d4418de9a5b17d7240b25d",
+      "assets/js/groups/blog.js": "sha256:0ad6c28f170aba75641da21821273a0401b9e86267f65a1769a672025a8337b8",
+      "assets/js/groups/menus.js": "sha256:5de2754319acdeb749e44009236a1f27272ef19806c4ea048c067611589694a9",
+      "assets/js/tracy-motion.js": "sha256:e0de98821c906566fe3cb2e4ba7d4203375f61e1061a869fe5b53c566a796c36",
+      "assets/js/tracy-preview.js": "sha256:174189d9b2412fe0b7a3f69dde16d901d43d24528b89d3bbad3c78adacb54eed",
+      "assets/js/tracy.js": "sha256:88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+      "assets/js/wp-ja-diner-dark.js": "sha256:713ea510d0d323ae154b60014998bab991f4af71ae48f15b2dd4e7595f30bc55",
+      "assets/js/wp-ja-diner.js": "sha256:d6a85a35c6d6d0227dfe9bc308d2df47d110e7414f511a606b2138b7926c1716",
+      "functions.php": "sha256:44ff272af7431246ede201d578d582f207105ca42c29c6de9550a66932423401",
+      "inc/asset-version.php": "sha256:3a714c4a5c7cc86565cbafdb063a68340b09c58045962b8751ef3ed66c415b1d",
+      "inc/brand-logo.php": "sha256:41f56347ead3a54e9b75a2a9869c96f61c80abacfb1a524f662e682b771730e9",
+      "inc/extra.php": "sha256:89bb1a58f413139d363e9badf2cb2a6777f63204dc0e94c33c7d0b7f9328309f",
+      "inc/groups/account.php": "sha256:db5f56aee0f45b930113961a9752cc8dcfd4c7f185a1555afe08cc99a5aa6091",
+      "inc/groups/blog.php": "sha256:397c5e71a437b23c00cca49e5bf83d3c9ae3b0a8be63e264ec584512f41a4525",
+      "inc/groups/chrome.php": "sha256:d7f7375db469dc70c2e8e97ec2bf3d3d0b86424a1584df28885664c232e99acd",
+      "inc/groups/content.php": "sha256:2f3e4611a27dead30bf2d4688a09828bd8a802cb25e7ab80a0e54f7ea642e8e4",
+      "inc/groups/g1.php": "sha256:cd3b8424ed15c0bb0565f57deba7982977505a9fc048fc8937e87cc4403c3584",
+      "inc/groups/home.php": "sha256:20c8a2176642e605ffee1c1633c50c69c1251278c7742f52b79c8743b02a20d9",
+      "inc/groups/pages.php": "sha256:181fac14adc8f7c144919536e03dc7bf64a5963da56dd915efa2ee6c1aeef076",
+      "inc/identity.php": "sha256:90b83a66885f08b6f6172e185d074e32c14b0019ba3d2481109d173b0d635352",
+      "inc/motion-head.php": "sha256:e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+      "inc/role-reads.php": "sha256:22b8e53eadd46c9d1eedb9d7a9b3839aa0f1182a661a4257c1f9f302744867a2",
+      "inc/update.php": "sha256:1833619b383ea9f03f41f8db076d151f108dce30cf9e58a054c3f750c4039a10",
+      "inc/variations.php": "sha256:54eee8dcec3f61fcaaffa3ecde6887b2b467cec816cce873f47aa4389d79a447",
+      "inspirations.json": "sha256:8ca62d32e4dcdbd84ee3a938ae6e095f23d125f3448a832664e7ba1b1b5208f2",
+      "parts/footer.html": "sha256:788418d838fe89bbafce9073b6faf29958635062106a339ba402f731ac4412c2",
+      "parts/header.html": "sha256:d5668c31051c3bae9769d9792a43194f633c4733334ce61f380e11622300c73c",
+      "parts/search-description.html": "sha256:6e10979e1ff1a2cd8ee578a20648fbdfaaf5cb42cbac77b20f0e539f67c6c88f",
+      "parts/search-form.html": "sha256:74e567bb26125aee07ad87b5933a4e1928012b77a49d8e70c587d4fe55775ab5",
+      "parts/sidebar.html": "sha256:c72185c12c70d85f615a361e93a78eea14e4934fa86e4fed0d188425123e065e",
+      "patterns/account-login.php": "sha256:c7ca760c3b87facf7eda42665ae44ad6d05517363b3b0083381000578bb88a8e",
+      "patterns/account-register.php": "sha256:6fd54f21e3906cf53393aa8fd55dbdd27ff73fc64618bea23842e8b3d5853025",
+      "patterns/account-remind.php": "sha256:1220d6f97df28f7c057a9eb42b456c717949cec1cde8ac5b89b763d1f5578159",
+      "patterns/account-reset.php": "sha256:2b79578266c68c299b98f3f2bd7539a215ab510ed46d48ea6229fcbfbb83c538",
+      "patterns/acm-container-tabs-style-1.php": "sha256:264b97e035168c3ba466a08eabcf523bb1115e94d39c35f357c1e5340f6433b0",
+      "patterns/acm-features-intro-style-1.php": "sha256:d4a4d0e38ffc585d768cbc48a833248682e6e8b141515771c1b2ca01124c8cd8",
+      "patterns/acm-features-intro-style-2.php": "sha256:a54edcdd333aa94fa98fdb8c9eabc2f972da4b11043181ad93ca090560366f9b",
+      "patterns/acm-features-intro-style-3.php": "sha256:ac39ae1f144017d590ef552c689b0acbb29020791c5da52fbc399cc0f082a191",
+      "patterns/acm-features-intro-style-4.php": "sha256:3c0865409b192b4930fc9487258221c89e9c8f9703cd629ffc4f0e54d007d4e1",
+      "patterns/acm-features-intro-style-5.php": "sha256:3944a7fc3daf0f78c7a35fcad1512012e7fb666b9d82f184133bd4bec7be1c7d",
+      "patterns/acm-happyhours-style-1.php": "sha256:32e413b30832b1b2b2e13b59cb034f5b8d16f951a819c2372c22568f46db120b",
+      "patterns/acm-happyhours-style-2.php": "sha256:b6124ef19166aeabf9d0810425a9cec7d2249250d82b11412db95cca7afb12a4",
+      "patterns/acm-happyhours-style-3.php": "sha256:2efac62c49cf69404565074537741b9e325d58b6abc72e40c818514a1cca364e",
+      "patterns/acm-latest-news-default.php": "sha256:a9f6ee92743e97e61e4beec1f0caf710514416032c80e0e6a422addbc99cc50a",
+      "patterns/acm-masthead-default.php": "sha256:25b68e94ce86c0381ed116ac04edccec5b8ca19370662e8d88adaf598e096184",
+      "patterns/acm-menu-style-1.php": "sha256:81999eb6362dec6c3dadd3fe474611bea50f8b5302e284c0e1449be3d1f69dff",
+      "patterns/acm-menu-style-2.php": "sha256:272ba40ab462a1f606a5344a7662423a0a98a88024c11447a03c8138047109a0",
+      "patterns/acm-menu-style-3.php": "sha256:b3e237f639381dbf1262973d1642934d80d36049f60415f17dc3c7decd12f962",
+      "patterns/acm-slideshow-style-owl.php": "sha256:60c36de227313eb68b40fbf28166890a8d635a2569745e8237707fe8f75f61ab",
+      "patterns/acm-subscribe-default.php": "sha256:8dd97b4cb1b6c1b20c0c42f9a17aa403aa5147c8a03bf41a4a67f361665944fa",
+      "patterns/acm-teams-style-1.php": "sha256:2930b255c4f75a67c01f154a37fd7285a9276a949a3287eeaa63a2e21e6140bb",
+      "patterns/blog-list.php": "sha256:454bfbc496e17c3f16b77bdf53ec856309e807ecc65863a0984413e4284dbc12",
+      "patterns/cards.php": "sha256:b9cff6d1aebcff1665eb25508e27b38d9527e406740683b56035a715b57b3f85",
+      "patterns/contact-form.php": "sha256:807ede23b63cbc854f9c7c3178a1855c2e32deef3aa1d73339e6294080d48299",
+      "patterns/heading-smart-search.php": "sha256:468e850daa44a5acd9d1414cabe551d071710e70459fe68b3494927acafc4e68",
+      "patterns/landing.php": "sha256:8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+      "patterns/part-404.php": "sha256:2f4e3b659c5943484a2baf7e5e0e5a4eed5de8de8792011bd9f348317604c462",
+      "patterns/part-search-description.php": "sha256:49bdddcec78c420ba54c906a2e9acede1109b7225baae7e4a53bbaba7d119f68",
+      "patterns/part-search-form.php": "sha256:4c6a40c7f8d3c0ef89d7b9bdd2e75e3e5b3a6b03cf544f6d0d5488e4296c3c0b",
+      "patterns/part-sidebar.php": "sha256:6e093858aa2ed65df29a49e3284222fb3e0ffdbabe6fc000af38d35c184f09d1",
+      "patterns/pricing.php": "sha256:31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+      "patterns/section-contact.php": "sha256:60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+      "patterns/section-cta-final.php": "sha256:0f481d7be1f28d8e7eff898fe38977830165dc6b88851b55416d0d891ab4a817",
+      "patterns/section-cta-inline.php": "sha256:462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+      "patterns/section-faq.php": "sha256:2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+      "patterns/section-features.php": "sha256:abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+      "patterns/section-gallery.php": "sha256:05eca35fed040a5da189dc458a03cd86a3c3000a50bc14ccc65f98e01976a0df",
+      "patterns/section-hero.php": "sha256:2b6d329d57d9f244e740dcf727d33c5b02a187c4fac52137aeb10760fe1a28be",
+      "patterns/section-how-it-works.php": "sha256:39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+      "patterns/section-listing.php": "sha256:1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+      "patterns/section-pillars.php": "sha256:dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+      "patterns/section-pricing.php": "sha256:54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+      "patterns/section-problem.php": "sha256:c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+      "patterns/section-proof.php": "sha256:2c92469b63fe5d91273f644d0265e0ea7e99ef41bb534e7077cdb35bdb0f7251",
+      "patterns/section-social-proof.php": "sha256:3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+      "patterns/section-styleguide.php": "sha256:036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+      "patterns/section-team.php": "sha256:539399cdefc0989bfdc07cc6ef300e1a632db5d1c40e067cfcae545adff68092",
+      "readme.txt": "sha256:6691a80dec9042d38628f9c16a46f7f71e4d9417aa6db4f9e4b01467b84bb296",
+      "screenshot.png": "sha256:f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+      "style.css": "sha256:9d360018dcc8efd9708c91c1c5b1449655f713dba71b4e59318c5f6090ddea13",
+      "styles/wp-ja-diner.json": "sha256:0d734d17ae27b12735953ac67f11f0ed40cd660a97f934f37cb0d2e64726a165",
+      "templates/404.html": "sha256:50471dd8b5b390173a2db2a377a7104a38ab7caec0f136cdee17549c918e470b",
+      "templates/archive.html": "sha256:c3329ed4b646de5130f7de7f57696b3e5ea7b65a586fa8768c22d25b52c5d10c",
+      "templates/artifact.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/category.html": "sha256:c3329ed4b646de5130f7de7f57696b3e5ea7b65a586fa8768c22d25b52c5d10c",
+      "templates/fixture.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/front-page.html": "sha256:27d57d83a9b83b2fd1d4c30e1d96ec1b79538c4df635aff3752b85016c54549e",
+      "templates/home.html": "sha256:c3329ed4b646de5130f7de7f57696b3e5ea7b65a586fa8768c22d25b52c5d10c",
+      "templates/index.html": "sha256:c3329ed4b646de5130f7de7f57696b3e5ea7b65a586fa8768c22d25b52c5d10c",
+      "templates/landing.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-account.html": "sha256:82a0e63d1dad3ff7d55830327eba28d7ee25b46a5b7c9de6acd30b4d82674435",
+      "templates/page-contact.html": "sha256:82a0e63d1dad3ff7d55830327eba28d7ee25b46a5b7c9de6acd30b4d82674435",
+      "templates/page-landing.html": "sha256:82a0e63d1dad3ff7d55830327eba28d7ee25b46a5b7c9de6acd30b4d82674435",
+      "templates/page-login.html": "sha256:82a0e63d1dad3ff7d55830327eba28d7ee25b46a5b7c9de6acd30b4d82674435",
+      "templates/page-password.html": "sha256:82a0e63d1dad3ff7d55830327eba28d7ee25b46a5b7c9de6acd30b4d82674435",
+      "templates/page-register.html": "sha256:82a0e63d1dad3ff7d55830327eba28d7ee25b46a5b7c9de6acd30b4d82674435",
+      "templates/page.html": "sha256:27d57d83a9b83b2fd1d4c30e1d96ec1b79538c4df635aff3752b85016c54549e",
+      "templates/pricing.html": "sha256:4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+      "templates/search.html": "sha256:14a2030d21dd76db6f637546c4e62bf9407a3fe625b3996c34be6bc66efdf74a",
+      "templates/single.html": "sha256:71ac2492660ad9d74037d2fe64be40b59a6aed0eb7d41bf5ef1b66bf44e87e12",
+      "templates/tag.html": "sha256:c3329ed4b646de5130f7de7f57696b3e5ea7b65a586fa8768c22d25b52c5d10c",
+      "theme.json": "sha256:90453571ace3273bb7f379e91e881f1cfc57bcc62fffcfccbbbe27a81c4ad876"
+    }
+  },
+  "spec": {
+    "dir": "spec",
+    "theme": {
+      "palette": {
+        "light": {
+          "primary": "#c36349",
+          "secondary": "#428bca",
+          "body_bg": "#fcfaf6",
+          "text": "#555"
+        },
+        "dark": null
+      },
+      "darkDerived": true,
+      "fonts": {
+        "body": "Work Sans",
+        "heading": "Eczar",
+        "ui": "Work Sans"
+      },
+      "hook": null
+    },
+    "routes": [
+      {
+        "path": "/",
+        "view": "front-page",
+        "title": "Home"
+      },
+      {
+        "path": "/404",
+        "view": "404",
+        "title": "Not found"
+      },
+      {
+        "path": "/about-us",
+        "view": "page",
+        "title": "About Us"
+      },
+      {
+        "path": "/contact-us",
+        "view": "page-contact",
+        "title": "Contact Us"
+      },
+      {
+        "path": "/content/all-categories",
+        "view": "page",
+        "title": "All categories"
+      },
+      {
+        "path": "/content/fetured-articles",
+        "view": "page-landing",
+        "title": "Fetured Articles"
+      },
+      {
+        "path": "/content/tagged-items",
+        "view": "tag",
+        "title": "Tagged Items"
+      },
+      {
+        "path": "/content/typography",
+        "view": "page",
+        "title": "Typography"
+      },
+      {
+        "path": "/home/home-blue",
+        "view": "page-landing",
+        "title": "Home - Blue"
+      },
+      {
+        "path": "/home/home-green",
+        "view": "page-landing",
+        "title": "Home - Green"
+      },
+      {
+        "path": "/home/home-pink",
+        "view": "page-landing",
+        "title": "Home - Pink"
+      },
+      {
+        "path": "/home/home-red",
+        "view": "page-landing",
+        "title": "Home - Red"
+      },
+      {
+        "path": "/j-pages/edit-user-profile",
+        "view": "page-account",
+        "title": "Edit User Profile"
+      },
+      {
+        "path": "/j-pages/login",
+        "view": "page-login",
+        "title": "Login "
+      },
+      {
+        "path": "/j-pages/registration",
+        "view": "page-register",
+        "title": "Registration"
+      },
+      {
+        "path": "/j-pages/user-profile",
+        "view": "page-account",
+        "title": "User Profile"
+      },
+      {
+        "path": "/offers",
+        "view": "page-landing",
+        "title": "Offers"
+      },
+      {
+        "path": "/other-pages/error-page",
+        "view": "page",
+        "title": "Error Page"
+      },
+      {
+        "path": "/other-pages/offline-page",
+        "view": "page",
+        "title": "Offline Page"
+      },
+      {
+        "path": "/other-pages/smart-search",
+        "view": "search",
+        "title": "Smart Search"
+      },
+      {
+        "path": "/our-blog",
+        "view": "category",
+        "title": "Our Blog"
+      },
+      {
+        "path": "/our-blog/10-restaurant-news/3-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+        "view": "single",
+        "title": "Cocktail Bar Alchemist set to open at Mediacity in Salford Quays"
+      },
+      {
+        "path": "/password-reset",
+        "view": "page-password",
+        "title": "Password Reset"
+      },
+      {
+        "path": "/reservation",
+        "view": "page",
+        "title": "Reservation"
+      },
+      {
+        "path": "/username-reminder-request",
+        "view": "page-password",
+        "title": "Username Reminder Request"
+      },
+      {
+        "path": "/your-profile",
+        "view": "page-account",
+        "title": "Your Profile"
+      }
+    ],
+    "routesByView": {
+      "404": 1,
+      "category": 1,
+      "front-page": 1,
+      "page": 6,
+      "page-account": 3,
+      "page-contact": 1,
+      "page-landing": 6,
+      "page-login": 1,
+      "page-password": 2,
+      "page-register": 1,
+      "search": 1,
+      "single": 1,
+      "tag": 1
+    },
+    "gaps": 3,
+    "menus": [
+      {
+        "slug": "mainmenu",
+        "title": "mainmenu",
+        "items": 10
+      },
+      {
+        "slug": "usermenu",
+        "title": "usermenu",
+        "items": 7
+      },
+      {
+        "slug": "site-pages",
+        "title": "Site pages",
+        "items": 15
+      }
+    ],
+    "redirects": 7,
+    "inputs": {
+      "page-map.json": "sha256:02d35fdebacbe3f5c89ab837fff32504400ff90eac2bd9e98b0dd19768a9e26c",
+      "menus.json": "sha256:e3679c8e988a631b5b78c06899773a137cd6a179a634060be005bf480f0e743f",
+      "redirects.json": "sha256:892914d8006a36b69a5e99dd97e724ca123ebd6c468d65d411941a56576b2024"
+    }
+  },
+  "seed": {
+    "file": "seed.json",
+    "startedAt": "2026-10-21T22:28:54.519Z",
+    "label": "at seed time, not live",
+    "counts": {
+      "authors": {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 1
+      },
+      "categories": {
+        "total": 6,
+        "created": 0,
+        "updated": 0,
+        "skipped": 6
+      },
+      "forms": {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 1
+      },
+      "navigation": {
+        "total": 3,
+        "created": 0,
+        "updated": 0,
+        "skipped": 3
+      },
+      "options": {
+        "total": 9,
+        "created": 0,
+        "updated": 0,
+        "skipped": 9
+      },
+      "pages": {
+        "total": 29,
+        "created": 0,
+        "updated": 0,
+        "skipped": 29
+      },
+      "posts": {
+        "total": 22,
+        "created": 0,
+        "updated": 0,
+        "skipped": 22
+      },
+      "templateParts": {
+        "total": 2,
+        "created": 0,
+        "updated": 0,
+        "skipped": 2
+      }
+    },
+    "navigation": [
+      "mainmenu",
+      "site-pages",
+      "usermenu"
+    ],
+    "templateParts": [
+      "footer",
+      "header"
+    ],
+    "redirects": 8,
+    "sections": {
+      "total": 89,
+      "byKind": {
+        "acm": 89
+      },
+      "byPattern": {
+        "wp-ja-diner/acm-container-tabs-style-1": 5,
+        "wp-ja-diner/acm-features-intro-style-1": 5,
+        "wp-ja-diner/acm-features-intro-style-2": 5,
+        "wp-ja-diner/acm-features-intro-style-3": 6,
+        "wp-ja-diner/acm-features-intro-style-4": 1,
+        "wp-ja-diner/acm-features-intro-style-5": 1,
+        "wp-ja-diner/acm-happyhours-style-1": 1,
+        "wp-ja-diner/acm-happyhours-style-2": 1,
+        "wp-ja-diner/acm-happyhours-style-3": 1,
+        "wp-ja-diner/acm-latest-news-default": 5,
+        "wp-ja-diner/acm-masthead-default": 14,
+        "wp-ja-diner/acm-menu-style-1": 15,
+        "wp-ja-diner/acm-slideshow-style-owl": 5,
+        "wp-ja-diner/acm-subscribe-default": 23,
+        "wp-ja-diner/acm-teams-style-1": 1
+      },
+      "pages": 23
+    },
+    "routes": {
+      "checked": 35,
+      "ok": 34
+    },
+    "media": {
+      "files": 56,
+      "imported": 0
+    },
+    "notes": [
+      "no section of the spec draws a subscribe box (one email field and a Subscribe button); no newsletter form created — a sidebar calling [contact-form-7 title=\"Newsletter\"] prints \"Contact form not found\"",
+      "post authors: standadmin \"Stand Admin\" [source joomla-user-42]",
+      "the source has no not-found page: draft \"page-not-found\" holds the page-map title \"Not found\" only — the source's other 404 words are not in the spec; write them in the admin",
+      "module mod_jamasthead has no block rendering; skipped",
+      "module mod_login has no block rendering; skipped",
+      "module mod_login has no block rendering; skipped",
+      "module mod_login has no block rendering; skipped",
+      "module mod_jamasthead has no block rendering; skipped",
+      "module mod_login has no block rendering; skipped",
+      "tag route declares no tags (archive.tags): every post is listed, as the spec does not say which; the adapter must record the tag filter",
+      "module mod_jamasthead has no block rendering; skipped",
+      "module mod_login has no block rendering; skipped",
+      "no page with view home in the page-map; page_for_posts left unset",
+      "single view: redirected to article 3 (cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays)"
+    ],
+    "hash": "sha256:00d5ecc565ec5266925b5f8014228cafd0c0c32f02ef69c55125dbcdba2e7e89"
+  }
+}

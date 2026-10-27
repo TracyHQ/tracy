@@ -1,0 +1,30 @@
+:root {
+  /* Colors */
+  --color-signal-blue: #3b82f6;
+  --color-action-blue: #2563eb;
+  --color-ink-black: #202020;
+  --color-carbon: #000000;
+  --color-paper: #fcfcfc;
+  --color-mist: #f0f0f0;
+  --color-fog: #e0e0e0;
+  --color-ash: #e5e7eb;
+  --color-steel: #c2c2c2;
+  --color-graphite: #838383;
+  --color-slate: #646464;
+  --color-outlined-indigo: #1e40af;
+  --color-spark-violet: #7c3aed;
+  --color-spark-violet-soft: #8b5cf6;
+  --color-ember: #d97706;
+  --color-sky: #0d74ce;
+  --color-ice: #e0ecfc;
+  --color-cyan-glow: #0090ff;
+  --color-alert-red: #ef4444;
+  --color-macos-red: #ff5f57;
+  --color-macos-yellow: #ffbd2e;
+  --color-macos-green: #28c840;
+
+  /* Typography — Font Families */
+  --font-defaultfont: 'defaultFont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cap-sans-custom-geometric-sans-similar-to-general-sans-or-inter-display: 'Cap Sans (custom geometric sans, similar to General Sans or Inter Display)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace-sfmono-regular-menlo-consolas: 'ui-monospace, SFMono-Regular, Menlo, Consolas', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

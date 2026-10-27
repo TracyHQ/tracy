@@ -1,0 +1,5 @@
+{
+  "$comment": "Demo brand → identity tokens for tracy-apple/j6, applied by scripts/tokenize-brand.mjs to a disposable install before the 1.3.0 archive is cut. Inventory (24/09/2026, brand-leaks.py over 149 pages of 1.2.0 plus a scan of every candidate row): the only public row naming the demo is the footer's legal line. The header and drawer wordmark come from template-patches/tracy (logo.php, offcanvas.php); the <title> suffix from Joomla's sitename, which plg_system_tracyidentity sets. The demo carries no phone, email, address or social links, so its identity module holds only a name, slogan and monogram.",
+  "quickstart": "tracy-apple/j6",
+  "replace": [{ "from": "Tracy Apple", "to": "{site.name}" }]
+}

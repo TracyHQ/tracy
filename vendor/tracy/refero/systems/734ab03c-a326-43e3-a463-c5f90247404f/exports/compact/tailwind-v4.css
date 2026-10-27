@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-midnight-navy: #000f2e;
+  --color-warm-cream: #f6ecc8;
+  --color-soft-off-white: #fcfaf2;
+  --color-electric-blue: #0067e5;
+  --color-heather-violet: #515a8a;
+  --color-signal-yellow: #fed200;
+  --color-deep-teal: #116973;
+  --color-sky-wash: #8ab1e6;
+  --color-black-ink: #000000;
+  --color-brand-blue-drift: #4183d9;
+
+  /* Typography */
+  --font-dopper: 'Dopper', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gilroy: 'Gilroy', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

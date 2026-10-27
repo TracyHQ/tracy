@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cocoa-black": {
+      "$value": "#200f0a",
+      "$type": "color",
+      "$description": "Cocoa Black — Page background, primary text on light surfaces — the warm near-black base; it has subtle brown warmth that distinguishes it from pure black and pairs with mint without vibrating"
+    },
+    "cream-mist": {
+      "$value": "#fcfaf9",
+      "$type": "color",
+      "$description": "Cream Mist — Primary body and heading text on dark surfaces, icon fills — soft off-white that reads as paper against cocoa"
+    },
+    "warm-sand": {
+      "$value": "#e3ccc0",
+      "$type": "color",
+      "$description": "Warm Sand — Hairline borders on cards and nav, subtle dividers — beige linework that defines edges without harshness"
+    },
+    "ash-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary borders, image outlines, utility rules — neutral gray for the most abundant structural lines"
+    },
+    "stone": {
+      "$value": "#a69f9d",
+      "$type": "color",
+      "$description": "Stone — Muted helper text, link underlines in resting state — desaturated warm gray for non-prominent metadata"
+    },
+    "deep-plum": {
+      "$value": "#2b2538",
+      "$type": "color",
+      "$description": "Deep Plum — Card surfaces, elevated panels — slightly cooler and lighter than the page, reading as a card lifted off cocoa"
+    },
+    "aubergine": {
+      "$value": "#4d3f3b",
+      "$type": "color",
+      "$description": "Aubergine — Accent surface for nested cards or highlighted zones — a warmer brown for the third elevation step"
+    },
+    "mint-keyhole": {
+      "$value": "#a2f6f5",
+      "$type": "color",
+      "$description": "Mint Keyhole — Teal action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "iris": {
+      "$value": "#858df9",
+      "$type": "color",
+      "$description": "Iris — Outlined action borders, secondary highlights, icon accents — vivid violet for the second action voice and decorative strokes"
+    },
+    "periwinkle": {
+      "$value": "#6c74df",
+      "$type": "color",
+      "$description": "Periwinkle — Deeper violet for secondary borders and surface accents when iris needs to recede"
+    },
+    "lavender-mist": {
+      "$value": "#b6bbfb",
+      "$type": "color",
+      "$description": "Lavender Mist — Soft violet for inactive nav borders and gentle icon tints — the muted sibling of iris"
+    }
+  },
+  "font": {
+    "saans": {
+      "$value": "Saans",
+      "$type": "fontFamily",
+      "$description": "All interface and display type — a custom geometric sans where weight 300 carries all headlines and hero statistics while weight 500 is reserved for UI chrome (buttons, nav, labels, body). The whisper-weight headlines are the system's most distinctive move: 100px at weight 300 reads as architectural light, not aggressive marketing."
+    },
+    "saansmono": {
+      "$value": "SaansMono",
+      "$type": "fontFamily",
+      "$description": "Monospace utility — tracking at 0.06em gives it an uppercase tag/label feel, used for overline metadata, tags, and monospaced code-adjacent labels"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.dashlane.com",
+      "siteName": "Dashlane",
+      "extractedAt": "2026-06-03T18:57:20.114Z",
+      "variant": "compact"
+    }
+  }
+}

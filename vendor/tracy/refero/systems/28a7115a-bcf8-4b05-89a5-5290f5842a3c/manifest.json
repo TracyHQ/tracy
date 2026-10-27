@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+  "status": "complete",
+  "name": "Handhold",
+  "url": "https://styles.refero.design/style/28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+  "sourceWebsite": "https://handhold.io",
+  "extractedAt": "2026-06-03T20:03:58.657Z",
+  "capturedAt": "2026-10-08T05:09:31.959277+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "warm parchment under whispered serifs — a hand-set editorial spread with zero chromatic noise, where a hairline serif at weight 200 carries all the voice.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/061bc998-9547-4653-9c95-c192d8effc19.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b3ea9101d6e5266c974fc813c75c49cb7f54d15939d512e2c65a6e2a98e1b7e5",
+      "bytes": 18051
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "17dc671143b31d6df4e890642234dce563eeb9472c81a72978646eeae60cc0b9",
+      "bytes": 74981
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4553def566060ba00a29a76b10ede560659ce9fcd931359a00ae68c489ff368c",
+      "bytes": 14614
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ffe78642723d2862fdfc2508fd4fdb6afd96c7a9861203bd9a57a4d5ce78cedd",
+      "bytes": 7537
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "275eda67e5b6b859035e007b360b96a1d575f8b89f9299392abc821b120dd767",
+      "bytes": 11270
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fd969ca4b722dc1a44ab91b741e89f6b98b11a7662c797038324bc1dcee19454",
+      "bytes": 2599
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "be2d24b40a8e411943471c2dcd4fd4fd656e590e79a5aed670a57398d65dbb98",
+      "bytes": 446
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "87fdf2e863123d2dd8275268227de3cefdd0b18d12d131f9540a2cc054a65815",
+      "bytes": 463
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6719864ad4e0ed9a8c8d1f43a73f3eef34ef172d0d34a4992fa2fe7f42d0daf2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "95c72885aefde181864966b3bbae86b025578f5bab3c2d55861f3c850aec39b1",
+      "bytes": 41483
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "04d7775d96bf6c17104ab579e6423f341a150997abac55272f400cfe1462af59",
+      "bytes": 21389
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "875e00eb0192bf0cb8b9fe5adf5fe07077ee537a3d5bdf8b92e59c09be70cc1f",
+      "bytes": 33836
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7780e0a13299920c6b491142d71b5ba4d788e6a3fa8f0c901299c34a6d0e5071",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "752109750bbca452079a84e96981f69fa38fb516e597dd3937df1f2036a8ef24",
+      "bytes": 1433
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "312a66d03637fbe04ee62e7f12c64191682ded1ccba69cdaeb5d5b53ab55ff9c",
+      "bytes": 1918
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "12255b63-e506-4bc1-a4cd-d05487de32f3",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "1ded7f89-3df0-4e7c-9cac-28218d038575",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "6024d069-8a74-4534-917f-5f5b11224cc5",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "94c4fc51-4323-4f06-a4a4-27517e190445",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

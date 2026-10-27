@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-fog: #efefef;
+  --color-ink: #10100f;
+  --color-paper: #ffffff;
+  --color-charcoal: #26292a;
+  --color-graphite: #40403f;
+  --color-ash: #b3b3b2;
+  --color-black: #000000;
+  --color-butter-cream: #fffb85;
+
+  /* Typography — Font Families */
+  --font-europagronr2sh: 'EuropaGroNr2SH', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-europagronr2sb: 'EuropaGroNr2SB', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

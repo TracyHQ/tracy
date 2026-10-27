@@ -1,0 +1,27 @@
+:root {
+  /* Colors */
+  --color-deep-iris: #4d3e78;
+  --color-amethyst: #6956a8;
+  --color-iris-glow: #745fbb;
+  --color-lilac-mist: #f3ecf7;
+  --color-parchment: #fcf9f5;
+  --color-licheno: #e9f3e7;
+  --color-apricot-wash: #feede0;
+  --color-rose-quartz: #ffdce8;
+  --color-sky-tint: #ccdcf8;
+  --color-lavender-veil: #eadff8;
+  --color-orchid-pink: #a54b7a;
+  --color-tangerine: #b74d1a;
+  --color-forest-fern: #1f7a57;
+  --color-cobalt: #3c699b;
+  --color-peacock: #058380;
+  --color-periwinkle: #4780bc;
+  --color-plum: #803218;
+  --color-crimson: #a53c3a;
+  --color-vermilion: #e14f4c;
+  --color-pure: #ffffff;
+
+  /* Typography — Font Families */
+  --font-reckless: 'Reckless', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

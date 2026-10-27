@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-PR-943-ja-vega-wp7-behaviour-layout-fixes-pending",
+  "itemIds": ["regression:REG-PR-943-ja-vega-wp7-behaviour-layout-fixes"],
+  "requirement": "JA Vega wp7 1.1.9: page heights, drawer, search field, project and service cards, article quote and header sun match the Joomla source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-943-ja-vega-wp7-behaviour-layout-fixes.json",
+    "ref": "PR #943 (fix); fix evidence: Measures of 05/10/2026 against the local Joomla source: the 1.1.8 restore passes 6 of 10 sweep checks (fixed-widgets, icons, forms, text fail); 1.1.9 on the clean restore passes 19 of 19 (fix-measure.json bound to wp-ja-vega-1.1.9.zip e55faf13); services-benefit-titles reports 36 defects on the previous 1.1.9 build and 0 on the shipped one",
+    "invariant": "site-sweep: all ten checks (overflow, scheme, background, header, chips, fixed-widgets, icons, forms, text, first-interaction) report 0 defects and 0 not measured over 34 routes x 6 widths x light and dark; the ten groups the dossier records as decided are listed as not counted; exit 0. measure118: 19 of 19 merged checks pass, among them services-benefit-titles (18 cases: the benefit card titles of the six service pages are 20 / 24 px at 390, 768 and 1440), text-field-focus, drawer-open-strip, drawer-back-row-case and project-card-excerpts with 0 defects. measure116: 5/5 and 3/3 checks pass.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-PR-943-ja-vega-wp7-behaviour-layout-fixes"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-PR-943-ja-vega-wp7-behaviour-layout-fixes",
+    "pr": 943,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-vega",
+    "file": "tests/regression/cases/REG-PR-943-ja-vega-wp7-behaviour-layout-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

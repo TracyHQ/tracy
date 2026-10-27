@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-hi-vis-yellow: #f0e226;
+  --color-ink-black: #19181a;
+  --color-pure-black: #000000;
+  --color-bone: #f5f4f0;
+  --color-charcoal: #272727;
+  --color-sand: #d9d7ce;
+
+  /* Typography — Font Families */
+  --font-apercu-pro: 'Apercu Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apercu-mono-pro: 'Apercu Mono Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

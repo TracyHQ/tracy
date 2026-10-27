@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-stone-charcoal: #444242;
+  --color-linen-cream: #efe3dc;
+  --color-warm-sand: #dacabf;
+  --color-dust: #938a83;
+  --color-mortar: #595552;
+
+  /* Typography — Font Families */
+  --font-basis: 'Basis', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-favorit: 'Favorit', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

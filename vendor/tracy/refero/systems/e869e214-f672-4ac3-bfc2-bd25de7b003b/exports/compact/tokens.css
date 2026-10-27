@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-canvas-bone: #faf9f7;
+  --color-card-white: #ffffff;
+  --color-ink-black: #0f0f0f;
+  --color-graphite: #232529;
+  --color-hairline: #d1d1d1;
+  --color-soft-border: #e6e6e6;
+  --color-muted-ink: #a0a0a0;
+  --color-lime-wash: #ebffb1;
+  --color-lime-edge: #ade900;
+  --color-ember-orange: #ff631f;
+  --color-sunset-gradient: #ffae53;
+  --gradient-sunset-gradient: linear-gradient(rgba(250, 249, 247, 0) 2.46%, rgb(255, 240, 222) 23.04%, rgb(255, 174, 83) 54.09%, rgba(255, 174, 83, 0) 93.84%);
+  --color-sky-wash: #5db3cf;
+  --gradient-sky-wash: radial-gradient(97.22% 78.13% at 50% -21%, rgb(93, 179, 207) 22.39%, rgba(145, 201, 220, 0.56) 58.43%, rgba(250, 249, 247, 0) 85.73%);
+
+  /* Typography — Font Families */
+  --font-wixmadefortext: 'WixMadeforText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wixmisoregular: 'WixMisoRegular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wixmisolight: 'WixMisoLight', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

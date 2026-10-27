@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#272727",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav, footer text, dark pill tags (funded, successful) — the workhorse near-black that grounds every layout"
+    },
+    "graphite": {
+      "$value": "#717171",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, hairline borders on cards, images, and inputs — the quiet structural neutral"
+    },
+    "ash": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, subtle borders, disabled or muted states"
+    },
+    "fog": {
+      "$value": "#cdcccc",
+      "$type": "color",
+      "$description": "Fog — Light placeholder text, decorative dividers on dark surfaces"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, text on dark/image overlays — the dominant background across all sections"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Occasional deep surface for emphasis blocks, SVG fills"
+    },
+    "ember": {
+      "$value": "#e75a00",
+      "$type": "color",
+      "$description": "Ember — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "signal-red": {
+      "$value": "#c52910",
+      "$type": "color",
+      "$description": "Signal Red — Accent — alert and availability tags, sits between Ember and Brick in the warm surface stack"
+    },
+    "brick": {
+      "$value": "#962921",
+      "$type": "color",
+      "$description": "Brick — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    }
+  },
+  "font": {
+    "messina-sans": {
+      "$value": "Messina Sans",
+      "$type": "fontFamily",
+      "$description": "Single-family system covering nav, body, display, and UI. The signature choice is using weight 300/350 everywhere — headlines whisper rather than shout, creating editorial restraint. 50px and 80px display sizes with tight tracking (-0.02em) float over full-bleed campaign imagery; 14–20px handles body and UI; 0.07em wide tracking is used for eyebrow labels and tag text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vol.co",
+      "siteName": "Volume",
+      "extractedAt": "2026-06-03T17:20:14.125Z",
+      "variant": "compact"
+    }
+  }
+}

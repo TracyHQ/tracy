@@ -1,0 +1,339 @@
+{
+  "about": "button-overlap: probe data cut from the Add site preview under Moxie, light visitor scheme, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1, no script as the frame runs, fleet01 demos). broken: JA Symphony Joomla, the Tickets / Rspv pills of each event, side by side on the template page (76 + 63 px), wrapped onto two rows edge to edge worn (90 x 37 over 75 x 37); clean: JA Voyara, JA Smallbiz, JA Sensei.",
+  "broken": [
+    {
+      "source": "quickstart/ja-symphony/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#858273",
+        "#93b6fb",
+        "#000000",
+        "#84acfb",
+        "#868474",
+        "#7a786a",
+        "#b7b39f",
+        "#1a1a1a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1188,
+              "y": 4026,
+              "w": 76,
+              "h": 40
+            },
+            "b": {
+              "x": 1272,
+              "y": 4026,
+              "w": 63,
+              "h": 40
+            }
+          },
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:3/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:3/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1188,
+              "y": 4229,
+              "w": 76,
+              "h": 40
+            },
+            "b": {
+              "x": 1272,
+              "y": 4229,
+              "w": 63,
+              "h": 40
+            }
+          },
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:4/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:4/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1188,
+              "y": 4330,
+              "w": 76,
+              "h": 40
+            },
+            "b": {
+              "x": 1272,
+              "y": 4330,
+              "w": 63,
+              "h": 40
+            }
+          },
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:5/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:5/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1188,
+              "y": 4431,
+              "w": 76,
+              "h": 40
+            },
+            "b": {
+              "x": 1272,
+              "y": 4431,
+              "w": 63,
+              "h": 40
+            }
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1215,
+              "y": 4130,
+              "w": 90,
+              "h": 37
+            },
+            "b": {
+              "x": 1230,
+              "y": 4167,
+              "w": 75,
+              "h": 37
+            }
+          },
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:3/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:3/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1215,
+              "y": 4363,
+              "w": 90,
+              "h": 37
+            },
+            "b": {
+              "x": 1230,
+              "y": 4400,
+              "w": 75,
+              "h": 37
+            }
+          },
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:4/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:4/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1215,
+              "y": 4498,
+              "w": 90,
+              "h": 37
+            },
+            "b": {
+              "x": 1230,
+              "y": 4535,
+              "w": 75,
+              "h": 37
+            }
+          },
+          {
+            "key": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:5/div:1/div:1/div:4/div:1/a:1|div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:5/div:1/div:1/div:4/div:1/a:2",
+            "at": "a.btn-sm.btn.btn-primary",
+            "text": "Tickets / Rspv",
+            "a": {
+              "x": 1215,
+              "y": 4633,
+              "w": 90,
+              "h": 37
+            },
+            "b": {
+              "x": 1230,
+              "y": 4670,
+              "w": 75,
+              "h": 37
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "key": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1|div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:2",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip / Watch the film",
+            "a": {
+              "x": 150,
+              "y": 521,
+              "w": 126,
+              "h": 47
+            },
+            "b": {
+              "x": 290,
+              "y": 521,
+              "w": 182,
+              "h": 47
+            }
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "key": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1|div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:2",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip / Watch the film",
+            "a": {
+              "x": 120,
+              "y": 511,
+              "w": 124,
+              "h": 47
+            },
+            "b": {
+              "x": 258,
+              "y": 511,
+              "w": 168,
+              "h": 47
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-smallbiz/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#7a786a",
+        "#858273",
+        "#868474",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": []
+      },
+      "worn": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-sensei/j6@1.0.3 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#858273",
+        "#b7b39f",
+        "#868474",
+        "#7a786a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "key": "div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:1|div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-primary",
+            "text": "Start your free trial / Plans & Pricing",
+            "a": {
+              "x": 90,
+              "y": 733,
+              "w": 204,
+              "h": 54
+            },
+            "b": {
+              "x": 304,
+              "y": 733,
+              "w": 171,
+              "h": 54
+            }
+          },
+          {
+            "key": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:1|div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:2",
+            "at": "a.btn.btn-primary",
+            "text": "Meet our Team / Become an Instructor",
+            "a": {
+              "x": 90,
+              "y": 3370,
+              "w": 174,
+              "h": 54
+            },
+            "b": {
+              "x": 286,
+              "y": 3370,
+              "w": 220,
+              "h": 54
+            }
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "key": "div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:1|div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-primary",
+            "text": "Start your free trial / Plans & Pricing",
+            "a": {
+              "x": 437,
+              "y": 698,
+              "w": 200,
+              "h": 38
+            },
+            "b": {
+              "x": 646,
+              "y": 698,
+              "w": 171,
+              "h": 38
+            }
+          },
+          {
+            "key": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:1|div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:2",
+            "at": "a.btn.btn-primary",
+            "text": "Meet our Team / Become an Instructor",
+            "a": {
+              "x": 138,
+              "y": 3228,
+              "w": 170,
+              "h": 38
+            },
+            "b": {
+              "x": 329,
+              "y": 3228,
+              "w": 220,
+              "h": 38
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

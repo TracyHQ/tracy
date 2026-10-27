@@ -1,0 +1,230 @@
+{
+  "dos": [
+    "Set all product tiles on a #f9f9f9 gallery card with 10px radius and 30px internal padding.",
+    "Use Times 16px weight 400 for all body and description copy; use Arial Narrow 14px for labels, chips, and metadata.",
+    "Reserve #ff0000 exclusively for the oversized script wordmark behind the header; treat it as a signature artwork, not a functional color.",
+    "Use #111111 as the dominant interface color for text, filled chips, and borders — keep the palette strictly black-on-white for everything else.",
+    "Use 10px border-radius for all chips, buttons, and cards as a single consistent rhythm.",
+    "Separate content with hairline #cfcfcf borders and color shifts rather than drop shadows.",
+    "Allow generous whitespace — section gaps of 40px and card padding of 30px — to preserve the gallery/archive feel."
+  ],
+  "donts": [
+    "Do not use #ff0000 for buttons, links, tags, error states, or any functional UI element.",
+    "Do not introduce additional accent colors — the system is strictly monochrome with one red artwork exception.",
+    "Do not use heavy or stacked shadows; the single 20px 30%-opacity blur is the maximum elevation allowed.",
+    "Do not use bold or display-weight typography; both Times and Arial Narrow appear at weight 400 only.",
+    "Do not fill buttons with chromatic colors — buttons should be #111111 fill on #ffffff or outlined #111111.",
+    "Do not use rounded or pill shapes (9999px radius) — the 10px radius is deliberate and consistent.",
+    "Do not add gradients, glows, or colored backgrounds to the product cards."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas White",
+      "role": "Page background, image surfaces, inverted text on dark chips",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f9f9",
+      "name": "Gallery Gray",
+      "role": "Card and product tile backgrounds — sets objects apart from the page with a whisper of warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cfcfcf",
+      "name": "Hairline Gray",
+      "role": "Dividers, secondary borders, placeholder structure",
+      "group": "neutral"
+    },
+    {
+      "hex": "#888888",
+      "name": "Caption Gray",
+      "role": "Secondary text, metadata, timestamps, muted helper labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111111",
+      "name": "Ink Black",
+      "role": "Primary text, filled filter chips, button borders, headings — the dominant interface color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "True Black",
+      "role": "Hard borders and text where maximum contrast is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff0000",
+      "name": "Signature Red",
+      "role": "The wordmark only — a pure, unmoderated red used at oversized scale behind the header as a brand watermark; never used for buttons, links, or functional UI",
+      "group": "brand"
+    }
+  ],
+  "layout": "The page is a max-width centered layout (estimated 1280px) with a full-bleed header zone where the red script wordmark bleeds beyond the container edges. The header is a single left-aligned block: brand name, description paragraph, and a horizontal row of filter chips. Below the header, the content is a 3-column product grid of square-ish cards on a white canvas, each card holding a single product photo and a two-line label row. Vertical rhythm is spacious — ~40px between sections and 30px inside each card. The layout is symmetric and grid-based with no asymmetric or overlapping sections. Navigation is minimal: just the filter chip row, a tiny social icon in the top-right, and the scroll itself.",
+  "imagery": "Product photography is the primary visual content: individual merch objects (apparel, accessories, containers) photographed in isolation on near-white backgrounds, with no lifestyle or contextual staging. Each object is treated as an archival specimen — centered, lit evenly, and given generous internal padding within its card. The only non-product imagery is the red cursive 'myrch' script, which functions as a decorative brand watermark rather than a photograph. There is no illustration, no 3D rendering, and no abstract graphics. Imagery occupies roughly 50-60% of the viewport in the main content area, with the remainder as white space and label text.",
+  "similar": [
+    {
+      "why": "Same near-monochrome archive aesthetic with hairline borders, generous whitespace, and serif/sans typographic pairing for cataloging content",
+      "business": "Are.na"
+    },
+    {
+      "why": "Editorial typographic restraint with black-and-white interface and a single bold accent used as a signature mark rather than functional UI",
+      "business": "Mubi"
+    },
+    {
+      "why": "Gallery-style grid of objects with serif italic labels and condensed sans metadata, prioritising content over chrome",
+      "business": "It's Nice That"
+    },
+    {
+      "why": "Archive/catalog sensibility using Times serif body and narrow sans labels on white space, treating items as curated specimens",
+      "business": "Cabinet magazine"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "10px",
+      "chips": "10px",
+      "buttons": "10px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "40px",
+    "cardPadding": "30px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background"
+    },
+    {
+      "hex": "#f9f9f9",
+      "name": "Gallery Card",
+      "level": 1,
+      "purpose": "Product tile and component surface"
+    },
+    {
+      "hex": "#111111",
+      "name": "Ink Surface",
+      "level": 2,
+      "purpose": "Active filter chip, filled control"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(17, 17, 17, 0.3) 0px 0px 20px 0px",
+      "element": "Product tile"
+    }
+  ],
+  "northStar": "white-walled exhibition vitrine — editorial serif labels floating in generous negative space, disrupted by a single red script signature",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 42,
+      "lineHeight": 1.24
+    }
+  ],
+  "components": [
+    {
+      "name": "Header Brand Lockup",
+      "role": "Site identity in the top-left",
+      "description": "'Myrch(dot)Club® — All ⓘ' rendered in Arial Narrow 20px, #111111. The registered trademark and circled-i are literal typographic characters, not icons. The wordmark dot is spelled out, reinforcing the archival/dot-matrix catalog feel."
+    },
+    {
+      "name": "Red Script Watermark",
+      "role": "Brand signature bleeding behind the header",
+      "description": "Oversized red (#ff0000) cursive 'myrch' set behind the header zone at 200px+ size, intentionally clipped by the page edges. Not a component to recreate literally — it is one custom artwork. On other pages, treat the red as reserved for this single hero watermark; do not reuse for buttons or accents."
+    },
+    {
+      "name": "Description Block",
+      "role": "Introductory paragraph beneath the brand",
+      "description": "Times 16px, weight 400, #111111, line-height 1.20. Two lines of text describing the archive's purpose. Sets the editorial reading voice for the site."
+    },
+    {
+      "name": "Filter Chip — Active",
+      "role": "Currently selected category filter",
+      "description": "Filled #111111 background, #ffffff text, 10px radius, padding 6px 12px. Text in Arial Narrow 14px weight 400. No border needed — the fill is the signal."
+    },
+    {
+      "name": "Filter Chip — Inactive",
+      "role": "Unselected category filter",
+      "description": "Transparent background, 1px solid #111111 border, #111111 text, 10px radius, padding 6px 12px. Arial Narrow 14px. On hover, can invert to the active style."
+    },
+    {
+      "name": "Curatorial Caption",
+      "role": "Tiny attribution line under the chips",
+      "description": "Times 14px, #888888. E.g. 'Myrch.Club is built and curated by ⬛ Manual Engineering.' Acts as a footer-of-the-header, a museum wall plaque."
+    },
+    {
+      "name": "Product Grid Card",
+      "role": "Individual merch item tile",
+      "description": "#f9f9f9 background, 10px border-radius, 30px internal padding, 1px #cfcfcf or absent border. Contains a product image centered on a slightly lighter inner area, then below: brand name in Times italic (#111111) left-aligned, and item name + source venue in Arial Narrow 14px (#888888) right-aligned. No drop shadow on the card itself."
+    },
+    {
+      "name": "Product Image Frame",
+      "role": "Photograph container within a card",
+      "description": "White (#ffffff) or very light background, generous internal padding around the photographed object, no border. The shadow rgba(17,17,17,0.3) 0px 0px 20px 0px may apply here as a subtle vignette around the object to lift it from the card surface."
+    },
+    {
+      "name": "Card Label Row",
+      "role": "Metadata strip beneath each product image",
+      "description": "Two-column inline layout: brand name left in Times italic 14px #111111; product + venue right in Arial Narrow 14px #888888. ~20px gap from the image to the label row, ~30px from label row to the card edge."
+    },
+    {
+      "name": "Instagram Icon Button",
+      "role": "Social link in the top-right corner",
+      "description": "Small, minimal — likely a stroke-only icon at ~20px, no background, no border, #111111. Sits in the absolute top-right of the header strip."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary body and interface type — used for descriptions, product metadata, and general reading text. The serif choice signals editorial/archive intent; a humanist serif substitute like EB Garamond or Lora preserves the curatorial atmosphere",
+      "sizes": "16px",
+      "family": "Times New Roman",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "EB Garamond, Lora, Source Serif Pro",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Secondary structural type — condensed sans for compact labels, filter chips, navigation, and the 42px brand name in the header. The narrow proportions contrast the serif body and create catalog/inventory utility. Substitute with a condensed grotesk like Barlow Condensed or Roboto Condensed",
+      "sizes": "14px, 20px, 42px",
+      "family": "Arial Narrow",
+      "weight": "400",
+      "lineHeight": "1.24, 1.33, 1.40, 1.43",
+      "substitute": "Barlow Condensed, Roboto Condensed, Helvetica Neue Condensed",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Myrch Club operates as a typographic archive: a near-monochrome gallery where serif body type, narrow sans labels, and a single defiant red script wordmark define the entire visual identity. The interface is deliberately white-spaced and editorial — product photography sits in soft gray cards (#f9f9f9) on a pure white canvas, separated by hairline borders rather than heavy elevation. The red appears only in the oversized cursive logo bleeding through the header, functioning as a watermark of intent rather than a functional UI color. Everything else — navigation chips, filter tags, captions — is rendered in near-black (#111111) with thin borders, creating a catalog-of-objects feeling closer to a museum index than an e-commerce grid.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #111111\n- background: #ffffff\n- card surface: #f9f9f9\n- border: #cfcfcf / #111111\n- accent: #ff0000 (wordmark only, never for UI)\n- primary action: #111111 (filled action)\n\n## Example Component Prompts\n1. **Filter Chip — Active**: 14px Arial Narrow weight 400, white (#ffffff) text on #111111 fill, 10px border-radius, padding 6px 12px, no border.\n2. **Filter Chip — Inactive**: 14px Arial Narrow weight 400, #111111 text on transparent background, 1px solid #111111 border, 10px border-radius, padding 6px 12px.\n3. **Product Card**: #f9f9f9 background, 10px border-radius, 30px padding, 1px solid #cfcfcf border. Contains a centered product image on white with 20px internal padding, and a label row below: brand name in Times italic 14px #111111 on the left, product name + venue in Arial Narrow 14px #888888 on the right, 20px below the image.\n4. **Header Description**: 16px Times weight 400, #111111, line-height 1.20, max-width 800px, followed by 20px gap before the filter chip row.\n5. **Gallery Page**: White (#ffffff) page background, max-width 1280px centered, header block left-aligned, then a 3-column product grid with 40px row gap and 20px column gap."
+    },
+    {
+      "title": "Signature Element — Red Wordmark",
+      "content": "The #ff0000 cursive 'myrch' script is a one-off brand artwork, not a repeatable design token. On the homepage it sits oversized behind the header zone, clipped by the viewport. When recreating other pages, either omit it or render it as a contained hero element. Do not fragment the red across the UI; it should always read as a single bold statement, not a distributed accent."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is nearly absent by design. The single 20px 30%-opacity black blur is used only on elevated image areas where the product photograph needs separation from the page. Surfaces are defined by background color shifts (#ffffff → #f9f9f9) and hairline #111111 borders, not by stacked shadows. The result reads as flat, editorial, and object-focused."
+}

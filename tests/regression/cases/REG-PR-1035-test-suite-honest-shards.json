@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1035-test-suite-honest-shards",
+  "kind": "fix",
+  "title": "A test that could not fail now fails for a cached credential; the tests gate names what it did not run and each shard prints per-file seconds",
+  "pr": 1035,
+  "area": "ci/test-suite",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S2: Run node --import tsx --test scripts/test/check-tests-environment.test.ts: it runs the tests gate as a command over a throwaway tree holding a skipped test, a passing test and a red test.",
+    "S3: Run node --import tsx --test scripts/test/update-test-timings.test.ts: it feeds the table importer logs in the shape of gh run view --log, a fake gh, and tables that are a symlink, a directory, a FIFO, empty or cut short.",
+    "S4: Run node --test packages/site/tracy-add-site/test/error-next-step.test.mjs and packages/site/tracy-add-site/test/import-watch.test.mjs: the import wizard's poll interval runs on node:test's fake setInterval, moved one POLL_MS (import-watch.mjs) at a time, while React, settle() and the fake doors keep real time."
+  ],
+  "expect": [
+    "S2: exit 0. The gate prints 'check-tests: 4 trees hold tests this gate does NOT run' and one 'SKIP <file>:<line> › <name> — <reason>' line per skipped test; a green shard prints begin, one 'tracy-test-timing v1 file=' line per file and end; a red shard exits 1 and prints no end line; TRACY_PILOT=1 without its artifact directory or database exits 1.",
+    "S3: exit 0. A shard with a missing, duplicated or malformed record is refused whole; fewer than three eligible runs, a run that is not a green Linux pull-request run into develop, and a gh failure (exit 3) each leave the table byte for byte; rest counted in the wrong unit is refused.",
+    "S4: exit 0. Every import-wizard case that waited for a poll still sees it: the adopted run is polled by its id, a failed or forgotten run shows its sentence and keeps its claim, a finished run is handed over exactly once over two polls, and no test sleeps a real poll period (the before/after timing is in the PR under How it was verified, not copied here)."
+  ],
+  "selectors": {
+    "files": "scripts/test-timing-reporter.mjs, scripts/update-test-timings.mjs, scripts/check-tests.ts",
+    "lines": "tracy-test-timing v1 · check-tests: N test(s) were selected and NOT run"
+  },
+  "evidence": "Tracy CI run 37707424087: tests 1/2 ran 655 s of workers, tests 2/2 969 s plus 197 s of rest; its log has a duration per test and none per file. The test 'it asks the book on EVERY call' ended in assert.ok(true) and passed with the credential cached.",
+  "fence": "The tests gate as a command, the reporter beside the usual one under --test-force-exit, and the importer's refusals; the mutation witness of questions-llm.test.mjs (S1) went with the question generator, removed 10/10/2026. It does not prove the shards are balanced, which needs three CI runs carrying the new lines. Not covered: the stand reuse in site-publish.test.mjs and site-comments.test.mjs, which the workers part of the tests gate runs itself.",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "scripts/test/check-tests-environment.test.ts",
+      "scripts/test/update-test-timings.test.ts",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs",
+      "packages/site/tracy-add-site/test/import-watch.test.mjs"
+    ]
+  }
+}

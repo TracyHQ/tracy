@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-sunset-gradient: #ea2804;
+  --color-forest-signal: #2b9a66;
+  --color-bone-white: #ffffff;
+  --color-ink: #202020;
+  --color-graphite: #646464;
+  --color-silver: #bfbfbf;
+  --color-smoke: #d9d9d9;
+  --color-fog: #f0f0f0;
+  --color-vellum: #f9f9f9;
+  --color-cream-paper: #fefce9;
+  --color-carbon: #000000;
+
+  /* Typography */
+  --font-rb-freigeist-neue: 'RB Freigeist Neue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basier-square: 'Basier Square', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

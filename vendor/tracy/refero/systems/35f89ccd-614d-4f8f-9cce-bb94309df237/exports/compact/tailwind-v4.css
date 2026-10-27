@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #121212;
+  --color-graphite: #303030;
+  --color-mid-gray: #666666;
+  --color-fog: #999999;
+  --color-silver: #cccccc;
+  --color-bone: #f2f2f2;
+  --color-white: #ffffff;
+  --color-signal-blue: #699fff;
+
+  /* Typography */
+  --font-shne-custom: 'Söhne (custom)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

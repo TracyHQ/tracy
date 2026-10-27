@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #0d0e13;
+  --color-pure-white: #ffffff;
+  --color-canvas-beige: #e4e0db;
+  --color-steel-gray: #6e6e71;
+  --color-footer-ink: #070707;
+  --color-sand-border: #e0ccbb;
+  --color-warm-linen: #e6d7ca;
+
+  /* Typography */
+  --font-lausanne-400: 'Lausanne-400', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-lausanne: 'Lausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

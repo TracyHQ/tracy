@@ -1,0 +1,1119 @@
+# Build `tracy-web` and `tracy-host`, push them to GHCR at ONE tag, and deploy them to a host.
+#
+# WHY THIS IS A SEPARATE FILE FROM `build-dsh-image.yml`, said in one place so nobody has to guess:
+# the two builds have nothing in common but a registry. dsh is a 4.4 GB image whose build runs
+# `pnpm build:official` over ~300 packages plus Chromium, needs a read-only deploy key for a
+# private submodule, and is given a 90-minute timeout; these two are node:24-slim plus a `COPY`,
+# and finish in single-digit minutes. Welding them together would make every one-line fix to
+# `apps/tracy-web` wait on — and be failed by — a build it does not touch, and would restart
+# `tracy-dsh` (every agent session on the host with it) on a push that changed neither.
+#
+# 🔒 THE SHARED TAG SURVIVES THE SPLIT, BECAUSE IT IS DERIVED AND NOT PASSED. Both workflows
+# compute `$(date +%F)-$(git rev-parse --short=8 HEAD)`, so one commit gives one tag in either
+# and "which build is dev running" keeps one answer. What the split does mean is that a commit
+# touching only `apps/` produces app images at a tag dsh has no image for — which is correct, not a
+# gap: dsh is deployed by its own workflow, to `/opt/tracy-fleet/dsh/`, from its own compose
+# project. Neither deploy touches the other's containers, and `deploy-tracy-stack.sh` names the
+# three services it owns for exactly that reason.
+#
+# ⚠ FOUR `dist/` DIRECTORIES ARE GITIGNORED AND THE IMAGE `COPY`s THEM. `apps/tracy-web/Dockerfile`
+# copies `packages/web/tracy-harness/dist`, `packages/web/tracy-design-page/dist`,
+# `packages/web/tracy-wo-find-page/dist` (the sign-in-free `/find`) and `apps/tracy-docs/dist` (the documentation site, since 28/09); none is in git (same reasoning
+# CLAUDE.md LAW #3 gives `lib/client.js`, in the other direction — these are NOT checked-in builds,
+# so whoever builds the image must build them first). Without the build step below, `docker build`
+# dies on a line that names a path and nothing else. And a `dist/` built with the wrong `base` is
+# worse than a missing one: `/ops` answers 200 with a blank body — measured 10/09 — so the assert
+# after the build reads `index.html` and insists the asset URLs are prefixed.
+
+name: build-app-images
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: 'Push the images to GHCR (uncheck to build only)'
+        type: boolean
+        default: true
+      deep_verify:
+        description: 'Also pull the images back in full — for a new host or registry change'
+        type: boolean
+        default: false
+      deploy_to:
+        description: 'Also deploy this build to a host'
+        type: choice
+        options: ['no', 'dev', 'staging', 'production']
+        default: 'no'
+      rebuild:
+        description: 'Build both images even if the registry already holds their context fingerprints'
+        type: boolean
+        default: false
+      inventory_emdash_tokens:
+        description: 'Dev only, READ-ONLY: roll-call the EmDash sites'' #155 token custody (no build/deploy needed — set deploy_to=no)'
+        type: boolean
+        default: false
+      migrate_emdash_token_mount:
+        description: 'Dev only: migrate ONE EmDash site to the #155 read-only token mount (needs its opaque selector; no build/deploy — set deploy_to=no)'
+        type: boolean
+        default: false
+      migrate_emdash_token_mount_selector:
+        description: 'The ONE site''s opaque sha256(label) selector (from the inventory). Required when migrate_emdash_token_mount is set.'
+        type: string
+        default: ''
+      migrate_emdash_token_mount_apply:
+        description: 'APPLY the migration (unchecked = dry-run preflight: no persistent compose/token/site-data/runtime change; it only writes an exclusive temporary candidate to prove it resolves, then removes it)'
+        type: boolean
+        default: false
+      build_web_images:
+        description: 'Build the web images web/IMAGE_TAGS names on ONE host, from this ref (bash web/build.sh builds only what is missing) — no build/deploy, set deploy_to=no'
+        type: choice
+        options: ['no', 'dev', 'staging', 'production']
+        default: 'no'
+      upgrade_emdash_tools:
+        description: 'Dev only: move EmDash quickstart sites onto their agent-tools image (#309) — no build/deploy, set deploy_to=no'
+        type: boolean
+        default: false
+      upgrade_emdash_tools_apply:
+        description: 'APPLY the move (unchecked = dry run: lists what would move, and why the others stay)'
+        type: boolean
+        default: false
+      migrate_dns_alias_selector:
+        # DEV ONLY (consumed only by deploy-dev below; deploy-prod never reads it). Empty does
+        # nothing. This is an OPAQUE, non-reversible selector — the already-derived bounded #165
+        # `tracy-web-<32hex>` alias — NOT a raw site label. A raw label embeds the QA site's private
+        # tunnel hostname, and an Actions input is printed into the run log even when it is not a
+        # secret; masking it after it has entered a log does not un-print it. The dev host resolves
+        # this selector read-only to exactly one local site (zero/ambiguous → refuse). The raw label
+        # never enters Actions, and the CLI keeps its raw-label form for private operator use.
+        description: 'DEV ONLY: the #165 tracy-web-<hash> selector for one site (empty = do nothing)'
+        type: string
+        default: ''
+      migrate_dns_alias_mode:
+        # dry-run does the whole read-only preflight and mutates nothing; apply acts. Default dry-run
+        # so the selector is proven to resolve to one site before anything is recreated.
+        description: 'DEV ONLY: how to run the #165 migration'
+        type: choice
+        options: ['dry-run', 'apply']
+        default: 'dry-run'
+  push:
+    # `feat/tracy-web` sits beside `develop` here: it is the branch the two apps are being built on
+    # (CLAUDE.md's own table — `apps/tracy-web` + `apps/tracy-host` replace the seven Workers), and
+    # until it merges it is the only place these Dockerfiles change.
+    # `main` is production (renamed 15/09/2026: the old `main` is `main-old`, `main-v2` is
+    # `main-archived`, and `main-v3` — the branch that carried the tracy.ai cutover — became `main`).
+    # A push to `main` builds these images AND deploys them to prod1 (`deploy-prod` below); a push to
+    # `develop` does the same for the dev box. Merging into `main` is deploying, the rule this repo
+    # already held for Workers.
+    branches: [main, staging, develop]
+    # 🔒 `paths-ignore` + A CONTENT FINGERPRINT, NOT A `paths:` ALLOWLIST — changed 15/09/2026.
+    #
+    # Until that day this was an allowlist, written on the argument that the boundary "is knowable
+    # rather than guessed — `grep '^COPY' apps/*/Dockerfile` names exactly the paths listed". It was
+    # not: the two SPAs the web image copies are BUILT from `@tracy/ui`, `@tracy/core`, `@tracy/i18n`,
+    # `packages/design/tracy-design-inspiration` (relative imports), `scripts/lib` and two `vendor/`
+    # trees, and none of them was listed — a change there reached neither `/ops` nor
+    # `/design-inspiration`, and nothing said so. An allowlist that misses an entry fails silent.
+    #
+    # Now this list only drops pushes that provably reach no image (documentation, Workers, the
+    # other workflows), and the build job decides per image from `scripts/ci/image-context.mjs`:
+    # an image whose context fingerprint is already in the registry is not rebuilt, and the deploy
+    # asks for a tag the host already runs — so a push that changes neither image restarts nothing.
+    # A path missing from THIS list costs one install and two SPA builds, never a skipped image.
+    paths-ignore:
+      - 'docs/**'
+      - 'tasks/**'
+      - '*.md'
+      - '.github/workflows/build-dsh-image.yml'
+      - '.github/workflows/changelog-check.yml'
+      - '.github/workflows/pr-description-check.yml'
+      - '.github/workflows/tracy-ci.yml'
+      - '.github/actions/deploy-host-dsh/**'
+      - '.github/pull_request_template.md'
+
+# One deploy at a time per branch, and never cancel one halfway: a cancelled job between
+# `docker compose up -d` and the health check leaves a host running an image nothing verified.
+concurrency:
+  group: build-app-images-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  WEB_IMAGE: ghcr.io/tracyhq/tracy-web
+  HOST_IMAGE: ghcr.io/tracyhq/tracy-host
+
+jobs:
+  build:
+    # The same x86_64 box the other two workflows use. NOT `ubuntu-latest`: the org's monthly
+    # Actions quota is shared with every repo in it, and when another one spends it these jobs die
+    # in three seconds with no steps run — measured 07/09, `Tracy CI` 0 green out of 300.
+    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 45
+
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      # The tag both deploys ask for: `app-<12 hex>` of the two context fingerprints, so it changes
+      # exactly when either image does, and redeploying it onto a host that runs it restarts nothing.
+      tag: ${{ steps.publish.outputs.app_tag }}
+      web_image: ${{ env.WEB_IMAGE }}
+      host_image: ${{ env.HOST_IMAGE }}
+      # What mirror-to-ecr copies: each image's context tag, and the tags the publish step points at it.
+      web_ctx: ${{ steps.ctx.outputs.web }}
+      host_ctx: ${{ steps.ctx.outputs.host }}
+      dated: ${{ steps.meta.outputs.tag }}
+
+    steps:
+      # 🔒 FULL HISTORY, NOT THE DEFAULT DEPTH 1 — added 15/09/2026, found by a live push.
+      # `tracy-design-page/scripts/build-assets.mjs` stamps the library's commit with
+      # `git log -1 -- vendor/tracy/od-design-system …`. In a shallow checkout the only commit git
+      # has IS the one that "touched" every path, so the stamp was HEAD: every push produced a
+      # different `dist/` (in `data/manifest.json` and `data/catalog.json`), the web image's content
+      # fingerprint moved with nothing changed, and tracy-web restarted — and the page served the
+      # wrong library commit all along. Measured on `develop` 87cd69df, a push touching one comment
+      # in `scripts/`. The runner keeps this checkout, so the ~220 MB history is fetched once per
+      # runner and incrementally after that.
+      - name: Checkout (without submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          fetch-depth: 0
+
+      # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
+      # two in step, so compare them here rather than let a mismatch surface as a Vite build that
+      # fails for a reason that does not mention Node. Copied from `tracy-ci.yml`, deliberately —
+      # this is our box, not a fresh VM, so no `actions/setup-node`.
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
+            exit 1
+          }
+          corepack enable pnpm
+
+      # ⚠ THE SUBMODULE IS NEEDED EVEN THOUGH NEITHER DOCKERFILE COPIES IT. `pnpm-workspace.yaml`
+      # declares ~300 members under `vendor/tracy/deepseek-harness`; with the directory empty the root
+      # install does not fail at the submodule, it fails as a 404 from npmjs for
+      # `@deepseek-ai/*@…-tracy.1` in the middle of a resolve (CLAUDE.md §5). It lives in a
+      # DIFFERENT private repository, which `GITHUB_TOKEN` cannot read — hence the deploy key.
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — vendor/tracy/deepseek-harness cannot be fetched"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          # The umask is in a SUBSHELL: a bare `umask 077` would apply to the rest of this step and
+          # every file git writes would land 600/700 — see build-dsh-image.yml for the twelve-layer
+          # failure that produced.
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          COUNT=$(find vendor/tracy/deepseek-harness -mindepth 1 -maxdepth 1 | wc -l)
+          echo "vendor/tracy/deepseek-harness holds $COUNT entries"
+          [ "$COUNT" -ge 5 ] || {
+            echo "::error::vendor/tracy/deepseek-harness looks empty — the install would fail as an npmjs 404 instead of here"
+            exit 1
+          }
+
+      - name: Resolve the tag
+        id: meta
+        run: |
+          set -euo pipefail
+          # 🔒 `--short=8`, NOT A BARE `--short`, AND THIS WAS MEASURED THE HARD WAY.
+          #
+          # `git rev-parse --short HEAD` picks its length from `core.abbrev=auto`, which git
+          # derives from how many objects THAT CLONE holds. Three runners share this repo but not
+          # a checkout, so the same commit abbreviates differently on each. Measured 10/09 on one
+          # commit, `88c5eafd…`: `build-app-images` on one runner produced `2026-09-10-88c5eafd`
+          # and `build-dsh-image` on another produced `2026-09-10-88c5eafd6` — one character
+          # apart, two tags, and the whole "which build is dev running has ONE answer" property
+          # gone. Nothing was red; the images simply did not line up.
+          #
+          # Both workflows pin the same explicit length for that reason. Change it in one and the
+          # invariant breaks again, silently.
+          SHORT=$(git rev-parse --short=8 HEAD)
+          # The SAME formula `build-dsh-image.yml` uses. Both images below carry it, and so does
+          # the dsh image built from the same commit — one commit, one tag, one answer to "which
+          # build is dev running".
+          TAG="$(date +%Y-%m-%d)-${SHORT}"
+          {
+            echo "tag=$TAG"
+            echo "short=$SHORT"
+          } >> "$GITHUB_OUTPUT"
+          echo "image tag: $TAG"
+
+      # ⚡ THE dsh BUILD COMES FROM THE CACHE WHEN IT CAN, AND FILLS IT WHEN IT CANNOT — 26/09.
+      # Same key and tar as Tracy CI's `dsh-lib` job (`.github/actions/dsh-lib`). This workflow is
+      # the one that runs on pushes to `develop` and `main`, and a cache saved there is the only
+      # kind every pull request can read — so a submodule move is built once here and never again
+      # by the eight Tracy CI jobs of the PRs that follow. On a hit the build-dsh below skips.
+      - name: Restore or build the vendored dsh (shared with Tracy CI)
+        uses: ./.github/actions/dsh-lib
+        with:
+          mode: ensure
+
+      # 🔒 START FROM NO node_modules, BECAUSE THREE WORKFLOWS SHARE ONE CHECKOUT. A self-hosted
+      # runner keeps one `_work/<repo>/<repo>` per repository, and each workflow bootstraps in it
+      # with the order CLAUDE.md §5 pins. Run one bootstrap on top of another's finished state and
+      # the tree is in neither shape — measured 08/09 twice, as a "missing package" that was not
+      # one. The pnpm store survives this, so it is a relink and not a download.
+      #
+      # ⚡ `--skip-if-built` (15/09): the runner keeps this checkout and the submodule almost never
+      # moves, so rebuilding its 410 packages was the slowest step here (p90 400 s over 60 runs). The
+      # script decides from a stamp and prints why; rules in `scripts/build-dsh.mjs`. Same flag
+      # `tracy-ci.yml` uses.
+      - name: Install (dsh from source, then the root workspace)
+        run: |
+          set -euo pipefail
+          rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
+          node scripts/build-dsh.mjs --skip-if-built
+          pnpm install --frozen-lockfile
+
+      # The two SPAs and the documentation site `apps/tracy-web/Dockerfile` COPYs. All three `dist/`
+      # directories are gitignored, so this is the step that makes the COPY possible at all — see the
+      # file header. The docs build first generates three pages from `apps/tracy-web/src/api-reference`
+      # and `docs/references/api-changelog.md` (`apps/tracy-docs/scripts/generate.mjs`), then runs Astro.
+      - name: Build the two SPAs and the documentation site the web image copies
+        run: |
+          set -euo pipefail
+          pnpm --filter @tracy/harness-web build
+          pnpm --filter @tracy/design-page build
+          pnpm --filter @tracy/wo-find-page build
+          pnpm --filter @tracy/docs build
+
+      # The `/ops/cms` snapshots are read out of git here, where a repository exists, and COPYed into
+      # the image as plain JSON (`apps/tracy-web/src/ops/cms.js` header). The generator resolves
+      # `origin/develop` and `origin/main`, so both refs must be up to date here.
+      - name: Generate the /ops/cms configuration snapshots
+        run: |
+          set -euo pipefail
+          # 🔒 THE `+` IS THE FIX, NOT DECORATION. This runner is self-hosted and KEEPS its checkout
+          # between runs, so `refs/remotes/origin/develop` already exists from the last one. Without
+          # `+`, git updates it only if it can prove the move is a fast-forward — and at `--depth=1`
+          # it cannot see enough history to prove anything, so it refuses:
+          #   ! [rejected]  develop -> origin/develop  (non-fast-forward)
+          # Measured 15/09/2026 on aacad1a7: the build died here, and every develop deploy after it
+          # with it. It passes on a fresh clone (no ref to update), which is why it looked fine for
+          # days. Remote-tracking refs are force-updated by git's own default refspec for exactly
+          # this reason; this line just says so explicitly.
+          # No `--depth=1` since 15/09: on the full-history checkout above it would make the repository
+          # shallow again, and the library commit stamp of the design page would go back to HEAD.
+          git fetch --no-tags origin +develop:refs/remotes/origin/develop +main:refs/remotes/origin/main
+          test "$(git rev-parse --is-shallow-repository)" = false || {
+            echo "::error::the checkout is shallow — build-assets.mjs would stamp HEAD as the design library commit and the web image would rebuild on every push"
+            exit 1
+          }
+          node scripts/gen-ops-cms-snapshot.mjs --out apps/tracy-web/static/ops-cms
+          test -s apps/tracy-web/static/ops-cms/index.json
+
+      # 🔒 A `dist/` BUILT WITH THE WRONG `base` IS NOT A BUILD FAILURE — IT IS A BLANK PAGE.
+      # Measured 10/09: `/ops` answered 200 with an empty body because `index.html` asked for
+      # `/assets/…`, which the server has nothing at. `check-server.sh` has the same assert for a
+      # person standing at the machine; this is the same one, before the bytes enter an image.
+      - name: Assert both SPAs were built against their own base
+        run: |
+          set -euo pipefail
+          # The same three lines `deploy/scripts/check-server.sh` runs, kept in step by intent
+          # rather than by a shared file: this one judges a build context, that one judges a
+          # machine, and a helper spanning both would be edited for one and shipped to the other.
+          assert_base() {
+            local name="$1" dir="$2" prefix="$3" strays first
+            [ -f "$dir/index.html" ] || { echo "::error::$name did not build — no $dir/index.html"; exit 1; }
+            # Every absolute asset URL in index.html that is NOT under this SPA's own prefix.
+            strays="$(grep -oE '(src|href)="/[^"]*"' "$dir/index.html" | grep -v "$prefix" || true)"
+            if [ -n "$strays" ]; then
+              # `sed`, not `cut -d'"'`: the delimiter would have to survive two levels of quoting
+              # inside a YAML block scalar, and the shape that does not is a one-character flag
+              # holding two characters — which `cut` rejects at run time, in the error path, where
+              # nobody is watching.
+              first="$(printf '%s\n' "$strays" | sed -n 1p | sed -E 's/^[^=]+="//; s/"$//')"
+              echo "::error::$name was built against the wrong base — index.html asks for $first, not $prefix. The page would answer 200 with a blank body."
+              exit 1
+            fi
+            echo "  $name: every asset URL under $prefix"
+          }
+          assert_base @tracy/harness-web packages/web/tracy-harness/dist      /ops/
+          assert_base @tracy/design-page packages/web/tracy-design-page/dist  /design-inspiration/
+          assert_base @tracy/wo-find-page packages/web/tracy-wo-find-page/dist /find/
+          # The docs site is built for the root of its own host (`base: '/'`, DOCS_ORIGIN): every URL
+          # is under `/`, so the assert above proves nothing for it. What can go wrong is a build that
+          # still asks for `/docs/…` (the old base) — the docs host would serve it with no assets.
+          if grep -qE '(src|href)="/docs/' apps/tracy-docs/dist/index.html; then
+            echo "::error::@tracy/docs was built against the old base /docs/ — the docs host serves it at /."
+            exit 1
+          fi
+          grep -qE '(src|href)="/_astro/' apps/tracy-docs/dist/index.html || {
+            echo "::error::@tracy/docs index.html names no /_astro/ asset — the build is not the site."
+            exit 1
+          }
+          echo "  @tracy/docs: built for the root of its own host"
+
+      # 🔒 FINGERPRINT AFTER BUILDING, NEVER BEFORE. `web`'s context includes the CONTENT of the two
+      # `dist/` directories and the snapshot, so they must exist first; the script exits 2 naming the
+      # missing build otherwise. Details and the two volatile fields it ignores: its header.
+      - name: Fingerprint both image contexts
+        id: ctx
+        run: |
+          set -euo pipefail
+          node scripts/ci/image-context.mjs --image host --explain
+          node scripts/ci/image-context.mjs --image web --explain
+          WEB_CTX=$(node scripts/ci/image-context.mjs --image web)
+          HOST_CTX=$(node scripts/ci/image-context.mjs --image host)
+          APP_TAG=$(node scripts/ci/image-context.mjs --app-tag --web "$WEB_CTX" --host "$HOST_CTX")
+          {
+            echo "web=$WEB_CTX"
+            echo "host=$HOST_CTX"
+            echo "app_tag=$APP_TAG"
+          } >> "$GITHUB_OUTPUT"
+          echo "web $WEB_CTX · host $HOST_CTX · deploy tag $APP_TAG"
+
+      - name: Log in to GHCR
+        run: echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      # ─────────────────────────────────────────────────────────────────────────────────────────
+      # A BUILDER WHOSE CACHE LIVES IN THE REGISTRY — added 2026-09-20
+      #
+      # 🔒 THE DEFAULT `docker` DRIVER CANNOT EXPORT CACHE, and that — not security, not CPU — is
+      # why image builds were pinned to one machine: the only cache they ever had was the local
+      # daemon's, so the second machine to try would rebuild 4.4 GB from scratch. With the cache in
+      # `ghcr.io/...:buildcache`, any runner starts warm. Idempotent; ~1 s when it already exists.
+      #
+      # 🔒 THE NAME CARRIES `$RUNNER_NAME`, AND THAT IS NOT COSMETIC. buildx keeps its builder list
+      # per USER, so every runner container starts with an empty one — but the `docker-container`
+      # driver creates a container on the HOST daemon (`buildx_buildkit_<builder>0`) shared by every
+      # runner on that machine. Measured on a shared runner host 21/09/2026: a second runner running the
+      # identical `create --name tracy` neither fails nor reuses — it RECREATES the container,
+      # killing whatever build was running in it. These two image workflows fire as a PAIR on every
+      # push, so two runners racing here is the normal case. Distinct names coexist (verified).
+      - name: A builder whose cache lives in the registry, not on this disk
+        run: |
+          set -euo pipefail
+          BUILDER="tracy-${RUNNER_NAME:-local}"
+          echo "BUILDER=$BUILDER" >> "$GITHUB_ENV"
+          docker buildx inspect "$BUILDER" > /dev/null 2>&1 \
+            || docker buildx create --name "$BUILDER" --driver docker-container --bootstrap
+          docker buildx inspect "$BUILDER" --bootstrap | sed -n '1,6p'
+
+      # One image at a time, the same three moves each:
+      #   1. the registry already holds `<image>:<ctx>` → no build (unless `inputs.rebuild`);
+      #   2. otherwise build it, and push the ctx tag when pushing;
+      #   3. when pushing, add the deploy tag, the dated commit tag and `latest` to that manifest —
+      #      `imagetools create` writes a new tag onto an existing manifest inside the registry, no
+      #      layer moves — so every commit still answers "which build is this" with one name.
+      # `manifest inspect` reads metadata only. A build that is not pushed (`push: false` on a manual
+      # run) is still built, so a branch can prove it builds without touching the registry.
+      - name: Build what changed, reuse what did not
+        id: publish
+        env:
+          PUSH: ${{ (github.event_name == 'push' || inputs.push) && 'yes' || 'no' }}
+          FORCE: ${{ inputs.rebuild && 'yes' || 'no' }}
+          WEB_CTX: ${{ steps.ctx.outputs.web }}
+          HOST_CTX: ${{ steps.ctx.outputs.host }}
+          APP_TAG: ${{ steps.ctx.outputs.app_tag }}
+          DATED: ${{ steps.meta.outputs.tag }}
+        run: |
+          set -euo pipefail
+          summary="$RUNNER_TEMP/app-images.md"
+          : > "$summary"
+          one() {
+            local name="$1" repo="$2" ctx="$3" dockerfile="$4" verdict out
+            shift 4
+            # Any further arguments are `--build-arg`s for this image only (tracy-web's build info,
+            # tracy-host's TRACY_SOURCE_COMMIT).
+            if [ "$FORCE" != yes ] && docker manifest inspect "$repo:$ctx" > /dev/null 2>&1; then
+              verdict="unchanged — reused $repo:$ctx"
+              echo "::notice title=$name image unchanged::$repo:$ctx is already in the registry; not rebuilt"
+            else
+              # 🔒 EACH IMAGE KEEPS ITS OWN CACHE TAG. One shared `:buildcache` would have web and
+              # host overwrite each other's cache on every run, so both would import a cache built
+              # from the other's Dockerfile and hit almost nothing — slower than no cache at all,
+              # and silently so.
+              if [ "$PUSH" = yes ]; then out=(--push); else out=(--output type=cacheonly); fi
+              docker buildx build --builder "$BUILDER" \
+                -f "$dockerfile" --label "org.tracy.ctx=$ctx" \
+                --cache-from "type=registry,ref=$repo:buildcache" \
+                --cache-to "type=registry,ref=$repo:buildcache,mode=max,image-manifest=true" \
+                "$@" "${out[@]}" -t "$repo:$ctx" .
+              # Not `[ … ] && verdict=…`: under `set -e` that returns 1 when PUSH is not yes and
+              # kills the step on the very path where nothing is wrong.
+              verdict="built"
+              if [ "$PUSH" = yes ]; then verdict="built and pushed"; fi
+            fi
+            if [ "$PUSH" = yes ]; then
+              docker buildx imagetools create -t "$repo:$APP_TAG" -t "$repo:$DATED" -t "$repo:latest" "$repo:$ctx"
+              docker buildx imagetools inspect "$repo:$APP_TAG" > /dev/null
+            fi
+            echo "| $name | \`$ctx\` | $verdict |" >> "$summary"
+          }
+          # Settings › Help & about shows which server build answers (GET /api/build). Read by the
+          # image's last layers only, and not by image-context.mjs, so it never forces a rebuild.
+          one tracy-web  "$WEB_IMAGE"  "$WEB_CTX"  apps/tracy-web/Dockerfile \
+            --build-arg "TRACY_SOURCE_COMMIT=$GITHUB_SHA" \
+            --build-arg "TRACY_BUILT_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          one tracy-host "$HOST_IMAGE" "$HOST_CTX" apps/tracy-host/Dockerfile \
+            --build-arg "TRACY_SOURCE_COMMIT=$GITHUB_SHA" \
+            --build-arg "TRACY_SOURCE_REPO=$GITHUB_REPOSITORY"
+          echo "app_tag=$APP_TAG" >> "$GITHUB_OUTPUT"
+          {
+            echo "### tracy-web + tracy-host"
+            echo
+            echo "| image | context | this run |"
+            echo "|---|---|---|"
+            cat "$summary"
+            echo
+            echo "deploy tag \`$APP_TAG\` · commit tag \`$DATED\` (same manifests)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The whole round trip a host performs, and the only check that covers a layer the registry
+      # accepted but cannot serve. Dropping the local copy first is the point: with the image still
+      # in the daemon, `docker pull` answers from what it holds and proves nothing.
+      - name: Pull the images back in full
+        if: inputs.deep_verify
+        run: |
+          set -euo pipefail
+          TAG='${{ steps.ctx.outputs.app_tag }}'
+          docker rmi "$WEB_IMAGE:$TAG" "$HOST_IMAGE:$TAG" > /dev/null 2>&1 || true
+          docker pull "$WEB_IMAGE:$TAG"
+          docker pull "$HOST_IMAGE:$TAG"
+
+      - name: Log out of GHCR
+        if: always()
+        run: docker logout ghcr.io || true
+
+      # The key is a credential on a machine that persists between jobs — it does not get to stay.
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+  # ── Mirror to AWS ECR (plan docs/sre/2026-10-20-chuyen-ghcr-sang-ecr-plan.md, P1) ─────────────
+  #
+  # GHCR stays the registry the build pushes to and the default every deploy pulls from. This job
+  # copies the tags this run built OR will deploy into ECR (`scripts/ci/mirror-to-ecr.sh`): a tag
+  # ECR lacks is copied from GHCR, which is also the backfill of a context tag reused without a
+  # build; a tag ECR has is not copied again.
+  # The deploy tag `app-…` is a second name for the context tags, so each image is copied once by
+  # context tag and then tagged with the deploy tag, the dated commit tag and `latest`, as in GHCR.
+  #
+  # 🔒 `environment: ecr-push` IS WHERE THE PUSH KEY LIVES, and that environment only admits
+  # develop, main and staging, so the `if:` names the same three refs (a dispatch from any other
+  # branch skips this job rather than waiting on an environment that refuses it). The key is an IAM
+  # user's (push/pull on lab3-image/tracy-ai/*), given to the login step alone as step env.
+  #
+  # No key yet → a notice and a green job: ECR is not required until an environment sets
+  # PULL_REGISTRY=ecr, and the deploys only wait for this job, they do not need it to succeed.
+  mirror-to-ecr:
+    needs: build
+    if: >-
+      ${{ needs.build.result == 'success'
+      && (github.event_name == 'push' || inputs.push)
+      && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging') }}
+    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    environment:
+      name: ecr-push
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout (without submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+
+      - name: Is the ECR push key set?
+        id: keys
+        env:
+          KEY_ID: ${{ secrets.ECR_PUSH_AWS_ACCESS_KEY_ID }}
+          KEY_SECRET: ${{ secrets.ECR_PUSH_AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+          ECR_REPO_PREFIX: ${{ vars.ECR_REPO_PREFIX }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          if [ -n "$KEY_ID" ] && [ -n "$KEY_SECRET" ] && [ -n "$ECR_REGISTRY" ] && [ -n "$ECR_REPO_PREFIX" ] && [ -n "$AWS_REGION" ]; then
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+            echo "ECR_PREFIX=$ECR_REGISTRY/$ECR_REPO_PREFIX" >> "$GITHUB_ENV"
+          else
+            echo "::notice title=ECR mirror skipped::ECR_PUSH_AWS_* secrets (environment ecr-push) or vars ECR_REGISTRY / ECR_REPO_PREFIX / AWS_REGION are not set; nothing was copied to ECR"
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Log in to GHCR
+        if: steps.keys.outputs.ready == 'yes'
+        run: echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      # Not configure-aws-credentials: it would export the key to every later step of the job.
+      - name: Log in to ECR
+        if: steps.keys.outputs.ready == 'yes'
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ECR_PUSH_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_PUSH_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      - name: Copy this run's tags to ECR
+        if: steps.keys.outputs.ready == 'yes'
+        env:
+          WEB_CTX: ${{ needs.build.outputs.web_ctx }}
+          HOST_CTX: ${{ needs.build.outputs.host_ctx }}
+          APP_TAG: ${{ needs.build.outputs.tag }}
+          DATED: ${{ needs.build.outputs.dated }}
+        run: |
+          set -euo pipefail
+          bash scripts/ci/mirror-to-ecr.sh --from "$WEB_IMAGE" --to "$ECR_PREFIX/tracy-web" \
+            --source "$WEB_CTX" --tag "$APP_TAG" --tag "$DATED" --tag latest
+          bash scripts/ci/mirror-to-ecr.sh --from "$HOST_IMAGE" --to "$ECR_PREFIX/tracy-host" \
+            --source "$HOST_CTX" --tag "$APP_TAG" --tag "$DATED" --tag latest
+          echo "### ECR mirror: \`$ECR_PREFIX/tracy-{web,host}:$APP_TAG\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Log out of both registries
+        if: always()
+        run: |
+          docker logout ghcr.io || true
+          if [ -n "${{ vars.ECR_REGISTRY }}" ]; then docker logout '${{ vars.ECR_REGISTRY }}' || true; fi
+
+  # ── Deploy ─────────────────────────────────────────────────────────────────────────────────
+  #
+  # The job runs ON the target host, on a runner labelled for it. Nothing here holds an SSH key,
+  # and no host stores a registry credential: the `docker login` inside the action uses this run's
+  # GITHUB_TOKEN, which expires with the job.
+  #
+  # 🔒 THE PULL REGISTRY IS THE ENVIRONMENT'S `vars.PULL_REGISTRY` (ghcr | ecr; unset = ghcr, which
+  # runs exactly the commands it always ran). With ecr the action logs in with the environment's
+  # pull-only key (secrets ECR_PULL_AWS_*) and refuses unless mirror-to-ecr succeeded in this run.
+  # That is why every deploy `needs:` mirror-to-ecr, and why its `if:` starts with `!cancelled()`
+  # and checks the build alone: a mirror that is skipped (no key) or red never holds a ghcr deploy.
+  #
+  # `environment:` is not a gate (deploys are automatic — since 02/09: merging IS deploying). It is
+  # the ledger: GitHub records which commit reached which environment, when, and at whose push.
+  #
+  # ⚠ A RUNNER ON A HOST IS ROOT ON THAT HOST — it holds the docker socket. That is the cost of
+  # this shape, the same cost as a deploy key in secrets; what keeps it honest is review on
+  # `.github/workflows/**`, not anything in this file.
+
+  deploy-dev:
+    needs: [build, mirror-to-ecr]
+    # That day came: `feat/tracy-web` merged into `develop`, so it is no longer named here. A stale
+    # branch that still deploys to dev is a deploy nobody is watching.
+    #
+    # 🔒 `&& !inputs.inventory_emdash_tokens && !inputs.migrate_emdash_token_mount`: the READ-ONLY
+    # inventory opt-in AND the one-site token-mount migration opt-in must each NOT deploy — and on
+    # `develop` the `github.ref` clause above would otherwise deploy in the SAME run. On a `push`
+    # (and on a manual run without either box ticked) both inputs are falsy, so this guard changes
+    # nothing about ordinary behaviour; it only suppresses EVERY deploy job when either box is ticked,
+    # whatever the ref or `deploy_to`.
+    if: ${{ !cancelled() && needs.build.result == 'success' && (github.ref == 'refs/heads/develop' || inputs.deploy_to == 'dev') && !inputs.inventory_emdash_tokens && !inputs.migrate_emdash_token_mount && !inputs.upgrade_emdash_tools && !(inputs.build_web_images && inputs.build_web_images != 'no') }}
+    runs-on: [self-hosted, linux, x64, tracy-dev]
+    environment:
+      name: dev
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      # 🔒 NO REGISTRY HOLDS THE WEB IMAGES: each host builds its own (web/build.sh), and a new site whose
+      # IMAGE_TAGS line names an image this host has not built falls back to the upstream image — no
+      # git/rg/jq, no chromium for page.look — with nothing but a `!!` in a provision log. Deploying a
+      # tracy-host whose IMAGE_TAGS names unbuilt images is exactly that, for every new WordPress/Joomla
+      # site on the host. Said here, where a deployer reads, with the dispatch that fixes it. A warning,
+      # not a failure: the deploy itself is sound, and blocking it would hold everyone's code.
+      - name: Web images IMAGE_TAGS names that this host has not built
+        run: |
+          set -uo pipefail
+          missing=""
+          while IFS= read -r line; do
+            case "$line" in ''|'#'*) continue ;; esac
+            image="${line#*=}"
+            docker image inspect "$image" >/dev/null 2>&1 || missing="$missing $image"
+          done < packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS
+          if [ -n "$missing" ]; then
+            echo "::warning::not built on this host:$missing — new sites for those bases get the upstream image (no agent tools) until build-app-images is dispatched with build_web_images=<this host>"
+          else
+            echo "every IMAGE_TAGS image is built here"
+          fi
+      - id: deploy
+        uses: ./.github/actions/deploy-tracy-stack
+        with:
+          web-image: ${{ needs.build.outputs.web_image }}
+          host-image: ${{ needs.build.outputs.host_image }}
+          tag: ${{ needs.build.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.PULL_REGISTRY || 'ghcr' }}
+          ecr-image-prefix: ${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO_PREFIX }}
+          aws-region: ${{ vars.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ECR_PULL_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY }}
+          mirror-result: ${{ needs.mirror-to-ecr.result }}
+
+      # The fleet files the tracy-host image carries for a machine with no checkout (a shard's
+      # updater), compared byte for byte with this commit's checkout. Here because this job already
+      # holds the image: the build job pushes it without loading it. Read only; nothing on this host
+      # uses the copies inside the image.
+      - name: The tracy-host image carries this commit's fleet files
+        run: bash deploy/scripts/check-fleet-files-in-image.sh '${{ steps.deploy.outputs.host-image }}:${{ needs.build.outputs.tag }}'
+
+      # DEV ONLY, opt-in: give ONE already-running site the #165 bounded tracy-network alias without
+      # re-rendering its compose (mixing in the unrelated #162 mount/runtime changes). Empty input
+      # does nothing — the `if:` gate. This job already runs on the dev host with the Docker socket,
+      # so it drives the migration on THIS host: no SSH, and no production path exists (deploy-prod
+      # carries no such step and never reads the input).
+      #
+      # 🔒 THE MIGRATION RUNS INSIDE tracy-host, NOT ON THE RUNNER. The site PRIVATE root (roots.sh's
+      # TRACY_PRIVATE_ROOT — compose.yml, .env, the baseline repo) is not necessarily mounted into the
+      # runner once a host is on Plan 5's two-root split; the ONE process that always has it, at its
+      # real absolute name and same-source/destination bind, is `tracy-host`, which also carries the
+      # INSTALLED fleet scripts. So `invoke-dns-alias-in-host.sh` selects the one running tracy-host
+      # container, validates its labels/root/mount, proves the installed `migrate-web-dns-alias.sh` (and
+      # dns-alias.mjs / render-compose.sh) match this checkout by digest, then runs the installed
+      # migration inside it against that root.
+      #
+      # 🔒 THE INPUT IS THE OPAQUE #165 SELECTOR, NOT A RAW LABEL. It reaches the helper through the
+      # environment and then as ONE quoted `--selector` argument — never spliced into shell code — and
+      # the migration resolves it read-only on THIS host to exactly one local site (zero/ambiguous →
+      # refuse). No raw label, path or env value enters this log: it carries only the opaque hash,
+      # technical status and a one-line JSON result. Mode is dry-run by default; only an explicit
+      # `apply` mutates. A failure fails the job (set -e + the helper's own non-zero).
+      - name: Migrate one dev site to the #165 DNS alias (opt-in)
+        if: inputs.migrate_dns_alias_selector != ''
+        shell: bash
+        env:
+          MIGRATE_SELECTOR: ${{ inputs.migrate_dns_alias_selector }}
+          MIGRATE_MODE: ${{ inputs.migrate_dns_alias_mode }}
+        run: |
+          set -euo pipefail
+          # The helper validates the tracy-host container's inspect payload (labels, running, a safe
+          # normalized non-root private root, an exact same-source/destination bind) with a Node program,
+          # not a sed job — assert the job-local runtime is present AND matches `.node-version` before it,
+          # so a runtime mismatch fails here with a clear message rather than an opaque error mid-run.
+          # This is the job-local Node the build steps already use; nothing is installed on the host.
+          command -v node >/dev/null 2>&1 || {
+            echo "::error::node is required for the #165 migration but is not on PATH"
+            exit 1
+          }
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "node: want $WANT, have $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::node is $HAVE but .node-version asks for $WANT — the migration expects the job-local runtime"
+            exit 1
+          }
+          # The helper runs the INSTALLED migrate-web-dns-alias.sh inside the one running tracy-host
+          # container, after digest-proving it matches this checkout.
+          # `if`, not `&& …`: a bare `[ … ] && …` that is false returns non-zero and set -e would abort.
+          APPLY=()
+          if [ "$MIGRATE_MODE" = apply ]; then APPLY=(--apply); fi
+          bash packages/fleet/tracy-fleet-operation/scripts/provision/invoke-dns-alias-in-host.sh \
+            --selector "$MIGRATE_SELECTOR" "${APPLY[@]}"
+
+  # ── EmDash agent-token inventory (READ-ONLY, dev only, opt-in) ────────────────────────────────
+  #
+  # A bounded, READ-ONLY roll-call of the dev fleet's EmDash sites' #155 token custody and readable
+  # agent identity, ahead of PR #162. It mints/writes/deploys NOTHING: it runs `docker ps`/`inspect`
+  # and a read-only `docker exec -u www-data … node …` that opens each site's SQLite `readOnly:true`,
+  # and prints opaque per-site selectors + fixed enums/counts (never a raw label/path/email/token).
+  #
+  # 🔒 EXPLICITLY GATED, and deliberately NOT wired to build or deploy:
+  #   - `workflow_dispatch` only, with `inventory_emdash_tokens == true` AND `deploy_to == 'no'`, so
+  #     the same run cannot also trigger a deploy through the choice input;
+  #   - refused on `main` (production) — this is the dev box only (`environment: dev`, the
+  #     `tracy-dev` runner);
+  #   - no `needs: build` — it uses no image, so it does not wait on (or fail with) a build, and the
+  #     build above may still run harmlessly. There is no `push` trigger for this job, so merging
+  #     into `main`/`develop` still builds and deploys exactly as before; every other job is untouched.
+  #
+  # It needs neither `pnpm install` nor the submodule: the script imports only Node built-ins, and
+  # `node:sqlite` lives inside each site's own container where the read runs as www-data.
+  inventory-emdash-tokens:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.inventory_emdash_tokens &&
+      inputs.deploy_to == 'no' &&
+      github.ref != 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, tracy-dev]
+    environment:
+      name: dev
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout (no submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      # The runner image pins Node; `.node-version` pins what the repo expects. The inventory script
+      # needs `node:sqlite`'s `readOnly` option and top-level `await`, so a mismatch must stop here
+      # rather than surface as a confusing runtime error. Same check the build job runs, minimal here.
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
+            exit 1
+          }
+      # 🔒 The runner reaches the fleet through the Docker daemon but does NOT mount
+      # TRACY_PRIVATE_ROOT, so running the inventory here would report every site `root-unsafe`.
+      # Instead `--via-host` locates the ONE running tracy-host container (Compose project `tracy`,
+      # service `tracy-host`), validates its full id, compose labels, running state, the normalised
+      # non-root TRACY_PRIVATE_ROOT it advertises, and its identical-path root bind, and only THEN
+      # pipes THIS reviewed, checked-out source — UNMODIFIED — into it on stdin to run there, pinned
+      # to that validated root. It still prints only fixed enums/counts and opaque selectors
+      # (`--truncate` keeps them short); a transport failure is a fixed `error` enum in the report,
+      # never a path or raw docker error, so the summary always renders.
+      - name: Read-only EmDash token inventory (executed inside tracy-host)
+        run: |
+          set -uo pipefail
+          # Capture the sanitized report but keep going on a non-zero exit, so the summary ALWAYS
+          # renders — then propagate that exit so a transport `error` still turns the step red.
+          rc=0
+          node packages/fleet/tracy-fleet-operation/scripts/provision/emdash/inventory.mjs --via-host --truncate \
+            > "$RUNNER_TEMP/emdash-inventory.json" || rc=$?
+          cat "$RUNNER_TEMP/emdash-inventory.json"
+          {
+            echo '### EmDash agent-token inventory (read-only, via tracy-host)'
+            echo
+            echo '```json'
+            cat "$RUNNER_TEMP/emdash-inventory.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
+  # ── EmDash ONE-SITE #155 token-mount migration (dev only, opt-in, dry-run by default) ─────────────
+  #
+  # The separately-reviewed APPLY the inventory refuses to be. It migrates EXACTLY ONE EmDash site
+  # (named by its opaque `sha256(label)` selector) to the #155 read-only agent-token bind mount, and
+  # nothing else: it inserts ONE line into that site's compose `volumes:` block and recreates the web
+  # container only (`--no-deps --no-build --pull never`). It mints/rotates/deletes NO token, creates no
+  # user, changes no database, removes no legacy copy, and never re-renders the whole compose. It reads
+  # the protected token only through an O_NOFOLLOW custody check, authenticates it against the site's
+  # own loopback MCP endpoint before and after (PAT on stdin, redirects refused), verifies the exact
+  # bind, and on failure restores the compose + runtime honestly. The default is a DRY RUN that makes NO
+  # persistent change (compose / token / site data / runtime): it only writes an exclusive temporary
+  # candidate to prove it resolves, then removes it. `migrate_emdash_token_mount_apply` is the only thing
+  # that mutates.
+  #
+  # 🔒 EXPLICITLY GATED, and deliberately NOT wired to build or deploy:
+  #   - `workflow_dispatch` only, with `migrate_emdash_token_mount == true` AND `deploy_to == 'no'`, so
+  #     the same run cannot also trigger a deploy through the choice input;
+  #   - refused on `main` (production) — dev box only (`environment: dev`, the `tracy-dev` runner);
+  #   - no `needs: build` — it uses no image; and there is no `push` trigger for this job, so merging
+  #     into `main`/`develop` still builds and deploys exactly as before. Every deploy job
+  #     (deploy-dev, deploy-prod) carries `&& !inputs.migrate_emdash_token_mount`, so a
+  #     ticked box deploys nothing, on any ref or target.
+  #
+  # It needs neither `pnpm install` nor the submodule: the script imports only Node built-ins, and the
+  # apply runs INSIDE the validated tracy-host container (`--via-host`), where the docker socket and the
+  # private root live — the runner never sees `TRACY_PRIVATE_ROOT`. No SSH, no new dependency. The
+  # selector is passed through the environment (not interpolated into the shell) and the script refuses
+  # anything that is not a bare sha256 hex; the summary is fixed and sanitized (opaque selector + fixed
+  # enums), never a raw label/path/token/docker error.
+  migrate-emdash-token-mount:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.migrate_emdash_token_mount &&
+      inputs.deploy_to == 'no' &&
+      github.ref != 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, tracy-dev]
+    environment:
+      name: dev
+    # 🔒 > the WHOLE inner bound plus preflight. The via-host exec's client bound is HOST_EXEC_TIMEOUT_MS
+    # (TERM 240s + rollback grace 300s + 60s ≈ 10 min); with checkout + the Node assert on top, 20 min
+    # leaves clear margin so the job does not kill a legitimate in-container TERM→rollback→KILL cycle.
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout (no submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      # The runner image pins Node; `.node-version` pins what the repo expects. The migration source
+      # needs `node:sqlite`'s reader (reused, via tracy-host) and top-level `await`, so a mismatch must
+      # stop here rather than surface as a confusing runtime error. Same check the other jobs run.
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
+            exit 1
+          }
+      # 🔒 The runner reaches the fleet through the Docker daemon but does NOT mount TRACY_PRIVATE_ROOT,
+      # so `--via-host` locates the ONE running tracy-host container, validates it, and pipes THIS
+      # reviewed, checked-out source — UNMODIFIED — into it on stdin to run there, pinned to the
+      # validated root. The selector travels via the environment (never the shell), and the apply flag
+      # is added only when the box is ticked; without it the run is a dry-run preflight that makes no
+      # persistent change (only an exclusive temporary candidate, written then removed). A transport
+      # failure is a fixed `error` enum in the report, never a path or raw docker error, so the summary
+      # always renders.
+      - name: One-site EmDash token-mount migration (executed inside tracy-host)
+        env:
+          SELECTOR: ${{ inputs.migrate_emdash_token_mount_selector }}
+          APPLY: ${{ inputs.migrate_emdash_token_mount_apply && 'yes' || 'no' }}
+        run: |
+          set -uo pipefail
+          # Refuse a missing/malformed selector here too (the script also validates it): a bare
+          # sha256 hex only, 32 or 64 chars, never echoed beyond this fixed check.
+          if ! printf '%s' "$SELECTOR" | grep -E '^[0-9a-f]{32}$|^[0-9a-f]{64}$' >/dev/null; then
+            echo "::error::migrate_emdash_token_mount_selector must be the opaque sha256(label) selector (32 or 64 hex) from the inventory"
+            exit 1
+          fi
+          apply_flag=""
+          [ "$APPLY" = yes ] && apply_flag="--apply"
+          rc=0
+          node packages/fleet/tracy-fleet-operation/scripts/provision/emdash/migrate-token-mount.mjs \
+            --via-host --selector "$SELECTOR" $apply_flag \
+            > "$RUNNER_TEMP/emdash-token-mount.json" || rc=$?
+          cat "$RUNNER_TEMP/emdash-token-mount.json"
+          {
+            echo "### EmDash #155 token-mount migration ($([ "$APPLY" = yes ] && echo apply || echo dry-run), via tracy-host)"
+            echo
+            echo '```json'
+            cat "$RUNNER_TEMP/emdash-token-mount.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
+  # ── Web images, built on the host that runs them ────────────────────────────────────────────────
+  #
+  # web/IMAGE_TAGS says "build them before shipping this file": the images are layered on Docker Hub
+  # bases and exist only where they are built, and a new site whose line names an unbuilt image gets
+  # the upstream base instead. Without SSH to the fleet, this is how a host builds them: dispatch
+  # FROM THE REF THAT CARRIES THE NEW IMAGE_TAGS (a branch, before it merges) with the host named,
+  # and web/build.sh builds only what that host is missing — "already built" for the rest. The
+  # runner holds the host's docker socket, and a Joomla build needs the repo checkout
+  # (vendor/joomla/joomlart-t4-skill), which the runner has. `production` only from develop or main.
+  build-web-images:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.build_web_images != 'no' &&
+      inputs.deploy_to == 'no' &&
+      (inputs.build_web_images != 'production' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main')
+    runs-on: [self-hosted, linux, x64, "${{ inputs.build_web_images == 'dev' && 'tracy-dev' || inputs.build_web_images == 'staging' && 'tracy-staging' || 'tracy-prod' }}"]
+    # The host's own environment, as its deploy job uses: a protection rule added to one later binds this too.
+    environment:
+      name: ${{ inputs.build_web_images == 'dev' && 'dev' || inputs.build_web_images == 'staging' && 'staging' || 'production' }}
+    # A full set is 12 images; each pulls its base and installs chromium, fonts and node.
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout (no submodules)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      - name: Build the missing web images on this host
+        run: |
+          set -uo pipefail
+          rc=0
+          bash packages/fleet/tracy-fleet-operation/web/build.sh 2>&1 | tee "$RUNNER_TEMP/web-build.txt" || rc=$?
+          {
+            echo "### Web images on ${{ inputs.build_web_images }}"
+            echo
+            echo '```'
+            grep -E '^(==>|!!)' "$RUNNER_TEMP/web-build.txt" || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
+  # ── EmDash quickstart sites → their agent-tools image (dev only) ─────────────────────────────────
+  #
+  # A quickstart site provisioned before #309 runs the template's plain image, which has no browser
+  # for page.look / page.text (#154 runs them inside the site's container). New sites get the tools
+  # layer at provision; this moves the ones already running. The script is the one INSTALLED in the
+  # running tracy-host (it needs TRACY_PRIVATE_ROOT, the socket and the fleet scripts it sources),
+  # so develop must be deployed first — the step refuses, by name, when it is not there. Per site it
+  # moves only a quickstart image under `protected` token custody whose container is its own, and a
+  # container that does not prove itself (answers, token mount readable, chromium on PATH) is put
+  # back on the old image. Unticked apply = a dry run that changes nothing. Sites are named by an
+  # opaque sha256(label) prefix, never by label.
+  upgrade-emdash-tools:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.upgrade_emdash_tools &&
+      inputs.deploy_to == 'no' &&
+      github.ref != 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, tracy-dev]
+    environment:
+      name: dev
+    # A tools image per template version is built once (155 s measured), then each site's web
+    # container is recreated and polled for up to 120 s.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Move EmDash quickstart sites onto their tools image (executed inside tracy-host)
+        env:
+          APPLY: ${{ inputs.upgrade_emdash_tools_apply && 'yes' || 'no' }}
+        run: |
+          set -uo pipefail
+          host="$(docker ps -q --filter label=com.docker.compose.project=tracy --filter label=com.docker.compose.service=tracy-host)"
+          if [ "$(printf '%s\n' "$host" | grep -c .)" != 1 ]; then
+            echo "::error::expected exactly one running tracy-host container (compose project tracy)"
+            exit 1
+          fi
+          script=/opt/tracy-fleet/provision/emdash/upgrade-tools-image.sh
+          if ! docker exec "$host" test -f "$script"; then
+            echo "::error::$script is not in the running tracy-host — deploy develop first"
+            exit 1
+          fi
+          apply_flag=""
+          [ "$APPLY" = yes ] && apply_flag="--apply"
+          rc=0
+          docker exec "$host" bash "$script" $apply_flag > "$RUNNER_TEMP/emdash-tools.txt" || rc=$?
+          cat "$RUNNER_TEMP/emdash-tools.txt"
+          {
+            echo "### EmDash quickstart sites → tools image ($([ "$APPLY" = yes ] && echo apply || echo dry-run))"
+            echo
+            echo '```'
+            cat "$RUNNER_TEMP/emdash-tools.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
+  # 🔒 A `runs-on:` LABEL NOBODY CARRIES DOES NOT GO RED — IT QUEUES, SILENTLY AND FOREVER.
+  # A job asking for a label no online runner holds sits at "Waiting for a runner" looking exactly
+  # like a busy queue. CLAUDE.md §6 records that shape costing 16 and 20 hours on the dev box when
+  # the one `tracy-dev` runner went offline while its container still read "Up 38 hours".
+  #
+  # ⚠ THERE USED TO BE A `prod-runner-exists` JOB HERE THAT ASKED GITHUB FIRST. It was removed on
+  # 11/09, the day it first ever ran — because its `if:` had never matched before, it had been
+  # green by never running, and it failed twice in a row for two different reasons:
+  #   1. `gh: command not found` — the runner image carries curl and jq, not the GitHub CLI.
+  #   2. rewritten with curl: `403`. `GET /repos/{o}/{r}/actions/runners` needs administration
+  #      rights, and `GITHUB_TOKEN` cannot be granted them — `permissions:` has no such key. The
+  #      check was never able to work, from the day it was written.
+  #
+  # What replaces it is not another check but the removal of the harm it was written about. The
+  # damage of a queued deploy was never the queue itself; it was `cancel-in-progress: false` at the
+  # top of this file, which let ONE stuck job hold the group so every later push lined up behind
+  # it. This job takes its own group with `cancel-in-progress: true`: a deploy that cannot find a
+  # runner is cancelled by the next push instead of blocking it, and it shows as CANCELLED, which
+  # is a thing a person reads, unlike a queue.
+  #
+  # The build above keeps the file's shared no-cancel group, on purpose — an interrupted image
+  # build wastes work and can push a half-tagged manifest.
+  deploy-prod:
+    needs: [build, mirror-to-ecr]
+    # `&& !inputs.inventory_emdash_tokens && !inputs.migrate_emdash_token_mount` for the same reason as
+    # deploy-dev: a ticked inventory OR migration box deploys nothing, even on `main`. (Both jobs are
+    # themselves refused on `main` — dev only — so a `main` dispatch of either runs no job at all and,
+    # crucially, no deploy either.)
+    if: ${{ !cancelled() && needs.build.result == 'success' && (github.ref == 'refs/heads/main' || inputs.deploy_to == 'production') && !inputs.inventory_emdash_tokens && !inputs.migrate_emdash_token_mount && !inputs.upgrade_emdash_tools && !(inputs.build_web_images && inputs.build_web_images != 'no') }}
+    runs-on: [self-hosted, linux, x64, tracy-prod]
+    concurrency:
+      group: deploy-prod
+      cancel-in-progress: true
+    environment:
+      name: production
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      # 🔒 NO REGISTRY HOLDS THE WEB IMAGES: each host builds its own (web/build.sh), and a new site whose
+      # IMAGE_TAGS line names an image this host has not built falls back to the upstream image — no
+      # git/rg/jq, no chromium for page.look — with nothing but a `!!` in a provision log. Deploying a
+      # tracy-host whose IMAGE_TAGS names unbuilt images is exactly that, for every new WordPress/Joomla
+      # site on the host. Said here, where a deployer reads, with the dispatch that fixes it. A warning,
+      # not a failure: the deploy itself is sound, and blocking it would hold everyone's code.
+      - name: Web images IMAGE_TAGS names that this host has not built
+        run: |
+          set -uo pipefail
+          missing=""
+          while IFS= read -r line; do
+            case "$line" in ''|'#'*) continue ;; esac
+            image="${line#*=}"
+            docker image inspect "$image" >/dev/null 2>&1 || missing="$missing $image"
+          done < packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS
+          if [ -n "$missing" ]; then
+            echo "::warning::not built on this host:$missing — new sites for those bases get the upstream image (no agent tools) until build-app-images is dispatched with build_web_images=<this host>"
+          else
+            echo "every IMAGE_TAGS image is built here"
+          fi
+      - uses: ./.github/actions/deploy-tracy-stack
+        with:
+          web-image: ${{ needs.build.outputs.web_image }}
+          host-image: ${{ needs.build.outputs.host_image }}
+          tag: ${{ needs.build.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.PULL_REGISTRY || 'ghcr' }}
+          ecr-image-prefix: ${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO_PREFIX }}
+          aws-region: ${{ vars.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ECR_PULL_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY }}
+          mirror-result: ${{ needs.mirror-to-ecr.result }}
+
+  # Staging (06/10/2026): the host between `develop` and `main`, a copy of production that runs the
+  # week's release before `main` takes it. Same shape and guards as deploy-prod, its own one runner
+  # labelled `tracy-staging` (TracyHQ/tracy-runners `hosts.tsv`), its own concurrency group.
+  deploy-staging:
+    needs: [build, mirror-to-ecr]
+    # The same maintenance-box guards as deploy-prod: a ticked box deploys nothing, on any host.
+    if: ${{ !cancelled() && needs.build.result == 'success' && (github.ref == 'refs/heads/staging' || inputs.deploy_to == 'staging') && !inputs.inventory_emdash_tokens && !inputs.migrate_emdash_token_mount && !inputs.upgrade_emdash_tools && !(inputs.build_web_images && inputs.build_web_images != 'no') }}
+    runs-on: [self-hosted, linux, x64, tracy-staging]
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: true
+    environment:
+      name: staging
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+      # 🔒 NO REGISTRY HOLDS THE WEB IMAGES: each host builds its own (web/build.sh), and a new site whose
+      # IMAGE_TAGS line names an image this host has not built falls back to the upstream image — no
+      # git/rg/jq, no chromium for page.look — with nothing but a `!!` in a provision log. Deploying a
+      # tracy-host whose IMAGE_TAGS names unbuilt images is exactly that, for every new WordPress/Joomla
+      # site on the host. Said here, where a deployer reads, with the dispatch that fixes it. A warning,
+      # not a failure: the deploy itself is sound, and blocking it would hold everyone's code.
+      - name: Web images IMAGE_TAGS names that this host has not built
+        run: |
+          set -uo pipefail
+          missing=""
+          while IFS= read -r line; do
+            case "$line" in ''|'#'*) continue ;; esac
+            image="${line#*=}"
+            docker image inspect "$image" >/dev/null 2>&1 || missing="$missing $image"
+          done < packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS
+          if [ -n "$missing" ]; then
+            echo "::warning::not built on this host:$missing — new sites for those bases get the upstream image (no agent tools) until build-app-images is dispatched with build_web_images=<this host>"
+          else
+            echo "every IMAGE_TAGS image is built here"
+          fi
+      - uses: ./.github/actions/deploy-tracy-stack
+        with:
+          web-image: ${{ needs.build.outputs.web_image }}
+          host-image: ${{ needs.build.outputs.host_image }}
+          tag: ${{ needs.build.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.PULL_REGISTRY || 'ghcr' }}
+          ecr-image-prefix: ${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO_PREFIX }}
+          aws-region: ${{ vars.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.ECR_PULL_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY }}
+          mirror-result: ${{ needs.mirror-to-ecr.result }}

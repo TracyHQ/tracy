@@ -1,0 +1,17 @@
+{
+  "busy": "Het Office-voorbeeld is bezet. Probeer het zo opnieuw.",
+  "changed": "Het bestand is gewijzigd tijdens het lezen. Open het voorbeeld opnieuw.",
+  "closeDetails": "Lettertypedetails sluiten",
+  "failed": "De Office-conversie heeft geen bruikbare PDF opgeleverd. Controleer het bestand en probeer het opnieuw.",
+  "invalid": "Van dit Office-bestand kan geen voorbeeld worden getoond. Het is mogelijk beschadigd, met een wachtwoord beveiligd of heeft de verkeerde extensie.",
+  "loading": "Document renderen...",
+  "missingFontsCount": "Lettertypen: {count}",
+  "missingFontsDescription": "Deze lettertypen zijn niet beschikbaar voor dit voorbeeld. Tekst en opmaak kunnen afwijken van het originele document.",
+  "missingFontsTitle": "Ontbrekende lettertypen",
+  "retry": "Opnieuw proberen",
+  "timeout": "De Office-conversie duurde te lang. Probeer het opnieuw.",
+  "title": "Office-document",
+  "tooLarge": "Het Office-bestand of de geconverteerde PDF overschrijdt de maximale grootte voor een voorbeeld. Verklein het bestand of pas de voorbeeldconfiguratie aan.",
+  "unavailable": "Office-voorbeelden zijn niet beschikbaar. Schakel de documentvoorbeeldservice in op de computer waarop Tracy Cowork draait.",
+  "viewMissingFonts": "Ontbrekende lettertypen: {count}. Klik om te bekijken."
+}

@@ -1,0 +1,18 @@
+{
+  "name": "astro-image-inspector-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.0.6",
+    "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@lexingtonthemes/astro-image-inspector": "file:.."
+  }
+}

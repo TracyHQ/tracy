@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+  "status": "complete",
+  "name": "Bang & Olufsen",
+  "url": "https://styles.refero.design/style/27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+  "sourceWebsite": "https://bang-olufsen.com",
+  "extractedAt": "2026-06-03T15:06:20.007Z",
+  "capturedAt": "2026-10-08T05:09:31.201145+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Scandinavian gallery on porcelain. When a B&O page goes dark, the product is lit like a sculpture in a midnight alcove; when it goes light, the product floats on white silk with nothing else competing for attention.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6b79e9ec-4c19-4987-9fc9-6e523f667ee9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/199a2b2e-5b87-4f59-a7fb-a14c90c16aaf.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2ea7242b-9167-4453-9b18-cd84a6f36773.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f625c47d-86ed-42cd-8976-656a52ad21d5.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/871dc93f-c3df-4d32-a644-62c86d0d6ea0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2f765d0dd91b55844c56d25dfbe615791704d7f009a98b78d59db163de9a5485",
+      "bytes": 20004
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "02e0bb147bce94540aba9b8871149f08e542b97881812758a038af18d13cabd9",
+      "bytes": 92969
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c90f652b7e28fbaec46cffcdc097d8f5adcca2b6e1cb8efa129e135a9013837c",
+      "bytes": 17004
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "641c5c124ab6dba9642c14f1391abe575525e128c4bef37f7600ecb6beca768b",
+      "bytes": 10934
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "eaffb8e93e4f5e97ebdb7cab8b799e4a5a172112aaff5432bd9a87959fe13f4b",
+      "bytes": 12134
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "21f23c20479d464ab51b0c18e818e0e385b89180fdfb37f49d475e02e4d7ed14",
+      "bytes": 2647
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9d619b375e84979296123494e65718c34293f43a3d99acd1a84a0d0c89d627ff",
+      "bytes": 576
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "acd86dee77d95d47cc7cb05be6a0b3b9c1b8082e6e96e13bcd74957e13045c84",
+      "bytes": 593
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c2e51dc6c5fcb9f8a667ee49961288abb0638dfc42fafa65e254c0f3ee2018aa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6035ab125b6236f353e7f4832a728bd013d0dfc9be70ab07700cd138565ccdbe",
+      "bytes": 41737
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "55ae91c0740e2d2355c7216e0efd3c90a79ab6f5c8afb6c868917c22f64ad65d",
+      "bytes": 21238
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8a29d58d230eb4444d4757bd77228c0d6d8c31beddb184a7c1f86f1703fba2a7",
+      "bytes": 37985
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "efe245438a5c2d59352e03cdac2b1a35024454d4b6a098915c7820f9aac480da",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fec3e7882717e756cabfd06915a036d5005cbf1a6cb50000625d9145317eb94a",
+      "bytes": 1407
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "af04aaad6884b21cb77a0f3e7c0ef13c9e40439b253ca54528844ab491232aad",
+      "bytes": 1951
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "8d315332-6267-4dc0-a14c-e8b49c26b0e1",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "ac53627e-5738-4121-8f5d-05e4d8475a5b",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

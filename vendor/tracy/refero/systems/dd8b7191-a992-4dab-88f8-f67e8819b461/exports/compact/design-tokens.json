@@ -1,0 +1,49 @@
+{
+  "color": {
+    "signal-yellow": {
+      "$value": "#ffe600",
+      "$type": "color",
+      "$description": "Signal Yellow — Full-bleed page and section background — the unbroken sunny sky that fills every viewport and frames all illustration. The yellow IS the canvas, not a surface sitting on a white page"
+    },
+    "globe-azure": {
+      "$value": "#007fff",
+      "$type": "color",
+      "$description": "Globe Azure — Hero focal surface — the spherical focal element rising from the bottom of the viewport, and any large circular/oval composition element. White text sits directly on this blue"
+    },
+    "roof-coral": {
+      "$value": "#ef3b2c",
+      "$type": "color",
+      "$description": "Roof Coral — Illustrated house roofs and accent fills within the hand-drawn scenes — decorative, never used on UI chrome"
+    },
+    "charcoal-ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal Ink — All body text, nav link text, nav link borders, and the thin linework inside the illustrations. The single dark value the entire UI runs on"
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud White — Display text overlaid on the blue globe, scattered cloud illustrations across the yellow sky, and window fills inside the house artwork. The only light value used structurally"
+    }
+  },
+  "font": {
+    "changa-one": {
+      "$value": "Changa One",
+      "$type": "fontFamily",
+      "$description": "Sole display and headline face. Carries every word that needs personality — the curving hero line, the self-intro statement, section openers. Single weight (400) but the chunky rounded letterforms do all the heavy lifting; no bold/light variants exist in the system."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Nav links only — the five top-of-page items (HOME, ABOUT, WORK, PLAY, CONTACT). The system-font choice deliberately plays utilitarian against the custom display face; the nav reads as a neutral signpost, not as part of the illustration."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://karlgonsalves.com",
+      "siteName": "Karl",
+      "extractedAt": "2026-06-03T18:47:28.120Z",
+      "variant": "compact"
+    }
+  }
+}

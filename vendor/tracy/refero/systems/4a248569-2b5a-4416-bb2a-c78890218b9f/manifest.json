@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4a248569-2b5a-4416-bb2a-c78890218b9f",
+  "status": "complete",
+  "name": "Zipline",
+  "url": "https://styles.refero.design/style/4a248569-2b5a-4416-bb2a-c78890218b9f",
+  "sourceWebsite": "https://www.zipline.com",
+  "extractedAt": "2026-06-03T19:20:24.152Z",
+  "capturedAt": "2026-10-08T05:11:15.959095+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "open meadow in morning light",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3469c5b5-a723-497d-ad85-382c1986e82d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d2a583ffa0e1d957d6575e24781cc06cac0e6dc81029342b37304cb6accf8463",
+      "bytes": 17939
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2c995e48f0570cb0f5aee91a49208a09ff21b0844b3ee08eeff021d94676aab8",
+      "bytes": 187540
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fb9662a2c63ccfd3c43c80794beb7a93f2ead2c8a37132f105cea0ae1d7264fd",
+      "bytes": 15168
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2deea04d2e081989c49c900d34ee66a228a8588e120ab30b62090330f75d9f68",
+      "bytes": 8233
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "60c2d12ebc565255db2dd77b06f2028d67ce092084298eb86ec051f1d09e5ace",
+      "bytes": 10640
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "11f89667e31c8d7586f768f5b7675be990c5b76e17e992a8a12c90080a5f6702",
+      "bytes": 2505
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3ecc251a5a2e54d267fced07e5bee09c7a4013adc4626bebaaee78c8a43d1650",
+      "bytes": 565
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4787dc09b5f45c3f5361cdedfe933c20aa66bc36f513255e88d517910bb6f067",
+      "bytes": 582
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "51115de60e8167a384acdfb7e5bb5daa845ecc0cdfa1d74d8dacd99acf74a375",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5c75c57ac2406c492e9319c6467ddae1ac577b09dd27a7fa4861daae2d9f9bfc",
+      "bytes": 40741
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c0423c0d047083b74095879fcd6734a5d7408477f5c1f1ea3509df7c896f8f87",
+      "bytes": 20909
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7554be0291d07bb402ecca85cf6a4b509051dc2b5ee72bdb36591ebf047fd6d1",
+      "bytes": 32300
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b5b7200e1c1931158deafb51931d8851996d2d2fd0dfaaa60fcea16700eeaa2a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b3f1b482c04cbc53904383a58a00ae9849babeea58094d4a061c57e7ada043f0",
+      "bytes": 1511
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f7ac80e39b6c9076964ac0cb675c442e7d102fa77ecb3151af9d69b4f8a3d23b",
+      "bytes": 2067
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "15846be3-8df8-42e4-a05c-d9395dcec369",
+    "198d4f13-0e88-4372-86fd-7abf34a668b1",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "f61cf515-ccd5-4494-bdd1-be9fe4d7258c",
+    "f6b396e6-0ad6-402e-9ab9-0034df0d204d",
+    "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6"
+  ]
+}

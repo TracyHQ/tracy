@@ -1,0 +1,25 @@
+[
+  {
+    "id": "QA-INFRA-provision-linux-fence-kernel",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/provision.sh"],
+    "requirement": "provision.sh: the iptables rules it adds/removes actually block/open the site's mail egress in the Linux kernel (rule bookkeeping is covered by the fake-iptables cases; the kernel behaviour is not)",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "linux-fence",
+      "invariant": "the Docker/iptables fence between sites is enforced by the Linux kernel; it can only be proven on a Linux host with the privileges to inspect it"
+    },
+    "edgeTags": ["cold-warm"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["a Linux host with iptables and the privileges to run it"],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  }
+]

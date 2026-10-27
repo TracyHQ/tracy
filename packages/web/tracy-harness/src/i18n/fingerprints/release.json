@@ -1,0 +1,18 @@
+{
+  "release.blurb": "1ea81d0c",
+  "release.checkAgain": "5162fccf",
+  "release.done": "72ea4164",
+  "release.footer": "c650d9ac",
+  "release.local": "574195c9",
+  "release.onlyOpen": "fd7b4058",
+  "release.readFailed": "7ec8b4ec",
+  "release.state.fail": "156f1a18",
+  "release.state.info": "1440c15d",
+  "release.state.pass": "85e4b82f",
+  "release.state.warn": "592c8de7",
+  "release.title": "aabf22e6",
+  "release.toCheck_one": "6a68d5d1",
+  "release.toCheck_other": "6a68d5d1",
+  "release.toFix_one": "13b5bc8a",
+  "release.toFix_other": "13b5bc8a"
+}

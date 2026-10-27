@@ -1,0 +1,74 @@
+{
+  "color": {
+    "death-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Death Black — Primary text, core UI backgrounds, filled buttons. Establishes the dominant, aggressive tone."
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Text on dark backgrounds, primary page backgrounds."
+    },
+    "off-black": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Off-Black — Body copy on light backgrounds, secondary UI elements."
+    },
+    "ash-gray": {
+      "$value": "#e3e3e3",
+      "$type": "color",
+      "$description": "Ash Gray — Product grid background, subtle dividers."
+    },
+    "gravel-gray": {
+      "$value": "#727272",
+      "$type": "color",
+      "$description": "Gravel Gray — Secondary text, disabled states, placeholder text."
+    },
+    "light-ash": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Light Ash — Alternative light background color for section differentiation."
+    },
+    "charcoal": {
+      "$value": "#232323",
+      "$type": "color",
+      "$description": "Charcoal — Hover states on dark elements."
+    },
+    "input-border": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Input Border — Default border color for text input fields."
+    },
+    "polished-gold": {
+      "$value": "#d2ac5a",
+      "$type": "color",
+      "$description": "Polished Gold — Accents, special links, logotype details — a premium, metallic highlight against the stark monochrome."
+    },
+    "antique-gold": {
+      "$value": "#8a6d35",
+      "$type": "color",
+      "$description": "Antique Gold — Hover state for gold accents, secondary logotype details."
+    }
+  },
+  "font": {
+    "acumin-pro": {
+      "$value": "Acumin Pro",
+      "$type": "fontFamily",
+      "$description": "The single, dominant typeface used for everything from massive uppercase headlines to body copy. Its clean, geometric form provides a brutalist, no-nonsense foundation. Extensive use of uppercase at 700 weight for headings is the brand's signature voice."
+    },
+    "acumin-pro-condensed": {
+      "$value": "acumin-pro-condensed",
+      "$type": "fontFamily",
+      "$description": "Used sparingly for subtitles and calorie counts where horizontal space is limited. Maintains the core Acumin feel in a more compact format."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://liquiddeath.com",
+      "siteName": "Liquid Death",
+      "extractedAt": "2026-04-11T17:51:51.532Z",
+      "variant": "compact"
+    }
+  }
+}

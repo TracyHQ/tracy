@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-apple/j6/1.3.0",
+  "platform": "joomla",
+  "template": "tracy",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-apple/j6",
+    "version": "1.3.0",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy",
+    "coworkVersion": "0.17.3",
+    "writeDoor": "disabled-until-provision",
+    "parts": {
+      "webroot": {
+        "file": "tracy-apple-j6-webroot-1.3.0.tar.gz",
+        "bytes": 62561102,
+        "sha256": "955468956806996705592bfa81d38d5c321af0abda43070a3835a33deda75337",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.3.0.tar.gz"
+      },
+      "database": {
+        "file": "tracy-apple-j6-database-1.3.0.sql.gz",
+        "bytes": 192141,
+        "sha256": "f5cc2959c6e934985e698f6e232bf3bbdb3d82739f4a7a8537bc859166dcbfd0",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-database-1.3.0.sql.gz"
+      }
+    }
+  },
+  "receiverVersion": "0.17.4",
+  "mode": "content-only"
+}

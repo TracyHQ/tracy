@@ -1,0 +1,1129 @@
+---
+title: Configuration Reference
+description: Complete reference for EmDash configuration options.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+The main EmDash configuration lives in `astro.config.mjs`, while `src/live.config.ts` registers the content loader. Deployment-specific values can also come from environment variables. A small `package.json` metadata block supports template labels and legacy local CLI flows.
+
+## Astro integration
+
+Configure EmDash as an Astro integration in `astro.config.mjs`:
+
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import emdash, { local, s3 } from "emdash/astro";
+import { sqlite, libsql } from "emdash/db";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			database: sqlite({ url: "file:./data.db" }),
+			storage: local({
+				directory: "./uploads",
+				baseUrl: "/_emdash/api/media/file",
+			}),
+			plugins: [],
+		}),
+	],
+});
+```
+
+## Integration options
+
+### `database`
+
+**Required.** Database adapter configuration. Choose one adapter:
+
+```js
+// SQLite (Node.js)
+database: sqlite({ url: "file:./data.db" });
+
+// PostgreSQL
+database: postgres({ connectionString: process.env.DATABASE_URL });
+
+// libSQL
+database: libsql({
+	url: process.env.LIBSQL_DATABASE_URL,
+	authToken: process.env.LIBSQL_AUTH_TOKEN,
+});
+
+// Cloudflare D1 (import from @emdash-cms/cloudflare)
+database: d1({ binding: "DB" });
+```
+
+See [Database Options](/deployment/database/) for details.
+
+### `migrations`
+
+**Optional.** Controls runtime handling of EmDash's internal database migrations. Omitting this option defaults to `{ runtime: "auto" }`.
+
+```js
+migrations: {
+	runtime: "check", // "auto" | "check" | "manual"
+	dev: "auto",     // optional development override
+}
+```
+
+`auto` checks and applies pending migrations, `check` returns 503 when migrations known to the running build are pending (except for requests to the image endpoint EmDash installs), and `manual` performs no runtime migration query. `EMDASH_MIGRATIONS_MODE` overrides the effective runtime mode. See [Manage Core Database Migrations](/deployment/core-migrations/) before adopting `check` or `manual`.
+
+### `storage`
+
+**Optional.** Media storage adapter configuration. EmDash stores files in `./.emdash/uploads` and serves them through `/_emdash/api/media/file` when this option is omitted. Choose an adapter when the default local directory is not suitable:
+
+```js
+// Local filesystem (development)
+storage: local({
+	directory: "./uploads",
+	baseUrl: "/_emdash/api/media/file",
+});
+
+// R2 binding (Cloudflare Workers)
+storage: r2({
+	binding: "MEDIA",
+	publicUrl: "https://pub-xxxx.r2.dev", // optional
+});
+
+// S3-compatible (any platform) — all fields from S3_* environment variables
+storage: s3()
+
+// Or with explicit values
+storage: s3({
+	endpoint: "https://s3.amazonaws.com",
+	bucket: "my-bucket",
+	accessKeyId: process.env.S3_ACCESS_KEY_ID,
+	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+	region: "us-east-1", // optional, default: "auto"
+	publicUrl: "https://cdn.example.com", // optional
+});
+```
+
+See [Storage Options](/deployment/storage/) for details.
+
+### `images`
+
+**Optional.** Controls whether EmDash integrates stored media with Astro's image optimization. The default is `true`.
+
+When enabled, EmDash wraps Astro's image endpoint so `<Image>` and `getImage()` can read source bytes directly from the configured storage adapter. This also works when the original media URL is behind Cloudflare Access. Requests to the wrapped endpoint skip EmDash's runtime startup, so on them `locals.emdash` holds only `storage`, plus `db` for a signed-in user. `locals.user` is set as on other public routes. Set `images: false` when another image service handles the media or when every image should render without EmDash's endpoint wrapper.
+
+```js
+emdash({
+	images: false,
+});
+```
+
+### `mediaProviders`
+
+**Optional.** Adds media services to the media library. The storage-backed local provider remains available automatically; each descriptor in this array adds another place editors can browse or upload media.
+
+The following example adds Cloudflare Images and Cloudflare Stream:
+
+```js title="astro.config.mjs"
+import { cloudflareImages, cloudflareStream } from "@emdash-cms/cloudflare";
+
+emdash({
+	mediaProviders: [cloudflareImages({}), cloudflareStream({})],
+});
+```
+
+Provider credentials are resolved at runtime. The empty configurations above use the default Cloudflare environment variables described in the [`cloudflareImages(config)`](#cloudflareimagesconfig) and [`cloudflareStream(config)`](#cloudflarestreamconfig) adapter sections. See [Media Library: Media providers](/guides/media-library/#media-providers) for binding and rendering setup.
+
+### `objectCache`
+
+**Optional.** Caches content and configuration query results in a key/value store so reads are served without querying the database on every request. Disabled when omitted. Choose one adapter:
+
+```js
+// Cloudflare KV (shared across all isolates)
+import { kvCache } from "@emdash-cms/cloudflare";
+objectCache: kvCache({ binding: "CACHE" });
+
+// In-memory (Node.js / development)
+import { memoryCache } from "emdash/astro";
+objectCache: memoryCache();
+```
+
+See [Object Cache](/deployment/object-cache/) for setup and options.
+
+### `middleware.outer`
+
+**Optional.** Registers an Astro middleware module outside the complete EmDash middleware stack. Because the integration registers it with Astro `order: "pre"`, it also runs before middleware defined in `src/middleware.ts`. Use it for request gates or full-response caches that must avoid runtime and database initialization on a hit, or for response headers that depend on EmDash's final HTML.
+
+```js title="astro.config.mjs"
+emdash({
+	middleware: {
+		outer: "./src/outer-middleware.ts",
+	},
+});
+```
+
+The execution order is:
+
+1. The outer middleware runs up to `await next()`.
+2. EmDash initializes its runtime and database, then runs setup, authentication, and request-context middleware.
+3. The Astro route renders.
+4. EmDash applies response mutations, including visual-editing HTML and security/timing headers.
+5. `next()` resolves to the outer middleware with that final response.
+
+Before calling `next()`, the middleware has the normal Astro request and platform execution context, but `locals.emdash`, `locals.user`, the database, and request-scoped EmDash state are unavailable. An early `Response` skips EmDash entirely, so it must include any security and cache headers it needs. After `next()` resolves, it is safe to finalize CSP nonces, cache the complete body, or set `Content-Length`. If the middleware changes the body, remove or recompute any existing `Content-Length` header.
+
+The hook uses Astro's middleware API on both Node and Cloudflare. This minimal Cloudflare Cache API example caches only anonymous HTML responses and returns hits before EmDash initialization:
+
+```ts title="src/outer-middleware.ts"
+import { waitUntil } from "cloudflare:workers";
+import { defineMiddleware } from "astro:middleware";
+
+export const onRequest = defineMiddleware(async ({ request }, next) => {
+	if (request.method !== "GET" || request.headers.has("cookie")) {
+		return next();
+	}
+
+	const cacheKey = new Request(request.url, { method: "GET" });
+	const cached = await caches.default.match(cacheKey);
+	if (cached) return cached;
+
+	const response = await next();
+	const isHtml = response.headers.get("content-type")?.includes("text/html");
+	const isPrivate = response.headers.get("cache-control")?.includes("no-store");
+	if (response.ok && isHtml && !isPrivate) {
+		waitUntil(caches.default.put(cacheKey, response.clone()));
+	}
+
+	return response;
+});
+```
+
+On Node, use the same middleware shape with a Node-compatible cache such as Redis. Cache keys and bypass rules must include every request property that changes the rendered response.
+
+### `playground`
+
+**Optional.** Enables the middleware used by disposable, browser-based EmDash playgrounds. It creates a writable Durable Object database for each session, applies the configured seed, and signs the visitor in as an anonymous administrator before the normal EmDash middleware runs.
+
+```js title="astro.config.mjs"
+import { playgroundDatabase } from "@emdash-cms/cloudflare";
+
+emdash({
+	database: playgroundDatabase({ binding: "PLAYGROUND_DB" }),
+	playground: {
+		middlewareEntrypoint: "@emdash-cms/cloudflare/db/playground-middleware",
+	},
+});
+```
+
+This mode requires `@emdash-cms/cloudflare` and a Durable Object binding. It bypasses the normal setup and authentication middleware, so use it only for ephemeral demo sites rather than a production CMS.
+
+### `plugins`
+
+**Optional.** Array of plugins that run in the same process as the Astro site. Native plugins belong here. A sandbox-compatible plugin can also run here when you trust it with full process access and do not need isolation.
+
+The following example registers a native plugin:
+
+```js
+import seoPlugin from "@emdash-cms/plugin-seo";
+
+plugins: [seoPlugin()];
+```
+
+Native plugins can use server and framework APIs directly, so they cannot be moved to `sandboxed` unless the package also provides a sandbox-compatible plugin entry point. See [Choose a plugin format](/plugins/creating-plugins/choosing-a-format/) for the authoring and deployment differences.
+
+### `sandboxed`
+
+**Optional.** Array of sandbox-compatible plugins that use EmDash's declared plugin APIs and run in isolated runtimes. Do not place a native plugin here: native code can depend on process and framework access that the sandbox does not provide.
+
+```js title="astro.config.mjs"
+import thirdPartyPlugin from "third-party-emdash-plugin";
+import { sandbox } from "@emdash-cms/cloudflare";
+
+emdash({
+	sandboxed: [thirdPartyPlugin()],
+	sandboxRunner: sandbox(),
+});
+```
+
+Sandboxed plugins are skipped when no usable sandbox runner is configured. See [Plugin Sandbox](/deployment/plugin-sandbox/) for the Cloudflare and Node.js runner setup.
+
+### `sandboxRunner`
+
+**Optional.** Module specifier for the factory that starts isolated plugin runtimes. It is required for plugins in `sandboxed` and for marketplace or registry plugins.
+
+On Cloudflare Workers, use the `sandbox()` adapter:
+
+```js
+import { sandbox } from "@emdash-cms/cloudflare";
+
+emdash({
+	sandboxRunner: sandbox(),
+});
+```
+
+Node.js deployments use the workerd runner module documented in [Plugin Sandbox: Node.js](/deployment/plugin-sandbox/#nodejs).
+
+### `sandbox`
+
+**Optional.** Controls whether a configured sandbox runner isolates plugins. Sandboxing is enabled when `sandboxRunner` is configured. Set `sandbox: false` only to diagnose whether a problem comes from a plugin or its sandbox runtime:
+
+```js
+emdash({
+	sandboxRunner: sandbox(),
+	sandbox: false,
+});
+```
+
+With `false`, plugins declared in `sandboxed` and installed from the marketplace run in the main server process without isolation or resource limits. Restore sandboxing after the diagnosis.
+
+### `registry`
+
+**Optional.** Configures the [plugin registry](/plugins/registry/) aggregator and policy. With no explicit value, EmDash uses `https://registry.emdashcms.com` when [`sandboxRunner`](#sandboxrunner) is configured and `sandbox` is not `false`.
+
+Set `registry: false` to disable registry discovery and registry-installed plugins while keeping the sandbox runner available for plugins declared in `sandboxed` and legacy Marketplace plugins:
+
+```js title="astro.config.mjs"
+emdash({
+	sandboxRunner: sandbox(),
+	registry: false,
+});
+```
+
+Pass the registry service URL as a string, or use an object when the site needs moderation sources or a release-age policy. The following example uses the object form:
+
+```js title="astro.config.mjs"
+import { sandbox } from "@emdash-cms/cloudflare";
+
+emdash({
+	sandboxRunner: sandbox(),
+	registry: {
+		aggregatorUrl: "https://registry.emdashcms.com",
+		acceptLabelers: "did:web:labels.emdashcms.com",
+		policy: {
+			minimumReleaseAge: "48h",
+			minimumReleaseAgeExclude: ["did:plc:yourfirstpartydid"],
+		},
+	},
+});
+```
+
+| Option                            | Type                   | Description                                                                                   |
+| --------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------- |
+| `aggregatorUrl`                   | `string`               | Base URL of the registry service. Use HTTPS in production.                                    |
+| `acceptLabelers`                  | `string`               | Optional comma-separated decentralized identifiers (DIDs) for moderation services accepted by the request. A DID is a stable Atmosphere account identifier. This setting cannot override the registry service's policy. |
+| `policy.minimumReleaseAge`        | `string \| number`     | Hold back releases newer than this age. Duration string (`"48h"`, `"7d"`) or seconds.          |
+| `policy.minimumReleaseAgeExclude` | `string[]`             | Publisher DIDs, or `<did>/<plugin-slug>` pairs, exempt from the holdback.                     |
+
+The release-age policy exempts a package's first release only when the registry reports one retained release and confirms that it observed the package continuously. A backfilled package, a deleted earlier release, or missing history evidence keeps the holdback in force. Explicit publisher and package exemptions apply regardless of history.
+
+See [The plugin registry](/plugins/registry/) for the install workflow and trust model.
+
+### `marketplace`
+
+**Deprecated.** Base URL used to update plugins installed from the legacy Marketplace. Marketplace browsing and new installs are not shown in the admin. Existing Marketplace plugins remain updateable and uninstallable while this option is configured.
+
+```js
+emdash({
+	marketplace: "https://marketplace.emdashcms.com",
+	sandboxRunner: sandbox(),
+});
+```
+
+Production URLs must use HTTPS; HTTP is accepted only for `localhost` and `127.0.0.1` during development. Keep this option until every Marketplace plugin has been replaced or uninstalled, then remove it. Follow [Migrate from Marketplace](/plugins/migrate-from-marketplace/) for the complete procedure.
+
+### `fonts`
+
+**Optional.** Admin UI font configuration.
+
+By default, EmDash loads [Noto Sans](https://fonts.google.com/noto/specimen/Noto+Sans) via the [Astro Font API](https://docs.astro.build/en/guides/fonts/). Fonts are downloaded from Google at build time and self-hosted, so there are no runtime CDN requests. The base font covers Latin, Cyrillic, Greek, Devanagari, and Vietnamese scripts.
+
+To add support for additional writing systems, pass script names. The following example adds Arabic and Japanese:
+
+```js
+emdash({
+  fonts: {
+    scripts: ["arabic", "japanese"],
+  },
+})
+```
+
+The available scripts are `arabic`, `armenian`, `bengali`, `chinese-simplified`, `chinese-traditional`, `chinese-hongkong`, `devanagari`, `ethiopic`, `farsi`, `georgian`, `gujarati`, `gurmukhi`, `hebrew`, `japanese`, `kannada`, `khmer`, `korean`, `lao`, `malayalam`, `myanmar`, `oriya`, `sinhala`, `tamil`, `telugu`, `thai`, and `tibetan`.
+
+Each script maps to the corresponding Noto Sans variant on Google Fonts (e.g. `"arabic"` loads Noto Sans Arabic). All font faces share a single `font-family` name and use `unicode-range` so the browser only downloads the files it needs for the characters on the page.
+
+Set to `false` to disable font injection entirely and use system fonts:
+
+```js
+emdash({
+	fonts: false,
+})
+```
+
+The admin CSS uses the `--font-emdash` CSS variable. This is set automatically by the font configuration above.
+
+### `auth`
+
+**Optional.** An authentication adapter. EmDash's built-in login is passkeys; setting `auth` replaces them with an external provider. The Cloudflare Access adapter, `access()`, is provided by `@emdash-cms/cloudflare`:
+
+```js
+import { access } from "@emdash-cms/cloudflare";
+
+emdash({
+	auth: access({
+		teamDomain: "myteam.cloudflareaccess.com",
+		audience: "your-app-audience-tag",
+		roleMapping: {
+			Admins: 50,
+			Editors: 40,
+		},
+	}),
+});
+```
+
+Options for `access()`:
+
+| Option           | Type      | Default                | Description                                                                                  |
+| ---------------- | --------- | ---------------------- | -------------------------------------------------------------------------------------------- |
+| `teamDomain`     | `string`  | required               | Your Cloudflare Access team domain                                                           |
+| `audience`       | `string`  | —                      | Application Audience (AUD) tag. On Workers, prefer `audienceEnvVar`.                          |
+| `audienceEnvVar` | `string`  | `"CF_ACCESS_AUDIENCE"` | Environment variable to read the audience tag from at runtime                                |
+| `autoProvision`  | `boolean` | `true`                 | Create an EmDash user on first login                                                         |
+| `defaultRole`    | `number`  | `30`                   | Role level for users not matched by `roleMapping` (see [User roles](/guides/authentication/#user-roles)) |
+| `syncRoles`      | `boolean` | `false`                | Re-apply `roleMapping` on every login instead of only at provisioning                        |
+| `roleMapping`    | `object`  | —                      | Map IdP group names to EmDash role levels; first match wins                                  |
+
+<Aside>
+	When an auth adapter is configured it becomes the only auth method: passkeys are disabled.
+</Aside>
+
+### `authProviders`
+
+**Optional.** An array of pluggable login providers (top-level, alongside `auth`). Each entry is the result of calling a provider factory, as shown below:
+
+```js
+import { github } from "emdash/auth/providers/github";
+import { google } from "emdash/auth/providers/google";
+import { atproto } from "@emdash-cms/auth-atproto";
+
+emdash({
+	authProviders: [github(), google(), atproto()],
+});
+```
+
+Built-in providers:
+
+- `github()` — reads `EMDASH_OAUTH_GITHUB_CLIENT_ID` / `EMDASH_OAUTH_GITHUB_CLIENT_SECRET` (or unprefixed fallbacks).
+- `google()` — reads `EMDASH_OAUTH_GOOGLE_CLIENT_ID` / `EMDASH_OAUTH_GOOGLE_CLIENT_SECRET`.
+- `microsoft()` — reads `EMDASH_OAUTH_MICROSOFT_CLIENT_ID` / `EMDASH_OAUTH_MICROSOFT_CLIENT_SECRET` / `EMDASH_OAUTH_MICROSOFT_TENANT_ID` (or unprefixed fallbacks). Accepts `{ emailVerified }`. See [Microsoft](/guides/authentication/#microsoft).
+- `atproto()` — Atmosphere account login (Bluesky and the wider AT Protocol network). No env vars needed. Accepts `{ allowedDIDs, allowedHandles, defaultRole }`. See the [Atmosphere login guide](/guides/atmosphere-auth/).
+
+Third-party packages can register their own providers using the same `AuthProviderDescriptor` shape — see [Login Providers](/guides/authentication/#login-providers).
+
+### `mcp`
+
+**Optional.** Enables the Model Context Protocol (MCP) endpoint at `/_emdash/api/mcp`. The endpoint is enabled by default and requires a bearer token, so enabling it does not grant anonymous access.
+
+Set the option to `false` when the site must not expose an MCP endpoint:
+
+```js
+emdash({
+	mcp: false,
+});
+```
+
+See [MCP Server Reference](/reference/mcp-server/) for token creation and client configuration.
+
+### `siteUrl`
+
+The public browser-facing origin for the site (scheme + host + optional port, **no path**). Set it before running production setup, unless the site is deployed to Cloudflare Workers. Only loopback development hosts can otherwise complete setup without a configured origin.
+
+Behind a **TLS-terminating reverse proxy**, `Astro.url` returns the internal address (`http://localhost:4321`) instead of the public one (`https://cms.example.com`). This breaks passkeys, CSRF origin matching, OAuth redirects, login redirects, MCP discovery, snapshot exports, sitemap, robots.txt, and JSON-LD structured data. Set `siteUrl` to fix all of these at once.
+
+The integration **validates** this value at load time: it must be a valid URL with **`http:`** or **`https:`** protocol and is normalized to **origin** (path is stripped).
+
+The following example sets the public origin:
+
+```js
+emdash({
+	database: sqlite({ url: "file:./data.db" }),
+	storage: local({
+		directory: "./uploads",
+		baseUrl: "/_emdash/api/media/file",
+	}),
+	siteUrl: "https://cms.example.com",
+});
+```
+
+When `siteUrl` is not set in config, EmDash checks environment variables in order: `EMDASH_SITE_URL`, then `SITE_URL`. This is useful for container deployments where the public URL is set at runtime.
+
+Setup fails with `SITE_URL_REQUIRED` on a non-loopback host when neither source is set. This prevents the first unauthenticated setup request from choosing the origin used in later authentication emails. A production build deployed to Cloudflare Workers is the exception: Cloudflare only routes requests for hostnames bound to the Worker, so setup records `https://` and the hostname it runs on. The same build served by `wrangler dev`, `astro preview`, or self-hosted workerd on a reachable address gets no such guarantee; set `siteUrl` or `EMDASH_SITE_URL` there first.
+
+On **Cloudflare Workers**, the env-var fallback reads `process.env`. With `nodejs_compat`, Cloudflare populates `process.env` by default for compatibility dates on or after `2025-04-01`. Projects pinned to an earlier date must also add `nodejs_compat_populate_process_env`.
+
+```jsonc
+// wrangler.jsonc
+{
+	"compatibility_date": "2026-02-24",
+	"compatibility_flags": ["nodejs_compat"],
+	"vars": { "EMDASH_SITE_URL": "https://cms.example.com" },
+}
+```
+
+<Aside type="tip">
+	`siteUrl` is the single option for the public origin. It covers passkeys and all other
+	origin-dependent features. It does not change `Astro.url` in your own templates — set Astro's
+	[`site`](https://docs.astro.build/en/reference/configuration-reference/#site) option for
+	canonical/OG URLs you build yourself.
+</Aside>
+
+### `allowedOrigins`
+
+**Optional.** Additional browser origins accepted by passkey verification for a deployment available on more than one hostname.
+
+`siteUrl` defines a single canonical origin. When the same EmDash deployment is reachable under several hostnames that share a registrable parent domain (e.g. `https://example.com` and `https://preview.example.com`), passkey verification rejects assertions whose origin doesn't match `siteUrl` exactly -- even though WebAuthn allows passkeys to be valid across subdomains under the same `rpId`.
+
+Declare additional accepted origins via either `allowedOrigins` in `astro.config.mjs` or the `EMDASH_ALLOWED_ORIGINS` env var. The canonical `siteUrl` remains the source of `rpId`; entries listed here are accepted at verification time. The two sources are merged at runtime, so config can declare the stable origins (versioned, code-reviewed) while env adds environment-specific extras (e.g. ephemeral PR previews).
+
+The following example declares one extra origin in config:
+
+```js title="astro.config.mjs"
+emdash({
+	siteUrl: "https://example.com",
+	allowedOrigins: ["https://preview.example.com"],
+})
+```
+
+The equivalent values can also come from environment variables:
+
+```bash title=".env / wrangler.jsonc / Docker env"
+EMDASH_SITE_URL=https://example.com
+EMDASH_ALLOWED_ORIGINS=https://preview.example.com,https://staging.example.com
+```
+
+##### Validation
+
+EmDash validates these to prevent dead config the browser would never honor:
+
+- Each entry must be a parseable `http:` or `https:` URL with no trailing dot and no empty labels in the hostname.
+- When `allowedOrigins` is non-empty, `siteUrl` must be set (either source) and must not be an IP literal or have a trailing-dot hostname.
+- Each origin must be the same hostname as `siteUrl` or a subdomain of it. (WebAuthn requires `rpId` to be a registrable suffix of every origin.)
+
+When validation fails, you'll see a source-attributed error like `EmDash config error in EMDASH_ALLOWED_ORIGINS: "https://other-site.com" is not a subdomain of siteUrl "https://example.com". Allowed origins must be the same hostname as siteUrl or a subdomain of it.`
+
+Where the error surfaces depends on where the values are declared:
+
+- **At Astro startup**, when both `config.allowedOrigins` and `config.siteUrl` come from `astro.config.mjs` -- typos in code fail the build.
+- **At first passkey verification**, when either value comes from `EMDASH_ALLOWED_ORIGINS` or `EMDASH_SITE_URL` -- env mismatches surface as 500s on the first verify attempt.
+
+#### Reverse proxy setup
+
+Astro only reflects **`X-Forwarded-*`** when the public host is allowed. Configure [**`security.allowedDomains`**](https://docs.astro.build/en/reference/configuration-reference/#securityalloweddomains) for the hostname (and schemes) your users hit. In **`astro dev`**, add matching **`vite.server.allowedHosts`** so Vite accepts the proxy **`Host`** header.
+
+Prefer fixing **`allowedDomains`** (and forwarded headers) first; use **`siteUrl`** when the reconstructed URL **still** diverges from the browser origin (typical when TLS is terminated in front and the upstream request stays **`http://`**).
+
+With TLS in front, binding the dev server to loopback (**`astro dev --host 127.0.0.1`**) is often enough: the proxy connects locally while **`siteUrl`** matches the public HTTPS origin.
+
+If your proxy writes a client-IP header, set [**`trustedProxyHeaders`**](#trustedproxyheaders) so EmDash's rate limits can use the real client IP. Without a trusted client IP, the authentication rate limits are skipped and all public comment submissions share one rate-limit bucket (20 comments per 10 minutes across all visitors).
+
+<Aside type="caution">
+	Your reverse proxy should forward a **port-aware** `Host` / `X-Forwarded-Host` when you use non-default ports. If the proxy strips the port, **`rpId`** and Astro’s rebuilt URL can be wrong.
+</Aside>
+
+The following configuration sets `allowedDomains`, `vite.server.allowedHosts`, and `siteUrl` together for a reverse-proxy deployment:
+
+```js title="astro.config.mjs (excerpt)"
+import { defineConfig } from "astro/config";
+import emdash, { local } from "emdash/astro";
+import { sqlite } from "emdash/db";
+
+export default defineConfig({
+	security: {
+		allowedDomains: [
+			{ hostname: "cms.example.com", protocol: "https" },
+			{ hostname: "cms.example.com", protocol: "http" },
+		],
+	},
+	vite: {
+		server: {
+			allowedHosts: ["cms.example.com"],
+		},
+	},
+	integrations: [
+		emdash({
+			database: sqlite({ url: "file:./data.db" }),
+			storage: local({
+				directory: "./uploads",
+				baseUrl: "/_emdash/api/media/file",
+			}),
+			siteUrl: "https://cms.example.com",
+		}),
+	],
+});
+```
+
+### `trustedProxyHeaders`
+
+**Optional.** Headers to trust for client-IP resolution when running behind a reverse proxy you control. Used by auth rate limits (magic-link, signup, passkey, OAuth device flow, OAuth client registration) and the public comment endpoint.
+
+On Cloudflare the `cf` object attached to the request is used automatically — you normally do **not** need to set this. On self-hosted deployments behind nginx, Caddy, Traefik, Fly, Railway, or similar, set this to the header your proxy writes so rate limits can count requests per real client IP.
+
+The following example trusts the `x-real-ip` header set by nginx, Caddy, or Traefik:
+
+```js
+emdash({
+	database: sqlite({ url: "file:./data.db" }),
+	trustedProxyHeaders: ["x-real-ip"],
+});
+```
+
+Headers are tried in order. Values matching `*-forwarded-for` are parsed as comma-separated lists and the first entry is used. The following example prefers Fly.io's header and falls back to `x-forwarded-for`:
+
+```js
+emdash({
+	trustedProxyHeaders: ["fly-client-ip", "x-forwarded-for"],
+});
+```
+
+When not set in config, EmDash reads the `EMDASH_TRUSTED_PROXY_HEADERS` env var (comma-separated). An explicit empty array in config overrides the env var.
+
+<Aside type="caution">
+	**Only set this when you control the reverse proxy.** Untrusted clients can set any header
+	they like; trusting forwarded-IP headers from an open network is an IP-spoofing vulnerability
+	that defeats rate limiting. If EmDash is exposed directly to the public internet with no
+	proxy in front, leave this unset rather than trust a spoofable header. EmDash then skips the
+	authentication rate limits, counts all public comment submissions in one shared bucket, and
+	treats all visitors as one voter for comment reactions.
+</Aside>
+
+### `maxUploadSize`
+
+**Optional.** Maximum allowed media file upload size in bytes. Applies to both direct multipart uploads and signed-URL uploads. Defaults to `52_428_800` (50 MB). The following example raises the limit to 100 MB:
+
+```js
+emdash({
+	database: sqlite({ url: "file:./data.db" }),
+	storage: local({
+		directory: "./uploads",
+		baseUrl: "/_emdash/api/media/file",
+	}),
+	maxUploadSize: 100 * 1024 * 1024, // 100 MB
+});
+```
+
+| Value | Description |
+| ----- | ----------- |
+| `number` (bytes) | Must be a positive finite integer |
+| omitted | Defaults to 50 MB |
+
+Uploads that exceed the configured limit are rejected with a `413 Payload Too Large` response on the direct upload path, or a `400 Validation Error` on the signed-URL path.
+
+### `admin`
+
+**Optional.** Replaces EmDash branding in the admin interface. These values do not change the public site's title, logo, or favicon.
+
+```js
+emdash({
+	admin: {
+		logo: "/images/agency-logo.webp",
+		siteName: "Agency CMS",
+		footerLabel: "AgencyX",
+		favicon: "/favicon.ico",
+	},
+});
+```
+
+| Option        | Type              | Description                                                                    |
+| ------------- | ----------------- | ------------------------------------------------------------------------------ |
+| `logo`        | `string`          | Logo URL or path for the login page and sidebar                                |
+| `siteName`    | `string`          | Name shown in the sidebar header and browser title                             |
+| `footerLabel` | `string \| false` | Label shown beside the sidebar version. Defaults to `"EmDash"`; `false` hides it |
+| `favicon`     | `string`          | Favicon URL or path for admin pages                                             |
+
+### `updateCheck`
+
+**Optional.** Controls the core update notice in the admin dashboard. Defaults to `true`.
+
+When enabled, EmDash checks the public npm registry for published `emdash` releases — at most once per day, deferred after the response so it never slows down a request — and shows a dismissible banner in the admin dashboard when a newer version is available. Dismissing the banner hides it for that version; it reappears when a newer version becomes available.
+
+The banner names the newest stable release that has been public for at least 24 hours, so a release is announced a day after it ships. To match a release-age policy in your package manager, such as pnpm's `minimumReleaseAge`, set `minimumReleaseAge` to a duration string (`"48h"`, `"7d"`) or a number of seconds. With `"7d"`, the banner offers the newest release that is at least a week old:
+
+```js
+emdash({
+	updateCheck: { minimumReleaseAge: "7d" },
+})
+```
+
+The check is a plain GET to `https://registry.npmjs.org/emdash` and carries no site data. Deployments without outbound internet access simply never show the banner. Set to `false` to disable the check entirely:
+
+```js
+emdash({
+	updateCheck: false,
+})
+```
+
+The banner is informational only — updating EmDash means bumping the `emdash` package in your project and redeploying, which the admin can't (and shouldn't) trigger.
+
+### `toolbar`
+
+**Optional.** Controls how the editor toolbar (the floating pill on public pages) is delivered. Defaults to `"server"`.
+
+| Value | Behavior |
+| ----- | -------- |
+| `"server"` (default) | The toolbar is injected server-side into every HTML response rendered for an authenticated editor. |
+| `"client"` | Public HTML is identical for every visitor. A tiny bootstrap script shows an "Edit" pill in browsers that have logged into the admin; clicking it verifies the session and reloads the page with an `_edit` query param, which is always rendered fresh (never cached) with the full toolbar. |
+| `false` | Never render the toolbar or the bootstrap script. |
+
+```js
+emdash({
+	toolbar: "client",
+})
+```
+
+Use `"client"` when your public HTML is served through a shared cache (Cloudflare Cache Everything / [Workers Cache](https://developers.cloudflare.com/workers/cache/), Fastly, Varnish, …). With server-side injection, an editor browsing the public site receives the cached anonymous variant — without the toolbar — whenever an anonymous visitor primed the cache first, so the toolbar appears and disappears with cache state. In client mode nothing session-specific is injected into shareable HTML, so the cache stays fully effective and the toolbar is reliable.
+
+Notes on `"client"` mode:
+
+- Logged-out visitors who open a shared `?_edit` URL are redirected to the canonical URL, so the param can't leak drafts or prime extra cache entries with page content.
+- The "logged in" signal is a non-secret `localStorage` flag set by the admin; the pill verifies the real session before entering the edit view.
+- The bootstrap is a small inline `<script>`. If your site sends a strict `Content-Security-Policy` without `'unsafe-inline'`, add a hash for it — the same applies to the server-injected toolbar.
+- EmDash injects nothing session-specific — but if your own templates branch on `Astro.locals.user` (e.g. an "Admin" nav link for logged-in users), that variance is still in your HTML and still fragments the cache.
+
+In every mode, the toolbar can be dismissed in the browser via its × button (per-browser, until the next time an editor opens the admin). Preview and edit-mode responses always render server-side with `Cache-Control: private, no-store`.
+
+## Database adapters
+
+Import the adapters from `emdash/db`:
+
+```js
+import { sqlite, libsql, postgres } from "emdash/db";
+```
+
+### `sqlite(config)`
+
+SQLite database using Node.js's built-in database driver. The following example connects to a local file:
+
+| Option | Type     | Description                   |
+| ------ | -------- | ----------------------------- |
+| `url`  | `string` | File path with `file:` prefix |
+
+```js
+sqlite({ url: "file:./data.db" });
+```
+
+### `libsql(config)`
+
+libSQL database. The following example connects to a remote libSQL database:
+
+| Option                  | Type     | Description                                                   |
+| ----------------------- | -------- | ------------------------------------------------------------- |
+| `url`                   | `string` | Database URL                                                  |
+| `authToken`             | `string` | Runtime auth token (optional for local files)                 |
+| `migrationAuthTokenEnv` | `string` | Migration token variable name (default `TURSO_AUTH_TOKEN`)    |
+
+```js
+libsql({
+	url: process.env.LIBSQL_DATABASE_URL,
+	authToken: process.env.LIBSQL_AUTH_TOKEN,
+});
+```
+
+### `postgres(config)`
+
+PostgreSQL database with connection pooling.
+
+| Option                         | Type      | Description                                          |
+| ------------------------------ | --------- | ---------------------------------------------------- |
+| `connectionString`             | `string`  | PostgreSQL connection URL                            |
+| `host`                         | `string`  | Database host                                        |
+| `port`                         | `number`  | Database port                                        |
+| `database`                     | `string`  | Database name                                        |
+| `user`                         | `string`  | Database user                                        |
+| `password`                     | `string`  | Database password                                    |
+| `ssl`                          | `boolean` | Enable SSL                                           |
+| `pool.min`                     | `number`  | Minimum pool size (default: 0)                       |
+| `pool.max`                     | `number`  | Maximum pool size (default: 10)                      |
+| `pool.connectionTimeoutMillis` | `number`  | Maximum connection wait (pg default: 0, no timeout)  |
+| `pool.idleTimeoutMillis`       | `number`  | Idle-client lifetime (pg default: 10,000 ms)         |
+| `migrationConnectionStringEnv` | `string` | Migration connection-string variable name (default `DATABASE_URL`) |
+
+The following example connects with a connection string:
+
+```js
+postgres({ connectionString: process.env.DATABASE_URL });
+```
+
+### `d1(config)`
+
+Cloudflare D1 database. Import from `@emdash-cms/cloudflare`.
+
+| Option           | Type     | Default              | Description                                         |
+| ---------------- | -------- | -------------------- | --------------------------------------------------- |
+| `binding`        | `string` | —                    | D1 binding name from `wrangler.jsonc`               |
+| `session`        | `string` | `"disabled"`         | Read replication mode: `"disabled"`, `"auto"`, or `"primary-first"` |
+| `bookmarkCookie` | `string` | `"__em_d1_bookmark"` | Cookie name for session bookmarks                   |
+| `coalesce`       | `boolean` | `false`               | Batch concurrent reads in the same event-loop turn; requires a session mode other than `"disabled"` |
+
+The following example shows a basic binding and one with read replicas enabled:
+
+```js
+// Basic
+d1({ binding: "DB" });
+
+// With read replicas
+d1({ binding: "DB", session: "auto" });
+```
+
+When `session` is `"auto"` or `"primary-first"`, EmDash uses the D1 Sessions API to route read queries to nearby replicas. Authenticated users get bookmark-based read-your-writes consistency. See [Database Options — Read Replicas](/deployment/database/#read-replicas) for details.
+
+<Aside>
+	D1 core migrations run automatically by default or through the deployment migration manifest.
+	Provision the D1 database separately; see [Manage Core Database
+	Migrations](/deployment/core-migrations/).
+</Aside>
+
+### `hyperdrive(config?)`
+
+PostgreSQL through a Cloudflare Hyperdrive binding. Import this adapter from `@emdash-cms/cloudflare`.
+
+| Option                         | Type      | Default          | Description                                                                 |
+| ------------------------------ | --------- | ---------------- | --------------------------------------------------------------------------- |
+| `binding`                      | `string`  | `"HYPERDRIVE"`   | Primary Hyperdrive binding with query caching disabled                      |
+| `cachedBinding`                | `string`  | —                | Optional second, caching-enabled binding for anonymous public reads         |
+| `preferUncachedAfterWriteMs`   | `number`  | `60_000`         | How long public reads use the primary after a content write when `cachedBinding` is set |
+| `migrationConnectionStringEnv` | `string`  | Derived from the primary binding | Environment variable containing the direct PostgreSQL URL used by `emdash migrate` |
+| `max`                          | `number`  | `5`              | Maximum connections from one Worker isolate to Hyperdrive                   |
+
+The following example routes authenticated requests and writes through the uncached binding, while anonymous public reads can use the cached binding:
+
+```js
+hyperdrive({
+	binding: "HYPERDRIVE",
+	cachedBinding: "HYPERDRIVE_CACHED",
+	preferUncachedAfterWriteMs: 60_000,
+});
+```
+
+Both bindings must point to the same database. Install `pg` version 8.16.3 or later, enable the `nodejs_compat` compatibility flag, and configure a direct database URL for deployment migrations. See [Database Options: Hyperdrive](/deployment/database/#hyperdrive) for the complete Worker and migration setup.
+
+### `durableObjects(config)`
+
+Stores the CMS in one SQLite-backed Durable Object. Import this adapter from `@emdash-cms/cloudflare`.
+
+| Option           | Type     | Default             | Description                                                        |
+| ---------------- | -------- | ------------------- | ------------------------------------------------------------------ |
+| `binding`        | `string` | required            | Durable Object namespace binding for the `EmDashDB` class          |
+| `name`           | `string` | `"emdash"`          | Singleton object name; change it only to isolate multiple databases behind one binding |
+| `session`        | `string` | `"disabled"`        | `"auto"` routes anonymous reads to replicas and writes to the primary |
+| `bookmarkCookie` | `string` | `"__em_do_bookmark"` | Cookie used for read-your-writes consistency in `"auto"` mode      |
+
+```js
+durableObjects({ binding: "DB_DO", session: "auto" });
+```
+
+Replica routing requires the `experimental` and `replica_routing` compatibility flags plus the Durable Object class and migration entries in `wrangler.jsonc`.
+
+### `previewDatabase(config)`
+
+Creates one isolated snapshot database per preview session in a Durable Object. The only option is the required `binding` name:
+
+```js
+previewDatabase({ binding: "PREVIEW_DB" });
+```
+
+This adapter is for preview infrastructure, not a production site's primary database.
+
+### `playgroundDatabase(config)`
+
+Creates one writable seeded database per playground session in a Durable Object. Pair it with the [`playground`](#playground) integration option:
+
+```js
+playgroundDatabase({ binding: "PLAYGROUND_DB" });
+```
+
+The required `binding` identifies the playground Durable Object namespace. Use this adapter only for disposable demo sites.
+
+## Storage adapters
+
+Import `local` and `s3` from `emdash/astro`. The `r2` adapter is imported from `@emdash-cms/cloudflare`:
+
+```js
+import emdash, { local, s3 } from "emdash/astro";
+import { r2 } from "@emdash-cms/cloudflare";
+```
+
+### `local(config)`
+
+Local filesystem storage. The following example serves uploads from a local directory:
+
+| Option      | Type     | Description                |
+| ----------- | -------- | -------------------------- |
+| `directory` | `string` | Directory path             |
+| `baseUrl`   | `string` | Base URL for serving files |
+
+```js
+local({
+	directory: "./uploads",
+	baseUrl: "/_emdash/api/media/file",
+});
+```
+
+### `r2(config)`
+
+Cloudflare R2 binding. The following example uses an R2 binding with a public URL:
+
+| Option      | Type     | Description         |
+| ----------- | -------- | ------------------- |
+| `binding`   | `string` | R2 binding name     |
+| `publicUrl` | `string` | Optional public URL |
+
+```js
+r2({
+	binding: "MEDIA",
+	publicUrl: "https://pub-xxxx.r2.dev",
+});
+```
+
+### `s3(config?)`
+
+S3-compatible storage. All config fields are optional: any field omitted from
+`s3({...})` is resolved from the matching `S3_*` environment variable when the
+Node process starts. Explicit values always take precedence.
+
+After config and environment values are merged, `endpoint` and `bucket` are required. If either credential is set, both `accessKeyId` and `secretAccessKey` are required. Missing values fail startup with the `MISSING_S3_CONFIG` error code.
+
+**Prerequisite:** install `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`
+in your project. EmDash core does not bundle the AWS SDK. See
+[Storage Options: S3-Compatible Storage](/deployment/storage/#s3-compatible-storage)
+for details.
+
+| Option            | Type     | Description                         |
+| ----------------- | -------- | ----------------------------------- |
+| `endpoint`        | `string` | S3 endpoint URL (`S3_ENDPOINT`)     |
+| `bucket`          | `string` | Bucket name (`S3_BUCKET`)           |
+| `accessKeyId`     | `string` | Access key (`S3_ACCESS_KEY_ID`)     |
+| `secretAccessKey` | `string` | Secret key (`S3_SECRET_ACCESS_KEY`) |
+| `region`          | `string` | Region, default `"auto"` (`S3_REGION`) |
+| `publicUrl`       | `string` | Optional CDN URL (`S3_PUBLIC_URL`)  |
+
+The following examples resolve all fields from the environment, mix config and environment, or pass every field explicitly:
+
+```js
+// All fields from S3_* environment variables (Node container deployments)
+s3()
+
+// Mix: CDN from config, rest from environment
+s3({ publicUrl: "https://cdn.example.com" })
+
+// All explicit
+s3({
+	endpoint: "https://xxx.r2.cloudflarestorage.com",
+	bucket: "media",
+	accessKeyId: process.env.R2_ACCESS_KEY_ID,
+	secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+	publicUrl: "https://cdn.example.com",
+})
+```
+
+Runtime environment variable resolution is a Node-only feature. On Cloudflare
+Workers, secrets and variables are exposed through the `env` parameter of the
+fetch handler, not through `process.env`, so `S3_*` environment variables are
+not picked up. Workers deployments should either use the [`r2(config)`](#r2config)
+adapter or pass explicit values to `s3({...})`. See
+[Storage Options](/deployment/storage/#s3-compatible-storage) for details.
+
+## Object cache adapters
+
+Pass one of these to the [`objectCache`](#objectcache) option.
+
+### `kvCache(config)`
+
+Cloudflare KV backend, shared across all isolates. Import from `@emdash-cms/cloudflare`.
+
+```js
+kvCache({
+	binding: "CACHE", // KV binding name (required)
+	defaultTtl: 3600, // entry TTL in seconds (optional, KV minimum 60)
+	revalidate: 1000, // cross-isolate staleness window in ms (optional)
+	timeout: 2000, // per-op timeout in ms before a miss (optional, 0 disables)
+	keyPrefix: "em", // cache key prefix (optional)
+})
+```
+
+### `memoryCache(config?)`
+
+In-process backend for Node.js and development. Import from `emdash/astro`.
+
+```js
+memoryCache({
+	defaultTtl: 3600, // entry TTL in seconds (optional)
+	revalidate: 1000, // staleness window in ms (optional)
+	maxEntries: 1000, // max cached keys before eviction (optional)
+	keyPrefix: "em", // cache key prefix (optional)
+})
+```
+
+See [Object Cache](/deployment/object-cache/) for setup and behavior.
+
+## Authentication and sandbox adapters
+
+These adapters return values for the `auth` and `sandboxRunner` integration options.
+
+### `access(config)`
+
+Replaces the built-in passkey login with Cloudflare Access authentication. Import it from `@emdash-cms/cloudflare` and pass the result to [`auth`](#auth):
+
+```js
+import { access } from "@emdash-cms/cloudflare";
+
+emdash({
+	auth: access({
+		teamDomain: "myteam.cloudflareaccess.com",
+		audienceEnvVar: "CF_ACCESS_AUDIENCE",
+	}),
+});
+```
+
+`teamDomain` is required. The adapter can read the application audience from `audience` or from the variable named by `audienceEnvVar`; it also accepts `autoProvision`, `defaultRole`, `syncRoles`, and `roleMapping`. The [`auth`](#auth) option documents their defaults and role behavior.
+
+### `sandbox()`
+
+Selects Cloudflare Worker Loader as the plugin sandbox runner. Import it from `@emdash-cms/cloudflare` and pass its return value to [`sandboxRunner`](#sandboxrunner):
+
+```js
+import { sandbox } from "@emdash-cms/cloudflare";
+
+emdash({
+	sandboxRunner: sandbox(),
+});
+```
+
+The site also needs a Worker Loader binding and the plugin bridge entry point. See [Plugin Sandbox: Cloudflare Workers](/deployment/plugin-sandbox/#cloudflare-workers) for those deployment settings.
+
+## Media provider adapters
+
+Pass media provider descriptors to [`mediaProviders`](#mediaproviders). Both built-in Cloudflare providers are imported from `@emdash-cms/cloudflare`.
+
+Each `*EnvVar` option below names an environment variable. The provider reads it in this order: a Cloudflare Workers binding of that name, then `process.env` on the Node adapter. The matching direct option (`accountId`, `accountHash`, `apiToken`) always takes precedence over both.
+
+### `cloudflareImages(config)`
+
+Adds Cloudflare Images for browsing, uploading, deleting, and delivering image assets.
+
+| Option           | Type      | Default                  | Description                                      |
+| ---------------- | --------- | ------------------------ | ------------------------------------------------ |
+| `accountId`      | `string`  | From `CF_ACCOUNT_ID`     | Cloudflare account ID                            |
+| `accountIdEnvVar` | `string` | `"CF_ACCOUNT_ID"`        | Variable used when `accountId` is omitted        |
+| `accountHash`    | `string`  | From `CF_IMAGES_ACCOUNT_HASH` | Account hash used in delivery URLs           |
+| `accountHashEnvVar` | `string` | `"CF_IMAGES_ACCOUNT_HASH"` | Variable used when `accountHash` is omitted |
+| `apiToken`       | `string`  | From `CF_IMAGES_TOKEN`   | Token with Cloudflare Images read and edit permissions |
+| `apiTokenEnvVar` | `string`  | `"CF_IMAGES_TOKEN"`      | Variable used when `apiToken` is omitted         |
+| `deliveryDomain` | `string`  | `imagedelivery.net`      | Custom image delivery hostname                   |
+| `defaultVariant` | `string`  | `"public"`               | Image variant used for display                   |
+
+```js
+mediaProviders: [cloudflareImages({ defaultVariant: "public" })];
+```
+
+### `cloudflareStream(config)`
+
+Adds Cloudflare Stream for browsing, searching, uploading, deleting, and playing video assets.
+
+| Option              | Type      | Default                | Description                                      |
+| ------------------- | --------- | ---------------------- | ------------------------------------------------ |
+| `accountId`         | `string`  | From `CF_ACCOUNT_ID`   | Cloudflare account ID                            |
+| `accountIdEnvVar`   | `string`  | `"CF_ACCOUNT_ID"`      | Variable used when `accountId` is omitted        |
+| `apiToken`          | `string`  | From `CF_STREAM_TOKEN` | Token with Cloudflare Stream read and edit permissions |
+| `apiTokenEnvVar`    | `string`  | `"CF_STREAM_TOKEN"`    | Variable used when `apiToken` is omitted         |
+| `customerSubdomain` | `string`  | Cloudflare default     | Custom Stream delivery hostname                  |
+| `controls`          | `boolean` | `true`                 | Show player controls                             |
+| `autoplay`          | `boolean` | `false`                | Start playback automatically                     |
+| `loop`              | `boolean` | `false`                | Repeat playback                                  |
+| `muted`             | `boolean` | `false`, or `true` with autoplay | Mute playback                         |
+
+```js
+mediaProviders: [cloudflareStream({ controls: true })];
+```
+
+See [Media Library: Media providers](/guides/media-library/#media-providers) for the required bindings and rendering components.
+
+## Live collections
+
+Configure the EmDash loader in `src/live.config.ts`:
+
+```ts title="src/live.config.ts"
+import { defineLiveCollection } from "astro:content";
+import { emdashLoader } from "emdash/runtime";
+
+export const collections = {
+	_emdash: defineLiveCollection({
+		loader: emdashLoader(),
+	}),
+};
+```
+
+### Loader options
+
+The `emdashLoader()` function takes no arguments:
+
+```ts
+emdashLoader();
+```
+
+## Environment variables
+
+EmDash respects these environment variables:
+
+| Variable                  | Description                              |
+| ------------------------- | ---------------------------------------- |
+| `EMDASH_SITE_URL`         | Public browser-facing origin (falls back to `SITE_URL`) |
+| `EMDASH_ALLOWED_ORIGINS`  | Comma-separated list of additional origins accepted by passkey verification (multi-subdomain deployments). |
+| `EMDASH_DATABASE_URL`     | Override database URL                    |
+| `EMDASH_ENCRYPTION_KEY`   | Key for encrypting plugin secrets at rest. Operator-provided — never stored in the database. |
+| `EMDASH_PREVIEW_SECRET`   | Optional override for preview HMAC secret. When unset, a stable per-site value is generated and stored in the database. |
+| `EMDASH_IP_SALT`          | Optional override for the commenter-IP hash salt. When unset, a stable per-site value is generated and stored in the database. |
+| `EMDASH_AUTH_SECRET`      | Legacy. Used as the IP-salt source if set; existing installs should keep this to preserve stable commenter-IP hashes across upgrade. |
+| `EMDASH_TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key (falls back to `TURNSTILE_SECRET_KEY`). When set, comment submissions must include a valid Turnstile token — pair it with the `turnstileSiteKey` prop on `<CommentForm>`. |
+| `EMDASH_URL`              | Remote EmDash URL for schema sync         |
+
+Generate an encryption key with the following command:
+
+```bash
+npx emdash secrets generate
+```
+
+## package.json configuration
+
+Templates and sites can declare optional metadata under an `emdash` key in `package.json`:
+
+```json title="package.json"
+{
+	"emdash": {
+		"label": "My Blog Template",
+		"schema": ".emdash/schema.sql",
+		"seed": ".emdash/seed.json"
+	}
+}
+```
+
+| Option        | Description                        |
+| ------------- | ---------------------------------- |
+| `label`       | Template name for display          |
+| `schema`      | Optional SQL schema read by `emdash init` |
+| `seed`        | Path to seed JSON file             |
+
+## TypeScript configuration
+
+During local development, the Astro integration generates `emdash-env.d.ts` in the project root and refreshes it after schema changes. The file augments the `emdash` module, so the standard `getEmDashCollection()` and `getEmDashEntry()` imports infer local collection fields without a path alias.
+
+The separate `emdash types` command fetches schema from a running local or remote instance and writes `.emdash/types.ts` by default. Add an alias only when application code imports that standalone output directly:
+
+```json title="tsconfig.json"
+{
+	"compilerOptions": {
+		"paths": {
+			"@emdash-cms/types": ["./.emdash/types.ts"]
+		}
+	}
+}
+```
+
+Generate the standalone remote-schema types with the following command:
+
+```bash
+npx emdash types
+```

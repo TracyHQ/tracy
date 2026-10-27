@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "df5e2be4-c2bd-42bb-bbc7-409bae6355c3",
+  "status": "complete",
+  "name": "Coinbase Spain",
+  "url": "https://styles.refero.design/style/df5e2be4-c2bd-42bb-bbc7-409bae6355c3",
+  "sourceWebsite": "https://coinbase.com",
+  "extractedAt": "2026-04-11T17:43:55.835Z",
+  "capturedAt": "2026-10-08T05:18:24.542336+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Digital Trust, Blueprinted. A system built on the clarity of an architectural plan, energized by a single, electric blue neuron.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/fea0137f-1b3a-457e-9a6b-fc86d51d1174.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/787ff9bc-e79c-4274-97cf-aa5df8f9674b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/58f8b1d1-50d5-4aa3-bac3-7cfcb076077a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/60f536d0-3123-4366-a7f5-88dffdf5037a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0120abfe-f170-4832-85f7-335d26bf6754.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "af85d161d8d2305d28b115aebf1151b271d1bb3c4781956eec121e9a9cc4aa3d",
+      "bytes": 13680
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3226078279d8b274c3971a35d5f2d303d2e5c817ac5fc7d562d5bdc36af4e192",
+      "bytes": 99860
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e0cf18dd4f69a46bfb63a84a44b2ea148ac70841999349375430712f7c82b9e6",
+      "bytes": 24910
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2c6557fbdae4f4dca48ac3098137706b80983b48d54a6e789b6b167ad9e1fcf5",
+      "bytes": 10326
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "664b598105f4157d099e9724ee16f408d80fa1ff6f4cacb8e4b0f973f55db310",
+      "bytes": 7626
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7b28349799d1597cec153f3b8d190e5fc706cb621efc55ff719858289ed97d66",
+      "bytes": 2887
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "dd53f06d01eedd0e6229cb87ccd4224c0f799cf3e4e4a91ea863fd73ee0991ef",
+      "bytes": 802
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3e9cc7904ad7e8e29e934679e0f6d8220fd0814ab70891b4864727458fc22ac0",
+      "bytes": 819
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "836532018008772ddc87c90c3237c98ce4777dbba6f22dc3a6a398cedce24fa6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3644cffef6cb4a69796b988989178716069395a3f1137d827e87ad01f4a05d0d",
+      "bytes": 44675
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e98f6c6336ee304c4aa07a6e5fbddbfe2701c9c9e7b63a5823263ef944793cad",
+      "bytes": 22768
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "28c212310fc52814be1ad8f3e561624cb28f56a238cc5dd8e235b6d1733f11e8",
+      "bytes": 46726
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "cb1e4f7a7b5736235664950a9ec40e4278335c07060e90ecd215799e93553f86",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "572fcdf035b34b97fdad5f6742f9a91d4260d34164dc4b9d31a5aa968c27ce34",
+      "bytes": 1505
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a3288775e4a3d71e21670ccfcfeda717a58b5b9ea1bac483ecda8adafc1abea8",
+      "bytes": 1855
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "29392960-0acf-4891-ad33-28a72f6a9b75",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "530eb4cf-7e75-4833-95c9-746818050db7",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "86a6814d-2485-4fad-b6fd-56c2d0a23620",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "df5e2be4-c2bd-42bb-bbc7-409bae6355c3",
+    "e5b95270-9148-417a-89c6-32138d83a251",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

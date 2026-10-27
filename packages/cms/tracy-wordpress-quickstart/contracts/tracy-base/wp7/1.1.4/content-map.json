@@ -1,0 +1,4150 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from tracy-base/wp7 1.1.2's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "Tracy Base"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": "Precision, in every surface"
+    },
+    {
+      "key": "page-home",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home"
+      }
+    },
+    {
+      "key": "page-pricing",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "pricing"
+      }
+    },
+    {
+      "key": "page-product",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "product"
+      }
+    },
+    {
+      "key": "page-home-variation",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-variation"
+      }
+    },
+    {
+      "key": "page-home-2",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-2"
+      }
+    },
+    {
+      "key": "page-about",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about"
+      }
+    },
+    {
+      "key": "page-contact",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "contact"
+      }
+    },
+    {
+      "key": "page-faq",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "faq"
+      }
+    },
+    {
+      "key": "page-service-detail",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "service-detail"
+      }
+    },
+    {
+      "key": "page-careers",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "careers"
+      }
+    },
+    {
+      "key": "page-marketing-samples",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "marketing-samples"
+      }
+    },
+    {
+      "key": "page-home-onepage",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-onepage"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "Tracy Base",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "Precision, in every surface",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "home.testimonials.eyebrow",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The people",
+      "maxCharacters": 80,
+      "label": "home — testimonials.eyebrow"
+    },
+    {
+      "key": "home.testimonials.heading",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Different skills. A shared standard.",
+      "maxCharacters": 92,
+      "label": "home — testimonials.heading"
+    },
+    {
+      "key": "home.testimonials.quote.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shapes the visual direction and keeps each page focused on its audience.",
+      "maxCharacters": 164,
+      "label": "home — testimonials.quote.1"
+    },
+    {
+      "key": "home.testimonials.quote-name.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Adam Hale",
+      "maxCharacters": 80,
+      "label": "home — testimonials.quote-name.1"
+    },
+    {
+      "key": "home.testimonials.quote-role.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote-role.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design Director",
+      "maxCharacters": 80,
+      "label": "home — testimonials.quote-role.1"
+    },
+    {
+      "key": "home.testimonials.quote.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Turns the design into sections the team can maintain.",
+      "maxCharacters": 126,
+      "label": "home — testimonials.quote.2"
+    },
+    {
+      "key": "home.testimonials.quote-name.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Peter Lang",
+      "maxCharacters": 80,
+      "label": "home — testimonials.quote-name.2"
+    },
+    {
+      "key": "home.testimonials.quote-role.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote-role.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Development Lead",
+      "maxCharacters": 80,
+      "label": "home — testimonials.quote-role.2"
+    },
+    {
+      "key": "home.testimonials.quote.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brings customer questions into the project from the start.",
+      "maxCharacters": 136,
+      "label": "home — testimonials.quote.3"
+    },
+    {
+      "key": "home.testimonials.quote-name.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lucas Meyer",
+      "maxCharacters": 80,
+      "label": "home — testimonials.quote-name.3"
+    },
+    {
+      "key": "home.testimonials.quote-role.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.quote-role.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Research Lead",
+      "maxCharacters": 80,
+      "label": "home — testimonials.quote-role.3"
+    },
+    {
+      "key": "pricing.pricing.eyebrow",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pricing",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.eyebrow"
+    },
+    {
+      "key": "pricing.pricing.heading",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Choose the level of support that fits.",
+      "maxCharacters": 96,
+      "label": "pricing — pricing.heading"
+    },
+    {
+      "key": "pricing.pricing.intro",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Illustrative plans for this demo studio. Scope and prices are examples, not an offer from Tracy.",
+      "maxCharacters": 212,
+      "label": "pricing — pricing.intro"
+    },
+    {
+      "key": "pricing.pricing.tier-name.1",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Starter",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-name.1"
+    },
+    {
+      "key": "pricing.pricing.tier-summary.1",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-summary.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For a small website with occasional updates.",
+      "maxCharacters": 108,
+      "label": "pricing — pricing.tier-summary.1"
+    },
+    {
+      "key": "pricing.pricing.tier-price.1",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$0",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-price.1"
+    },
+    {
+      "key": "pricing.pricing.tier-period.1",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-period.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "demo plan",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-period.1"
+    },
+    {
+      "key": "pricing.pricing.tier-action.1",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-action.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discuss Starter",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-action.1"
+    },
+    {
+      "key": "pricing.pricing.tier-action.1.url",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-action.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "pricing — pricing.tier-action.1 (link)"
+    },
+    {
+      "key": "pricing.pricing.tier-badge.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-badge.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Example package",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-badge.2"
+    },
+    {
+      "key": "pricing.pricing.tier-name.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Studio",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-name.2"
+    },
+    {
+      "key": "pricing.pricing.tier-summary.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-summary.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For a team publishing and improving regularly.",
+      "maxCharacters": 112,
+      "label": "pricing — pricing.tier-summary.2"
+    },
+    {
+      "key": "pricing.pricing.tier-price.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$24",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-price.2"
+    },
+    {
+      "key": "pricing.pricing.tier-period.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-period.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "per month · demo",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-period.2"
+    },
+    {
+      "key": "pricing.pricing.tier-action.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-action.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discuss Studio",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-action.2"
+    },
+    {
+      "key": "pricing.pricing.tier-action.2.url",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-action.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "pricing — pricing.tier-action.2 (link)"
+    },
+    {
+      "key": "pricing.pricing.tier-name.3",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Foundry",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-name.3"
+    },
+    {
+      "key": "pricing.pricing.tier-summary.3",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-summary.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For several sites and a shared design system.",
+      "maxCharacters": 110,
+      "label": "pricing — pricing.tier-summary.3"
+    },
+    {
+      "key": "pricing.pricing.tier-price.3",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$96",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-price.3"
+    },
+    {
+      "key": "pricing.pricing.tier-period.3",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-period.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "per month · demo",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-period.3"
+    },
+    {
+      "key": "pricing.pricing.tier-action.3",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-action.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discuss Foundry",
+      "maxCharacters": 80,
+      "label": "pricing — pricing.tier-action.3"
+    },
+    {
+      "key": "pricing.pricing.tier-action.3.url",
+      "entity": "page-pricing",
+      "target": {
+        "block": "pricing.tier-action.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "pricing — pricing.tier-action.3 (link)"
+    },
+    {
+      "key": "pricing.accordion.eyebrow",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Questions",
+      "maxCharacters": 80,
+      "label": "pricing — accordion.eyebrow"
+    },
+    {
+      "key": "pricing.accordion.heading",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Before you choose",
+      "maxCharacters": 80,
+      "label": "pricing — accordion.heading"
+    },
+    {
+      "key": "pricing.accordion.entry-answer.1",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.entry-answer.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start with the audience, the main offer and the questions customers ask. These shape the brief and page plan.",
+      "maxCharacters": 238,
+      "label": "pricing — accordion.entry-answer.1"
+    },
+    {
+      "key": "pricing.accordion.entry-answer.2",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.entry-answer.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The demo uses editable Joomla articles and modules. Your team can replace words, images, links and section content through the admin.",
+      "maxCharacters": 286,
+      "label": "pricing — accordion.entry-answer.2"
+    },
+    {
+      "key": "pricing.accordion.entry-answer.3",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.entry-answer.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring your service information, brand assets and photographs you have permission to use. Agree who will review and approve the content.",
+      "maxCharacters": 290,
+      "label": "pricing — accordion.entry-answer.3"
+    },
+    {
+      "key": "pricing.accordion.entry-answer.4",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.entry-answer.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "An existing site can provide useful content and evidence about the customer journey. Review what to keep before deciding what to change.",
+      "maxCharacters": 292,
+      "label": "pricing — accordion.entry-answer.4"
+    },
+    {
+      "key": "pricing.accordion.entry-answer.5",
+      "entity": "page-pricing",
+      "target": {
+        "block": "accordion.entry-answer.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Confirm the deliverables, responsibilities and support needed for your project. The plans on this demo are illustrative examples.",
+      "maxCharacters": 278,
+      "label": "pricing — accordion.entry-answer.5"
+    },
+    {
+      "key": "pricing.cta-capsule.statement",
+      "entity": "page-pricing",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your next website needs to do.",
+      "maxCharacters": 106,
+      "label": "pricing — cta-capsule.statement"
+    },
+    {
+      "key": "pricing.cta-capsule.support",
+      "entity": "page-pricing",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring the idea, the existing site or the question you have not answered yet. Start with a conversation.",
+      "maxCharacters": 226,
+      "label": "pricing — cta-capsule.support"
+    },
+    {
+      "key": "pricing.cta-capsule.btn",
+      "entity": "page-pricing",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start a conversation",
+      "maxCharacters": 80,
+      "label": "pricing — cta-capsule.btn"
+    },
+    {
+      "key": "pricing.cta-capsule.btn.url",
+      "entity": "page-pricing",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "pricing — cta-capsule.btn (link)"
+    },
+    {
+      "key": "pricing.cta-capsule.link",
+      "entity": "page-pricing",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "pricing — cta-capsule.link"
+    },
+    {
+      "key": "pricing.cta-capsule.link.url",
+      "entity": "page-pricing",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "pricing — cta-capsule.link (link)"
+    },
+    {
+      "key": "product.hero.eyebrow",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Your website, ready to grow",
+      "maxCharacters": 80,
+      "label": "product — hero.eyebrow"
+    },
+    {
+      "key": "product.hero.title",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A clear foundation for the work ahead.",
+      "maxCharacters": 96,
+      "label": "product — hero.title"
+    },
+    {
+      "key": "product.hero.lead",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.lead",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Flexible pages, editable content and a consistent design language help your team keep the website moving.",
+      "maxCharacters": 230,
+      "label": "product — hero.lead"
+    },
+    {
+      "key": "product.hero.btn-1",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.btn-1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore sample plans",
+      "maxCharacters": 80,
+      "label": "product — hero.btn-1"
+    },
+    {
+      "key": "product.hero.btn-1.url",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.btn-1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/pricing",
+      "maxCharacters": 2048,
+      "label": "product — hero.btn-1 (link)"
+    },
+    {
+      "key": "product.hero.btn-2",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.btn-2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Talk about a project",
+      "maxCharacters": 80,
+      "label": "product — hero.btn-2"
+    },
+    {
+      "key": "product.hero.btn-2.url",
+      "entity": "page-product",
+      "target": {
+        "block": "hero.btn-2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "product — hero.btn-2 (link)"
+    },
+    {
+      "key": "product.carousel.eyebrow",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What you get",
+      "maxCharacters": 80,
+      "label": "product — carousel.eyebrow"
+    },
+    {
+      "key": "product.carousel.heading",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The essentials, working together.",
+      "maxCharacters": 86,
+      "label": "product — carousel.heading"
+    },
+    {
+      "key": "product.carousel.intro",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A practical foundation for presenting the business and keeping content up to date.",
+      "maxCharacters": 184,
+      "label": "product — carousel.intro"
+    },
+    {
+      "key": "product.carousel.slide-kicker.1",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-kicker.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Foundations",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-kicker.1"
+    },
+    {
+      "key": "product.carousel.slide-title.1",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A recognisable identity",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-title.1"
+    },
+    {
+      "key": "product.carousel.slide-text.1",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-text.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A shared approach to colour, type and imagery connects the whole site.",
+      "maxCharacters": 160,
+      "label": "product — carousel.slide-text.1"
+    },
+    {
+      "key": "product.carousel.slide-kicker.2",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-kicker.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Layout",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-kicker.2"
+    },
+    {
+      "key": "product.carousel.slide-title.2",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pages with a purpose",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-title.2"
+    },
+    {
+      "key": "product.carousel.slide-text.2",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-text.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Choose the layout that helps a visitor understand the topic and next step.",
+      "maxCharacters": 168,
+      "label": "product — carousel.slide-text.2"
+    },
+    {
+      "key": "product.carousel.slide-kicker.3",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-kicker.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Content",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-kicker.3"
+    },
+    {
+      "key": "product.carousel.slide-title.3",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Content your team owns",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-title.3"
+    },
+    {
+      "key": "product.carousel.slide-text.3",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-text.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Edit text and images in the admin without rebuilding the page.",
+      "maxCharacters": 144,
+      "label": "product — carousel.slide-text.3"
+    },
+    {
+      "key": "product.carousel.slide-kicker.4",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-kicker.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dark",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-kicker.4"
+    },
+    {
+      "key": "product.carousel.slide-title.4",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Comfort in light and dark",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-title.4"
+    },
+    {
+      "key": "product.carousel.slide-text.4",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-text.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The same content stays readable in both appearance modes.",
+      "maxCharacters": 134,
+      "label": "product — carousel.slide-text.4"
+    },
+    {
+      "key": "product.carousel.slide-kicker.5",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-kicker.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Speed",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-kicker.5"
+    },
+    {
+      "key": "product.carousel.slide-title.5",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Room to keep improving",
+      "maxCharacters": 80,
+      "label": "product — carousel.slide-title.5"
+    },
+    {
+      "key": "product.carousel.slide-text.5",
+      "entity": "page-product",
+      "target": {
+        "block": "carousel.slide-text.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Reuse sections as services and customer needs change.",
+      "maxCharacters": 126,
+      "label": "product — carousel.slide-text.5"
+    },
+    {
+      "key": "product.tabs.eyebrow",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How it works",
+      "maxCharacters": 80,
+      "label": "product — tabs.eyebrow"
+    },
+    {
+      "key": "product.tabs.heading",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A process you can follow.",
+      "maxCharacters": 80,
+      "label": "product — tabs.heading"
+    },
+    {
+      "key": "product.tabs.tab-title.1",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.tab-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Understand the business first",
+      "maxCharacters": 80,
+      "label": "product — tabs.tab-title.1"
+    },
+    {
+      "key": "product.tabs.tab-body.1",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.tab-body.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We map the audience, offer and important customer questions before deciding what each page needs.",
+      "maxCharacters": 214,
+      "label": "product — tabs.tab-body.1"
+    },
+    {
+      "key": "product.tabs.tab-title.2",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.tab-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Review something concrete",
+      "maxCharacters": 80,
+      "label": "product — tabs.tab-title.2"
+    },
+    {
+      "key": "product.tabs.tab-body.2",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.tab-body.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Page concepts bring the message and design together. Reviews focus on clarity, hierarchy and the next action.",
+      "maxCharacters": 238,
+      "label": "product — tabs.tab-body.2"
+    },
+    {
+      "key": "product.tabs.tab-title.3",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.tab-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Keep the site useful",
+      "maxCharacters": 80,
+      "label": "product — tabs.tab-title.3"
+    },
+    {
+      "key": "product.tabs.tab-body.3",
+      "entity": "page-product",
+      "target": {
+        "block": "tabs.tab-body.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Editable content and a clear handover support the next update. Regular reviews help the site keep pace with the business.",
+      "maxCharacters": 262,
+      "label": "product — tabs.tab-body.3"
+    },
+    {
+      "key": "product.statistics.eyebrow",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The website toolkit",
+      "maxCharacters": 80,
+      "label": "product — statistics.eyebrow"
+    },
+    {
+      "key": "product.statistics.heading",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A reusable foundation.",
+      "maxCharacters": 80,
+      "label": "product — statistics.heading"
+    },
+    {
+      "key": "product.statistics.figure-value.1",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-value.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "152",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-value.1"
+    },
+    {
+      "key": "product.statistics.figure-caption.1",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-caption.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Included design systems",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-caption.1"
+    },
+    {
+      "key": "product.statistics.figure-value.2",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-value.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-value.2"
+    },
+    {
+      "key": "product.statistics.figure-caption.2",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-caption.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Appearance modes",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-caption.2"
+    },
+    {
+      "key": "product.statistics.figure-value.3",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-value.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "13",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-value.3"
+    },
+    {
+      "key": "product.statistics.figure-caption.3",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-caption.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Section types to combine",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-caption.3"
+    },
+    {
+      "key": "product.statistics.figure-value.4",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-value.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-value.4"
+    },
+    {
+      "key": "product.statistics.figure-caption.4",
+      "entity": "page-product",
+      "target": {
+        "block": "statistics.figure-caption.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Place to edit your content",
+      "maxCharacters": 80,
+      "label": "product — statistics.figure-caption.4"
+    },
+    {
+      "key": "product.cta-capsule.statement",
+      "entity": "page-product",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your next website needs to do.",
+      "maxCharacters": 106,
+      "label": "product — cta-capsule.statement"
+    },
+    {
+      "key": "product.cta-capsule.support",
+      "entity": "page-product",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring the idea, the existing site or the question you have not answered yet. Start with a conversation.",
+      "maxCharacters": 226,
+      "label": "product — cta-capsule.support"
+    },
+    {
+      "key": "product.cta-capsule.btn",
+      "entity": "page-product",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start a conversation",
+      "maxCharacters": 80,
+      "label": "product — cta-capsule.btn"
+    },
+    {
+      "key": "product.cta-capsule.btn.url",
+      "entity": "page-product",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "product — cta-capsule.btn (link)"
+    },
+    {
+      "key": "product.cta-capsule.link",
+      "entity": "page-product",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "product — cta-capsule.link"
+    },
+    {
+      "key": "product.cta-capsule.link.url",
+      "entity": "page-product",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "product — cta-capsule.link (link)"
+    },
+    {
+      "key": "home-variation.hero.eyebrow",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Thoughtful websites. Practical results.",
+      "maxCharacters": 98,
+      "label": "home-variation — hero.eyebrow"
+    },
+    {
+      "key": "home-variation.hero.title",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A better website starts with your business.",
+      "maxCharacters": 106,
+      "label": "home-variation — hero.title"
+    },
+    {
+      "key": "home-variation.hero.lead",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.lead",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Strategy, design and development for teams who want a clearer story and a website they can keep moving.",
+      "maxCharacters": 226,
+      "label": "home-variation — hero.lead"
+    },
+    {
+      "key": "home-variation.hero.btn-1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.btn-1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "home-variation — hero.btn-1"
+    },
+    {
+      "key": "home-variation.hero.btn-1.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.btn-1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "home-variation — hero.btn-1 (link)"
+    },
+    {
+      "key": "home-variation.hero.btn-2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.btn-2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet the studio",
+      "maxCharacters": 80,
+      "label": "home-variation — hero.btn-2"
+    },
+    {
+      "key": "home-variation.hero.btn-2.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.btn-2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/company/about",
+      "maxCharacters": 2048,
+      "label": "home-variation — hero.btn-2 (link)"
+    },
+    {
+      "key": "home-variation.story-chapter.statement",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "story-chapter.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Make the first impression feel like you.",
+      "maxCharacters": 100,
+      "label": "home-variation — story-chapter.statement"
+    },
+    {
+      "key": "home-variation.story-chapter.support",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "story-chapter.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We bring your message, visual identity and page structure together, so customers can understand what you do and where to go next.",
+      "maxCharacters": 278,
+      "label": "home-variation — story-chapter.support"
+    },
+    {
+      "key": "home-variation.story-chapter.link",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "story-chapter.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our approach",
+      "maxCharacters": 80,
+      "label": "home-variation — story-chapter.link"
+    },
+    {
+      "key": "home-variation.story-chapter.link.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "story-chapter.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "home-variation — story-chapter.link (link)"
+    },
+    {
+      "key": "home-variation.features-intro.eyebrow",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How we help",
+      "maxCharacters": 80,
+      "label": "home-variation — features-intro.eyebrow"
+    },
+    {
+      "key": "home-variation.features-intro.title",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "From the first question to the finished website.",
+      "maxCharacters": 116,
+      "label": "home-variation — features-intro.title"
+    },
+    {
+      "key": "home-variation.features-intro.lead",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.lead",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A connected service for planning the message, shaping the design and keeping the site useful.",
+      "maxCharacters": 206,
+      "label": "home-variation — features-intro.lead"
+    },
+    {
+      "key": "home-variation.features-intro.spotlight-label",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.spotlight-label",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The contract",
+      "maxCharacters": 80,
+      "label": "home-variation — features-intro.spotlight-label"
+    },
+    {
+      "key": "home-variation.features-intro.card-title.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Plan with purpose",
+      "maxCharacters": 80,
+      "label": "home-variation — features-intro.card-title.1"
+    },
+    {
+      "key": "home-variation.features-intro.card-text.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-text.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start with your audience and the decisions they need to make. We turn those questions into a focused page plan.",
+      "maxCharacters": 242,
+      "label": "home-variation — features-intro.card-text.1"
+    },
+    {
+      "key": "home-variation.features-intro.card-title.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design with clarity",
+      "maxCharacters": 80,
+      "label": "home-variation — features-intro.card-title.2"
+    },
+    {
+      "key": "home-variation.features-intro.card-text.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-text.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring typography, colour and imagery together so each page feels like the same business.",
+      "maxCharacters": 196,
+      "label": "home-variation — features-intro.card-text.2"
+    },
+    {
+      "key": "home-variation.features-intro.card-title.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Build for everyday use",
+      "maxCharacters": 80,
+      "label": "home-variation — features-intro.card-title.3"
+    },
+    {
+      "key": "home-variation.features-intro.card-text.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-text.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Give your team editable sections and a clear handover, with the main journeys tested on desktop and mobile.",
+      "maxCharacters": 234,
+      "label": "home-variation — features-intro.card-text.3"
+    },
+    {
+      "key": "home-variation.features-intro.card-title.4",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Keep improving",
+      "maxCharacters": 80,
+      "label": "home-variation — features-intro.card-title.4"
+    },
+    {
+      "key": "home-variation.features-intro.card-text.4",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "features-intro.card-text.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Review what customers need next, update the content and make the next useful change.",
+      "maxCharacters": 188,
+      "label": "home-variation — features-intro.card-text.4"
+    },
+    {
+      "key": "home-variation.statistics.eyebrow",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A clear working process",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.eyebrow"
+    },
+    {
+      "key": "home-variation.statistics.heading",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Four steps, one shared direction.",
+      "maxCharacters": 86,
+      "label": "home-variation — statistics.heading"
+    },
+    {
+      "key": "home-variation.statistics.figure-value.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-value.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-value.1"
+    },
+    {
+      "key": "home-variation.statistics.figure-caption.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-caption.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover the business",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-caption.1"
+    },
+    {
+      "key": "home-variation.statistics.figure-value.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-value.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-value.2"
+    },
+    {
+      "key": "home-variation.statistics.figure-caption.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-caption.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shape the experience",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-caption.2"
+    },
+    {
+      "key": "home-variation.statistics.figure-value.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-value.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-value.3"
+    },
+    {
+      "key": "home-variation.statistics.figure-caption.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-caption.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Build and review",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-caption.3"
+    },
+    {
+      "key": "home-variation.statistics.figure-value.4",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-value.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-value.4"
+    },
+    {
+      "key": "home-variation.statistics.figure-caption.4",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "statistics.figure-caption.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Launch and learn",
+      "maxCharacters": 80,
+      "label": "home-variation — statistics.figure-caption.4"
+    },
+    {
+      "key": "home-variation.pricing.eyebrow",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sample website care plans",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.eyebrow"
+    },
+    {
+      "key": "home-variation.pricing.heading",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Choose the level of support that fits.",
+      "maxCharacters": 96,
+      "label": "home-variation — pricing.heading"
+    },
+    {
+      "key": "home-variation.pricing.intro",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Illustrative plans for this demo studio. Scope and prices are examples, not an offer from Tracy.",
+      "maxCharacters": 212,
+      "label": "home-variation — pricing.intro"
+    },
+    {
+      "key": "home-variation.pricing.tier-name.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Starter",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-name.1"
+    },
+    {
+      "key": "home-variation.pricing.tier-summary.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-summary.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For a small website with occasional updates.",
+      "maxCharacters": 108,
+      "label": "home-variation — pricing.tier-summary.1"
+    },
+    {
+      "key": "home-variation.pricing.tier-price.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$0",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-price.1"
+    },
+    {
+      "key": "home-variation.pricing.tier-period.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-period.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "demo plan",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-period.1"
+    },
+    {
+      "key": "home-variation.pricing.tier-action.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-action.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discuss Starter",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-action.1"
+    },
+    {
+      "key": "home-variation.pricing.tier-action.1.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-action.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "home-variation — pricing.tier-action.1 (link)"
+    },
+    {
+      "key": "home-variation.pricing.tier-badge.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-badge.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Example package",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-badge.2"
+    },
+    {
+      "key": "home-variation.pricing.tier-name.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Studio",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-name.2"
+    },
+    {
+      "key": "home-variation.pricing.tier-summary.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-summary.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For a team publishing and improving regularly.",
+      "maxCharacters": 112,
+      "label": "home-variation — pricing.tier-summary.2"
+    },
+    {
+      "key": "home-variation.pricing.tier-price.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$24",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-price.2"
+    },
+    {
+      "key": "home-variation.pricing.tier-period.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-period.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "per month · demo",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-period.2"
+    },
+    {
+      "key": "home-variation.pricing.tier-action.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-action.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discuss Studio",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-action.2"
+    },
+    {
+      "key": "home-variation.pricing.tier-action.2.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-action.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "home-variation — pricing.tier-action.2 (link)"
+    },
+    {
+      "key": "home-variation.pricing.tier-name.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Foundry",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-name.3"
+    },
+    {
+      "key": "home-variation.pricing.tier-summary.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-summary.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For several sites and a shared design system.",
+      "maxCharacters": 110,
+      "label": "home-variation — pricing.tier-summary.3"
+    },
+    {
+      "key": "home-variation.pricing.tier-price.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$96",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-price.3"
+    },
+    {
+      "key": "home-variation.pricing.tier-period.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-period.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "per month · demo",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-period.3"
+    },
+    {
+      "key": "home-variation.pricing.tier-action.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-action.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discuss Foundry",
+      "maxCharacters": 80,
+      "label": "home-variation — pricing.tier-action.3"
+    },
+    {
+      "key": "home-variation.pricing.tier-action.3.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "pricing.tier-action.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "home-variation — pricing.tier-action.3 (link)"
+    },
+    {
+      "key": "home-variation.testimonials.eyebrow",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Illustrative client stories",
+      "maxCharacters": 80,
+      "label": "home-variation — testimonials.eyebrow"
+    },
+    {
+      "key": "home-variation.testimonials.heading",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What a good working relationship can feel like.",
+      "maxCharacters": 114,
+      "label": "home-variation — testimonials.heading"
+    },
+    {
+      "key": "home-variation.testimonials.quote.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The project began with questions about our customers. By the time we reviewed the design, everyone understood what each page needed to do.",
+      "maxCharacters": 296,
+      "label": "home-variation — testimonials.quote.1"
+    },
+    {
+      "key": "home-variation.testimonials.quote-name.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Alex Morgan",
+      "maxCharacters": 80,
+      "label": "home-variation — testimonials.quote-name.1"
+    },
+    {
+      "key": "home-variation.testimonials.quote-role.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote-role.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Marketing lead · fictional retail brand",
+      "maxCharacters": 98,
+      "label": "home-variation — testimonials.quote-role.1"
+    },
+    {
+      "key": "home-variation.testimonials.quote.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The handover made the difference. Our team knew where to change the content and could keep the site current.",
+      "maxCharacters": 236,
+      "label": "home-variation — testimonials.quote.2"
+    },
+    {
+      "key": "home-variation.testimonials.quote-name.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Jordan Lee",
+      "maxCharacters": 80,
+      "label": "home-variation — testimonials.quote-name.2"
+    },
+    {
+      "key": "home-variation.testimonials.quote-role.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote-role.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Operations lead · fictional consultancy",
+      "maxCharacters": 98,
+      "label": "home-variation — testimonials.quote-role.2"
+    },
+    {
+      "key": "home-variation.testimonials.quote.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Having the message, design and build discussed together made the review process much easier to follow.",
+      "maxCharacters": 224,
+      "label": "home-variation — testimonials.quote.3"
+    },
+    {
+      "key": "home-variation.testimonials.quote-name.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sam Rivera",
+      "maxCharacters": 80,
+      "label": "home-variation — testimonials.quote-name.3"
+    },
+    {
+      "key": "home-variation.testimonials.quote-role.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "testimonials.quote-role.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder · fictional creative business",
+      "maxCharacters": 94,
+      "label": "home-variation — testimonials.quote-role.3"
+    },
+    {
+      "key": "home-variation.clients.eyebrow",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Example client identities",
+      "maxCharacters": 80,
+      "label": "home-variation — clients.eyebrow"
+    },
+    {
+      "key": "home-variation.cta-capsule.statement",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your next website needs to do.",
+      "maxCharacters": 106,
+      "label": "home-variation — cta-capsule.statement"
+    },
+    {
+      "key": "home-variation.cta-capsule.support",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring the idea, the existing site or the question you have not answered yet. Start with a conversation.",
+      "maxCharacters": 226,
+      "label": "home-variation — cta-capsule.support"
+    },
+    {
+      "key": "home-variation.cta-capsule.btn",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start a conversation",
+      "maxCharacters": 80,
+      "label": "home-variation — cta-capsule.btn"
+    },
+    {
+      "key": "home-variation.cta-capsule.btn.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "home-variation — cta-capsule.btn (link)"
+    },
+    {
+      "key": "home-variation.cta-capsule.link",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "home-variation — cta-capsule.link"
+    },
+    {
+      "key": "home-variation.cta-capsule.link.url",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "home-variation — cta-capsule.link (link)"
+    },
+    {
+      "key": "home-2.hero.eyebrow",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet the studio",
+      "maxCharacters": 80,
+      "label": "home-2 — hero.eyebrow"
+    },
+    {
+      "key": "home-2.hero.title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Good websites are a team effort.",
+      "maxCharacters": 84,
+      "label": "home-2 — hero.title"
+    },
+    {
+      "key": "home-2.hero.lead",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.lead",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A small demo studio bringing research, design, content and development into the same conversation.",
+      "maxCharacters": 216,
+      "label": "home-2 — hero.lead"
+    },
+    {
+      "key": "home-2.hero.btn-1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.btn-1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet the team",
+      "maxCharacters": 80,
+      "label": "home-2 — hero.btn-1"
+    },
+    {
+      "key": "home-2.hero.btn-1.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.btn-1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/company/team",
+      "maxCharacters": 2048,
+      "label": "home-2 — hero.btn-1 (link)"
+    },
+    {
+      "key": "home-2.hero.btn-2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.btn-2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "home-2 — hero.btn-2"
+    },
+    {
+      "key": "home-2.hero.btn-2.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "hero.btn-2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "home-2 — hero.btn-2 (link)"
+    },
+    {
+      "key": "home-2.story-chapter.statement",
+      "entity": "page-home-2",
+      "target": {
+        "block": "story-chapter.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start with a conversation, not a page count.",
+      "maxCharacters": 108,
+      "label": "home-2 — story-chapter.statement"
+    },
+    {
+      "key": "home-2.story-chapter.support",
+      "entity": "page-home-2",
+      "target": {
+        "block": "story-chapter.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your customers need to understand and what your team needs to change. That gives the project a useful starting point.",
+      "maxCharacters": 280,
+      "label": "home-2 — story-chapter.support"
+    },
+    {
+      "key": "home-2.story-chapter.link",
+      "entity": "page-home-2",
+      "target": {
+        "block": "story-chapter.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Talk through a project",
+      "maxCharacters": 80,
+      "label": "home-2 — story-chapter.link"
+    },
+    {
+      "key": "home-2.story-chapter.link.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "story-chapter.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "home-2 — story-chapter.link (link)"
+    },
+    {
+      "key": "home-2.team.eyebrow",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The people",
+      "maxCharacters": 80,
+      "label": "home-2 — team.eyebrow"
+    },
+    {
+      "key": "home-2.team.heading",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Different skills. A shared standard.",
+      "maxCharacters": 92,
+      "label": "home-2 — team.heading"
+    },
+    {
+      "key": "home-2.team.member-name.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Adam Hale",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-name.1"
+    },
+    {
+      "key": "home-2.team.member-role.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-role.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design Director",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-role.1"
+    },
+    {
+      "key": "home-2.team.member-bio.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-bio.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shapes the visual direction and keeps each page focused on its audience.",
+      "maxCharacters": 164,
+      "label": "home-2 — team.member-bio.1"
+    },
+    {
+      "key": "home-2.team.member-name.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Peter Lang",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-name.2"
+    },
+    {
+      "key": "home-2.team.member-role.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-role.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Development Lead",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-role.2"
+    },
+    {
+      "key": "home-2.team.member-bio.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-bio.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Turns the design into sections the team can maintain.",
+      "maxCharacters": 126,
+      "label": "home-2 — team.member-bio.2"
+    },
+    {
+      "key": "home-2.team.member-name.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sofia Lindqvist",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-name.3"
+    },
+    {
+      "key": "home-2.team.member-role.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-role.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brand Designer",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-role.3"
+    },
+    {
+      "key": "home-2.team.member-bio.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-bio.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Connects the identity, words and images across the experience.",
+      "maxCharacters": 144,
+      "label": "home-2 — team.member-bio.3"
+    },
+    {
+      "key": "home-2.team.member-name.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lucas Meyer",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-name.4"
+    },
+    {
+      "key": "home-2.team.member-role.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-role.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Research Lead",
+      "maxCharacters": 80,
+      "label": "home-2 — team.member-role.4"
+    },
+    {
+      "key": "home-2.team.member-bio.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-bio.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brings customer questions into the project from the start.",
+      "maxCharacters": 136,
+      "label": "home-2 — team.member-bio.4"
+    },
+    {
+      "key": "home-2.accordion.eyebrow",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Questions",
+      "maxCharacters": 80,
+      "label": "home-2 — accordion.eyebrow"
+    },
+    {
+      "key": "home-2.accordion.heading",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Before you commit",
+      "maxCharacters": 80,
+      "label": "home-2 — accordion.heading"
+    },
+    {
+      "key": "home-2.accordion.entry-answer.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.entry-answer.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start with the audience, the main offer and the questions customers ask. These shape the brief and page plan.",
+      "maxCharacters": 238,
+      "label": "home-2 — accordion.entry-answer.1"
+    },
+    {
+      "key": "home-2.accordion.entry-answer.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.entry-answer.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The demo uses editable Joomla articles and modules. Your team can replace words, images, links and section content through the admin.",
+      "maxCharacters": 286,
+      "label": "home-2 — accordion.entry-answer.2"
+    },
+    {
+      "key": "home-2.accordion.entry-answer.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.entry-answer.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring your service information, brand assets and photographs you have permission to use. Agree who will review and approve the content.",
+      "maxCharacters": 290,
+      "label": "home-2 — accordion.entry-answer.3"
+    },
+    {
+      "key": "home-2.accordion.entry-answer.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.entry-answer.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "An existing site can provide useful content and evidence about the customer journey. Review what to keep before deciding what to change.",
+      "maxCharacters": 292,
+      "label": "home-2 — accordion.entry-answer.4"
+    },
+    {
+      "key": "home-2.accordion.entry-answer.5",
+      "entity": "page-home-2",
+      "target": {
+        "block": "accordion.entry-answer.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Confirm the deliverables, responsibilities and support needed for your project. The plans on this demo are illustrative examples.",
+      "maxCharacters": 278,
+      "label": "home-2 — accordion.entry-answer.5"
+    },
+    {
+      "key": "home-2.statistics.figure-value.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "statistics.figure-value.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "10",
+      "maxCharacters": 80,
+      "label": "home-2 — statistics.figure-value.1"
+    },
+    {
+      "key": "home-2.statistics.figure-caption.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "statistics.figure-caption.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Editable section blocks",
+      "maxCharacters": 80,
+      "label": "home-2 — statistics.figure-caption.1"
+    },
+    {
+      "key": "home-2.statistics.figure-value.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "statistics.figure-value.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "5",
+      "maxCharacters": 80,
+      "label": "home-2 — statistics.figure-value.2"
+    },
+    {
+      "key": "home-2.statistics.figure-caption.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "statistics.figure-caption.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Page layouts, each on its own style",
+      "maxCharacters": 90,
+      "label": "home-2 — statistics.figure-caption.2"
+    },
+    {
+      "key": "home-2.statistics.figure-value.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "statistics.figure-value.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "31",
+      "maxCharacters": 80,
+      "label": "home-2 — statistics.figure-value.3"
+    },
+    {
+      "key": "home-2.statistics.figure-caption.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "statistics.figure-caption.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Views covered end to end",
+      "maxCharacters": 80,
+      "label": "home-2 — statistics.figure-caption.3"
+    },
+    {
+      "key": "home-2.cta-capsule.statement",
+      "entity": "page-home-2",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your next website needs to do.",
+      "maxCharacters": 106,
+      "label": "home-2 — cta-capsule.statement"
+    },
+    {
+      "key": "home-2.cta-capsule.support",
+      "entity": "page-home-2",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring the idea, the existing site or the question you have not answered yet. Start with a conversation.",
+      "maxCharacters": 226,
+      "label": "home-2 — cta-capsule.support"
+    },
+    {
+      "key": "home-2.cta-capsule.btn",
+      "entity": "page-home-2",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start a conversation",
+      "maxCharacters": 80,
+      "label": "home-2 — cta-capsule.btn"
+    },
+    {
+      "key": "home-2.cta-capsule.btn.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "home-2 — cta-capsule.btn (link)"
+    },
+    {
+      "key": "home-2.cta-capsule.link",
+      "entity": "page-home-2",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "home-2 — cta-capsule.link"
+    },
+    {
+      "key": "home-2.cta-capsule.link.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "home-2 — cta-capsule.link (link)"
+    },
+    {
+      "key": "about.story-chapter.statement",
+      "entity": "page-about",
+      "target": {
+        "block": "story-chapter.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Make the first impression feel like you.",
+      "maxCharacters": 100,
+      "label": "about — story-chapter.statement"
+    },
+    {
+      "key": "about.story-chapter.support",
+      "entity": "page-about",
+      "target": {
+        "block": "story-chapter.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We bring your message, visual identity and page structure together, so customers can understand what you do and where to go next.",
+      "maxCharacters": 278,
+      "label": "about — story-chapter.support"
+    },
+    {
+      "key": "about.story-chapter.link",
+      "entity": "page-about",
+      "target": {
+        "block": "story-chapter.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our approach",
+      "maxCharacters": 80,
+      "label": "about — story-chapter.link"
+    },
+    {
+      "key": "about.story-chapter.link.url",
+      "entity": "page-about",
+      "target": {
+        "block": "story-chapter.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "about — story-chapter.link (link)"
+    },
+    {
+      "key": "about.statistics.eyebrow",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A clear working process",
+      "maxCharacters": 80,
+      "label": "about — statistics.eyebrow"
+    },
+    {
+      "key": "about.statistics.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Four steps, one shared direction.",
+      "maxCharacters": 86,
+      "label": "about — statistics.heading"
+    },
+    {
+      "key": "about.statistics.figure-value.1",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-value.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-value.1"
+    },
+    {
+      "key": "about.statistics.figure-caption.1",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-caption.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Discover the business",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-caption.1"
+    },
+    {
+      "key": "about.statistics.figure-value.2",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-value.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-value.2"
+    },
+    {
+      "key": "about.statistics.figure-caption.2",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-caption.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shape the experience",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-caption.2"
+    },
+    {
+      "key": "about.statistics.figure-value.3",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-value.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "03",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-value.3"
+    },
+    {
+      "key": "about.statistics.figure-caption.3",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-caption.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Build and review",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-caption.3"
+    },
+    {
+      "key": "about.statistics.figure-value.4",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-value.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "04",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-value.4"
+    },
+    {
+      "key": "about.statistics.figure-caption.4",
+      "entity": "page-about",
+      "target": {
+        "block": "statistics.figure-caption.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Launch and learn",
+      "maxCharacters": 80,
+      "label": "about — statistics.figure-caption.4"
+    },
+    {
+      "key": "about.team.eyebrow",
+      "entity": "page-about",
+      "target": {
+        "block": "team.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The people",
+      "maxCharacters": 80,
+      "label": "about — team.eyebrow"
+    },
+    {
+      "key": "about.team.heading",
+      "entity": "page-about",
+      "target": {
+        "block": "team.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Different skills. A shared standard.",
+      "maxCharacters": 92,
+      "label": "about — team.heading"
+    },
+    {
+      "key": "about.team.member-name.1",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Adam Hale",
+      "maxCharacters": 80,
+      "label": "about — team.member-name.1"
+    },
+    {
+      "key": "about.team.member-role.1",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-role.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design Director",
+      "maxCharacters": 80,
+      "label": "about — team.member-role.1"
+    },
+    {
+      "key": "about.team.member-bio.1",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-bio.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shapes the visual direction and keeps each page focused on its audience.",
+      "maxCharacters": 164,
+      "label": "about — team.member-bio.1"
+    },
+    {
+      "key": "about.team.member-name.2",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Peter Lang",
+      "maxCharacters": 80,
+      "label": "about — team.member-name.2"
+    },
+    {
+      "key": "about.team.member-role.2",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-role.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Development Lead",
+      "maxCharacters": 80,
+      "label": "about — team.member-role.2"
+    },
+    {
+      "key": "about.team.member-bio.2",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-bio.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Turns the design into sections the team can maintain.",
+      "maxCharacters": 126,
+      "label": "about — team.member-bio.2"
+    },
+    {
+      "key": "about.team.member-name.3",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sofia Lindqvist",
+      "maxCharacters": 80,
+      "label": "about — team.member-name.3"
+    },
+    {
+      "key": "about.team.member-role.3",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-role.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brand Designer",
+      "maxCharacters": 80,
+      "label": "about — team.member-role.3"
+    },
+    {
+      "key": "about.team.member-bio.3",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-bio.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Connects the identity, words and images across the experience.",
+      "maxCharacters": 144,
+      "label": "about — team.member-bio.3"
+    },
+    {
+      "key": "about.team.member-name.4",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lucas Meyer",
+      "maxCharacters": 80,
+      "label": "about — team.member-name.4"
+    },
+    {
+      "key": "about.team.member-role.4",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-role.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Research Lead",
+      "maxCharacters": 80,
+      "label": "about — team.member-role.4"
+    },
+    {
+      "key": "about.team.member-bio.4",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-bio.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brings customer questions into the project from the start.",
+      "maxCharacters": 136,
+      "label": "about — team.member-bio.4"
+    },
+    {
+      "key": "about.cta-capsule.statement",
+      "entity": "page-about",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your next website needs to do.",
+      "maxCharacters": 106,
+      "label": "about — cta-capsule.statement"
+    },
+    {
+      "key": "about.cta-capsule.support",
+      "entity": "page-about",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring the idea, the existing site or the question you have not answered yet. Start with a conversation.",
+      "maxCharacters": 226,
+      "label": "about — cta-capsule.support"
+    },
+    {
+      "key": "about.cta-capsule.btn",
+      "entity": "page-about",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start a conversation",
+      "maxCharacters": 80,
+      "label": "about — cta-capsule.btn"
+    },
+    {
+      "key": "about.cta-capsule.btn.url",
+      "entity": "page-about",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "about — cta-capsule.btn (link)"
+    },
+    {
+      "key": "about.cta-capsule.link",
+      "entity": "page-about",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "about — cta-capsule.link"
+    },
+    {
+      "key": "about.cta-capsule.link.url",
+      "entity": "page-about",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "about — cta-capsule.link (link)"
+    },
+    {
+      "key": "contact.contact-information.heading",
+      "entity": "page-contact",
+      "target": {
+        "block": "contact-information.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact information",
+      "maxCharacters": 80,
+      "label": "contact — contact-information.heading"
+    },
+    {
+      "key": "contact.contact-information.email-label",
+      "entity": "page-contact",
+      "target": {
+        "block": "contact-information.email-label",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Email · demo address",
+      "maxCharacters": 80,
+      "label": "contact — contact-information.email-label"
+    },
+    {
+      "key": "contact.contact-information.email",
+      "entity": "page-contact",
+      "target": {
+        "block": "contact-information.email",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "hello@tracy-base.example",
+      "maxCharacters": 80,
+      "label": "contact — contact-information.email"
+    },
+    {
+      "key": "contact.contact-information.notice",
+      "entity": "page-contact",
+      "target": {
+        "block": "contact-information.notice",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "This is a demonstration contact page. Replace the recipient email and business details before enabling enquiries for your own website.",
+      "maxCharacters": 288,
+      "label": "contact — contact-information.notice"
+    },
+    {
+      "key": "faq.accordion.entry-answer.1",
+      "entity": "page-faq",
+      "target": {
+        "block": "accordion.entry-answer.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start with the audience, the main offer and the questions customers ask. These shape the brief and page plan.",
+      "maxCharacters": 238,
+      "label": "faq — accordion.entry-answer.1"
+    },
+    {
+      "key": "faq.accordion.entry-answer.2",
+      "entity": "page-faq",
+      "target": {
+        "block": "accordion.entry-answer.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The demo uses editable Joomla articles and modules. Your team can replace words, images, links and section content through the admin.",
+      "maxCharacters": 286,
+      "label": "faq — accordion.entry-answer.2"
+    },
+    {
+      "key": "faq.accordion.entry-answer.3",
+      "entity": "page-faq",
+      "target": {
+        "block": "accordion.entry-answer.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring your service information, brand assets and photographs you have permission to use. Agree who will review and approve the content.",
+      "maxCharacters": 290,
+      "label": "faq — accordion.entry-answer.3"
+    },
+    {
+      "key": "faq.accordion.entry-answer.4",
+      "entity": "page-faq",
+      "target": {
+        "block": "accordion.entry-answer.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "An existing site can provide useful content and evidence about the customer journey. Review what to keep before deciding what to change.",
+      "maxCharacters": 292,
+      "label": "faq — accordion.entry-answer.4"
+    },
+    {
+      "key": "faq.accordion.entry-answer.5",
+      "entity": "page-faq",
+      "target": {
+        "block": "accordion.entry-answer.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Confirm the deliverables, responsibilities and support needed for your project. The plans on this demo are illustrative examples.",
+      "maxCharacters": 278,
+      "label": "faq — accordion.entry-answer.5"
+    },
+    {
+      "key": "service-detail.accordion.eyebrow",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "accordion.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Before you book",
+      "maxCharacters": 80,
+      "label": "service-detail — accordion.eyebrow"
+    },
+    {
+      "key": "service-detail.accordion.entry-answer.1",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "accordion.entry-answer.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Scope is agreed around your audience, content and the pages you need. A written brief records the deliverables.",
+      "maxCharacters": 242,
+      "label": "service-detail — accordion.entry-answer.1"
+    },
+    {
+      "key": "service-detail.accordion.entry-answer.2",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "accordion.entry-answer.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Review the work at agreed checkpoints and collect feedback in one place. Decisions stay connected to the purpose of each page.",
+      "maxCharacters": 272,
+      "label": "service-detail — accordion.entry-answer.2"
+    },
+    {
+      "key": "service-detail.accordion.entry-answer.3",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "accordion.entry-answer.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Your team receives an editing walk-through and a clear list of next steps. Ongoing support can be scoped separately.",
+      "maxCharacters": 252,
+      "label": "service-detail — accordion.entry-answer.3"
+    },
+    {
+      "key": "service-detail.cta-capsule.statement",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tell us what your next website needs to do.",
+      "maxCharacters": 106,
+      "label": "service-detail — cta-capsule.statement"
+    },
+    {
+      "key": "service-detail.cta-capsule.support",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring the idea, the existing site or the question you have not answered yet. Start with a conversation.",
+      "maxCharacters": 226,
+      "label": "service-detail — cta-capsule.support"
+    },
+    {
+      "key": "service-detail.cta-capsule.btn",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Start a conversation",
+      "maxCharacters": 80,
+      "label": "service-detail — cta-capsule.btn"
+    },
+    {
+      "key": "service-detail.cta-capsule.btn.url",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "service-detail — cta-capsule.btn (link)"
+    },
+    {
+      "key": "service-detail.cta-capsule.link",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore our services",
+      "maxCharacters": 80,
+      "label": "service-detail — cta-capsule.link"
+    },
+    {
+      "key": "service-detail.cta-capsule.link.url",
+      "entity": "page-service-detail",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/services",
+      "maxCharacters": 2048,
+      "label": "service-detail — cta-capsule.link (link)"
+    },
+    {
+      "key": "careers.timeline.eyebrow",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A fictional studio timeline",
+      "maxCharacters": 80,
+      "label": "careers — timeline.eyebrow"
+    },
+    {
+      "key": "careers.timeline.heading",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Small steps, a shared direction.",
+      "maxCharacters": 84,
+      "label": "careers — timeline.heading"
+    },
+    {
+      "key": "careers.timeline.intro",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.intro",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "An example company story for you to replace with your own milestones.",
+      "maxCharacters": 158,
+      "label": "careers — timeline.intro"
+    },
+    {
+      "key": "careers.timeline.entry-marker.1",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-marker.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2019",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-marker.1"
+    },
+    {
+      "key": "careers.timeline.entry-title.1",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A studio takes shape",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-title.1"
+    },
+    {
+      "key": "careers.timeline.entry-text.1",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-text.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our fictional team begins by bringing design and development together.",
+      "maxCharacters": 160,
+      "label": "careers — timeline.entry-text.1"
+    },
+    {
+      "key": "careers.timeline.entry-marker.2",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-marker.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2021",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-marker.2"
+    },
+    {
+      "key": "careers.timeline.entry-title.2",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A clearer working process",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-title.2"
+    },
+    {
+      "key": "careers.timeline.entry-text.2",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-text.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The sample studio introduces shared project briefs and review checkpoints.",
+      "maxCharacters": 168,
+      "label": "careers — timeline.entry-text.2"
+    },
+    {
+      "key": "careers.timeline.entry-marker.3",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-marker.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2023",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-marker.3"
+    },
+    {
+      "key": "careers.timeline.entry-title.3",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Content joins the conversation",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-title.3"
+    },
+    {
+      "key": "careers.timeline.entry-text.3",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-text.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Research and editorial planning become part of every project conversation.",
+      "maxCharacters": 168,
+      "label": "careers — timeline.entry-text.3"
+    },
+    {
+      "key": "careers.timeline.entry-marker.4",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-marker.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2026",
+      "maxCharacters": 80,
+      "label": "careers — timeline.entry-marker.4"
+    },
+    {
+      "key": "careers.timeline.entry-title.4",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A foundation for the next chapter",
+      "maxCharacters": 86,
+      "label": "careers — timeline.entry-title.4"
+    },
+    {
+      "key": "careers.timeline.entry-text.4",
+      "entity": "page-careers",
+      "target": {
+        "block": "timeline.entry-text.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Reusable page sections help the team support a wider range of sites.",
+      "maxCharacters": 156,
+      "label": "careers — timeline.entry-text.4"
+    },
+    {
+      "key": "careers.cta-capsule.statement",
+      "entity": "page-careers",
+      "target": {
+        "block": "cta-capsule.statement",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Bring a different perspective.",
+      "maxCharacters": 80,
+      "label": "careers — cta-capsule.statement"
+    },
+    {
+      "key": "careers.cta-capsule.support",
+      "entity": "page-careers",
+      "target": {
+        "block": "cta-capsule.support",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "This is an example careers section. Replace it with your open roles, working arrangements and application process.",
+      "maxCharacters": 248,
+      "label": "careers — cta-capsule.support"
+    },
+    {
+      "key": "careers.cta-capsule.btn",
+      "entity": "page-careers",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact the studio",
+      "maxCharacters": 80,
+      "label": "careers — cta-capsule.btn"
+    },
+    {
+      "key": "careers.cta-capsule.btn.url",
+      "entity": "page-careers",
+      "target": {
+        "block": "cta-capsule.btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/resources/contact",
+      "maxCharacters": 2048,
+      "label": "careers — cta-capsule.btn (link)"
+    },
+    {
+      "key": "careers.cta-capsule.link",
+      "entity": "page-careers",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet the demo team",
+      "maxCharacters": 80,
+      "label": "careers — cta-capsule.link"
+    },
+    {
+      "key": "careers.cta-capsule.link.url",
+      "entity": "page-careers",
+      "target": {
+        "block": "cta-capsule.link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/company/team",
+      "maxCharacters": 2048,
+      "label": "careers — cta-capsule.link (link)"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.eyebrow",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tracy Base · Creative collection",
+      "maxCharacters": 84,
+      "label": "marketing-samples — marketing-samples.eyebrow"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.heading",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "One identity. Every message.",
+      "maxCharacters": 80,
+      "label": "marketing-samples — marketing-samples.heading"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.lead",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.lead",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "An illustrative independent website studio bringing strategy, brand design and development together.",
+      "maxCharacters": 220,
+      "label": "marketing-samples — marketing-samples.lead"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.sample-description.1",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.sample-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A studio digest: a lead story, three numbered services and one reading action.",
+      "maxCharacters": 176,
+      "label": "marketing-samples — marketing-samples.sample-description.1"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.sample-description.2",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.sample-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A single announcement about the studio offer, with one next step.",
+      "maxCharacters": 150,
+      "label": "marketing-samples — marketing-samples.sample-description.2"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.sample-description.3",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.sample-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A 3:4 campaign sheet stating what the studio does and where to start.",
+      "maxCharacters": 158,
+      "label": "marketing-samples — marketing-samples.sample-description.3"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.sample-description.4",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.sample-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "An eleven-slide studio introduction. Use the arrow keys or slide controls to explore.",
+      "maxCharacters": 190,
+      "label": "marketing-samples — marketing-samples.sample-description.4"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.sample-description.5",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.sample-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "A split-screen enquiry layout. It is a preview: nothing is sent.",
+      "maxCharacters": 148,
+      "label": "marketing-samples — marketing-samples.sample-description.5"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.sample-description.6",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.sample-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Type specimens, colour roles and spacing, written in the studio voice.",
+      "maxCharacters": 160,
+      "label": "marketing-samples — marketing-samples.sample-description.6"
+    },
+    {
+      "key": "marketing-samples.marketing-samples.note",
+      "entity": "page-marketing-samples",
+      "target": {
+        "block": "marketing-samples.note",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tracy Base is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy. Forms, subscriptions and campaign actions are previews; no information is submitted.",
+      "maxCharacters": 416,
+      "label": "marketing-samples — marketing-samples.note"
+    },
+    {
+      "key": "home-onepage.team.eyebrow",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.eyebrow",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "People behind the work",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.eyebrow"
+    },
+    {
+      "key": "home-onepage.team.heading",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.heading",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Different skills. A shared standard.",
+      "maxCharacters": 92,
+      "label": "home-onepage — team.heading"
+    },
+    {
+      "key": "home-onepage.team.member-name.1",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Adam Hale",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-name.1"
+    },
+    {
+      "key": "home-onepage.team.member-role.1",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-role.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Design Director",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-role.1"
+    },
+    {
+      "key": "home-onepage.team.member-bio.1",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-bio.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shapes the visual direction and keeps each page focused on its audience.",
+      "maxCharacters": 164,
+      "label": "home-onepage — team.member-bio.1"
+    },
+    {
+      "key": "home-onepage.team.member-name.2",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Peter Lang",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-name.2"
+    },
+    {
+      "key": "home-onepage.team.member-role.2",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-role.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Development Lead",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-role.2"
+    },
+    {
+      "key": "home-onepage.team.member-bio.2",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-bio.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Turns the design into sections the team can maintain.",
+      "maxCharacters": 126,
+      "label": "home-onepage — team.member-bio.2"
+    },
+    {
+      "key": "home-onepage.team.member-name.3",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sofia Lindqvist",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-name.3"
+    },
+    {
+      "key": "home-onepage.team.member-role.3",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-role.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brand Designer",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-role.3"
+    },
+    {
+      "key": "home-onepage.team.member-bio.3",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-bio.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Connects the identity, words and images across the experience.",
+      "maxCharacters": 144,
+      "label": "home-onepage — team.member-bio.3"
+    },
+    {
+      "key": "home-onepage.team.member-name.4",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lucas Meyer",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-name.4"
+    },
+    {
+      "key": "home-onepage.team.member-role.4",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-role.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Research Lead",
+      "maxCharacters": 80,
+      "label": "home-onepage — team.member-role.4"
+    },
+    {
+      "key": "home-onepage.team.member-bio.4",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-bio.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brings customer questions into the project from the start.",
+      "maxCharacters": 136,
+      "label": "home-onepage — team.member-bio.4"
+    },
+    {
+      "key": "home-variation.hero.hero-image",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "hero.hero-image",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/studio-workspace-1.png",
+      "sampleId": 161,
+      "maxCharacters": 255,
+      "label": "home-variation — hero.hero-image"
+    },
+    {
+      "key": "home-variation.story-chapter.media",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "story-chapter.media",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/chapter-precision-1.jpg",
+      "sampleId": 184,
+      "maxCharacters": 255,
+      "label": "home-variation — story-chapter.media"
+    },
+    {
+      "key": "home-variation.clients.mark-image.1",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.mark-image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mark-1-1.png",
+      "sampleId": 189,
+      "maxCharacters": 255,
+      "label": "home-variation — clients.mark-image.1"
+    },
+    {
+      "key": "home-variation.clients.mark-image.2",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.mark-image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mark-2-1.png",
+      "sampleId": 190,
+      "maxCharacters": 255,
+      "label": "home-variation — clients.mark-image.2"
+    },
+    {
+      "key": "home-variation.clients.mark-image.3",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.mark-image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mark-3-1.png",
+      "sampleId": 191,
+      "maxCharacters": 255,
+      "label": "home-variation — clients.mark-image.3"
+    },
+    {
+      "key": "home-variation.clients.mark-image.4",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.mark-image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mark-4-1.png",
+      "sampleId": 192,
+      "maxCharacters": 255,
+      "label": "home-variation — clients.mark-image.4"
+    },
+    {
+      "key": "home-variation.clients.mark-image.5",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.mark-image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mark-5-1.png",
+      "sampleId": 193,
+      "maxCharacters": 255,
+      "label": "home-variation — clients.mark-image.5"
+    },
+    {
+      "key": "home-variation.clients.mark-image.6",
+      "entity": "page-home-variation",
+      "target": {
+        "block": "clients.mark-image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mark-6-1.png",
+      "sampleId": 194,
+      "maxCharacters": 255,
+      "label": "home-variation — clients.mark-image.6"
+    },
+    {
+      "key": "home-2.story-chapter.media",
+      "entity": "page-home-2",
+      "target": {
+        "block": "story-chapter.media",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/chapter-material-1.jpg",
+      "sampleId": 186,
+      "maxCharacters": 255,
+      "label": "home-2 — story-chapter.media"
+    },
+    {
+      "key": "home-2.team.member-portrait.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-portrait.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-1-1.jpg",
+      "sampleId": 163,
+      "maxCharacters": 255,
+      "label": "home-2 — team.member-portrait.1"
+    },
+    {
+      "key": "home-2.team.member-portrait.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-portrait.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-2-1.jpg",
+      "sampleId": 164,
+      "maxCharacters": 255,
+      "label": "home-2 — team.member-portrait.2"
+    },
+    {
+      "key": "home-2.team.member-portrait.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-portrait.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-3-1.jpg",
+      "sampleId": 165,
+      "maxCharacters": 255,
+      "label": "home-2 — team.member-portrait.3"
+    },
+    {
+      "key": "home-2.team.member-portrait.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "team.member-portrait.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-4-1.jpg",
+      "sampleId": 166,
+      "maxCharacters": 255,
+      "label": "home-2 — team.member-portrait.4"
+    },
+    {
+      "key": "about.story-chapter.media",
+      "entity": "page-about",
+      "target": {
+        "block": "story-chapter.media",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/chapter-precision-1.jpg",
+      "sampleId": 184,
+      "maxCharacters": 255,
+      "label": "about — story-chapter.media"
+    },
+    {
+      "key": "about.team.member-portrait.1",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-portrait.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-1-1.jpg",
+      "sampleId": 163,
+      "maxCharacters": 255,
+      "label": "about — team.member-portrait.1"
+    },
+    {
+      "key": "about.team.member-portrait.2",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-portrait.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-2-1.jpg",
+      "sampleId": 164,
+      "maxCharacters": 255,
+      "label": "about — team.member-portrait.2"
+    },
+    {
+      "key": "about.team.member-portrait.3",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-portrait.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-3-1.jpg",
+      "sampleId": 165,
+      "maxCharacters": 255,
+      "label": "about — team.member-portrait.3"
+    },
+    {
+      "key": "about.team.member-portrait.4",
+      "entity": "page-about",
+      "target": {
+        "block": "team.member-portrait.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-4-1.jpg",
+      "sampleId": 166,
+      "maxCharacters": 255,
+      "label": "about — team.member-portrait.4"
+    },
+    {
+      "key": "home-onepage.team.member-portrait.1",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-portrait.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-1-1.jpg",
+      "sampleId": 163,
+      "maxCharacters": 255,
+      "label": "home-onepage — team.member-portrait.1"
+    },
+    {
+      "key": "home-onepage.team.member-portrait.2",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-portrait.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-2-1.jpg",
+      "sampleId": 164,
+      "maxCharacters": 255,
+      "label": "home-onepage — team.member-portrait.2"
+    },
+    {
+      "key": "home-onepage.team.member-portrait.3",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-portrait.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-3-1.jpg",
+      "sampleId": 165,
+      "maxCharacters": 255,
+      "label": "home-onepage — team.member-portrait.3"
+    },
+    {
+      "key": "home-onepage.team.member-portrait.4",
+      "entity": "page-home-onepage",
+      "target": {
+        "block": "team.member-portrait.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/mem-4-1.jpg",
+      "sampleId": 166,
+      "maxCharacters": 255,
+      "label": "home-onepage — team.member-portrait.4"
+    }
+  ]
+}

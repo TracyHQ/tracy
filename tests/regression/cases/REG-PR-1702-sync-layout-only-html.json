@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1702-sync-layout-only-html",
+  "kind": "fix",
+  "title": "A Sync from live never lists as Tracy's version kept a column the live site (or the copy) only re-laid out — HTML re-indented by a CMS editor on save — while the other side's real change stands; both sides changing the text is still a conflict",
+  "pr": 1702,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-name-pattern=\"re-laid out|reader sees\" packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+  ],
+  "expect": [
+    "S1: the three layout cases pass: live-only layout keeps the copy's text with no kept, copy-only layout takes the live text with no kept, both changing the text is a kept conflict"
+  ],
+  "selectors": {
+    "host": "live_sync.py layout_text DbMerge.layout_change texts"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-layout-only-html.md",
+  "fence": "A sync never reports a conflict no person made",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=re-laid out|reader sees",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ]
+  }
+}

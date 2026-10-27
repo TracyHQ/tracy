@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+  "status": "complete",
+  "name": "Alveos One",
+  "url": "https://styles.refero.design/style/811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+  "sourceWebsite": "https://www.alveoslabs.com",
+  "extractedAt": "2026-06-03T19:54:31.490Z",
+  "capturedAt": "2026-10-08T05:14:11.137086+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "warm river-stone sanctuary — a still, cream-lit meditation room where a single graphite object rests in a pool of soft amber light.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0b6e5059-cb74-49e0-8143-1e35c5d4c491.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8162d0b2f4bfdd1c3192b1cc798b1e397b79fea7e41d80e4b010f06ee1a19185",
+      "bytes": 25604
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "bd2925ac814a1b7a6d4d1a39ba2e5c1908770000d058c26f1eef3046d3b1e4ad",
+      "bytes": 55895
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f60e12af12c4ddef4fbc970b039693e239300838167aacb949bfa4a386653b58",
+      "bytes": 20330
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1a6eaedbb922cd2a0fe6150d6f7599c8b02177f83e39a6276e3327ed2671b5db",
+      "bytes": 14998
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "db0346c8eaa028a0593adea21f4b4657dd5b66eb868bb8637e048490251e877e",
+      "bytes": 15197
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0fa51f7f4540c9103185934909b95b895c26502e1b7b912dd1a714c753d7a5f9",
+      "bytes": 5196
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7f04e7bc2ed8604076f31490ac22aef3fc7254094fd4daa1d512979e22628489",
+      "bytes": 1277
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "fd816f422c43927c848b03fc97724d026424a5b5903a74974369ea13fd22eef5",
+      "bytes": 1415
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6eb1a5aeb8732d55d7a9745e913fbb3b9e51890c9775df7f43733d66a0b9a5d1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ad1a6085ff806437326794d40274ba5ec98eaa3daa4261f8713eee88393069c1",
+      "bytes": 47472
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2d25dc21f19c1a454e29869df4b6765d6a3599a5fb23c08629a0e9658e266e46",
+      "bytes": 24414
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "715f740d34d2f1bb33a94bfa313437624b0c8968d806b9fe3e8de87b67f352e6",
+      "bytes": 59280
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "1dc8b534a2b6008f6ca15b4a20c22598ef6584afd2fc9febff79942a5694110e",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "03a42942af4dba69978c429abd390dc4448e1be0d9e7dac6ce6e65bbef6a394d",
+      "bytes": 2554
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c985815a55448cc18f6b329910c242ef880a3bb04459b4b7db5da88ebf69f601",
+      "bytes": 3296
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "035a098b-5a27-48a3-8a3a-c68a698e3eab",
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "76c761d8-4af1-4ed5-ba93-eeb60f7006b5",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b6f25b86-ffcf-42f1-9f37-5e37d08cb4ce",
+    "be17feca-c2bd-4e17-b4d2-ed3ae019a84c",
+    "e4e8fe86-47ed-4ddd-a6c6-2c28eae9aabe",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e9f5e976-53f7-42f5-a882-4e63b3c2f734",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

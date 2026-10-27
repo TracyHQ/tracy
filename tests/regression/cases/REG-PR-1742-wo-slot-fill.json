@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1742-wo-slot-fill",
+  "kind": "feat",
+  "title": "WO fills a template with a ready slot-roles sidecar group by group from the place profile, one entity per card",
+  "pr": 1742,
+  "area": "website-opportunities/slot-fill",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From the checkout, run the command in run.",
+    "It runs the domain tests of planSlotFill, slotFillPins and the place profile converters, the tests reading the three committed sidecars (Tracy Base j6 1.0.5, JA Restaurant wp7 1.0.1, Tracy Base EmDash 0.5.6), and the tests of the place profile a revision fills its slots from. No database or network is needed."
+  ],
+  "expect": [
+    "Every slot of a card group comes from one entity: a dish without a price keeps an empty price and never takes the next dish's price or photo.",
+    "With fewer entities than cards, every card keeps all its slots, neutral or empty; a withheld fact is never written.",
+    "A shortened menu price prints its full amount in the site language; a call to action links only to an accepted phone, mailbox or booking page.",
+    "A gym on Tracy Base Joomla gets no person, price or number; on JA Restaurant a cafe's dishes fill the dish cards with their own price and photo.",
+    "A release without a sidecar keeps the hand-made slot-role map pins unchanged.",
+    "A revision that froze its place profile fills its slots from that profile and its frozen assessment; an assessment naming another profile hash accepts no fact and says so in a note; a revision without the frozen column keeps the provisional read of its research.",
+    "A place that is not food (a gym, a spa) offers services, never dishes or drinks, from research, a brief or a v1 demo request; a restaurant keeps its dishes.",
+    "A dish photo the brief holds as a candidate and this build's vision calls a drink (a cafe's Phin sữa đá) fills the picture slot of that dish on the frozen-profile path, and only that dish's; without that vision label no dish photo is placed, and the frozen profile and its hash stay unchanged.",
+    "Each card's picture is its own entity's on all three CMSs: a card bound to a dish with a photo shows that photo; a card whose dish has no photo of this build takes the neutral placeholder and its manifest entry says empty, never another dish's photo (Pho bo has a photo, Bun cha none: the Bun cha card never shows the pho). On WordPress the template's dish items no slot covers take their own dish's photo with the dish's name as alt, or the neutral picture with the business name as alt; no picture is rotated across items. On EmDash a team member with no photo shows the place's own interior or exterior (manifest neutral), and a reviewer's avatar sits only beside that reviewer's words.",
+    "Without a sidecar the neutral item name follows the trade and the site language: a gym's is Service, a Vietnamese spa's the vi catalogue's service word, a cafe's Menu item; the agent hand-off and agent demo prompts name the same word and ask to hide or remove nothing.",
+    "On the frozen-profile path and the provisional read of an older revision alike, one assessment policy decides: a Google review fills one testimonial card with its own text, author, avatar and stars, a reviewer without an avatar never borrows another's, and a fact still marked not-on-demo never reaches any slot even when accepted by hand.",
+    "Google and Tripadvisor ratings and review counts, then follower counts (most first), then likes fill the stat cards, each (platform, metric) once; Instagram 12,400 followers and Facebook 3,100 likes print as '12,400' 'Instagram followers' and '3,100' 'Facebook likes' (12.400 and 'Người theo dõi trên Instagram' in Vietnamese) with that fact as their reference; a zero count is left out.",
+    "A sender passes a platform review or rating on only when every source is a Google or Tripadvisor https page; a testimonial or review it wrote itself stays withheld.",
+    "One category normaliser serves the profile and the brief: 'Gym' and 'gym' are fitness, 'hair salon' and 'day_spa' beauty, 'restaurant' food; a stated category nothing places offers services, and only a place with no category keeps dishes.",
+    "A Google or Tripadvisor review, a rating, a review count, a follower or like count and a guest's photo on Google Maps stay accepted however old they are; a phone number read more than 365 days ago is still stale. Testimonial cards show the newest review first.",
+    "The social-stats cache's count of a profile the place links to becomes that platform's statistic with its profile URL, measurement time and provider (an Instagram 12,400 prints '12,400' 'Instagram followers', a YouTube count 'YouTube subscribers'); when the same platform and metric was also read from a source page, only the latest measurement is kept.",
+    "A website that states a schema.org LocalBusiness subtype (HealthClub, BeautySalon, DaySpa, Dentist, LegalService, Physiotherapy, SportsClub, AutoBodyShop), in its merged profile or only in its website source row, with no Google category, is placed in that trade and offers services; a bare LocalBusiness is a stated category nothing places and offers services, never dishes; the crawler reads a type written as a schema.org IRI.",
+    "All tests pass."
+  ],
+  "selectors": {
+    "functions": "planSlotFill, slotFillPins, copyPinsOf, emdashSlotFillWrites, agentSlotFillOf, placeProfileOfRevision, offeringKindOf, withAcceptedDishPhotos, planPlacement, shapeReal, planEmdashPictures, emdashCardPictures, fillDishItems, dishItemPictures, contractCopyPins, renderAgentPrompt, agentDemoPrompt, assessProfile, provisionalAssessment, tradeOfCategory, defaultOfferingKind, statedTradeOf, socialStatsOfRead, tradeOfSchemaType, extractPage"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-slot-fill.test.mjs",
+      "packages/wo/website-opportunities/test/domain-slot-fill-reviews.test.mjs",
+      "packages/wo/website-opportunities/test/domain-trades.test.mjs",
+      "packages/wo/website-opportunities/test/domain-slot-fill-pins.test.mjs",
+      "packages/wo/website-opportunities/test/domain-place-profile-from-research.test.mjs",
+      "packages/wo/website-opportunities/test/domain-place-profile-adapters.test.mjs",
+      "packages/wo/website-opportunities/test/domain-dish-photos.test.mjs",
+      "packages/wo/website-opportunities/test/domain-fact-assessment-records.test.mjs",
+      "packages/wo/website-opportunities/test/domain-website-crawler.test.mjs",
+      "apps/tracy-web/test/wo-slot-fill.test.mjs",
+      "apps/tracy-web/test/wo-place-profile-of-revision.test.mjs",
+      "packages/wo/website-opportunities/test/domain-pictures-dish.test.mjs",
+      "packages/wo/website-opportunities/test/domain-contract-copy-pins.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs",
+      "apps/tracy-web/test/brief-real-pictures.test.mjs",
+      "apps/tracy-web/test/brief-wp-hide.test.mjs"
+    ],
+    "needs": []
+  }
+}

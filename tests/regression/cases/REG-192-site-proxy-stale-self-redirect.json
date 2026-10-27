@@ -1,0 +1,33 @@
+{
+  "id": "REG-192",
+  "kind": "fix",
+  "title": "A site redirect to its own hostname on a stale port or scheme (Joomla live_site from the old :8080 stand) lands on the address the visitor used, not on a refused connection",
+  "pr": 915,
+  "area": "web/site-proxy",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a throwaway PostgreSQL (for example: docker run -d --rm --name reg192-pg -e POSTGRES_PASSWORD=t -p 127.0.0.1:55432:5432 postgres:16-alpine) and wait until pg_isready answers.",
+    "S2: From the TCH checkout run: TEST_DATABASE_URL=postgres://postgres:t@127.0.0.1:55432/postgres node --test --test-reporter=tap apps/tracy-web/test/bar.test.mjs",
+    "S3: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below, then stop the PostgreSQL container.",
+    "S4: Run the REG-192 script; it additionally checks signed public origins, managed frame-policy reconciliation across all three CMS, authenticated preview ordering, and shared Apache/EmDash policy generation."
+  ],
+  "expect": [
+    "S2 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "\"a redirect to the site's OWN hostname on a stale port or scheme lands on the address the visitor used\" passes: a site answering `Location: http://stale.tracy.test:8080/` or `https://stale.tracy.test/en/?x=1` to a visitor on `http://stale.tracy.test:51710` is reframed to `http://stale.tracy.test:51710/` and `http://stale.tracy.test:51710/en/?x=1`.",
+    "'a redirect to a THIRD party is left exactly as the site wrote it' still passes: `https://checkout.stripe.com/x` is not touched.",
+    "'a redirect naming the INTERNAL container is reframed onto the address the visitor used', both EmDash redirect tests and 'a local CMS redirect that adds a port to its Docker hostname stays on the public site' still pass.",
+    "S4: Changing origin A to B at arbitrary ports updates managed policy exactly once on WordPress, Joomla and EmDash; content/mail/publish survive, custom and none remain unchanged, invalid or unsigned calls cannot write, and failed reconciliation returns a framable message before upstream."
+  ],
+  "selectors": {
+    "door": "`reframeLocation` in apps/tracy-web/src/bar/site-proxy.js, reached through the site hostname route of bar/route.js",
+    "header": "the `location` response header a site hostname answers"
+  },
+  "evidence": "01/10/2026: on a local stand a Joomla site born while TRACY_ORIGIN was http://tracy.test:8080 (before f3367844b2, 11/09) kept `$live_site = 'http://tracy-ai-8836f920.tracy.test:8080'`; pages rendered, but signing in or out inside the Browser tab showed 'tracy-ai-8836f920.tracy.test refused to connect'. Reproduced 05/10 on vincent-testing1 with live_site set to :8080: GET /index.php?option=com_users&view=login answered 301 to :8080 and the Browser tab showed the same error; after the fix the same GET and a sign-in POST (303) stay on :51710.",
+  "fence": "Mechanism only: the proxy runs under node --test with a stub upstream fetch and a real PostgreSQL. Not covered: a real Joomla or WordPress, a browser, absolute links the site prints INSIDE its HTML (canonical, og:url), which still name the stale address until its live_site / WP_HOME is corrected. Managed frame policy is also covered with temporary configuration files and fake Docker calls on all three CMS; preview ordering and signed host routes use real Hono requests. The separate stand iframe receipt is manual browser evidence, not part of this automated case.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-192.mjs"],
+    "needs": ["postgres"]
+  }
+}

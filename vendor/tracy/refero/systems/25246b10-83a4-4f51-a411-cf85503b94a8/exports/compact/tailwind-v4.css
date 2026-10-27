@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-parchment: #faf6f3;
+  --color-ash: #e5e7eb;
+  --color-smoke: #999999;
+  --color-silver: #b3b3b3;
+  --color-ink: #000000;
+  --color-bone: #ffffff;
+  --color-olive-charcoal: #3d3b2f;
+  --color-obsidian: #1d1d1b;
+  --color-saffron-dot: #ff6714;
+
+  /* Typography */
+  --font-eloquia-text: 'Eloquia Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

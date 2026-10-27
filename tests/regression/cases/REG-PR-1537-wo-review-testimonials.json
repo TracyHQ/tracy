@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1537-wo-review-testimonials",
+  "kind": "fix",
+  "title": "Collected Google reviews reach the demo as attributed testimonials without becoming business facts",
+  "pr": 1537,
+  "area": "website-opportunities/reviews",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Build and render a brief with collected Google reviews; inspect the CMS handoff prompt.",
+    "Send an attributed quotation and its supplied source link to the host judge, then remove attribution or alter the quote.",
+    "Put a price in a collected review and repeat that price as business copy."
+  ],
+  "expect": [
+    "Default brief includes the real review, author and source; handoff tells all CMS agents to fill testimonials verbatim and never invent an author or portrait.",
+    "An attributed quotation passes; missing attribution, missing supplied source link, an altered long quotation and an uncredited short review fail.",
+    "An attributed testimonial price is not flagged; the same price repeated in business copy the brief does not hold is flagged by facts-from-brief as sample content (the check passes: it fails only facts that contradict the research)."
+  ],
+  "selectors": {
+    "code": "domain/brief.mjs, domain/agent-prompt.mjs, opportunities/demo-qa.js briefOf, tracy-host/demo-qa.js checkNoGoogleReviewQuoted and checkFactsFromBrief"
+  },
+  "evidence": "tasks/evidence/wo-review-testimonials/verification.md",
+  "fence": "Separate review text from the business fact corpus; only exempt verbatim attributed testimonials from the historical quotation guard.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-brief.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "markdown includes collected reviews by default as attributed testimonials, with an explicit opt-out",
+      "collected Google reviews fill attributed testimonials without supplying business facts; booking still follows reservable",
+      "collected testimonials pass with author, Google and source link; uncredited, altered and short quotes fail",
+      "testimonial prices are opinions; the same price in business copy the brief does not hold is sample content"
+    ]
+  },
+  "history": [
+    "24/10/2026: 754d4ebc04 (23/10/2026) makes facts-from-brief fail only facts that contradict the research and flag unsupported ones as sample content; the price line and its test name follow. The review/fact separation this case fences is unchanged."
+  ]
+}

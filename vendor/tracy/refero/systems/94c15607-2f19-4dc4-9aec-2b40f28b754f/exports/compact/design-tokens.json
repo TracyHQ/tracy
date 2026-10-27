@@ -1,0 +1,34 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, primary surface, image card backgrounds, footer/header fields"
+    },
+    "ash": {
+      "$value": "#5a5a5a",
+      "$type": "color",
+      "$description": "Ash — Secondary structural elements, input borders, mid-tone dividers, muted UI chrome"
+    },
+    "ghost-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Ghost White — Primary text, heading fills, hairline borders, badge outlines, link strokes"
+    }
+  },
+  "font": {
+    "polysans": {
+      "$value": "PolySans",
+      "$type": "fontFamily",
+      "$description": "Sole typeface. Weight stays at 400 across every size from caption to display — hierarchy is created purely by scale and negative tracking, never by weight contrast. Display sizes (50–77px) use line-height 0.90–1.00 and letter-spacing compressed to -0.044em/-0.056em, pulling characters into tight sculptural forms. Body sits at 14–16px with 1.43 line-height for legibility. The single-weight discipline is the signature: no bold, no italic, no fallback hierarchy — scale is everything."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://minimalcollective.digital",
+      "siteName": "Minimal Collective",
+      "extractedAt": "2026-06-03T17:27:27.922Z",
+      "variant": "compact"
+    }
+  }
+}

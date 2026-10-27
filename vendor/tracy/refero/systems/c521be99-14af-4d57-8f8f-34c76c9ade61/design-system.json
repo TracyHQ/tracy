@@ -1,0 +1,307 @@
+{
+  "dos": [
+    "Use the sans font at weight 400 exclusively — never introduce bold, semibold, or medium weights; emphasis comes from size alone",
+    "Apply #f7e731 only for beta status pills, highlight text, and the single primary accent moment per viewport — never as a background fill for cards or sections",
+    "Set display headlines at 84px or larger with -0.025em letter-spacing to create the word-as-image effect",
+    "Use 12px mono with +0.025em tracking for all captions, timestamps, and metadata above headlines",
+    "Maintain the white canvas across the page body — use #f3f3f0 only for alternating section bands, never decorative gradients",
+    "Center-align hero headlines and display blocks — the layout reads top-to-bottom in a single column rhythm",
+    "Set all buttons to 14px Helvetica Neue Bold 700 — the one weight-700 moment in the system"
+  ],
+  "donts": [
+    "Don't add drop shadows, box-shadows, or elevation effects to any component — the design is intentionally flat",
+    "Don't introduce additional chromatic colors beyond #f7e731, the two near-grays (#eadcce, #aec2b8), and #d9ecee — the system is 95% achromatic by design",
+    "Don't use bold or semibold in the sans family — weight 400 carries the entire typographic voice",
+    "Don't set headlines below 42px on hero/display contexts — the scale jumps to communicate importance, not weight",
+    "Don't use 9999px radius on cards, inputs, or images — pills and buttons only; cards use 12px, inputs use 4px",
+    "Don't add a colored header bar, sidebar, or full-width nav — the floating centered pill is the only navigation pattern",
+    "Don't use the yellow (#f7e731) as a body text color on white backgrounds — the contrast ratio supports it but the brand intent reserves it for pill backgrounds and accent highlights"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f7e731",
+      "name": "Lemon Highlight",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis",
+      "group": "brand"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Ink Black",
+      "role": "Primary text, icons, button labels, nav links, form borders — the workhorse dark for all readable content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page background, card surfaces, button text on dark fills — the dominant canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Hairline borders, footer background, maximum-emphasis text — used where Ink Black is not dark enough",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6f6f6f",
+      "name": "Stone Gray",
+      "role": "Secondary body text, muted descriptions, inactive form labels — the softest readable gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f3f0",
+      "name": "Bone",
+      "role": "Alternate section background, subtle card surface — a warm off-white for band variation without breaking the monochrome",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeeeee",
+      "name": "Ash",
+      "role": "Button hover surfaces, disabled states, hairline dividers, input backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9ecee",
+      "name": "Mist",
+      "role": "Very subtle teal-tinted surface for rare color-washed sections — barely chromatic, almost a gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#aec2b8",
+      "name": "Sage Wash",
+      "role": "Gradient stop in decorative card backgrounds — a muted sage fading into off-white, used only in gradient form",
+      "group": "accent"
+    },
+    {
+      "hex": "#eadcce",
+      "name": "Linen",
+      "role": "Warm card background — a near-gray beige for section bands, the only warm neutral in the system",
+      "group": "accent"
+    }
+  ],
+  "layout": "Single-column centered layout with a max-width of ~1200px. The page model is a vertical scroll through alternating photo-text bands: centered headline → full-bleed photo → body text → next section. No sidebar, no multi-column content grid, no card grid for features. Navigation is a floating centered pill at the top — not a full-width bar. Section rhythm is generous (80px gaps) with hairline dividers or pure whitespace separating content. The hero is a large centered headline ('Say hello to Memo') over a full-bleed photograph. FAQ section uses a two-column layout (label left, accordion right) but all other content is centered single-column. Footer is a single full-width black band.",
+  "imagery": "Photography is the dominant visual medium — full-bleed product shots of the Memo robot in real domestic environments (kitchens, living spaces). Images are high-key, naturally lit, slightly desaturated, with warm and cool tones balanced to feel like editorial lifestyle photography. No illustrations, no 3D renders, no abstract graphics. Images have 12px border-radius (never sharp corners) and are treated as the hero of each section, with text overlaying or sitting directly beside them. Iconography is minimal: a few mono-weight line icons in nav (settings gear, hamburger menu) and a chevron for the FAQ accordion. No icon system beyond functional UI controls.",
+  "similar": [
+    {
+      "why": "Same editorial full-bleed photography, massive single-weight headlines, and monochrome canvas with minimal accent color",
+      "business": "Apple (product launch pages)"
+    },
+    {
+      "why": "Same confident restraint with dot-matrix mono captions above display headlines, and extreme typographic scale jumps",
+      "business": "Nothing (tech)"
+    },
+    {
+      "why": "Same product-launch-as-magazine-spread approach with full-bleed lifestyle photography and centered typographic hero",
+      "business": "Humane (AI pin)"
+    },
+    {
+      "why": "Same generous whitespace, hairline-only dividers, and refusal of drop shadows or card-based layouts",
+      "business": "Framework (laptops)"
+    },
+    {
+      "why": "Same single-weight typography approach, playful monochrome with occasional bright accent, and product-photo-as-hero discipline",
+      "business": "Teenage Engineering"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "pills": "9999px",
+      "images": "12px",
+      "inputs": "4px",
+      "buttons": "4px"
+    },
+    "elementGap": "12-24px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Default page background, dominant surface"
+    },
+    {
+      "hex": "#f3f3f0",
+      "name": "Warm Band",
+      "level": 1,
+      "purpose": "Alternate section background for rhythm variation"
+    },
+    {
+      "hex": "#eadcce",
+      "name": "Card Surface",
+      "level": 2,
+      "purpose": "Warm-tinted cards in product showcase areas"
+    },
+    {
+      "hex": "#d9ecee",
+      "name": "Muted Accent",
+      "level": 3,
+      "purpose": "Rare teal-tinted highlight surface"
+    },
+    {
+      "hex": "#000000",
+      "name": "Footer",
+      "level": 4,
+      "purpose": "Dark footer band as the only non-white surface inversion"
+    }
+  ],
+  "elevation": [],
+  "northStar": "Monochrome magazine spread with one yellow highlight",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.3
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.71
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.45
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.5
+    },
+    {
+      "role": "heading-lg",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "display",
+      "size": 84,
+      "lineHeight": 1,
+      "letterSpacing": -2.1
+    },
+    {
+      "role": "display-lg",
+      "size": 104,
+      "lineHeight": 1,
+      "letterSpacing": -2.6
+    },
+    {
+      "role": "display-xl",
+      "size": 120,
+      "lineHeight": 1,
+      "letterSpacing": -3
+    },
+    {
+      "role": "display-2xl",
+      "size": 142,
+      "lineHeight": 1,
+      "letterSpacing": -3.55
+    }
+  ],
+  "components": [
+    {
+      "name": "Beta Highlight Pill",
+      "role": "Status indicator and primary conversion element",
+      "description": "Pill-shaped button (#f7e731 background, #1a1a1a text), 9999px border-radius, 12px vertical / 20px horizontal padding, 14px Helvetica Neue Bold. Functions as the only chromatic interactive element on the page. Used in pairs: filled yellow pill on the left (primary), outlined yellow pill on the right (secondary)."
+    },
+    {
+      "name": "Outlined Action Pill",
+      "role": "Secondary conversion alongside the highlight pill",
+      "description": "Transparent background, #f7e731 border at 1.5px, #f7e731 text, 9999px radius, same 12px/20px padding as the filled pill. Pairs with the Beta Highlight Pill to create a visual weight hierarchy without adding a second color."
+    },
+    {
+      "name": "Centered Nav Bar",
+      "role": "Primary site navigation",
+      "description": "Floating white pill (4px radius) containing a small logo mark, the wordmark 'sunday' in 14px sans 400, and a hamburger icon. Centered at the top of the page with generous top margin. The pill form factor replaces a traditional full-width nav bar."
+    },
+    {
+      "name": "Display Headline Block",
+      "role": "Hero and section-level typography",
+      "description": "Centered text block with a 12px mono caption (positive tracking) above, followed by a sans 400 headline at 84–142px. The caption uses 0.025em tracking to feel like a magazine dateline; the headline uses -0.025em to feel like a single word-shape. Both are centered."
+    },
+    {
+      "name": "Full-Bleed Hero Image",
+      "role": "Product photography showcase",
+      "description": "Edge-to-edge photographic image with 12px border-radius. Display headline overlays the top portion in white at 84–104px when the image is dark, or in black when the image is light. No gradient overlay — the photograph carries the contrast."
+    },
+    {
+      "name": "FAQ Accordion",
+      "role": "Information architecture for common questions",
+      "description": "Two-column layout: left column holds the 'Frequently asked questions' label in 14px mono; right column contains stacked question rows. Each row is separated by a 1px #eeeeee hairline, with 16–20px vertical padding. Questions are 16–18px sans 400 in #1a1a1a, with a chevron icon right-aligned."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Vertical rhythm separator",
+      "description": "Invisible or hairline-only divider between sections. Uses 80px vertical gap or a 1px #eeeeee horizontal line. Never uses background color changes alone — the white canvas is sacred and rarely broken."
+    },
+    {
+      "name": "Footer",
+      "role": "Site closure",
+      "description": "Full-width #000000 black band. White text inside, 12–14px sans or mono. The only non-white surface on the page, creating a hard bookend against the white body."
+    },
+    {
+      "name": "Image Card",
+      "role": "Content containers with imagery",
+      "description": "12px border-radius, no border, no shadow. Contains a photograph or illustration with optional caption below in 14px mono. When on a non-white background, the card itself stays white (or uses #eadcce/#d9ecee for warm/cool variants)."
+    },
+    {
+      "name": "Ghost Nav Link",
+      "role": "Text-only navigation items",
+      "description": "No background, no border. 14px sans 400 in #1a1a1a. Hover state: color shift to #6f6f6f. No underline. Appears inside the nav pill."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The sole display and body typeface. A single weight (400) handles everything from 142px display headlines down to 16px body. The flat single-weight approach is a deliberate anti-SaaS choice — no bold, no semibold. Emphasis comes from size and the yellow accent, not weight. The slight negative tracking (-0.025em) tightens large display text into cohesive word-shapes.",
+      "sizes": "16px, 18px, 20px, 24px, 32px, 42px, 84px, 104px, 120px, 142px",
+      "family": "sans",
+      "weight": "400",
+      "lineHeight": "1.00–1.50",
+      "substitute": "Inter or GT America at weight 400",
+      "letterSpacing": "-0.025em (negative tracking on display sizes, relaxes toward 0 at body sizes)",
+      "fontFeatureSettings": "\"kern\" on, \"ss01\" on"
+    },
+    {
+      "role": "Captions, status labels, and small metadata. The positive letter-spacing (0.025em) gives these texts a typographic whisper — used for 'Beta launching late 2026' and similar timestamps that sit above display headlines. Creates a clear register separation from the sans display voice.",
+      "sizes": "12px, 14px",
+      "family": "mono",
+      "weight": "400",
+      "lineHeight": "1.14–1.43",
+      "substitute": "JetBrains Mono or IBM Plex Mono at weight 400",
+      "letterSpacing": "0.025em (positive tracking for technical/caption voice)",
+      "fontFeatureSettings": "\"kern\" on, \"ss01\" on"
+    },
+    {
+      "role": "Button text only — the one place bold weight appears, and it belongs to a different family (system Helvetica Neue Bold 700) to make CTAs visually distinct from headlines. The 14px size with 1.71 line-height and normal tracking creates a compact, button-typical cadence.",
+      "sizes": "14px",
+      "family": "Helvetica Neue",
+      "weight": "700",
+      "lineHeight": "1.71",
+      "substitute": "Helvetica Neue Bold (system font)",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Sunday presents Memo in an editorial product-launch register: a pure white canvas dominated by massive single-weight headlines, photographic storytelling, and a single vivid yellow used as rare punctuation against a near-total absence of color. Typography is the brand — one weight (400) stretched across a scale from 14px to 142px, with slight negative tracking on display sizes, giving the page the cadence of a magazine spread rather than a software product page. The interface is sparse to the point of asceticism: centered navigation, no sidebar, no cards with shadows, no decorative gradient meshes. Color appears only as functional signal — yellow for highlight states and beta CTAs, black for everything else. The visual system reads as confidence through restraint: the robot does the talking, the page stays out of the way.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text (primary): #1a1a1a\n- Text (secondary): #6f6f6f\n- Background: #ffffff\n- Border / hairline: #eeeeee\n- Accent (beta pill, highlight): #f7e731\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\n1. **Hero Display Headline**: Full-bleed background photo. Centered caption above: 'The helpful home robot' in 12px mono, #6f6f6f, letter-spacing 0.3px. Headline below: 'Say hello to Memo' in sans weight 400, 104px, #1a1a1a, letter-spacing -2.6px, line-height 1.0. Both centered.\n\n2. **Beta Highlight Pill**: #f7e731 background, 9999px border-radius, 12px padding-top, 20px padding-left/right. Text 'Join the Founding Family' in 14px Helvetica Neue Bold 700, #1a1a1a. Sits inside a floating bar with a secondary outlined pill beside it.\n\n3. **FAQ Accordion Row**: Full-width row with 1px #eeeeee bottom border, 20px vertical padding. Question text in 16px sans 400, #1a1a1a, left-aligned. Right-aligned chevron icon (simple line, 1.5px stroke) in #1a1a1a.\n\n4. **Section Body Text**: 18px sans 400, #1a1a1a, line-height 1.4, letter-spacing -0.45px. Max-width ~700px, centered within the 1200px page container. Follows a display headline block.\n\n5. **Full-Bleed Image Band**: Edge-to-edge photograph with 12px border-radius on the image itself, no overlay, no gradient. White text caption overlay in top-left at 14px sans 400 when image is dark; black when image is light."
+    }
+  ],
+  "elevationPhilosophy": "The design intentionally avoids shadows entirely. Elevation is communicated through surface color shifts (white → #f3f3f0 → #eadcce) and image content, never through drop shadows. This keeps the page feeling flat, editorial, and print-like rather than skeuomorphic or app-like."
+}

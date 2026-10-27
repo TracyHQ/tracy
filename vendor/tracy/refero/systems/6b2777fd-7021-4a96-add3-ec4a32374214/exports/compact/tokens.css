@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-warm-cream: #fffcf6;
+  --color-ink-black: #000000;
+  --color-charcoal: #333333;
+  --color-deep-panel: #161616;
+  --color-fog-gray: #8c8c8c;
+  --color-mist-gray: #cccccc;
+  --color-lilac-mist: #c4c9dd;
+  --color-bubblegum: #ff83da;
+  --color-cotton-pink: #ffc5ee;
+  --color-blush-mist: #f7e1f7;
+  --color-ice-blue: #d2f4ff;
+  --color-voltage-lime: #e8ff5b;
+
+  /* Typography — Font Families */
+  --font-soehne: 'Soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

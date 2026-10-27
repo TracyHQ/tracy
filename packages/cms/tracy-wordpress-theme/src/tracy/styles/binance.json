@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "Binance.US",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "#f5f5f5"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#1e2026"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#32313a"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#848e9c"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#777e90"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#e6e8ea"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "#f0f1f2"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#f0b90b"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#1e2026"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "#1eaedb"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "#d0980b"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#0ecb81"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#eab308"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#f6465d"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "BinancePlex, Arial, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "BinancePlex, Arial, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Monaco, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "11px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "20px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "24px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "28px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "34px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "60px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1200px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.5",
+        "tight": "1.0"
+      },
+      "tracking": {
+        "display": "0"
+      },
+      "sectionY": {
+        "desktop": "80px",
+        "tablet": "48px",
+        "phone": "32px"
+      },
+      "radius": {
+        "sm": "8px",
+        "md": "12px",
+        "lg": "24px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 3px 5px 0 rgba(32, 32, 37, 0.05)"
+      },
+      "focusRing": "0 0 0 2px #1eaedb",
+      "motion": {
+        "fast": "150ms",
+        "base": "200ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)"
+      },
+      "container": {
+        "max": "1200px",
+        "gutterDesktop": "32px",
+        "gutterTablet": "16px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "binance"
+      }
+    }
+  }
+}

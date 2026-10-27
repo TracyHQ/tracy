@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1204-sc3-sidebar",
+  "kind": "fix",
+  "title": "A site set up from its brief shows no 'Files changed; source unknown' row: the files the Tracy setup run's writes left (pictures, language pack, brand, Joomla template settings) ride on its own 'Tracy setup' row; and the side card's agent-opens socket keeps reconnecting on a page that was only idle; the Files tab fence answers a missing path in another site exactly like an existing one (no existence oracle); and 'Create with' no longer calls the design-pick door the chat-design-system switch has closed",
+  "pr": 1204,
+  "area": "site-changes/setup",
+  "cms": ["wp", "jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1 (SC-3, reader) on Postgres: TEST_DATABASE_URL=<url> node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='SC-3|sweep 4' apps/tracy-web/test/site-activity-v2.test.mjs",
+    "S2 (SC-3, the run holds the webroot) on Postgres: TEST_DATABASE_URL=<url> node --test --test-reporter=tap --test-name-pattern='webroot|moment' apps/tracy-web/test/brief-build.test.mjs and --test-name-pattern='setupWebroot' apps/tracy-web/test/sites-route.test.mjs",
+    "S3 (SC-3, host script, no database): node --test --test-reporter=tap --test-name-pattern='SC-3 setup run' packages/fleet/tracy-fleet-operation/test/webroot-git.test.mjs",
+    "S4 (SB-1, sidebar fork, needs `pnpm dsh:build`): in vendor/tracy/dsh-better-sidebar, VITE_CONFIG_NATIVE_IGNORE_WARNING=true ./node_modules/.bin/vitest run tests/agent-opens-reconnect.spec.tsx",
+    "S5 (SEC-2, sidebar fork + gateway contract): in vendor/tracy/dsh-better-sidebar, VITE_CONFIG_NATIVE_IGNORE_WARNING=true ./node_modules/.bin/vitest run tests/path-security-probe.spec.ts; then node --import tsx --test scripts/test/seat-isolation-files-tab.test.ts",
+    "S6 (DI-1, no database): node --test packages/design/tracy-design-inspiration/test/chat-route.test.mjs",
+    "All of it: node tests/regression/scripts/REG-PR-1204-sc3-sidebar.mjs "
+  ],
+  "expect": [
+    "S1: 'SC-3: the files a Tracy setup run wrote ride on its row, never a \"source unknown\" row' is ok — the V2 page is exactly [writes:setup:<run>], that row has effects.files {count: 25, sha: <moment>} and two content resources, counts.unknown 0 (pre-fix: a second row git:<moment sha>).",
+    "S1: 'SC-3: a setup moment the run did not hear back from is still its own, never Unknown' is ok — the commit known only by its trailer Tracy-Turn: setup-<run>:1 rides on the run's row (count 9); a trailer naming a run the site never had stays a git row.",
+    "S2: 'a setup run holds the webroot: opened before its first write, its moment taken after the brand, once' is ok (order open → apply → brand → close); 'a failed apply still takes the moment…' is ok (open → apply → close, state failed); 'a webroot that cannot be held is no reason to fail the site' is ok (state applied).",
+    "S2: 'setupWebroot: the run seals under its own turn, then commits its moment and records the carrier write' is ok — the host is asked {kind: webroot-seal-outside, turn: setup-<run>:1} then {kind: webroot-moment, title: 'Tracy setup', turn: setup-<run>:1}; site_write holds one row {action: setup.files, via: setup-moment, origin: setup, origin_ref: <run>, target: {sha, files: 25}}; 'setupWebroot: an EmDash site keeps no webroot history…' is ok (no host call).",
+    "S3: 'SC-3 setup run: its turn id holds the webroot like a chat turn, and its moment names the run' is ok — what was dirty before the run is one outside seal, a look while the run writes seals nothing, the moment's body ends 'Tracy-Turn: setup-<run>:1'.",
+    "S4: both tests pass: six idle drops of an opened socket give 7 sockets and no console.error (pre-fix: 3 sockets and the error); three connections that never open stop the loop with one report.",
+    "S5: the five path-security-probe tests pass: a missing file in site B, a missing file under a missing directory of site B (read and write guard) and a missing file behind a symlink planted in site A into site B all give the same {code: forbidden, status: 403, message: 'path \"<path>\" is outside workspace'} as an existing one (pre-fix: 400 fs-error ENOENT); inside site A a missing file still gives 400 ENOENT, and with the fence off nothing changes. seat-isolation-files-tab.test.ts: all 7 tests ok, including 'plugin: the fence is no existence oracle…' (read, write and remove guards).",
+    "S6: chat-route.test.mjs all ok, including 'Create with records the pick only while the chat route is on…': recordsPickOnCreate follows the switch and the dialog's only bare `void choose(inspiration.id)` is behind it (pre-fix: the Create with handler called choose unconditionally and the host answered 403 CHAT_DESIGN_SYSTEM_OFF on every press)."
+  ],
+  "selectors": {
+    "reader": "apps/tracy-web/src/sites/activity-v2.js readActivityV2 (setupMoments) + hydrate write groups (carrier via 'setup-moment'); activity-store.js accountedForGit setupRuns",
+    "producer": "apps/tracy-web/src/sites/brief-build.js holdWebroot('open'|'close'); sites/route.js setupWebroot; sites/setup-moment.js",
+    "sidebar": "vendor/tracy/dsh-better-sidebar/src/client/sidebar/use-host-feeds.ts socket.onopen resets failures",
+    "fence": "vendor/tracy/dsh-better-sidebar/src/path-security.ts ensureWorkspacePath / ensureWorkspaceWritePath: assertSpelledInside before I/O, assertFailureInside on a failed resolve",
+    "create-with": "packages/design/tracy-design-inspiration/src/client/PreviewDialog.tsx Create with onClick: if (recordsPickOnCreate({ chatRoute })) void choose(...); chat-route.mjs recordsPickOnCreate"
+  },
+  "evidence": "Dev 12/10/2026, read only: g66-ess-wp-full holds 114 untracked wp-content/languages/* files written 45 s after the webroot baseline by the setup run's language.install; g66-ess-j-full's first seal held 494 files (vi-VN pack, images/tracy-content/*, images/tracy-brand/*, configuration.php, templates/ja_essence/local/etc/site/*.json, language/overrides/*.ini), all from its setup run; acc1182wp (deleted) had 6 media.upload ≈ 25 files with thumbnails. SB-1 on cowork.tracy.site (l3-j53-wp, test seat): the agent-opens socket closed idle at 132 s, 260 s and 387 s, each reconnect opened in 2 s, and the third close logged '[dsh-better-sidebar] agent-opens connection failed; stopping reconnect loop' (probe log tasks/evidence/tracy-site-bugs-1110/sc3-sidebar/sb1-dev-probe.log). SEC-2 and DI-1 from the independent dev acceptance of 12/10/2026 (tasks/evidence/tracy-site-bugs-1110/dev-acceptance-2026-10-12/README.md): a seat of site A got 400 ENOENT for a missing file in site B's webroot and 403 for an existing one; pressing Create with in workspace acc1012s logged 403 /api/tracy-design-inspiration/choose (the switch chat-design-system is off by default).",
+  "fence": "SC-3: the setup run holds the webroot with the same two host jobs and the same declared limits as a chat turn (a WP-Cron write inside the run's window rides on the run's moment, as on a turn's). Never invents a source: no hold (host down, timeout, EmDash) leaves the files to the next look as before. SB-1: only a socket that opened resets the failure count; three that never open still stop the loop. SEC-2: every target outside the workspace gets one refusal naming the path as sent; inside the workspace errors stay as they were; an escaping symlink is still refused after resolution. DI-1: Create with stays drawn and works with the switch off; only the pick record follows the switch.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1204-sc3-sidebar.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 900
+  }
+}

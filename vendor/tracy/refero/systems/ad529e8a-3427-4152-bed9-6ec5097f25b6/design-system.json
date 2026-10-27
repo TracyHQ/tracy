@@ -1,0 +1,316 @@
+{
+  "dos": [
+    "Use the tri-color gradient (Electric Violet → Magenta → Sunset Coral) on at least one headline per page section — it is the single most recognizable brand treatment",
+    "Set hero display headlines at 69–83px in Mabry Pro weight 500 with 0.93–0.95 line-height — the tight leading is what makes the type feel poster-like",
+    "Apply 0.2em letter-spacing to all Mabry Pro UI text (nav, buttons, labels) at 16–20px — without it the type reads as generic instead of editorial",
+    "Keep all UI radii at 4px — the sharp 4px corners are the system default and should not be inflated to 8px or rounded to pills",
+    "Pair the blush cream canvas (#f3eae5) with pure white card surfaces only — never use white as the page background, it kills the paper-stock feel",
+    "Use Coral Pop (#ff7e85) as the only filled-button background on light sections — reserve the ghost white treatment for the indigo hero",
+    "Let illustrations bleed to section edges and occupy at least 50% of split-section width — decorative restraint is not the brand"
+  ],
+  "donts": [
+    "Do not add drop shadows to cards, buttons, or sections — the system relies on color contrast and the cream canvas for separation, not elevation shadows",
+    "Do not use the pastel washes (#fdd7f5, #bdedd5, #fdd5c3) as full page backgrounds — they are decorative illustration zones only",
+    "Do not mix in a second body font — Helvetica Neue is the only body face; all display and UI type is Mabry Pro",
+    "Do not round buttons to 9999px pill shapes — the 4px radius is signature and must be preserved",
+    "Do not use #000000 for body text — always use Graphite (#3e3c43) on light surfaces for a warmer, less harsh read",
+    "Do not introduce a cool blue or gray CTA — the only filled-button color is the warm coral, and the page temperature should stay warm overall",
+    "Do not apply the gradient fill to body copy or small text — it is reserved for headlines 27px and above, where the color stops have room to breathe"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#f3eae5",
+      "name": "Blush Cream",
+      "role": "Primary page canvas — warm off-white with a rosy undertone that gives every section a paper-stock feel rather than a digital white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000647",
+      "name": "Deep Indigo",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Card surfaces on the dark hero, button text fills, and inverse typography on dark bands",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3e3c43",
+      "name": "Graphite",
+      "role": "Primary body text and high-emphasis headings on light surfaces — a near-black with a hint of warmth rather than a cold #000",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7a7780",
+      "name": "Mid Stone",
+      "role": "Muted secondary text, badge labels, and input helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff7e85",
+      "name": "Coral Pop",
+      "role": "Primary filled CTA background on light sections — the single warm action color that punctuates the cream canvas",
+      "group": "brand"
+    },
+    {
+      "hex": "#0e1889",
+      "name": "Electric Violet",
+      "role": "Headline gradient anchor and brand-defining deep accent — used at the start of gradient text fills (violet → magenta → coral)",
+      "group": "brand"
+    },
+    {
+      "hex": "#dd59cf",
+      "name": "Magenta",
+      "role": "Mid-stop in headline gradient fills — the vivid pink bridge between violet and coral that gives gradient headlines their signature tri-color arc",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff7399",
+      "name": "Sunset Coral",
+      "role": "Gradient headline end-stop and accent strokes in illustrations — a hotter pink than Coral Pop, reserved for type treatments",
+      "group": "accent"
+    },
+    {
+      "hex": "#206871",
+      "name": "Deep Teal",
+      "role": "Secondary brand anchor — used for headings and icon strokes, providing the cool counterpoint to all the warm pinks and corals",
+      "group": "accent"
+    },
+    {
+      "hex": "#118391",
+      "name": "Bright Teal",
+      "role": "Lighter teal companion for heading treatments and badge icons",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffa541",
+      "name": "Persimmon",
+      "role": "Illustration accent — a warm orange that appears in brush-stroke artwork and icon details",
+      "group": "accent"
+    },
+    {
+      "hex": "#7c80ad",
+      "name": "Muted Lilac",
+      "role": "Outlined/ghost link and button border color — the soft violet used for secondary text-link treatments throughout the page",
+      "group": "accent"
+    },
+    {
+      "hex": "#40ac76",
+      "name": "Fern Green",
+      "role": "Green state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#fdd7f5",
+      "name": "Bubblegum Wash",
+      "role": "Decorative pastel surface — soft pink fill for feature-card backgrounds and illustration halos",
+      "group": "accent"
+    },
+    {
+      "hex": "#bdedd5",
+      "name": "Mint Wash",
+      "role": "Decorative pastel surface — mint green fill used in feature illustration backgrounds",
+      "group": "accent"
+    },
+    {
+      "hex": "#fdd5c3",
+      "name": "Peach Wash",
+      "role": "Decorative pastel surface — peach fill for illustration backgrounds and soft card zones",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed sections that alternate between dark and light bands. The hero is a full-width indigo (#000647) band with a 50/50 split: headline + CTA on the left, large illustration on the right. Below the hero, the page returns to the blush cream canvas with centered max-width ~1200px content. Feature sections follow a repeating pattern: a three-column feature-card row (icon + heading + body), then a two-column split section alternating illustration-left/text-right and text-left/illustration-right. No sidebar, no sticky header beyond the hero nav. Vertical rhythm is generous — 120px between major sections, 40–60px between content blocks within a section. Navigation is a single horizontal bar on the hero, not repeated on light sections.",
+  "imagery": "Hand-drawn expressive illustrations are the visual backbone of the page — not stock photography, not flat iconography, not 3D renders. The style is painterly with visible brush-stroke fills, surreal subject matter (characters with spiky colored hair, hands with eyes on the fingers, anthropomorphic objects), and saturated coral/pink/violet/teal palettes. Illustrations are large, section-spanning, and left to bleed to the canvas edge without frames or rounded masks. Icons are minimal — small circular avatars or simple line marks accompany feature cards, but the visual weight comes from the full illustrations. Photography does not appear. The illustration style deliberately evokes a creative zine or hand-painted poster rather than a corporate SaaS site.",
+  "similar": [
+    {
+      "why": "Same polychrome illustration-forward approach with a cream/warm canvas and large expressive artwork carrying the visual weight",
+      "business": "Krea AI"
+    },
+    {
+      "why": "Same editorial poster-style headlines paired with a warm neutral body, though Moderne is more illustration-heavy and colorful",
+      "business": "Notion AI marketing pages"
+    },
+    {
+      "why": "Same flat surface treatment with no drop shadows, oversized display type, and a single warm accent color against a cream canvas",
+      "business": "Pitch (pitch.com)"
+    },
+    {
+      "why": "Same dual-band hero pattern (dark opening section returning to light body) and oversized gradient-free display type on a warm canvas",
+      "business": "Framer"
+    },
+    {
+      "why": "Same confident oversized type and refusal of shadows, though Linear is dark-mode dominant where Moderne splits dark hero + light body",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "4px",
+      "badges": "4px",
+      "inputs": "4px",
+      "buttons": "4px",
+      "featuredCards": "15px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "120px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f3eae5",
+      "name": "Blush Canvas",
+      "level": 0,
+      "purpose": "Base page background — the warm cream that all light sections sit on"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White Card",
+      "level": 1,
+      "purpose": "Elevated card surface on the dark hero band and isolated feature blocks"
+    },
+    {
+      "hex": "#000647",
+      "name": "Indigo Stage",
+      "level": 2,
+      "purpose": "Full-bleed hero background — the dramatic dark opening section"
+    },
+    {
+      "hex": "#fdd7f5",
+      "name": "Pastel Decorative",
+      "level": 3,
+      "purpose": "Soft pink illustration backgrounds and feature-card accent zones"
+    }
+  ],
+  "elevation": [],
+  "northStar": "Expressive creative studio on warm blush paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 27,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 43,
+      "lineHeight": 1.06
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.02
+    },
+    {
+      "role": "display",
+      "size": 83,
+      "lineHeight": 0.95
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero CTA — Coral Filled Button",
+      "role": "Primary action on the light cream sections and gradient feature blocks",
+      "description": "Filled button, background #ff7e85 (Coral Pop), white text, 4px radius, 18px vertical padding × 20px horizontal padding. Text is Mabry Pro weight 500 at 16–19px with the 0.2em tracking — the positive letter-spacing on button text is signature and must not be removed."
+    },
+    {
+      "name": "Hero Ghost Button — On Indigo",
+      "role": "Secondary action on the dark indigo hero",
+      "description": "Ghost/outlined button on the #000647 background. 1px white border, white text, 4px radius, 18×20px padding, Mabry Pro 16px weight 500 with 0.2em tracking. No fill — lets the dark background show through."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header on the indigo hero",
+      "description": "Sits on the #000647 hero band. Logo (circular mascot mark) at far left, centered nav links (Overview, Solutions, Pricing, Insight of the Day, Login) in white Mabry Pro 16px weight 500 with 0.2em tracking, and the ghost 'Get a Demo' button at far right. Generous horizontal padding around all items."
+    },
+    {
+      "name": "Gradient Headline",
+      "role": "Section-defining headlines on light sections",
+      "description": "Mabry Pro weight 500 at 43–56px, line-height 1.02–1.06. Fill is a left-to-right CSS gradient running Electric Violet (#0e1889) → Magenta (#dd59cf) → Sunset Coral (#ff7399). This tri-color gradient is the brand's signature text treatment and should appear on at least one headline per page section."
+    },
+    {
+      "name": "Hero Display Headline",
+      "role": "The opening headline on the indigo hero",
+      "description": "Mabry Pro weight 500 at 69–83px, pure white (#ffffff), tight line-height 0.93–0.95. Sits on the left half of the hero split, with the subtext paragraph in a lighter blue-gray beneath it."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Three-column feature blocks on the light canvas",
+      "description": "No card background — the cards are content-only blocks on the blush canvas. Each card has a small circular illustration (48–64px) at the top, a bold heading in Mabry Pro 20–22px weight 500, and body copy in Helvetica Neue 14–15px at 1.40 line-height. Generous vertical spacing between cards (40–60px). No visible border or shadow."
+    },
+    {
+      "name": "Split Section — Text + Illustration",
+      "role": "Alternating content bands below the hero",
+      "description": "Two-column layout (approximately 50/50). One column holds a large expressive hand-drawn illustration, the other holds a gradient headline (43–56px Mabry Pro) and a paragraph of body copy (16–18px Helvetica Neue, #3e3c43). Sections alternate illustration-left/text-right and vice versa for visual rhythm."
+    },
+    {
+      "name": "Illustration Panel",
+      "role": "Decorative visual content in every section",
+      "description": "Large hand-drawn illustrations occupying roughly half the viewport width. Style is expressive and surreal — characters with exaggerated features, brush-stroke fills, and saturated coral/pink/violet/teal palettes. Illustrations bleed to section edges with no border or frame."
+    },
+    {
+      "name": "Success Badge",
+      "role": "Status indicators in cards and lists",
+      "description": "Fern Green (#40ac76) border, Fern Green text or white-on-green fill, 4px radius, 12px vertical × 20px horizontal padding, Mabry Pro or Helvetica Neue 14px weight 500. Small and unobtrusive — acts as a status dot rather than a focal element."
+    },
+    {
+      "name": "Text Link",
+      "role": "Inline and standalone link treatments",
+      "description": "Muted Lilac (#7c80ad) underlined text in Helvetica Neue 16px. 1px border-bottom in the same lilac for the link underline. The lilac is deliberately desaturated — links should not compete with the gradient headlines for attention."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form inputs (email capture, search)",
+      "description": "1px border in #cfc7c5 (light stone) or #7a7780, 4px radius, 1–2px vertical padding, white or cream background. Placeholder text in #7a7780. Minimal chrome — no focus ring color evidence, but should default to a subtle 1px shift to #0e1889 on focus."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading typeface — the brand-defining font. Used at 43–83px for section headlines (with tight 0.93–1.06 line-heights creating a poster-like density) and at 16–20px with positive 0.2em tracking for nav items, buttons, and labels. The 0.2em tracking on UI text is signature: it makes even small text feel intentional and editorial rather than utilitarian.",
+      "sizes": "16, 19, 20, 27, 43, 52, 56, 69, 83",
+      "family": "Mabry Pro",
+      "weight": "500",
+      "lineHeight": "0.93, 0.95, 1.00, 1.02, 1.06, 1.20",
+      "substitute": "Inter, General Sans, or Suisse Int'l",
+      "letterSpacing": "0.2em at 16-20px; tight/near-zero at display sizes 43-83px"
+    },
+    {
+      "role": "Body and UI text — paragraph copy at 16–18px/1.40–1.56, card descriptions at 14–15px, and supporting subheadings at 20–26px. The system fallback pairing keeps body text neutral so the Mabry Pro headlines can carry the brand voice.",
+      "sizes": "14, 15, 16, 18, 20, 22, 26",
+      "family": "Helvetica Neue",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.07, 1.18, 1.19, 1.20, 1.33, 1.40, 1.56"
+    }
+  ],
+  "description": "Moderne operates as a creative-zine-meets-SaaS: a warm blush-paper canvas (#f3eae5) hosts large confident Mabry Pro headlines, while a single full-bleed deep-indigo hero band (#000647) acts as the dramatic opening spread before the page returns to cream. The color system is deliberately polychrome — a riot of coral, violet, magenta, teal, and orange accents painted across expressive hand-drawn illustrations and gradient headline fills, never reduced to a single brand hue. Typography is oversized and weight-500, giving every section an editorial poster feel rather than a dashboard feel. UI chrome stays light: 4px radii, thin dark borders, ghost buttons on the dark hero, filled coral buttons on the light sections, and illustrations do the heavy emotional lifting.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Canvas/background: #f3eae5 (blush cream)\n- Hero background: #000647 (deep indigo)\n- Card surface: #ffffff\n- Primary text: #3e3c43 (graphite)\n- Muted text: #7a7780 (mid stone)\n- primary action: #ff7e85 (filled action)\n- Accent: #0e1889 (electric violet) → #dd59cf (magenta) → #ff7399 (sunset coral) for gradient headlines\n\n## 3 Example Component Prompts\n\n1. Create a Primary Action Button: #ff7e85 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Gradient Headline Feature Block** — On #f3eae5 canvas. Headline at 52px Mabry Pro weight 500 with CSS background-clip text gradient: linear-gradient(90deg, #0e1889 0%, #dd59cf 50%, #ff7399 100%). Body paragraph at 16px Helvetica Neue weight 400, color #3e3c43, line-height 1.56, max-width 560px. No card chrome — text sits directly on the cream canvas.\n\n3. **Three-Column Feature Row** — On #f3eae5 canvas. Three equal columns with 40px gap. Each column: 56px circular illustration at top (use pastel wash #fdd7f5, #bdedd5, or #fdd5c3 as fill), heading 22px Mabry Pro weight 500 color #3e3c43, body 15px Helvetica Neue color #7a7780 line-height 1.40. No borders, no backgrounds, no shadows."
+    }
+  ],
+  "elevationPhilosophy": "Moderne deliberately avoids drop shadows. Depth and separation are achieved entirely through color contrast — the cream canvas vs white cards, the indigo hero band vs the light body, and the coral CTA against warm neutrals. This flat, poster-like treatment is what gives the system its zine/editorial feel rather than a Material/iOS dashboard feel."
+}

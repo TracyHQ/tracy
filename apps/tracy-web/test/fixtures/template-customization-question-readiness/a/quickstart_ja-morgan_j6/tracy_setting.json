@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Morgan",
+  "version": "1.0.2",
+  "cms": "6.1.1",
+  "install": {
+    "webroot": {
+      "file": "ja-morgan-j6-webroot-1.0.2.tar.gz",
+      "sha256": "0ef79b7f57365c512b08cb33a57efe4e129264859a6f98c531c2986bd39bc14f"
+    },
+    "database": {
+      "file": "ja-morgan-j6-database-1.0.2.sql.gz",
+      "sha256": "da793d70b465c8418cf98935c37d611a04082aef324fae18ed5bd542ef2ab040"
+    }
+  },
+  "template": "ja_morgan"
+}

@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-893-baseline-repo-no-detached-gc-happy",
+  "itemIds": ["regression:REG-PR-893-baseline-repo-no-detached-gc"],
+  "requirement": "Commits in a site's baseline repo start no detached git gc, and teardown waits out one still running",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-baseline-repo-no-detached-gc.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 dev Mac, twice: deleting a site whose install had failed (initb-0510-wpz-a3) stopped at teardown step 3 with \"rm: cannot remove '.../webroot-baseline.git': Directory not empty\"; the one file left was gc.log ('unable to read 95727ea4...', 'failed to run repack') written by a detached automatic gc the baseline commit had started (ledger L14b). Red 9610fb9e2 (4 cases not ok on 04a0c6da2), fix cd45fa2b6.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 26). Every named case is 'ok' (none 'not ok', none '# SKIP'): with git told to gc at once (gc.auto=1, foreground), a baseline commit and a moment leave no pack behind, every git call the webroot scripts make on a site repo carries the no-maintenance config, and teardown waits a bounded while for a gc.pid naming a live process on this host before removing the directory.",
+    "productSources": [
+      "packages/fleet/tracy-fleet-operation/scripts/provision/teardown.sh:39",
+      "packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-git.sh:57"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:195 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:196 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:207 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:365 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/webroot-repo-gc.test.mjs:132 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the baseline commit of a webroot past the gc threshold starts no automatic gc",
+    "a moment past the gc threshold starts no automatic gc either",
+    "every git call the webroot scripts make on a site repo carries the no-maintenance config",
+    "a git gc still running in the baseline repo is waited for, a bounded while, before the directory goes"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-baseline-repo-no-detached-gc"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/fleet/tracy-fleet-operation", "tracy-fleet-operation"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-baseline-repo-no-detached-gc",
+    "pr": 893,
+    "kind": "fix",
+    "area": "fleet/teardown",
+    "file": "tests/regression/cases/REG-PR-893-baseline-repo-no-detached-gc.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/fleet/tracy-fleet-operation/test/webroot-repo-gc.test.mjs",
+    "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the baseline commit of a webroot past the gc threshold starts no automatic gc",
+    "a moment past the gc threshold starts no automatic gc either",
+    "every git call the webroot scripts make on a site repo carries the no-maintenance config",
+    "a git gc still running in the baseline repo is waited for, a bounded while, before the directory goes"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,62 @@
+{
+  "id": "QA-UNIT-REG-PR-1755-cowork-self-update-seal-happy",
+  "itemIds": ["regression:REG-PR-1755-cowork-self-update-seal"],
+  "requirement": "A seal that is only Tracy's own Cowork package updating itself (Joomla package or WordPress plugin, a manifest moved) reads in Site changes as a Tracy update (Source deployment, Tracy deploy, deploy.updated component cowork), never 'Files changed; source unknown'; any other file in the seal keeps it unknown",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1755-cowork-self-update-seal.json",
+    "ref": "PR #1755 (fix); fix evidence: Dev 22/10/2026 (d1, tracywalk-1792671498, Joomla quickstart tracy-business/j6): seal c727411 at 12:28:12, 122 files all com_claudecowork / plg_system_claudecowork* / pkg_claudecowork.xml, claudecowork.xml 0.24.43 -> 0.24.53; the site's administrator/logs/1.plg_system_claudecoworkupdate.php: '2026-10-22T12:24:02 pkg_claudecowork: 0.24.43 -> 0.24.53 installed', 35 s after the webroot baseline 1160fd4 (12:23:27). Dev 26/10: 30 site_outside seals across Joomla sites whose files are all the Cowork package with its manifest.",
+    "invariant": "S1: 'outside seal: Tracy's Cowork package updating itself is a Tracy update; anything less stays unknown' is ok: the Joomla package seal and the WordPress plugin seal are deployment; one foreign file, no manifest, a look-alike folder, an empty or missing path list stay unknown; a housekeeping commit of the same files stays automatic. S2: 'a seal that is only Tracy's own Cowork package updating itself reads as a Tracy update, never Unknown' is ok: both rows have origin.source deployment, actor service:tracy-deploy, description {key: deploy.updated, params: {component: cowork, files, tag: null, owner: tracy}}, timeBasis detected, counts.unknown 0 (pre-fix: files.changed-source-unknown and counts.unknown 2). S2: 'a seal is a Tracy update only when EVERY file is the Cowork package and its manifest moved' is ok (5 rows unknown); the SQL/JS parity test is ok with the four seals with paths; E5.1c fold test is ok with unknown 4, deployment 2.",
+    "productSources": [
+      "apps/tracy-host/src/cms-log.js:151",
+      "apps/tracy-web/src/db/index.js:40",
+      "apps/tracy-web/src/lib/person-face.js:62",
+      "apps/tracy-web/src/sites/activity-describe.js:106",
+      "apps/tracy-web/src/sites/activity-source.js:152",
+      "apps/tracy-web/src/sites/activity-store.js:20",
+      "apps/tracy-web/src/sites/activity-v2.js:160",
+      "apps/tracy-web/src/sites/activity.js:85",
+      "apps/tracy-web/src/sites/cms-log.js:64",
+      "apps/tracy-web/src/sites/turns.js:82",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/access/wordpress/tracy-access.php:26"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": ["REG-PR-1755-cowork-self-update-seal.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1755-cowork-self-update-seal"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1755-cowork-self-update-seal",
+    "pr": 1755,
+    "kind": "fix",
+    "area": "site-changes/outside",
+    "file": "tests/regression/cases/REG-PR-1755-cowork-self-update-seal.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-concurrency=1",
+    "--test-name-pattern=Cowork|classify the same|folded only when EVERY",
+    "apps/tracy-web/test/activity-source.test.mjs",
+    "apps/tracy-web/test/site-activity-v2.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [],
+  "timeoutS": 600
+}

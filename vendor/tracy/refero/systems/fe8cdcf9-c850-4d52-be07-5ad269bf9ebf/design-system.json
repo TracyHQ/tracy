@@ -1,0 +1,284 @@
+{
+  "dos": [
+    "Use PP Neue Corp Compact at 48px or larger for any heading that needs to feel structural — below 40px the ultrabold weight overwhelms and loses its industrial character",
+    "Apply 40px border-radius to all cards, content blocks, and non-pill buttons as the default surface radius",
+    "Use 800px border-radius (full pill) for all buttons, tags, nav containers, and small interactive elements",
+    "Set primary CTAs to Ember (#fc5000) with Obsidian (#070607) text, sized at 12px/24px padding — never rectangular, always pill-shaped",
+    "Keep body text at DM Sans 500 (Medium) — never drop to Regular weight, which reads as anemic against the ultrabold display type",
+    "Use the halftone dot pattern (orange dots on violet) as the hero/signature visual treatment — it is the system’s most recognizable motif",
+    "Layer surfaces using color contrast (Pumice canvas → Limestone cards → Ember features) rather than shadows or borders"
+  ],
+  "donts": [
+    "Do not add drop shadows to any element — the system is intentionally flat; shadows would undermine the paper-like warmth",
+    "Do not use rectangular (low-radius) buttons — the pill/40px-radius treatment is non-negotiable",
+    "Do not introduce additional accent colors beyond Ember, Plasma Violet, and Sulfur — the palette is deliberately constrained to three chromatic tones",
+    "Do not use Regular or Bold weights of DM Sans for body — Medium (500) is the only correct weight",
+    "Do not set headings below 26px or above 189px — the display type only works at architectural scale",
+    "Do not use Plasma Violet for buttons or controls — it is reserved for the hero halftone and a single accent card",
+    "Do not apply negative letter-spacing to PP Neue Corp Compact — the +0.02em positive tracking is intentional at display sizes to prevent stroke collision"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fc5000",
+      "name": "Ember",
+      "role": "Primary action buttons, featured stat cards, key visual highlights — the only aggressive chromatic accent; its vivid saturation against warm grays creates urgency without needing supporting decorative weight",
+      "group": "brand"
+    },
+    {
+      "hex": "#524ae9",
+      "name": "Plasma Violet",
+      "role": "Hero halftone gradient base, single secondary card surface — appears almost exclusively in the hero dot pattern and one standout card; never used for controls",
+      "group": "brand"
+    },
+    {
+      "hex": "#f5f28e",
+      "name": "Sulfur",
+      "role": "Tag and category badge backgrounds, small highlight washes — the soft yellow that labels blog post categories and program announcements",
+      "group": "accent"
+    },
+    {
+      "hex": "#f7f6f2",
+      "name": "Limestone",
+      "role": "Card surfaces, content block backgrounds, secondary button fills — the lighter warm off-white that lifts elements off the page canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e2e2df",
+      "name": "Pumice",
+      "role": "Page canvas, dominant background — the warm medium-gray that grounds every section; slightly darker than card surfaces to create subtle figure/ground separation without shadows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#070607",
+      "name": "Obsidian",
+      "role": "Primary text, headings, link text, button borders — near-black with a barely-warm cast matching the canvas warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Chalk",
+      "role": "Dark-section text, input text on dark backgrounds, high-contrast overlays — pure white used only where maximum contrast against dark surfaces is required",
+      "group": "neutral"
+    }
+  ],
+  "imagery": "Imagery is minimal and deliberate. The hero uses an abstract halftone dot pattern (orange dots on a violet-to-orange gradient) rather than photography — it functions as brand artwork, not decoration. Product and announcement cards use either solid Ember blocks or the Plasma Violet halftone as image-area fills, keeping a consistent graphic system. Partner/integration logos are rendered as monochrome marks on light backgrounds. No photography, no 3D renders, no lifestyle imagery anywhere. Icons are small, monochrome, and minimal — Discord, X, and Telegram sit in the nav as simple glyphs. The visual language is graphic and editorial, not photographic: think poster design, not stock imagery.",
+  "similar": [
+    {
+      "why": "Similar crypto/web3 site language with warm off-white canvas, massive condensed display type, and a single bold accent color dominating featured surfaces",
+      "business": "Berachain"
+    },
+    {
+      "why": "Matching approach of ultrabold compressed headlines at near-architectural scale, flat no-shadow surfaces, and pill-shaped controls with aggressive border-radius",
+      "business": "Monad"
+    },
+    {
+      "why": "Shared visual DNA of warm neutral canvas, single vivid accent color for CTAs and stat cards, and condensed industrial display typography",
+      "business": "Dymension"
+    },
+    {
+      "why": "Same flat-design philosophy on warm background, pill buttons in one dominant accent color, and oversized compressed headlines as structural anchors",
+      "business": "Blast"
+    },
+    {
+      "why": "Comparable crypto ecosystem site pattern with generous 40px surface radii, warm light canvas, and medium-weight body sans against heavy display type",
+      "business": "Arbitrum"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "40px",
+      "pills": "800px",
+      "small": "16px",
+      "inputs": "100px",
+      "medium": "20px",
+      "buttons": "40px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "40px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#e2e2df",
+      "name": "Pumice Canvas",
+      "level": 0,
+      "purpose": "Page background — warm medium-gray that grounds all content"
+    },
+    {
+      "hex": "#f7f6f2",
+      "name": "Limestone Surface",
+      "level": 1,
+      "purpose": "Cards, content blocks, secondary buttons — lighter warm off-white"
+    },
+    {
+      "hex": "#fc5000",
+      "name": "Ember Feature",
+      "level": 2,
+      "purpose": "Featured stat cards and emphasis surfaces — the only chromatic surface elevation"
+    },
+    {
+      "hex": "#524ae9",
+      "name": "Plasma Hero",
+      "level": 3,
+      "purpose": "Hero halftone block — reserved for the homepage hero gradient overlay"
+    }
+  ],
+  "northStar": "forge fire on warm limestone. The canvas is raw warm plaster, and every orange element reads as glowing embers pressed into the surface.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.55
+    },
+    {
+      "role": "subheading",
+      "size": 26,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 30,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1,
+      "letterSpacing": 0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1
+    },
+    {
+      "role": "heading-2xl",
+      "size": 80,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "heading-3xl",
+      "size": 96,
+      "lineHeight": 0.95
+    },
+    {
+      "role": "display",
+      "size": 189,
+      "lineHeight": 0.94
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action",
+      "description": "Filled Ember (#fc5000) with Obsidian (#070607) text. 800px border-radius (full pill). Padding 12px vertical, 24px horizontal. DM Sans 500 weight at 16px. No shadow. The pill shape is the most distinctive control shape in the system — never rectangular."
+    },
+    {
+      "name": "Secondary Pill Button",
+      "role": "Alternative action or paired CTA",
+      "description": "Transparent background, 1.5px Obsidian (#070607) border, Obsidian text. 40px border-radius. Padding 16px all sides. DM Sans 500 at 16px. Border style is solid here, not dotted. Sits beside the primary CTA as the quieter counterpart."
+    },
+    {
+      "name": "Outlined Ghost Link",
+      "role": "Low-emphasis text link or nav item",
+      "description": "Transparent background, no visible border, Obsidian text. 800px pill radius. Padding 0 vertical, 12px horizontal. DM Sans 500 at 16px. Used for nav items and inline links — relies on color and position rather than container weight."
+    },
+    {
+      "name": "Stat Feature Card",
+      "role": "Highlight key metrics (TVL, transactions, etc.)",
+      "description": "Ember (#fc5000) solid background, Chalk (#ffffff) text. 40px border-radius. Padding 40px on all sides. No shadow. The large metric number uses PP Neue Corp Compact at 80px+; the label above uses DM Sans 500 at 14–16px. These cards are the system’s most visually dominant elements after the hero."
+    },
+    {
+      "name": "Content Card",
+      "role": "Blog posts, announcements, program entries",
+      "description": "Limestone (#f7f6f2) background, no border, no shadow. 40px border-radius. Padding 40px all sides. Contains a category tag, headline (PP Neue Corp Compact 26–32px in Obsidian), and date metadata. The image area at the top can be a halftone or solid Ember block."
+    },
+    {
+      "name": "Plasma Hero Card",
+      "role": "Single standout content surface",
+      "description": "Plasma Violet (#524ae9) background with white halftone dot pattern overlay. 40px border-radius. Used sparingly — appears once as a signature visual anchor. No shadow."
+    },
+    {
+      "name": "Category Tag Badge",
+      "role": "Label blog posts and announcements",
+      "description": "Sulfur (#f5f28e) background, Obsidian (#070607) text. Pill shape (800px radius). DM Sans 500 at 12–14px. Padding approximately 3–4px vertical, 8–10px horizontal. Small, bright, and functionally pure — the only yellow element in the system."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Pumice (#e2e2df) page background continues through. Nav items are Obsidian text in DM Sans 500 at 16px, separated by 9px gaps. The entire nav row can sit inside a Limestone (#f7f6f2) pill container with 800px radius — a signature element. Logo lockup (mountain icon + wordmark) sits left, social icons and CTA right."
+    },
+    {
+      "name": "Hero Halftone Block",
+      "role": "Hero section visual centerpiece",
+      "description": "Large rounded rectangle filled with a Plasma Violet (#524ae9) to Ember (#fc5000) gradient overlaid with an orange halftone dot pattern. 40px border-radius. Dimensions are hero-scale (roughly 50% of viewport width). The halftone effect is the system’s most distinctive visual signature — pixel-art-like, high-density dot grid that fades to solid orange at the top right."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form input on dark sections",
+      "description": "Transparent background, 1.5px Chalk (#ffffff) border. 100px border-radius (pill). Padding 24px vertical, 32px left, 64px right. Chalk text. DM Sans 500. Used in dark/contrast sections only."
+    },
+    {
+      "name": "Partner Logo Strip",
+      "role": "Display ecosystem partners or integrations",
+      "description": "Limestone (#f7f6f2) background card, 40px radius, 40px padding. Logos arranged in a single row with consistent height, separated by vertical 1.5px Obsidian dotted dividers. No individual logo containers — flat inline treatment."
+    },
+    {
+      "name": "Dotted Divider",
+      "role": "Section separator and decorative detail",
+      "description": "1.5px dotted line in Obsidian (#070607). Used as vertical dividers in nav and partner strips, and occasionally as horizontal section breaks. The dotted (not dashed, not solid) style is a small but consistent signature detail."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All headings and display text. A custom condensed ultrabold face that gives headlines an industrial, sign-painted weight. The 189px display size in the hero is the signature — compressed, almost structural rather than typographic. Feature settings \"ss06\" and \"ss10\" activate alternate letterforms and spacing for a more aggressive condensed rhythm. Positive tracking (+0.02em) is unusual for display sizes and keeps the heavy strokes from feeling claustrophobic at 80–189px.",
+      "sizes": "26px, 32px, 40px, 48px, 56px, 64px, 80px, 96px, 189px",
+      "family": "PP Neue Corp Compact",
+      "weight": "400 (Ultrabold cut)",
+      "lineHeight": "0.94–1.20",
+      "substitute": "Bebas Neue, Anton, Druk Wide Bold",
+      "letterSpacing": "0.64px at 32px (0.02em), scaling proportionally to ~3.78px at display 189px",
+      "fontFeatureSettings": "\"ss06\", \"ss10\""
+    },
+    {
+      "role": "Body copy, nav links, button labels, supporting headings up to 30px. Medium weight throughout is deliberate — Regular would feel too thin against the ultrabold display type, and Bold would compete with it. DM Sans provides a humanist, slightly geometric counterpoint to the industrial display face.",
+      "sizes": "14px, 16px, 18px, 30px",
+      "family": "DM Sans",
+      "weight": "500 (Medium only — never Regular or Bold)",
+      "lineHeight": "1.20–1.55",
+      "substitute": "Inter, Manrope"
+    },
+    {
+      "role": "Captions, meta text, dates, micro-labels. Only used at 12px where weight and brand presence matter less than size economy.",
+      "sizes": "12px",
+      "family": "System sans-serif",
+      "weight": "400",
+      "lineHeight": "1.20"
+    }
+  ],
+  "description": "Caldera runs on a warm limestone canvas flooded with molten orange. The interface is flat and unshadowed, letting ultrabold compressed type at near-architectural scale (up to 189px) carry all structural weight. A single vivid orange (#fc5000) acts as the only aggressive chromatic accent against monochrome warm grays, with a violet plasma reserved for the hero halftone and a sulfur yellow for tags. The visual language is volcanic: condensed heavy letterforms, halftone dot patterns, 40px radii on cards and buttons, and 800px pill controls — heat contained within a soft, paper-like surface.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Page background: #e2e2df (Pumice)\n- Card/content surface: #f7f6f2 (Limestone)\n- Primary text/headings: #070607 (Obsidian)\n- primary action: #fc5000 (filled action)\n- Accent: #524ae9 (Plasma Violet) — hero halftone only\n- Tag/badge: #f5f28e (Sulfur)\n- Input border (dark sections): #ffffff (Chalk)\n\n## 3-5 Example Component Prompts\n1. Create a Primary Action Button: #fc5000 background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Stat Row**: Four Ember (#fc5000) cards in a row, each 40px radius, 40px padding. Label in DM Sans 500 at 14px, Chalk (#ffffff) text. Metric value in PP Neue Corp Compact at 80px weight 400, Chalk text, line-height 1.1.\n\n3. **Content Card**: Limestone (#f7f6f2) background, 40px radius, 40px padding. Sulfur (#f5f28e) pill tag at top with DM Sans 500 12px Obsidian text, 800px radius. Headline at 32px PP Neue Corp Compact, Obsidian, letter-spacing 0.64px. Date at 12px system sans-serif, Obsidian.\n\n\n5. **Dark Input Section**: Obsidian (#070607) background. Chalk (#ffffff) pill input with 100px radius, 24px/32px padding, 1.5px Chalk border. DM Sans 500 16px Chalk text. Submit button: Ember fill, 800px radius, 12px/24px padding."
+    },
+    {
+      "title": "Signature Motifs",
+      "content": "Three visual signatures define Caldera’s identity and should be reused across new pages: (1) The halftone dot pattern — orange dots on a violet-to-orange gradient, always at hero scale with 40px radius, is the most recognizable motif. (2) The 189px display headline — ultrabold compressed type at near-architectural scale, with tight 0.94 line-height, signals the page is a Caldera page. (3) The triple-radius system — 100px for inputs, 40px for cards and rectangular buttons, 800px for pills — creates a consistent roundness without monotony."
+    }
+  ],
+  "elevationPhilosophy": "Deliberately shadowless. The design relies on color contrast (warm gray vs lighter off-white vs vivid orange) and generous 40px corner radii to create surface hierarchy. No element casts a shadow anywhere in the system — the flatness keeps the heavy type and bold orange from feeling overwrought."
+}

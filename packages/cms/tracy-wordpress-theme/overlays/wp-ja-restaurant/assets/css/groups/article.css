@@ -1,0 +1,254 @@
+/* wp-ja-restaurant: article pages inside the main frame (Phone Reservation, the typography page). The seeded blocks are core groups with the
+   constrained layout; the source's Bootstrap markup expects plain block flow, so the layout's width and auto margins are undone here. */
+.jr-content .article-content .wp-block-group.is-layout-constrained > *,
+.jr-content .article-content .wp-block-group.is-layout-flow > * {
+  max-width: none;
+  margin-left: 0 !important; /* core's constrained layout sets auto with !important */
+  margin-right: 0 !important;
+}
+.jr-content .article-content .wp-block-group.is-layout-constrained > .row,
+.jr-content .article-content .wp-block-group.is-layout-flow > .row,
+.jr-content .article-content .row {
+  margin-left: -25px !important;
+  margin-right: -25px !important;
+}
+@media (max-width: 767px) {
+  .jr-content .article-content .wp-block-group.is-layout-constrained > .row,
+  .jr-content .article-content .wp-block-group.is-layout-flow > .row,
+  .jr-content .article-content .row {
+    margin-left: -7.5px !important;
+    margin-right: -7.5px !important;
+  }
+}
+.jr-content .article-content .wp-block-image {
+  margin: 0;
+}
+.jr-content .article-content .wp-block-image img {
+  max-width: 100%;
+  height: auto;
+}
+/* The block gap is not the source's spacing: only the source's own margins apply between siblings. */
+.jr-content .article-content .wp-block-group.row > *,
+.jr-content .article-content .online-reservation > :not(h1, h2, h3, h4, h5, h6) {
+  margin-block-start: 0;
+}
+.jr-content .article-content .wp-block-group:not(.text-left, .text-right) > :where(h1, h2, h3):first-child {
+  margin-top: 30px;
+}
+
+/* Text the source holds directly in a bootstrap box is a paragraph block here; the block gap must not push it down. */
+.alert > p.wp-block-paragraph,
+.well > p.wp-block-paragraph,
+.panel-heading > p.wp-block-paragraph,
+.panel-body > p.wp-block-paragraph {
+  margin-block-start: 0;
+}
+
+/* The article converter keeps a list's class but not its items' (`li.list-group-item` arrives as a bare `li`): draw the
+   base item of the source's .list-group-item (bootstrap.css) on the list's own children. */
+ul.list-group > li {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: -1px;
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  border: 1px solid var(--ds-c-border, light-dark(#dddddd, #544e46));
+}
+ul.list-group > li:last-child {
+  margin-bottom: 0;
+}
+
+/* Typography page (round 2). The source's `.row` follows its siblings without a block gap, and its heading-first boxes
+   start flush: the `margin-top: 30px` above is for article prose, not for a hero unit or a panel title. */
+.jr-content .article-content .wp-block-group.row {
+  margin-block-start: 0;
+}
+.jr-content .article-content .jumbotron.wp-block-group > :where(h1, h2, h3):first-child,
+.jr-content .article-content .panel-heading.wp-block-group > :where(h1, h2, h3):first-child,
+.jr-content .article-content .panel-heading > :where(h1, h2, h3, h4):first-child {
+  margin-top: 0;
+}
+/* A column the converter made a paragraph keeps the source's narrow-screen column padding. */
+@media (max-width: 991px) {
+  .docs-section .row > p.wp-block-paragraph {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+    margin-bottom: 15px;
+  }
+}
+/* Inline code scales with its parent as in the source (bootstrap.css `code { font-size: 90% }`); the base theme pins it. */
+.jr-content .article-content :not(pre) > code {
+  font-size: 90%;
+}
+/* A multiple select is a list box: the field rule in account.css (50px) must not flatten it to two rows. The source's single select is 16px / 48px too (round 3). */
+.jr-content .article-content select[multiple],
+.jr-content .article-content select[size],
+.jr-content .article-content select.form-control {
+  height: auto;
+  font-size: 16px;
+  padding: 8px 5px 8px 15px;
+}
+
+.jr-content .article-content select.form-control:not([multiple], [size]) {
+  height: 48px;
+  line-height: 30px;
+}
+
+/* Dark mode: three things the typography page shows as samples of a fixed look. */
+/* The Gray Lighter / Gray Lightest swatches name a colour (the label prints its hex): they keep it in both themes. */
+.swatch-item.color-gray-lighter,
+.swatch-item.color-gray-lightest {
+  color: var(--ds-c-fg, #333333);
+}
+.swatch-item.color-gray-lighter {
+  background: #eeeeee;
+}
+.swatch-item.color-gray-lightest {
+  background: var(--ds-c-surface, #f7f7f7);
+}
+/* The primary hero is orange in both themes, so its button keeps the white outline (not the dark soft border). */
+.jumbotron-primary .btn-primary {
+  border-color: var(--ds-c-border-soft, #ffffff);
+}
+/* The well's blockquote rule is 15% black in the source; on the dark well it needs the theme's border colour. */
+.well blockquote {
+  border-left-color: var(--ds-c-border, light-dark(rgba(0, 0, 0, 0.15), #544e46));
+}
+
+/* Alerts keep the source's 30 px gap below each box (bootstrap .alert margin-bottom), which the block-gap reset above took away. */
+.wp-block-group.alert.alert {
+  margin-bottom: 30px;
+}
+
+/* Block gap, round 3 (typography page). Core's `:root :where(.is-layout-constrained) > *` sets margin-block-start to the gap and
+   margin-block-end to 0 (specificity 0,1,0), and its `:last-child` twin (0,2,0) zeroes the end margin again. That beats the
+   source's element rules (h1-h6, p, ul, label: 0,0,1) and its single-class rules on a last child, so headings sat 15 px tight to
+   the block below and blocks lost their 30 px tail. The source's own values are put back here, at a higher specificity. */
+.jr-content .article-content .wp-block-group > * {
+  margin-block-start: 0;
+}
+.jr-content .article-content .wp-block-group > :is(h1, h2, h3) {
+  margin-block: 30px 15px;
+}
+.jr-content .article-content .wp-block-group > :is(h4, h5, h6) {
+  margin-block: 15px;
+}
+.jr-content .article-content .wp-block-group > :is(p, ul, ol) {
+  margin-block-end: 15px;
+}
+.jr-content .article-content .wp-block-group > :is(.nav-pills, .nav-stacked) {
+  margin-block-end: 0;
+}
+.jr-content .article-content .wp-block-group > :is(.nav-tabs, .jumbotron, .panel) {
+  margin-block-end: 30px;
+}
+.jr-content .article-content .wp-block-group > :is(.well, .list-group) {
+  margin-block-end: 20px;
+}
+.jr-content .article-content .wp-block-group > label {
+  margin-block-end: 5px;
+}
+/* The table and form-group tails are 30 px on wide screens; the source swaps them at 767 px (15 px, and the table's moves to its wrapper). */
+@media (min-width: 768px) {
+  .jr-content .article-content .wp-block-group > :is(.table, .form-group) {
+    margin-block-end: 30px;
+  }
+}
+@media (max-width: 767px) {
+  .jr-content .article-content .wp-block-group > .form-group {
+    margin-block-end: 15px;
+  }
+  .jr-content .article-content .wp-block-group > .table-responsive {
+    margin-block-end: 22.5px;
+  }
+}
+/* Where the source holds plain text, the converter made a paragraph: it keeps no tail, and a hero's first heading no top. */
+.jr-content .article-content :is(.alert, .well, .panel-heading, .panel-body).wp-block-group > p {
+  margin-block-end: 0;
+}
+.jr-content .article-content .jumbotron.wp-block-group > p:last-child {
+  margin-block-end: 0;
+}
+/* A bootstrap box the converter made a paragraph (p.panel-body, p.example) keeps the box's own spacing, not the paragraph's tail. */
+.jr-content .article-content p.wp-block-paragraph:is(.panel-body, .panel-heading, .example) {
+  margin-block-end: 0;
+}
+@media (min-width: 992px) {
+  .jr-content .article-content .row.wp-block-group > p {
+    margin-block-end: 0;
+  }
+}
+.jr-content .article-content .panel-heading > .panel-title {
+  margin-block: 0;
+}
+.jr-content .article-content .page-header.wp-block-group > h1:first-child,
+.jr-content .article-content .example-navigation .wp-block-group > h2:first-child,
+.jr-content .article-content .jumbotron.wp-block-group > h1:first-child {
+  margin-block-start: 0;
+}
+.jr-content .article-content .page-header.wp-block-group > h1:first-child {
+  margin-block-end: 0;
+}
+
+/* Phone Reservation. The converter wraps the source's direct `<span>` (18px) in a paragraph, so the source's
+   `.phone-reservation > span` rule has nothing to match; the paragraph takes the size and the body's line ratio. */
+.phone-reservation > p.wp-block-paragraph:has(> span) {
+  font-size: 18px;
+  line-height: 33.75px;
+}
+/* The picture frame is the img's own (source rule above); the figure core wraps it in must draw none. */
+.phone-reservation figure.wp-block-image {
+  border: 0;
+  background: none;
+  padding: 0;
+}
+/* A phone number never breaks across lines on a narrow screen. */
+.phone-reservation a[href^="tel:"] {
+  white-space: nowrap;
+}
+
+/* Offline / Error pages: the source's article is `<p align="center"><img></p>` under a `.well`; the picture is centred. */
+.single-content > figure.wp-block-image {
+  margin: 0 0 15px;
+  text-align: center;
+}
+.single-content > figure.wp-block-image img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+.single-content > .well {
+  margin-block-end: 20px;
+}
+/* The reservation rows keep the source's 100px (30px on phones) above them: the block-gap reset above must not zero it. */
+.jr-content .article-content .phone-reservation > .row.wp-block-group {
+  margin-block-start: 100px;
+}
+.jr-content .article-content .phone-reservation > p.wp-block-paragraph:has(> span) {
+  margin-block-end: 0;
+}
+@media (max-width: 767px) {
+  .jr-content .article-content .phone-reservation > .row.wp-block-group {
+    margin-block-start: 30px;
+  }
+}
+.jr-content .article-content .phone-reservation > .online-reservation.wp-block-group {
+  margin-block-start: 100px;
+}
+@media (max-width: 767px) {
+  .jr-content .article-content .phone-reservation > .online-reservation.wp-block-group {
+    margin-block-start: 30px;
+  }
+}
+.jr-content .article-content .online-reservation.wp-block-group > p:last-child {
+  margin-block-end: 0;
+}
+
+/* All Categories: the card title link is the source's near-black; `--ds-c-fg-2` is not defined on this site, so the fallback
+   would stay dark on the dark card. The theme's own text role flips with the mode. */
+.category-item .item-title a {
+  color: var(--ds-c-fg-2, light-dark(#222222, var(--wp--preset--color--fg-2)));
+}
+.category-item .item-title a:is(:hover, :focus, :active) {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent-hover));
+}

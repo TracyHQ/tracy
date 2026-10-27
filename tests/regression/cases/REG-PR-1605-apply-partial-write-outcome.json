@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1605-apply-partial-write-outcome",
+  "kind": "fix",
+  "title": "A write the plugin answers with ok:false and landed:true is recorded as unknown, not as a clean refusal: Site changes keeps it, the site is stamped as written and the write lease is kept",
+  "pr": 1605,
+  "area": "apply/write-door",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-web/test/review-apply-write-door.test.mjs: a move-and-rename answered write_failed with landed:true, the same answer without the flag, and landed on an ok answer."
+  ],
+  "expect": [
+    "S1: landed flag gives outcome unknown, last_write_at set, lease holder kept; no flag gives refused, no stamp, lease freed; ok answer stays ok."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/route.js"
+  },
+  "evidence": "22/10/2026: two writes of a real imported Joomla site were refused (bad_params, write_failed) and passed on retry; the test for a write_failed that part landed was marked todo because the door recorded it as refused.",
+  "fence": "Only an explicit landed:true changes the outcome; an answer without it is read exactly as before",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/review-apply-write-door.test.mjs"],
+    "tests": [
+      "a plugin 'write_failed' flagged landed is recorded as a change that may have happened, keeps the lease and moves the stamp",
+      "a plugin 'write_failed' with no landed flag is still a clean refusal: the lease goes back, no stamp",
+      "a landed flag on an answer that is ok, or is not a write failure, changes nothing"
+    ]
+  }
+}

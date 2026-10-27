@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1134-ds-remeasure-3",
+  "kind": "fix",
+  "title": "Fourteen ready JA Joomla j6 slot contracts re-measured with the round-3 probe on the release each minVersion names: the ones that read worse than the template's own, or failed the eye check, fixed module-side and still ready",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{healthcare,helple,impact,insight,justitia,kidscorner,kinetic,landscape,lawfirm,magz-ii,mason,mono,mood,morgan}.json through loadContract; build the JA Impact and JA Kinetic module sheets (joomlaSlot: Moxie, Apple) and the sheets of the other templates fixed in this pass; read scripts/flow.mjs.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version:<minVersion>}) for each.",
+    "S4: stand.mjs up quickstart/ja-impact/j6 (the newest published release: 1.0.1 when written, 1.0.2 since; it must lie inside the contract's [minVersion, maxVersion]), article order fixed, T4 sheets emptied and written anew, flow.mjs --snap, then flow.mjs with Moxie, MotherDuck, Toggl Track and Apple; stand.mjs down.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-remeasure-3.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all fourteen ready with the same minVersion as before the pass (1.0.1; ja-kinetic 1.0.4; ja-morgan 1.0.3), each readyNote starting 're-measured 11/10/2026 with the round-3 probe' (or 're-verified'/'re-measured' by a later pass whose ds-reverify-*/ds-remeasure-* folder of that template exists, 12/10/2026) and naming tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-<name>-j6; JA Impact keeps .donation-layout and .item-textwhite, gives --headings-color #1d3677 back, gives its figure tiles and blog cards the surface under a dark system only, and writes its white buttons in the readable accent; JA Kinetic's tokenScope ends with html.t4-dark[data-style]:root and points --elevated, --muted, --chrome-muted, --primary-ink at the system, its eyebrows at the readable accent; the other fixes named in the script hold; flow.mjs leaves text set under 1 px unmeasured.",
+    "S3: each at its minVersion → {contract:'joomla-ja-<name>'}.",
+    "S4: verdicts 12/12, controls 0,0,0,0, no text worse than the template's own, kept bands unchanged, every system's page share following ≥ 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-*.json ready, minVersion, readyNote, keepScopes, keepText, keepColors, keepDefaults, templateVars, tokenScope, followRules, sideRules, selectors.inkImages, selectors.groundPicture, selectors.button",
+    "probe": "packages/design/tracy-ds-slot/scripts/flow.mjs contrastProbe sizeless"
+  },
+  "evidence": "tasks/evidence/ds-remeasure-3-2026-10-11/README.md: each template stood up from the release its minVersion names (a local build folder when not published), T4 sheets regenerated, four systems on desktop 1440 and phone 390; dark and light screenshots checked by eye.",
+  "fence": "whether the fourteen contracts are honestly ready under the current probe, and the module-side fixes that made them so; not the release uploads (no re-release was needed)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-remeasure-3.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

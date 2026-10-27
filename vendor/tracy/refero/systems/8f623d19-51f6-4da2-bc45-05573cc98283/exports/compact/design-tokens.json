@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Ink Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#2a2a2a",
+      "$type": "color",
+      "$description": "Graphite — Secondary dark surface, button hover states"
+    },
+    "slate": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Slate — Body text, secondary headings, dense paragraph copy"
+    },
+    "steel": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Steel — Muted helper text, tertiary metadata, subdued links"
+    },
+    "silver": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Silver — Disabled states, placeholder text, low-priority captions"
+    },
+    "bone": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Bone — Hairline borders, divider lines, card outlines, structural separators"
+    },
+    "cloud": {
+      "$value": "#eef1f5",
+      "$type": "color",
+      "$description": "Cloud — Subtle background wash, hover state for neutral surfaces"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on dark fills"
+    },
+    "cobalt-signal": {
+      "$value": "#2b22fa",
+      "$type": "color",
+      "$description": "Cobalt Signal — Promotional announcement bar, brand accent — the only chromatic moment in the system, used sparingly to signal news or offers without competing with the research content"
+    }
+  },
+  "font": {
+    "abcnormal": {
+      "$value": "abcNormal",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire interface — navigation, body, buttons, and display headlines. Weight 450 (a half-step) and 500 carry most UI text; 600 is reserved for emphasis. The tight tracking on large sizes (-0.025em at 48px) prevents headlines from feeling airy, keeping them grounded as editorial statements rather than marketing shouts. The positive tracking at 11px (+0.025em) compensates for small-size readability. Weight 400 for body keeps long research paragraphs light on the eye."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://runwayml.com",
+      "siteName": "Runway",
+      "extractedAt": "2026-06-03T18:48:28.392Z",
+      "variant": "compact"
+    }
+  }
+}

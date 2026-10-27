@@ -1,0 +1,602 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-sensei",
+  "release": "quickstart/ja-sensei/j6@1.0.1",
+  "roles": {
+    "page": "body",
+    "display": "h1",
+    "body": "div.features-item > p:not(.lead)",
+    "button-primary": "a.btn.btn-primary",
+    "card": "div.testimonial-item-inner",
+    "section": "#Section103"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 64px",
+    "displayFace": "HKGrotesk 700, tracking 0em",
+    "body": "running text the template does not weigh itself (its .lead paragraphs are 500 by the template)",
+    "button-primary": "first filled, coloured call to action: rgb(75, 209, 115)",
+    "card": "repeated rounded box ×7",
+    "section": "first padded full-width section, padding-top 144px"
+  },
+  "keepScopes": [".t3-topbar"],
+  "keepColors": {
+    ".t3-topbar": "#69747f"
+  },
+  "keepNote": "kept: the dark topbar (#2a3642): it paints no text colour of its own, so its address and hours inherited the worn page's text (MotherDuck 1.05:1, Apple 1.37:1 on the bar); its own grey (#69747f, as the released page computes it) is given back (keepColors)",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#f1f5f7",
+    "--fg": "#69747f",
+    "--fg-2": "#2a3642",
+    "--accent": "#4bd173",
+    "--accent-hover": "#2fba59",
+    "--surface": "#f1f5f7",
+    "--meta": "#9fa7ac",
+    "--success": "#4bd173",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#d8e1e4",
+    "--muted": "#555555",
+    "--font-display": "\"HKGrotesk\", sans-serif",
+    "--font-body": "\"HKGrotesk\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#2a3642"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f1f5f7",
+      "fg": "#69747f",
+      "fg-2": "#2a3642",
+      "accent": "#4bd173",
+      "accent-hover": "#2fba59",
+      "surface": "#f1f5f7",
+      "meta": "#9fa7ac",
+      "success": "#4bd173",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#d8e1e4",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#f1f5f7",
+      "surface": "#ffffff",
+      "fg": "#69747f",
+      "fg-2": "#9fa7ac",
+      "accent": "#4bd173",
+      "accent-on": "#ffffff",
+      "border": "#d8e1e4",
+      "surface-warm": "#2a3642"
+    },
+    {
+      "accent": "#4bd173"
+    },
+    {
+      "fg": "#2a3642"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "bg": "#eeeeee",
+      "surface-warm": "#333333",
+      "border-soft": "#e5e5e5",
+      "border": "#e1e1e1",
+      "accent-hover": "#2db155"
+    },
+    {
+      "bg": "#fcf8e3",
+      "surface-warm": "#2a3642",
+      "border": "#e0e2e3",
+      "border-soft": "#f1f5f7"
+    },
+    {
+      "bg": "#e7e7e7",
+      "border": "#d5d5d5",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "bg": "#f9f9f9",
+      "border": "#e3e3e3"
+    },
+    {
+      "bg": "#f8f8f8"
+    },
+    {
+      "bg": "#f9f2f4"
+    },
+    {
+      "bg": "#e1e9ee"
+    },
+    {
+      "bg": "#e8e8e8"
+    },
+    {
+      "bg": "#f7f7f7"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (64 line colours, 73 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.testimonial-item-inner", ".card"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section103"],
+    "bodyFace": ["body"],
+    "cardLike": [".testimonial-item-inner", ".member-item"]
+  },
+  "contrast": {
+    "accent-text": "div.features-item > a.action, h5.testimonial-name, #t3-mainbody a:not([class*=btn]):not(:has(img))",
+    "muted": "div.testimonial-position, div.module > small",
+    "body": "div.features-item > p, div.testimonial-item-inner > div.lead, #t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 19 tried (byte 8388); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 94,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 12
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 44,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 23
+    },
+    {
+      "hex": "#333333",
+      "uses": 42,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#2a3642",
+      "distance": 18
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 26,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#e7e7e7",
+      "uses": 22,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 23
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 20,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 9
+    },
+    {
+      "hex": "#2a3642",
+      "uses": 18,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#2a3642",
+      "distance": 0
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 13,
+      "kind": "line",
+      "role": "border",
+      "near": "#d8e1e4",
+      "distance": 9
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#d8e1e4",
+      "distance": 8
+    },
+    {
+      "hex": "#2db155",
+      "uses": 8,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#2fba59",
+      "distance": 10
+    },
+    {
+      "hex": "#d5d5d5",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#d8e1e4",
+      "distance": 19
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 8,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 8
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 6,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 9
+    },
+    {
+      "hex": "#f1f5f7",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 19
+    },
+    {
+      "hex": "#e1e9ee",
+      "uses": 6,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 22
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 22
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#d8e1e4",
+      "distance": 11
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f1f5f7",
+      "distance": 6
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (heading and text kinds added) on the published quickstart/ja-sensei/j6 1.0.1 (installer sha256 44391ef8…, the same file as the local build; tasks/evidence/ds-remeasure-4-2026-10-11/ja-sensei-j6): first 4/12 — the kept dark topbar paints no text colour of its own, so its address and hours took the worn page's text (MotherDuck 1.05:1, Apple 1.37:1) and 19 of its elements changed; its own grey is given back (keepColors). Then 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, kept bands 0 differences, no text under 4.5:1 worse than the template's own (the lowest, 2.58, is the topbar's own grey on its bar), 79% or more of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at. Earlier: measured 11/10/2026 on the local build of ja-sensei/j6 1.0.1 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-sensei-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 80% or more of the page follows; without a system 1.0.1 computes exactly what 1.0.0 does; 1.0.1 ships T3 dev mode off (t3DevmodeOff): T3 now serves its tokenized css/ files; with no system 0 of ~2,500 painted values differ from 1.0.0 on five pages; the body probe reads the feature text, not the .lead paragraphs the template sets at 500 Re-verified 12/10/2026 on the unified probe (fix/ds-remeasure) on quickstart/ja-sensei/j6 1.0.1: the hero's Plans & Pricing button (white on a 20% white veil) dropped onto the orange illustration under the systems' wider faces, 2.10:1 under Apple and 2.34:1 under MotherDuck (the probe counted it as the template's text on its picture) — sideRules fill it with the purple the default page shows (#955cf0); after: 12/12, controls 0, regressed 0, 79–92% follows, every kind sampled, the button 4.14:1 under every system (4.16 on the default page), MotherDuck and Apple read by eye (tasks/evidence/ds-reverify-c-2026-10-12/ja-sensei)",
+  "t3DevmodeOff": true,
+  "t3DevmodeNote": "every style of the released template has T3 dev mode on: T3 compiles its LESS per request and never serves css/*.css, so tokenized stylesheets cannot reach the page (09/10: 7-21% followed). The next release ships dev mode off (release-joomla.mjs); with minify on, T3 then serves its combined css/ files, tokenized",
+  "contrastNote": "the home page has no #t3-mainbody text: its feature text and links, testimonials and footer notes are what a reader reads (11/10/2026)",
+  "minVersion": {
+    "quickstart/ja-sensei/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-sensei/j6": "1.0.6"
+  },
+  "maxVersionNote": "1.0.6 21/10/2026 (TEXT-1 batch 1): built from 1.0.5 (release-batch.mjs --overlay); only css/template.css (.btn-info reads the info fill with info-text words) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.2 (11/10/2026, TCH #1180) is 1.0.1's installer, the same bytes (sha256 checked against the release): only its content contract changed, to name T3 dev mode off as the database does, so it wears the slot exactly as 1.0.1 was measured 1.0.4 16/10/2026 (#1375): re-cut of 1.0.3 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "sideRules": {
+    "light": {
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      ".label-info[href]:hover, .label-info[href]:focus": {
+        "background-color": "var(--ds-c-fg) !important",
+        "color": "var(--ds-c-bg) !important",
+        "text-decoration-line": "underline !important"
+      },
+      ".t3-hero .acm-features.style-1": {
+        "background-image": "none",
+        "background-color": "var(--ds-c-accent-band)"
+      },
+      ".ja-masthead": {
+        "background": "var(--ds-c-accent-band) !important"
+      },
+      ".t3-hero .acm-features.style-1 h1": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .features-item": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 p": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead .ja-masthead-detail": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead .ja-masthead-title": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead .ja-masthead-description": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead h1": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead p": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li a": {
+        "color": "color-mix(in oklab, var(--ds-c-on-accent-band) 80%, transparent)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li a:hover": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li a:focus": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li.active a": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li.open a": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .btn-action .btn.btn-default": {
+        "background-color": "transparent",
+        "box-shadow": "inset 0 0 0 1.5px var(--ds-c-on-accent-band)",
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .btn-action .btn.btn-default:hover": {
+        "background-color": "var(--ds-c-on-accent-band)",
+        "box-shadow": "inset 0 0 0 1.5px var(--ds-c-on-accent-band)",
+        "color": "var(--ds-c-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .btn-action .btn.btn-default:focus": {
+        "background-color": "var(--ds-c-on-accent-band)",
+        "box-shadow": "inset 0 0 0 1.5px var(--ds-c-on-accent-band)",
+        "color": "var(--ds-c-accent-band)"
+      },
+      ".t3-header .js-finder-search-query": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".acm-features.style-1 .btn-action .btn.btn-default": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".acm-features.style-1 .mask-wrap": {
+        "background-image": "none",
+        "background-color": "var(--ds-c-surface)",
+        "left": "50%",
+        "right": "auto",
+        "width": "max(calc(100% + 2px), 1836.5px)",
+        "transform": "translateX(-50%)",
+        "clip-path": "polygon(33.3% 6.3%,30.2% 11.4%,24.4% 26.2%,21.2% 33%,18% 37.6%,14.7% 40.1%,9% 40.4%,6% 38.1%,2.8% 33.1%,1.2% 28.6%,0% 24%,0% 100%,100% 100%,100% 85.4%,99.1% 82.2%,97.2% 76.9%,94.6% 71.6%,91.2% 66.3%,89.1% 64.1%,87.2% 64%,85% 65.3%,74% 77.4%,67.4% 81.8%,63.1% 81.8%,59% 78.4%,55.8% 72.7%,51.9% 61.6%,49% 50.8%,42.2% 21.9%,39.5% 12.9%,38% 9.2%,36.4% 6.8%)"
+      },
+      ".ja-masthead a": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead b": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".teams-description .action .btn.btn-default": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      "#t3-topbar ul.ja-login #ja-user-login ul li a:hover, #t3-topbar ul.ja-login #ja-user-login ul li a:focus, #t3-topbar ul.ja-login #ja-user-login ul li a:active": {
+        "color": "var(--ds-c-focus-ring)"
+      },
+      "#t3-topbar ul.ja-login > li #login-form .logout-button input": {
+        "color": "inherit"
+      }
+    },
+    "dark": {
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      ".label-info[href]:hover, .label-info[href]:focus": {
+        "background-color": "var(--ds-c-fg) !important",
+        "color": "var(--ds-c-bg) !important",
+        "text-decoration-line": "underline !important"
+      },
+      ".t3-hero .acm-features.style-1": {
+        "background-image": "none",
+        "background-color": "var(--ds-c-accent-band)"
+      },
+      ".ja-masthead": {
+        "background": "var(--ds-c-accent-band) !important"
+      },
+      ".t3-hero .acm-features.style-1 h1": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .features-item": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 p": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead .ja-masthead-detail": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead .ja-masthead-title": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead .ja-masthead-description": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead h1": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead p": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li a": {
+        "color": "color-mix(in oklab, var(--ds-c-on-accent-band) 80%, transparent)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li a:hover": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li a:focus": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li.active a": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      "#t3-mainnav .t3-megamenu .level0 li.open a": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .btn-action .btn.btn-default": {
+        "background-color": "transparent",
+        "box-shadow": "inset 0 0 0 1.5px var(--ds-c-on-accent-band)",
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .btn-action .btn.btn-default:hover": {
+        "background-color": "var(--ds-c-on-accent-band)",
+        "box-shadow": "inset 0 0 0 1.5px var(--ds-c-on-accent-band)",
+        "color": "var(--ds-c-accent-band)"
+      },
+      ".t3-hero .acm-features.style-1 .btn-action .btn.btn-default:focus": {
+        "background-color": "var(--ds-c-on-accent-band)",
+        "box-shadow": "inset 0 0 0 1.5px var(--ds-c-on-accent-band)",
+        "color": "var(--ds-c-accent-band)"
+      },
+      ".t3-header .js-finder-search-query": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".acm-features.style-1 .btn-action .btn.btn-default": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".acm-features.style-1 .mask-wrap": {
+        "background-image": "none",
+        "background-color": "var(--ds-c-surface)",
+        "left": "50%",
+        "right": "auto",
+        "width": "max(calc(100% + 2px), 1836.5px)",
+        "transform": "translateX(-50%)",
+        "clip-path": "polygon(33.3% 6.3%,30.2% 11.4%,24.4% 26.2%,21.2% 33%,18% 37.6%,14.7% 40.1%,9% 40.4%,6% 38.1%,2.8% 33.1%,1.2% 28.6%,0% 24%,0% 100%,100% 100%,100% 85.4%,99.1% 82.2%,97.2% 76.9%,94.6% 71.6%,91.2% 66.3%,89.1% 64.1%,87.2% 64%,85% 65.3%,74% 77.4%,67.4% 81.8%,63.1% 81.8%,59% 78.4%,55.8% 72.7%,51.9% 61.6%,49% 50.8%,42.2% 21.9%,39.5% 12.9%,38% 9.2%,36.4% 6.8%)"
+      },
+      ".t3-footnav .custom a img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".ja-masthead a": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".ja-masthead b": {
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".teams-description .action .btn.btn-default": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 72%, var(--ds-c-on-ink))",
+        "color": "var(--ds-c-on-ink)"
+      },
+      "#t3-topbar ul.ja-login #ja-user-login ul li a:hover, #t3-topbar ul.ja-login #ja-user-login ul li a:focus, #t3-topbar ul.ja-login #ja-user-login ul li a:active": {
+        "color": "color-mix(in oklab, var(--ds-c-focus-ring) 40%, #000)"
+      },
+      "#t3-topbar ul.ja-login > li #login-form .logout-button input": {
+        "color": "inherit"
+      }
+    }
+  },
+  "sideNote": "the hero's second call to action (Plans & Pricing) is white on a 20% white veil, which shows the purple hero behind it (#955cf0 on the default page, 4.16:1); a system's wider face wraps the hero copy so the button drops onto the orange illustration (2.10:1 under Apple, 2.34:1 under MotherDuck, unified-probe re-verify 12/10/2026): under any system the button is filled with the purple it shows on the default page; visual review 14/10/2026: the hero ends in a wave drawn for the light page — .mask-wrap, a white SVG (mask-hero.svg, fill #fff, its bottom a solid white strip) laid as a background over the bottom 220px of the hero; under a dark system it stayed a white wave and strip between the hero and the dark page. A picture cannot take the page colour (sideRules take no url(), and a filter can only make it black, which is not the ground of the next block), so on the dark side it is dropped and the hero ends square on the worn page; the light side keeps it; 14/10/2026 (visual review, round 3): dropping the wave on the dark side left the hero ending square; the wave is now drawn on both sides in the colour of the block it runs into (.t3-wrapper-inner paints the system surface, as the template’s white wave meets its white wrapper): the picture is replaced by that colour clipped to the wave’s own outline (a polygon traced off mask-hero.svg, viewBox 1920×230), the box sized and centred as background-size: cover places the 220px-high picture (1836.5px wide, wider on a wider screen), so the curve sits where the template draws it. General: it reads the surface role, no colour of any system | 16/10/2026 (batch 2, eye check under Moxie): the home hero (.t3-hero .acm-features.style-1) and every inner page's masthead (.ja-masthead) are the template's coloured band, and the header with its menu sits on them. Tokenized, they wore the accent itself: the menu kept the template's white 80% (about 2:1 on Moxie's light periwinkle accent) and the hero's accent buttons vanished into an accent ground. They now wear the system's accent band (--ds-c-accent-band, tuned 3:1 off the accent so the accent button stands out) with its words (--ds-c-on-accent-band) for the headings, text and menu; the secondary hero button is an on-accent-band outline; the header logo is no longer inverted on a dark system (it is white, drawn for a coloured band). The header search disc draws a white picture icon, so it wears the system's ink. The inner masthead's gradient is !important in the template (.view-article div.ja-masthead), so its band is too. Become an Instructor (.teams-description .action .btn-default) is the template's quiet grey button beside the accent one: it wears the system's ink with on-ink words, on a dark side lifted 28% toward its words (plain ink is no edge at all on a black page; on a light side the lift took Airbnb's grey ink under 4.5:1), not a fill lighter than the accent button. | 21/10/2026 (TEXT-1 batch 1, HOVER-2 and BTN-1): 1.0.6 gave .btn-info its info fill's own words (--ds-c-info-bg fill, --ds-c-info-text words), and under a system that soft fill sat within a hair of the page (#edf1fa on white, #0b1220 on black) on a button with no border: the typography page's Info Button lost its shape (BTN-1, Moxie and refero 5fd3b3b4, both sides). Worn, it is outlined in the info words, transparent at rest and filled with the soft info ground on hover, focus and press, as JA Diner's. A tag link (.label-info[href]) wears the info words as its fill with the page colour on it (ds-bootstrap-roles), the same at rest and on hover, where the template darkens its fill: on hover and focus it takes the page text as its fill with the page colour on it, a pair that always reads. 21/10/2026 (review): a linked info label's hover also underlines, so it never rests on its colours alone.",
+  "bands": {
+    ".t3-topbar": {
+      "ground": "#2a3642",
+      "texts": ["#69747f"],
+      "paint": {
+        ".hidden-xs": {
+          "color": "accent"
+        },
+        ".ja-login > li > a, .ja-login > li > a span, .social-list li a": {
+          "color": "accent"
+        },
+        ".ja-login > li > a:hover, .ja-login > li > a:focus, .ja-login > li > a:hover span, .ja-login > li > a:focus span": {
+          "color": "text"
+        },
+        ".ja-login #login-form .logout-button, .ja-login #login-form .logout-button:hover": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".member-item": {
+      "ground": "#4bd173",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "paint": {
+        ".social-list li a span": {
+          "background-color": "text",
+          "color": "ground"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours. 18/10/2026 (topbar links): the kept topbar resets every --ds-c-* to initial (keepRules), so the template's own link rule (a: var(--ds-c-accent-text, #4bd173), hover var(--ds-c-accent-text-hover, #2fba59)) fell back to its green inside the bar under every system: the Login / Create an account links (their lock and user-plus icons at 991px and under, green on the worn ink), the social links, and on hover nothing changed. The bar paints them itself: the links take the band accent, their hover/focus the band words; the signed-in Log out pill takes the band accent fill with the words that read on it. The login popup is a white card of the module's own CSS inside the bar: its links hover in the page's accent text (sideRules.light: --ds-c-focus-ring, the role that carries the accent text and that the band does not reset; --ds-accent-text-hover is written only when the system's own hover needed a shade) and on the dark side, where the page accent text is made for a dark page and would fade on the white card, that same accent text taken 60% toward black (color-mix with #000: the system's hue, dark enough for the white card under every system).",
+  "literalsNote": "#955cf0: the hero’s second call to action sits on the template’s own purple illustration, which the hero keeps; it is filled with that purple",
+  "followRules": {
+    ".teams-description .btn-default": {
+      "background-color": "accent",
+      "color": "accent-on",
+      "border-color": "accent"
+    },
+    ".testimonial-content .owl-dots .owl-dot": {
+      "background-color": "border!",
+      "border-color": "bg!"
+    }
+  },
+  "contractNotes1317": "13/10/2026 (#1317): .teams-description .btn-default (Become an Instructor) kept its #d8e1e4 fill; it follows the system surface (narrowed to that block: the same class on the features band is one of its worn buttons, and a page-wide rule put the text colour on its accent fill, 3.6:1). The social icons (Facebook, Twitter, Instagram fills, 96 left paints) keep their own brand colours on purpose; the hero is the next step (SCREEN-1 90%). Second run (21:46): .teams-description .btn-default re-measured as narrowed. Third run (23:12): the hero was tried as a gradient brand band (.acm-features.style-1 with .acm-features kept) and every .acm-features block of the page took the accent gradient under its own dark words (1.5-2.1:1, 13 texts under Stripe at 390) while the lead box kept its light ground under the system text (1.06:1 under Moxie); the hero stays as the template paints it (SCREEN-1 90%, a re-release question, #1318), the kept scope and the band are dropped. Round 4 (14/10): the team cards' social icons keep the networks' own fills (#3b5999, #55acee, #e4405f: 12 of the 30 left paints under Moxie); inside the worn member card they take the card's words as their disc and the card's ground as their glyph. The testimonial dots (#d8e1e4, white ring) follow the system border and page. SCREEN-1 stays a template question (#1318): 89% of the first screen is the hero photo and the header over it.",
+  "batch2Note": "16/10/2026 (batch 2, role variables, 1.0.5): the template reads the role variables (VARS-1: 0 open). The hero (.acm-features.style-1) and the inner-page masthead follow the system: their gradient runs accent to accent-hover and their words read accent-on, so the hero is no longer kept whole and its Plans & Pricing button takes accent-hover with accent-on (sideRules), not the hero purple. Become an Instructor takes the accent pair (followRules): its surface fill vanished on a surface ground. The footer logo and the header logo are one-tone drawings for the light page: under a dark system they are shown inverted (sideRules.dark; a filter in sideRules switches off the slot flip of framework logos, so the header logo is named too). The call-to-action banner keeps its padding (template !important): the system button padding shrank it to a pill (LAYOUT-2)."
+}

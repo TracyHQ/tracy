@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1350-fact-rows-together",
+  "kind": "fix",
+  "title": "A repeated Joomla fact row (branch city and address, team member, client, counter) is filled whole from evidence or kept demo",
+  "pr": 1350,
+  "area": "joomla-contract/evidence",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Plan and apply tracy-business/j6 with a description that mentions Dubai and a model that writes \"Dubai\" into the three Contact - Branches city cells.",
+    "S2: Same, with \"Dubai\" written into every city and addr cell of the Branches rows.",
+    "S3: Same, with a description naming one branch whole (city, address with phone) and a second city alone.",
+    "S4: Run partialFactRows over the newest Branches module, a site identity module and jatable team rows."
+  ],
+  "expect": [
+    "S1: no Branches city or addr cell is written; the rows keep the demo.",
+    "S2: no Branches cell is written: one value in the same field of several rows is one fact.",
+    "S3: the named branch's city and address are written; the city without an address is not.",
+    "S4: the Branches module is three city+addr rows, the heading is no row, the site identity is no row, a team row missing its role is dropped."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/brief-joomla.test.mjs, apps/tracy-web/test/fact-fields.test.mjs"
+  },
+  "evidence": "14/10/2026 acceptance of #1331 on dev, site g66-accept-tbjoomla (Tracy Business Joomla 1.2.3): /en/contact Branches rows read \"Dubai: 7/22 Derbenevskaya emb., 8th floor\", \"Dubai: Lipetsk SEZ, 6 Tekhnologichesky proezd\", \"Dubai: Fabrication yard, Zavolzhye IP\"; each gated cell was judged alone and \"Dubai\" is a verbatim piece of the brief.",
+  "fence": "The real tracy-business/j6 map, the seeder's real planner, a model double and a site double; no site is built.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/fact-fields.test.mjs"
+    ]
+  }
+}

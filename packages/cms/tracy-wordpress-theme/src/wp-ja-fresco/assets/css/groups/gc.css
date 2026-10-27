@@ -1,0 +1,659 @@
+/* Group C: the article listings (category blog, featured articles, author listing), the search page and 404. */
+
+/* ---- Listing (pattern tracy/cards) ---- */
+/* The source's category blog sits in the container with 64 px above and 96 px below (32 / 48 px below 768 px). */
+.jf-blog.wp-block-query {
+	box-sizing: border-box;
+	max-width: var(--jf-container);
+	margin: 0 auto;
+	padding: 64px var(--jf-gutter) 96px;
+}
+@media (max-width: 767px) {
+	.jf-blog.wp-block-query {
+		padding-top: 32px;
+		padding-bottom: 48px;
+	}
+}
+/* One column, two from 768 px, three from 992 px; the first card (the leading article) spans the row. */
+.jf-blog .jf-blog-items {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 32px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@media (min-width: 768px) {
+	.jf-blog .jf-blog-items {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+@media (min-width: 992px) {
+	.jf-blog .jf-blog-items {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+.jf-blog .jf-blog-items > li {
+	margin: 0;
+}
+.jf-blog .jf-blog-items > li:first-child {
+	grid-column: 1 / -1;
+}
+.jf-blog-item {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	box-sizing: border-box;
+	border: 1px solid var(--jf-wash-5);
+}
+.jf-blog-item .item-image {
+	margin: 0;
+	overflow: hidden;
+}
+.jf-blog-item .item-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+}
+.jf-blog-item .item-content {
+	flex: 1;
+	padding: 32px;
+	background: var(--jf-wash-4);
+	text-align: center;
+}
+/* The category badge sits over the lower edge of the picture. */
+.jf-blog-item .category-name.wp-block-post-terms {
+	position: relative;
+	margin: -48px 0 24px;
+}
+.jf-blog-item .item-title {
+	margin: 0 0 24px;
+	font-size: var(--jf-h2);
+	line-height: 1.3;
+}
+@media (min-width: 768px) {
+	.jf-blog-item .item-title {
+		font-size: 24px;
+	}
+}
+.jf-blog-item .item-title a {
+	color: var(--ds-c-heading, var(--jf-heading));
+}
+.jf-blog-item .item-title a:hover,
+.jf-blog-item .item-title a:focus-visible {
+	color: var(--jf-accent);
+}
+/* The source prints the whole intro and shows its first three lines, with no read-more link. */
+.jf-blog-item .item-intro {
+	margin: 8px 0 0;
+}
+.jf-blog-item .item-intro p:first-child {
+	display: -webkit-box;
+	margin: 0;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+/* Featured articles: the source closes its featured wrapper after the leading item, so only that item's intro
+   is clamped; every item after it shows its whole intro. */
+.jf-route-featured-articles .jf-blog-items > li:not(:first-child) .jf-blog-item .item-intro p:first-child {
+	display: block;
+	overflow: visible;
+	-webkit-line-clamp: unset;
+}
+.jf-blog-item .item-intro .wp-block-post-excerpt__more-text {
+	display: none;
+}
+
+/* Author with avatar, then the date after a dash. */
+.jf-blog-item .article-info {
+	justify-content: center;
+	gap: 0;
+	font-size: 14px;
+	line-height: 22.4px;
+	color: var(--jf-text);
+}
+.jf-blog-item .article-info > * {
+	display: flex;
+	align-items: center;
+	margin: 0;
+}
+.jf-blog-item .article-info > * + *::before {
+	content: "–";
+	padding: 0 4px;
+	opacity: 0.6;
+}
+.jf-blog-item .createdby {
+	gap: 0;
+}
+.jf-blog-item .createdby-by {
+	margin: 0 4px 0 0;
+}
+.jf-blog-item .author-avatar {
+	margin: 0 8px 0 4px;
+}
+.jf-blog-item .author-avatar img {
+	display: block;
+	border-radius: 50%;
+}
+.jf-blog-item .author-name {
+	font-weight: 700;
+	color: var(--jf-heading);
+}
+.jf-blog-item .author-name a {
+	color: inherit;
+}
+
+/* The leading article: picture above the text, centred, the text pulled 32 px over the picture's margin;
+   from 992 px picture and text side by side, the text left-aligned. */
+.jf-blog-items > li:first-child .jf-blog-item .item-image {
+	margin-bottom: 24px;
+}
+.jf-blog-items > li:first-child .jf-blog-item .item-content {
+	margin-top: -32px;
+	padding: 0 0 32px;
+	background: none;
+}
+.jf-blog-items > li:first-child .jf-blog-item .category-name.wp-block-post-terms {
+	margin: 0 0 24px;
+}
+@media (min-width: 768px) {
+	.jf-blog-items > li:first-child .jf-blog-item .item-title {
+		font-size: var(--jf-h2);
+	}
+}
+@media (min-width: 992px) {
+	.jf-blog-items > li:first-child .jf-blog-item {
+		flex-direction: row;
+	}
+	.jf-blog-items > li:first-child .jf-blog-item .item-image {
+		flex: 0 0 50%;
+		box-sizing: border-box;
+		margin: 0;
+		padding-right: 16px;
+	}
+	.jf-blog-items > li:first-child .jf-blog-item .item-image a,
+	.jf-blog-items > li:first-child .jf-blog-item .item-image img {
+		height: 100%;
+	}
+	.jf-blog-items > li:first-child .jf-blog-item .item-image img {
+		aspect-ratio: auto;
+	}
+	.jf-blog-items > li:first-child .jf-blog-item .item-content {
+		flex: 0 0 50%;
+		box-sizing: border-box;
+		margin: 0;
+		padding: 64px 64px 64px 16px;
+		text-align: left;
+	}
+	.jf-blog-items > li:first-child .jf-blog-item .article-info {
+		justify-content: flex-start;
+	}
+}
+@media (min-width: 1420px) {
+	.jf-blog-items > li:first-child .jf-blog-item .item-image {
+		padding-right: 32px;
+	}
+	.jf-blog-items > li:first-child .jf-blog-item .item-content {
+		padding-left: 32px;
+	}
+}
+
+/* ---- More articles ---- */
+.jf-blog .tracy-more-articles {
+	margin-top: 48px;
+}
+.jf-blog .tracy-more-articles__title {
+	margin: 0 0 24px;
+	font-size: var(--jf-h3);
+	color: var(--jf-accent);
+}
+.jf-blog .tracy-more-articles ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.jf-blog .tracy-more-articles li {
+	margin: 0;
+	padding: 2px 0;
+}
+.jf-blog .tracy-more-articles li + li {
+	margin-top: 10px;
+}
+.jf-blog .tracy-more-articles .wp-block-post-title {
+	margin: 0;
+	font-family: var(--jf-font-body);
+	font-size: 16px;
+	line-height: 24px;
+}
+.jf-blog .tracy-more-articles .wp-block-post-title a {
+	position: relative;
+	left: 0;
+	display: inline-flex;
+	align-items: center;
+	color: var(--jf-heading);
+	transition: left 0.2s ease;
+}
+/* The source's file icon before each link. */
+.jf-blog .tracy-more-articles .wp-block-post-title a::before {
+	content: "";
+	width: 12px;
+	height: 16px;
+	margin-right: 8px;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M8 0H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zm0 1.5L10.5 4H8zM1.5 14.5v-13H7V5h3.5v9.5zM3 8h6v1H3zm0 2h6v1H3zm0 2h6v1H3z'/%3E%3C/svg%3E") no-repeat center / contain;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M8 0H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4zm0 1.5L10.5 4H8zM1.5 14.5v-13H7V5h3.5v9.5zM3 8h6v1H3zm0 2h6v1H3zm0 2h6v1H3z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+.jf-blog .tracy-more-articles .wp-block-post-title a:hover,
+.jf-blog .tracy-more-articles .wp-block-post-title a:focus-visible {
+	left: 3px;
+	color: var(--jf-accent);
+}
+
+/* ---- Pager (the seeder's tracy-pager) ---- */
+/* Square boxes on a faint wash, the current page filled with the accent; the four steps are arrows. The
+   row holds the pager's <nav> and, beside it, the "Page N of M" counter (inc/groups/gc.php). */
+.jf-blog .jf-pager-row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+	margin: 0 0 32px;
+	padding: 32px 0 0;
+}
+@media (max-width: 767px) {
+	.jf-blog .jf-pager-row {
+		padding-top: 16px;
+	}
+}
+.jf-blog .jf-pager-row > .tracy-joomla-pager {
+	margin: 0;
+	padding: 0;
+}
+.jf-blog .tracy-pager__list {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.jf-blog .tracy-pager__item + .tracy-pager__item {
+	margin-left: -1px;
+}
+.jf-blog .tracy-pager__link {
+	display: block;
+	box-sizing: border-box;
+	min-width: 40px;
+	height: 42px;
+	padding: 0 12px;
+	border: 1px solid var(--jf-wash-5);
+	background: var(--jf-wash-4);
+	color: var(--jf-text);
+	font-size: 16px;
+	line-height: 40px;
+	text-align: center;
+}
+.jf-blog a.tracy-pager__link:hover,
+.jf-blog a.tracy-pager__link:focus-visible {
+	color: var(--jf-accent);
+}
+.jf-blog .is-current .tracy-pager__link {
+	background: var(--jf-accent);
+	color: var(--jf-accent-on);
+}
+.jf-blog .is-disabled .tracy-pager__link {
+	opacity: 0.5;
+}
+/* The step words stay the links' text for assistive technology; the boxes show the source's arrows. */
+.jf-blog .tracy-pager__item:is(:first-child, :nth-child(2), :nth-last-child(2), :last-child) .tracy-pager__link {
+	font-size: 0;
+}
+.jf-blog .tracy-pager__item:is(:first-child, :nth-child(2), :nth-last-child(2), :last-child) .tracy-pager__link::before {
+	font-size: 16px;
+}
+.jf-blog .tracy-pager__item:first-child .tracy-pager__link::before {
+	content: "«" / "";
+}
+.jf-blog .tracy-pager__item:nth-child(2) .tracy-pager__link::before {
+	content: "‹" / "";
+}
+.jf-blog .tracy-pager__item:nth-last-child(2) .tracy-pager__link::before {
+	content: "›" / "";
+}
+.jf-blog .tracy-pager__item:last-child .tracy-pager__link::before {
+	content: "»" / "";
+}
+.jf-blog .tracy-pager__counter {
+	margin: 0;
+	padding: 8px 24px;
+	border: 1px solid var(--jf-wash-5);
+	background: var(--jf-wash-4);
+	line-height: 20.8px;
+}
+@media (max-width: 575px) {
+	.jf-blog .tracy-pager__counter {
+		line-height: 19.2px;
+	}
+}
+
+/* ---- Search (templates/search.html, pattern wp-ja-fresco/finder) ---- */
+/* The source's com_finder view: in the container, 64 px above and 96 px below (32 / 48 px below 768 px); a
+   faint panel padded 64 px (48 × 32 px below 992 px, 48 × 8 px below 768 px), inset 44 px from 1200 px. The
+   "Search Terms:" label is hidden on the source; it stays for assistive technology. */
+.jf-finder-wrap {
+	box-sizing: border-box;
+	max-width: var(--jf-container);
+	margin: 0 auto;
+	padding: 64px var(--jf-gutter) 96px;
+}
+.jf-finder {
+	padding: 64px;
+	background: var(--jf-wash-4);
+}
+@media (min-width: 1200px) {
+	.jf-finder {
+		margin: 0 44px;
+	}
+}
+@media (max-width: 991px) {
+	.jf-finder {
+		padding: 48px 32px;
+	}
+}
+@media (max-width: 767px) {
+	.jf-finder-wrap {
+		padding-top: 32px;
+		padding-bottom: 48px;
+	}
+	.jf-finder {
+		padding: 48px 8px;
+	}
+}
+.jf-finder fieldset {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.jf-finder .com-finder__search {
+	margin-bottom: 16px;
+}
+.jf-finder label[for="q"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+.jf-finder .input-group {
+	display: flex;
+	flex-wrap: wrap;
+}
+.jf-finder .input-group-append {
+	display: flex;
+}
+.jf-finder #q {
+	flex: 1 1 0;
+	min-width: 0;
+	box-sizing: border-box;
+	margin: 0 8px 0 0;
+	padding: 10px 24px;
+	border: 1px solid var(--jf-line);
+	border-radius: var(--jf-radius);
+	background: var(--jf-wash-6);
+	color: var(--jf-heading);
+	font: 14px / 21px var(--jf-font-body);
+}
+.jf-finder #q:focus {
+	border-color: var(--ds-c-border-soft, rgba(255, 255, 255, 0.08));
+	color: var(--jf-heading);
+	outline: 0;
+}
+.jf-finder .input-group .btn {
+	margin: 0 4px;
+}
+.jf-finder button.btn-secondary {
+	background: var(--jf-c-secondary);
+	border-color: var(--jf-c-secondary);
+	color: var(--jf-heading);
+}
+@media (max-width: 575px) {
+	.jf-finder #q {
+		flex-basis: 100%;
+		margin: 0 0 12px;
+	}
+	.jf-finder .input-group .btn {
+		padding: 10px 16px;
+		font-size: 13px;
+		line-height: 19.5px;
+	}
+}
+/* The source tips card is a Bootstrap .card (a flex column, so the last tip keeps its 8 px margin inside it)
+   with mb-3 under it. */
+.jf-finder .com-finder__tips {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 16px;
+}
+.jf-finder .com-finder__tips p {
+	margin: 0 0 8px;
+}
+.jf-finder .com-finder__advanced[hidden] {
+	display: none;
+}
+/* The term line and the empty result: 24 px under the form, the term in 800 weight; the empty box padded
+   16 px, its heading 28 / 36.4 px bold. The source prints the sentence under it in Bootstrap's grey
+   (#6c757d, 3.9:1 on the panel); the port keeps the body text colour (D-25). */
+.jf-finder .com-finder__explained {
+	margin: 24px 0 0;
+	padding: 8px 0 0;
+}
+.jf-finder .com-finder__explained .term {
+	font-weight: 800;
+}
+.jf-finder .jf-finder-results.wp-block-query {
+	max-width: none;
+	margin: 0;
+	padding: 0;
+}
+.jf-finder .com-finder__empty {
+	margin: 24px 0 0;
+	padding: 16px;
+}
+.jf-finder .com-finder__empty h2 {
+	margin: 0;
+	color: var(--jf-heading);
+	font: 700 28px / 36.4px var(--jf-font-display);
+}
+.jf-finder .com-finder__empty p {
+	margin: 0;
+	color: var(--jf-text);
+}
+
+/* ---- 404 ---- */
+/* The source answers an unknown path with error.php: no header or footer, one box in the middle of the
+   screen holding the big code, the message and a button home. The words are the draft page-not-found. */
+.jf-error {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	box-sizing: border-box;
+	padding: 16px;
+}
+.jf-404 {
+	box-sizing: border-box;
+	width: 900px;
+	max-width: 100%;
+	padding: 64px;
+	background: var(--jf-wash-4);
+	text-align: center;
+}
+@media (max-width: 575px) {
+	.jf-404 {
+		padding: 32px 24px;
+	}
+}
+.jf-404 .error-code {
+	margin: 0;
+	font-family: var(--jf-font-display);
+	font-size: 288px;
+	line-height: 1;
+	color: var(--jf-heading);
+}
+.jf-404 .error-msg {
+	margin: 64px 0 24px;
+	font-size: 44.8px;
+	line-height: 1.2;
+}
+.jf-404 .error-other-info {
+	margin: 0;
+	line-height: 25.6px;
+	color: var(--jf-text-error);
+}
+@media (max-width: 575px) {
+	.jf-404 .error-code {
+		/* The source keeps 208px and its "404" (1.59em wide) runs past a 320-360px screen; below 381px the size
+		   follows the screen so the word ends inside it. */
+		font-size: min(208px, calc((100vw - 48px) / 1.6));
+	}
+	.jf-404 .error-msg {
+		font-size: 35.2px;
+	}
+}
+.jf-404 .page-redirect {
+	margin: 0;
+	padding-top: 32px;
+}
+.jf-404 .page-redirect .wp-block-button__link {
+	padding: 10.4px 32px;
+	border: 1px solid var(--jf-accent);
+	background: var(--jf-accent);
+	color: var(--jf-accent-on);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 22.4px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+/* ---- Author list (block wp-ja-fresco/authors, template page-author-listing) ---- */
+/* The source's author view: in the container, 64 px above and 96 px below (32 / 48 px below 768 px); one card a
+   row, two from 768 px, three from 992 px, 32 px apart both ways. */
+.jf-authors {
+	padding-top: 64px;
+	padding-bottom: 96px;
+}
+@media (max-width: 767px) {
+	.jf-authors {
+		padding-top: 32px;
+		padding-bottom: 48px;
+	}
+}
+.jf-authors .author-lists {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 32px;
+	/* Each source card keeps its 32 px bottom margin, the last row's too. */
+	margin: 0 0 32px;
+	padding: 0;
+	list-style: none;
+}
+@media (min-width: 768px) {
+	.jf-authors .author-lists {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+@media (min-width: 992px) {
+	.jf-authors .author-lists {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+.jf-authors .author {
+	margin: 0;
+	overflow: hidden;
+}
+.jf-authors .author-block {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+.jf-authors .author-avatar a {
+	display: block;
+	overflow: hidden;
+}
+/* The source zooms the photo 3 % over 1.5 s on hover; the port keeps it still (the hover-jump scan, as the team cards). */
+.jf-authors .author-avatar img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+.jf-authors .author-other-info {
+	flex: 1;
+	padding: 32px;
+	text-align: center;
+	background: rgba(255, 255, 255, .04);
+}
+.jf-authors .author-name {
+	margin: 0 0 16px;
+	font-family: var(--jf-font-display);
+	font-size: var(--jf-h3);
+	font-weight: 400;
+	line-height: 1;
+}
+.jf-authors .author-name a {
+	color: var(--jf-heading);
+	text-decoration: none;
+}
+.jf-authors .author-name a:hover,
+.jf-authors .author-name a:focus-visible {
+	color: var(--jf-accent);
+}
+.jf-authors .author-title {
+	margin: 0 0 8px;
+	color: var(--jf-accent);
+}
+/* Three lines of the biography, the rest clipped (the list under it never shows). */
+.jf-authors .author-about-me {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	max-height: 4.5rem;
+	overflow: hidden;
+}
+.jf-authors .author-about-me ul {
+	margin: 0;
+	padding: 24px 0 0;
+	list-style: none;
+}
+.jf-authors .author-socials.wp-block-social-links {
+	justify-content: center;
+	gap: .75rem;
+	margin: 24px 0 0;
+	padding: 0;
+}
+.jf-authors .author-socials .wp-social-link.wp-social-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	min-width: 36px;
+	margin: 0;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, .06);
+	color: var(--ds-c-on-ink, #fff);
+	font-size: .875rem;
+}
+.jf-authors .author-socials .wp-social-link.wp-social-link:hover {
+	transform: none;
+}
+.jf-authors .author-socials .wp-block-social-link-anchor {
+	padding: 0;
+	color: inherit;
+}

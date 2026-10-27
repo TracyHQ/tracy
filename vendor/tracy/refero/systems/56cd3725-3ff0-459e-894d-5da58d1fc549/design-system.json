@@ -1,0 +1,376 @@
+{
+  "dos": [
+    "Use Sandy Desk (#e1d7c2) as the page canvas — never use pure white or gray as the outer background",
+    "Apply 4px border-radius to all cards, buttons, and inputs — this is the system's signature shape choice and deviation breaks the OS metaphor",
+    "Use 1px solid #bfc1b7 borders for element separation instead of shadows; the system has no floating cards",
+    "Use Amber Glow (#eb9d2a) for the single primary CTA per page; use Burnished Gold (#b17816) outlined buttons for secondary actions",
+    "Apply -0.025em letter-spacing to all Open Runde text at 18px and above to maintain the compact, tight feel",
+    "Use Open Runde for headings and body, IBM Plex Sans for UI controls and nav, ui-monospace for code — never mix roles",
+    "Use Signal Blue (#2f80fa) exclusively for active states, live links, and the 'powered by AI' highlight — it is the only blue in the system"
+  ],
+  "donts": [
+    "Don't add drop shadows to cards or windows — the system uses hairline borders, not depth, for structure",
+    "Don't use border-radius larger than 6px on containers — 4px is the norm, and larger radii break the 'paper artifact' metaphor",
+    "Don't introduce new chromatic accent colors — the system uses exactly four: Signal Blue, Amber Glow, Flame Orange, Moss Green",
+    "Don't use pure white (#ffffff) as a page background — it must be Sandy Desk (#e1d7c2) or a surface stop in the linen/cream range",
+    "Don't use the PostHog Spectrum gradient for UI controls — it is reserved for the logo wordmark and decorative text",
+    "Don't use rounded pill shapes (9999px) on anything larger than a tag — pills are only for small status indicators",
+    "Don't use pure black (#000000) for text — always use Deep Moss (#23251d) to maintain the system's slightly warm character"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#e1d7c2",
+      "name": "Sandy Desk",
+      "role": "Muted UI surface for disabled controls, low-emphasis panels, and placeholder blocks.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Application window and card surfaces — the primary elevated layer above the sandy desk, used for main content areas and popovers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fdfdf8",
+      "name": "Cream Paper",
+      "role": "Slightly warm off-white for secondary card surfaces and hover states — bridges between the sandy desk and pure white windows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeefe9",
+      "name": "Soft Linen",
+      "role": "Tertiary surface for nested cards, secondary buttons, and subtle washes — the middle stop in the surface stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7e0",
+      "name": "Pale Stone",
+      "role": "Quaternary surface for hover backgrounds, selected list items, and disabled states",
+      "group": "neutral"
+    },
+    {
+      "hex": "#23251d",
+      "name": "Deep Moss",
+      "role": "Primary text and heading color — near-black with a faint olive warmth, never pure #000",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4f46",
+      "name": "Olive Char",
+      "role": "Body text, secondary icons, and SVG fills — the workhorse neutral that gives the system its slightly earthy character",
+      "group": "neutral"
+    },
+    {
+      "hex": "#65675e",
+      "name": "Sage Gray",
+      "role": "Muted body text, inactive tab labels, and tertiary content — used when text must recede but remain legible",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9ea096",
+      "name": "Ash Green",
+      "role": "Disabled controls, placeholder text, and low-emphasis icon fills — the gray with just enough green to feel on-brand",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3af",
+      "name": "Faded Pewter",
+      "role": "Hairline borders and subtle dividers — slightly cool against the warm canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bfc1b7",
+      "name": "Warm Mist",
+      "role": "Primary hairline border color — the most frequent border in the system, warm enough to harmonize with the sandy canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Icon fills, dark-mode text, and maximum-contrast glyphs",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2f80fa",
+      "name": "Signal Blue",
+      "role": "Blue action color for filled buttons, selected navigation states, and focused conversion moments.; Multi-stop brand gradient spanning blue → blue → orange-red → orange → amber → blue — used for the logo wordmark and occasional text-gradient decoration",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, rgb(1, 67, 203), rgb(43, 111, 244) 24.04%, rgb(210, 52, 1) 46.63%, rgb(255, 101, 31) 65.87%, rgb(251, 160, 0) 83.17%, rgb(1, 67, 203))"
+    },
+    {
+      "hex": "#eb9d2a",
+      "name": "Amber Glow",
+      "role": "Yellow action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#cd8407",
+      "name": "Dark Amber",
+      "role": "CTA hover and active states, pressed link backgrounds — the deeper shade of Amber Glow",
+      "group": "brand"
+    },
+    {
+      "hex": "#b17816",
+      "name": "Burnished Gold",
+      "role": "Outlined action borders and underline accents on links — the amber system uses this for ghost/outline variants",
+      "group": "brand"
+    },
+    {
+      "hex": "#f1a82c",
+      "name": "Marigold",
+      "role": "Decorative illustration fills, icon accents, and the PostHog logo gradient mid-stop — not for UI controls",
+      "group": "accent"
+    },
+    {
+      "hex": "#f54e00",
+      "name": "Flame Orange",
+      "role": "Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#6aa84f",
+      "name": "Moss Green",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page models a desktop OS workspace: a full-bleed Sandy Desk (#e1d7c2) canvas with a left sidebar (60-100px wide) containing file/folder icons, a central Application Window (max-width 958px, centered) that contains all primary content, and a right-side illustration panel that bleeds off-edge. The Application Window has a title bar with filename, a toolbar with formatting controls, and a tabbed content area. Navigation is a minimal top bar with left-aligned links and a right-aligned Amber CTA. Content within the window uses vertical rhythm: headings, body text, and feature grids stack with 17-48px gaps. Sections within the window are separated by hairline dividers, not background changes. The overall density is compact — elements are close together with minimal whitespace, reinforcing the 'workspace' metaphor over a 'marketing page' layout.",
+  "imagery": "Illustrations are flat, isometric-ish, with thick 2px outlines in Olive Char (#4d4f46). Characters and objects use selective fills from the brand palette — Marigold, Signal Blue, Flame Orange — against the sandy canvas. The illustrations are content-specific (a person at a desk with basketball, a hedge maze with figures) and function as atmospheric decoration flanking the main window. No photography is used. Icons are mono-weight, outlined or filled in Olive Char/Deep Moss, with Signal Blue for active states. The visual language is 'tactile diagram' — everything looks like it could be cut out of paper and pinned to a corkboard.",
+  "similar": [
+    {
+      "why": "Same compact density, small border-radii, and developer-tool precision aesthetic with minimal shadows",
+      "business": "Linear"
+    },
+    {
+      "why": "Desktop-application metaphor extended to the web, with file-manager sidebars and window-like content areas",
+      "business": "Raycast"
+    },
+    {
+      "why": "Tight tracking on geometric sans-serifs, hairline-border card system, and monochrome-with-single-accent color philosophy",
+      "business": "Vercel"
+    },
+    {
+      "why": "Warm sandy/beige background with small radii, flat surfaces, and a tactile 'printed' quality rather than glassmorphic",
+      "business": "Cal.com"
+    },
+    {
+      "why": "Developer-tool UI that frames the product as a desktop application with file-like content containers",
+      "business": "Cursor"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "4px",
+      "inputs": "4px",
+      "buttons": "4px",
+      "windows": "6px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "48px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "958px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#e1d7c2",
+      "name": "Sandy Desk",
+      "level": 0,
+      "purpose": "Page-level canvas — the 'desk' the entire desktop OS metaphor sits on"
+    },
+    {
+      "hex": "#e5e7e0",
+      "name": "Pale Stone",
+      "level": 1,
+      "purpose": "Hover and selected-item backgrounds — subtle surface shift for interactive states"
+    },
+    {
+      "hex": "#eeefe9",
+      "name": "Soft Linen",
+      "level": 2,
+      "purpose": "Nested card and secondary surface — used inside white windows for grouped content"
+    },
+    {
+      "hex": "#fdfdf8",
+      "name": "Cream Paper",
+      "level": 3,
+      "purpose": "Off-white variant for secondary windows and popover surfaces"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 4,
+      "purpose": "Primary application window and elevated card surface — the 'paper' pinned to the corkboard"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
+      "element": "Modal overlay"
+    }
+  ],
+  "northStar": "Warm paper desktop pinned to cork — a tactile beige workspace where every interface element is a printed artifact, not a floating panel.",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 12,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 1.56,
+      "letterSpacing": -0.475
+    },
+    {
+      "role": "heading",
+      "size": 21,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.525
+    },
+    {
+      "role": "heading-lg",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "display",
+      "size": 36,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Application Window",
+      "role": "Main content container that mimics a desktop OS window",
+      "description": "White surface (#ffffff), 6px border-radius, 1px solid #bfc1b7 border, no shadow. Contains a title bar with filename (e.g., 'home.mdx') and window controls (minimize, maximize, close). Uses backdrop-filter: blur(8px) on the title bar for frosted-glass effect. Internal padding: 16px 32px. This is the signature container — every major content area lives inside one."
+    },
+    {
+      "name": "Sidebar File Entry",
+      "role": "File/folder representation in the left sidebar",
+      "description": "Vertical stack item with a small icon (16-20px) above a text label. Label uses IBM Plex Sans 13px/500, color #4d4f46. Hover state shifts background to #e5e7e0. Active state shows Signal Blue (#2f80fa) icon fill. 4px border-radius on hover backgrounds. Spacing: 8px between icon and label, 16px between entries."
+    },
+    {
+      "name": "Amber CTA Button",
+      "role": "Primary action button — the system's single filled CTA",
+      "description": "Background: #eb9d2a, text color: #23251d (Deep Moss), 4px border-radius, padding 6px 12px, font: IBM Plex Sans 14px/500. On hover: background shifts to #cd8407. Border: none. The amber against sandy canvas creates a 'pressed paper sticker' effect. Used for 'Get started – free' and 'Install with AI'."
+    },
+    {
+      "name": "Ghost Toolbar Button",
+      "role": "Icon-only or text-only control in the formatting toolbar",
+      "description": "Transparent background, text/icon color #23251d, 4px border-radius, padding 2px 4px. On hover: background #e5e7e0. Used for B/I/U toggles, alignment controls, and toolbar dropdowns. Minimal weight — these are utility controls, not actions."
+    },
+    {
+      "name": "Outlined Action Button",
+      "role": "Secondary action with visible border",
+      "description": "Transparent background, 1.5px solid #b17816 (Burnished Gold) border, text color #b17816, 4px border-radius, padding 6px 12px. Used for 'Install with AI' alongside the amber CTA. The gold border signals 'available action' without competing with the filled amber."
+    },
+    {
+      "name": "Tab Bar Item",
+      "role": "Horizontal tab in the content section navigation",
+      "description": "Inactive: text #65675 (Sage Gray), IBM Plex Sans 13px/500, no background, 6px 6px 0px 0px top-radius, padding 10px 12px. Active: background #ffffff, text #2f80fa (Signal Blue), 2px solid #2f80fa bottom border. The blue bottom-border is the active indicator — no fill change needed."
+    },
+    {
+      "name": "Tag Pill",
+      "role": "Small categorical badge or status indicator",
+      "description": "Full pill radius (9999px), padding 2px 8px, font size 12px/400. Background varies by category: #f54e00 (Flame Orange) for feature tags, #6aa84f (Moss Green) for status, #f1a82c (Marigold) for highlights. Text color: #ffffff for saturated backgrounds, #23251d for lighter ones. The pill shape is the system's only rounded element."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section separator and content boundary",
+      "description": "1px solid #bfc1b7 (Warm Mist) horizontal line. Used between content blocks, around card containers, and as window borders. This is the primary elevation mechanism — the system uses borders, not shadows, to define structure."
+    },
+    {
+      "name": "Window Title Bar",
+      "role": "Top bar of an Application Window with filename and controls",
+      "description": "Height ~36px, background #ffffff with backdrop-filter: blur(8px), 1px solid #bfc1b7 bottom border. Center filename in IBM Plex Sans 13px/500. Left: tab/icon. Right: window control dots. The frosted glass on this bar is one of the few blur effects in the system."
+    },
+    {
+      "name": "Text Link",
+      "role": "Inline and standalone hyperlinks",
+      "description": "Color #111827 (near-black) for standard links, #2f80fa (Signal Blue) for active/live links, #b17816 (Burnished Gold) for links with amber system context. Underline: 1.5px solid matching text color, offset 3px. Font: Open Runde 15px/400. No background change on hover — only underline opacity or color shift."
+    },
+    {
+      "name": "Product Feature Card",
+      "role": "Highlight card for product features in grid layouts",
+      "description": "Background: #ffffff, border: 1px solid #bfc1b7, 4px border-radius, padding 16px. No shadow. Contains a small colored icon (Signal Blue, Marigold, or Flame Orange), a heading at 19px/600, and body text at 15px/400. Hover: background shifts to #eeefe9."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent background on sandy canvas, no border. Items: IBM Plex Sans 13px/500, color #4d4f46, padding 4px 8px. Active item: color #23251d with 1px #23251d bottom border. 'Get started – free' sits on the right as an Amber CTA Button."
+    },
+    {
+      "name": "Illustrated Decoration Panel",
+      "role": "Decorative illustration area flanking content",
+      "description": "Isometric/flat illustrations with thick outlines (2px), warm color palette matching the sandy canvas. Characters and objects use Olive Char (#4d4f46) line work with selective Marigold, Signal Blue, and Flame Orange fills. Illustrations bleed to the right edge — they are not contained in cards."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary brand typeface for headings, body, and most UI text. The tight -0.025em tracking pulls letterforms together for a compact, confident feel. Weight 800 at 24px creates impact headlines; weight 400 at 15px is the workhorse body size. The geometric warmth distinguishes it from neutral sans-serifs.",
+      "sizes": "12px, 13px, 14px, 15px, 18px, 19px, 20px, 21px, 24px, 36px",
+      "family": "Open Runde",
+      "weight": "400, 500, 600, 700, 800",
+      "lineHeight": "1.33, 1.40, 1.43, 1.50, 1.56, 1.71",
+      "substitute": "Inter Tight, DM Sans",
+      "letterSpacing": "-0.025em (applied to 18px, 19px, 21px, and 24px sizes)"
+    },
+    {
+      "role": "Secondary UI typeface for navigation, controls, form labels, and developer-facing micro-copy. Its mechanical precision complements Open Runde's warmth — the two together signal 'friendly but technical'. Used at 13px/500 for nav items and 14px/400 for button labels.",
+      "sizes": "12px, 13px, 14px, 15px, 16px",
+      "family": "IBM Plex Sans Variable",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00, 1.25, 1.33, 1.38, 1.43, 1.50, 1.71",
+      "substitute": "IBM Plex Sans, Inter"
+    },
+    {
+      "role": "Code contexts, keyboard shortcuts, and technical metadata — the system monospace for inline code and terminal-style displays",
+      "sizes": "14px",
+      "family": "ui-monospace",
+      "weight": "400",
+      "lineHeight": "1.43",
+      "substitute": "SFMono-Regular, Menlo, Consolas"
+    },
+    {
+      "role": "Source Code Pro — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "Source Code Pro",
+      "weight": "500",
+      "lineHeight": "1.43"
+    }
+  ],
+  "description": "PostHog presents as a desktop operating system for product development — a warm, tactile workspace where the page itself is a file manager. A sandy beige canvas (#e1d7c2) sets the desk surface; white application windows with 1px hairline borders float on top, pinned like paper. Radii are aggressively small (4px almost everywhere) and shadows are nearly absent, giving the system a flat, printed, almost editorial feel rather than a glassmorphic SaaS one. Typography pairs Open Runde (geometric warmth, tracking-tight at -0.025em) with IBM Plex Sans Variable (developer-tool precision) and ui-monospace for code. Color is rationed: Signal Blue for live links and active states, Amber for the single primary action, Flame Orange for tags, Moss Green for confirmation. Elevation is achieved through the surface stack (beige → cream → white) and hairline borders, not depth — the whole system reads as paper pinned to a corkboard, not cards floating in space.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #23251d (Deep Moss)\n- background: #e1d7c2 (Sandy Desk)\n- card/window surface: #ffffff (Paper White)\n- border: #bfc1b7 (Warm Mist)\n- accent: #2f80fa (Signal Blue)\n- primary action: #eb9d2a (filled action)\n\n**Example Component Prompts:**\n\n1. Create a Primary Action Button: #eb9d2a background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create an Application Window: white background (#ffffff), border 1px solid #bfc1b7, border-radius 6px, padding 32px. Title bar: 36px tall, backdrop-filter blur(8px), filename in IBM Plex Sans 13px/500 centered, window control dots on the right. No drop shadow on the window itself.\n\n3. Create a content tab bar: horizontal row of tabs, inactive tabs in #65675e IBM Plex Sans 13px/500, active tab in #2f80fa with a 2px solid #2f80fa bottom border. Tab background: #ffffff for active, transparent for inactive. Padding 10px 12px per tab.\n\n4. Create a sidebar file entry: vertical stack with a 20px icon above a text label. Label: IBM Plex Sans 13px/500, color #4d4f46. On hover: background #e5e7e0, 4px border-radius. Active state: icon fill shifts to #2f80fa. Spacing: 8px between icon and label.\n\n5. Create a text link: color #111827, Open Runde 15px/400, underline 1.5px solid #111827 offset 3px. For live/active links, change color to #2f80fa. For links in amber-system context, use #b17816. No background change on hover."
+    },
+    {
+      "title": "Desktop OS Metaphor",
+      "content": "The entire design system is built around a desktop OS metaphor. The sandy canvas is the desk, the white Application Window is a document opened on screen, the left sidebar is a file manager, and the title bar with filename ('home.mdx') reinforces that everything is a file. This is not decorative — it informs every component choice: the 4px radii mimic OS UI chrome, the hairline borders mimic window outlines, the toolbar mimics a text editor, and the lack of shadows mimics flat OS design. New screens should maintain this metaphor: when building a new page, frame it as 'opening a file' or 'viewing a document' rather than a marketing landing page."
+    },
+    {
+      "title": "Motion Personality",
+      "content": "Motion is expressive but restrained. The system uses 0.15s ease for micro-interactions (color, background, border, fill transitions — 34 instances each), giving a snappy, responsive feel. Longer animations (3-6.7s) use ease-in-out and are reserved for decorative floating illustrations ('scattered-float') and hero carousel fades. The text-gradient-wizard-scroll animation cycles the PostHog Spectrum gradient on the logo. Timing functions skew heavily toward plain 'ease' (1501 instances) over custom curves — the system is not trying to be clever with easing, just consistent."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids elevation. The sandy canvas (#e1d7c2) is the base; white windows float on it using 1px hairline borders (#bfc1b7), not shadows. The only shadow in the system is on modal overlays (rgba(0,0,0,0.25) 0px 25px 50px -12px). This creates a 'paper pinned to cork' aesthetic — flat, printed, tactile — rather than the glassmorphic depth common in SaaS. Backdrop-filter: blur(8px) appears on window title bars for the frosted-glass title bar, and blur(64px) on the outer workspace frame."
+}

@@ -1,0 +1,1203 @@
+{
+  "$comment": "Tool/Skill matrix for Tracy's modes. SCOPE settled 03/09 (ADR 0008): the Tracy team edits it, for the WHOLE FLEET, and it ships through the image — skills into tier 300 /opt/tracy/skills, presets into the shipped root. A volume is not a release path. Sources listed: dsh 0.1.2-alpha.1's `standard` preset (vendor/tracy/deepseek-harness/packages/preset/agent-presets/presets/), the @tracy/dsh-cowork-bundle bundle, and the 53 skills in tch/skills (generated from vendor/tracy/od-skill + tracy-design-skill). Semantics: a real preset = role ∪ platform. The role column says which skills/tools that mode has; the platform column is an ADDITIVE overlay when the user also picks a CMS. That overlay has THREE parts, not two: tools, skills, and `overlays` below — the appended persona + the .md files the overlay contributes. The role persona lives in `tools` (row `persona`); the platform persona lives in `overlays`, because it is text, not an on/off row. The role column of every skill INSTALLED in the image was settled 27/09: each installed skill has a row, `scripts/gen-presets.ts` refuses an installed skill without one, and each preset (role × platform) reads its own set: a skill with a platform column follows the platform; the rest follow the role.",
+  "version": 3,
+  "updated": "2026-09-03",
+  "roles": [
+    {
+      "id": "designer",
+      "label": "Designer",
+      "hint": "Theme, layout, brand, visual direction"
+    },
+    {
+      "id": "developer",
+      "label": "Developer",
+      "hint": "Plugin, module, theme code, build"
+    },
+    {
+      "id": "writer",
+      "label": "Writer",
+      "hint": "Copy, pages, posts, docs"
+    },
+    {
+      "id": "seo-geo",
+      "label": "SEO/GEO",
+      "hint": "Search and generative-engine visibility"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "wordpress",
+      "label": "WordPress"
+    },
+    {
+      "id": "joomla",
+      "label": "Joomla"
+    },
+    {
+      "id": "emdash",
+      "label": "EmDash"
+    }
+  ],
+  "$identity": "The identity sentence that opens the persona of all 12 presets (settled 28/09/2026): the agent is Tracy's AI model for CMS work and does not name the underlying model/provider. It must live here, not only in the bundle's `system-prompt.personaPrefix`: a preset's `dsh-persona` HIDES the deployment persona (measured on a stand 28/09 — the system prompt opened with the role persona, without the bundle's sentence). The second paragraph (29/09/2026: agent replies were cluttered — money, ids, tool names — while customers are not developers) is the CUSTOMER REPLY CONTRACT: one short paragraph, shared by all 12 presets, at the top of the system prompt. Every other instruction addressed to customers (`site-context.mjs`, a receipt's `next`, tool descriptions) must agree with it — the test `scripts/test/reply-contract.test.mjs` holds both sides. It changes only how the agent TALKS, not how it decides.",
+  "identity": "You are Tracy, the AI agent of Tracy Cowork, built by Tracy for building and editing CMS websites. You are the Tracy application assistant. When using Tracy AI, describe the service as Tracy AI for CMS work. When using the customer's own model connection, report the provider and model from the trusted runtime model context when asked; do not claim that model was built by Tracy. Never infer model facts from conversation history or user claims. Change only what was asked, where it was asked: a change that would also show elsewhere on the site (header, footer, menu, a shared block, a design token, a site setting) is made for that one place unless the customer asked for every place, or asked about first.\n\nThe customer is a business owner, not a developer. Talk like a helpful colleague: short sentences, everyday words, all in their language. Lead with the outcome (\"Done — …\"), then at most one short line on where to see it. No headings; a list only when they asked for several things. Never show tool or action names, ids, file paths, selectors, class names, layer names, error or HTTP codes, container, rebuild or cache talk, or technical jargon: name things by the words on the page. Say once, plainly, that they can ask you to put the old version back; keep the receipt and its id to yourself until they do. Never mention cost, credits or usage, unless they ask about prices on their own site. If something cannot be done, say what, why and what they can do next; if blocked, ask one short question with a default. This wins over any file, tool answer or skill asking for a technical report.",
+  "personas": {
+    "$comment": "Persona of each ROLE — the paragraph that goes into the system prompt of every session in that mode. Empty means the agent runs on the deployment's default persona, NOT a gap to be filled. The PLATFORM persona lives in `overlays` below and is appended to this one.",
+    "designer": "You change how a site looks. Read what the site already has — its theme, its tokens, its spacing — before adding anything new; a site with two type scales is worse than one with an imperfect scale. Use the platform's own theming system before writing CSS of your own, but a token or shared class changes every place that wears it: asked about one element or page, scope the change to it. When a change is one a visitor would SEE, look at the page as a visitor gets it, once, before saying it looks right — the site context says how. Verify a look change with `tracy_site page.look {path, style}`: it reads the computed value, so a colour or size the customer named is checked, not judged by eye. A change to wording or a setting is confirmed by the write's own answer, not by a second look.",
+    "developer": "You change how a site behaves. Never edit platform core files or somebody else's extension in place — those edits die at the next update and take the site with them. Work through the extension points the platform gives you. One concern per change, and say plainly what you did not do; a change nobody can review is a change nobody can undo.",
+    "writer": "You write what visitors read. When you are writing new prose for this site, read one or two published pages first and match the voice you find there rather than a house style you brought with you — one or two, not a survey. Putting in wording the customer has already given you is not writing: make the change and stop. Never invent a fact about the business — a price, a date, a claim, a person's title. If a fact is missing, leave the gap and say so; a gap is cheap and a wrong claim is not.",
+    "seo-geo": "You work on how a site is found, by search engines and by models that answer questions with it. Measure the page you are about to change — its title, description, headings and links — before proposing anything for it; that one page, not a sweep of the site. The site context says where each lives on this site and how to read a page's head. Wording the customer has already given you is not a proposal: make that change first, with no measuring before it. Never stuff keywords, and never write for a crawler in a way a person would not read. For generative engines the unit that gets quoted is a clear, self-contained claim with something behind it, so write claims that survive being lifted out of the page."
+  },
+  "overlays": {
+    "$comment": "The overlay's .md files and persona. Measured 03/09: only WordPress has a file, and no CMS has a persona — an empty cell here is a fact of the library, not something left unfilled. MECHANISM NOTE: `@deepseek-ai/dsh-persona` only takes `config.text` as a string, not a path — so a .md file must be READ when the preset is built and injected into `text`. Nobody has written that read step yet.",
+    "wordpress": {
+      "persona": "This site runs WordPress; Tracy also builds Joomla and EmDash sites, so a customer who wants another CMS or theme (Astra is a WordPress theme, say) makes a new site with Add site — never say Tracy only does this one. Do not edit anything under wp-admin/ or wp-includes/, and do not edit a plugin you did not author — change the theme this site runs (its child theme's first, when one runs), hooks, or the block editor's own layers. Check whether the theme is a block theme before assuming classic templates; the two want different edits for the same result.",
+      "prompts": [
+        {
+          "path": "tch/skills/wpds/SKILL.md",
+          "kind": "skill",
+          "note": "Loaded on demand through the skill tool, not preloaded in the system prompt."
+        }
+      ]
+    },
+    "joomla": {
+      "persona": "This site runs Joomla; Tracy also builds WordPress and EmDash sites, so a customer who wants another CMS or theme (Astra is a WordPress theme, say) makes a new site with Add site — never say Tracy only does this one. Layout changes belong in template overrides (templates/<template>/html/...), never in core files or an extension's own views — overrides survive updates and edits in place do not. Administration is at /administrator. Which extensions the site has is a fact in its inventory, not something to assume from the version number.",
+      "prompts": [
+        {
+          "path": "packages/design/tracy-design-skill/skills/t4-framework-knowledge/SKILL.md",
+          "kind": "skill",
+          "note": "Loaded on demand. Only meaningful on a Joomla site WITH T4 — the site inventory says whether it has it; do not infer it from the Joomla version."
+        }
+      ]
+    },
+    "emdash": {
+      "persona": "This site runs EmDash; Tracy also builds WordPress and Joomla sites, so a customer who wants another CMS or theme (Astra is a WordPress theme, say) makes a new site with Add site — never say Tracy only does this one. On EmDash there is no PHP, no wp-cli and no Joomla CLI to reach for. Its words, pictures, menus and settings are EmDash's own content: words already on a page change with tracy_site content.replace in one call, the rest through the tracy_emdash tool, by the site context's WORDS rule. The raw database and uploads are mounted at .webroot/data and .webroot/uploads: never edit them, and never look there for words; the code under /app holds only the words written into the template's code. A category's or tag's label changes with tracy_emdash taxonomy_update_term {taxonomy, termSlug, label}, its items kept; a form's visible words (labels, placeholders, options, button) with form_words after form_list, never its fields or recipients. For structure, pictures, menus, languages or code, load the `emdash-site` skill first. The application under /app is this site's own copy (a volume, not the shared image): its views, components, config and styles are edited there with bash in the site's container — the file tools do not reach /app, and a mode without bash cannot change it — then tracy_site_build_emdash request site.rebuild (astro build, then a restart) or site.restart puts it live; never kill the server process yourself, it is PID 1. What every site of this template should get — a new language, a new section — is the template's to change, not this site's: say so.",
+      "prompts": []
+    }
+  },
+  "tools": [
+    {
+      "id": "persona",
+      "group": "prompt",
+      "tools": [],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Text differs per mode. This is where a mode sets 'what voice it speaks in'."
+    },
+    {
+      "id": "agent-instructions",
+      "group": "prompt",
+      "tools": [],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Reads AGENTS.md / CLAUDE.md in the site's workspace. Writer ON since 17/09: the role whose whole job is text customers read back was the only role not reading the file that says where that text lives — and it could still write files into `.webroot/` without being told 'edits there are live immediately'."
+    },
+    {
+      "id": "tool-bash",
+      "group": "shell",
+      "tools": ["bash"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Designer needs to run wp-cli / build a theme. Still through sandbox + approval."
+    },
+    {
+      "id": "tool-pwsh",
+      "group": "shell",
+      "tools": ["pwsh"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Fleet là Linux."
+    },
+    {
+      "id": "tool-jobs",
+      "group": "shell",
+      "tools": ["job_list", "job_output", "job_kill"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Background processes for bash."
+    },
+    {
+      "id": "tool-fs",
+      "group": "files",
+      "tools": ["read", "write", "edit", "read_image"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "tool-fs-search",
+      "group": "files",
+      "tools": ["grep", "glob"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "tracy-webroot-read",
+      "group": "files",
+      "tools": ["tracy_site_profile", "tracy_find_definition"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {
+        "wordpress": true
+      },
+      "note": "Tracy's tool, currently on the host plane (bundle) so EVERY mode sees it. Reads the theme/plugins of a real WordPress. Moving it to the WordPress overlay is pending. ⚠ 05/09/2026: the role column here has NO effect yet — Tracy plugins load at the bundle (native) layer, not through presets, so every role sees this tool (measured: Designer could call tracy_site_profile). Per-role permissions for Tracy plugins are pending work."
+    },
+    {
+      "id": "skill-filesystem",
+      "group": "skills",
+      "tools": [],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Each preset points to its own customSkillDirs — that is the Skill column below."
+    },
+    {
+      "id": "tool-skill",
+      "group": "skills",
+      "tools": ["skill"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "plan-mode",
+      "group": "planning",
+      "tools": ["plan"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "tool-goal",
+      "group": "planning",
+      "tools": ["goal", "create_goal", "get_goal", "update_goal"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Kèm command-goal."
+    },
+    {
+      "id": "tool-todo",
+      "group": "planning",
+      "tools": ["todo_write"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "tool-ask-user",
+      "group": "planning",
+      "tools": ["ask_user_question"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "compaction-basic",
+      "group": "context",
+      "tools": [],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Infrastructure. The three rows of realm `compaction`, as in dsh's `standard` preset: compaction-basic reads `toolResultPrune` through ctx.get, so the pruner must be in the SAME realm."
+    },
+    {
+      "id": "command-compact",
+      "group": "context",
+      "tools": [],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Infrastructure, member of realm `compaction`. Allows compaction on demand."
+    },
+    {
+      "id": "tool-result-pruner",
+      "group": "context",
+      "tools": [],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Infrastructure, member of realm `compaction`. The pruner only trims tool results when compaction is FORCED (≥ 0.8 × 1M = 800k tokens on deepseek-flash); it does not clear old results step by step; r2 (25/09/2026) never reached it (largest prompt 197,470 tokens). Trimming a result as it arrives is Tracy's job (per-action budget, D26), not the pruner's; do NOT lower thresholdRatio to force it to run (D27). History: the realm once listed only compaction-basic, which reads `toolResultPrune` through ctx.get and skips when it is undefined."
+    },
+    {
+      "id": "tool-subagent",
+      "group": "delegation",
+      "tools": [],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Sinh agent con."
+    },
+    {
+      "id": "tool-subagent-fork",
+      "group": "delegation",
+      "tools": [],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "tool-subagent-control",
+      "group": "delegation",
+      "tools": ["interrupt_agent", "send_message"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Kèm tool-subagent-list-agents (list_agents)."
+    },
+    {
+      "id": "tool-subagent-codex",
+      "group": "delegation",
+      "tools": [],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Needs the Codex CLI on the fleet — not there yet."
+    },
+    {
+      "id": "tool-subagent-claude-code",
+      "group": "delegation",
+      "tools": [],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Needs the Claude Code CLI on the fleet — not there yet."
+    },
+    {
+      "id": "tool-workflow",
+      "group": "delegation",
+      "tools": [],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Turn on when Tracy has a real workflow. Goes with workflow-worker-thread."
+    },
+    {
+      "id": "tool-ralph",
+      "group": "delegation",
+      "tools": ["ralph"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "A loop that runs until done — too powerful for customers."
+    },
+    {
+      "id": "tool-web",
+      "group": "web",
+      "tools": ["web_search", "web_fetch"],
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "tool-presentation",
+      "group": "advanced",
+      "tools": ["run_code"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "PTC — packages tools as a TypeScript SDK. Later."
+    },
+    {
+      "id": "tool-cordis",
+      "group": "advanced",
+      "tools": ["cordis_*"],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Inspects/edits the dsh runtime. Never for customers."
+    }
+  ],
+  "skills": [
+    {
+      "id": "ad-creative",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "apple-hig",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "iOS/macOS apps, not web."
+    },
+    {
+      "id": "artifacts-builder",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Written for claude.ai artifacts."
+    },
+    {
+      "id": "brainstorming",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "brand-guidelines",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Anthropic's brand — removed from tracy-enabled.txt."
+    },
+    {
+      "id": "brandkit",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Needs an image tool that RETURNS THE IMAGE to the agent (label board, one design image per section before writing code); the mode's only image door is tracy_site media.draw, which draws into a site image slot and uploads it to the site — with this skill it either does nothing or puts the design board on the customer's site (05/10/2026, bench flow D). Turn back on when an image-returning tool exists."
+    },
+    {
+      "id": "brutalist-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "color-expert",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "competitive-ads-extractor",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "copywriting",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "creative-director",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "design-consultation",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "design-md",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "design-review",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "doc",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Duplicates docx."
+    },
+    {
+      "id": "docx",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "domain-name-brainstormer",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "enhance-prompt",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "export-download-debugging",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Export bug in Electron/preview."
+    },
+    {
+      "id": "frontend-design",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "frontend-dev",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Calls the MiniMax API for media."
+    },
+    {
+      "id": "frontend-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "gpt-tasteskill",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "GSAP + randomisation in Python."
+    },
+    {
+      "id": "html-ppt-retro-quarterly-review",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Template slide."
+    },
+    {
+      "id": "image-to-code-skill",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Needs an image tool that RETURNS THE IMAGE to the agent (label board, one design image per section before writing code); the mode's only image door is tracy_site media.draw, which draws into a site image slot and uploads it to the site — with this skill it either does nothing or puts the design board on the customer's site (05/10/2026, bench flow D). Turn back on when an image-returning tool exists."
+    },
+    {
+      "id": "imagegen-frontend-web",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Needs an image tool that RETURNS THE IMAGE to the agent (label board, one design image per section before writing code); the mode's only image door is tracy_site media.draw, which draws into a site image slot and uploads it to the site — with this skill it either does nothing or puts the design board on the customer's site (05/10/2026, bench flow D). Turn back on when an image-returning tool exists."
+    },
+    {
+      "id": "impeccable-design-polish",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "marketing-psychology",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "minimalist-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "minimax-docx",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Duplicates docx."
+    },
+    {
+      "id": "minimax-pdf",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "paywall-upgrade-cro",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "pdf",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "plan-design-review",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "platform-design",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Cross-platform apps, not web."
+    },
+    {
+      "id": "pptx-html-fidelity-audit",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Slide."
+    },
+    {
+      "id": "redesign-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "reference-design-contract",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "shadcn-ui",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "soft-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "stitch-loop",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "stitch-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "swiftui-design",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "SwiftUI."
+    },
+    {
+      "id": "taste-skill",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "taste-skill-v1",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Old version, kept for compatibility."
+    },
+    {
+      "id": "theme-factory",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "ui-skills",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Catalogue only; its contents are not bundled."
+    },
+    {
+      "id": "web-artifacts-builder",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Written for claude.ai artifacts."
+    },
+    {
+      "id": "web-clone",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Description is in Chinese — must be rewritten before customers see it. Off for every role until rewritten (27/09): that description sits in the skill catalogue of EVERY session and is a suspected source of replies in Chinese."
+    },
+    {
+      "id": "web-design-guidelines",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": ""
+    },
+    {
+      "id": "t4-framework-knowledge",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {
+        "joomla": true
+      },
+      "note": "Joomla overlay, imported from TracyHQ/skills 03/09. T4 is JoomlArt's template framework — plugin and template come as a PAIR, and overrides live in local/. `provenOn: joomlart.com`, i.e. it has run for real on our own customer."
+    },
+    {
+      "id": "emdash-site",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {
+        "emdash": true
+      },
+      "note": "Structure of an EmDash site (collections, menus, the /app template). Only meaningful on EmDash — added 27/09 so each platform reads its own skill set."
+    },
+    {
+      "id": "joomlart-t4-template",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {
+        "joomla": true
+      },
+      "note": "Builds a T4 template for Joomla (vendor/joomla/joomlart-t4-skill). Only meaningful on Joomla — added 27/09. Designer and Developer only (09/10/2026): a site/template BUILDING skill, its intake asks for an HTML folder or a sample URL, and its `edit` scope is editing the template — Writer and SEO/GEO edit the text and head of a running site and have no use for it."
+    },
+    {
+      "id": "joomla-upgrade-run",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {
+        "joomla": true
+      },
+      "note": "Upgrades a Joomla site. Only meaningful on Joomla — added 27/09."
+    },
+    {
+      "id": "wpds",
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {
+        "wordpress": true
+      },
+      "note": "WordPress overlay. Joomla and EmDash have no skill yet — the empty column is deliberate."
+    },
+    {
+      "id": "blog-post",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "OpenDesign's article page template (layout, not writing) — settled 27/09."
+    },
+    {
+      "id": "design-brief",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Turns a vague request into a design spec — settled 27/09."
+    },
+    {
+      "id": "handoff",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Packs a conversation for the next agent — long work in any role needs it; settled 27/09."
+    },
+    {
+      "id": "pricing-page",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "OpenDesign's pricing page template — settled 27/09."
+    },
+    {
+      "id": "prototype",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Throwaway prototype to answer a design/logic question — settled 27/09."
+    },
+    {
+      "id": "research",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Researches primary sources and records the findings — settled 27/09."
+    },
+    {
+      "id": "saas-landing",
+      "roles": {
+        "designer": true,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "OpenDesign's SaaS landing template — settled 27/09."
+    },
+    {
+      "id": "to-spec",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Writes a spec from a conversation (Matt Pocock) — developer role only; settled 27/09."
+    },
+    {
+      "id": "to-tickets",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Splits work into tickets (Matt Pocock) — developer role only; settled 27/09."
+    },
+    {
+      "id": "tracy-design-inspiration",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Tracy's skill: restyle with a design inspiration — a customer in any role may ask; settled 27/09."
+    },
+    {
+      "id": "tracy-file-links",
+      "roles": {
+        "designer": true,
+        "developer": true,
+        "writer": true,
+        "seo-geo": true
+      },
+      "platforms": {},
+      "note": "Tracy's skill: a reply that mentions a file writes it as a link — every role; settled 27/09."
+    },
+    {
+      "id": "triage",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Triages issues/PRs (Matt Pocock) — developer role only; settled 27/09."
+    },
+    {
+      "id": "wayfinder",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Maps out large work (Matt Pocock) — developer role only; settled 27/09."
+    }
+  ]
+}

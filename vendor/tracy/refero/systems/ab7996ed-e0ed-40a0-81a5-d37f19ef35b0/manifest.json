@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+  "status": "complete",
+  "name": "Mr. Pops",
+  "url": "https://styles.refero.design/style/ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+  "sourceWebsite": "https://mrpops.ua/en",
+  "extractedAt": "2026-06-03T19:46:54.155Z",
+  "capturedAt": "2026-10-08T05:16:04.332302+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "retro ice cream parlor on cream paper. A bright white shopfront with cherry-red trim, stacked marquee letters, and warm cream cards beneath full-bleed food photography.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/dfc0ab0b-73f1-4c13-8d16-9001c39787fe.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6afe77c2-ce42-4d0f-87da-9c27f2d0a09c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/3ea25349-0953-4170-ae4a-75cf4cd0f0ee.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/38716c82-c7e1-4b74-9122-eb73610ef644.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0e9ba53c-0b3e-4bde-baf3-5a7426756b41.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3136c123d5eb68d7f71fb03a5bb559c11ffe1ae60f076ef33c0c00b712a7bb6e",
+      "bytes": 17561
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "36cbc4a221c8a91ad6258a7d7fa5000ed88f5c6be57fcd4d36fe25c571260c18",
+      "bytes": 143001
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d5787015e8f6bafa3481d3b34895bd618082600a875d18bb475619eafd3eb5ff",
+      "bytes": 14102
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7f8cc301a1a23260db01570cdafe97d00b6315f48dc35122f126019bcf0a8c8d",
+      "bytes": 9523
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "64949f2c80fc31f7e19861e0a3248bfd45db1b3dce2526a6010d055dec1c5c20",
+      "bytes": 10978
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d4b7f6f21d0868e58f121cb7087771c0c38df923b4da211c265a3106dcc5d875",
+      "bytes": 2174
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e5315a9d9b7bc0a9ba180ba7819077ace34a0040550541b5bf3a3395a96549f3",
+      "bytes": 464
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d5b39f9eba5a84b5d422f83030b8860c971498ddaf2bd7d767be3063c8127529",
+      "bytes": 481
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c799302ec073b422dabb786076c965b2979d31ff40d432e1741ff57d016a1e20",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "82b4e181b6ededc32e295658f7d8177b67fcb67f2632ff2cf1d8ab458c126c8e",
+      "bytes": 40774
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2f1fbe3ea1d4e0d74cbb629a7129682ad42075206262bda9a747ec9d931974d9",
+      "bytes": 21373
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "60ebfc3d945a8e0c6fc1b5f62463c2fd5e3247de44db82d808a27cbc0e388d72",
+      "bytes": 36515
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d089c2bcfdff81c2e7cf2e37095b2036eac0a9b94d5af99028c61bd3271ae46a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9264f557aec8aaaeb170a9cb865fa440d97f834e7a43ed5c179e72c5aec3528d",
+      "bytes": 1430
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "74c724a91fea7cae67e251ecfd79afb1f25dbc1d3a4353255e64eff33f9ef3b5",
+      "bytes": 1873
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "14efe0a8-5abf-441c-919d-add271317bf9",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "93fe74fd-bac8-4d13-9d5b-3b5e242f74e6",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

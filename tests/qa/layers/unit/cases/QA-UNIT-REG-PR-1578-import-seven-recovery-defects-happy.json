@@ -1,0 +1,89 @@
+{
+  "id": "QA-UNIT-REG-PR-1578-import-seven-recovery-defects-happy",
+  "itemIds": ["regression:REG-PR-1578-import-seven-recovery-defects"],
+  "requirement": "Import failed reads remain retryable and all seven acceptance defects stay fixed",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1578-import-seven-recovery-defects.json",
+    "ref": "PR #1578 (fix); fix evidence: Develop acceptance D1 through D7 from the import error UX report. Each defect has a failing test recorded before its source change.",
+    "invariant": "A failed read with no build job permits retry, including correcting the platform; missing, successful, unsupported or unreadable status cannot authorize retry. Concurrent starts and late retries of one failed run share one replacement; S4-F003 never sends a second unknown start. Unknown platform plus Cloudflare preserves both instructions; timeout steps are bullets. Missing admin-form links retain typed source origin, port and subfolder and lead to the platform admin path; unreachable links retain the exact typed URL. Basic password guidance names WordPress or Joomla correctly; the WordPress account error offers Use another account. Basic Auth OFF clears compulsory server fields and the checkbox can be unticked.",
+    "productSources": [
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/seats/store.js:21",
+      "apps/tracy-web/src/sites/import-address.js:57",
+      "packages/site/tracy-add-site/src/client/create-step-model.mjs:8",
+      "packages/site/tracy-add-site/src/client/import-watch.mjs:8"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/e2e/import-preflight.test.mjs:15 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/import-preflight.test.mjs:36 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs:1624 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs:88 require() with a computed specifier",
+      "packages/site/tracy-add-site/test/handover-lifecycle.test.mjs:126 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/handover-lifecycle.test.mjs:81 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-problems.test.mjs:44 require() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-problems.test.mjs:555 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "D1: a newly opened wizard retries a failed read only when the claim has no build",
+    "D1: after a failed Joomla read, correcting the platform to WordPress permits retry",
+    "D1: overlapping starts for one site adopt the same active read",
+    "D1: two retries of one failed run start only one replacement even after it has failed",
+    "Cloudflare and unknown platform warnings show both instructions in the same resolution",
+    "the website timeout gives three bullet steps without an action inside its guidance",
+    "missing admin guidance preserves the entered source origin and subfolder safely",
+    "server-password guidance names the selected CMS account for both platforms",
+    "a WordPress account without installation rights offers Use another account",
+    "removing Basic Auth clears required server credentials and leaves the checkbox reversible"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1578-import-seven-recovery-defects"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1578-import-seven-recovery-defects",
+    "pr": 1578,
+    "kind": "fix",
+    "area": "add-site/import-errors",
+    "file": "tests/regression/cases/REG-PR-1578-import-seven-recovery-defects.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "packages/site/tracy-add-site/test/e2e/import-preflight.test.mjs",
+    "packages/site/tracy-add-site/test/import-problems.test.mjs",
+    "packages/site/tracy-add-site/test/error-next-step.test.mjs",
+    "packages/site/tracy-add-site/test/handover-lifecycle.test.mjs",
+    "apps/tracy-web/test/import-address.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "D1: a newly opened wizard retries a failed read only when the claim has no build",
+    "D1: after a failed Joomla read, correcting the platform to WordPress permits retry",
+    "D1: overlapping starts for one site adopt the same active read",
+    "D1: two retries of one failed run start only one replacement even after it has failed",
+    "Cloudflare and unknown platform warnings show both instructions in the same resolution",
+    "the website timeout gives three bullet steps without an action inside its guidance",
+    "missing admin guidance preserves the entered source origin and subfolder safely",
+    "server-password guidance names the selected CMS account for both platforms",
+    "a WordPress account without installation rights offers Use another account",
+    "removing Basic Auth clears required server credentials and leaves the checkbox reversible"
+  ],
+  "timeoutS": 240
+}

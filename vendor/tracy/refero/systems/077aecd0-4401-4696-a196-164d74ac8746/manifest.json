@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "077aecd0-4401-4696-a196-164d74ac8746",
+  "status": "complete",
+  "name": "Lithic",
+  "url": "https://styles.refero.design/style/077aecd0-4401-4696-a196-164d74ac8746",
+  "sourceWebsite": "https://www.lithic.com",
+  "extractedAt": "2026-06-03T20:25:22.912Z",
+  "capturedAt": "2026-10-08T05:08:01.944044+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Warm marble briefing room for card architects — confident, earthy, deliberate.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c87ae1ff-9959-4ad8-aa68-4b80e4772084.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/34f97bc3-03f1-49f5-b1ef-cfe6b3336853.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4b280202-b576-45a5-b047-1daab7d94b73.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/08934f3f-4a9c-4feb-adf0-bfe052c0fc23.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/aa8bbe13-91a4-43b2-ae5d-d082ff7f4597.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "964b04f30e97da3d3edcbfe6103d5f3b5a36ee41dfcf5e298501a187075a0ef3",
+      "bytes": 20917
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9f42b52773c584443046f93a84006db4bfe9bb810b71d78f1d8354fafb152e14",
+      "bytes": 169765
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "91b81ff1eb918314b68ed28babb41d7999ec9bee25fea3b9fb08dac99aa8f0a2",
+      "bytes": 17818
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a707c5c67664b958e0047837e10056fae2246e2186dc0fcf360915db9d49a81b",
+      "bytes": 12344
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ad78594913bc2e4572cbdf3fd2a4b18783b8b02682eeaccd647424f58decb874",
+      "bytes": 13055
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "5dd5675f83d36d70d094cdd653731748947b774e867b52c6af15600e0427fb0d",
+      "bytes": 3775
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "33c5b4b984ef40a59dd83f3d355ded323696136fbaaf5854cdd0dd4bededd7fa",
+      "bytes": 604
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "13e2d5cdd5a89ee1369d313edf8e8090167bb810351e230d03a11c99443f1be3",
+      "bytes": 621
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9fd11f3512936d06ce39f382dd527b0e488fa19a80620007976a46a63ab40966",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "db7ad025e39ac5cf5667420215d17568b8415c11caf46bf77324437e94676384",
+      "bytes": 45307
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1815b88623710b5944329b2688252d3dc38e349a1cb90f834421b2cf6c058540",
+      "bytes": 23669
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5167c27232cc4b1a57c381af2efbc1059b7df2ee3f2b6181d47b363fff1cf5d4",
+      "bytes": 50954
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "77fc1d869a69eb1e3a8047907818f1b70d94a24596c10a0b694e39df99d4c1f8",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ce33bdad9cc214d3f6d6ddf1e67592af63d0b5711fe398449de6b201ca41b433",
+      "bytes": 1664
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "fdb659810bac4e9dea50924d4de596f6c0a1919d2eac1235c6d49a6df0b78eb7",
+      "bytes": 2256
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "1ded7f89-3df0-4e7c-9cac-28218d038575",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "964b9215-396b-492c-abec-7bd778d7b1c9",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "bcfc6cb0-1b39-4f3f-a95e-bd7b563b0efc",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "d95a35c2-d3f7-49e7-9ba7-282d52d3211d",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

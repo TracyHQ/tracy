@@ -1,0 +1,698 @@
+{
+  "source": "benchemdash02 / \"See our capabilities\" — Chromium CDP CSS.getMatchedStylesForNode, desktop 1440×900, light; captured 28/09/2026, minimized to the asked properties and the custom properties their var()s reach",
+  "props": ["color", "background-color", "font-family", "font-size", "font-weight"],
+  "info": {
+    "el": "<a.btn-primary.!px-7>",
+    "text": "See our capabilities",
+    "matches": 1,
+    "how": "exact",
+    "hidden": false,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "background-color": "rgb(218, 90, 42)",
+      "font-family": "Archivo-d7009d10e90b12ba, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif, system-ui, sans-serif",
+      "font-size": "15px",
+      "font-weight": "600"
+    },
+    "hex": {
+      "color": "#ffffff",
+      "background-color": "#da5a2a"
+    },
+    "paint": 0,
+    "chain": [
+      "<div.flex.flex-wrap>",
+      "<div.pb-24>",
+      "<div.container-site.grid>",
+      "<section.band-ink.relative>",
+      "<main>",
+      "<div.min-h-screen.bg-paper>",
+      "<body>",
+      "<html>"
+    ]
+  },
+  "matched": {
+    "matchedCSSRules": [
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "user-agent",
+          "selectorList": {
+            "text": "a:-webkit-any-link",
+            "selectors": [
+              {
+                "text": "a:-webkit-any-link"
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "-webkit-link"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-72700-5",
+          "selectorList": {
+            "text": "a",
+            "selectors": [
+              {
+                "text": "a",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "layers": [
+            {
+              "text": "base"
+            }
+          ],
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "inherit",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "inherit"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-72700-5",
+          "selectorList": {
+            "text": "a",
+            "selectors": [
+              {
+                "text": "a",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "layers": [
+            {
+              "text": "base"
+            }
+          ],
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "var(--color-link)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "var(--color-link)"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-72700-5",
+          "selectorList": {
+            "text": ".btn-primary",
+            "selectors": [
+              {
+                "text": ".btn-primary",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "layers": [
+            {
+              "text": "components"
+            }
+          ],
+          "style": {
+            "cssProperties": [
+              {
+                "name": "background",
+                "value": "var(--color-signal)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "#fff",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-size",
+                "value": "15.5px",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-weight",
+                "value": "600",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "background-color",
+                "value": ""
+              },
+              {
+                "name": "color",
+                "value": "rgb(255, 255, 255)"
+              },
+              {
+                "name": "font-size",
+                "value": "15.5px"
+              },
+              {
+                "name": "font-weight",
+                "value": "600"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-72700-5",
+          "selectorList": {
+            "text": ".\\!text-\\[15px\\]",
+            "selectors": [
+              {
+                "text": ".\\!text-\\[15px\\]",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "layers": [
+            {
+              "text": "utilities"
+            }
+          ],
+          "style": {
+            "cssProperties": [
+              {
+                "name": "font-size",
+                "value": "15px!important",
+                "important": true,
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-size",
+                "value": "15px !important",
+                "important": true
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "inherited": [
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-5",
+              "selectorList": {
+                "text": ".band-ink",
+                "selectors": [
+                  {
+                    "text": ".band-ink",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "components"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background",
+                    "value": "var(--color-ink)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-on-ink)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-on-ink)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-5",
+              "selectorList": {
+                "text": ".bg-paper",
+                "selectors": [
+                  {
+                    "text": ".bg-paper",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "utilities"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background-color",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": "var(--color-paper)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-5",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-5",
+              "selectorList": {
+                "text": ":root, :host",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": ":host",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "theme"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-sans",
+                    "value": "var(--font-archivo), system-ui, sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--default-font-family",
+                    "value": "var(--font-sans)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-paper",
+                    "value": "#f5f3ee",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-ink",
+                    "value": "#14171a",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-forest",
+                    "value": "#14483a",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-link",
+                    "value": "var(--color-forest)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-signal",
+                    "value": "#da5a2a",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-fg",
+                    "value": "#14171a",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-on-ink",
+                    "value": "#f5f3ee",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-sans",
+                    "value": "var(--font-archivo), system-ui, sans-serif"
+                  },
+                  {
+                    "name": "--default-font-family",
+                    "value": "var(--font-sans)"
+                  },
+                  {
+                    "name": "--color-paper",
+                    "value": "#f5f3ee"
+                  },
+                  {
+                    "name": "--color-ink",
+                    "value": "#14171a"
+                  },
+                  {
+                    "name": "--color-forest",
+                    "value": "#14483a"
+                  },
+                  {
+                    "name": "--color-link",
+                    "value": "var(--color-forest)"
+                  },
+                  {
+                    "name": "--color-signal",
+                    "value": "#da5a2a"
+                  },
+                  {
+                    "name": "--color-fg",
+                    "value": "#14171a"
+                  },
+                  {
+                    "name": "--color-on-ink",
+                    "value": "#f5f3ee"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-5",
+              "selectorList": {
+                "text": "html, :host",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": ":host",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\")",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\")"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-5",
+              "selectorList": {
+                "text": "html",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-archivo), system-ui, sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-archivo), system-ui, sans-serif"
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)"
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-72700-3",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-archivo",
+                    "value": "Archivo-d7009d10e90b12ba,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-archivo",
+                    "value": "Archivo-d7009d10e90b12ba,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "painter": null,
+  "sheets": {
+    "style-sheet-72700-5": {
+      "styleSheetId": "style-sheet-72700-5",
+      "sourceURL": "http://benchemdash02.tracy.test:51710/_astro/NotFound.NMFWnc7f.css",
+      "origin": "regular",
+      "isInline": false,
+      "ownerNode": 14
+    },
+    "style-sheet-72700-3": {
+      "styleSheetId": "style-sheet-72700-3",
+      "sourceURL": "http://benchemdash02.tracy.test:51710/",
+      "origin": "regular",
+      "isInline": true,
+      "ownerNode": 12
+    }
+  }
+}

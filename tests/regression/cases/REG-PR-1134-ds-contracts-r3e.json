@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r3e",
+  "kind": "feat",
+  "title": "Round 3 of the JA Joomla j6 slot contracts (r3e): JA Comics, JA Educatsy, JA Eventcamp and JA Fit, not ready in round 1, wear a design system from their 1.0.1 re-release",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{comics,educatsy,eventcamp,fit}.json through loadContract; build each module sheet (joomlaSlot: Moxie, Comics under MotherDuck); read scripts/flow.mjs.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version}) for each, at 1.0.1 and at 1.0.0.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-eventcamp --port 53817 --cdp 9917 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r3e.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all four ready, minVersion {'quickstart/ja-<name>/j6': '1.0.1'}, readyNote naming tasks/evidence/ds-contracts-r3e-2026-10-11/templates/ja-<name>-j6, no t4SiteCss; Comics' sheet gives .btn.btn-outline-primary:not(:hover):not(:active) the readable accent; Educatsy's gives its tab pill the accent and accent-on and keeps .bg-secondary{color:#585858}; Eventcamp's restores --color-primary:#e812b8 in its kept bands and gives .section-title span the readable accent; Fit's keeps .t3-slideshow, #Section94, #Section95, #Section96 and #Section98 with color rgb(189, 189, 189), gives .t3-slideshow the #111111 ground and the menu links accent-on, and its button rules no longer name every link; flow.mjs skips text under 0.2 opacity and holds the same text on the same picture as the template's.",
+    "S3: at 1.0.1 {contract:'joomla-ja-<name>'}; at 1.0.0 reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following ≥ 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{comics,educatsy,eventcamp,fit}.json ready, minVersion, followRules, keepScopes, keepText, keepColors, keepGround, keepDefaults, selectors.onAccent"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r3e-2026-10-11/README.md: each template measured on 1.0.0 tokenized in place and on its 1.0.1 build stood up from its own zip; desktop and phone screenshots checked by eye (JA Fit also on full-page shots).",
+  "fence": "which r3e templates are offered and the contract fields and measuring rules that made them pass; not the release upload (RELEASE-DS-R3E.sh, a person runs it)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r3e.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

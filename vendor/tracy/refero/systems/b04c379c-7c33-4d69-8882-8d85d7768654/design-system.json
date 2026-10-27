@@ -1,0 +1,347 @@
+{
+  "dos": [
+    "Use Voltage Lime (#d2e823) as the single primary action color on every section; never substitute another hue for CTAs",
+    "Set display headlines at 56–80px Linksans 800 with negative letter-spacing (-0.024em to -0.043em) — tight tracking is signature",
+    "Float the white pill navigation over full-bleed color sections; it should never sit on a flat white page edge",
+    "Use pill radius (9999px) for all buttons and tags; reserve 8px only for inputs and form fields",
+    "Apply full-bleed solid color section backgrounds as the primary layout device; avoid gradients and shadows entirely",
+    "Pair each section's background with a single contrasting text color — Midnight Ink on lime, Voltage Lime on blue, Lilac Whisper on maroon",
+    "Keep card radius in the 32–64px range for a lozenge, sticker-like feel on colored backgrounds"
+  ],
+  "donts": [
+    "Don't use box-shadow or any drop-shadow effect for depth — separation must come from color contrast",
+    "Don't set body or headline type in Arial or any system font; Linksans is non-negotiable for brand voice",
+    "Don't use CTA colors other than #d2e823 — avoid blue, maroon, or pink buttons even when they match a section",
+    "Don't apply tight negative letter-spacing below 18px — tracking only tightens at display sizes",
+    "Don't break the full-bleed section model with subtle background tints or muted neutrals; sections should be loud and saturated",
+    "Don't center body paragraphs — text blocks are left-aligned in a generous measure (max ~520px)",
+    "Don't use square or small-radius buttons; everything clickable is a pill or lozenge",
+    "Don't add gradients to backgrounds, buttons, or text — the system is strictly flat color"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#d2e823",
+      "name": "Voltage Lime",
+      "role": "Primary action buttons, highlighted headlines, accent surfaces — the brand's signature chartreuse, used sparingly as functional punctuation across every section",
+      "group": "brand"
+    },
+    {
+      "hex": "#2665d6",
+      "name": "Cobalt Signal",
+      "role": "Full-bleed section backgrounds, link accents — saturated blue used as an alternate hero band",
+      "group": "brand"
+    },
+    {
+      "hex": "#780016",
+      "name": "Bordeaux Maroon",
+      "role": "Full-bleed FAQ and deep sections — dark wine red for high-contrast blocks",
+      "group": "brand"
+    },
+    {
+      "hex": "#1e2330",
+      "name": "Midnight Ink",
+      "role": "Primary text, icon fills, dark UI outlines — near-black with a faint blue undertone, the default ink color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Plaster White",
+      "role": "Card surfaces, button text, pill nav background — pure white floats above the colored sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f3f1",
+      "name": "Bone Canvas",
+      "role": "Page background base, subtle button surfaces — warm off-white with a faint green cast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#adadad",
+      "name": "Cement Gray",
+      "role": "Muted card backgrounds, disabled or secondary surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#676b5f",
+      "name": "Slate Mute",
+      "role": "Muted link text, secondary borders, low-emphasis text — warm desaturated olive-gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Carbon",
+      "role": "Deep button text and borders for inverted controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e9c0e9",
+      "name": "Lilac Whisper",
+      "role": "Decorative borders, icon strokes, soft accent washes — pastel pink used for outlines and ornaments",
+      "group": "accent"
+    },
+    {
+      "hex": "#061492",
+      "name": "Indigo Abyss",
+      "role": "Deep card surfaces, tertiary button backgrounds — saturated navy",
+      "group": "accent"
+    },
+    {
+      "hex": "#254f1a",
+      "name": "Forest Depth",
+      "role": "Headline outlines, bordered cards, body emphasis — dark forest green as an alternate text color",
+      "group": "accent"
+    },
+    {
+      "hex": "#d6a337",
+      "name": "Saffron",
+      "role": "Card accent backgrounds — warm gold for variety blocks",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed color sections stacked vertically, each one a different hue (lime → blue → maroon). Inside each band, a max-width ~1280px centered content column. Hero pattern is a 2-column split: oversized left-aligned headline + supporting paragraph on the left, a contained photo or device mockup on the right. Navigation is a floating white pill that sits on top of the first color band, not pinned to the page edge. Sections alternate 2-column (text+visual) and full-width stacked content (centered headline → grid). No sidebar, no sticky header beyond the floating nav. Vertical rhythm is generous (80px section gaps) and the bottom of each section is a hard color cut, never a gradient fade.",
+  "imagery": "Photography is lifestyle-candid: real creators in real environments, shot at medium distance with natural light, often posed with props that reinforce their trade (lettering artist with a brush, food founders with ingredients). Subjects are cropped with generous breathing room and never full-bleed — they sit in contained frames to the right of text. Product visuals are angled phone mockups floating in colored space, never literal screenshots. No illustration, no abstract graphics, no 3D renders. Iconography is minimal: simple outlined or filled glyphs at small sizes, Lilac Whisper or Midnight Ink, no multicolor icon system.",
+  "similar": [
+    {
+      "why": "Full-bleed saturated color sections with a single lime-green action accent and rounded pill-shaped CTAs",
+      "business": "Duolingo"
+    },
+    {
+      "why": "Bold flat-color bands stacked vertically, playful rounded shapes, and a single warm accent punctuating the palette",
+      "business": "Headspace"
+    },
+    {
+      "why": "Loud solid-color hero sections, compressed bold display type, and a creator-first lifestyle photography style",
+      "business": "Gumroad"
+    },
+    {
+      "why": "Vivid blue and purple full-bleed sections with pill navigation and oversized editorial headlines",
+      "business": "Loom"
+    },
+    {
+      "why": "Saturated color-block storytelling with a single bright accent (lime) popping against deep brand hues",
+      "business": "Spotify Wrapped"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "8px",
+      "tags": "9999px",
+      "cards": "32px",
+      "pills": "1000px",
+      "inputs": "8px",
+      "buttons": "9999px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f3f3f1",
+      "name": "Bone Canvas",
+      "level": 0,
+      "purpose": "Base page background, off-white warm neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Plaster White",
+      "level": 1,
+      "purpose": "Floating nav, cards, input fields, button text"
+    },
+    {
+      "hex": "#d2e823",
+      "name": "Color Section Band",
+      "level": 2,
+      "purpose": "Full-bleed hero and content sections"
+    },
+    {
+      "hex": "#2665d6",
+      "name": "Color Section Band Alt",
+      "level": 3,
+      "purpose": "Alternate full-bleed sections"
+    },
+    {
+      "hex": "#780016",
+      "name": "Deep Section Band",
+      "level": 4,
+      "purpose": "FAQ and footer depth sections"
+    },
+    {
+      "hex": "#adadad",
+      "name": "Cement Overlay",
+      "level": 5,
+      "purpose": "Muted overlays and secondary card backgrounds"
+    }
+  ],
+  "northStar": "Editorial posters stacked like candy. A full-bleed color-block site where lime green headlines sit on cobalt blue walls and white pill-shaped navs float across maroon fields.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.31,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading",
+      "size": 28,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.56
+    },
+    {
+      "role": "heading-lg",
+      "size": 51,
+      "lineHeight": 1.06,
+      "letterSpacing": -1.22
+    },
+    {
+      "role": "display-alt",
+      "size": 56,
+      "lineHeight": 1.06,
+      "letterSpacing": -1.34
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": -3.44
+    }
+  ],
+  "components": [
+    {
+      "name": "Floating Pill Navigation",
+      "role": "Primary site navigation",
+      "description": "White rounded pill floating over full-bleed color sections. Background #ffffff, radius 1000px, height ~64px, horizontal padding ~32px. Logo on left in Midnight Ink (#1e2330). Nav links in 14–15px Linksans 500 at #1e2330. Right side: ghost 'Log in' (dark text, no border) + filled black 'Sign up free' button (#000000, white text, 9999px radius, 18px 22px padding)."
+    },
+    {
+      "name": "Lime Primary Button",
+      "role": "Main call-to-action",
+      "description": "Filled chartreuse green button. Background #d2e823, text #1e2330, radius 9999px, padding 18px 22px. Font: Linksans 700 at 16px. The signature CTA color; appears on every section. Hover darkens to #b8c91b."
+    },
+    {
+      "name": "Black Sign-Up Button",
+      "role": "Secondary navigation action",
+      "description": "Filled black button in the nav pill. Background #000000, text #ffffff, radius 9999px, padding 12px 20px. Font: Linksans 500 at 14–15px. Sits at the far right of the floating nav."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Tertiary inline action",
+      "description": "Text-only button with no fill or border. Text in #1e2330, Linksans 500 at 14–15px. Used for 'Log in' in nav. Hover adds underline."
+    },
+    {
+      "name": "Dark Outlined Card",
+      "role": "Feature or FAQ card",
+      "description": "Card with dark background and light text. Background #780016 (maroon) or #061492, text #ffffff, radius 32–64px, padding 24px. Thin 1px border in #e9c0e9 or #254f1a. Used for FAQ items and feature blocks."
+    },
+    {
+      "name": "Phone Mockup Card",
+      "role": "Product showcase",
+      "description": "Rounded device frame containing app screenshots. Outer container radius 32–64px, often a brand-color block. Inner phone shape radius 41.6px. Used to display Linktree profile previews at angles."
+    },
+    {
+      "name": "Bordered Accent Card",
+      "role": "Highlighted content block",
+      "description": "Card with visible colored border, no fill or tinted fill. Border 2px in #e9c0e9 (pink) or #254f1a (forest), radius 32–64px, padding 24–32px. Background can be #ffffff or section color. Creates a sticker-like emphasis."
+    },
+    {
+      "name": "Text Input Field",
+      "role": "Form input",
+      "description": "Simple input with bottom border or full border. Border 1px in #000000 or #676b5f, radius 8px, padding 8px 16px. Placeholder text in #757575. Font: Linksans 400 at 16px. Used in handle-creation form."
+    },
+    {
+      "name": "Section Heading Block",
+      "role": "Display headline",
+      "description": "Large headline set in 80px or 56px Linksans 800, letter-spacing -0.043em or -0.024em, line-height 1.0–1.06. Color matches section logic: Midnight Ink (#1e2330) on lime, Voltage Lime (#d2e823) on blue, Lilac Whisper (#e9c0e9) on maroon. Word-wraps in 2-line editorial stacks."
+    },
+    {
+      "name": "Handle Input Group",
+      "role": "Profile creation form",
+      "description": "Composite input: small fixed prefix label ('linktr.ee/') in Linksans 500, paired with a text input. Sits inline with the lime primary button to its right. White card-like container with subtle background."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question item",
+      "description": "Full-width row inside maroon section. Background a slightly lighter maroon, radius 16–32px, padding 20–24px. Question text in #ffffff Linksans 500 at 16–18px. Chevron icon in white, rotates 180° on expand. 1px Lilac Whisper (#e9c0e9) border possible."
+    },
+    {
+      "name": "Top Banner Strip",
+      "role": "Promotional announcement bar",
+      "description": "Full-width thin strip above the floating nav. Background Voltage Lime (#d2e823) or white, text #1e2330 in Linksans 500 at 13–14px. Includes a close (×) button on the right. Centers a short message with bold inline emphasis."
+    }
+  ],
+  "typography": [
+    {
+      "role": "System fallback for form inputs and legacy text nodes — only appears as a default rendering, not a designed choice",
+      "sizes": "16px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "system-ui"
+    },
+    {
+      "role": "Primary brand typeface — geometric custom sans used everywhere from nav to 80px display headlines. Weight 700–800 at large sizes with negative letter-spacing creates the compressed, poster-like headline voice. Substitute with Inter or Space Grotesk if Linksans is unavailable.",
+      "sizes": "12px, 13px, 14px, 15px, 20px, 24px, 25px, 51px",
+      "family": "Linksans",
+      "weight": "400, 500, 700, 800",
+      "lineHeight": "1.06–1.50",
+      "substitute": "Inter",
+      "letterSpacing": "-0.043em at 80px, -0.024em at 56px, -0.020em at 24–28px, -0.013em at 18px, -0.010em at 15–16px, normal at 12–14px"
+    },
+    {
+      "role": "Linksans Linksansvf — detected in extracted data but not described by AI",
+      "sizes": "14px, 16px, 18px, 24px, 28px, 56px, 80px",
+      "family": "Linksans Linksansvf",
+      "weight": "400, 500, 700, 800",
+      "lineHeight": "1, 1.06, 1.07, 1.2, 1.3, 1.5",
+      "letterSpacing": "-0.02, -0.01, 0.01"
+    },
+    {
+      "role": "yerk — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "yerk",
+      "weight": "400",
+      "lineHeight": "1.5"
+    }
+  ],
+  "description": "Linktree speaks in full-volume color blocks: each section is a saturated wall of lime, cobalt, or maroon, and content floats on top as white pills and dark text. The system treats color as the layout, not decoration — headers, cards, and CTAs inherit the section hue rather than fighting it, while a recurring chartreuse green acts as the brand's singular action accent. Typography is a single custom geometric sans (Linksans) set extra-bold with tight negative tracking at display sizes, giving headlines a compressed, poster-like weight. Shapes are aggressively rounded: nav bars and buttons become perfect pills, cards become lozenges, and only form inputs keep a modest 8px corner. The result reads as a series of bold editorial spreads rather than a conventional product page.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #1e2330 (Midnight Ink)\n- background: #f3f3f1 (Bone Canvas) for neutral pages, or section-specific full-bleed colors\n- surface/card: #ffffff (Plaster White)\n- border: #e9c0e9 (Lilac Whisper) for decorative outlines, #000000 for structural edges\n- accent: #d2e823 (Voltage Lime)\n- primary action: #d2e823 (filled action)\n\nExample Component Prompts:\n\n1. Create a Primary Action Button: #d2e823 background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a floating white pill navigation: #ffffff background, 1000px radius, ~64px height, 32px horizontal padding. Left: 'Linktree' wordmark in 20px Linksans 700, #1e2330. Center: 5 nav links in 14px Linksans 500, #1e2330, 20px gap. Right: ghost 'Log in' text button (#1e2330, no border) + filled 'Sign up free' button (#000000 fill, #ffffff text, 9999px radius, 12px 20px padding, Linksans 500 14px).\n\n\n4. Create a maroon FAQ section: full-bleed background #780016. Centered headline 'Questions? Answered' in 56px Linksans 800, color #e9c0e9, letter-spacing -1.34px. Below: 4 full-width accordion rows, each with background a slightly lighter maroon, 16–32px radius, 20–24px padding, 1px #e9c0e9 border, question text in #ffffff Linksans 500 18px, and a white chevron icon on the right.\n\n5. Create a top announcement banner: full-width strip, background #d2e823, padding 12px 16px. Centered text in 13px Linksans 500, #1e2330, with a bold inline phrase and a × close button on the far right (16px, #1e2330)."
+    },
+    {
+      "title": "Type System Rules",
+      "content": "Linksans is the only designed typeface; Arial appears only as a legacy fallback in form fields and should be replaced with Linksans wherever possible. The voice is compressed and heavy: display sizes (51–80px) use weight 800 with -0.024em to -0.043em letter-spacing, subheadings (20–28px) use weight 700 with -0.013em to -0.020em, and body (14–18px) uses weight 400–500 with -0.010em to normal tracking. Never set Linksans below 12px. Line-heights collapse at display sizes (1.0–1.06) and breathe at body sizes (1.31–1.50)."
+    },
+    {
+      "title": "Section Color Rotation",
+      "content": "The page cycles through bold solid colors as full-bleed section bands, typically lime → blue → maroon with occasional neutral white in between. Each section pairs its background with exactly one text accent: Midnight Ink on lime, Voltage Lime on blue, Lilac Whisper on maroon. Do not introduce new section colors beyond the four established (lime, blue, maroon, white) unless extending the palette intentionally."
+    }
+  ],
+  "elevationPhilosophy": "The system avoids drop shadows entirely. Depth is achieved through full-bleed color contrast — a white pill nav visibly sits on a lime or blue field, a maroon card sits on a slightly lighter maroon, a phone mockup sits on a cobalt block. No box-shadow, no blur, no glow. Flatness is the identity; separation comes from hue jumps, not elevation."
+}

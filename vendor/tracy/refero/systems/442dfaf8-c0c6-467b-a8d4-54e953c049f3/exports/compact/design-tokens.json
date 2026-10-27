@@ -1,0 +1,39 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, hero background, footer background — the absolute ground everything else sits on or within"
+    },
+    "carbon": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Carbon — Subtle surface variation from the page canvas — used as a near-identical lifted surface where one is needed without breaking the monochrome spell"
+    },
+    "ash": {
+      "$value": "#afafaf",
+      "$type": "color",
+      "$description": "Ash — Secondary text, muted labels, inactive input borders — a half-step between white and black for elements that must recede"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Primary text, hairline rules, link and button borders, image borders — the only forward-facing tone, used with restraint as both type and geometry"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk-tp-55-roman": {
+      "$value": "Neue Haas Grotesk TP 55 Roman",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all interface text — navigation, body, headlines, buttons, footer. The exclusive use of weight 400 is a deliberate anti-hierarchy choice; scale and spacing do the work that weight normally would. The OpenType 'case' feature is enabled site-wide, giving all-caps small text properly designed uppercase parentheses, hyphens, and numerals instead of lowercase glyphs scaled up."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wearechaiboy.com",
+      "siteName": "CHAIBOY",
+      "extractedAt": "2026-06-03T21:32:46.796Z",
+      "variant": "compact"
+    }
+  }
+}

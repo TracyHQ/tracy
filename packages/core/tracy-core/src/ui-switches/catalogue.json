@@ -1,0 +1,781 @@
+{
+  "$comment": "Customer UI switches: the ONE list of pieces an operator can hide on the dsh page. Read by @tracy/core/ui-switches (plugins), apps/tracy-web (the /api/ui and /api/ops/ui doors, COPY in its Dockerfile) — never copied. defaultOn is the code default (Lee, 28/09/2026); the database stores only an operator's differences from it. tabs = the Better Sidebar tab types a right-column switch governs: tab-* decides whether the type exists for customers, launch-* whether it is listed in the + menu and the Start guide.",
+  "areas": [
+    {
+      "id": "settings",
+      "label": "Settings dialog",
+      "blurb": "What the gear opens.",
+      "groups": ["settings-nav", "settings-general", "settings-help"]
+    },
+    {
+      "id": "sidebar",
+      "label": "Left column",
+      "blurb": "The column beside the chat.",
+      "groups": ["sidebar"]
+    },
+    {
+      "id": "right-column",
+      "label": "Right column",
+      "blurb": "The side card and its tabs.",
+      "groups": ["right-chrome", "right-launcher", "right-tabs", "browser-toolbar"]
+    },
+    {
+      "id": "new-session",
+      "label": "New session",
+      "blurb": "A blank conversation before the first message.",
+      "groups": ["new-session"]
+    },
+    {
+      "id": "composer",
+      "label": "Composer",
+      "blurb": "Controls around the message box.",
+      "groups": ["composer"]
+    },
+    {
+      "id": "dsh",
+      "label": "DSH",
+      "blurb": "Pieces dsh draws in the conversation that are not Tracy's: view tabs and the session header's tools.",
+      "groups": ["dsh-tabs", "dsh-header"]
+    },
+    {
+      "id": "assistant",
+      "label": "Help",
+      "blurb": "The /help command in the agent's chat.",
+      "groups": ["assistant"]
+    },
+    {
+      "id": "onboarding",
+      "label": "Getting started",
+      "blurb": "The welcome screen after sign-in.",
+      "groups": ["onboarding"]
+    }
+  ],
+  "groups": [
+    {
+      "id": "settings-help",
+      "title": "Settings dialog · Help & about",
+      "blurb": "Links inside Help & about."
+    },
+    {
+      "id": "settings-nav",
+      "title": "Settings dialog · navigation",
+      "blurb": "Rows in the left column of the Settings dialog a customer opens from the gear."
+    },
+    {
+      "id": "settings-general",
+      "title": "Settings dialog · General",
+      "blurb": "Rows inside the General section."
+    },
+    {
+      "id": "sidebar",
+      "title": "Left column of the page",
+      "blurb": "Pieces beside the chat. Off keeps the customer on the conversation."
+    },
+    {
+      "id": "new-session",
+      "title": "New session screen",
+      "blurb": "What a blank conversation shows before the first message."
+    },
+    {
+      "id": "composer",
+      "title": "Composer",
+      "blurb": "Controls around the message box."
+    },
+    {
+      "id": "right-chrome",
+      "title": "Right column · frame",
+      "blurb": "The side card itself: what surrounds the tabs. Whether a customer may switch tabs off themselves is the “Side card” row of the Settings dialog."
+    },
+    {
+      "id": "right-launcher",
+      "title": "Right column · + menu",
+      "blurb": "Entries the + button and the Start guide list. One switch per entry; a tab type left out of the menu stays openable from its own entry points. Today the code lists every enabled tab — the two-entry menu is a mockup decision of 27/09, not shipped."
+    },
+    {
+      "id": "right-tabs",
+      "title": "Right column · tabs",
+      "blurb": "Tab types the + launcher and deep links can open. Off removes the type for customers: not in the menu, not by link, and the customer cannot switch it back on."
+    },
+    {
+      "id": "browser-toolbar",
+      "title": "Right column · Browser toolbar",
+      "blurb": "Buttons on the site browser's toolbar, beside the address bar (Undo, Edit and Comments have no switch), and the site's Design system row (the Design system button left the toolbar on 12/10/2026) and whether the chat may do what that row does."
+    },
+    {
+      "id": "dsh-tabs",
+      "title": "Conversation view tabs",
+      "blurb": "The tab strip above a conversation (Chat, Trajectory). Hiding Trajectory while a customer is on it brings them back to Chat."
+    },
+    {
+      "id": "dsh-header",
+      "title": "Session header tools",
+      "blurb": "The buttons at the right of a conversation's header."
+    },
+    {
+      "id": "assistant",
+      "title": "Help",
+      "blurb": "Typing /help and a question in the agent's chat asks Tracy Help about Tracy and the customer's own sites. It answers and points at screens; it changes nothing, and the agent never sees the question."
+    },
+    {
+      "id": "onboarding",
+      "title": "Getting started",
+      "blurb": "The welcome screen: sign in, pick your AI account, appearance & language, and in the desktop app notifications."
+    }
+  ],
+  "switches": [
+    {
+      "id": "help-desktop-download",
+      "group": "settings-help",
+      "label": "Download desktop app",
+      "hint": "The download button in Help & about on the web.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "parent": "tracy-help-about"
+    },
+    {
+      "id": "general",
+      "group": "settings-nav",
+      "label": "General",
+      "hint": "Language, appearance, font size.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "plugins",
+      "group": "settings-nav",
+      "label": "Built-in plugins",
+      "hint": "Inspect the plugins this deployment ships.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "tracy-account",
+      "group": "settings-nav",
+      "label": "Account",
+      "hint": "Who is signed in, and Sign out. Off, the account menu's header still shows who is signed in but no longer opens Settings › Account.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "warning": "Off leaves the customer no way to sign out: Sign out lives only in Settings › Account."
+    },
+    {
+      "id": "tracy-model-plan",
+      "group": "settings-nav",
+      "label": "AI accounts",
+      "hint": "The person's own AI accounts (Claude, ChatGPT Codex, …) and their routing, on web and desktop: the Settings section and its row in the account menu. Off hides both; saved connections are kept.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "dsh-subscriptions",
+      "group": "settings-nav",
+      "label": "Host subscriptions",
+      "hint": "The shared host must not store customer subscriptions.",
+      "drawnBy": "dsh",
+      "defaultOn": false,
+      "locked": "Use account-scoped AI accounts on web and desktop."
+    },
+    {
+      "id": "tracy-notifications",
+      "group": "settings-nav",
+      "label": "Notifications",
+      "hint": "Inbox and Email switches per kind of notification.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "tracy-site",
+      "group": "settings-nav",
+      "label": "This site",
+      "hint": "The open site: address, platform, seat.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "better-sidebar",
+      "group": "settings-nav",
+      "label": "Side card",
+      "hint": "Which side-card tabs are enabled.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "tracy-help-about",
+      "group": "settings-nav",
+      "label": "Help & about",
+      "hint": "Server build, desktop app updates, links to help and community.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "website-opportunities",
+      "group": "settings-nav",
+      "label": "Website Opportunities",
+      "hint": "Find restaurants, collect their website and social content, and build demo sites; also the desktop Help menu item and the Default CMS setting.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "website-opportunities-public-find",
+      "group": "settings-nav",
+      "label": "Website Opportunities: public Find",
+      "hint": "The sign-in-free /find page where anyone can search restaurants near a place (Google, capped per day in /ops/settings/wo). Answers only while Website Opportunities is on too.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "language",
+      "group": "settings-general",
+      "label": "Language",
+      "hint": "The UI language of the page.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "appearance",
+      "group": "settings-general",
+      "label": "Appearance",
+      "hint": "Light, dark, or system.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "font-size",
+      "group": "settings-general",
+      "label": "Font size",
+      "hint": "Conversation text size.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "transcript-view",
+      "group": "settings-general",
+      "label": "Work details",
+      "hint": "How much detail to show for tool calls.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "performance-usage",
+      "group": "settings-general",
+      "label": "Performance & usage",
+      "hint": "Performance and usage information.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "composer-enter",
+      "group": "settings-general",
+      "label": "Send behavior while busy",
+      "hint": "What Enter does while the agent runs.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "other-sites",
+      "group": "sidebar",
+      "label": "Site folders",
+      "hint": "The list of the customer’s other sites. Switching sites lives in the Browser tab instead.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "settings-button",
+      "group": "sidebar",
+      "label": "Account menu",
+      "hint": "The person's avatar at the bottom of the column, which opens the account menu (Account, AI accounts, Settings, Appearance, Community). Settings opens from that menu. Off hides the menu and the whole dialog above.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "warning": "Off leaves the customer no way to sign out: Sign out lives only in Settings › Account."
+    },
+    {
+      "id": "community-link",
+      "group": "sidebar",
+      "label": "Community link",
+      "hint": "The Community row of the account menu (Discord mark), where customers ask questions, report bugs and share feedback.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "warning": "It is where the Need help? button sends a customer who hid it. Off with that button hidden leaves no way to the community."
+    },
+    {
+      "id": "shortcuts",
+      "group": "settings-general",
+      "label": "Keyboard shortcuts",
+      "hint": "The shortcuts row and its page.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "workspace-tree",
+      "group": "sidebar",
+      "label": "Sitespace tree and session list",
+      "hint": "The open site’s folder with its conversations.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "session-status-dot",
+      "group": "sidebar",
+      "label": "Status dot on conversations",
+      "hint": "Waiting, errored, finished — beside each conversation row.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "session-timestamp",
+      "group": "sidebar",
+      "label": "Timestamp on conversations",
+      "hint": "When each conversation last moved.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "hero-headline",
+      "group": "new-session",
+      "label": "Hero headline and Preview badge",
+      "hint": "“Into the Unknown” above a blank conversation.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "guide-picture",
+      "group": "right-chrome",
+      "label": "Compass picture on the Start guide",
+      "hint": "The illustration above the right column’s Start list.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "start-cards",
+      "group": "new-session",
+      "label": "Start block on /new/",
+      "hint": "New user: Create a new site, Start from a template, Import your existing site. A site: Edit, Comments, Site changes, Team.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "mode-platform-row",
+      "group": "new-session",
+      "label": "Mode / Platform row on a blank session",
+      "hint": "Sitespace, mode and platform pickers above the composer before the first message.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "access-mode",
+      "group": "composer",
+      "label": "Access mode chip",
+      "hint": "Read-only / workspace-write picker. The level itself is still decided by the host.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "model-picker",
+      "group": "composer",
+      "label": "Model picker and Effort menu",
+      "hint": "Tracy picks the model for the customer.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "preset-picker",
+      "group": "composer",
+      "label": "Role picker (Designer, Developer, Writer, SEO/GEO)",
+      "hint": "Where a customer picks the role Tracy works in: the role chip in the message box before a site's first message, and the Mode / Platform pills on a blank session. Off: every session starts with the default preset (Designer for the site's platform).",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "composer-voice-input",
+      "group": "composer",
+      "label": "Voice input (microphone beside Send)",
+      "hint": "The microphone in the message box: the customer speaks and the words appear in the message as they are recognised, in the language spoken (ElevenLabs). Shows only on a deployment with a speech key (SPEECH_TO_TEXT_API_KEY).",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "voice-plan-approval",
+      "group": "composer",
+      "label": "Approve a plan by voice",
+      "hint": "In a voice conversation, a plan waiting for review is read out (its title and scope) and the customer may approve it by saying the whole phrase, such as “approve this plan”, or ask for a change with “change the plan …”. Only one plan waiting and no other question; a plan that changed is read again. Off: the customer is sent to the chat to review the plan, as before. Needs Voice input on.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "help-button",
+      "group": "composer",
+      "label": "Need help? button",
+      "hint": "The floating pill above the message box that opens the Discord community. A customer can hide it in their own browser. Off by default: people reach Help by typing /help in the chat.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "split-button",
+      "group": "right-chrome",
+      "label": "Split button",
+      "hint": "Opens a second pane. Cmd+\\ still works.",
+      "drawnBy": "dsh",
+      "defaultOn": false
+    },
+    {
+      "id": "launch-add-site",
+      "group": "right-launcher",
+      "label": "Add site",
+      "hint": "Create a site on the fleet, or import a running one. Signed-in viewers only.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:add-site"]
+    },
+    {
+      "id": "launch-my-sites",
+      "group": "right-launcher",
+      "label": "My sites",
+      "hint": "Sites the viewer holds a seat on. Signed-in viewers only. Added by Lee 28/09.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:my-sites"]
+    },
+    {
+      "id": "launch-inspirations",
+      "group": "right-launcher",
+      "label": "Design templates",
+      "hint": "154 design templates and the brand tab.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:design-inspiration"]
+    },
+    {
+      "id": "launch-design-system",
+      "group": "right-launcher",
+      "label": "Design system",
+      "hint": "In the + menu and the Start guide: the design system the open site wears, and another from the design templates library to apply to it. Needs an open site, and Design system on. Off, it still opens from the Design system row on the site's start screen.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:design-system"]
+    },
+    {
+      "id": "launch-team",
+      "group": "right-launcher",
+      "label": "Team",
+      "hint": "In the + menu and the Start guide.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:team"]
+    },
+    {
+      "id": "launch-changes",
+      "group": "right-launcher",
+      "label": "Site changes",
+      "hint": "In the + menu and the Start guide. Off, it still opens from My sites, the Browser tab's site menu, the Start cards and links.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:changes"]
+    },
+    {
+      "id": "launch-brand",
+      "group": "right-launcher",
+      "label": "Brand",
+      "hint": "In the + menu and the Start guide.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:brand"]
+    },
+    {
+      "id": "launch-brand-builder",
+      "group": "right-launcher",
+      "label": "Brand builder",
+      "hint": "In the + menu and the Start guide.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:brand-builder"]
+    },
+    {
+      "id": "launch-files",
+      "group": "right-launcher",
+      "label": "Files",
+      "hint": "In the + menu and the Start guide.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["editor", "files"]
+    },
+    {
+      "id": "launch-git",
+      "group": "right-launcher",
+      "label": "Git",
+      "hint": "Git, shown as “Changes” in the menu.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["git"]
+    },
+    {
+      "id": "launch-subagent",
+      "group": "right-launcher",
+      "label": "Subagent",
+      "hint": "Subagent runs, shown as “Tasks” in the menu.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["subagent"]
+    },
+    {
+      "id": "launch-side-chat",
+      "group": "right-launcher",
+      "label": "Side chat",
+      "hint": "In the + menu and the Start guide.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["sidechat"]
+    },
+    {
+      "id": "launch-browser",
+      "group": "right-launcher",
+      "label": "Browser",
+      "hint": "In the + menu and the Start guide.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:browser"]
+    },
+    {
+      "id": "launch-build",
+      "group": "right-launcher",
+      "label": "Build",
+      "hint": "The Build tab of each CMS. It still opens from the site flow.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:build:wordpress", "tracy:build:joomla", "tracy:build:emdash"]
+    },
+    {
+      "id": "launch-live-site",
+      "group": "right-launcher",
+      "label": "Live site",
+      "hint": "The live site tab of each CMS. It still opens from the site flow.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "tabs": ["tracy:live-wordpress", "tracy:live-joomla", "tracy:live-emdash"]
+    },
+    {
+      "id": "tab-team",
+      "group": "right-tabs",
+      "label": "Team tab",
+      "hint": "Seats on the open site.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:team"]
+    },
+    {
+      "id": "tab-changes",
+      "group": "right-tabs",
+      "label": "Site changes tab",
+      "hint": "What changed on the site, by whom and from where, with its backups: create one, restore files or everything.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:changes"]
+    },
+    {
+      "id": "tab-inspirations",
+      "group": "right-tabs",
+      "label": "Design templates tab",
+      "hint": "154 design templates and the brand tab.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:design-inspiration"]
+    },
+    {
+      "id": "tab-brand",
+      "group": "right-tabs",
+      "label": "Brand tab",
+      "hint": "The site’s brand inspiration.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:brand"]
+    },
+    {
+      "id": "tab-brand-builder",
+      "group": "right-tabs",
+      "label": "Brand builder tab",
+      "hint": "Build a brand from a URL.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:brand-builder"]
+    },
+    {
+      "id": "tab-files",
+      "group": "right-tabs",
+      "label": "Files tab",
+      "hint": "The site’s files, opened in the editor.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["editor"]
+    },
+    {
+      "id": "tab-git",
+      "group": "right-tabs",
+      "label": "Git tab",
+      "hint": "Developer view; a site is not a git repo.",
+      "drawnBy": "dsh",
+      "defaultOn": true,
+      "tabs": ["git"]
+    },
+    {
+      "id": "tab-subagent",
+      "group": "right-tabs",
+      "label": "Subagent tab",
+      "hint": "Developer view of subagent runs.",
+      "drawnBy": "dsh",
+      "defaultOn": true,
+      "tabs": ["subagent"]
+    },
+    {
+      "id": "tab-side-chat",
+      "group": "right-tabs",
+      "label": "Side chat tab",
+      "hint": "A second conversation beside the main one.",
+      "drawnBy": "dsh",
+      "defaultOn": true,
+      "tabs": ["sidechat"]
+    },
+    {
+      "id": "tab-inbox",
+      "group": "right-tabs",
+      "label": "Inbox",
+      "hint": "Team and comment notifications from every site, and its row with the unread count below New session in the left column. Signed-in viewers only. Spec #809.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:inbox"]
+    },
+    {
+      "id": "tab-questions",
+      "group": "right-tabs",
+      "label": "Questions",
+      "hint": "The agent's questions as one form in the right pane; off, the chat card alone asks them.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:ask-user"]
+    },
+    {
+      "id": "site-connect-domain",
+      "group": "right-tabs",
+      "label": "Connect domain",
+      "hint": "The button on a site’s Publish tab (My Sites › ⋯ › Publish) that lets an Owner add a domain of their own. Turned off, the server also refuses to add a domain or check one's DNS. A domain a site already has stays shown, keeps working and can still be removed.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "warning": "A customer who is part-way through connecting a domain keeps seeing it but can no longer check its DNS. It can still be removed, and the next publish still connects it once its records are right."
+    },
+    {
+      "id": "site-brand-uploads",
+      "group": "right-tabs",
+      "label": "Logo and favicon questions",
+      "hint": "The Logo and Favicon questions in Add site › Customize your site, and the upload of their PNG files. Off: the sheet does not ask them and the server ignores any file sent with a new site.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "site-from-business",
+      "group": "right-tabs",
+      "label": "Build from my business",
+      "hint": "The Build from my business start in Add site: the customer finds their business by name and city or pastes its website or Google Maps link, Tracy researches it, picks a template and the site's agent builds the whole site in one chat. Off: Add site shows only its other starts and the server refuses these doors.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "toolbar-design-system",
+      "group": "browser-toolbar",
+      "label": "Design system",
+      "hint": "The Design system row on the site's start screen and the tab it opens: shows the design system the site wears, applies another from the design templates library to the running site, and undoes it.",
+      "drawnBy": "Tracy",
+      "defaultOn": true,
+      "tabs": ["tracy:design-system"]
+    },
+    {
+      "id": "chat-design-system",
+      "group": "browser-toolbar",
+      "label": "Design system through the chat",
+      "hint": "The chat route to a whole design system, beside the Design system row on the site's start screen: the agent proposing design templates for the site and applying one (a Refero library id, from a pasted DESIGN.md, or as a whole new look) through the Design system tab's own door, the “Use this design template” button of the preview dialog, and the WordPress style variation the agent could switch. Off (the default since 11/10/2026, David): the agent changes nothing of the kind and points the customer to the Design system row in one sentence; Help says the same. Element edits written relative to the system the site wears, and picking a design when a new site is created, are not governed by this switch.",
+      "drawnBy": "Tracy",
+      "defaultOn": false,
+      "warning": "On lets the agent replace a site's whole look from the chat. Turn it on only once the chat route has been measured again."
+    },
+    {
+      "id": "site-sync-from-live",
+      "group": "browser-toolbar",
+      "label": "Sync from live",
+      "hint": "An imported Joomla or WordPress site’s “Sync from live” row in the site’s ••• menu, and the Sync step of its Publish tab (right before the last step of each flow): Tracy reads the customer’s live site, merges what changed there into the copy (Tracy’s own changes stay) and puts the result in place behind a backup. Off: the row and the step go, and Export packs the copy as it is.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "site-sync-to-live",
+      "group": "browser-toolbar",
+      "label": "Sync to live",
+      "hint": "An imported Joomla or WordPress site’s “Sync to live” row in the site’s ••• menu and the “Send changes to your live site” choice of its Publish tab (Owners only): Tracy previews the content changes it made on the copy, and after the Owner confirms, writes them to the customer’s live site through its Claude Cowork plugin, skipping anything the live site changed since the last sync, with an Undo. Off: the row and the choice go; nothing is written to a live site.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    },
+    {
+      "id": "dsh-trajectory-tab",
+      "group": "dsh-tabs",
+      "label": "Trajectory tab",
+      "hint": "The step-by-step record of what the agent did in this conversation.",
+      "drawnBy": "dsh",
+      "defaultOn": true
+    },
+    {
+      "id": "dsh-open-in-app",
+      "group": "dsh-header",
+      "label": "Open in app",
+      "hint": "The ↗ button with its list of editors (Cursor, VS Code, Zed…) that opens the workspace on the viewer's own machine.",
+      "drawnBy": "dsh",
+      "defaultOn": false,
+      "locked": "Locked off: dsh launches the editor on the server, not on the customer's machine, so the button can only fail. Its plugin is off in every Tracy bundle; unlock when an upstream dsh release opens editors on the viewer's side."
+    },
+    {
+      "id": "dsh-session-menu",
+      "group": "dsh-header",
+      "label": "“…” menu (Feedback, Download)",
+      "hint": "The whole “More actions” menu. Off hides every item in it, whatever the switches below say.",
+      "drawnBy": "dsh",
+      "defaultOn": true,
+      "warning": "Off hides the progress of a download started with /export: the command still runs, silently."
+    },
+    {
+      "id": "dsh-session-menu-feedback",
+      "group": "dsh-header",
+      "label": "Feedback",
+      "hint": "Send feedback about this conversation.",
+      "drawnBy": "dsh",
+      "defaultOn": true,
+      "parent": "dsh-session-menu"
+    },
+    {
+      "id": "dsh-session-menu-download",
+      "group": "dsh-header",
+      "label": "Download conversation file",
+      "hint": "Download this conversation as a file.",
+      "drawnBy": "dsh",
+      "defaultOn": true,
+      "parent": "dsh-session-menu"
+    },
+    {
+      "id": "ai-assistant",
+      "group": "assistant",
+      "label": "Help command (/help)",
+      "hint": "Typing /help followed by a question in the agent's chat asks Tracy Help about Tracy and the person's own sites. Off: /help is an ordinary message for the agent.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "onboarding",
+      "group": "onboarding",
+      "label": "Getting started screen",
+      "hint": "Shown once to each account after sign-in on the web (once per computer in the desktop app), and reopened from Getting started in the account menu. Off hides the screen and that menu row.",
+      "drawnBy": "Tracy",
+      "defaultOn": true
+    },
+    {
+      "id": "website-voice-widget",
+      "group": "new-session",
+      "label": "Embeddable website assistant",
+      "hint": "The voice-first website discovery widget at /widget and its embeddable script. Uses the real template, design-system, sign-in and site creation doors.",
+      "drawnBy": "Tracy",
+      "defaultOn": false
+    }
+  ]
+}

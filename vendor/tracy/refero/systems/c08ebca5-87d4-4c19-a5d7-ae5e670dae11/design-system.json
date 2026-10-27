@@ -1,0 +1,299 @@
+{
+  "dos": [
+    "Use #1868db for every primary action button, link, and focus state — it is the only chromatic action color in the system",
+    "Set card radius to 20px and button radius to 28px (or 10000px for full pill) — flatness is the point",
+    "Pair Charlie Display weight 400-500 with Charlie Text weight 400-500; reserve weight 700+ for inline emphasis only",
+    "Frame dark hero panels with geometric confetti shapes in violet (#bf63f3), yellow (#fca700), blue (#1868db), and green — never use these colors as fills inside functional UI",
+    "Use #eed7fc lavender for editorial section dividers between white blocks; never use it for buttons or interactive elements",
+    "Reach for the navy-tinted shadow stack (rgba(9, 30, 66, ...)) when any elevation is needed — never use neutral black shadows",
+    "Set headlines at 40-80px with tightened 0.012em letter-spacing; body at 16px with 1.50 line-height for generous reading rhythm"
+  ],
+  "donts": [
+    "Don't introduce additional accent colors for UI — yellow, violet, and green are decorative-only and must never appear on buttons, links, or form controls",
+    "Don't use heavy drop shadows or elevation stacks — the system is deliberately flat; depth comes from color inversion and radius alone",
+    "Don't use sharp corners on cards or images — always apply 20px radius to cards and at least 5px to images",
+    "Don't mix the two font families' weights arbitrarily — Charlie Text handles UI (13-24px), Charlie Display handles editorial (24-80px)",
+    "Don't use black (#000000) as a background or large fill — it appears only as text and border ink; dark panels use #101214",
+    "Don't place white text on lavender or blue — contrast pairs are dark-on-light or white-on-navy only",
+    "Don't tile or repeat the confetti gradient — it is a single decorative frame device, not a pattern or texture"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1868db",
+      "name": "Atlassian Blue",
+      "role": "Primary action buttons, active links, focus states, icon accents — the single chromatic action color across the entire system, providing directional clarity against monochrome surfaces",
+      "group": "brand"
+    },
+    {
+      "hex": "#101214",
+      "name": "Midnight Navy",
+      "role": "Primary text, heading fills on light surfaces, dark hero panel backgrounds, link text — the dominant ink color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#292a2e",
+      "name": "Carbon Edge",
+      "role": "Card borders on light surfaces, body text, input borders, secondary heading text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1c2b42",
+      "name": "Slate Current",
+      "role": "Outlined action borders, icon strokes, list dividers, tertiary text — a blue-tinted near-gray that hints at brand without committing to color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#42526e",
+      "name": "Muted Indigo",
+      "role": "Helper text, form labels, info badges, icon tints, secondary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page canvas, card surfaces, button text on dark fills, dark-section backgrounds where contrast demands it",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f1f2",
+      "name": "Fog White",
+      "role": "Muted button backgrounds, secondary surface fills, hairline section dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b7b9be",
+      "name": "Ash Gray",
+      "role": "Disabled borders, subtle list separators, card shadow tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fca700",
+      "name": "Taxicab Yellow",
+      "role": "Sporadic CTA alternative (event registration), decorative fill in geometric confetti, accent punctuation in dark banners",
+      "group": "accent"
+    },
+    {
+      "hex": "#eed7fc",
+      "name": "Lavender Wash",
+      "role": "Soft purple section backgrounds, highlight bands, decorative geometric fills",
+      "group": "accent"
+    },
+    {
+      "hex": "#bf63f3",
+      "name": "Confetti Gradient",
+      "role": "Decorative geometric borders around video and hero blocks — conic gradient sweeps violet → yellow → blue",
+      "group": "accent",
+      "gradient": "conic-gradient(rgb(191, 99, 243) 170deg, rgb(252, 167, 0) 171deg, rgb(252, 167, 0) 230deg, rgb(77, 140, 237) 231deg, rgb(77, 140, 237) 360deg)"
+    }
+  ],
+  "layout": "Full-width bands of alternating white and lavender (#eed7fc) sections, with occasional full-bleed dark navy (#101214) panels that break the rhythm. Content is max-width 1200px centered within each band. Hero is a full-bleed dark panel with left-aligned text and right-side promotional card, framed by geometric confetti bleeding off-page edges. Below the hero, sections alternate between centered editorial headlines with single CTAs, and two-column layouts (text-left/visual-right or visual-left/text-right) for product features. Product showcases use tilted screenshots on solid blue (#1868db) backgrounds as transitional elements. Navigation is a single sticky top bar with dropdown mega-menus. Vertical rhythm: 64-80px between major sections, 24-40px within. The page breathes generously but information density stays high in product blocks.",
+  "imagery": "Imagery is split into two distinct registers. Functional: product screenshots (Jira boards, Confluence pages) shown raw on solid color backgrounds, slightly tilted for energy. Editorial: colorful flat geometric shapes — torn rectangles, angled bars, confetti fragments — in a fixed palette of vivid violet, taxicab yellow, electric blue, and leaf green that frame hero banners and video blocks. No photography, no 3D renders, no lifestyle imagery. Illustrations (when present, e.g. in the Teamwork Collection block) are flat, brand-colored, and character-driven — stylized human figures in solid fills. The visual energy comes entirely from these geometric color fragments, not from photographic content.",
+  "similar": [
+    {
+      "why": "Similar light-canvas SaaS aesthetic with generous whitespace, single accent color, and large editorial headlines paired with product screenshots",
+      "business": "Notion"
+    },
+    {
+      "why": "Shared disciplined single-accent-color system with custom sans typography, dark hero panels, and minimal shadow philosophy",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar use of colorful geometric shapes as editorial decoration around dark sections, paired with clean white product showcases",
+      "business": "Figma"
+    },
+    {
+      "why": "Enterprise developer-tool sensibility with custom sans pairing, dark navigation panels, and functional monochrome product surfaces",
+      "business": "GitHub"
+    },
+    {
+      "why": "Close companion brand using the same Atlassian design DNA — vivid accent color, custom humanist sans, flat rounded components, minimal shadows",
+      "business": "Slack"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "2px",
+      "tags": "10000px",
+      "cards": "20px",
+      "images": "5px",
+      "inputs": "8px",
+      "buttons": "28px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64-80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background for content sections"
+    },
+    {
+      "hex": "#f0f1f2",
+      "name": "Soft Surface",
+      "level": 1,
+      "purpose": "Muted buttons, subtle section bands, low-emphasis fills"
+    },
+    {
+      "hex": "#e9f2fe",
+      "name": "Tinted Surface",
+      "level": 2,
+      "purpose": "Blue-tinted highlight wash, feature card backgrounds"
+    },
+    {
+      "hex": "#eed7fc",
+      "name": "Lavender Band",
+      "level": 3,
+      "purpose": "Editorial accent sections, decorative dividers"
+    },
+    {
+      "hex": "#101214",
+      "name": "Dark Panel",
+      "level": 4,
+      "purpose": "Hero banners, product feature blocks, inverted sections"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(9, 30, 66, 0.31) 0px 0px 1px 0px, rgba(9, 30, 66, 0.25) 0px 1px 1px 0px",
+      "element": "Feature card"
+    }
+  ],
+  "northStar": "Confetti-edged engineering blueprint. A clean white enterprise canvas interrupted by dark navy editorial panels framed in torn geometric color — vivid violet, taxicab yellow, electric blue, leaf green — like precise diagrams pinned between paint-splattered dividers.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.29
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.14
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": 0.012
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "role": "High-emphasis CTA — registration, get started, primary conversions",
+      "description": "Filled #1868db background, #ffffff text in Charlie Text 16px weight 500. Pill radius of 28px (or 10000px for full pill). Padding 10px 22px. No border. Sits flat with zero shadow — the color does the work."
+    },
+    {
+      "name": "Secondary Action Button",
+      "role": "Tertiary CTA — learn more, see agenda, navigation onward",
+      "description": "Transparent background, #101214 or #ffffff text (inverts on dark), Charlie Text 16px weight 500. Optional thin underline on hover. Sits beside primary actions as a text-link counterpart."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Low-emphasis interactive — filter chips, toggle controls",
+      "description": "Border 1px #101214 or #ffffff, transparent fill, same text spec as primary. Pill radius."
+    },
+    {
+      "name": "Dark Hero Banner",
+      "role": "Top-of-page event/campaign promotion",
+      "description": "Full-width #101214 background, framed on left/right by jagged geometric color shapes (violet #bf63f3, yellow #fca700, blue #1868db, green confetti). Charlie Display 80px weight 400-500 headline in white, left-aligned with supporting body in #ffffff at 16px. Primary button in vivid yellow (#fca700) for contrast against dark — the only place the yellow CTA appears."
+    },
+    {
+      "name": "Product Screenshot Card",
+      "role": "Embedded product UI showcase (Jira board, Confluence, etc.)",
+      "description": "Screenshot image placed on solid #1868db blue background, offset/tilted slightly. Image has ~5px radius corners. Functions as a showcase layer between white content sections. Zero border, zero shadow — the blue background IS the frame."
+    },
+    {
+      "name": "Video Player Block",
+      "role": "Embedded video content with brand frame",
+      "description": "16:9 video container, thumbnail darkened to ~60% opacity, centered white play button (circle, ~64px). Surrounded by asymmetric geometric color shapes in violet/yellow/blue/green that break the rectangular frame — signature editorial device."
+    },
+    {
+      "name": "Lavender Feature Band",
+      "role": "Editorial section divider with content",
+      "description": "Full-width #eed7fc background, centered Charlie Display heading 32-40px weight 400 in #101214, body copy in #101214 at 16px. No card containers — text floats on the tinted surface. Breaks visual rhythm between white sections."
+    },
+    {
+      "name": "Inverted Dark Section",
+      "role": "Product collection or feature highlight block",
+      "description": "#101214 background spanning full width, left half holds white text content (heading + body), right half holds colorful illustration or product visual. Charlie Display 40-48px weight 500 headline, Charlie Text 16px body."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Sticky white bar, #ffffff background, bottom border 1px #f0f1f2 or 2px hairline. Atlassian wordmark + blue triangle logo at left. Menu items in Charlie Text 14px weight 400 #101214, dropdowns revealed on hover. Sign in link right-aligned in #1868db. Height ~56px."
+    },
+    {
+      "name": "Centered Editorial Headline",
+      "role": "Section opener for marketing pages",
+      "description": "Centered Charlie Display 40-48px weight 500 in #101214, with a yellow hand-drawn underline scribble beneath key words (signature editorial flourish). Subhead in Charlie Text 16px #42526, max-width 600px centered."
+    },
+    {
+      "name": "Info Badge",
+      "role": "Metadata tags, status indicators, category labels",
+      "description": "Pill shape (10000px radius), small padding 4-6px horizontal, Charlie Text 13px weight 500. Uses #42526 text on #f0f1f2 background, or #1868db text on #e9f2fe for brand-tinted variants."
+    },
+    {
+      "name": "Card Container",
+      "role": "Generic content card — features, blog posts, resource tiles",
+      "description": "#ffffff background, 20px border radius, 24px internal padding, minimal border (1px #f0f1f2) or the navy-tinted micro-shadow. No drop shadow at scale — the radius and whitespace do the lifting."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Editorial headlines, hero text, section titles — scales from 24px sub-headings to 80px display. Weight 400-500 creates a humanist warmth uncommon in enterprise tools; letter-spacing tightens to 0.012em at large sizes for optical correction.",
+      "sizes": "14, 24, 28, 32, 40, 44, 48, 70, 80",
+      "family": "Charlie Display",
+      "weight": "400, 500, 700, 800",
+      "lineHeight": "1.00, 1.10, 1.14, 1.17, 1.19, 1.20, 1.25, 1.43",
+      "substitute": "Manrope",
+      "letterSpacing": "0.0120em at 40px+; 0.0300em at small display sizes"
+    },
+    {
+      "role": "Body copy, UI labels, navigation, button text, input fields, footer text. Weight 400 for body, 500 for emphasized labels, 700 reserved for inline strong elements. Tight line-heights (1.20-1.25) at UI sizes maximize information density without feeling cramped.",
+      "sizes": "13, 14, 16, 20, 24",
+      "family": "Charlie Text",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.20, 1.25, 1.29, 1.40, 1.50",
+      "substitute": "Inter"
+    }
+  ],
+  "description": "Atlassian operates as an enterprise workshop dressed in casual confidence: a white canvas where dense product interfaces meet bold, colorful editorial moments. The visual system splits between quiet functional surfaces (white, light gray, subtle blue) and expressive dark hero blocks (near-black navies) framed by fragmented geometric confetti in vivid violet, yellow, blue, and green. Typography is a paired custom sans family — Charlie Text for dense UI, Charlie Display for editorial headlines that grow to 80px with tightened tracking. Components are large, rounded, and borderless — pills for actions, generous 20px radii for cards, almost no shadow. Color is disciplined: one electric blue drives every primary action and link, while chromatic energy lives only in decorative edges and section dividers, never bleeding into functional UI.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #101214\n- background: #ffffff\n- border: #292a2e\n- accent: #1868db\n- primary action: #1868db (filled action)\n- dark panel: #101214\n\n## Example Component Prompts\n\n1. Create a Primary Action Button: #1868db background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Create a product screenshot card**: Place a Jira/Confluence UI screenshot (16:10 ratio) at slight 3° rotation on a solid #1868db background. Image has 5px corner radius. No border, no shadow. Surrounding canvas is #ffffff with 64px top/bottom padding.\n\n\n4. **Create a lavender feature band**: Full-width #eed7fc background, 64px vertical padding. Centered Charlie Display 32px weight 400 in #101214, followed by Charlie Text 16px body in #101214. No card containers — text sits directly on the tinted surface.\n\n5. **Create a navigation bar**: Sticky top bar, #ffffff background, 1px bottom border #f0f1f2. Blue triangle Atlassian logo + wordmark left. Menu items (Products, Solutions, Why Atlassian, Resources, Enterprise) in Charlie Text 14px weight 400 #101214 with dropdown chevrons. Right-aligned 'Sign in' in #1868db, 14px. Height 56px, 16px horizontal padding for menu items."
+    },
+    {
+      "title": "Confetti Decorative System",
+      "content": "The signature visual device is fragmented geometric color — asymmetric torn-rectangle and angled-bar shapes in a fixed four-color palette (violet #bf63f3, taxicab yellow #fca700, electric blue #1868db, leaf green) that bleed off the edges of dark hero panels and video blocks. These shapes are flat fills, no gradients, no shadows, no stroke. They function as visual punctuation — loud, joyful, and intentionally unrefined against the otherwise precise enterprise UI. They appear only as framing elements around dark surfaces, never inside white content sections, and never overlap functional UI components. The conic gradient (violet → yellow → blue) is reserved for the most prominent frame, typically around featured video or hero imagery."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is nearly absent. The system relies on flat surfaces, 20px radii, and background color shifts (white → fog → lavender) to establish hierarchy. The single detected shadow is a barely-visible two-layer stack using Atlassian's signature navy-blue shadow tint (rgba 9,30,66) rather than neutral black — it feels like depth through atmosphere, not plastic drop-shadow. Dark hero panels achieve separation from the white canvas through color inversion alone, never through shadow."
+}

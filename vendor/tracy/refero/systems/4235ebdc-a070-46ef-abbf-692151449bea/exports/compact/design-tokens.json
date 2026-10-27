@@ -1,0 +1,34 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Ink — Primary text, all hairlines and card borders, nav links — the workhorse near-black that defines every interface edge"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Badge borders, emphasis strokes, and the darkest accents where pure black is needed against white"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces, and inverted text on dark badges — the only true surface tone"
+    }
+  },
+  "font": {
+    "pragmatica": {
+      "$value": "pragmatica",
+      "$type": "fontFamily",
+      "$description": "The single, exclusive typeface used everywhere at weight 400 only. A neo-grotesque with geometric warmth that reads like editorial print. Headlines (30–35px) use tight leading (~1.14) and the wide gaps in cap-height create a poster-like presence. Body and bylines sit at 15px with generous 1.47 leading. Captions and metadata drop to 12px. The refusal to go bold is the signature: the design speaks in one volume, and the weight of the words comes from the images, not the strokes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.nofilter.space",
+      "siteName": "Nofilter.space",
+      "extractedAt": "2026-06-03T20:08:13.987Z",
+      "variant": "compact"
+    }
+  }
+}

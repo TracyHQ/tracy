@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1134-ds-remeasure-6",
+  "kind": "fix",
+  "title": "Sixteen slot contracts re-measured with the final contrast probe, every heading, text and block of text judged: every one offered carries evidence of this round that passes; the WordPress variation writes followRules and sideRules and keeps kept bands light, EmDash takes followRules, the probe reads translucent fills, a text's own chip, photos, lazy pictures, skips text clipped out of a scroller and compares a text with its own default when the slot adds an element ahead of it",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: cd packages/design/tracy-ds-slot && node --test test/slot.test.mjs test/cms.test.mjs (the WordPress followRules, sideRules and kept-band light scheme included).",
+    "S2: for each of joomla-t3-bs3-blank, joomla-t4-bs5-blank, joomla-tracy-airbnb, joomla-tracy-base, joomla-tracy-business, wordpress-ja-{essence,impact,kinetic,morgan,nova,vega}, wordpress-tracy-base, wordpress-tracy-business, emdash-base, emdash-tracy-business, emdash-tracy-saas: loadContract, then read tasks/evidence/ds-remeasure-6-2026-10-11/<run>/final.json for every release it was measured on.",
+    "S3: build the EmDash slot CSS of emdash-tracy-business under Toggl Track and of emdash-tracy-saas under Apple (emdashCss).",
+    "S4: tracy-web's contractFor for Tracy SaaS (1.4.10, and its contract's minVersion), Tracy Business and Tracy Base EmDash at their released versions.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-remeasure-6.mjs"
+  ],
+  "expect": [
+    "S1: both test files pass.",
+    "S2: every ready contract's readyNote names tasks/evidence/ds-remeasure-6-2026-10-11 and its contrast kinds cover every heading and text; each final.json has systemsPass true, controlsZero true, regressed [], minFollows >= 0.5 and everyViewHasSamples true.",
+    "S3: the Tracy Business hero accent line on the ink band reads >= 4.5:1 under Toggl Track; the Tracy SaaS CTA eyebrow reads >= 4.5:1 on every ground of its card under Apple.",
+    "S4: Tracy SaaS's minVersion is 1.4.11 or later (1.4.11 was the first release that wears the slot; develop moved it to 1.4.12 on 12/10/2026), so 1.4.10 is told to update to minVersion and minVersion is offered; Tracy Business 1.7.6 and Tracy Base 0.5.0 are offered."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/<name>.json ready, readyNote, followRules, sideRules, templateVars, keepScopes, selectors.button, selectors.card",
+    "evidence": "tasks/evidence/ds-remeasure-6-2026-10-11/<run>/final.json systemsPass, controlsZero, regressed, minFollows, everyViewHasSamples"
+  },
+  "evidence": "tasks/evidence/ds-remeasure-6-2026-10-11/README.md: contract x first pass with this round's probe x after x numbers x what changed; screenshots read by eye.",
+  "fence": "which of the sixteen contracts are offered and the evidence they rest on, and the WordPress variation keys this round added; not the stands themselves (measured once, committed) nor any release upload",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-remeasure-6.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

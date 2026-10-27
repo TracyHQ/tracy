@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-signal-orange: #ff5e24;
+  --color-ember-crust: #6c3200;
+  --color-cloud-mist: #e3f1fe;
+  --color-graphite-ink: #232629;
+  --color-paper-white: #ffffff;
+  --color-slate-pencil: #5c6066;
+  --color-ash-mist: #989ea4;
+  --color-blush-shadow: #dbced0;
+  --color-midnight-ink: #101828;
+
+  /* Typography — Font Families */
+  --font-jersey-10: 'Jersey 10', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-manrope-variable: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

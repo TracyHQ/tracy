@@ -1,0 +1,3175 @@
+/**
+ * TanStack Router configuration for EmDash Admin
+ *
+ * Defines all admin routes and their components.
+ */
+
+import { Button, Loader, Toast, useKumoToastManager } from "@cloudflare/kumo";
+import { plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
+import type { QueryClient } from "@tanstack/react-query";
+import {
+	keepPreviousData,
+	useQuery,
+	useInfiniteQuery,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
+import {
+	createRouter,
+	createRootRouteWithContext,
+	createRoute,
+	Outlet,
+	Link,
+	useParams,
+	useNavigate,
+	useSearch,
+} from "@tanstack/react-router";
+import * as React from "react";
+
+import { BlockTypeList } from "./components/BlockTypeList.js";
+import { EMPTY_BYLINE_FILTER, type BylineFilterState } from "./components/BylineFilter";
+import { CommentInbox } from "./components/comments/CommentInbox";
+import { ContentEditor, type ReferenceEntryRow } from "./components/ContentEditor";
+import {
+	ContentList,
+	EMPTY_DATE_FILTER,
+	type ContentDateFilter,
+	type ContentListSort,
+	type ContentStatusFilter,
+} from "./components/ContentList";
+import { ContentTypeEditor } from "./components/ContentTypeEditor";
+import { ContentTypeList } from "./components/ContentTypeList";
+import { Dashboard } from "./components/Dashboard";
+import { DeviceAuthorizePage } from "./components/DeviceAuthorizePage";
+import { EntryLockNotice } from "./components/EntryLockNotice";
+import { InviteAcceptPage } from "./components/InviteAcceptPage";
+import { LoginPage } from "./components/LoginPage";
+import { MagicLinkConfirmPage } from "./components/MagicLinkConfirmPage";
+import { MediaLibrary } from "./components/MediaLibrary";
+import { MenuEditor } from "./components/MenuEditor";
+import { MenuList } from "./components/MenuList";
+import { PluginManager } from "./components/PluginManager";
+import { PluginSettings } from "./components/PluginSettings";
+import { Redirects } from "./components/Redirects";
+import { RegistryBrowse } from "./components/RegistryBrowse";
+import { RegistryPluginDetail } from "./components/RegistryPluginDetail";
+import { RelationList } from "./components/RelationList";
+import { SandboxedPluginPage } from "./components/SandboxedPluginPage";
+import { SectionEditor } from "./components/SectionEditor";
+import { Sections } from "./components/Sections";
+import { Settings } from "./components/Settings";
+import { AllowedDomainsSettings } from "./components/settings/AllowedDomainsSettings";
+import { ApiTokenSettings } from "./components/settings/ApiTokenSettings";
+import { BackupSettings } from "./components/settings/BackupSettings";
+import { EmailSettings } from "./components/settings/EmailSettings";
+import { GeneralSettings } from "./components/settings/GeneralSettings";
+import { MediaUsageSettings } from "./components/settings/MediaUsageSettings";
+import { SecuritySettings } from "./components/settings/SecuritySettings";
+import { SeoSettings } from "./components/settings/SeoSettings";
+import { SocialSettings } from "./components/settings/SocialSettings";
+import { TransferSettings } from "./components/settings/TransferSettings";
+import { SetupWizard } from "./components/SetupWizard";
+import { Shell } from "./components/Shell";
+import { SignupPage } from "./components/SignupPage";
+import { TaxonomyManager } from "./components/TaxonomyManager";
+import { Widgets } from "./components/Widgets";
+import { WordPressImport } from "./components/WordPressImport";
+import {
+	apiFetch,
+	parseApiResponse,
+	fetchManifest,
+	fetchContentList,
+	fetchContentAuthors,
+	fetchContent,
+	createContent,
+	updateContent,
+	deleteContent,
+	fetchTranslations,
+	fetchMediaList,
+	updateMedia,
+	uploadMedia,
+	createRelation,
+	deleteRelation,
+	fetchCollections,
+	fetchRelations,
+	updateRelation,
+	type CreateRelationInput,
+	type UpdateRelationInput,
+	fetchBlockTypes,
+	fetchCollection,
+	createCollection,
+	updateCollection,
+	deleteCollection,
+	createField,
+	updateField,
+	deleteField,
+	reorderFields,
+	reorderCollections,
+	fetchOrphanedTables,
+	registerOrphanedTable,
+	fetchUsers,
+	fetchBylines,
+	createByline,
+	updateByline,
+	setSearchEnabled,
+	fetchTrashedContent,
+	restoreContent,
+	permanentDeleteContent,
+	duplicateContent,
+	scheduleContent,
+	unscheduleContent,
+	publishContent,
+	unpublishContent,
+	discardDraft,
+	fetchRevision,
+	fetchMediaFolder,
+	fetchMediaFolders,
+	createMediaFolder,
+	renameMediaFolder,
+	deleteMediaFolder,
+	ApiResponseError,
+	isTerminalRequestError,
+	useCurrentUser,
+	type AdminManifest,
+	type CreateCollectionInput,
+	type UpdateCollectionInput,
+	type CreateFieldInput,
+	type BylineCreditInput,
+	type ContentSeoInput,
+	type ContentItem,
+	type MediaUploadOptions,
+	type Revision,
+} from "./lib/api";
+import {
+	fetchComments,
+	fetchCommentCounts,
+	updateCommentStatus,
+	deleteComment,
+	bulkCommentAction,
+	type CommentStatus,
+} from "./lib/api/comments";
+import { runBulkAction } from "./lib/bulk";
+import { parseCalendarSearch } from "./lib/calendar";
+import { describeContentValidationError } from "./lib/content-validation-errors";
+import { usePluginPage } from "./lib/plugin-context";
+import { getPluginBlocks } from "./lib/pluginBlocks";
+import { sanitizeRedirectUrl } from "./lib/url";
+import { useEntryLock } from "./lib/useEntryLock";
+import { BylineSchemaPage } from "./routes/byline-schema";
+import { BylinesPage } from "./routes/bylines";
+import { CalendarPage } from "./routes/calendar";
+import { UsersPage } from "./routes/users";
+
+// Router context type
+interface RouterContext {
+	queryClient: QueryClient;
+}
+
+interface ContentUpdateChanges {
+	data?: Record<string, unknown>;
+	slug?: string;
+	publishedAt?: string | null;
+	authorId?: string | null;
+	bylines?: BylineCreditInput[];
+	skipRevision?: boolean;
+	seo?: ContentSeoInput;
+	references?: Record<string, string[]>;
+	/** Optimistic-concurrency token from the latest response. */
+	_rev?: string;
+}
+
+interface ContentUpdateMutationInput {
+	targetId: string;
+	targetLocale?: string;
+	source: "editor" | "auxiliary";
+	changes: ContentUpdateChanges;
+}
+
+interface AutosaveMutationInput {
+	targetId: string;
+	targetLocale?: string;
+	changes: Pick<ContentUpdateChanges, "data" | "slug" | "bylines" | "references" | "_rev">;
+	referenceRows?: Record<string, ReferenceEntryRow[]>;
+}
+
+function isSaveConflict(error: unknown): boolean {
+	return error instanceof ApiResponseError && error.code === "CONFLICT";
+}
+
+/**
+ * The editor's reference pages once an autosave has written `saved`: fields the
+ * save left alone keep their cached page, and each saved field holds exactly the
+ * entries that were sent.
+ */
+function withAutosavedReferences(
+	cached: ContentItem["references"],
+	saved: Record<string, ReferenceEntryRow[]> | undefined,
+	fields: Record<string, { validation?: Record<string, unknown> }>,
+): ContentItem["references"] {
+	if (!saved) return cached;
+	const next = { ...cached };
+	for (const [field, rows] of Object.entries(saved)) {
+		const targetCollection = fields[field]?.validation?.targetCollection;
+		if (typeof targetCollection !== "string") continue;
+		next[field] = {
+			children: rows.map((row) => ({
+				id: row.id,
+				slug: row.slug,
+				collection: targetCollection,
+				title: row.title ?? null,
+				locale: row.locale ?? null,
+				translationGroup: row.translationGroup ?? null,
+			})),
+		};
+	}
+	return next;
+}
+
+function patchAutosaveQueries(
+	queryClient: QueryClient,
+	params: {
+		collection: string;
+		id: string;
+		savedItem: ContentItem;
+		payload: {
+			data?: Record<string, unknown>;
+			slug?: string;
+		};
+		referenceRows?: Record<string, ReferenceEntryRow[]>;
+		fields: Record<string, { validation?: Record<string, unknown> }>;
+	},
+) {
+	const { collection, id, savedItem, payload, referenceRows, fields } = params;
+	const draftRevisionId = savedItem.draftRevisionId;
+
+	if (draftRevisionId) {
+		queryClient.setQueryData<Revision>(["revision", draftRevisionId], (existing) => {
+			const nextData: Record<string, unknown> = {
+				...existing?.data,
+				...payload.data,
+			};
+
+			if (payload.slug !== undefined) {
+				nextData._slug = payload.slug;
+			}
+
+			return {
+				id: draftRevisionId,
+				collection,
+				entryId: id,
+				data: nextData,
+				authorId: existing?.authorId ?? savedItem.authorId,
+				createdAt: existing?.createdAt ?? savedItem.updatedAt,
+			};
+		});
+	}
+
+	// Match by (collection, id) prefix rather than an exact locale-scoped key: the
+	// editor reads `{ locale: activeLocale }`, undefined when i18n is off, while the
+	// saved item carries the DB default "en". An exact key would write to an entry
+	// nobody observes, leaving the editor on stale revision pointers.
+	// The save response carries no `references` (only the editor GET hydrates
+	// them), and an entry reopened from this cache would show its reference
+	// fields empty, so the cached pages are carried over.
+	queryClient.setQueriesData<ContentItem>({ queryKey: ["content", collection, id] }, (cached) => ({
+		...savedItem,
+		references:
+			savedItem.references ?? withAutosavedReferences(cached?.references, referenceRows, fields),
+	}));
+}
+
+// Create a base root route without Shell for setup
+const baseRootRoute = createRootRouteWithContext<RouterContext>()({
+	component: () => <Outlet />,
+});
+
+// Setup route (standalone, no Shell)
+const setupRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	path: "/setup",
+	component: SetupWizard,
+});
+
+// Login route (standalone, no Shell)
+const loginRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	path: "/login",
+	component: LoginPageWrapper,
+});
+
+function LoginPageWrapper() {
+	// Extract redirect URL from query params, sanitized to prevent open redirect / XSS
+	const searchParams = new URLSearchParams(window.location.search);
+	const redirect = sanitizeRedirectUrl(searchParams.get("redirect") || "/_emdash/admin");
+	return <LoginPage redirectUrl={redirect} />;
+}
+
+const magicLinkConfirmRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	path: "/login/magic-link",
+	component: MagicLinkConfirmPageWrapper,
+	validateSearch: (search: Record<string, unknown>) => ({
+		token: typeof search.token === "string" ? search.token : undefined,
+		redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+	}),
+});
+
+function MagicLinkConfirmPageWrapper() {
+	const { token, redirect } = useSearch({ from: "/login/magic-link" });
+	const safeRedirect = sanitizeRedirectUrl(redirect || "/_emdash/admin");
+	return <MagicLinkConfirmPage token={token ?? null} redirectUrl={safeRedirect} />;
+}
+
+// Signup route (standalone, no Shell)
+const signupRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	path: "/signup",
+	component: SignupPage,
+});
+
+// Invite accept route (standalone, no Shell)
+const inviteAcceptRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	path: "/invite/accept",
+	component: InviteAcceptPage,
+	validateSearch: (search: Record<string, unknown>) => ({
+		token: typeof search.token === "string" ? search.token : undefined,
+	}),
+});
+
+// Device authorization route (standalone, no Shell)
+const deviceRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	path: "/device",
+	component: DeviceAuthorizePage,
+});
+
+// Layout route with Shell wrapper for admin pages (pathless - matches all admin routes)
+const adminLayoutRoute = createRoute({
+	getParentRoute: () => baseRootRoute,
+	id: "_admin",
+	component: RootComponent,
+});
+
+// Isomorphic requestIdleCallback polyfill
+if (typeof window !== "undefined" && typeof window.requestIdleCallback === "undefined") {
+	window.requestIdleCallback = (cb) => setTimeout(cb, 50);
+	window.cancelIdleCallback = (id) => clearTimeout(id);
+}
+
+function RootComponent() {
+	const { t } = useLingui();
+	const {
+		data: manifest,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+
+	if (isLoading) {
+		return <ConfigurationLoadingScreen />;
+	}
+
+	if (error || !manifest) {
+		return <ErrorScreen error={error?.message ?? t`Failed to load admin`} />;
+	}
+
+	// Plugin admin components are passed via props and available through PluginAdminContext
+	return (
+		<Shell manifest={manifest}>
+			<Outlet />
+		</Shell>
+	);
+}
+
+// Dashboard route - matches the index path "/"
+const dashboardRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/",
+	component: DashboardPage,
+});
+
+function DashboardPage() {
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+
+	if (!manifest) return null;
+
+	return <Dashboard manifest={manifest} />;
+}
+
+const calendarRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/calendar",
+	component: CalendarPage,
+	validateSearch: parseCalendarSearch,
+});
+
+// Content list route
+const contentListRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content/$collection",
+	component: ContentListPage,
+	validateSearch: (search: Record<string, unknown>) => ({
+		locale: typeof search.locale === "string" ? search.locale : undefined,
+	}),
+});
+
+function ContentListPage() {
+	const { t } = useLingui();
+	const { collection } = useParams({ from: "/_admin/content/$collection" });
+	const { locale: localeParam } = useSearch({ from: "/_admin/content/$collection" });
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+	const toastManager = Toast.useToastManager();
+
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+	const { data: currentUser } = useCurrentUser();
+
+	const i18n = manifest?.i18n;
+
+	// Default to defaultLocale when i18n is enabled and no locale specified
+	const activeLocale = i18n ? (localeParam ?? i18n.defaultLocale) : undefined;
+
+	// Controlled sort state — passed to the list, and included in the query
+	// key so changing direction invalidates the current cursor chain.
+	// Default sorts by the collection's dateField, else last-updated.
+	// `sortOverride` is the user's explicit choice (null until they click a
+	// column), keeping the default reactive as the manifest loads and per-collection.
+	const [sortOverride, setSortOverride] = React.useState<ContentListSort | null>(null);
+	const sort: ContentListSort = sortOverride ?? {
+		field: manifest?.collections[collection]?.dateField ?? "updatedAt",
+		direction: "desc",
+	};
+	React.useEffect(() => setSortOverride(null), [collection]);
+
+	// Server-side search term (debounced inside ContentList). Part of the query
+	// key so a new term restarts the cursor chain from a filtered first page.
+	const [searchTerm, setSearchTerm] = React.useState("");
+
+	// Filter state. All are part of the query key so changing any of
+	// them restarts the cursor chain from a filtered first page.
+	const [statusFilter, setStatusFilter] = React.useState<ContentStatusFilter>("all");
+	const [authorFilter, setAuthorFilter] = React.useState("");
+	const [dateFilter, setDateFilter] = React.useState<ContentDateFilter>(EMPTY_DATE_FILTER);
+	const [bylineFilter, setBylineFilter] = React.useState<BylineFilterState>(EMPTY_BYLINE_FILTER);
+
+	// Only the parts that change the result set belong in the query key —
+	// `includeInferred` alone, with nothing selected, filters nothing.
+	const bylineApiParams = React.useMemo(() => {
+		if (!bylineFilter.none && bylineFilter.bylineIds.length === 0) return undefined;
+		return {
+			bylines: bylineFilter.none ? undefined : bylineFilter.bylineIds,
+			bylinesNone: bylineFilter.none,
+			includeInferredBylines: bylineFilter.includeInferred,
+		};
+	}, [bylineFilter]);
+
+	// The date inputs yield calendar dates; widen them to UTC day boundaries so
+	// the inclusive `dateTo` covers the whole day (timestamps are stored in UTC).
+	const dateApiParams = React.useMemo(() => {
+		const hasRange = !!dateFilter.from || !!dateFilter.to;
+		if (!hasRange) return undefined;
+		return {
+			dateField: dateFilter.field,
+			dateFrom: dateFilter.from ? `${dateFilter.from}T00:00:00.000Z` : undefined,
+			dateTo: dateFilter.to ? `${dateFilter.to}T23:59:59.999Z` : undefined,
+		};
+	}, [dateFilter]);
+
+	// Authors are collection-wide (the endpoint doesn't scope by locale), so the
+	// query key omits locale to avoid refetching/cache-fragmenting on locale
+	// switches, and the selection stays valid across locales.
+	const { data: authors } = useQuery({
+		queryKey: ["content", collection, "authors"],
+		queryFn: () => fetchContentAuthors(collection),
+		enabled: !!manifest,
+	});
+
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
+		useInfiniteQuery({
+			queryKey: [
+				"content",
+				collection,
+				{
+					locale: activeLocale,
+					sort,
+					search: searchTerm,
+					status: statusFilter,
+					author: authorFilter,
+					date: dateApiParams,
+					byline: bylineApiParams,
+				},
+			],
+			queryFn: ({ pageParam }) =>
+				fetchContentList(collection, {
+					locale: activeLocale,
+					cursor: pageParam,
+					limit: 100,
+					orderBy: sort.field,
+					order: sort.direction,
+					search: searchTerm || undefined,
+					status: statusFilter === "all" ? undefined : statusFilter,
+					authorId: authorFilter || undefined,
+					...dateApiParams,
+					...bylineApiParams,
+				}),
+			initialPageParam: undefined as string | undefined,
+			getNextPageParam: (lastPage) => lastPage.nextCursor,
+			enabled: !!manifest,
+		});
+
+	// Fetch trashed items
+	const { data: trashedData, isLoading: isTrashedLoading } = useQuery({
+		queryKey: ["content", collection, "trash", { locale: activeLocale }],
+		queryFn: () => fetchTrashedContent(collection, { locale: activeLocale }),
+	});
+
+	const deleteMutation = useMutation({
+		mutationFn: (id: string) => deleteContent(collection, id),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+			void queryClient.invalidateQueries({ queryKey: ["content", collection, "trash"] });
+		},
+		onError: (mutationError) => {
+			toastManager.add({
+				title: t`Failed to delete`,
+				description: mutationError instanceof Error ? mutationError.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const restoreMutation = useMutation({
+		mutationFn: (id: string) => restoreContent(collection, id),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+			void queryClient.invalidateQueries({ queryKey: ["content", collection, "trash"] });
+		},
+		onError: (mutationError) => {
+			toastManager.add({
+				title: t`Failed to restore`,
+				description: mutationError instanceof Error ? mutationError.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const permanentDeleteMutation = useMutation({
+		mutationFn: (id: string) => permanentDeleteContent(collection, id),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection, "trash"] });
+		},
+		onError: (mutationError) => {
+			toastManager.add({
+				title: t`Failed to delete`,
+				description: mutationError instanceof Error ? mutationError.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const duplicateMutation = useMutation({
+		mutationFn: (id: string) => duplicateContent(collection, id),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+		},
+		onError: (mutationError) => {
+			toastManager.add({
+				title: t`Failed to duplicate`,
+				description: mutationError instanceof Error ? mutationError.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	// Bulk actions run the existing per-entry endpoints through a
+	// concurrency-limited queue (runBulkAction) — selection persists across
+	// pagination, so an unbounded fan-out could fire hundreds of parallel
+	// requests. Per-id failures are collected (not thrown) and returned to
+	// ContentList, which keeps the failed rows selected for a retry; the
+	// toasts surface the failure count and the list is refetched either way.
+	const bulkPublishMutation = useMutation({
+		mutationFn: async (ids: string[]) => {
+			const { failedIds } = await runBulkAction(ids, (id) =>
+				publishContent(collection, id, { locale: activeLocale }),
+			);
+			return { total: ids.length, failedIds };
+		},
+		onSuccess: ({ total, failedIds }) => {
+			if (failedIds.length === 0) {
+				toastManager.add({ title: t`Published ${total} items`, type: "success" });
+			} else {
+				toastManager.add({
+					title: t`Failed to publish`,
+					description: t`${failedIds.length} of ${total} could not be published`,
+					type: "error",
+				});
+			}
+		},
+		onSettled: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+		},
+	});
+
+	const bulkUnpublishMutation = useMutation({
+		mutationFn: async (ids: string[]) => {
+			const { failedIds } = await runBulkAction(ids, (id) =>
+				unpublishContent(collection, id, { locale: activeLocale }),
+			);
+			return { total: ids.length, failedIds };
+		},
+		onSuccess: ({ total, failedIds }) => {
+			if (failedIds.length === 0) {
+				toastManager.add({ title: t`Moved ${total} items to draft`, type: "success" });
+			} else {
+				toastManager.add({
+					title: t`Failed to update`,
+					description: t`${failedIds.length} of ${total} could not be updated`,
+					type: "error",
+				});
+			}
+		},
+		onSettled: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+		},
+	});
+
+	const bulkDeleteMutation = useMutation({
+		mutationFn: async (ids: string[]) => {
+			const { failedIds } = await runBulkAction(ids, (id) => deleteContent(collection, id));
+			return { total: ids.length, failedIds };
+		},
+		onSuccess: ({ total, failedIds }) => {
+			if (failedIds.length === 0) {
+				toastManager.add({ title: t`Moved ${total} items to trash`, type: "success" });
+			} else {
+				toastManager.add({
+					title: t`Failed to delete`,
+					description: t`${failedIds.length} of ${total} could not be deleted`,
+					type: "error",
+				});
+			}
+		},
+		onSettled: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+			void queryClient.invalidateQueries({ queryKey: ["content", collection, "trash"] });
+		},
+	});
+
+	const items = React.useMemo(() => {
+		return data?.pages.flatMap((page) => page.items) || [];
+	}, [data]);
+
+	// Server returns `total` on every page; the first page is authoritative
+	// because filters don't change within a fetch cycle. Fall back to the
+	// loaded count so old servers (pre-total) still render a denominator.
+	const total = data?.pages[0]?.total ?? items.length;
+
+	// Keep every hook above the early returns below — a render that takes a
+	// guard (e.g. `error`) must run the same number of hooks as a full render,
+	// or React throws #300 "Rendered fewer hooks than expected" (#1415).
+	const handleLoadMore = React.useCallback(() => void fetchNextPage(), [fetchNextPage]);
+
+	if (!manifest) {
+		return <LoadingScreen />;
+	}
+
+	const collectionConfig = manifest.collections[collection];
+
+	if (!collectionConfig) {
+		return <NotFoundPage message={`Collection "${collection}" not found`} />;
+	}
+
+	if (error) {
+		return <ErrorScreen error={error.message} />;
+	}
+
+	const listColumns = (collectionConfig.listColumns ?? []).flatMap((slug) => {
+		const field = collectionConfig.fields[slug];
+		if (!field) return [];
+		return [
+			{
+				slug,
+				label: field.label ?? slug,
+				kind: field.kind,
+				options: Array.isArray(field.options) ? field.options : undefined,
+			},
+		];
+	});
+
+	const handleLocaleChange = (locale: string) => {
+		// Update URL search params without full navigation
+		void navigate({
+			to: "/content/$collection",
+			params: { collection },
+			search: { locale: locale || undefined },
+		});
+	};
+
+	return (
+		<ContentList
+			collection={collection}
+			collectionLabel={collectionConfig.label}
+			items={items}
+			listColumns={listColumns}
+			trashedItems={trashedData?.items || []}
+			isLoading={isLoading || isFetchingNextPage}
+			isTrashedLoading={isTrashedLoading}
+			hasMore={!!hasNextPage}
+			onLoadMore={handleLoadMore}
+			trashedCount={trashedData?.items?.length || 0}
+			onDelete={(id) => deleteMutation.mutate(id)}
+			onRestore={(id) => restoreMutation.mutate(id)}
+			onPermanentDelete={(id) => permanentDeleteMutation.mutate(id)}
+			onDuplicate={(id) => duplicateMutation.mutate(id)}
+			i18n={i18n}
+			activeLocale={activeLocale}
+			onLocaleChange={handleLocaleChange}
+			urlPattern={collectionConfig.urlPattern}
+			titleField={collectionConfig.titleField}
+			dateField={collectionConfig.dateField}
+			sort={sort}
+			onSortChange={setSortOverride}
+			total={total}
+			onSearchChange={setSearchTerm}
+			statusFilter={statusFilter}
+			onStatusFilterChange={setStatusFilter}
+			authors={authors}
+			authorFilter={authorFilter}
+			onAuthorFilterChange={setAuthorFilter}
+			dateFilter={dateFilter}
+			onDateFilterChange={setDateFilter}
+			bylineFilter={bylineFilter}
+			onBylineFilterChange={setBylineFilter}
+			onBulkPublish={(ids) => bulkPublishMutation.mutateAsync(ids).then((r) => r.failedIds)}
+			onBulkUnpublish={(ids) => bulkUnpublishMutation.mutateAsync(ids).then((r) => r.failedIds)}
+			onBulkDelete={(ids) => bulkDeleteMutation.mutateAsync(ids).then((r) => r.failedIds)}
+			bulkTagTaxonomies={
+				(currentUser?.role ?? 0) >= ROLE_EDITOR
+					? manifest.taxonomies.filter((taxonomy) => taxonomy.collections.includes(collection))
+					: []
+			}
+			pluginStates={manifest.plugins}
+			userRole={currentUser?.role ?? 0}
+		/>
+	);
+}
+
+// Content new route
+const contentNewRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content/$collection/new",
+	component: ContentNewPage,
+	staticData: { fullBleed: true },
+	validateSearch: (search: Record<string, unknown>) => ({
+		locale: typeof search.locale === "string" ? search.locale : undefined,
+	}),
+});
+
+function ContentNewPage() {
+	const { collection } = useParams({ from: "/_admin/content/$collection/new" });
+	const { locale } = useSearch({ from: "/_admin/content/$collection/new" });
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+	const { t } = useLingui();
+	const toastManager = useKumoToastManager();
+	const [selectedBylines, setSelectedBylines] = React.useState<BylineCreditInput[]>([]);
+
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+
+	// Locale the picker should scope to. URL `?locale=` wins; otherwise
+	// fall back to the configured defaultLocale. Single-locale installs
+	// resolve to `defaultLocale` too — the server treats that as "use the
+	// configured default" so behaviour matches pre-i18n in that case.
+	const pickerLocale = locale ?? manifest?.i18n?.defaultLocale;
+
+	// Send the resolved picker locale so the new entry's locale matches
+	// the locale the byline picker was scoped to.
+	const createMutation = useMutation({
+		mutationFn: (data: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+			references?: Record<string, string[]>;
+		}) => createContent(collection, { ...data, locale: pickerLocale }),
+		onSuccess: (result) => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+			void navigate({
+				to: "/content/$collection/$id",
+				params: { collection, id: result.id },
+				search: { locale: result.locale },
+			});
+		},
+		onError: (error) => {
+			toastManager.add({
+				title: t`Failed to save`,
+				description:
+					describeContentValidationError(
+						error,
+						manifest?.collections[collection]?.fields ?? EMPTY_FIELDS,
+					) ?? (error instanceof Error ? error.message : t`An error occurred`),
+				variant: "error",
+			});
+		},
+	});
+
+	const pluginBlocks = React.useMemo(() => (manifest ? getPluginBlocks(manifest) : []), [manifest]);
+
+	// The picker is locale-pinned to the entry being created so editors
+	// only see bylines that will actually hydrate at this locale (per the
+	// strict per-locale model from migration 040). Locale is part of the
+	// query key so switching locales fetches a fresh slice rather than
+	// reusing a stale cache.
+	const { data: bylinesData, isSuccess: bylinesLoaded } = useQuery({
+		queryKey: ["bylines", "picker", pickerLocale ?? null],
+		queryFn: () => fetchBylines({ locale: pickerLocale, limit: 100 }),
+		enabled: !!manifest,
+	});
+
+	const createBylineMutation = useMutation({
+		mutationFn: (input: { slug: string; displayName: string }) =>
+			createByline({ ...input, isGuest: true, locale: pickerLocale }),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["bylines"] });
+		},
+	});
+
+	const updateBylineMutation = useMutation({
+		mutationFn: (input: { id: string; slug: string; displayName: string }) =>
+			updateByline(input.id, {
+				slug: input.slug,
+				displayName: input.displayName,
+			}),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["bylines"] });
+		},
+	});
+
+	// Stable handler identities: these flow into the memoized
+	// ContentSettingsPanel, so fresh arrows on every mutation-state flip
+	// would defeat the memo. mutate/mutateAsync are referentially stable.
+	const handleSave = React.useCallback(
+		(payload: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+			references?: Record<string, string[]>;
+		}) => {
+			createMutation.mutate(payload);
+		},
+		[createMutation.mutate],
+	);
+
+	const handleQuickCreateByline = React.useCallback(
+		(input: { slug: string; displayName: string }) => createBylineMutation.mutateAsync(input),
+		[createBylineMutation.mutateAsync],
+	);
+
+	const handleQuickEditByline = React.useCallback(
+		(bylineId: string, input: { slug: string; displayName: string }) =>
+			updateBylineMutation.mutateAsync({ id: bylineId, ...input }),
+		[updateBylineMutation.mutateAsync],
+	);
+
+	if (!manifest) {
+		return <LoadingScreen />;
+	}
+
+	const collectionConfig = manifest.collections[collection];
+
+	if (!collectionConfig) {
+		return <NotFoundPage message={`Collection "${collection}" not found`} />;
+	}
+
+	return (
+		<ContentEditor
+			collection={collection}
+			collectionLabel={collectionConfig.labelSingular || collectionConfig.label}
+			fields={collectionConfig.fields}
+			isNew
+			entryLocale={pickerLocale}
+			i18n={manifest?.i18n}
+			isSaving={createMutation.isPending}
+			onSave={handleSave}
+			pluginBlocks={pluginBlocks}
+			availableBylines={bylinesData?.items}
+			availableBylinesLoaded={bylinesLoaded}
+			selectedBylines={selectedBylines}
+			onBylinesChange={setSelectedBylines}
+			onQuickCreateByline={handleQuickCreateByline}
+			onQuickEditByline={handleQuickEditByline}
+			manifest={manifest ?? null}
+			timezone={manifest.timezone ?? "UTC"}
+		/>
+	);
+}
+
+// Content edit route
+const contentEditRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content/$collection/$id",
+	component: ContentEditPage,
+	staticData: { fullBleed: true },
+	validateSearch: (search) => ({
+		...(typeof search.field === "string" && { field: search.field }),
+		...(typeof search.locale === "string" && { locale: search.locale }),
+	}),
+});
+
+// Role levels from @emdash-cms/auth
+const ROLE_AUTHOR = 30;
+const ROLE_EDITOR = 40;
+
+const EMPTY_FIELDS: AdminManifest["collections"][string]["fields"] = {};
+
+function ContentEditPage() {
+	const { t } = useLingui();
+	const { collection, id } = useParams({
+		from: "/_admin/content/$collection/$id",
+	});
+	const searchParams = useSearch({
+		from: "/_admin/content/$collection/$id",
+	});
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+	const toastManager = Toast.useToastManager();
+
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+
+	const i18n = manifest?.i18n;
+	const activeLocale = i18n ? (searchParams.locale ?? i18n.defaultLocale) : undefined;
+	const collectionFields = manifest?.collections[collection]?.fields ?? EMPTY_FIELDS;
+
+	const { data: rawItem, isLoading } = useQuery({
+		queryKey: ["content", collection, id, { locale: activeLocale }],
+		queryFn: () => fetchContent(collection, id, { locale: activeLocale }),
+		enabled: !i18n || !!activeLocale,
+	});
+	const entryLock = useEntryLock({
+		collection,
+		entryId: id,
+		locale: activeLocale,
+		ready: Boolean(rawItem),
+	});
+	const revisionTokensRef = React.useRef(new Map<string, string | undefined>());
+	const activeRevisionEntryRef = React.useRef("");
+	if (activeRevisionEntryRef.current !== id) {
+		activeRevisionEntryRef.current = id;
+		revisionTokensRef.current.delete(id);
+	}
+	if (rawItem && !revisionTokensRef.current.has(rawItem.id)) {
+		revisionTokensRef.current.set(rawItem.id, rawItem._rev);
+	}
+	const editorSaveQueueRef = React.useRef<Promise<void>>(Promise.resolve());
+	const unpublishRequestRef = React.useRef<Promise<void> | null>(null);
+	// Written together with the conflict state rather than on render, so a save
+	// that runs before the next render still sees the conflict.
+	const conflictedEntryIdRef = React.useRef("");
+	const serializeEditorSave = React.useCallback(
+		<T,>(operation: () => Promise<T>, { explicitSave = false, allowConflict = false } = {}) => {
+			const savesOverConflict = explicitSave && conflictedEntryIdRef.current === id;
+			const result = editorSaveQueueRef.current.then(() => {
+				// The token the recovery fetched is only for a save the writer starts
+				// while the conflict shows; anything else would write over a version
+				// they have not seen.
+				if (!savesOverConflict && !allowConflict && conflictedEntryIdRef.current === id) {
+					throw new Error(
+						t`This entry changed somewhere else. Save anyway, or reload to get the newer version.`,
+					);
+				}
+				return operation();
+			});
+			editorSaveQueueRef.current = result.then(
+				() => undefined,
+				() => undefined,
+			);
+			return result;
+		},
+		[id, t],
+	);
+	const publishRequestRef = React.useRef<Promise<void> | null>(null);
+
+	React.useEffect(() => {
+		if (typeof searchParams.field !== "string" || isLoading) return;
+
+		const timeoutId = requestIdleCallback(() => {
+			const el = document.getElementById(`field-${searchParams.field}`);
+			if (el) {
+				el.scrollIntoView({ behavior: "smooth", block: "center" });
+				el.focus();
+				const { field: _, ...preservedSearch } = searchParams;
+				void navigate({ search: preservedSearch as never, replace: true });
+			}
+		});
+		return () => cancelIdleCallback(timeoutId);
+	}, [searchParams, isLoading, navigate]);
+
+	// Fetch translations when i18n is enabled
+	const { data: translationsData } = useQuery({
+		queryKey: ["translations", collection, id],
+		queryFn: () => fetchTranslations(collection, id),
+		enabled: !!i18n && !!rawItem,
+	});
+
+	// When a draft revision exists, fetch its data for the editor form.
+	// The content table holds published data; the draft revision holds
+	// the editor's working copy.
+	const { data: draftRevision } = useQuery({
+		queryKey: ["revision", rawItem?.draftRevisionId],
+		queryFn: () => fetchRevision(rawItem!.draftRevisionId!),
+		enabled: !!rawItem?.draftRevisionId,
+	});
+
+	// Merge draft revision data into the item for the editor.
+	// The item's metadata (id, status, slug, etc.) comes from the content table;
+	// the data fields come from the draft revision if available.
+	const item = React.useMemo(() => {
+		if (!rawItem) return undefined;
+		if (!draftRevision?.data) return rawItem;
+		// Strip revision metadata keys (prefixed with _)
+		const draftData: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(draftRevision.data)) {
+			if (!key.startsWith("_")) {
+				draftData[key] = value;
+			}
+		}
+		// Draft slug override
+		const draftSlug =
+			typeof draftRevision.data._slug === "string" ? draftRevision.data._slug : rawItem.slug;
+		return {
+			...rawItem,
+			slug: draftSlug,
+			data: { ...rawItem.data, ...draftData },
+		};
+	}, [rawItem, draftRevision]);
+
+	// Fetch current user for permission checks
+	const { data: currentUser } = useQuery({
+		queryKey: ["currentUser"],
+		queryFn: async (): Promise<{ id: string; role: number }> => {
+			const response = await apiFetch("/_emdash/api/auth/me");
+			return parseApiResponse<{ id: string; role: number }>(response, t`Failed to fetch user`);
+		},
+		staleTime: 5 * 60 * 1000,
+	});
+
+	// Fetch users list for author selector (only if user is editor+)
+	const { data: usersData } = useQuery({
+		queryKey: ["users"],
+		queryFn: () => fetchUsers({ limit: 100 }),
+		enabled: !!currentUser && currentUser.role >= ROLE_EDITOR,
+		staleTime: 5 * 60 * 1000,
+	});
+
+	// Picker is locale-pinned to the entry being edited. The credit
+	// hydration server-side is strict per locale (migration 040), so the
+	// picker must show only bylines that will actually render at this
+	// locale — otherwise the editor adds a credit that silently vanishes
+	// after autosave. Query disabled until `rawItem.locale` resolves so a
+	// transient `undefined` doesn't populate the cache with default-locale
+	// data.
+	const itemLocale = rawItem?.locale ?? undefined;
+	const autosaveCompletionSequenceRef = React.useRef(0);
+	const [autosaveCompletion, setAutosaveCompletion] = React.useState({ entryId: "", token: 0 });
+	const autosaveRejectionSequenceRef = React.useRef(0);
+	const [autosaveRejection, setAutosaveRejection] = React.useState({ entryId: "", token: 0 });
+	const [editorSavePendingCounts, setEditorSavePendingCounts] = React.useState<
+		ReadonlyMap<string, number>
+	>(new Map());
+	const updateEditorSavePendingCount = React.useCallback((entryId: string, delta: 1 | -1) => {
+		setEditorSavePendingCounts((previous) => {
+			const next = new Map(previous);
+			const count = Math.max((next.get(entryId) ?? 0) + delta, 0);
+			if (count === 0) next.delete(entryId);
+			else next.set(entryId, count);
+			return next;
+		});
+	}, []);
+	const recordAutosaveCompletion = React.useCallback((entryId: string) => {
+		autosaveCompletionSequenceRef.current += 1;
+		setAutosaveCompletion({ entryId, token: autosaveCompletionSequenceRef.current });
+	}, []);
+	const recordAutosaveRejection = React.useCallback((entryId: string) => {
+		autosaveRejectionSequenceRef.current += 1;
+		setAutosaveRejection({ entryId, token: autosaveRejectionSequenceRef.current });
+	}, []);
+	const [conflictedEntryId, setConflictedEntryIdState] = React.useState("");
+	const setConflictedEntryId = React.useCallback((next: React.SetStateAction<string>) => {
+		conflictedEntryIdRef.current =
+			typeof next === "function" ? next(conflictedEntryIdRef.current) : next;
+		setConflictedEntryIdState(conflictedEntryIdRef.current);
+	}, []);
+	const { data: bylinesData, isSuccess: bylinesLoaded } = useQuery({
+		queryKey: ["bylines", "picker", itemLocale ?? null],
+		queryFn: () => fetchBylines({ locale: itemLocale, limit: 100 }),
+		enabled: !!itemLocale,
+	});
+
+	const createBylineMutation = useMutation({
+		mutationFn: (input: { slug: string; displayName: string }) =>
+			createByline({ ...input, isGuest: true, locale: itemLocale }),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["bylines"] });
+		},
+	});
+
+	const updateBylineMutation = useMutation({
+		mutationFn: (input: { id: string; slug: string; displayName: string }) =>
+			updateByline(input.id, {
+				slug: input.slug,
+				displayName: input.displayName,
+			}),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["bylines"] });
+		},
+	});
+
+	const handleContentUpdateSuccess = React.useCallback(
+		(targetId: string) => {
+			// Invalidate by (collection, id) prefix without the locale object: the
+			// editor's read query is keyed `{ locale: activeLocale }` (undefined when
+			// i18n is off) while `rawItem.locale` is the DB default "en", so a
+			// locale-scoped invalidation key would not match and the item would never
+			// refetch — leaving the publish/save buttons stale until a hard refresh.
+			void queryClient.invalidateQueries({
+				queryKey: ["content", collection, targetId],
+			});
+			// Also invalidate revisions since a new one was created
+			void queryClient.invalidateQueries({
+				queryKey: ["revisions", collection, targetId],
+			});
+			// Invalidate the cached draft revision so stale data doesn't overwrite the form
+			if (rawItem?.draftRevisionId) {
+				void queryClient.invalidateQueries({
+					queryKey: ["revision", rawItem.draftRevisionId],
+				});
+			}
+		},
+		[collection, queryClient, rawItem?.draftRevisionId],
+	);
+	const recoverFromSaveConflict = React.useCallback(
+		async (entryId: string) => {
+			setConflictedEntryId(entryId);
+			try {
+				const server = await fetchContent(collection, entryId, {
+					locale: rawItem?.locale ?? activeLocale,
+				});
+				revisionTokensRef.current.set(entryId, server._rev);
+				return true;
+			} catch {
+				// Dropping the refused token would make the next save a blind write, so
+				// it stays. Offering to save over a version that could not be read
+				// would promise a write the server refuses again.
+				setConflictedEntryId((conflicted) => (conflicted === entryId ? "" : conflicted));
+				return false;
+			}
+		},
+		[activeLocale, collection, rawItem?.locale],
+	);
+	const handleContentUpdateError = React.useCallback(
+		(error: unknown, targetId: string) => {
+			if (entryLock.reportWriteError(error, targetId)) return;
+			toastManager.add({
+				title: t`Failed to save`,
+				description:
+					describeContentValidationError(error, collectionFields) ??
+					(error instanceof Error ? error.message : t`An error occurred`),
+				type: "error",
+			});
+		},
+		[collectionFields, entryLock.reportWriteError, t, toastManager],
+	);
+
+	const updateMutation = useMutation({
+		mutationFn: async ({ targetId, targetLocale, changes }: ContentUpdateMutationInput) => {
+			const savedItem = await updateContent(
+				collection,
+				targetId,
+				{ ...changes, _rev: revisionTokensRef.current.get(targetId) },
+				{ locale: targetLocale },
+			);
+			revisionTokensRef.current.set(targetId, savedItem._rev);
+			return savedItem;
+		},
+		onMutate: (variables) => {
+			if (variables.source === "editor") {
+				updateEditorSavePendingCount(variables.targetId, 1);
+			}
+		},
+		onSuccess: (_, variables) => {
+			// Only a save the writer started resolves the conflict. An author or SEO
+			// write carries the recovered token too, and clearing the notice for one
+			// would hand the editor's stale copy a token the server accepts.
+			if (variables.source === "editor") {
+				setConflictedEntryId((current) => (current === variables.targetId ? "" : current));
+			}
+			handleContentUpdateSuccess(variables.targetId);
+		},
+		onError: async (error, variables) => {
+			if (isSaveConflict(error) && (await recoverFromSaveConflict(variables.targetId))) return;
+			handleContentUpdateError(error, variables.targetId);
+		},
+		onSettled: (_, __, variables) => {
+			if (variables.source === "editor") {
+				updateEditorSavePendingCount(variables.targetId, -1);
+			}
+		},
+	});
+	const publishedAtMutation = useMutation({
+		mutationFn: async (publishedAt: string) => {
+			const savedItem = await updateContent(
+				collection,
+				id,
+				{ publishedAt, _rev: revisionTokensRef.current.get(id) },
+				{ locale: rawItem?.locale ?? activeLocale },
+			);
+			revisionTokensRef.current.set(id, savedItem._rev);
+			return savedItem;
+		},
+		onSuccess: () => {
+			setConflictedEntryId((current) => (current === id ? "" : current));
+			handleContentUpdateSuccess(id);
+		},
+		onError: async (error) => {
+			if (isSaveConflict(error) && (await recoverFromSaveConflict(id))) return;
+			handleContentUpdateError(error, id);
+		},
+	});
+
+	// Autosave mutation - skips revision creation
+	const autosaveMutation = useMutation({
+		mutationFn: async ({ targetId, targetLocale, changes }: AutosaveMutationInput) => {
+			const savedItem = await updateContent(
+				collection,
+				targetId,
+				{ ...changes, skipRevision: true, _rev: revisionTokensRef.current.get(targetId) },
+				{ locale: targetLocale },
+			);
+			revisionTokensRef.current.set(targetId, savedItem._rev);
+			return savedItem;
+		},
+		onSuccess: (savedItem, variables) => {
+			setConflictedEntryId((current) => (current === variables.targetId ? "" : current));
+			recordAutosaveCompletion(variables.targetId);
+			patchAutosaveQueries(queryClient, {
+				collection,
+				id: variables.targetId,
+				savedItem,
+				payload: {
+					data: variables.changes.data,
+					slug: variables.changes.slug,
+				},
+				referenceRows: variables.referenceRows,
+				fields: collectionFields,
+			});
+			// Keep the cache fresh without refetching older server state back into the form
+			// while the user is still typing.
+		},
+		onError: async (err, variables) => {
+			if (isSaveConflict(err) && (await recoverFromSaveConflict(variables.targetId))) return;
+			if (isTerminalRequestError(err)) recordAutosaveRejection(variables.targetId);
+			if (entryLock.reportWriteError(err, variables.targetId)) return;
+			toastManager.add({
+				title: t`Autosave failed`,
+				description:
+					describeContentValidationError(err, collectionFields) ??
+					(err instanceof Error ? err.message : t`An error occurred`),
+				type: "error",
+			});
+		},
+	});
+
+	const publishMutation = useMutation({
+		mutationFn: ({ revision }: { revision: string | undefined; savedReferences: boolean }) =>
+			publishContent(collection, id, {
+				locale: rawItem?.locale ?? activeLocale,
+				_rev: revision,
+			}),
+		onSuccess: (publishedItem, { savedReferences }) => {
+			revisionTokensRef.current.set(id, publishedItem._rev);
+			// A selection the preceding save sent is in no cached page yet, so the
+			// entry is read again instead of keeping the pages from before it.
+			queryClient.setQueriesData<ContentItem>(
+				{ queryKey: ["content", collection, id] },
+				(cached) => ({
+					...publishedItem,
+					references:
+						publishedItem.references ?? (savedReferences ? undefined : cached?.references),
+				}),
+			);
+			if (savedReferences) {
+				void queryClient.invalidateQueries({ queryKey: ["content", collection, id] });
+			}
+			void queryClient.invalidateQueries({ queryKey: ["revisions", collection, id] });
+			toastManager.add({ title: t`Published`, description: t`Content is now live` });
+		},
+		onError: (error) => {
+			if (entryLock.reportWriteError(error, id)) return;
+			toastManager.add({
+				title: t`Failed to publish`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const unpublishMutation = useMutation({
+		mutationFn: (_rev?: string) =>
+			unpublishContent(collection, id, {
+				locale: rawItem?.locale ?? activeLocale,
+				_rev,
+			}),
+		onSuccess: (unpublishedItem) => {
+			revisionTokensRef.current.set(id, unpublishedItem._rev);
+			void queryClient.invalidateQueries({
+				queryKey: ["content", collection, id],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["revisions", collection, id] });
+			toastManager.add({ title: t`Unpublished`, description: t`Content removed from public view` });
+		},
+		onError: (error) => {
+			if (entryLock.reportWriteError(error, id)) return;
+			toastManager.add({
+				title: t`Failed to unpublish`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const discardDraftMutation = useMutation({
+		mutationFn: () => discardDraft(collection, id, { locale: rawItem?.locale ?? activeLocale }),
+		onSuccess: (discardedItem) => {
+			setConflictedEntryId((conflicted) => (conflicted === id ? "" : conflicted));
+			revisionTokensRef.current.set(id, discardedItem._rev);
+			void queryClient.invalidateQueries({
+				queryKey: ["content", collection, id],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["revisions", collection, id] });
+			toastManager.add({
+				title: t`Changes discarded`,
+				description: t`Reverted to published version`,
+			});
+		},
+		onError: (error) => {
+			if (entryLock.reportWriteError(error, id)) return;
+			toastManager.add({
+				title: t`Failed to discard changes`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+	const applyScheduleChange = React.useCallback(
+		async (
+			changedItem: ContentItem,
+			savedItem?: ContentItem,
+			savedPayload?: { references?: Record<string, string[]> },
+		) => {
+			await queryClient.cancelQueries({ queryKey: ["content", collection, id] });
+			const currentChangedItem = changedItem._rev
+				? changedItem
+				: await fetchContent(collection, id, { locale: rawItem?.locale ?? activeLocale });
+			if (currentChangedItem._rev) {
+				revisionTokensRef.current.set(id, currentChangedItem._rev);
+			}
+			queryClient.setQueriesData<ContentItem>(
+				{ queryKey: ["content", collection, id] },
+				(existing) => {
+					const currentItem = savedItem ?? existing;
+					return currentItem
+						? {
+								...currentItem,
+								...currentChangedItem,
+								data: currentItem.data,
+								slug: currentItem.slug,
+								byline: currentItem.byline ?? existing?.byline,
+								bylines: currentItem.bylines ?? existing?.bylines,
+								references: savedPayload?.references
+									? undefined
+									: (currentItem.references ?? existing?.references),
+							}
+						: currentChangedItem;
+				},
+			);
+			// The save's own refetch was cancelled above, so a selection it sent is
+			// in no cached page yet.
+			if (savedPayload?.references) {
+				void queryClient.invalidateQueries({ queryKey: ["content", collection, id] });
+			}
+		},
+		[activeLocale, collection, id, queryClient, rawItem?.locale],
+	);
+	const scheduleMutation = useMutation({
+		mutationFn: (scheduledAt: string) =>
+			scheduleContent(collection, id, scheduledAt, { locale: rawItem?.locale ?? activeLocale }),
+		onSuccess: () => {
+			toastManager.add({
+				title: t`Scheduled`,
+				description: t`Content has been scheduled for publishing`,
+			});
+		},
+		onError: (error) => {
+			if (entryLock.reportWriteError(error, id)) return;
+			toastManager.add({
+				title: t`Failed to schedule`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const unscheduleMutation = useMutation({
+		mutationFn: () =>
+			unscheduleContent(collection, id, { locale: rawItem?.locale ?? activeLocale }),
+		onSuccess: () => {
+			toastManager.add({
+				title: t`Unscheduled`,
+				description: t`Content reverted to draft`,
+			});
+		},
+		onError: (error) => {
+			if (entryLock.reportWriteError(error, id)) return;
+			toastManager.add({
+				title: t`Failed to unschedule`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	// Create translation mutation
+	const translateMutation = useMutation({
+		mutationFn: (locale: string) =>
+			createContent(collection, {
+				data: rawItem?.data ?? {},
+				slug: rawItem?.slug ?? undefined,
+				locale,
+				translationOf: id,
+			}),
+		onSuccess: (result) => {
+			void queryClient.invalidateQueries({ queryKey: ["translations", collection, id] });
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+			void navigate({
+				to: "/content/$collection/$id",
+				params: { collection, id: result.id },
+				search: { locale: result.locale },
+			});
+			toastManager.add({
+				title: t`Translation created`,
+				description: t`Created ${result.locale?.toUpperCase() ?? t`new`} translation`,
+			});
+		},
+		onError: (error) => {
+			toastManager.add({
+				title: t`Failed to create translation`,
+				description:
+					describeContentValidationError(error, collectionFields) ??
+					(error instanceof Error ? error.message : t`An error occurred`),
+				type: "error",
+			});
+		},
+	});
+
+	const deleteMutation = useMutation({
+		mutationFn: () => deleteContent(collection, id, { locale: rawItem?.locale ?? activeLocale }),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["content", collection] });
+			void queryClient.invalidateQueries({ queryKey: ["content", collection, "trash"] });
+			void navigate({
+				to: "/content/$collection",
+				params: { collection },
+				search: { locale: activeLocale },
+			});
+		},
+		onError: (error) => {
+			if (entryLock.reportWriteError(error, id)) return;
+			toastManager.add({
+				title: t`Failed to delete`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const pluginBlocks = React.useMemo(() => (manifest ? getPluginBlocks(manifest) : []), [manifest]);
+
+	// Stable handler identities: these flow into the memoized
+	// ContentSettingsPanel, so fresh arrows on every mutation-state flip
+	// (twice per autosave cycle) would defeat the memo. mutate/mutateAsync
+	// are referentially stable.
+	const handleSave = React.useCallback(
+		(payload: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+			references?: Record<string, string[]>;
+		}) => {
+			void serializeEditorSave(
+				() =>
+					updateMutation.mutateAsync({
+						targetId: id,
+						targetLocale: rawItem?.locale ?? activeLocale,
+						source: "editor",
+						changes: payload,
+					}),
+				{ explicitSave: true },
+			).catch(() => undefined);
+		},
+		[activeLocale, id, rawItem?.locale, serializeEditorSave, updateMutation.mutateAsync],
+	);
+
+	const handleAutosave = React.useCallback(
+		(payload: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+			references?: Record<string, string[]>;
+			referenceRows?: Record<string, ReferenceEntryRow[]>;
+		}) => {
+			const { referenceRows, ...changes } = payload;
+			void serializeEditorSave(() =>
+				autosaveMutation.mutateAsync({
+					targetId: id,
+					targetLocale: rawItem?.locale ?? activeLocale,
+					changes,
+					referenceRows,
+				}),
+			).catch(() => undefined);
+		},
+		[activeLocale, autosaveMutation.mutateAsync, id, rawItem?.locale, serializeEditorSave],
+	);
+	const handleAuthorChange = React.useCallback(
+		(authorId: string | null) => {
+			updateMutation.mutate({
+				targetId: id,
+				targetLocale: rawItem?.locale ?? activeLocale,
+				source: "auxiliary",
+				changes: { authorId },
+			});
+		},
+		[activeLocale, id, rawItem?.locale, updateMutation.mutate],
+	);
+	const handlePublishedAtChange = React.useCallback(
+		async (
+			publishedAt: string,
+			payload?: {
+				data: Record<string, unknown>;
+				slug?: string;
+				bylines?: BylineCreditInput[];
+			},
+		) => {
+			await serializeEditorSave(
+				async () => {
+					if (!payload) return;
+					return updateMutation.mutateAsync({
+						targetId: id,
+						targetLocale: rawItem?.locale ?? activeLocale,
+						source: "editor",
+						changes: payload,
+					});
+				},
+				{ allowConflict: !payload },
+			);
+			await publishedAtMutation.mutateAsync(publishedAt);
+		},
+		[
+			activeLocale,
+			id,
+			publishedAtMutation.mutateAsync,
+			rawItem?.locale,
+			serializeEditorSave,
+			updateMutation.mutateAsync,
+		],
+	);
+
+	const handleSeoChange = React.useCallback(
+		(seo: ContentSeoInput) => {
+			updateMutation.mutate({
+				targetId: id,
+				targetLocale: rawItem?.locale ?? activeLocale,
+				source: "auxiliary",
+				changes: { seo },
+			});
+		},
+		[activeLocale, id, rawItem?.locale, updateMutation.mutate],
+	);
+
+	const handlePublish = React.useCallback(
+		(payload: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+			references?: Record<string, string[]>;
+		}) => {
+			if (publishRequestRef.current) return publishRequestRef.current;
+
+			const request = (async () => {
+				const savedItem = await serializeEditorSave(() =>
+					updateMutation.mutateAsync({
+						targetId: id,
+						targetLocale: rawItem?.locale ?? activeLocale,
+						source: "editor",
+						changes: payload,
+					}),
+				);
+				await publishMutation.mutateAsync({
+					revision: savedItem._rev,
+					savedReferences: Boolean(payload.references),
+				});
+			})();
+			publishRequestRef.current = request;
+			void request
+				.catch(() => undefined)
+				.finally(() => {
+					if (publishRequestRef.current === request) publishRequestRef.current = null;
+				});
+			return request;
+		},
+		[
+			activeLocale,
+			id,
+			publishMutation.mutateAsync,
+			rawItem?.locale,
+			serializeEditorSave,
+			updateMutation.mutateAsync,
+		],
+	);
+	const handleUnpublish = React.useCallback(
+		async (payload?: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+		}) => {
+			if (unpublishRequestRef.current) return unpublishRequestRef.current;
+
+			const request = (async () => {
+				const savedItem = await serializeEditorSave(async () => {
+					if (!payload) return;
+					return updateMutation.mutateAsync({
+						targetId: id,
+						targetLocale: rawItem?.locale ?? activeLocale,
+						source: "editor",
+						changes: payload,
+					});
+				});
+				const currentToken = savedItem?._rev ?? revisionTokensRef.current.get(id);
+				await unpublishMutation.mutateAsync(currentToken);
+			})();
+			unpublishRequestRef.current = request;
+			void request
+				.catch(() => undefined)
+				.finally(() => {
+					if (unpublishRequestRef.current === request) unpublishRequestRef.current = null;
+				});
+			return request;
+		},
+		[
+			activeLocale,
+			id,
+			rawItem?.locale,
+			serializeEditorSave,
+			unpublishMutation.mutateAsync,
+			updateMutation.mutateAsync,
+		],
+	);
+	const handleDiscardDraft = React.useCallback(
+		() => discardDraftMutation.mutate(),
+		[discardDraftMutation.mutate],
+	);
+	const handleSchedule = React.useCallback(
+		async (
+			scheduledAt: string,
+			payload?: {
+				data: Record<string, unknown>;
+				slug?: string;
+				bylines?: BylineCreditInput[];
+				references?: Record<string, string[]>;
+			},
+		) => {
+			const savedItem = await serializeEditorSave(async () => {
+				if (!payload) return;
+				return updateMutation.mutateAsync({
+					targetId: id,
+					targetLocale: rawItem?.locale ?? activeLocale,
+					source: "editor",
+					changes: payload,
+				});
+			});
+			const scheduledItem = await scheduleMutation.mutateAsync(scheduledAt);
+			await applyScheduleChange(scheduledItem, savedItem, payload);
+		},
+		[
+			activeLocale,
+			applyScheduleChange,
+			id,
+			rawItem?.locale,
+			scheduleMutation.mutateAsync,
+			serializeEditorSave,
+			updateMutation.mutateAsync,
+		],
+	);
+	const handleUnschedule = React.useCallback(
+		async (payload?: {
+			data: Record<string, unknown>;
+			slug?: string;
+			bylines?: BylineCreditInput[];
+			references?: Record<string, string[]>;
+		}) => {
+			const savedItem = await serializeEditorSave(async () => {
+				if (!payload) return;
+				return updateMutation.mutateAsync({
+					targetId: id,
+					targetLocale: rawItem?.locale ?? activeLocale,
+					source: "editor",
+					changes: payload,
+				});
+			});
+			const unscheduledItem = await unscheduleMutation.mutateAsync();
+			await applyScheduleChange(unscheduledItem, savedItem, payload);
+		},
+		[
+			activeLocale,
+			applyScheduleChange,
+			id,
+			rawItem?.locale,
+			serializeEditorSave,
+			unscheduleMutation.mutateAsync,
+			updateMutation.mutateAsync,
+		],
+	);
+	const handleDelete = React.useCallback(() => deleteMutation.mutate(), [deleteMutation.mutate]);
+	const handleTranslate = React.useCallback(
+		(locale: string) => translateMutation.mutate(locale),
+		[translateMutation.mutate],
+	);
+	const handleQuickCreateByline = React.useCallback(
+		(input: { slug: string; displayName: string }) => createBylineMutation.mutateAsync(input),
+		[createBylineMutation.mutateAsync],
+	);
+	const handleQuickEditByline = React.useCallback(
+		(bylineId: string, input: { slug: string; displayName: string }) =>
+			updateBylineMutation.mutateAsync({ id: bylineId, ...input }),
+		[updateBylineMutation.mutateAsync],
+	);
+	const handleRevisionRestored = React.useCallback(
+		(restoredItem: ContentItem) => {
+			if (restoredItem._rev) {
+				revisionTokensRef.current.set(id, restoredItem._rev);
+			}
+		},
+		[id],
+	);
+	const handlePluginEntryRefresh = React.useCallback(async () => {
+		await Promise.all([
+			queryClient.invalidateQueries({ queryKey: ["content", collection, id] }),
+			queryClient.invalidateQueries({ queryKey: ["revisions", collection, id] }),
+			queryClient.invalidateQueries({ queryKey: ["translations", collection, id] }),
+		]);
+	}, [collection, id, queryClient]);
+
+	if (!manifest) {
+		return <LoadingScreen />;
+	}
+
+	const collectionConfig = manifest.collections[collection];
+
+	if (!collectionConfig) {
+		return <NotFoundPage message={`Collection "${collection}" not found`} />;
+	}
+
+	if (isLoading) {
+		return <LoadingScreen />;
+	}
+
+	return (
+		<ContentEditor
+			collection={collection}
+			collectionLabel={collectionConfig.labelSingular || collectionConfig.label}
+			item={item}
+			timezone={manifest.timezone ?? "UTC"}
+			fields={collectionConfig.fields}
+			isSaving={
+				updateMutation.isPending || publishedAtMutation.isPending || publishMutation.isPending
+			}
+			isSaveFeedbackActive={(editorSavePendingCounts.get(id) ?? 0) > 0}
+			onSave={handleSave}
+			onAutosave={handleAutosave}
+			isAutosaving={autosaveMutation.isPending}
+			isAutosaveFeedbackActive={
+				autosaveMutation.isPending && autosaveMutation.variables?.targetId === id
+			}
+			autosaveCompletionToken={autosaveCompletion.entryId === id ? autosaveCompletion.token : 0}
+			autosaveRejectionToken={autosaveRejection.entryId === id ? autosaveRejection.token : 0}
+			hasSaveConflict={conflictedEntryId === id}
+			onPublish={handlePublish}
+			onUnpublish={handleUnpublish}
+			onDiscardDraft={handleDiscardDraft}
+			onRevisionRestored={handleRevisionRestored}
+			onSchedule={handleSchedule}
+			onUnschedule={handleUnschedule}
+			isScheduling={scheduleMutation.isPending}
+			isUnscheduling={unscheduleMutation.isPending}
+			onPublishedAtChange={handlePublishedAtChange}
+			isUpdatingPublishedAt={publishedAtMutation.isPending}
+			onDelete={handleDelete}
+			isDeleting={deleteMutation.isPending}
+			supportsDrafts={collectionConfig.supports.includes("drafts")}
+			supportsRevisions={collectionConfig.supports.includes("revisions")}
+			supportsPreview={collectionConfig.supports.includes("preview")}
+			currentUser={currentUser}
+			users={usersData?.items}
+			onAuthorChange={handleAuthorChange}
+			i18n={i18n}
+			translations={translationsData?.translations}
+			onTranslate={handleTranslate}
+			pluginBlocks={pluginBlocks}
+			hasSeo={collectionConfig.hasSeo}
+			onSeoChange={handleSeoChange}
+			availableBylines={bylinesData?.items}
+			availableBylinesLoaded={bylinesLoaded}
+			onQuickCreateByline={handleQuickCreateByline}
+			onQuickEditByline={handleQuickEditByline}
+			manifest={manifest ?? null}
+			onEntryRefresh={handlePluginEntryRefresh}
+			readOnly={entryLock.readOnly}
+			notice={
+				<EntryLockNotice
+					state={entryLock.state}
+					onTakeOver={entryLock.takeOver}
+					onReadInstead={entryLock.readInstead}
+					isTakingOver={entryLock.isTakingOver}
+				/>
+			}
+		/>
+	);
+}
+
+// Media library route
+const mediaRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/media",
+	component: MediaPage,
+	validateSearch: (search: Record<string, unknown>) => ({
+		folder:
+			typeof search.folder === "string" && search.folder.length > 0 && search.folder.length <= 64
+				? search.folder
+				: undefined,
+	}),
+});
+
+function MediaPage() {
+	const { t } = useLingui();
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+	const { folder } = useSearch({ from: "/_admin/media" });
+	const toastManager = Toast.useToastManager();
+	const { data: currentUser } = useCurrentUser();
+
+	const [search, setSearch] = React.useState("");
+	const [mimeFilter, setMimeFilter] = React.useState<string | string[] | undefined>(undefined);
+	const [page, setPage] = React.useState(1);
+	const [perPage, setPerPage] = React.useState(35);
+	const [retainedTotalCount, setRetainedTotalCount] = React.useState(0);
+	const [activeProvider, setActiveProvider] = React.useState("local");
+	const mimeKey = Array.isArray(mimeFilter) ? mimeFilter.join(",") : (mimeFilter ?? "");
+	const currentFolderQuery = useQuery({
+		queryKey: ["media-folder", folder],
+		queryFn: () => fetchMediaFolder(folder!),
+		enabled: folder !== undefined,
+		retry: (failureCount, queryError) =>
+			!(queryError instanceof ApiResponseError && queryError.code === "NOT_FOUND") &&
+			failureCount < 2,
+	});
+	const missingFolder =
+		currentFolderQuery.error instanceof ApiResponseError &&
+		currentFolderQuery.error.code === "NOT_FOUND";
+	const recoveredFolderRef = React.useRef<string | null>(null);
+	React.useEffect(() => {
+		if (!folder || !missingFolder || recoveredFolderRef.current === folder) return;
+		recoveredFolderRef.current = folder;
+		void navigate({ to: "/media", search: { folder: undefined }, replace: true });
+		toastManager.add({
+			title: t`Folder no longer exists`,
+			type: "warning",
+			timeout: 4000,
+		});
+	}, [folder, missingFolder, navigate, t, toastManager]);
+	React.useEffect(() => {
+		if (folder !== recoveredFolderRef.current) recoveredFolderRef.current = null;
+	}, [folder]);
+	const previousFolderRef = React.useRef(folder);
+	const folderChanged = previousFolderRef.current !== folder;
+	const requestedPage = folderChanged ? 1 : page;
+	const folderListEnabled =
+		activeProvider === "local" &&
+		requestedPage === 1 &&
+		mimeFilter === undefined &&
+		(folder === undefined || search !== "");
+	const folderListQuery = useInfiniteQuery({
+		queryKey: ["media-folders", "page", { search }],
+		queryFn: ({ pageParam }) =>
+			fetchMediaFolders({
+				limit: 100,
+				cursor: pageParam,
+				search: search || undefined,
+			}),
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: (lastPage) => lastPage.nextCursor,
+		enabled: folderListEnabled,
+	});
+	const folders = React.useMemo(
+		() => folderListQuery.data?.pages.flatMap((folderPage) => folderPage.items) ?? [],
+		[folderListQuery.data?.pages],
+	);
+
+	const { data, isLoading, isFetching, error } = useQuery({
+		queryKey: [
+			"media",
+			{ search, mime: mimeKey, folder: folder ?? "main", page: requestedPage, perPage },
+		],
+		queryFn: () =>
+			fetchMediaList({
+				page: requestedPage,
+				limit: perPage,
+				search: search || undefined,
+				mimeType: mimeFilter,
+				folderId: search ? undefined : (folder ?? null),
+			}),
+		placeholderData: keepPreviousData,
+	});
+
+	React.useEffect(() => {
+		if (data?.totalCount !== undefined) setRetainedTotalCount(data.totalCount);
+	}, [data?.totalCount]);
+	React.useEffect(() => {
+		if (previousFolderRef.current === folder) return;
+		previousFolderRef.current = folder;
+		setPage(1);
+		setRetainedTotalCount(0);
+	}, [folder]);
+
+	const totalCount = data?.totalCount ?? retainedTotalCount;
+	const lastPage = Math.max(1, Math.ceil((data?.totalCount ?? 0) / perPage));
+	const isRecoveringPage = data?.totalCount !== undefined && requestedPage > lastPage;
+	React.useEffect(() => {
+		if (isRecoveringPage) setPage(lastPage);
+	}, [isRecoveringPage, lastPage]);
+
+	const pageCount = Math.max(1, Math.ceil(totalCount / perPage));
+	const handlePageChange = React.useCallback(
+		(nextPage: number) => {
+			if (isFetching || !Number.isSafeInteger(nextPage) || nextPage < 1 || nextPage > pageCount) {
+				return;
+			}
+			setPage(nextPage);
+		},
+		[isFetching, pageCount],
+	);
+	const handlePageSizeChange = React.useCallback(
+		(nextPerPage: number) => {
+			if (isFetching) return;
+			setPerPage(nextPerPage);
+			setPage(1);
+			setRetainedTotalCount(0);
+		},
+		[isFetching],
+	);
+	const handleSearchChange = React.useCallback((nextSearch: string) => {
+		setSearch(nextSearch);
+		setPage(1);
+		setRetainedTotalCount(0);
+	}, []);
+	const handleMimeFilterChange = React.useCallback(
+		(nextMimeFilter: string | string[] | undefined) => {
+			setMimeFilter(nextMimeFilter);
+			setPage(1);
+			setRetainedTotalCount(0);
+		},
+		[],
+	);
+
+	const paginationPending = isLoading || isFetching || isRecoveringPage;
+
+	const uploadMutation = useMutation({
+		mutationFn: ({ file, options }: { file: File; options?: MediaUploadOptions }) =>
+			uploadMedia(file, options),
+		onSuccess: () => {
+			setPage(1);
+			setRetainedTotalCount(0);
+			void queryClient.invalidateQueries({ queryKey: ["media"] });
+		},
+	});
+	const resetMediaPage = React.useCallback(() => {
+		setPage(1);
+		setRetainedTotalCount(0);
+	}, []);
+	const handleOpenFolder = React.useCallback(
+		(nextFolder: { id: string }) => {
+			resetMediaPage();
+			void navigate({ to: "/media", search: { folder: nextFolder.id }, resetScroll: false });
+		},
+		[navigate, resetMediaPage],
+	);
+	const handleBackToMain = React.useCallback(() => {
+		resetMediaPage();
+		void navigate({ to: "/media", search: { folder: undefined }, resetScroll: false });
+	}, [navigate, resetMediaPage]);
+	const handleCreateFolder = React.useCallback(
+		async (name: string) => {
+			const created = await createMediaFolder(name);
+			resetMediaPage();
+			await queryClient.invalidateQueries({ queryKey: ["media-folders"] });
+			return created;
+		},
+		[queryClient, resetMediaPage],
+	);
+	const handleRenameFolder = React.useCallback(
+		async (targetFolder: { id: string }, name: string) => {
+			const renamed = await renameMediaFolder(targetFolder.id, name);
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ["media-folders"] }),
+				queryClient.invalidateQueries({ queryKey: ["media-folder", targetFolder.id] }),
+			]);
+			return renamed;
+		},
+		[queryClient],
+	);
+	const handleDeleteFolder = React.useCallback(
+		async (targetFolder: { id: string }) => {
+			await deleteMediaFolder(targetFolder.id);
+			const deletingCurrentFolder = folder === targetFolder.id;
+			if (deletingCurrentFolder) {
+				resetMediaPage();
+				await navigate({
+					to: "/media",
+					search: { folder: undefined },
+					replace: true,
+					resetScroll: false,
+				});
+			}
+			queryClient.removeQueries({ queryKey: ["media-folder", targetFolder.id], exact: true });
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: ["media-folders"] }),
+				queryClient.invalidateQueries({ queryKey: ["media"] }),
+			]);
+			if (!deletingCurrentFolder) resetMediaPage();
+		},
+		[folder, navigate, queryClient, resetMediaPage],
+	);
+	const handleMoveMedia = React.useCallback(
+		async (item: { id: string }, destination: { id: string }) => {
+			try {
+				await updateMedia(item.id, { folderId: destination.id });
+				await queryClient.invalidateQueries({ queryKey: ["media"] });
+			} catch (moveError) {
+				const recovery: Promise<unknown>[] = [
+					queryClient.invalidateQueries({ queryKey: ["media"] }),
+				];
+				if (moveError instanceof ApiResponseError && moveError.code === "NOT_FOUND") {
+					recovery.push(
+						queryClient.invalidateQueries({ queryKey: ["media-folders"] }),
+						queryClient.invalidateQueries({ queryKey: ["media-folder"] }),
+					);
+				}
+				if (
+					moveError instanceof ApiResponseError &&
+					(moveError.status === 401 || moveError.status === 403)
+				) {
+					recovery.push(queryClient.resetQueries({ queryKey: ["currentUser"], exact: true }));
+				}
+				await Promise.allSettled(recovery);
+				throw moveError;
+			}
+		},
+		[queryClient],
+	);
+	const canMoveMedia = React.useCallback(
+		(item: { authorId: string | null }) =>
+			Boolean(
+				currentUser &&
+				(currentUser.role >= ROLE_EDITOR ||
+					(currentUser.role >= ROLE_AUTHOR && item.authorId === currentUser.id)),
+			),
+		[currentUser],
+	);
+
+	if (currentFolderQuery.error && !missingFolder) {
+		return <ErrorScreen error={currentFolderQuery.error.message} />;
+	}
+
+	if (error) {
+		return <ErrorScreen error={error.message} />;
+	}
+
+	return (
+		<MediaLibrary
+			items={isRecoveringPage ? [] : (data?.items ?? [])}
+			isLoading={paginationPending}
+			pagination={{
+				page: isRecoveringPage ? lastPage : requestedPage,
+				perPage,
+				totalCount,
+				isPending: paginationPending,
+				onPageChange: handlePageChange,
+				onPageSizeChange: handlePageSizeChange,
+			}}
+			onUpload={async (file, options) => {
+				await uploadMutation.mutateAsync({ file, options });
+			}}
+			onLocalSearchChange={handleSearchChange}
+			onLocalMimeFilterChange={handleMimeFilterChange}
+			folders={folders}
+			foldersLoading={folderListQuery.isLoading}
+			foldersError={folderListQuery.error}
+			hasMoreFolders={folderListQuery.hasNextPage}
+			isLoadingMoreFolders={folderListQuery.isFetchingNextPage}
+			onLoadMoreFolders={() => void folderListQuery.fetchNextPage()}
+			onActiveProviderChange={setActiveProvider}
+			folderId={folder}
+			currentFolder={currentFolderQuery.data ?? null}
+			currentFolderLoading={currentFolderQuery.isLoading}
+			canManageFolders={(currentUser?.role ?? 0) >= ROLE_EDITOR}
+			onOpenFolder={handleOpenFolder}
+			onBackToMain={handleBackToMain}
+			onRetryFolders={() => void folderListQuery.refetch()}
+			onCreateFolder={handleCreateFolder}
+			onRenameFolder={handleRenameFolder}
+			onDeleteFolder={handleDeleteFolder}
+			canMoveMedia={canMoveMedia}
+			onMoveMedia={handleMoveMedia}
+		/>
+	);
+}
+
+// Comments moderation inbox route
+const commentsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/comments",
+	component: CommentsPage,
+});
+
+// Admin role level from @emdash-cms/auth
+const ROLE_ADMIN = 50;
+
+function CommentsPage() {
+	const { t } = useLingui();
+	const queryClient = useQueryClient();
+	const toastManager = Toast.useToastManager();
+
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+
+	// Current user for ADMIN check (hard delete)
+	const { data: currentUser } = useQuery({
+		queryKey: ["currentUser"],
+		queryFn: async (): Promise<{ id: string; role: number }> => {
+			const response = await apiFetch("/_emdash/api/auth/me");
+			return parseApiResponse<{ id: string; role: number }>(response, t`Failed to fetch user`);
+		},
+		staleTime: 5 * 60 * 1000,
+	});
+
+	// Filter state
+	const [activeStatus, setActiveStatus] = React.useState<CommentStatus>("pending");
+	const [collectionFilter, setCollectionFilter] = React.useState("");
+	const [searchQuery, setSearchQuery] = React.useState("");
+	const [debouncedSearch, setDebouncedSearch] = React.useState("");
+
+	// Debounce search
+	React.useEffect(() => {
+		const timer = setTimeout(setDebouncedSearch, 300, searchQuery);
+		return () => clearTimeout(timer);
+	}, [searchQuery]);
+
+	// Fetch comments
+	const {
+		data: commentsData,
+		isLoading,
+		fetchNextPage,
+		hasNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["comments", activeStatus, collectionFilter, debouncedSearch],
+		queryFn: ({ pageParam }) =>
+			fetchComments({
+				status: activeStatus,
+				collection: collectionFilter || undefined,
+				search: debouncedSearch || undefined,
+				cursor: pageParam,
+				limit: 50,
+			}),
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: (lastPage) => lastPage.nextCursor,
+	});
+
+	// Fetch counts
+	const { data: counts } = useQuery({
+		queryKey: ["commentCounts"],
+		queryFn: fetchCommentCounts,
+	});
+
+	// Status change mutation
+	const statusMutation = useMutation({
+		mutationFn: ({ id, status }: { id: string; status: CommentStatus }) =>
+			updateCommentStatus(id, status),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["comments"] });
+			void queryClient.invalidateQueries({ queryKey: ["commentCounts"] });
+		},
+		onError: (error) => {
+			toastManager.add({
+				title: t`Failed to update status`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	// Delete mutation
+	const deleteMutation = useMutation({
+		mutationFn: (id: string) => deleteComment(id),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["comments"] });
+			void queryClient.invalidateQueries({ queryKey: ["commentCounts"] });
+		},
+		onError: (error) => {
+			toastManager.add({
+				title: t`Failed to delete comment`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	// Bulk action mutation
+	const bulkMutation = useMutation({
+		mutationFn: ({
+			ids,
+			action,
+		}: {
+			ids: string[];
+			action: "approve" | "spam" | "trash" | "delete";
+		}) => bulkCommentAction(ids, action),
+		onSuccess: (result) => {
+			void queryClient.invalidateQueries({ queryKey: ["comments"] });
+			void queryClient.invalidateQueries({ queryKey: ["commentCounts"] });
+			toastManager.add({
+				title: plural(result.affected, { one: "# comment updated", other: "# comments updated" }),
+			});
+		},
+		onError: (error) => {
+			toastManager.add({
+				title: t`Failed to perform bulk action`,
+				description: error instanceof Error ? error.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const allComments = commentsData?.pages.flatMap((p) => p.items) ?? [];
+	const lastPage = commentsData?.pages[commentsData.pages.length - 1];
+
+	// Require EDITOR role for comment moderation
+	if (currentUser && currentUser.role < ROLE_EDITOR) {
+		return (
+			<div className="flex items-center justify-center min-h-[50vh]">
+				<div className="text-center">
+					<h1 className="text-2xl font-semibold leading-tight">{t`Access Denied`}</h1>
+					<p className="mt-2 text-sm text-kumo-subtle">{t`You need Editor permissions to moderate comments.`}</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<CommentInbox
+			comments={allComments}
+			counts={counts ?? { pending: 0, approved: 0, spam: 0, trash: 0 }}
+			isLoading={isLoading}
+			nextCursor={lastPage?.nextCursor}
+			collections={manifest?.collections ?? {}}
+			activeStatus={activeStatus}
+			onStatusChange={setActiveStatus}
+			collectionFilter={collectionFilter}
+			onCollectionFilterChange={setCollectionFilter}
+			searchQuery={searchQuery}
+			onSearchChange={setSearchQuery}
+			onCommentStatusChange={(id, status) =>
+				statusMutation.mutateAsync({ id, status }).catch(() => {})
+			}
+			onCommentDelete={(id) => deleteMutation.mutateAsync(id).catch(() => {})}
+			onBulkAction={(ids, action) => bulkMutation.mutateAsync({ ids, action }).catch(() => {})}
+			onLoadMore={() => {
+				if (hasNextPage) void fetchNextPage();
+			}}
+			isAdmin={(currentUser?.role ?? 0) >= ROLE_ADMIN}
+			isStatusPending={
+				statusMutation.isPending || deleteMutation.isPending || bulkMutation.isPending
+			}
+			deleteError={deleteMutation.error}
+			onDeleteErrorReset={() => deleteMutation.reset()}
+		/>
+	);
+}
+
+// Settings route
+const settingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings",
+	component: Settings,
+});
+
+const mediaUsageSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/media-usage",
+	component: MediaUsageSettings,
+});
+
+// Security settings route
+const securitySettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/security",
+	component: SecuritySettings,
+});
+
+// Allowed domains settings route
+const allowedDomainsSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/allowed-domains",
+	component: AllowedDomainsSettings,
+});
+
+// API tokens settings route
+const apiTokenSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/api-tokens",
+	component: ApiTokenSettings,
+});
+
+// Email settings route
+const emailSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/email",
+	component: EmailSettings,
+});
+
+// Backup settings route
+const backupSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/backups",
+	component: BackupSettings,
+});
+
+const transferSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/transfer",
+	component: TransferSettingsPage,
+	validateSearch: (search: Record<string, unknown>): { start?: "import" } =>
+		search.start === "import" ? { start: "import" } : {},
+});
+
+function TransferSettingsPage() {
+	const { start } = transferSettingsRoute.useSearch();
+	return <TransferSettings focusImport={start === "import"} />;
+}
+
+// General settings route
+const generalSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/general",
+	component: GeneralSettings,
+});
+
+// Social settings route
+const socialSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/social",
+	component: SocialSettings,
+});
+
+// SEO settings route
+const seoSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/settings/seo",
+	component: SeoSettings,
+});
+
+// Plugin manager route
+const pluginManagerRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins-manager",
+	component: PluginManagerPage,
+});
+
+function PluginManagerPage() {
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+	return <PluginManager manifest={manifest} />;
+}
+
+const registryBrowseRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins/registry",
+	component: RegistryBrowsePage,
+});
+
+function RegistryBrowsePage() {
+	const { t } = useLingui();
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+
+	const { data: plugins } = useQuery({
+		queryKey: ["plugins"],
+		queryFn: async () => {
+			const { fetchPlugins } = await import("./lib/api/plugins.js");
+			return fetchPlugins();
+		},
+		refetchOnMount: "always",
+		refetchOnWindowFocus: "always",
+	});
+
+	if (manifest?.registry) {
+		// Map installed registry plugins to their AT URIs for the
+		// "Installed" badge on browse cards.
+		const installedRegistryUris = new Set<string>(
+			(plugins ?? [])
+				.filter((p) => p.source === "registry" && p.registryPublisherDid && p.registrySlug)
+				.map(
+					(p) =>
+						`at://${p.registryPublisherDid}/com.emdashcms.experimental.package.profile/${p.registrySlug}`,
+				),
+		);
+		return (
+			<RegistryBrowse config={manifest.registry} installedRegistryUris={installedRegistryUris} />
+		);
+	}
+
+	return <NotFoundPage message={t`Plugin registry is not configured.`} />;
+}
+
+const marketplaceBrowseRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins/marketplace",
+	component: MarketplaceUnavailablePage,
+});
+
+// Marketplace plugin detail route
+const marketplaceDetailRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins/marketplace/$pluginId",
+	component: MarketplaceDetailPage,
+});
+
+const registryDetailRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins/registry/$publisher/$slug",
+	component: RegistryDetailPage,
+});
+
+function RegistryDetailPage() {
+	const { t } = useLingui();
+	const { publisher, slug } = useParams({
+		from: "/_admin/plugins/registry/$publisher/$slug",
+	});
+	const { data: manifest } = useQuery({
+		queryKey: ["manifest"],
+		queryFn: fetchManifest,
+	});
+	if (!manifest?.registry) return <NotFoundPage message={t`Plugin registry is not configured.`} />;
+	return <RegistryPluginDetail pluginId={`${publisher}/${slug}`} config={manifest.registry} />;
+}
+
+function MarketplaceDetailPage() {
+	const { t } = useLingui();
+
+	return (
+		<NotFoundPage
+			message={t`Marketplace browsing is no longer available. Manage installed plugins from Plugins.`}
+		/>
+	);
+}
+
+// Theme marketplace browse route
+const themeMarketplaceBrowseRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/themes/marketplace",
+	component: MarketplaceUnavailablePage,
+});
+
+// Theme marketplace detail route
+const themeMarketplaceDetailRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/themes/marketplace/$themeId",
+	component: ThemeDetailPage,
+});
+
+function ThemeDetailPage() {
+	return <MarketplaceUnavailablePage />;
+}
+
+function MarketplaceUnavailablePage() {
+	const { t } = useLingui();
+	return <NotFoundPage message={t`Marketplace browsing is no longer available.`} />;
+}
+
+// WordPress import route
+const wordpressImportRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/import/wordpress",
+	component: WordPressImport,
+});
+
+// Menu routes
+const menuListRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/menus",
+	component: MenuList,
+});
+
+const menuEditorRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/menus/$name",
+	component: MenuEditor,
+	validateSearch: (search: Record<string, unknown>) => {
+		return {
+			locale: typeof search.locale === "string" ? search.locale : undefined,
+		};
+	},
+});
+
+// Taxonomy manager route
+const taxonomyRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/taxonomies/$taxonomy",
+	component: TaxonomyPage,
+});
+
+function TaxonomyPage() {
+	const { taxonomy } = useParams({ from: "/_admin/taxonomies/$taxonomy" });
+	const navigate = useNavigate();
+	return <TaxonomyManager taxonomyName={taxonomy} onDeleted={() => void navigate({ to: "/" })} />;
+}
+
+// Widgets route
+const widgetsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/widgets",
+	component: Widgets,
+});
+
+// Sections routes
+const redirectsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/redirects",
+	component: Redirects,
+});
+
+const sectionsListRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/sections",
+	component: Sections,
+});
+
+const sectionEditRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/sections/$slug",
+	component: SectionEditor,
+});
+
+// Users route
+const usersRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/users",
+	component: UsersPage,
+});
+
+// Bylines route
+//
+// `validateSearch` rejects empty-string locale (`?locale=`) — left as `""`
+// it would land in component state and silently drop the locale filter
+// from `fetchBylines`, fetching every locale's rows while the UI thinks
+// it's scoped to one.
+export function parseBylinesLocaleSearch(search: Record<string, unknown>): {
+	locale: string | undefined;
+} {
+	if (typeof search.locale === "string" && search.locale.length > 0) {
+		return { locale: search.locale };
+	}
+	return { locale: undefined };
+}
+
+const bylinesRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/bylines",
+	component: BylinesPage,
+	validateSearch: parseBylinesLocaleSearch,
+});
+
+// Byline schema management route (Discussion #1174, Phase 5).
+// `minRole: ROLE_ADMIN` is enforced both in the sidebar (entry hidden
+// for non-admins) and inside `BylineSchemaPage` (URL-direct navigation).
+const bylineSchemaRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/byline-schema",
+	component: BylineSchemaPage,
+});
+
+// Content Types routes
+const contentTypesListRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content-types",
+	component: ContentTypesListPage,
+});
+
+function ContentTypesListPage() {
+	const queryClient = useQueryClient();
+
+	const {
+		data: collections,
+		isLoading: collectionsLoading,
+		error: collectionsError,
+	} = useQuery({
+		queryKey: ["schema", "collections"],
+		queryFn: fetchCollections,
+	});
+
+	const {
+		data: orphanedTables,
+		isLoading: orphansLoading,
+		error: orphansError,
+	} = useQuery({
+		queryKey: ["schema", "orphans"],
+		queryFn: fetchOrphanedTables,
+	});
+	const {
+		data: blockTypes,
+		isLoading: blockTypesLoading,
+		error: blockTypesError,
+	} = useQuery({
+		queryKey: ["schema", "block-types"],
+		queryFn: fetchBlockTypes,
+	});
+
+	const deleteMutation = useMutation({
+		mutationFn: (slug: string) => deleteCollection(slug, true),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+			// Every relationship the collection was an end of went with it, along
+			// with the reference fields on the other collections.
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+		},
+	});
+
+	const registerOrphanMutation = useMutation({
+		mutationFn: (slug: string) => registerOrphanedTable(slug),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["schema", "orphans"] });
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+		},
+	});
+
+	const reorderMutation = useMutation({
+		mutationFn: (slugs: string[]) => reorderCollections(slugs),
+		// The manifest drives the sidebar order, so it has to be refetched
+		// alongside the collection list for the move to show up in the nav.
+		onSettled: () => {
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+		},
+	});
+
+	const error = collectionsError || orphansError || blockTypesError;
+	if (error) {
+		return <ErrorScreen error={error.message} />;
+	}
+
+	return (
+		<div className="space-y-6">
+			<ContentTypeList
+				collections={collections ?? []}
+				orphanedTables={orphanedTables}
+				isLoading={collectionsLoading || orphansLoading}
+				onDelete={(slug) => deleteMutation.mutate(slug)}
+				onRegisterOrphan={(slug) => registerOrphanMutation.mutate(slug)}
+				onReorder={(slugs) => reorderMutation.mutate(slugs)}
+			/>
+			<BlockTypeList blockTypes={blockTypes ?? []} isLoading={blockTypesLoading} />
+		</div>
+	);
+}
+
+const contentTypesNewRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content-types/new",
+	component: ContentTypesNewPage,
+});
+
+function ContentTypesNewPage() {
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+
+	const createMutation = useMutation({
+		mutationFn: (input: CreateCollectionInput) => createCollection(input),
+		onSuccess: (result) => {
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+			void navigate({
+				to: "/content-types/$slug",
+				params: { slug: result.slug },
+			});
+		},
+	});
+
+	return (
+		<ContentTypeEditor
+			isNew
+			isSaving={createMutation.isPending}
+			onSave={(input) => {
+				createMutation.mutate(input as CreateCollectionInput);
+			}}
+		/>
+	);
+}
+
+// Relations: link definitions between two content types. Under /content-types
+// because a relation is schema, like a collection.
+const relationsListRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content-types/relations",
+	component: RelationsListPage,
+});
+
+function RelationsListPage() {
+	const { data: relations, isLoading, error } = useRelationsQuery();
+	const { data: collections = [] } = useQuery({
+		queryKey: ["schema", "collections"],
+		queryFn: fetchCollections,
+	});
+	const queryClient = useQueryClient();
+
+	// Deleting a relation takes the reference fields bound to it, on both of
+	// the content types it joins.
+	const invalidateRelations = () => {
+		void queryClient.invalidateQueries({ queryKey: ["relations"] });
+		void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+		void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+	};
+
+	const createMutation = useMutation({
+		mutationFn: (input: CreateRelationInput) => createRelation(input),
+		onSuccess: invalidateRelations,
+	});
+
+	const updateMutation = useMutation({
+		mutationFn: ({ id, input }: { id: string; input: UpdateRelationInput }) =>
+			updateRelation(id, input),
+		onSuccess: invalidateRelations,
+	});
+
+	const deleteMutation = useMutation({
+		mutationFn: (id: string) => deleteRelation(id),
+		onSuccess: invalidateRelations,
+	});
+
+	return (
+		<RelationList
+			relations={relations ?? []}
+			collections={collections}
+			isLoading={isLoading}
+			error={error ? error.message : undefined}
+			onCreateRelation={(input) => createMutation.mutateAsync(input)}
+			onUpdateRelation={(id, input) => updateMutation.mutateAsync({ id, input })}
+			onDeleteRelation={(id) => deleteMutation.mutateAsync(id)}
+			isDeleting={deleteMutation.isPending}
+			deleteError={deleteMutation.error}
+		/>
+	);
+}
+
+function useRelationsQuery() {
+	return useQuery({
+		queryKey: ["relations"],
+		queryFn: () => fetchRelations(),
+	});
+}
+
+const contentTypesEditRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/content-types/$slug",
+	component: ContentTypesEditPage,
+});
+
+function ContentTypesEditPage() {
+	const { slug } = useParams({ from: "/_admin/content-types/$slug" });
+	const queryClient = useQueryClient();
+	const toastManager = Toast.useToastManager();
+	const { t } = useLingui();
+
+	const {
+		data: collection,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ["schema", "collections", slug],
+		queryFn: () => fetchCollection(slug),
+	});
+
+	const updateMutation = useMutation({
+		mutationFn: async (input: UpdateCollectionInput) => {
+			// Check if search support is being toggled
+			const oldSupports = collection?.supports ?? [];
+			const newSupports = input.supports ?? oldSupports;
+			const hadSearch = oldSupports.includes("search");
+			const hasSearch = newSupports.includes("search");
+
+			// Update the collection first
+			const result = await updateCollection(slug, input);
+
+			// If search support changed, enable/disable search
+			if (hadSearch !== hasSearch) {
+				try {
+					await setSearchEnabled(slug, hasSearch);
+				} catch (err) {
+					// Log but don't fail the mutation - search can be enabled manually
+					console.error("Failed to toggle search:", err);
+				}
+			}
+
+			return result;
+		},
+		onSuccess: () => {
+			void queryClient.invalidateQueries({
+				queryKey: ["schema", "collections", slug],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+		},
+		onError: (mutationError) => {
+			toastManager.add({
+				title: t`Failed to save`,
+				description: mutationError instanceof Error ? mutationError.message : t`An error occurred`,
+				type: "error",
+			});
+		},
+	});
+
+	const addFieldMutation = useMutation({
+		mutationFn: (input: CreateFieldInput) => createField(slug, input),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({
+				queryKey: ["schema", "collections", slug],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+			// A reference field creates a relationship server-side, so the list the
+			// next dialog computes its free sides from is stale without this.
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+		},
+	});
+
+	const updateFieldMutation = useMutation({
+		mutationFn: ({ fieldSlug, input }: { fieldSlug: string; input: CreateFieldInput }) =>
+			updateField(slug, fieldSlug, input),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({
+				queryKey: ["schema", "collections", slug],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+			// Binding a field creates a relationship, and a relabel renames a role
+			// on one.
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+		},
+	});
+
+	const deleteFieldMutation = useMutation({
+		mutationFn: ({
+			fieldSlug,
+			alsoDeleteRelation,
+		}: {
+			fieldSlug: string;
+			alsoDeleteRelation?: boolean;
+		}) => deleteField(slug, fieldSlug, { deleteRelation: alsoDeleteRelation }),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({
+				queryKey: ["schema", "collections", slug],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+			// Deleting the relationship takes the field on its other end with it,
+			// so every collection's field list and the relations list can change.
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+		},
+	});
+
+	const createRelationMutation = useMutation({
+		mutationFn: (input: CreateRelationInput) => createRelation(input),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+		},
+	});
+
+	const updateRelationMutation = useMutation({
+		mutationFn: ({ id, input }: { id: string; input: UpdateRelationInput }) =>
+			updateRelation(id, input),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+			// The relation's limits are what the manifest reports as a bound
+			// field's `multiple`, so the entry editor's picker is stale without
+			// this.
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+		},
+	});
+
+	const deleteRelationMutation = useMutation({
+		mutationFn: (id: string) => deleteRelation(id),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({ queryKey: ["relations"] });
+			// The fields bound to the relation went with it, on both of the
+			// content types it joined.
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections"] });
+			void queryClient.invalidateQueries({ queryKey: ["schema", "collections", slug] });
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+		},
+	});
+
+	const reorderFieldsMutation = useMutation({
+		mutationFn: (fieldSlugs: string[]) => reorderFields(slug, fieldSlugs),
+		onSuccess: () => {
+			void queryClient.invalidateQueries({
+				queryKey: ["schema", "collections", slug],
+			});
+			void queryClient.invalidateQueries({ queryKey: ["manifest"] });
+		},
+	});
+
+	if (error) {
+		return <ErrorScreen error={error.message} />;
+	}
+
+	if (isLoading) {
+		return <LoadingScreen />;
+	}
+
+	return (
+		<ContentTypeEditor
+			collection={collection}
+			isSaving={updateMutation.isPending}
+			onSave={(input) => updateMutation.mutate(input)}
+			onAddField={(input) => addFieldMutation.mutateAsync(input)}
+			onUpdateField={(fieldSlug, input) => updateFieldMutation.mutateAsync({ fieldSlug, input })}
+			onDeleteField={(fieldSlug, options) =>
+				deleteFieldMutation.mutate({ fieldSlug, alsoDeleteRelation: options?.deleteRelation })
+			}
+			onReorderFields={(fieldSlugs) => reorderFieldsMutation.mutate(fieldSlugs)}
+			onCreateRelation={(input) => createRelationMutation.mutateAsync(input)}
+			onUpdateRelation={(id, input) => updateRelationMutation.mutateAsync({ id, input })}
+			onDeleteRelation={(id) => deleteRelationMutation.mutateAsync(id)}
+			isDeletingRelation={deleteRelationMutation.isPending}
+			deleteRelationError={deleteRelationMutation.error}
+		/>
+	);
+}
+
+// Auto-generated plugin settings route (from admin.settingsSchema).
+// Lives under /plugins-manager so it can never shadow a plugin's own
+// admin pages (which own the /plugins/$pluginId/* namespace).
+const pluginSettingsRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins-manager/$pluginId/settings",
+	component: PluginSettingsPage,
+});
+
+function PluginSettingsPage() {
+	const { pluginId } = useParams({ from: "/_admin/plugins-manager/$pluginId/settings" });
+	return <PluginSettings pluginId={pluginId} />;
+}
+
+// Plugin page route
+const pluginRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "/plugins/$pluginId/$",
+	component: PluginPage,
+});
+
+function PluginPage() {
+	const { pluginId } = useParams({ from: "/_admin/plugins/$pluginId/$" });
+	const { _splat } = useParams({ from: "/_admin/plugins/$pluginId/$" });
+	const pagePath = "/" + (_splat || "");
+
+	// Get plugin page component from context (trusted plugins with React)
+	const PluginComponent = usePluginPage(pluginId, pagePath);
+
+	if (PluginComponent) {
+		return <PluginComponent />;
+	}
+
+	// No React component — fall back to Block Kit rendering
+	return <SandboxedPluginPage pluginId={pluginId} page={pagePath} />;
+}
+
+// Catch-all 404 route
+const notFoundRoute = createRoute({
+	getParentRoute: () => adminLayoutRoute,
+	path: "*",
+	component: () => <NotFoundPage />,
+});
+
+// Create route tree with admin routes under layout and setup route separate
+const adminRoutes = adminLayoutRoute.addChildren([
+	dashboardRoute,
+	calendarRoute,
+	contentListRoute,
+	contentNewRoute,
+	contentEditRoute,
+	contentTypesListRoute,
+	contentTypesNewRoute,
+	relationsListRoute,
+	contentTypesEditRoute,
+	mediaRoute,
+	commentsRoute,
+	menuListRoute,
+	menuEditorRoute,
+	pluginManagerRoute,
+	pluginSettingsRoute,
+	marketplaceDetailRoute,
+	registryBrowseRoute,
+	registryDetailRoute,
+	marketplaceBrowseRoute,
+	themeMarketplaceBrowseRoute,
+	themeMarketplaceDetailRoute,
+	pluginRoute,
+	redirectsRoute,
+	sectionsListRoute,
+	sectionEditRoute,
+	taxonomyRoute,
+	usersRoute,
+	bylinesRoute,
+	bylineSchemaRoute,
+	widgetsRoute,
+	settingsRoute,
+	mediaUsageSettingsRoute,
+	generalSettingsRoute,
+	socialSettingsRoute,
+	seoSettingsRoute,
+	securitySettingsRoute,
+	allowedDomainsSettingsRoute,
+	apiTokenSettingsRoute,
+	emailSettingsRoute,
+	backupSettingsRoute,
+	transferSettingsRoute,
+	wordpressImportRoute,
+	notFoundRoute,
+]);
+
+const routeTree = baseRootRoute.addChildren([
+	setupRoute,
+	loginRoute,
+	magicLinkConfirmRoute,
+	signupRoute,
+	inviteAcceptRoute,
+	deviceRoute,
+	adminRoutes,
+]);
+
+// Create router
+export function createAdminRouter(queryClient: QueryClient) {
+	return createRouter({
+		routeTree,
+		context: { queryClient },
+		basepath: "/_emdash/admin",
+		defaultPreload: "intent",
+	});
+}
+
+// Declare router type
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: ReturnType<typeof createAdminRouter>;
+	}
+}
+
+// Shared components
+
+export function ConfigurationLoadingScreen() {
+	const { t } = useLingui();
+	return (
+		<div className="emdash-configuration-loader">
+			<div className="loader-inner">
+				<div
+					className="spinner emdash-configuration-spinner"
+					role="status"
+					aria-label={t`Loading`}
+				/>
+				<p className="emdash-configuration-label">{t`Loading configuration...`}</p>
+			</div>
+		</div>
+	);
+}
+
+function LoadingScreen() {
+	const { t } = useLingui();
+	return (
+		<div className="flex items-center justify-center min-h-screen">
+			<div className="text-center">
+				<Loader />
+				<p className="mt-4 text-kumo-subtle">{t`Loading configuration...`}</p>
+			</div>
+		</div>
+	);
+}
+
+function ErrorScreen({ error }: { error: string }) {
+	const { t } = useLingui();
+	return (
+		<div className="flex items-center justify-center min-h-screen">
+			<div className="text-center">
+				<h1 className="text-2xl font-semibold leading-tight text-kumo-danger">{t`Error`}</h1>
+				<p className="mt-2 text-sm text-kumo-subtle">{error}</p>
+				<Button onClick={() => window.location.reload()} className="mt-4">
+					{t`Retry`}
+				</Button>
+			</div>
+		</div>
+	);
+}
+
+function NotFoundPage({ message }: { message?: string }) {
+	const { t } = useLingui();
+	return (
+		<div className="flex items-center justify-center min-h-[50vh]">
+			<div className="text-center">
+				<h1 className="text-2xl font-semibold leading-tight">{t`Page Not Found`}</h1>
+				<p className="mt-2 text-sm text-kumo-subtle">
+					{message ?? t`The page you're looking for doesn't exist.`}
+				</p>
+				<Link to="/" className="mt-4 inline-block text-kumo-link">
+					{t`Go to Dashboard`}
+				</Link>
+			</div>
+		</div>
+	);
+}
+
+export { Link, useNavigate, useParams };

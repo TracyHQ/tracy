@@ -1,0 +1,286 @@
+{
+  "dos": [
+    "Use Lavender Whisper #f0d7ff as the sole primary action color — never substitute blue, green, or any other hue for CTAs",
+    "Set display headlines in Eb Garamond weight 400 (not bold) — authority comes from 64–120px scale, not font weight",
+    "Apply 2px solid #1a1a1a borders to all interactive elements — the thick border is a signature, not optional",
+    "Alternate cream #ffffeb and dark #1a1a1a sections page-wide — every dark chamber should be bookended by cream",
+    "Use 32px border-radius on standard cards and 40–80px on dark section cards — never use 4px or 8px on content blocks",
+    "Use Figtree 400 as the default body weight; reserve 600–700 for nav items, badges, and button labels",
+    "Pair #f0d7ff (active/accent) with #034f46 (secondary) — these two brand colors are complementary, not alternatives"
+  ],
+  "donts": [
+    "Do not use bold or weight 700 for display headlines — the serif whispers at weight 400 and commands through size alone",
+    "Do not use box-shadow for card elevation — this design is border-driven; shadows break the editorial flatness",
+    "Do not introduce blue, green, or any non-palette accent color for actions, links, or highlights",
+    "Do not use border-radius below 12px on buttons or below 32px on cards — small radii clash with the oversized chamber geometry",
+    "Do not use gradient fills — the palette is flat; gradients dilute the editorial discipline",
+    "Do not center body text — body copy and subtitles should be left-aligned or follow a strict measure, not centered blocks",
+    "Do not place cream content on cream canvas without a border or background change — the palette needs contrast separation"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#f0d7ff",
+      "name": "Lavender Whisper",
+      "role": "Primary CTA fill, accent card surfaces — soft pink-lavender that signals the one clickable thing on any page without ever shouting",
+      "group": "brand"
+    },
+    {
+      "hex": "#034f46",
+      "name": "Forest Ink",
+      "role": "Secondary brand surface — teal pill badges, inner dark-panel cards, secondary buttons against dark backgrounds",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffa946",
+      "name": "Ember Glow",
+      "role": "Live/active state accent — notification dots, active mic indicators, occasional badge highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Vast Ink",
+      "role": "Primary text, button borders, dark section/card backgrounds — the dominant near-black that defines every dark chamber",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffeb",
+      "name": "Lumen Cream",
+      "role": "Dominant page canvas, card surfaces, button fills, light text on dark — warm off-white that reads as paper, not screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e4d0",
+      "name": "Lumen Stone",
+      "role": "Subtle borders, nav pill background, muted dividers — one shade darker than the cream canvas for low-contrast separation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8a8a80",
+      "name": "Fog",
+      "role": "Muted captions, helper text, and de-emphasized UI labels.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Charcoal",
+      "role": "Secondary button text and nav text — slightly lighter than Vast Ink for less critical text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Badge borders on dark surfaces, light text on color, SVG icon strokes",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Page model: centered max-width 1200px content with full-bleed section backgrounds. Hero: centered serif headline (120px) over cream canvas with a floating nav pill at the top and a single CTA below the subtitle. The hero text uses two-tone coloring (Fog gray → Vast Ink) to create a visual cadence across the headline. Sections alternate cream → dark → cream in a deliberate rhythm, with dark chambers taking 40–80px corner radii that make them feel like rounded inset rooms. Content arrangement: text-left/visual-right on feature sections (phone mockup on right), centered stacks for headlines, and side-by-side comparison cards for data sections. The nav is always a floating cream pill (not full-bleed), positioned with breathing room from the page edges. Footer is a full-width dark band. Vertical rhythm: 64–96px between major sections, 32px between cards, 8–16px between elements within a block.",
+  "imagery": "Imagery is sparse and editorial: real product app icons (Slack, Notion, Gmail, Messages, etc.) appear in a horizontal parade across dark sections, creating a 'works everywhere' visual proof without lifestyle photography. Phone mockups are flat dark illustrations with cream chat bubbles, not photorealistic renders. Photo backgrounds appear only inside dark feature cards as blurred, desaturated atmospheric layers behind text overlays. Signature graphical elements include curved text arcs following circular paths (the hero's 'going on, no really' loop), hand-drawn lavender SVG underlines beneath key words, and waveform visualizer pills that serve as both audio indicators and decorative rhythm markers. No stock photography, no abstract gradients, no 3D renders — the visual language is editorial print meets functional UI.",
+  "similar": [
+    {
+      "why": "Editorial serif headings at display scale, cream/near-black palette alternation, restrained color discipline, and thick 2px borders define both systems",
+      "business": "Mercury"
+    },
+    {
+      "why": "Clean dark-chamber sections breaking up light surfaces, disciplined two-color brand palette, oversized corner radii on feature cards",
+      "business": "Linear"
+    },
+    {
+      "why": "Full-bleed alternating dark/light section rhythm, generous vertical breathing room, and large display typography that anchors each band",
+      "business": "Vercel"
+    },
+    {
+      "why": "Warm cream canvas with deep near-black chambers, oversized pill-shaped containers, and a sense of rounded geometric softness throughout the layout",
+      "business": "Arc"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "32px",
+      "badges": "9999px",
+      "inputs": "12px",
+      "buttons": "12px",
+      "sections": "40-80px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64-96px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffeb",
+      "name": "Cream Canvas",
+      "level": 0,
+      "purpose": "Default page background — warm paper-like off-white"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Dark Chamber",
+      "level": 1,
+      "purpose": "Alternating section/card background — near-black velvet rooms"
+    },
+    {
+      "hex": "#f0d7ff",
+      "name": "Lavender Accent",
+      "level": 2,
+      "purpose": "Accent card surfaces, highlighted feature panels"
+    },
+    {
+      "hex": "#034f46",
+      "name": "Forest Panel",
+      "level": 3,
+      "purpose": "Secondary accent — badge fills, inner card on dark sections"
+    }
+  ],
+  "northStar": "cream broadsheet, dark velvet chambers",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 0.95,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-lg",
+      "size": 64,
+      "lineHeight": 0.95,
+      "letterSpacing": -1.92
+    },
+    {
+      "role": "display",
+      "size": 120,
+      "lineHeight": 0.85,
+      "letterSpacing": -3.6
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "The main download/purchase action on every page",
+      "description": "Fill: #f0d7ff Lavender Whisper. Text: #1a1a1a Vast Ink. Border: 2px solid #1a1a1a. Border-radius: 12px. Padding: 14px 14px (compact) or 16px 24px (standard). Font: Figtree 500, 16px. Includes Apple/platform icon prefix. The 2px border is non-negotiable — it gives the soft lavender a defined edge."
+    },
+    {
+      "name": "Outlined Secondary Button",
+      "role": "Secondary actions: 'Try Flow', 'Watch in action'",
+      "description": "Fill: #ffffeb Lumen Cream. Text: #1a1a1a Vast Ink. Border: 2px solid #1a1a1a. Border-radius: 12px. Padding: 16px 24px. Font: Figtree 500, 16px. Matches the CTA's border weight and radius for visual kinship."
+    },
+    {
+      "name": "Ghost/Text Button",
+      "role": "Tertiary actions, inline links in copy",
+      "description": "No background. Text: #1a1a1a Vast Ink. No border. Padding: variable. Font: Figtree 400, 16px. Underline on hover. Used for navigation and low-priority links."
+    },
+    {
+      "name": "Floating Navigation Pill",
+      "role": "Top-of-page navigation bar",
+      "description": "Container: cream pill (#ffffeb) with 9999px border-radius, 2px solid #1a1a1a border, slight padding. Contains Flow logo (bar-chart mark + wordmark in Figtree 600), nav items (Product, Individuals, Business, Resources, Company) with dropdown chevrons, and a lavender CTA pinned to the right. Floats over the canvas with subtle margin from page edges."
+    },
+    {
+      "name": "Cream Content Card",
+      "role": "Light-surface content blocks, feature panels",
+      "description": "Fill: #ffffeb Lumen Cream. Border-radius: 32px. Padding: 32px all sides. No shadow. Optional 2px solid #1a1a1a border. The 32px radius is consistent across all card sizes — no smaller cards, no exceptions."
+    },
+    {
+      "name": "Dark Feature Card",
+      "role": "Dark-chamber content blocks, feature showcases",
+      "description": "Fill: #1a1a1a Vast Ink. Border-radius: 40–80px (larger than cream cards for dramatic contrast). Padding: 55–70px. No shadow. Text: #ffffeb Lumen Cream. These are the 'velvet rooms' — sections that feel like stepping into a dark alcove."
+    },
+    {
+      "name": "Teal Status Badge",
+      "role": "Success states, feature labels, 'Grammar corrected'",
+      "description": "Fill: #034f46 Forest Ink. Text: #ffffeb Lumen Cream. Border-radius: 1000px (full pill). Padding: 8px 16px. Font: Figtree 500, 14px. May include checkmark or icon prefix. The forest teal against cream text is the most readable badge combination."
+    },
+    {
+      "name": "Platform Pill Badge",
+      "role": "Platform selector on dark sections (Mac, Windows, iPhone, Android)",
+      "description": "Fill: transparent. Text: #ffffeb Lumen Cream. Border: 1–2px solid #ffffff. Border-radius: 1000px (full pill). Padding: 8px 16px. Font: Figtree 500, 14px. Includes platform icon prefix. Sits on dark chamber backgrounds."
+    },
+    {
+      "name": "Dark Square Badge",
+      "role": "Inline tags, category labels",
+      "description": "Fill: #1a1a1a Vast Ink. Text: #ffffeb Lumen Cream. Border-radius: 8px (sharp contrast to the site's pill-shaped elements). Padding: 8px 16px. Font: Figtree 500, 14px. The 8px radius is deliberately tight — a small geometric counterpoint to the dominant pill shapes."
+    },
+    {
+      "name": "Waveform Visualizer",
+      "role": "Audio/speech indicator, mic active state",
+      "description": "Container: cream pill (#ffffeb) with 9999px border-radius, 2px solid #1a1a1a border. Interior: 5–7 vertical bars of varying height in #1a1a1a, evenly spaced. Height range: 8–24px. Animated bars pulse to indicate active recording. Sits inline with text as a functional punctuation mark."
+    },
+    {
+      "name": "Phone Mockup",
+      "role": "Product preview, feature demonstration",
+      "description": "Dark device frame (#1a1a1a) with 40px corner radius. Screen shows chat interface with cream message bubbles, user avatar circle, and waveform visualizer at the bottom. No realistic bezel — the mockup is a flat illustration, not a render."
+    },
+    {
+      "name": "Section Container",
+      "role": "Page-level content bands",
+      "description": "Alternating fill: #ffffeb (cream) and #1a1a1a (dark). Border-radius: 40–80px on the outer container, creating the rounded-chamber effect. Section gaps: 64–96px vertical. No dividers or separators between sections — the fill alternation and rounded corners do the work."
+    },
+    {
+      "name": "Hand-drawn Underline Accent",
+      "role": "Editorial emphasis on key words in headlines",
+      "description": "SVG squiggle or wavy line in #f0d7ff Lavender Whisper, positioned beneath 1–2 words in a display headline. Stroke-width: 3–4px. Slight irregularity in path. The lavender matches the CTA color, creating a visual link between emphasis and action."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and editorial headings — classical serif at regular weight, used at massive sizes (up to 120px) where weight 400 commands through scale alone. The 0.85–0.95 line-height at display sizes tightens lines into a single horizontal gesture. Subtitle: 'EB Garamond' (Google Fonts) or 'Cormorant Garamond' as alternative",
+      "sizes": "32px, 48px, 64px, 120px",
+      "family": "Eb Garamond",
+      "weight": "400",
+      "lineHeight": "0.85–1.3",
+      "substitute": "EB Garamond, Cormorant Garamond, Playfair Display",
+      "letterSpacing": "-3.6px at 120px, -1.92px at 64px, -0.96px at 32px"
+    },
+    {
+      "role": "Body text, UI labels, navigation, buttons, badges — geometric sans at weight 400 as default body, 500–700 for emphasis. The 1.3 line-height across all sizes gives comfortable rhythm without excess leading. 16px is the workhorse size (freq=716).",
+      "sizes": "14px, 16px, 20px, 22px, 24px, 32px",
+      "family": "Figtree",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.3",
+      "substitute": "Inter, Plus Jakarta Sans, Manrope"
+    }
+  ],
+  "description": "Wispr Flow reads like an editorial broadsheet rebuilt for software: a warm cream canvas (#ffffeb) hosts weight-400 Eb Garamond at display sizes (48–120px) that commands through sheer scale rather than weight, while Figtree handles every interactive surface. Pages alternate between bright cream chambers and deep near-black rooms, separated by 2px ink borders and oversized corner radii (40–80px) that make each section feel rounded like a polished pebble. The palette stays disciplined to four working colors — cream, black, lavender (#f0d7ff) for primary actions, and forest teal (#034f46) for inner accents — with an occasional ember orange (#ffa946) punctuating active states.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #1a1a1a (Vast Ink)\n- background: #ffffeb (Lumen Cream)\n- border: #1a1a1a (Vast Ink, 2px solid)\n- accent: #f0d7ff (Lavender Whisper)\n- primary action: #f0d7ff (filled action)\n- secondary brand: #034f46 (Forest Ink)\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #f0d7ff background, #1a1a1a text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. *Create a dark feature chamber*: Full-width section with #1a1a1a fill, 80px border-radius on outer container. Left column: 64px Eb Garamond weight 400 heading in #ffffeb with -1.92px letter-spacing, 20px Figtree 400 subtitle in #ffffeb, and an outlined cream button (12px radius, 2px #1a1a1a... no — 2px #ffffeb border on this dark bg, cream fill, #1a1a1a text, Figtree 500 16px). Right column: flat phone mockup (40px radius, #1a1a1a frame, cream chat bubbles inside).\n\n3. *Create a comparison card pair*: Two cards side by side on #ffffeb canvas. Left: cream card (#ffffeb fill, 32px radius, 32px padding, 2px #1a1a1a border). Heading 'Keyboard' in 20px Figtree 500 #1a1a1a, stat '45 wpm' in 48px Eb Garamond weight 400. Right: dark card (#1a1a1a fill, 40px radius, 32px padding) with blurred photo overlay. Heading 'Flow' in 20px Figtree 500 #ffffeb, stat '220 wpm' in 48px Eb Garamond weight 400 #ffffeb.\n\n4. *Create a platform selector row*: Four full-pill badges in a horizontal row on #1a1a1a dark background. Each: transparent fill, 1px solid #ffffeb border, 1000px border-radius, 8px 16px padding, Figtree 500 14px #ffffeb text, platform icon prefix (Mac, Windows, iPhone, Android).\n\n5. *Create a status badge*: Forest Ink #034f46 fill, 1000px border-radius, 8px 16px padding, Figtree 500 14px #ffffeb text, optional checkmark icon in #ffffeb prefix."
+    },
+    {
+      "title": "Elevation Philosophy",
+      "content": "This design is deliberately shadowless. All cards rely on flat fill + 2px ink borders for separation — no box-shadows, no depth gradients, no floating effects. The only shadow in the system is a single subtle drop-shadow on display text, which is an artifact of typography rendering, not elevation. The 'elevation' is achieved through fill alternation (cream → dark → cream) and oversized border-radii (40–80px) that make dark sections feel like inset rooms rather than elevated overlays. Do not introduce box-shadow to make cards 'pop' — the editorial flatness is the signature."
+    }
+  ],
+  "elevationPhilosophy": "This design is deliberately shadowless. All cards rely on flat fill + 2px ink borders for separation — no box-shadows, no depth gradients, no floating effects. The only shadow in the system is a single subtle drop-shadow on display text, which is an artifact of typography rendering, not elevation. The 'elevation' is achieved through fill alternation (cream → dark → cream) and oversized border-radii (40–80px) that make dark sections feel like inset rooms rather than elevated overlays. Do not introduce box-shadow to make cards 'pop' — the editorial flatness is the signature."
+}

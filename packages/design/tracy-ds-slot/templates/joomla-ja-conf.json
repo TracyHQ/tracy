@@ -1,0 +1,439 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-conf",
+  "release": "quickstart/ja-conf/j6@1.0.1",
+  "roles": {
+    "page": "body",
+    "body": "p",
+    "button-primary": "div.features-action a",
+    "section": "#Mod89",
+    "input": "#email_field_673"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(35, 38, 81)",
+    "section": "first padded full-width section, padding-top 128px",
+    "input": "first text field"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#0b0d3e",
+    "--fg": "#9095ab",
+    "--fg-2": "#ffffff",
+    "--accent": "#fd7d56",
+    "--accent-hover": "#fc430a",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#080808",
+    "--muted": "#555555",
+    "--font-display": "\"Chivo\", sans-serif",
+    "--font-body": "\"Chivo\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#0b0d3e",
+      "fg": "#9095ab",
+      "fg-2": "#ffffff",
+      "accent": "#fd7d56",
+      "accent-hover": "#fc430a",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#080808",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#0b0d3e",
+      "fg": "#9095ab",
+      "fg-2": "#ffffff",
+      "accent": "#232651",
+      "accent-on": "#ffffff"
+    },
+    {
+      "accent": "#fd7d56"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface-warm": "#ffffff",
+      "surface": "#eeeeee",
+      "border-soft": "#f2f2f2",
+      "success": "#59ad5e",
+      "warn": "#fabe58",
+      "accent": "#ed7f4f",
+      "border": "#101010",
+      "accent-hover": "#f93c03",
+      "bg": "#08092d"
+    },
+    {
+      "surface": "#f5f5f5",
+      "success": "#5eb663",
+      "border-soft": "#e5e5e5",
+      "accent": "#fd7147",
+      "warn": "#f9b43f",
+      "bg": "#1c0e3a"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e1e1e1",
+      "success": "#50b055",
+      "warn": "#fab849"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e0e2e3"
+    },
+    {
+      "surface": "#f7f7f7",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#ededed",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f9f2f4"
+    },
+    {
+      "surface": "#f0f0f0"
+    },
+    {
+      "surface": "#eaeaea"
+    },
+    {
+      "surface": "#f8f8f8"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (63 line colours, 77 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary", ".btn-linear"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Mod89"],
+    "bodyFace": ["body"],
+    "groundPicture": [
+      ".btn-linear",
+      ".acm-video .video-player .btn-play",
+      "#t3-section .t3-section.bg-light"
+    ],
+    "eyebrow": [".title-intro"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "hero": ".acm-hero :is(.hero-title, .title-intro)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "masthead",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 15 tried (byte 5018); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 678,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 6
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 293,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 226,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 15
+    },
+    {
+      "hex": "#59ad5e",
+      "uses": 224,
+      "kind": "line",
+      "role": "success",
+      "near": "#5cb85c",
+      "distance": 12
+    },
+    {
+      "hex": "#fabe58",
+      "uses": 200,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#f0ad4e",
+      "distance": 22
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 166,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#5eb663",
+      "uses": 104,
+      "kind": "fill",
+      "role": "success",
+      "near": "#5cb85c",
+      "distance": 8
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 96,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 70,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 62,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 0
+    },
+    {
+      "hex": "#ed7f4f",
+      "uses": 60,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#fd7d56",
+      "distance": 18
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 58,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#ededed",
+      "uses": 24,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 17
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 15,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#101010",
+      "uses": 14,
+      "kind": "line",
+      "role": "border",
+      "near": "#080808",
+      "distance": 14
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 23
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#f93c03",
+      "uses": 6,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#fc430a",
+      "distance": 10
+    },
+    {
+      "hex": "#08092d",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#0b0d3e",
+      "distance": 18
+    },
+    {
+      "hex": "#fd7147",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#fd7d56",
+      "distance": 19
+    },
+    {
+      "hex": "#50b055",
+      "uses": 4,
+      "kind": "fill",
+      "role": "success",
+      "near": "#5cb85c",
+      "distance": 16
+    },
+    {
+      "hex": "#f9b43f",
+      "uses": 4,
+      "kind": "line",
+      "role": "warn",
+      "near": "#f0ad4e",
+      "distance": 19
+    },
+    {
+      "hex": "#fab849",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#f0ad4e",
+      "distance": 16
+    },
+    {
+      "hex": "#1c0e3a",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#0b0d3e",
+      "distance": 17
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible text judged on the paint under it, text over a photo against the photo) on the 1.0.2 release build itself (~/tracy-bench-work/release/ds-batch5/ja-conf, stood up from its own zip: tasks/evidence/ds-remeasure-2-2026-10-11/ja-conf-j6): 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 100% of the page follows, checked by eye on the four systems' screenshots. The batch-5 contract failed this probe (5/12): the gradient buttons' fixed pink end, the separator menu item and the hero title on the hero photo, the newsletter band, the speakers' job titles — fixed by groundPicture, followRules and sideRules; first measured 11/10/2026 in tasks/evidence/ds-contracts-batch5-2026-10-11/ja-conf-j6",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); hero: the hero title and eyebrow are divs, outside the heading and text kinds, so they are named on their own (re-measure 11/10/2026); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "minVersion": {
+    "quickstart/ja-conf/j6": "1.0.2"
+  },
+  "minVersionNote": "the tokenized re-release batch 5 built and verified locally (~/tracy-bench-work/release/ds-batch5/ja-conf; uploaded by ~/tracy-bench-work/RELEASE-DS-BATCH5.sh, run by a person): a site built from an older version is refused",
+  "groundNote": "the calls to action and the newsletter band are a gradient picture from the accent to a fixed pink (.btn-linear, the video play button .btn-play, #t3-section .t3-section.bg-light — named with the id the template rule carries, which outranks the slot prefix otherwise): under a worn system the picture gives way (selectors.groundPicture) — the buttons show the accent fill with its own text, the band the worn page under the worn text. The fixed pink end left black button text at 1.0–2.5:1 under Moxie and MotherDuck, and the newsletter intro at 1.05–1.66:1",
+  "followRules": {
+    ".latestnews.list .article-field": {
+      "color": "muted"
+    }
+  },
+  "followNote": "the speakers' job titles (.latestnews.list .article-field, a literal rgba(255, 255, 255, 0.4) the tokenizer does not reach) take the worn muted text (white on white under MotherDuck and Apple)",
+  "sideRules": {
+    "light": {
+      ".acm-hero :is(.hero-title, .title-intro)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".title-lead": {
+        "background-image": "linear-gradient(135deg, var(--ds-c-accent-text), color-mix(in srgb, var(--ds-c-accent-text) 55%, var(--ds-c-fg)))"
+      },
+      ".t3-wrapper:has(.t3-hero .acm-hero) #t3-mainnav .navbar-nav.level0 :is(a, span.separator):not(.dropdown-menu *)": {
+        "color": "var(--ds-c-bg)"
+      }
+    },
+    "dark": {
+      ".acm-hero :is(.hero-title, .title-intro)": {
+        "color": "color-mix(in srgb, var(--ds-c-fg) 15%, #ffffff)"
+      },
+      ".title-lead": {
+        "background-image": "linear-gradient(135deg, var(--ds-c-accent-text), color-mix(in srgb, var(--ds-c-accent-text) 55%, var(--ds-c-fg)))"
+      }
+    }
+  },
+  "sideRulesNote": "the hero title and its eyebrow sit on the dark hero photo, which no system repaints: on a light system they take the system page colour, on a dark one the system text colour lightened toward white (JA Aiga precedent) — the dark systems' own text colours read 1.9–4.0:1 on the photo Under a dark system the hero title takes 15% of the system text in white (35% until 12/10/2026): read under its own words, where the photo is pink (#8c5489), 35% of Toggl Track’s text read 4.08:1 against the template’s white 5.6 (integration re-measure with the unified probe).",
+  "maxVersion": {
+    "quickstart/ja-conf/j6": "1.0.3"
+  },
+  "maxVersionNote": "1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "buttonNote": "the buttons are the template’s own button classes (.btn; the calls to action .btn-primary and the gradient .btn-linear): the first draft named every link (a), so under every system the main menu links became joined filled pills and the text links (Learn more, the speakers’ names) padless pills (visual review, 14/10/2026)",
+  "sideNote": "the section headings (.title-lead) are gradient text clipped from a picture that runs from the template accent to a fixed pink: under a light accent on a light page they ran yellow to orange on white, \"Web Designers,\" barely readable (Mailchimp, visual review 14/10/2026). Under a system the gradient runs from the accent made readable on the page (accent-text) to its mix with the page text, both readable on either side; the home page's main menu sits on the hero picture (the hero runs up under the transparent header), which no system repaints: once its links stopped being button pills (67b7ce557c) they took a light system's dark text on the navy picture, all but invisible (Airbnb, Stripe, 14/10/2026) — on a light system the top-level links of a page that has the hero take the system page colour, like the hero title; on pages without the hero the header sits on the page and keeps the page text"
+}

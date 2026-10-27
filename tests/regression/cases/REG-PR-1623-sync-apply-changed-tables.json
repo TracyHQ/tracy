@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1623-sync-apply-changed-tables",
+  "kind": "feat",
+  "title": "A Sync from live puts in place only the tables that differ from its point; the others keep their rows and triggers, and a cut-off sync is still recovered",
+  "pr": 1623,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/dump-tables.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: the cut keeps the named tables with their triggers between the dump's head and tail; after a sync the changed table was put in place, an unchanged one kept its create_time and trigger, a Before-restore point exists; every cut-off recovery case still settles"
+  ],
+  "selectors": {
+    "host": "webroot-sync.sh apply only-tables.txt, webroot-backup.sh --only-tables --sealed only_load_start, lib/dump_tables.py"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-23-sync-apply-changed-tables.md",
+  "fence": "A sync never swaps a table it did not change, and never without its way back",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/dump-tables.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+    ]
+  }
+}

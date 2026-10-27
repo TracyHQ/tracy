@@ -1,0 +1,52 @@
+---
+// Generic page (Terms, Privacy): title + lede + Portable Text. Kit templates route elsewhere.
+import { getEditMeta, getEmDashEntry } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import BodyImage from '@/components/site/BodyImage.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('pages', slug, { locale })
+if (!entry || entry.data.status !== 'published') {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const p = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'pages', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const empty = !p.content?.length && !p.lede
+// On a stamped request each text block names itself (`field:content.<_key>`, `stampBlocks`) and is
+// rendered by a renderer that prints it; an ordinary request keeps the renderers it always had.
+const content = getEditMeta(p.content) ? (p.content ?? []) : stampBlocks($page, 'content', p.content ?? [])
+const contentComponents = $page.owner
+  ? { block: ProseBlock, listItem: ProseListItem, type: { image: BodyImage, blockquoteGroup: ProseQuote } }
+  : { type: { image: BodyImage } }
+---
+
+<Base chrome={chrome} title={p.title} description={p.lede} currentPath={`/${slug}`} content={{ collection: "pages", id: entry.data.id, slug, toPath: (s) => `/${s}` }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: p.title, stamp: $page("title") }]} />
+		<div class="container-site max-w-[44em] pb-[96px] pt-14">
+			<h1 class="h-page mb-5" {...$page("title")}>{p.title}</h1>
+			{p.lede && <p class="mb-8 text-[17.5px] leading-[1.68] text-fg-2" {...$page("lede")}>{p.lede}</p>}
+			<div class="prose-article" {...$page("content")}><PortableText value={content} components={contentComponents} /></div>
+			{empty && <p class="text-[14px] text-fg-faint">—</p>}
+		</div>
+	</main>
+</Base>

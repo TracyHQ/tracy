@@ -1,0 +1,119 @@
+---
+/**
+ * The ACM `hero` block. Default is `style-1`: copy on a 1.3fr/1fr grid beside the hero image, or
+ * beside the status aside when there is no image. `align="center"` is `style-2`: centred copy,
+ * no visual, the 80px display size. Every string, link and note is a CMS field; empty ones vanish.
+ */
+import Photo from '@/components/site/Photo.astro'
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+interface Props {
+  eyebrow?: string
+  title?: string
+  lead?: string
+  cta1Label?: string
+  cta1Url?: string
+  cta2Label?: string
+  cta2Url?: string
+  image?: any
+  imageAlt?: string
+  asideLabel?: string
+  asideBadge?: string
+  asideState?: 'success' | 'neutral' | 'warning'
+  notes?: Array<{ text: string }>
+  align?: 'left' | 'center'
+  class?: string
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: Partial<
+    Record<
+      | 'eyebrow'
+      | 'title'
+      | 'lead'
+      | 'cta1Label'
+      | 'cta2Label'
+      | 'image'
+      | 'asideLabel'
+      | 'asideBadge'
+      | 'notes',
+      string
+    >
+  >
+}
+const {
+  eyebrow,
+  title,
+  lead,
+  cta1Label,
+  cta1Url,
+  cta2Label,
+  cta2Url,
+  image,
+  imageAlt = '',
+  asideLabel,
+  asideBadge,
+  asideState = 'success',
+  notes = [],
+  align = 'left',
+  class: className = 'band',
+  stamp,
+  fields
+} = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [cta1Url, cta2Url])
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const sub = (k: string) => (stamp && fields?.notes ? stamp(`${fields.notes}.${k}`) : none)
+const center = align === 'center'
+const noteList = notes.filter((n) => n?.text)
+const hasAside = !image && (asideLabel || asideBadge || noteList.length > 0)
+const badgeTone =
+  asideState === 'success'
+    ? 'text-success-text bg-success-bg'
+    : asideState === 'warning'
+      ? 'text-[color:var(--ds-c-warn-text,var(--color-warn))] bg-warn-bg'
+      : 'text-fg-muted bg-fg-muted/12'
+---
+
+<section class:list={["wrap", className]} data-block="hero">
+	<div class:list={center ? "mx-auto max-w-[1024px] text-center" : "grid items-end gap-8 lg:grid-cols-[1.3fr_1fr] lg:gap-12"}>
+		<div class="min-w-0">
+			{eyebrow && <p class="eyebrow eyebrow--acm mb-4" {...at("eyebrow")}>{eyebrow}</p>}
+			{title && <h1 class:list={center ? "mx-auto max-w-[18ch] text-[40px] font-semibold sm:text-[56px] lg:text-[80px] leading-[1.05] tracking-[-0.015em] text-pretty" : "h-hero max-w-[18ch]"} {...at("title")}>{title}</h1>}
+			{lead && <p class:list={["mt-4 max-w-[52ch] text-[21px] leading-[1.38] tracking-[-0.011em] text-fg-2", center && "mx-auto"]} {...at("lead")}>{lead}</p>}
+			{((cta1Label && live(cta1Url)) || (cta2Label && live(cta2Url))) && (
+				<div class:list={["mt-6 flex flex-wrap gap-3", center && "justify-center"]}>
+					{cta1Label && live(cta1Url) && (
+						<a href={cta1Url || "#"} class="btn btn-primary max-sm:w-full" {...at("cta1Label")}>
+							{cta1Label}
+							<svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+						</a>
+					)}
+					{cta2Label && live(cta2Url) && <a href={cta2Url || "#"} class="btn btn-secondary max-sm:w-full" {...at("cta2Label")}>{cta2Label}</a>}
+				</div>
+			)}
+		</div>
+		{image ? (
+			<Photo image={image} stamp={at("image")} alt={imageAlt} class="aspect-[3/2] self-center rounded-[var(--ds-card-radius,18px)]" priority />
+		) : hasAside ? (
+			<aside class="flex flex-col gap-3 rounded-[var(--ds-card-radius,12px)] border border-line-card bg-bg p-5" aria-label={asideLabel || undefined}>
+				{(asideLabel || asideBadge) && (
+					<div class="flex items-center justify-between gap-3">
+						{asideLabel && <span class="text-[14px] text-fg" {...at("asideLabel")}>{asideLabel}</span>}
+						{asideBadge && (
+							<span class:list={["inline-flex items-center gap-2 rounded-[var(--ds-pill-radius,calc(infinity_*_1px))] px-3 py-1 text-[12px] font-medium leading-[1.4]", badgeTone]} {...at("asideBadge")}>
+								<span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>
+								{asideBadge}
+							</span>
+						)}
+					</div>
+				)}
+				{noteList.map((n) => <p class="text-[14px] text-fg-muted" {...sub("text")}>{n.text}</p>)}
+			</aside>
+		) : null}
+	</div>
+</section>

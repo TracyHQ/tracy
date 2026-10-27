@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Kinetic — com_users auth FIELD-WIDTH fix ([FIELD-WIDTH-COLLAPSE]).
+   Loaded via addStyleSheet directly from the login/registration overrides
+   (NOT scss, NOT index.php) so it is editable without a shared recompile.
+
+   Defect: Joomla's show-password toggle <button class="btn btn-secondary
+   input-password-toggle"> inherits the auth card's global `.kinetic-auth .btn
+   {width:100%}` rule and balloons to ~288px inside the flex .input-group,
+   squeezing the password <input> to ~145px while email/text inputs are full
+   width. The .pen (Login W1uty7/dBSZC, Register UTode/inMIG) shows the
+   password field FULL-WIDTH with NO eye icon. So: hide the toggle entirely
+   and force the password input to fill, matching the email field exactly.
+   Holds on Login + Register (password1) + Register password2 (hidden).
+   All !important so cascade/optimize-bundle order is irrelevant.
+   ========================================================================== */
+
+.kinetic-auth .input-password-toggle{ display:none !important; }
+
+/* Password input-group becomes a single full-width field (toggle removed). */
+.kinetic-auth .input-group{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  width:100% !important;
+  max-width:100% !important;
+}
+.kinetic-auth .input-group > input.form-control,
+.kinetic-auth .password-group input.form-control,
+.kinetic-auth input[type="password"].form-control{
+  flex:1 1 100% !important;
+  width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}

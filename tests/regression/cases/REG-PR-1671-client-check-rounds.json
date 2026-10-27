@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1671-client-check-rounds",
+  "kind": "fix",
+  "title": "The agent's own site checks of a client-send demo count as check rounds and repairs on /ops/wo and in Details",
+  "pr": 1671,
+  "area": "website-opportunities/demo-qa",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: in a client-send demo, the agent runs three counted checks: a failing one, a failing one started with check.start, then a passing one.",
+    "S2: read the build's qa and demoProgress of the build."
+  ],
+  "expect": [
+    "S2: qa.rounds has 3 rounds with 1, 1 and 0 failed checks; qa.repairs is 2.",
+    "S2: demoProgress reports state needs-review, 3 rounds, 0 issues."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/client-demo.js, apps/tracy-web/src/opportunities-build/demo-actions.js, apps/tracy-web/src/lib/wo-ops.js",
+    "dom": ""
+  },
+  "evidence": "e2e dev 24/10/2026: /ops/wo showed 0 repairs and Details showed Site check rounds: 0 after three checks",
+  "fence": "saveCheck records each client check in qa.rounds and qa.repairs, the fields every reader counts",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs"
+    ],
+    "tests": [
+      "client-send reserves real chat and one native user request before provision; agent tools own install/check and server prompt stays zero"
+    ]
+  }
+}

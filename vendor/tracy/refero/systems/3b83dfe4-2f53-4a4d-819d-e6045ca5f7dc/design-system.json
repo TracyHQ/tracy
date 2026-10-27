@@ -1,0 +1,332 @@
+{
+  "dos": [
+    "Use #0a0a0a for the primary filled button — never substitute a chromatic CTA color; the system is intentionally monochrome",
+    "Set all headlines (24px+) with letter-spacing -0.025em and line-height 1.0–1.33; lock them to the type grid rather than centring them visually",
+    "Apply radius 9999px to every button, tag, and language tab; the pill is the system's signature shape",
+    "Use #f9f8f6 for any surface that sits above the page; let the warm cream alone separate layers — avoid shadows",
+    "Reach for GeistMono whenever content is technical (code, terminal, tabs, metadata); reserve universalSans for editorial and UI copy",
+    "Keep the Beta pill to feature-release moments only (#f2ede5 background, 12px weight 500); do not introduce other accent pills",
+    "Default to ghost/outlined buttons for any action that is not the page's single primary conversion"
+  ],
+  "donts": [
+    "Do not use chromatic colors for buttons or links — the only saturated color on a page should be a single Beta pill or a terminal dot",
+    "Do not stack shadows; the system uses a single hairline ring (1px solid #d5d9e2) as the sole depth cue",
+    "Do not set body text below 14px or above 18px on screen; the type scale jumps from 18 → 24 → 30 → 48 to preserve hierarchy through size alone",
+    "Do not add background colors to nav links, news cards, or inline list items — the page should read as quiet whitespace",
+    "Do not use line-heights above 1.63 for running text; display headlines must stay at 1.0–1.33 to maintain the editorial lockup",
+    "Do not introduce new radii; the system is binary — pills (9999px) or cream cards (16px), no intermediate rounding",
+    "Do not use pure black (#000000) — always #0a0a0a; the slight lift keeps the dark surfaces on-brand warm rather than CRT-cold"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#0a0a0a",
+      "name": "Jet Ink",
+      "role": "Primary text, filled CTA buttons, logo mark — near-black anchors the hierarchy without the harshness of pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#151515",
+      "name": "Charcoal",
+      "role": "Dark code-block surface behind terminal demos (used where black feels too stark against warm white)",
+      "group": "neutral"
+    },
+    {
+      "hex": "#858585",
+      "name": "Fog",
+      "role": "Secondary text, icon strokes, inactive nav items — the most-used gray; carries the bulk of body and link copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9d9d9d",
+      "name": "Pewter",
+      "role": "Tertiary text, meta labels, decorative fills — softer than Fog for de-emphasized utility copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#545454",
+      "name": "Steel",
+      "role": "Mid-weight body text where Fog reads too washed out (inline stats, spec lines)",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d5d9e2",
+      "name": "Dove",
+      "role": "Hairline borders, input rings, button focus outlines — the only border color in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f8f6",
+      "name": "Cream",
+      "role": "Card surfaces, secondary panels, tag backgrounds — warm off-white distinguishes layered surfaces from the pure-white page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page background, button text on filled CTAs, icon foreground on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2ede5",
+      "name": "Sand",
+      "role": "Warm wash backgrounds, subtle highlight zones, section tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3b3b3b",
+      "name": "Slate",
+      "role": "Muted heading variant for secondary headlines and section labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff5f57",
+      "name": "Ember",
+      "role": "Terminal traffic-light dot (red) — decorative accent inside code-block mocks only",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffbd2e",
+      "name": "Sunbeam",
+      "role": "Terminal traffic-light dot (yellow), and the Beta pill background — the single warm accent that signals novelty",
+      "group": "accent"
+    },
+    {
+      "hex": "#28c840",
+      "name": "Sprout",
+      "role": "Terminal traffic-light dot (green) — decorative accent inside code-block mocks only",
+      "group": "accent"
+    }
+  ],
+  "layout": "Layout is max-width centered (~1200px) on a full-bleed white canvas, with generous vertical rhythm (80px section gaps). The hero is text-first: a centered headline stack on white with two CTAs below, followed by a 2-column product-card row (Chat / Code) at comfortable density. Below the hero, the page alternates into single-column feature blocks (One API. Every modality.) with text-left and code-panel-right splits, then a 4-column news index, then a 2-column pricing/CTA tier. Navigation is a single sticky top bar (64px) with logo + horizontal menu + two right-aligned action buttons. The page never uses a sidebar; content density stays low. Cards are flat and borderless — the cream surface alone carries the grouping. The sticky header adopts a backdrop-blur (12px) and hairline bottom border on scroll.",
+  "imagery": "Imagery is product-screenshot-driven, not lifestyle. The hero and feature tiles contain in-context product captures: a chat thread rendered as a UI mockup, a code editor with syntax-highlighted TypeScript, a voice waveform on a cream card, a code-snippet panel on a warm gradient backdrop. All product visuals sit inside flat cream containers with no rounded inner edges masking the media. Decorative warmth comes from large radial gradient orbs (peach/coral) that bleed behind code panels — blurred at 64px, they read as ambient glow rather than imagery. Photography is absent; the system is pure UI + illustration + gradient. Icons are stroke-based, 1.5px weight, Fog (#858585) by default with Jet (#0a0a0a) on hover. No 3D renders, no stock photography, no human figures.",
+  "similar": [
+    {
+      "why": "Same near-monochrome palette with one high-contrast filled pill CTA, and editorial-grade display headlines at near-100% line-height",
+      "business": "Linear"
+    },
+    {
+      "why": "Same black-pill-on-white hero button system and tight negative tracking on display type, with similar hairline-border depth cues",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same warm-paper editorial tone with restrained color rationing and Geist-family type pairing for developer surfaces",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Same pill-shaped CTA convention, near-flat card surfaces, and use of one vivid gradient orb as the sole chromatic punctuation",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "pills": "9999px",
+      "inputs": "6px",
+      "buttons": "9999px",
+      "smallCards": "8px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "80px",
+    "cardPadding": "40px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Page background, modal canvas, inline white surfaces"
+    },
+    {
+      "hex": "#f9f8f6",
+      "name": "Cream",
+      "level": 1,
+      "purpose": "Card surfaces, secondary panels, tag backgrounds — the dominant elevated layer"
+    },
+    {
+      "hex": "#f2ede5",
+      "name": "Sand",
+      "level": 2,
+      "purpose": "Warm wash for highlight zones, Beta pill, subtle section tints"
+    },
+    {
+      "hex": "#151515",
+      "name": "Charcoal",
+      "level": 3,
+      "purpose": "Inverted surface for code-block mocks, terminal demos — appears only inside product illustrations"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 1px rgba(10, 10, 10, 0.15)",
+      "element": "Compact nav button, ghost button focus state"
+    },
+    {
+      "style": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+      "element": "Sticky header (on scroll)"
+    },
+    {
+      "style": "0 0 0 1px rgba(0, 0, 0, 0.06), 0 18px 40px -24px rgba(15, 23, 42, 0.18)",
+      "element": "Elevated cream card (pricing, modal-like surfaces)"
+    }
+  ],
+  "northStar": "warm cream laboratory with a black pill",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 20,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 24
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 32,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "subheading",
+      "size": 30,
+      "lineHeight": 36,
+      "letterSpacing": -0.75
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 48,
+      "letterSpacing": -1.2
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 60,
+      "letterSpacing": -1.5
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 72,
+      "letterSpacing": -1.8
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Primary Button",
+      "role": "Main call-to-action",
+      "description": "Background #0a0a0a, text #ffffff, radius 9999px, padding 12px 20px, font 14px/20 universalSans weight 500. Used for 'Get API Access', 'Start Building', 'Try for free'. The single high-contrast element on the page; no border, no shadow."
+    },
+    {
+      "name": "Ghost Secondary Button",
+      "role": "Tertiary action",
+      "description": "Background transparent, text #0a0a0a, radius 9999px, padding 12px 20px, font 14px/20 universalSans weight 500. Pairs directly beside a filled primary as the soft alternative. No visible border by default; hover adds 1px #d5d9e2 ring."
+    },
+    {
+      "name": "Compact Nav Button",
+      "role": "Top-bar utility (Contact Sales)",
+      "description": "Background #ffffff, text #0a0a0a, radius 9999px, padding 6px 12px, border 1px #d5d9e2. Smaller scale than hero buttons; sits in the sticky header alongside the filled primary."
+    },
+    {
+      "name": "Beta Tag Pill",
+      "role": "Feature-release badge",
+      "description": "Background #f2ede5 (warm wash), text #0a0a0a, radius 9999px, padding 2px 8px, font 12px universalSans weight 500. Used inline before a feature label ('Beta  Grok Voice Agent Builder'). The only colored pill in the system."
+    },
+    {
+      "name": "Flat Cream Card",
+      "role": "Product showcase tile (Chat, Voice, Build, Imagine)",
+      "description": "Background #f9f8f6, radius 8–16px (asymmetric — inner mockup radius differs from card radius), padding 0, no shadow, no border. Card holds a media element (code mockup, audio waveform, image) flush to its edges; the surface tone alone separates it from the page."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Large comparison panel",
+      "description": "Background #f9f8f6, radius 16px, padding 40px on all sides, no shadow. Spacious interior with generous heading-to-body ratio. Uses universalSans weight 500 for tier name, weight 400 for spec lines."
+    },
+    {
+      "name": "Terminal Code Block",
+      "role": "Developer-facing mockup (chat/code demos)",
+      "description": "Background #151515, radius 12px, padding not standardized, font GeistMono 12–13px. Traffic-light dots (#ff5f57, #ffbd2, #28c840) sit top-left at ~8px. Syntax highlighting uses a muted code palette (#032f62 keys, #91c17a strings, #d73a49 errors) — these are mockup-internal, not system tokens."
+    },
+    {
+      "name": "Language Tab Pill",
+      "role": "Code-snippet language switcher (Python/TypeScript/cURL)",
+      "description": "Radius 9999px, padding 6px 12px, font 13px GeistMono. Active state: background #0a0a0a, text #ffffff. Inactive: background transparent, text #858585. Sits beneath code-block mocks."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Top-nav menu item",
+      "description": "Font 14px/20 universalSans weight 500, text #858585 default → #0a0a0a on hover, no underline, no background. Underline appears only on focus. Dropdown indicators (▾) drawn with stroke #858585."
+    },
+    {
+      "name": "News Card",
+      "role": "Latest-news tile in 4-column grid",
+      "description": "Background transparent (inherits page), no border, no radius, no padding. Image at top with default radius, then date meta in 11px universalSans weight 400 #858585, then title in 16px weight 500 #0a0a0a. The absence of a card surface is intentional — news feels like an index, not a gallery."
+    },
+    {
+      "name": "Feature Stat Block",
+      "role": "Hero metric (1M+ API calls/day, <200ms median latency)",
+      "description": "Large number 18px universalSans weight 400 #0a0a0a stacked above 11px label #9d9d9d. No card wrapper; sits inline within a feature column."
+    },
+    {
+      "name": "Checklist Row",
+      "role": "Pricing-tier bullet line",
+      "description": "UniversalSans 14px/20 weight 400 #0a0a0a. Leading check glyph in #0a0a0a stroke. Vertical stack with 8px row-gap; no dividers between rows."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary UI typeface — used for nav, body, buttons, cards, labels, and inline links. The dual-weight scale (400 for copy, 500 for emphasis) is the sole hierarchy tool for running text. The negative tracking at small sizes tightens headlines without compressing readability.",
+      "sizes": "10, 11, 12, 13, 14, 16, 18",
+      "family": "universalSans",
+      "weight": "400, 500",
+      "lineHeight": "1.00–1.63",
+      "substitute": "Inter, system-ui",
+      "letterSpacing": "-0.025em at display, 0 at body"
+    },
+    {
+      "role": "Editorial display face for H1/H2 only — set at near-100% line-height (-1.8px at 72px) to lock the type to a grid and create the confident, monolithic headline blocks. Weight 400 at 48–72px is the signature: headlines whisper rather than shout.",
+      "sizes": "24, 30, 48, 60, 72",
+      "family": "universalSansDisplay",
+      "weight": "400, 500",
+      "lineHeight": "1.00–1.33",
+      "substitute": "Söhne, GT America, Inter Display",
+      "letterSpacing": "-0.025em across the scale"
+    },
+    {
+      "role": "Technical monospace — terminal mockups, code snippets, metadata labels, tab labels (Python/TypeScript/cURL). Sets the developer-engineering tone; pairs against the universalSans to mark technical vs editorial voice.",
+      "sizes": "10, 11, 12, 13",
+      "family": "GeistMono",
+      "weight": "400, 700",
+      "lineHeight": "1.50–1.85",
+      "substitute": "Geist Mono, JetBrains Mono",
+      "letterSpacing": "-0.01em"
+    }
+  ],
+  "description": "xAI runs a restrained near-monochrome editorial system on a warm-white canvas. Type leads the visual hierarchy: oversized display headlines at near-100% line-height with tight negative tracking sit above generous breathing room, while GeistMono punctuates the interface with terminal/code fragments. The single defining interaction is a pill-shaped, pure-black filled button — everything else is ghost, outlined, or surface-toned. Cards are flat, borderless, and warm-cream (#f9f8f6); depth comes from a single hairline ring rather than shadow stacks. Color is rationed: a warm off-white page, cream cards, near-black ink, and the occasional vivid accent (Beta pill, traffic-light terminal dots, gradient orbs) that earns attention precisely because the rest of the page refuses it.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text: #0a0a0a (primary), #858585 (secondary), #9d9d9d (tertiary), #3b3b3b (muted heading)\n- Background: #ffffff (page), #f9f8f6 (card), #f2ede5 (warm wash), #151515 (code mockup)\n- Border: #d5d9e2 (hairline ring)\n- Accent: #ffbd2e (Beta pill, terminal yellow)\n- primary action: #0a0a0a (filled action)\n\n## Example Component Prompts\n\n1. Create a Primary Action Button: #0a0a0a background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Cream Product Card**: Background #f9f8f6, radius 16px, padding 0 (media flush to edges). Internal media is a terminal mockup: background #151515, radius 12px, GeistMono 13px with traffic-light dots (#ff5f57, #ffbd2e, #28c840) top-left.\n\n3. **Pricing Tier Card**: Background #f9f8f6, radius 16px, padding 40px. Tier name in 24px universalSansDisplay weight 500, #0a0a0a. Spec lines in 14px universalSans weight 400, #858585. Checkmark rows: 14px weight 400 #0a0a0a with leading #0a0a0a check stroke, 8px row-gap.\n\n4. **Language Tab Strip**: Pills at radius 9999px, padding 6px 12px, GeistMono 13px. Active: bg #0a0a0a, text #ffffff. Inactive: bg transparent, text #858585. Sits directly beneath a code-block mockup.\n\n5. **News Index Card**: No surface, no border, no radius. Image at top (default radius), then 11px universalSans weight 400 #858585 date meta, then 16px weight 500 #0a0a0a title. Lives in a 4-column grid with 24px column-gap."
+    },
+    {
+      "title": "Editorial Type System",
+      "content": "The defining type choice is the pairing of universalSansDisplay (weight 400, not 500 or 700) at hero sizes with line-height locked to ~1.0. Headlines are not bold — they are massive and quiet. Negative tracking (-0.025em) tightens them without compressing letterforms, and the 1.0 line-height means the block becomes a typographic slab rather than a column of text. This is the anti-bold-headline system: authority through size and restraint, not weight. At smaller sizes the same family at weight 500 carries emphasis; GeistMono interrupts to mark technical territory. The three-font system (universalSans / universalSansDisplay / GeistMono) is intentionally narrow — there is no fourth voice."
+    },
+    {
+      "title": "Orb and Gradient Vocabulary",
+      "content": "Decorative warmth comes from two specific gradient patterns, used sparingly: (1) a radial coral/peach orb (#ff8868 → transparent, or #ffa888 → transparent) blurred at 64px that bleeds behind code-block panels, giving the developer surface a sunset glow without committing to a brand color; (2) a linear indigo→pink→orange→amber spectrum used as a single accent stripe behind logos or progress bars. These are page-atmosphere gradients, never used for buttons, text, or functional UI. Treat them as a third surface tier — visual depth without chromatic commitment."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is rationed: most surfaces stay flat and borderless. Depth appears only as a single 1px hairline ring (#d5d9e2), and true drop-shadows are reserved for the sticky header on scroll and one elevated card variant. The default state of the page is shadow-free — depth is opt-in, not ambient."
+}

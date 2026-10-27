@@ -1,0 +1,94 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff4f00",
+      "$type": "color",
+      "$description": "Ember Orange — Brand mark, filled button surfaces, key highlights, illustration accents — the singular chromatic accent across the entire system, used as punctuation rather than wash"
+    },
+    "iris-ink": {
+      "$value": "#2b2358",
+      "$type": "color",
+      "$description": "Iris Ink — Illustration-only accent (buildings, shadows in hero artwork) — never use in UI chrome, buttons, or text"
+    },
+    "cream-paper": {
+      "$value": "#fffefb",
+      "$type": "color",
+      "$description": "Cream Paper — Primary canvas, card surfaces, input backgrounds — the signature warm white that replaces stark #ffffff"
+    },
+    "parchment": {
+      "$value": "#f8f4f0",
+      "$type": "color",
+      "$description": "Parchment — Secondary surface, alternating section bands, soft elevated cards — one step warmer than the canvas"
+    },
+    "stone-linen": {
+      "$value": "#eceae3",
+      "$type": "color",
+      "$description": "Stone Linen — Hairline borders, dividers, muted surface tints — the structural separator color"
+    },
+    "driftwood": {
+      "$value": "#c5c0b1",
+      "$type": "color",
+      "$description": "Driftwood — Muted borders, disabled-state backgrounds, low-contrast dividers"
+    },
+    "ash-mist": {
+      "$value": "#b7b6b3",
+      "$type": "color",
+      "$description": "Ash Mist — Disabled text, placeholder text, very subtle borders"
+    },
+    "ink-brown": {
+      "$value": "#201515",
+      "$type": "color",
+      "$description": "Ink Brown — Primary text, dark UI elements, logo wordmark — warm near-black, not #000000"
+    },
+    "bark": {
+      "$value": "#36342e",
+      "$type": "color",
+      "$description": "Bark — Secondary headings, nav text, medium-emphasis body copy"
+    },
+    "coffee-stone": {
+      "$value": "#413735",
+      "$type": "color",
+      "$description": "Coffee Stone — Tertiary text, link text in resting state, breadcrumb text"
+    },
+    "stone-gray": {
+      "$value": "#939084",
+      "$type": "color",
+      "$description": "Stone Gray — Muted helper text, captions, metadata, small-print compliance lines"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Icons at maximum contrast, footer text on light surfaces, logo mark detail"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface. Inter carries all functional text — nav items, buttons, form fields, card body, captions. Weight 500 for button labels and nav, 400 for body, 600 for emphasis. Negative tracking tightens as size grows."
+    },
+    "degular-display": {
+      "$value": "Degular Display",
+      "$type": "fontFamily",
+      "$description": "Display face for hero headlines, section headings, and uppercase eyebrow labels. Runs POSITIVE letter-spacing (0.020–0.071em) — counter-intuitive for display type, which gives headings an open, almost editorial-poster feel. The custom face is the primary brand-typography signal; do not substitute it with a tightened grotesque."
+    },
+    "gt-alpina": {
+      "$value": "GT Alpina",
+      "$type": "fontFamily",
+      "$description": "Editorial accent serif for select headings that need a magazine-like lift — used sparingly, never for body or UI. Weight 250 (ultra-light) is the signature: a whisper-weight serif that contrasts the geometric Degular Display and adds human warmth to the system."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback only — appears in third-party embed contexts, not a design choice"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://zapier.com",
+      "siteName": "Zapier",
+      "extractedAt": "2026-06-03T18:55:38.283Z",
+      "variant": "compact"
+    }
+  }
+}

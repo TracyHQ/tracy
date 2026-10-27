@@ -1,0 +1,34 @@
+[
+  {
+    "id": "de",
+    "label": "Deutsch"
+  },
+  {
+    "id": "en",
+    "label": "English"
+  },
+  {
+    "id": "es",
+    "label": "Español"
+  },
+  {
+    "id": "fr",
+    "label": "Français"
+  },
+  {
+    "id": "it",
+    "label": "Italiano"
+  },
+  {
+    "id": "nl",
+    "label": "Nederlands"
+  },
+  {
+    "id": "vi",
+    "label": "Tiếng Việt"
+  },
+  {
+    "id": "zh",
+    "label": "中文"
+  }
+]

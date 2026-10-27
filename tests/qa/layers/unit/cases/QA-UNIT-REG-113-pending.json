@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-113-pending",
+  "itemIds": ["regression:REG-113"],
+  "requirement": "JA Morgan wp7: registration labels in dark, typography badges and labels, and the header of home styles 2, 3 and 4 match the source at every width; the header of home styles 3 and 4 stays transparent in dark",
+  "oracle": {
+    "source": "tests/regression/cases/REG-113-ja-morgan-wp7-sweep-fixes.json",
+    "ref": "PR #909 (fix); fix evidence: Sweeps of 04/10/2026 against the local Joomla source stand: 1.1.6 had 23 defect groups (3 scheme, 13 header, 7 chips); 1.1.7 has 6, all the source's own (fix-measure.json bound to wp-ja-morgan-1.1.7.zip 9e1bae22; tasks/ja-morgan-wp7/release/BROWSER.json is measure116 6/6 on the clean restore)",
+    "invariant": "site-sweep: overflow and background pass (312 cases each, no defect); the registration labels, the typography badges and labels and the header insets of home styles 2, 3 and 4 produce no defect group. site-sweep: the only groups left are the source's own faults recorded in DECISIONS.md: the light badges of the tag list and the category list on a dark page (D-57) and the home-style-4 header at 320 px (D-58); scheme, header and chips therefore still list them and the measure is 2/5, the previous version 2/5 with 23 groups. measure116: TOTAL 6/6 (the hardened contact handlers are unchanged); measure115: TOTAL 14/14.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-113"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-113",
+    "pr": 909,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-morgan",
+    "file": "tests/regression/cases/REG-113-ja-morgan-wp7-sweep-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

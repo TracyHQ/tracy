@@ -1,0 +1,2048 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "tracy-base/wp7/1.1.5",
+  "database": {
+    "file": "tracy-base-wp7-database-1.1.5.sql.gz",
+    "sha256": "9b73c0d77bd92138d9b73ec9c36038819ca74b9a9fe1c0329cf59c70b1f04ecd"
+  },
+  "stylesheet": "tracy-base",
+  "frontPage": 94,
+  "navigations": [
+    {
+      "id": 137,
+      "slug": "tracy",
+      "title": "tracy",
+      "language": "en",
+      "sha256": "d86a1ba36c803e02942d201773631fabb79621e8dee7cd72854aa9d0d4959e3b",
+      "content": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":94,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Product\",\"type\":\"page\",\"id\":96,\"url\":\"https://quickstart.invalid/product/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Pricing\",\"type\":\"page\",\"id\":95,\"url\":\"https://quickstart.invalid/pricing/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 138,
+      "slug": "tracy-utility",
+      "title": "tracy-utility",
+      "language": "en",
+      "sha256": "472b0bb9a2141f8189a7ed8b0010b9e343129c0583d8acd0f9995b9c1178a53c",
+      "content": "<!-- wp:navigation-submenu {\"label\":\"Pages\"} -->\n<!-- wp:navigation-link {\"label\":\"Contact category\",\"type\":\"page\",\"id\":116,\"url\":\"https://quickstart.invalid/resources/contact/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Featured contacts\",\"type\":\"page\",\"id\":116,\"url\":\"https://quickstart.invalid/resources/contact/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"News feeds\",\"type\":\"page\",\"id\":128,\"url\":\"https://quickstart.invalid/resources/blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Wrapper\",\"type\":\"page\",\"id\":94,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Authors\",\"type\":\"page\",\"id\":132,\"url\":\"https://quickstart.invalid/pages/authors/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->"
+    },
+    {
+      "id": 139,
+      "slug": "tracy-onepage",
+      "title": "tracy-onepage",
+      "language": "en",
+      "sha256": "51f6888590731e1d367efb3e0d22d0fbe5ba9554d20c527355a66ff23c5df168",
+      "content": "<!-- wp:navigation-link {\"label\":\"About\",\"url\":\"/resources/home-onepage#about\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Services\",\"url\":\"/resources/home-onepage#services\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Product\",\"url\":\"/resources/home-onepage#product\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Team\",\"url\":\"/resources/home-onepage#team\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"url\":\"/resources/home-onepage#contact\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 140,
+      "slug": "tracy-footer-1",
+      "title": "Footer — Product",
+      "language": "en",
+      "sha256": "908e7294aa0996877777402a75f7dc1cd2bdc9a7758deac4cfb5d2856ec46bfa",
+      "content": "<!-- wp:navigation-link {\"label\":\"Product\",\"type\":\"page\",\"id\":96,\"url\":\"https://quickstart.invalid/product/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Pricing\",\"type\":\"page\",\"id\":95,\"url\":\"https://quickstart.invalid/pricing/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Service\",\"type\":\"page\",\"id\":100,\"url\":\"https://quickstart.invalid/services/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Service detail\",\"type\":\"page\",\"id\":118,\"url\":\"https://quickstart.invalid/services/service-detail/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 141,
+      "slug": "tracy-footer-2",
+      "title": "Footer — Resources",
+      "language": "en",
+      "sha256": "19ff7de4c1e04d644edd27f6b2b407ae071eb8797d00d5195d5c630544199cf8",
+      "content": "<!-- wp:navigation-link {\"label\":\"Blog\",\"type\":\"page\",\"id\":128,\"url\":\"https://quickstart.invalid/resources/blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Website planning\",\"type\":\"page\",\"id\":133,\"url\":\"https://quickstart.invalid/resources/website-planning/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Design system\",\"type\":\"page\",\"id\":106,\"url\":\"https://quickstart.invalid/resources/style-guide/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Help centre\",\"type\":\"page\",\"id\":117,\"url\":\"https://quickstart.invalid/resources/faq/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 142,
+      "slug": "tracy-footer-3",
+      "title": "Footer — Company",
+      "language": "en",
+      "sha256": "5f8fdaa8e4950ec59538e30633e38e0f204ce9475b5f4147427a6cb2e0b6ec6c",
+      "content": "<!-- wp:navigation-link {\"label\":\"About\",\"type\":\"page\",\"id\":108,\"url\":\"https://quickstart.invalid/company/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Team\",\"type\":\"page\",\"id\":126,\"url\":\"https://quickstart.invalid/company/team/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Careers\",\"type\":\"page\",\"id\":119,\"url\":\"https://quickstart.invalid/company/careers/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact us\",\"type\":\"page\",\"id\":116,\"url\":\"https://quickstart.invalid/resources/contact/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 268,
+      "slug": "tracy-footer-4",
+      "title": "Footer — Pages",
+      "language": "en",
+      "sha256": "c98f32290114e2c8f72ed914b7e34e87aac5ba0840a6e43220d3e89d6d3412de",
+      "content": "<!-- wp:navigation-link {\"label\":\"Home variation\",\"type\":\"page\",\"id\":102,\"url\":\"https://quickstart.invalid/resources/home-variation/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home — variant\",\"type\":\"page\",\"id\":107,\"url\":\"https://quickstart.invalid/resources/home-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home - Onepage\",\"type\":\"page\",\"id\":125,\"url\":\"https://quickstart.invalid/resources/home-onepage/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Topics\",\"type\":\"page\",\"id\":109,\"url\":\"https://quickstart.invalid/resources/all-categories/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Marketing samples\",\"type\":\"page\",\"id\":120,\"url\":\"https://quickstart.invalid/resources/marketing-samples/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Typography\",\"type\":\"page\",\"id\":103,\"url\":\"https://quickstart.invalid/resources/typography/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Colour\",\"type\":\"page\",\"id\":104,\"url\":\"https://quickstart.invalid/resources/colors/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Spacing & grid\",\"type\":\"page\",\"id\":105,\"url\":\"https://quickstart.invalid/resources/spacing/\",\"kind\":\"post-type\"} /-->"
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 143,
+      "slug": "header",
+      "theme": "tracy-base",
+      "area": "header",
+      "sha256": "3baaf3f9fea54196976e63cc2647c14ca4a4608ed8892bd51fb9ae10366c54e0",
+      "content": "<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-header__inner\",\"layout\":{\"type\":\"flex\",\"justifyContent\":\"space-between\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__inner\">\n<!-- wp:group {\"className\":\"tracy-header__brand\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__brand\">\n<!-- wp:site-logo {\"width\":32,\"shouldSyncIcon\":false,\"className\":\"tracy-logo tracy-logo-light tracy-logo-bare\"} /-->\n<!-- wp:site-logo {\"width\":32,\"shouldSyncIcon\":false,\"className\":\"tracy-logo tracy-logo-dark tracy-logo-bare\"} /-->\n<!-- wp:site-title {\"level\":0,\"className\":\"tracy-brand\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"tracy-header__menu\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__menu\">\n<!-- wp:navigation {\"ref\":137,\"className\":\"tracy-nav\",\"overlayMenu\":\"always\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\"}} /-->\n<!-- wp:group {\"className\":\"tracy-header__links\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__links\">\n<!-- wp:paragraph {\"className\":\"tracy-header__link\"} -->\n<p class=\"tracy-header__link\"><a href=\"/\">Home</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"tracy-header__link\"} -->\n<p class=\"tracy-header__link\"><a href=\"/product\">Product</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:tracy-base/mega-menu {\"label\":\"Service\"} -->\n<!-- wp:columns {\"className\":\"tracy-mega__columns\"} -->\n<div class=\"wp-block-columns tracy-mega__columns\">\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Our services</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/services/website-strategy\">Website strategy</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/services/brand-and-interface-design\">Brand and interface design</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/services/website-development\">Website development</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/services/content-and-photography\">Content and photography</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">From idea to launch</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph {\"className\":\"tracy-mega__feature\"} -->\n<p class=\"tracy-mega__feature\">A clear plan, a considered design and a site your team can maintain.</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph -->\n<p><a href=\"/services/service-detail\">Explore website design &amp; build →</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n<!-- /wp:tracy-base/mega-menu -->\n<!-- wp:paragraph {\"className\":\"tracy-header__link\"} -->\n<p class=\"tracy-header__link\"><a href=\"/pricing\">Pricing</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:tracy-base/mega-menu {\"label\":\"Resources\"} -->\n<!-- wp:columns {\"className\":\"tracy-mega__columns\"} -->\n<div class=\"wp-block-columns tracy-mega__columns\">\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Read &amp; learn</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/resources/blog\">Blog</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/resources/website-planning\">Website planning</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/resources/website-operations\">Website operations</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/resources/studio-notes\">Studio notes</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Help &amp; support</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/resources/faq\">Help centre</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/resources/contact\">Contact us</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/resources/style-guide\">Design system</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/wp-login.php\">Sign in</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Latest from the blog</h3>\n<!-- /wp:heading -->\n<!-- wp:query {\"queryId\":11,\"query\":{\"perPage\":3,\"pages\":0,\"offset\":0,\"postType\":\"post\",\"order\":\"desc\",\"orderBy\":\"date\",\"inherit\":false},\"className\":\"tracy-mega__latest\"} -->\n<div class=\"wp-block-query tracy-mega__latest\">\n<!-- wp:post-template {\"layout\":{\"type\":\"default\"}} -->\n<!-- wp:post-title {\"level\":4,\"isLink\":true} /-->\n<!-- wp:post-date /-->\n<!-- /wp:post-template -->\n</div>\n<!-- /wp:query -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Search</h3>\n<!-- /wp:heading -->\n<!-- wp:search {\"label\":\"Search\",\"showLabel\":false,\"placeholder\":\"Search the site\",\"buttonText\":\"Search\",\"buttonUseIcon\":true} /-->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n<!-- /wp:tracy-base/mega-menu -->\n<!-- wp:tracy-base/mega-menu {\"label\":\"Company\"} -->\n<!-- wp:columns {\"className\":\"tracy-mega__columns\"} -->\n<div class=\"wp-block-columns tracy-mega__columns\">\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">The studio</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/company/about\">About</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/company/team\">Team</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/company/careers\">Careers</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">The people behind the work</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph {\"className\":\"tracy-mega__feature\"} -->\n<p class=\"tracy-mega__feature\">Designers, developers and researchers who ship together.</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph -->\n<p><a href=\"/company/team\">View all team →</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n<!-- /wp:tracy-base/mega-menu -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"tracy-header__actions\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__actions\">\n<!-- wp:buttons {\"className\":\"tracy-header__cta\"} -->\n<div class=\"wp-block-buttons tracy-header__cta\">\n<!-- wp:button -->\n<div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"/resources/contact\">Contact</a></div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->\n<!-- wp:html -->\n<button type=\"button\" class=\"tracy-theme-toggle\" data-tracy-theme-toggle data-theme-state=\"auto\" aria-pressed=\"false\" aria-label=\"Theme: automatic. Switch to light\"><span class=\"tracy-theme-toggle__icon\" aria-hidden=\"true\"></span></button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    },
+    {
+      "id": 144,
+      "slug": "footer",
+      "theme": "tracy-base",
+      "area": "footer",
+      "sha256": "1591122e1650fcb84e1e6aa94464b6857fe296d3eab031c95524335722420db1",
+      "content": "<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__band\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__band\">\n<!-- wp:group {\"className\":\"tracy-footer__inner\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__inner\">\n<!-- wp:columns {\"className\":\"tracy-footer__columns\"} -->\n<div class=\"wp-block-columns tracy-footer__columns\">\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Product</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":140,\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Resources</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":141,\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Company</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":142,\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Pages</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":268,\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n<!-- wp:column {\"className\":\"tracy-footer__social\"} -->\n<div class=\"wp-block-column tracy-footer__social\">\n<!-- wp:pattern {\"slug\":\"tracy-base/section-social-links\"} /-->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__strip\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__strip\">\n<!-- wp:pattern {\"slug\":\"tracy-base/section-site-notice\"} /-->\n<!-- wp:group {\"className\":\"tracy-footer__copyright px-container-phone sm:px-container-tablet lg:px-container-desktop\"} -->\n<div class=\"wp-block-group tracy-footer__copyright px-container-phone sm:px-container-tablet lg:px-container-desktop\">\n<!-- wp:paragraph {\"className\":\"tracy-meta max-w-page mx-auto mb-0\"} -->\n<p class=\"tracy-meta max-w-page mx-auto mb-0\">© {year} {site.title}</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    }
+  ],
+  "themeParts": [],
+  "linkedPosts": [
+    {
+      "id": 94,
+      "type": "page",
+      "status": "publish",
+      "slug": "home",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 95,
+      "type": "page",
+      "status": "publish",
+      "slug": "pricing",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 96,
+      "type": "page",
+      "status": "publish",
+      "slug": "product",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 100,
+      "type": "page",
+      "status": "publish",
+      "slug": "services",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 102,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-variation",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 103,
+      "type": "page",
+      "status": "publish",
+      "slug": "typography",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 104,
+      "type": "page",
+      "status": "publish",
+      "slug": "colors",
+      "blocks": [
+        "core/html"
+      ]
+    },
+    {
+      "id": 105,
+      "type": "page",
+      "status": "publish",
+      "slug": "spacing",
+      "blocks": [
+        "core/html"
+      ]
+    },
+    {
+      "id": 106,
+      "type": "page",
+      "status": "publish",
+      "slug": "style-guide",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 107,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 108,
+      "type": "page",
+      "status": "publish",
+      "slug": "about",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 109,
+      "type": "page",
+      "status": "publish",
+      "slug": "all-categories",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 116,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/shortcode"
+      ]
+    },
+    {
+      "id": 117,
+      "type": "page",
+      "status": "publish",
+      "slug": "faq",
+      "blocks": [
+        "core/details",
+        "core/group",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 118,
+      "type": "page",
+      "status": "publish",
+      "slug": "service-detail",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/column",
+        "core/columns",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-template",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 119,
+      "type": "page",
+      "status": "publish",
+      "slug": "careers",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 120,
+      "type": "page",
+      "status": "publish",
+      "slug": "marketing-samples",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 125,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-onepage",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 126,
+      "type": "page",
+      "status": "publish",
+      "slug": "team",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 128,
+      "type": "page",
+      "status": "publish",
+      "slug": "blog",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 132,
+      "type": "page",
+      "status": "publish",
+      "slug": "authors",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 133,
+      "type": "page",
+      "status": "publish",
+      "slug": "website-planning",
+      "blocks": [
+        "core/column",
+        "core/columns",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 100,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "page",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [
+            118
+          ],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "asc",
+          "orderBy": "menu_order",
+          "termLinks": [],
+          "unsupported": [
+            "parents"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              7
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              8
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 5,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              9
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "post_tag": [
+              16
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              8
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              3,
+              7,
+              8
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              8
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 5,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 133,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              13,
+              14,
+              15
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              13
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 134,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              13,
+              14,
+              15
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              14
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 135,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              13,
+              14,
+              15
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              15
+            ]
+          },
+          "taxExclude": {
+            "post_tag": [
+              16
+            ]
+          },
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 42,
+      "type": "post",
+      "slug": "lessons-from-a-website-discovery-workshop",
+      "author": 1,
+      "date": "2021-09-14 00:00:50",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          16
+        ]
+      }
+    },
+    {
+      "id": 43,
+      "type": "post",
+      "slug": "keeping-project-communication-clear",
+      "author": 1,
+      "date": "2021-09-14 00:00:49",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          16
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "type": "post",
+      "slug": "a-thoughtful-follow-up-after-launch",
+      "author": 1,
+      "date": "2021-09-14 00:00:48",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          16
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "type": "post",
+      "slug": "website-care",
+      "author": 1,
+      "date": "2021-09-14 00:00:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ]
+      }
+    },
+    {
+      "id": 46,
+      "type": "post",
+      "slug": "writing-a-useful-website-brief",
+      "author": 1,
+      "date": "2021-09-14 00:00:46",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "type": "post",
+      "slug": "designing-a-contact-page-people-can-use",
+      "author": 1,
+      "date": "2021-09-14 00:00:45",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 48,
+      "type": "post",
+      "slug": "adam-hale-design-director",
+      "author": 1,
+      "date": "2021-09-14 00:00:44",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 49,
+      "type": "post",
+      "slug": "peter-lang-development-lead",
+      "author": 1,
+      "date": "2021-09-14 00:00:43",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "type": "post",
+      "slug": "sofia-lindqvist-brand-designer",
+      "author": 1,
+      "date": "2021-09-14 00:00:42",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "type": "post",
+      "slug": "lucas-meyer-research-lead",
+      "author": 1,
+      "date": "2021-09-14 00:00:41",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "type": "post",
+      "slug": "testing-a-website-before-launch",
+      "author": 1,
+      "date": "2021-09-14 00:00:40",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 53,
+      "type": "post",
+      "slug": "planning-a-website-migration",
+      "author": 1,
+      "date": "2021-09-14 00:00:39",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 54,
+      "type": "post",
+      "slug": "keeping-images-sharp-on-smaller-screens",
+      "author": 1,
+      "date": "2021-09-14 00:00:38",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "type": "post",
+      "slug": "making-a-website-easy-to-maintain",
+      "author": 1,
+      "date": "2021-09-14 00:00:37",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 56,
+      "type": "post",
+      "slug": "a-practical-handover-checklist",
+      "author": 1,
+      "date": "2021-09-14 00:00:36",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 57,
+      "type": "post",
+      "slug": "inside-a-collaborative-design-review",
+      "author": 1,
+      "date": "2021-09-14 00:00:35",
+      "language": "en",
+      "terms": {
+        "category": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 58,
+      "type": "post",
+      "slug": "preparing-for-a-team-photo-session",
+      "author": 1,
+      "date": "2021-09-14 00:00:34",
+      "language": "en",
+      "terms": {
+        "category": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 59,
+      "type": "post",
+      "slug": "a-workspace-that-supports-creative-work",
+      "author": 1,
+      "date": "2021-09-14 00:00:33",
+      "language": "en",
+      "terms": {
+        "category": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 60,
+      "type": "post",
+      "slug": "from-workshop-notes-to-a-page-plan",
+      "author": 1,
+      "date": "2021-09-14 00:00:32",
+      "language": "en",
+      "terms": {
+        "category": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 61,
+      "type": "post",
+      "slug": "editing-website-copy-for-clarity",
+      "author": 1,
+      "date": "2021-09-14 00:00:31",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 62,
+      "type": "post",
+      "slug": "choosing-what-belongs-on-the-homepage",
+      "author": 1,
+      "date": "2021-09-14 00:00:30",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 63,
+      "type": "post",
+      "slug": "building-an-editorial-calendar",
+      "author": 1,
+      "date": "2021-09-14 00:00:29",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 64,
+      "type": "post",
+      "slug": "making-service-pages-more-specific",
+      "author": 1,
+      "date": "2021-09-14 00:00:28",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 65,
+      "type": "post",
+      "slug": "writing-headings-that-guide-a-reader",
+      "author": 1,
+      "date": "2021-09-14 00:00:27",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 66,
+      "type": "post",
+      "slug": "using-customer-stories-responsibly",
+      "author": 1,
+      "date": "2021-09-14 00:00:26",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 67,
+      "type": "post",
+      "slug": "a-simple-content-review-workflow",
+      "author": 1,
+      "date": "2021-09-14 00:00:25",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 68,
+      "type": "post",
+      "slug": "planning-a-focused-campaign-page",
+      "author": 1,
+      "date": "2021-09-14 00:00:24",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ]
+      }
+    },
+    {
+      "id": 69,
+      "type": "post",
+      "slug": "choosing-a-cms-your-team-can-use",
+      "author": 1,
+      "date": "2021-09-14 00:00:23",
+      "language": "en",
+      "terms": {
+        "category": [
+          13
+        ]
+      }
+    },
+    {
+      "id": 70,
+      "type": "post",
+      "slug": "asking-better-questions-about-hosting",
+      "author": 1,
+      "date": "2021-09-14 00:00:22",
+      "language": "en",
+      "terms": {
+        "category": [
+          13
+        ]
+      }
+    },
+    {
+      "id": 71,
+      "type": "post",
+      "slug": "preparing-an-asset-inventory",
+      "author": 1,
+      "date": "2021-09-14 00:00:21",
+      "language": "en",
+      "terms": {
+        "category": [
+          13
+        ]
+      }
+    },
+    {
+      "id": 72,
+      "type": "post",
+      "slug": "reviewing-third-party-integrations",
+      "author": 1,
+      "date": "2021-09-14 00:00:20",
+      "language": "en",
+      "terms": {
+        "category": [
+          13
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "type": "post",
+      "slug": "comparing-proposals-on-the-same-basis",
+      "author": 1,
+      "date": "2021-09-14 00:00:19",
+      "language": "en",
+      "terms": {
+        "category": [
+          13
+        ]
+      }
+    },
+    {
+      "id": 74,
+      "type": "post",
+      "slug": "making-recovery-part-of-launch-planning",
+      "author": 1,
+      "date": "2021-09-14 00:00:18",
+      "language": "en",
+      "terms": {
+        "category": [
+          14
+        ]
+      }
+    },
+    {
+      "id": 75,
+      "type": "post",
+      "slug": "a-routine-for-website-updates",
+      "author": 1,
+      "date": "2021-09-14 00:00:17",
+      "language": "en",
+      "terms": {
+        "category": [
+          14
+        ]
+      }
+    },
+    {
+      "id": 76,
+      "type": "post",
+      "slug": "keeping-forms-connected-to-your-team",
+      "author": 1,
+      "date": "2021-09-14 00:00:16",
+      "language": "en",
+      "terms": {
+        "category": [
+          14
+        ]
+      }
+    },
+    {
+      "id": 77,
+      "type": "post",
+      "slug": "reading-website-analytics-with-a-purpose",
+      "author": 1,
+      "date": "2021-09-14 00:00:15",
+      "language": "en",
+      "terms": {
+        "category": [
+          14
+        ]
+      }
+    },
+    {
+      "id": 78,
+      "type": "post",
+      "slug": "reducing-unnecessary-page-weight",
+      "author": 1,
+      "date": "2021-09-14 00:00:14",
+      "language": "en",
+      "terms": {
+        "category": [
+          14
+        ]
+      }
+    },
+    {
+      "id": 79,
+      "type": "post",
+      "slug": "studio-notes-starting-with-the-customer",
+      "author": 1,
+      "date": "2021-09-14 00:00:13",
+      "language": "en",
+      "terms": {
+        "category": [
+          15
+        ]
+      }
+    },
+    {
+      "id": 80,
+      "type": "post",
+      "slug": "studio-notes-a-better-project-kickoff",
+      "author": 1,
+      "date": "2021-09-14 00:00:12",
+      "language": "en",
+      "terms": {
+        "category": [
+          15
+        ]
+      }
+    },
+    {
+      "id": 81,
+      "type": "post",
+      "slug": "studio-notes-reviewing-work-together",
+      "author": 1,
+      "date": "2021-09-14 00:00:11",
+      "language": "en",
+      "terms": {
+        "category": [
+          15
+        ]
+      }
+    },
+    {
+      "id": 82,
+      "type": "post",
+      "slug": "studio-notes-welcoming-a-new-perspective",
+      "author": 1,
+      "date": "2021-09-14 00:00:10",
+      "language": "en",
+      "terms": {
+        "category": [
+          15
+        ]
+      }
+    },
+    {
+      "id": 83,
+      "type": "post",
+      "slug": "studio-notes-making-time-for-improvements",
+      "author": 1,
+      "date": "2021-09-14 00:00:09",
+      "language": "en",
+      "terms": {
+        "category": [
+          15
+        ]
+      }
+    },
+    {
+      "id": 84,
+      "type": "post",
+      "slug": "making-room-for-informal-conversations",
+      "author": 1,
+      "date": "2021-09-14 00:00:08",
+      "language": "en",
+      "terms": {
+        "category": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 85,
+      "type": "post",
+      "slug": "a-team-lunch-with-a-purpose",
+      "author": 1,
+      "date": "2021-09-14 00:00:07",
+      "language": "en",
+      "terms": {
+        "category": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 86,
+      "type": "post",
+      "slug": "collecting-inspiration-outside-the-studio",
+      "author": 1,
+      "date": "2021-09-14 00:00:06",
+      "language": "en",
+      "terms": {
+        "category": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 87,
+      "type": "post",
+      "slug": "sharing-knowledge-in-small-sessions",
+      "author": 1,
+      "date": "2021-09-14 00:00:05",
+      "language": "en",
+      "terms": {
+        "category": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 88,
+      "type": "post",
+      "slug": "how-the-demo-team-works-together",
+      "author": 1,
+      "date": "2021-09-14 00:00:04",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 89,
+      "type": "post",
+      "slug": "meet-the-people-behind-a-project",
+      "author": 1,
+      "date": "2021-09-14 00:00:03",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 90,
+      "type": "post",
+      "slug": "testing-keyboard-navigation",
+      "author": 1,
+      "date": "2021-09-14 00:00:02",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 91,
+      "type": "post",
+      "slug": "organising-a-useful-inspiration-library",
+      "author": 1,
+      "date": "2021-09-14 00:00:01",
+      "language": "en",
+      "terms": {
+        "category": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 92,
+      "type": "post",
+      "slug": "keeping-project-decisions-findable",
+      "author": 1,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 94,
+      "type": "page",
+      "slug": "home",
+      "author": 0,
+      "date": "2026-09-09 19:29:36",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 95,
+      "type": "page",
+      "slug": "pricing",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 96,
+      "type": "page",
+      "slug": "product",
+      "author": 0,
+      "date": "2026-09-10 23:40:46",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 97,
+      "type": "page",
+      "slug": "resources",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 98,
+      "type": "page",
+      "slug": "company",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 100,
+      "type": "page",
+      "slug": "services",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 101,
+      "type": "page",
+      "slug": "pages",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 102,
+      "type": "page",
+      "slug": "home-variation",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 103,
+      "type": "page",
+      "slug": "typography",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 104,
+      "type": "page",
+      "slug": "colors",
+      "author": 0,
+      "date": "2026-09-09 19:29:34",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 105,
+      "type": "page",
+      "slug": "spacing",
+      "author": 0,
+      "date": "2026-09-09 19:29:34",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 106,
+      "type": "page",
+      "slug": "style-guide",
+      "author": 0,
+      "date": "2026-09-09 19:29:35",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 107,
+      "type": "page",
+      "slug": "home-2",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 108,
+      "type": "page",
+      "slug": "about",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 109,
+      "type": "page",
+      "slug": "all-categories",
+      "author": 0,
+      "date": "2026-09-25 09:32:26",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 115,
+      "type": "page",
+      "slug": "tags",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 116,
+      "type": "page",
+      "slug": "contact",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 117,
+      "type": "page",
+      "slug": "faq",
+      "author": 0,
+      "date": "2026-09-09 19:29:36",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 118,
+      "type": "page",
+      "slug": "service-detail",
+      "author": 0,
+      "date": "2026-09-09 19:45:36",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 119,
+      "type": "page",
+      "slug": "careers",
+      "author": 0,
+      "date": "2026-09-10 23:40:46",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 120,
+      "type": "page",
+      "slug": "marketing-samples",
+      "author": 0,
+      "date": "2026-09-11 19:25:40",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 121,
+      "type": "page",
+      "slug": "website-strategy",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 122,
+      "type": "page",
+      "slug": "brand-and-interface-design",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 123,
+      "type": "page",
+      "slug": "website-development",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 124,
+      "type": "page",
+      "slug": "content-and-photography",
+      "author": 0,
+      "date": "2021-09-14 00:00:00",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 125,
+      "type": "page",
+      "slug": "home-onepage",
+      "author": 0,
+      "date": "2026-09-09 19:29:36",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 126,
+      "type": "page",
+      "slug": "team",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 127,
+      "type": "page",
+      "slug": "archive",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 128,
+      "type": "page",
+      "slug": "blog",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 130,
+      "type": "page",
+      "slug": "category-list",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 131,
+      "type": "page",
+      "slug": "single-tag",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 132,
+      "type": "page",
+      "slug": "authors",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 133,
+      "type": "page",
+      "slug": "website-planning",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 134,
+      "type": "page",
+      "slug": "website-operations",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    },
+    {
+      "id": 135,
+      "type": "page",
+      "slug": "studio-notes",
+      "author": 0,
+      "date": "2026-09-25 09:32:27",
+      "language": "en",
+      "terms": {}
+    }
+  ],
+  "terms": [
+    {
+      "id": 1,
+      "taxonomy": "category",
+      "slug": "uncategorized",
+      "parent": 0
+    },
+    {
+      "id": 2,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 3,
+      "taxonomy": "category",
+      "slug": "journal",
+      "parent": 0
+    },
+    {
+      "id": 4,
+      "taxonomy": "category",
+      "slug": "explore-the-studio",
+      "parent": 0
+    },
+    {
+      "id": 5,
+      "taxonomy": "category",
+      "slug": "pages",
+      "parent": 0
+    },
+    {
+      "id": 6,
+      "taxonomy": "category",
+      "slug": "insights",
+      "parent": 0
+    },
+    {
+      "id": 7,
+      "taxonomy": "category",
+      "slug": "website-services",
+      "parent": 3
+    },
+    {
+      "id": 8,
+      "taxonomy": "category",
+      "slug": "content-guides",
+      "parent": 3
+    },
+    {
+      "id": 9,
+      "taxonomy": "category",
+      "slug": "people",
+      "parent": 4
+    },
+    {
+      "id": 10,
+      "taxonomy": "category",
+      "slug": "practical-guides",
+      "parent": 4
+    },
+    {
+      "id": 11,
+      "taxonomy": "category",
+      "slug": "inside-the-studio",
+      "parent": 4
+    },
+    {
+      "id": 12,
+      "taxonomy": "category",
+      "slug": "studio-life",
+      "parent": 4
+    },
+    {
+      "id": 13,
+      "taxonomy": "category",
+      "slug": "website-planning",
+      "parent": 6
+    },
+    {
+      "id": 14,
+      "taxonomy": "category",
+      "slug": "website-operations",
+      "parent": 6
+    },
+    {
+      "id": 15,
+      "taxonomy": "category",
+      "slug": "studio-notes",
+      "parent": 6
+    },
+    {
+      "id": 16,
+      "taxonomy": "post_tag",
+      "slug": "archived",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    48,
+    49,
+    50,
+    51,
+    53,
+    55,
+    58,
+    59,
+    71,
+    73,
+    75,
+    78,
+    80,
+    82,
+    85,
+    86,
+    91
+  ]
+}

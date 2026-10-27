@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-ink: #121212;
+  --color-canvas: #ffffff;
+  --color-fog: #dbdada;
+  --color-slate: #8e8e93;
+  --color-obsidian: #000000;
+  --color-signal-coral: #ee585a;
+
+  /* Typography — Font Families */
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

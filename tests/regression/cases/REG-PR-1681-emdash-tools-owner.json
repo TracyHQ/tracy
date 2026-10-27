@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-1681-emdash-tools-owner",
+  "kind": "fix",
+  "title": "EmDash quickstart site: /app is www-data's, so rebuild, pnpm install/add and a restart work as the site user",
+  "pr": 1681,
+  "area": "fleet/emdash-tools-image",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In packages/fleet/tracy-fleet-operation run node --test on test/emdash-tools-layer-install.test.mjs, test/emdash-post-up.test.mjs and test/mint-agent-token.test.mjs.",
+    "S2: Read the results of the tools-layer tests (install-emdash-receiver.mjs against a stubbed root filesystem).",
+    "S3: Read the results of the mint-helper and owner-guard tests (platform/emdash.sh, mint-agent-token.sh)."
+  ],
+  "expect": [
+    "S2: a quickstart archive is unpacked without its owners, built, then everything under /app is handed back to the site user",
+    "S2: pnpm-workspace.yaml and node_modules/.modules.yaml name the same store inside /app, idempotently; another EmDash version still gets the store pin and the owners",
+    "S2: the site user gets a home and the project's pnpm is fetched as that user in /app; a failed fetch only warns",
+    "S2: a non-quickstart image gets no store rewrite, no chown, no home and no Corepack run; a bad archive checksum fails the layer",
+    "S3: /app/tracy-mint.cjs is removed after a clean mint and after a failed one (the failure still fails)",
+    "S3: foreign owners under /app are warned about (digest excluded) without failing the site; a clean /app prints nothing"
+  ],
+  "selectors": {
+    "exec_user": "docker exec -u www-data",
+    "store": "/app/node_modules/.modules.yaml storeDir",
+    "digest": "/app/tracy-content-relay.sha256"
+  },
+  "evidence": "Owner investigation 24/10/2026 on dev (site emdashown1024): 1,589 uid-501 + 832 root files under /app from the tools layer; astro build EACCES; pnpm add ERR_PNPM_UNEXPECTED_STORE; a failed reinstall emptied node_modules.",
+  "fence": "web/install-emdash-receiver.mjs hands /app back to www-data and pins the pnpm store; platform/emdash.sh removes tracy-mint.cjs and warns on foreign owners.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/emdash-tools-layer-install.test.mjs",
+      "test/emdash-post-up.test.mjs",
+      "test/mint-agent-token.test.mjs"
+    ],
+    "cwd": "packages/fleet/tracy-fleet-operation",
+    "tests": [
+      "quickstart, compatible EmDash: unpacked without the archive owners",
+      "quickstart: node_modules and pnpm-workspace.yaml name the same store",
+      "quickstart on another EmDash version: store pinned and owners handed back",
+      "not a quickstart (no site user owns /app): no store rewrite, no chown",
+      "an archive that does not match its checksum fails the layer",
+      "quickstart: the site user gets a home and the pinned pnpm",
+      "quickstart: a failed pnpm fetch is a warning",
+      "not a quickstart: no home is created and Corepack is not run",
+      "mint helper: removed from /app after a clean mint",
+      "mint helper: removed from /app after a failed mint",
+      "owner guard: foreign files under /app are reported",
+      "owner guard: a clean /app prints no warning"
+    ]
+  }
+}

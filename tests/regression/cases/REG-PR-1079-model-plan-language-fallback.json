@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1079-model-plan-language-fallback",
+  "kind": "fix",
+  "title": "Model Subscription: refusals reach the customer in their language, a conversation moved to Tracy AI returns to the subscription once it can serve, and a batch from two speakers runs on the default instead of sticking the session",
+  "pr": 1079,
+  "area": "agent-harness/model-plan",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a throwaway Postgres and export TEST_DATABASE_URL (see tests/regression/README.md common setup or docs on tracy-web DB tests).",
+    "S2: From the TCH checkout run: node --test --test-reporter=tap --test-concurrency=1 apps/tracy-web/test/seat-plan-route.test.mjs apps/tracy-web/test/seat-plan-broker.test.mjs packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs",
+    "S3: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'the host's pin and run doors refuse in the account's language, not the default' passes.",
+    "'a conversation moved to Tracy AI goes back to the subscription once it can serve again' and 'a pin made with no connection stays plain after the account connects one' pass.",
+    "'a batch from two people runs on the deployment default and never asks the broker' passes.",
+    "'the host's own refusals carry no owner scope' passes."
+  ],
+  "selectors": {
+    "pinDoor": "POST /internal/seat-plan/pin {sessionId} -> {route} | {code, message}",
+    "route": "apps/tracy-web/src/seat-plan/route.js refusal(c, error, language)",
+    "broker": "apps/tracy-web/src/seat-plan/broker.js pin, backFromFallback",
+    "host": "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs speakerOf, HOST_CODES"
+  },
+  "fence": "Route test calls the internal doors with a valid actor and an account whose language is vi; broker tests drive a real Postgres with a fallen-back pin whose cool-down then passes; host tests feed a two-speaker batch. No model, no network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/seat-plan-route.test.mjs",
+      "apps/tracy-web/test/seat-plan-broker.test.mjs",
+      "packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs"
+    ],
+    "tests": [
+      "the host's pin and run doors refuse in the account's language",
+      "a conversation moved to Tracy AI goes back to the subscription once it can serve again",
+      "a pin made with no connection stays plain after the account connects one",
+      "a batch from two people runs on the deployment default and never asks the broker",
+      "the host's own refusals carry no owner scope"
+    ]
+  }
+}

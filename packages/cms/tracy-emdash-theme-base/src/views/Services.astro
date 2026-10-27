@@ -1,0 +1,58 @@
+---
+/**
+ * /services — the services list (source: com_content category blog, `tracy-cardgrid`). Page title
+ * and intro come from `services_page`; the cards are every published `services` entry in `sort`
+ * order. A service card has no author/date/category row, so PostCard renders with `showMeta` off.
+ */
+import { getEmDashCollection, getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import PostCard from '@/components/site/PostCard.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const [{ entry }, { entries }] = await Promise.all([
+  getEmDashEntry('services_page', 'services_page', { locale }),
+  getEmDashCollection('services', { locale, status: 'published', limit: 100 } as any)
+])
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const p = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'services_page', entry)
+// Editors order services with the integer `sort`; sort here so the API's default order never leaks.
+const services = (entries as any[])
+  .map((e) => ({
+    id: e.data.id as string,
+    slug: e.slug as string,
+    data: e.data as Record<string, any>,
+    category: undefined,
+    tags: []
+  }))
+  .filter((e: any) => !(e.data.listed === false || e.data.listed === 0)) // EmDash stores a false boolean as 0
+  .sort((a, b) => (a.data.sort ?? 0) - (b.data.sort ?? 0))
+---
+
+<Base chrome={chrome} title={p.title} description={p.intro} currentPath="/services" content={{ collection: "services_page", id: entry.data.id, slug: "services_page", toPath: () => "/services" }}>
+	<main id="main" class="wrap pb-[var(--band-y)] pt-[var(--band-y)]">
+		<PageOwner stamp={$page} />
+		<header class="mb-8 max-w-[720px]">
+			<h1 class="h-page" {...$page("title")}>{p.title}</h1>
+			{p.intro && <p class="lead mt-4" {...$page("intro")}>{p.intro}</p>}
+		</header>
+		{services.length > 0 && (
+			<div class="card-grid" data-block="services">
+				{services.map((s) => <PostCard post={s} locale={locale} site={site} base="/services" showMeta={false} collection="services" />)}
+			</div>
+		)}
+	</main>
+</Base>

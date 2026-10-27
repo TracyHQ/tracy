@@ -1,0 +1,802 @@
+{
+  "color": {
+    "drawing-ink": {
+      "$value": "#0a1217",
+      "$type": "color",
+      "$description": "Drawing Ink — Primary text, dark product panels, dark feature sections, icons, and structural strokes"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, light product panels, and reversed text"
+    },
+    "drafting-gray": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Drafting Gray — Muted card surfaces, logo tiles, product-widget backgrounds, and secondary action surfaces"
+    },
+    "hairline": {
+      "$value": "#e6e7e8",
+      "$type": "color",
+      "$description": "Hairline — 1px card, navigation, and input-like dividers"
+    },
+    "stone": {
+      "$value": "#85898b",
+      "$type": "color",
+      "$description": "Stone — Muted helper text, secondary metadata, and low-emphasis interface marks"
+    },
+    "graphite": {
+      "$value": "#54595d",
+      "$type": "color",
+      "$description": "Graphite — Supporting body copy on light surfaces"
+    },
+    "archive-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Archive Black — Footer canvas and the deepest visual anchor"
+    },
+    "signal-lime": {
+      "$value": "#cdfe00",
+      "$type": "color",
+      "$description": "Signal Lime — Filled demo buttons, active selection, announcement highlights, and graphic framing — the acid-lime mark punctures the otherwise monochrome document palette"
+    },
+    "blueprint-wash": {
+      "$value": "#dceaf8",
+      "$type": "color",
+      "$description": "Blueprint Wash — Pale blue feature-card surface for specification and document workflows"
+    },
+    "material-wash": {
+      "$value": "#f4e3cd",
+      "$type": "color",
+      "$description": "Material Wash — Pale warm feature-card surface for architectural content modules"
+    },
+    "site-wash": {
+      "$value": "#ddefe2",
+      "$type": "color",
+      "$description": "Site Wash — Pale green-tinted feature-card surface"
+    },
+    "review-status": {
+      "$value": "#5b4678",
+      "$type": "color",
+      "$description": "Review Status — In-review status badges in product interfaces"
+    },
+    "input-status": {
+      "$value": "#9a6700",
+      "$type": "color",
+      "$description": "Input Status — Needs-input status badges in product interfaces"
+    },
+    "complete-status": {
+      "$value": "#1a7f55",
+      "$type": "color",
+      "$description": "Complete Status — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "plan-blue": {
+      "$value": "#24476b",
+      "$type": "color",
+      "$description": "Plan Blue — Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    }
+  },
+  "font": {
+    "aspekta": {
+      "$value": "Aspekta",
+      "$type": "fontFamily",
+      "$description": "The site-wide sans for display headings, body copy, navigation, buttons, badges, and product UI. Weight 650 carries the broad, tightly packed statements; weight 350 keeps utility navigation and body metadata thin and technical rather than corporate."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Sparse technical labels and machine-like product metadata, set with tight -0.36px tracking to make document references feel system-generated."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "9px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 9px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "9px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.1em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 9px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "9px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.12em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 9px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "9px",
+        "fontWeight": 350,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 9px"
+    },
+    "xs-5": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "9px",
+        "fontWeight": 350,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-5 at 9px"
+    },
+    "xs-6": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "10px",
+        "fontWeight": 650,
+        "lineHeight": 1,
+        "letterSpacing": "0.12em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-6 at 10px"
+    },
+    "xs-7": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "10px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-7 at 10px"
+    },
+    "xs-8": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "10px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-8 at 10px"
+    },
+    "xs-9": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "11px",
+        "fontWeight": 600,
+        "lineHeight": 1.3,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-9 at 11px"
+    },
+    "xs-10": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "11px",
+        "fontWeight": 450,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-10 at 11px"
+    },
+    "xs-11": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "11px",
+        "fontWeight": 450,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.1em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-11 at 11px"
+    },
+    "xs-12": {
+      "$value": {
+        "fontFamily": "ui-monospace",
+        "fontSize": "12px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-12 at 12px"
+    },
+    "xs-13": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-13 at 12px"
+    },
+    "xs-14": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-14 at 12px"
+    },
+    "xs-15": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 350,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-15 at 12px"
+    },
+    "xs-16": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-16 at 12px"
+    },
+    "xs-17": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 450,
+        "lineHeight": 1.33,
+        "letterSpacing": "0.1em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-17 at 12px"
+    },
+    "xs-18": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 450,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-18 at 12px"
+    },
+    "xs-19": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 550,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-19 at 12px"
+    },
+    "xs-20": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "12px",
+        "fontWeight": 350,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-20 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.54,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 550,
+        "lineHeight": 1.54,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 350,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 350,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 13px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 350,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 13px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.005em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 13px"
+    },
+    "sm-7": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 350,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-7 at 13px"
+    },
+    "sm-8": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 450,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-8 at 13px"
+    },
+    "sm-9": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 450,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-9 at 13px"
+    },
+    "sm-10": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 350,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-10 at 13px"
+    },
+    "sm-11": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "13px",
+        "fontWeight": 350,
+        "lineHeight": 1.7,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-11 at 13px"
+    },
+    "sm-12": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "14px",
+        "fontWeight": 550,
+        "lineHeight": 1.43,
+        "letterSpacing": "0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-12 at 14px"
+    },
+    "sm-13": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "14px",
+        "fontWeight": 450,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-13 at 14px"
+    },
+    "sm-14": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "14px",
+        "fontWeight": 550,
+        "lineHeight": 1.43,
+        "letterSpacing": "0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-14 at 14px"
+    },
+    "sm-15": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "14px",
+        "fontWeight": 350,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-15 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "16px",
+        "fontWeight": 350,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "17px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 17px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "18px",
+        "fontWeight": 350,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "18px",
+        "fontWeight": 350,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.35,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "24px",
+        "fontWeight": 550,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "32px",
+        "fontWeight": 650,
+        "lineHeight": 1.04,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "48px",
+        "fontWeight": 650,
+        "lineHeight": 0.95,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "48px",
+        "fontWeight": 650,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 48px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "56px",
+        "fontWeight": 650,
+        "lineHeight": 0.98,
+        "letterSpacing": "-0.035em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 56px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "aspekta",
+        "fontSize": "72px",
+        "fontWeight": 650,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 72px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "5": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Spacing 5px"
+    },
+    "6": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Spacing 6px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "9": {
+      "$value": "9px",
+      "$type": "dimension",
+      "$description": "Spacing 9px"
+    },
+    "10": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Spacing 10px"
+    },
+    "11": {
+      "$value": "11px",
+      "$type": "dimension",
+      "$description": "Spacing 11px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "14": {
+      "$value": "14px",
+      "$type": "dimension",
+      "$description": "Spacing 14px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "44": {
+      "$value": "44px",
+      "$type": "dimension",
+      "$description": "Spacing 44px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "2xl-2": {
+      "$value": "22.4px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl-2"
+    },
+    "3xl": {
+      "$value": "28.8px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "35.2px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "999px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgba(10, 18, 23, 0.15) 0px 1px 2px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "md": {
+      "$value": "oklab(0 0 0 / 0.15) 0px 10px 15px -3px, oklab(0 0 0 / 0.15) 0px 4px 6px -4px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md"
+    },
+    "xl": {
+      "$value": "rgba(0, 0, 0, 0.34) 0px 24px 80px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    }
+  },
+  "surface": {
+    "paper-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page background, light cards, and product-document surfaces."
+    },
+    "drafting-gray-surface": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Surface level 1: Feature cards, logo tiles, and muted interactive tiles."
+    },
+    "pale-workflow-surface": {
+      "$value": "#dceaf8",
+      "$type": "color",
+      "$description": "Surface level 2: Large contextual workflow panels."
+    },
+    "drawing-ink-surface": {
+      "$value": "#0a1217",
+      "$type": "color",
+      "$description": "Surface level 3: Hero panels, dark content bands, and high-contrast product contexts."
+    },
+    "archive-black-surface": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 4: Footer and terminal conversion field."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.avoice.co",
+      "siteName": "Avoice",
+      "extractedAt": "2026-09-20T19:23:25.316Z",
+      "variant": "extended"
+    }
+  }
+}

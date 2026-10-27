@@ -1,0 +1,163 @@
+---
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const { entry } = await getEmDashEntry('about', 'about', { locale })
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const a = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'about', entry)
+const $site = stampFor(Astro.request, 'site', site)
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = a.cta_url || href(locale, '/contact')
+const ctaAltUrl = a.cta_alt_url || href(locale, '/projects')
+const live = await liveLinks(Astro.request, locale, [ctaUrl, ctaAltUrl])
+// A claim Apply emptied (seed/personalize.json `facts`) takes its section with it: no heading over nothing.
+const has = (v: unknown) => (Array.isArray(v) ? v.length > 0 : typeof v === 'string' && v.trim() !== '')
+const showGeo = has(a.geo_text) || has(a.geo_list)
+const showSafety = has(a.safety_text)
+---
+
+<Base chrome={chrome} title={a.breadcrumb || a.title} description={a.lede} heroImage={mediaUrl(a.hero_image)} currentPath="/about" content={{ collection: "about", id: entry.data.id, slug: "about", toPath: () => "/about" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: a.breadcrumb || a.title, stamp: $page(a.breadcrumb ? "breadcrumb" : "title") }]} />
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-14 pb-12 pt-16">
+			<div>
+				<h1 class="h-page mb-5" {...$page("title")}>{a.title}</h1>
+				<p class="max-w-[40em] text-[17.5px] leading-[1.68] text-fg-2" {...$page("lede")}>{a.lede}</p>
+			</div>
+			<Photo image={a.hero_image} stamp={$page("hero_image")} alt="" placeholder={slots.project} class="h-[clamp(240px,30vw,350px)] min-w-0" priority />
+		</section>
+		{has(a.stats) && (
+		<div class="container-site pb-16">
+			<div class="grid-lines grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
+				{(a.stats ?? []).map((s: any) => (
+					<div class="p-6" {...$page.block("stats")}>
+						<div class="font-serif text-[34px] leading-none" {...$page("stats.value")}>{s.value}</div>
+						<div class="mt-1.5 text-[13px] text-fg-meta" {...$page("stats.label")}>{s.label}</div>
+					</div>
+				))}
+			</div>
+		</div>
+		)}
+
+		<section class="band-paper2">
+			<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-16">
+				<div>
+					<h2 class="h-section mb-[18px]" {...$page("mission_title")}>{a.mission_title}</h2>
+					<p class="text-[16.5px] leading-[1.7] text-fg-2" {...$page("mission_text")}>{a.mission_text}</p>
+				</div>
+				<div class="grid-lines">
+					{(a.pillars ?? []).map((p: any) => (
+						<div class="px-6 py-[22px]" {...$page.block("pillars")}>
+							<div class="text-[16.5px] font-semibold" {...$page("pillars.title")}>{p.title}</div>
+							<div class="mt-1.5 text-[15px] leading-[1.6] text-fg-muted" {...$page("pillars.text")}>{p.text}</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		{has(a.history) && (
+		<section class="container-site pt-[72px]">
+			<h2 class="h-section mb-6 border-b border-line pb-3.5" {...$page("history_title")}>{a.history_title}</h2>
+			{(a.history ?? []).map((row: any) => (
+				<div class="grid grid-cols-[minmax(70px,90px)_minmax(0,1fr)] items-baseline gap-x-5 gap-y-1.5 border-b border-line-soft py-5 md:grid-cols-[minmax(90px,120px)_minmax(0,1fr)_minmax(0,1.6fr)] md:gap-7" {...$page.block("history")}>
+					<div class="font-serif text-[27px] leading-none text-signal-text" {...$page("history.year")}>{row.year}</div>
+					<div class="text-[16.5px] font-semibold" {...$page("history.title")}>{row.title}</div>
+					<div class="col-start-2 text-[15.5px] leading-[1.62] text-fg-muted md:col-start-auto" {...$page("history.text")}>{row.text}</div>
+				</div>
+			))}
+		</section>
+		)}
+
+		{showGeo && (
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-[72px]">
+			<div>
+				<h2 class="h-section-sm mb-4" {...$page("geo_title")}>{a.geo_title}</h2>
+				{has(a.geo_text) && <p class="mb-[22px] text-[16px] leading-[1.68] text-fg-2" {...$page("geo_text")}>{a.geo_text}</p>}
+				{(a.geo_list ?? []).map((g: any) => (
+					<div class="grid grid-cols-2 gap-4 border-b border-line-soft py-[13px]" {...$page.block("geo_list")}>
+						<span class="text-[15.5px] font-semibold" {...$page("geo_list.city")}>{g.city}</span>
+						<span class="text-[14.5px] text-fg-meta" {...$page("geo_list.role")}>{g.role}</span>
+					</div>
+				))}
+			</div>
+			<Photo image={a.map_image} stamp={$page("map_image")} alt="" placeholder={slots.map} class="h-[clamp(260px,30vw,360px)] min-w-0" />
+		</section>
+		)}
+
+		{has(a.team) && (
+		<section class="band-ink">
+			<div class="container-site py-16">
+				<h2 class="h-section mb-7" {...$page("team_title")}>{a.team_title}</h2>
+				<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-[26px]">
+					{(a.team ?? []).map((m: any) => (
+						<div {...$page.block("team")}>
+							<Photo image={m.photo} stamp={$page("team.photo")} alt={m.name} placeholder={slots.team} class="h-[230px] !border-on-ink-line" />
+							<div class="mt-3 text-[16.5px] font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$page("team.name")}>{m.name}</div>
+							<div class="mt-[3px] text-[13.5px] text-signal-text" {...$page("team.role")}>{m.role}</div>
+							<div class="mt-[7px] text-[14px] leading-[1.55] text-on-ink-meta" {...$page("team.text")}>{m.text}</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+		)}
+
+		{(has(a.certs) || showSafety) && (
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-[72px]">
+			{has(a.certs) && (
+			<div>
+				<h2 class="h-section-sm mb-5" {...$page("cert_title")}>{a.cert_title}</h2>
+				{(a.certs ?? []).map((c: any) => (
+					<div class="grid grid-cols-[24px_1fr] gap-3 border-b border-line-soft py-3.5" {...$page.block("certs")}>
+						<span class="font-serif text-forest-text">→</span>
+						<div>
+							<div class="text-[16px] font-semibold" {...$page("certs.title")}>{c.title}</div>
+							<div class="mt-1 text-[14.5px] text-fg-muted" {...$page("certs.text")}>{c.text}</div>
+						</div>
+					</div>
+				))}
+			</div>
+			)}
+			{showSafety && (
+			<div class="border border-line-card bg-paper-2 p-7">
+				<h2 class="font-serif text-[clamp(22px,2.5vw,28px)] font-normal tracking-[-.02em] mb-3.5" {...$page("safety_title")}>{a.safety_title}</h2>
+				<p class="mb-5 text-[16px] leading-[1.68] text-fg-2" {...$page("safety_text")}>{a.safety_text}</p>
+				<Photo image={a.safety_image} stamp={$page("safety_image")} alt="" placeholder={slots.team} class="h-[200px]" />
+			</div>
+			)}
+		</section>
+		)}
+
+		<section class="container-site pb-20">
+			<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-center gap-8 border border-line-card bg-paper-2 p-10">
+				<div>
+					<h2 class="h-section-sm mb-2.5" {...$page("cta_title")}>{a.cta_title}</h2>
+					<p class="text-[16px] leading-[1.6] text-fg-2" {...$page("cta_text")}>{a.cta_text}</p>
+				</div>
+				<div class="flex flex-wrap items-center gap-3.5">
+					{live(ctaUrl) && <a href={ctaUrl} class="btn-primary" {...$page("cta_button")}>{a.cta_button}</a>}
+					{live(ctaAltUrl) && <a href={ctaAltUrl} class="link-underline !text-[15px]" {...$page("cta_alt_label")}>{a.cta_alt_label}</a>}
+				</div>
+			</div>
+		</section>
+	</main>
+</Base>

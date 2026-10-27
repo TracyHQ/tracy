@@ -1,0 +1,375 @@
+{
+  "dos": [
+    "Use only #ff2f00 as the chromatic accent — it must remain rare enough to register as editorial highlight, not decoration",
+    "Set all borders to 1px solid #000000 for cards, lists, badges, and inputs — the hairline black is the structural skeleton",
+    "Use 20px border-radius for cards, buttons, and inputs; reserve 999px exclusively for badge pills",
+    "Set hero type to Neue Montreal at 121-145px weight 600 with line-height 1.00 — the type should fill the card vertically",
+    "Use status badges (#ff2f00 New, #ffb700 Update, #bfe0ff Early Access) as the only chromatic elements in any view",
+    "Set card padding to 26px and card gaps to 15-23px to maintain the comfortable editorial density",
+    "Let full-bleed photography carry the hero sections — never apply colored backgrounds to hero cards"
+  ],
+  "donts": [
+    "Do not use #ff2f00 for body text, headings, or large surfaces — its role is badge/punctuation only",
+    "Do not apply box-shadow or heavy elevation — the system relies on 1px borders and whitespace, not depth",
+    "Do not use radius values other than 20px (cards/buttons/inputs) and 999px (badges) — the rounded softness is signature",
+    "Do not use colors other than the defined palette — no decorative blues, greens, or purples for UI chrome",
+    "Do not use multiple type families in the same view — Neue Montreal carries everything except specimen showcases",
+    "Do not set line-height above 1.30 for any size — the tight leading is essential to the editorial feel",
+    "Do not center body text or metadata — only headlines and hero type use center alignment"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ff2f00",
+      "name": "Ember Orange",
+      "role": "Orange action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Marble White",
+      "role": "Page canvas, card surfaces, input fields, default panel backgrounds. The dominant surface tone, barely off-white for warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ededed",
+      "name": "Stone Gray",
+      "role": "Secondary surface for filled buttons, muted card backgrounds, image placeholder fills. One step deeper than Marble White to create gentle separation without contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Graphite",
+      "role": "Secondary text, link color, subdued metadata, helper text. Reads as muted black — never used for primary text or headings",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary text, all headings, hairline borders (cards, lists, badges, inputs), icons, navigation. The structural backbone — 1px borders everywhere define the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffb700",
+      "name": "Signal Yellow",
+      "role": "Yellow state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#bfe0ff",
+      "name": "Ice Blue",
+      "role": "Blue state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    }
+  ],
+  "layout": "Max-width 1200px centered content with full-bleed hero cards that break the container. The page model alternates between two primary section types: (1) full-width feature cards with photographic backgrounds and overlaid display type, stacked vertically with generous gaps, and (2) a 4-column grid of font specimen cards on a #fafafa background. The font grid is the workhorse — 4 columns at desktop with 15-23px gaps, 2 columns on tablet, 1 column on mobile. Section rhythm is consistent: each section separated by 92px of vertical whitespace, with 1px hairlines as occasional dividers. Navigation is a single transparent top bar, not sticky, with a centered link cluster and right-aligned utility icons. The hero is never a traditional text+image split — it's always a full-bleed image with centered type overlay.",
+  "imagery": "Full-bleed photography dominates the visual language. Each font hero features a high-resolution environmental photograph — cityscapes, food, lifestyle scenes — chosen to evoke the personality of the typeface (Montreal gets brutalist architecture, New York gets a sandwich, Palma gets cocktail citrus). Photos are unmanipulated: no duotone, no color grading, no overlays except a subtle dark gradient for text legibility. The card grid in specimen view contains no photography — just enormous 'Aa' letterforms in each typeface as the visual content. Icons are minimal, line-style, monochrome. No illustrations, no 3D renders, no abstract graphics — the type specimens and curated photography carry all visual weight.",
+  "similar": [
+    {
+      "why": "Same type-foundry curatorial aesthetic — large display type over editorial imagery, single accent color, minimal UI chrome, type-as-product approach.",
+      "business": "Dinamo (dinamo.com)"
+    },
+    {
+      "why": "Similar specimen-driven layout with full-bleed feature cards, white-canvas grid of typeface cards, and restrained chromatic palette.",
+      "business": "Grilli Type (grillitype.com)"
+    },
+    {
+      "why": "Editorial type-catalogue feel with hairline borders, generous whitespace, and large-format type specimens dominating the visual hierarchy.",
+      "business": "Klim Type Foundry (klim.co.nz)"
+    },
+    {
+      "why": "Independent foundry with the same print-catalogue-on-screen treatment: 1px structural borders, pill controls, type-first hierarchy with minimal decorative color.",
+      "business": "OHno Type (ohnotype.com)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "20px",
+      "small": "20px",
+      "badges": "999px",
+      "inputs": "20px",
+      "buttons": "20px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "92px",
+    "cardPadding": "26px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#fafafa",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the base white-marble surface"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Font specimen cards, content panels — same as canvas, separated by 1px black border"
+    },
+    {
+      "hex": "#ededed",
+      "name": "Secondary Fill",
+      "level": 2,
+      "purpose": "Filled buttons, muted card backgrounds, image placeholders — one step deeper for gentle separation"
+    },
+    {
+      "hex": "#bfe0ff",
+      "name": "Accent Surface",
+      "level": 3,
+      "purpose": "Info badge background for Early Access status"
+    },
+    {
+      "hex": "#ffb700",
+      "name": "Accent Surface",
+      "level": 4,
+      "purpose": "Warning badge background for Update status"
+    },
+    {
+      "hex": "#ff2f00",
+      "name": "Accent Surface",
+      "level": 5,
+      "purpose": "Primary accent badge background for New status and icon highlights"
+    }
+  ],
+  "northStar": "Museum vitrine on white marble. A gallery-style type foundry where the canvas is bare stone, the lighting is flat daylight, and the only vivid color is a single orange-red label used by a curator to flag what is new.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.17
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.17
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "display",
+      "size": 121,
+      "lineHeight": 1
+    },
+    {
+      "role": "display-xl",
+      "size": 145,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Font Showcase Card",
+      "role": "Full-bleed feature card for a typeface release",
+      "description": "Large rounded card (20px radius) with photographic background image filling the entire surface, title text in Neue Montreal at 121-145px weight 600 in white overlaid center, subtitle at 18px weight 400, and a small status badge pill floating above the title. The image darkens or uses a gradient overlay to ensure white text contrast."
+    },
+    {
+      "name": "Status Badge — New",
+      "role": "Highlight tag for newly released fonts",
+      "description": "Pill shape (999px radius), #ff2f00 background, white text in Neue Montreal 12px weight 500, padding 4px 12px. The signature accent — appears on most cards in the grid."
+    },
+    {
+      "name": "Status Badge — Update",
+      "role": "Highlight tag for recently updated fonts",
+      "description": "Pill shape (999px radius), #ffb700 background, black text in Neue Montreal 12px weight 500, padding 4px 12px. Yellow variant of the status badge."
+    },
+    {
+      "name": "Status Badge — Early Access",
+      "role": "Highlight tag for preview/beta releases",
+      "description": "Pill shape (999px radius), #bfe0ff background, black text in Neue Montreal 12px weight 500, padding 4px 12px. Cool blue variant for access-state distinction."
+    },
+    {
+      "name": "Primary Filled Button",
+      "role": "Main call-to-action (Explore font, Try for Free)",
+      "description": "20px border-radius, white (#fafafa) background, 1px black border, Neue Montreal 14px weight 500, black text, padding 8px 23px. The filled white pill against dark or photographic backgrounds is the signature button form."
+    },
+    {
+      "name": "Ghost Outlined Button",
+      "role": "Secondary action paired with primary button",
+      "description": "20px border-radius, transparent background, 1px white border, Neue Montreal 14px weight 500, white text, padding 8px 23px. Used alongside filled buttons on dark/image backgrounds for the secondary action."
+    },
+    {
+      "name": "Font Specimen Card (Grid View)",
+      "role": "Card showing one typeface in the font catalog grid",
+      "description": "#fafafa background, 1px black border, 20px radius, padding 26px. Contains font name at 18px weight 530, metadata (styles count, features) at 14px weight 400 in Graphite, a status badge in the top-right, and a large 'Aa' specimen at ~103px in the displayed font weight, bottom-aligned. Cards in a 4-column grid with 15-23px gaps."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top site navigation",
+      "description": "Full-width sticky bar, transparent or #fafafa background, height ~60px. Logo 'Pangram Pangram Foundry' in Neue Montreal 14px weight 530 left, nav links in Neue Montreal 14px weight 400 center (23px gap between items), search/cart/menu icons right. No background fill — relies on hairline bottom border."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Visual separator between content sections",
+      "description": "1px black border-bottom or generous vertical spacing (92px). The system prefers whitespace over rules; dividers are minimal."
+    },
+    {
+      "name": "Input Field",
+      "role": "Text input for search or forms",
+      "description": "1px black border, 20px radius, padding 24px vertical, #fafafa background, Neue Montreal 16px weight 400, black text. Generous padding makes inputs feel spacious and editorial."
+    },
+    {
+      "name": "View Toggle (Card View / List View)",
+      "role": "Switch between display modes in the font grid",
+      "description": "Inline pill control with two text options separated by a small icon. Active state uses #ff2f00 underline or indicator. Neue Montreal 14px weight 500."
+    },
+    {
+      "name": "Footer Link Group",
+      "role": "Footer navigation cluster",
+      "description": "Stacked links in Neue Montreal 14px weight 400, Graphite color, 4-8px vertical gap. Underline on hover with #666 border-bottom."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The workhorse and display face. Weight 400 for body, weight 530 for subheads and medium emphasis, weight 600 for headings and display overlays. Used at 145px for hero type, 48px for section headlines, 18-20px for body, 14px for navigation, 12px for badges. The type IS the product — this single family carries the entire brand voice.",
+      "sizes": "12, 14, 16, 18, 20, 22, 24, 36, 48, 121, 145",
+      "family": "Neue Montreal",
+      "weight": "400, 530, 600",
+      "lineHeight": "1.00, 1.10, 1.17, 1.20, 1.30",
+      "substitute": "Inter, Söhne, or Neue Haas Grotesk Display Pro"
+    },
+    {
+      "role": "Heavy display variant used for the largest typographic moments in specimen cards. Tighter, more compressed than standard weight 600.",
+      "sizes": "103, 121",
+      "family": "Neue Montreal Semibold",
+      "weight": "600",
+      "lineHeight": "1.00",
+      "substitute": "Inter Tight Bold"
+    },
+    {
+      "role": "Companion serif/contrast face shown in specimen contexts. The 700 weight provides a sharp counterpoint to the geometric Montreal.",
+      "sizes": "103, 121",
+      "family": "Neue York",
+      "weight": "400, 700",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase weight — displayed at exact 103px in the grid to demonstrate each family's character at scale.",
+      "sizes": "103",
+      "family": "Frama Semibold",
+      "weight": "580",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Kyoto Semibold",
+      "weight": "600",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Neue Gstaad Bold",
+      "weight": "700",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Palma Fizzy Heavy",
+      "weight": "800",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Mori Bold",
+      "weight": "700",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — the 300 weight in the grid is deliberately whisper-light, making weight 300 headlines read as anti-convention: authority through restraint rather than volume.",
+      "sizes": "103",
+      "family": "Museum Light",
+      "weight": "300",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Neue Corp Semibold",
+      "weight": "500",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Watch Medium",
+      "weight": "485",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Monument Narrow Medium",
+      "weight": "525",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "Specimen showcase — fixed 103px display size in the font grid.",
+      "sizes": "103",
+      "family": "Model Plastic Regular",
+      "weight": "500",
+      "lineHeight": "1.00"
+    },
+    {
+      "role": "neue-gstaad-normal-bold — detected in extracted data but not described by AI",
+      "sizes": "103px",
+      "family": "neue-gstaad-normal-bold",
+      "weight": "700",
+      "lineHeight": "1"
+    },
+    {
+      "role": "neue-corp-normal-semibold — detected in extracted data but not described by AI",
+      "sizes": "103px",
+      "family": "neue-corp-normal-semibold",
+      "weight": "500",
+      "lineHeight": "1"
+    },
+    {
+      "role": "neue-york-normal-normal-bold — detected in extracted data but not described by AI",
+      "sizes": "121px",
+      "family": "neue-york-normal-normal-bold",
+      "weight": "400",
+      "lineHeight": "1"
+    }
+  ],
+  "description": "Pangram Pangram Foundry is a type foundry that lets the typefaces speak: an editorial canvas of near-pure grayscale, with one saturated orange-red acting as a hot accent. Hero sections are full-bleed photographic plates with massive display type overlaid in white — the type IS the product, so the UI recedes. Surfaces stay quiet (#fafafa and #ededed), borders are hairline black at 1px, and the only chromatic punctuation is the single #ff2f00 accent used for status badges, icons, and tag chrome. Components are lightweight: pill-shaped controls, ghost buttons, soft card containers, and almost no elevation. The overall effect is a curatorial print catalogue translated to screen — restrained, confident, type-first.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #000000\n- background: #fafafa\n- border: #000000 (1px hairline)\n- secondary surface: #ededed\n- muted text: #666666\n- accent: #ff2f00 (badges, icons, highlights only)\n- primary action: #ff2f00 (filled action)\n\nExample Component Prompts:\n\n1. Create a hero font showcase card: full-bleed background image filling a 20px-radius card. Centered title in Neue Montreal 121px weight 600, color #ffffff, line-height 1.00. Subtitle below in Neue Montreal 18px weight 400, #ffffff. A #ff2f00 status pill badge (999px radius, white text, 12px) floats above the title. A white filled pill button ('Explore font') and a white ghost outlined button ('Try for Free') sit side by side at the bottom center — both 20px radius, padding 8px 23px, 14px weight 500.\n\n2. Create a font specimen grid card: #fafafa background, 1px #000000 border, 20px radius, 26px padding. Font name at top-left in Neue Montreal 18px weight 530, #000000. Metadata below in Neue Montreal 14px weight 400, #666666. A #ff2f00 'New' pill badge (999px radius, 12px weight 500, white text) positioned top-right. A massive 'Aa' at ~103px in the showcased font, bottom-aligned, #000000. Cards arrange in a 4-column grid with 20px gaps.\n\n3. Create a status badge: pill shape (999px radius), 4px 12px padding, Neue Montreal 12px weight 500. Three variants: #ff2f00 bg + white text (New), #ffb700 bg + black text (Update), #bfe0ff bg + black text (Early Access).\n\n4. Create the top navigation bar: full-width, transparent background, ~60px height. 'Pangram Pangram Foundry' logo at far left in Neue Montreal 14px weight 530. Five nav links center-aligned in Neue Montreal 14px weight 400, #000000, with 23px gap between items. Search icon, cart icon, and hamburger menu icon right-aligned, all 1px stroke black.\n\n5. Create a filled action button: 20px border-radius, #fafafa background, 1px #000000 border, Neue Montreal 14px weight 500, #000000 text, padding 8px 23px. Inline display, no shadow. This is the 'Explore font' button — the system's only filled button variant."
+    },
+    {
+      "title": "Type System Rules",
+      "content": "The foundry is a single-family UI system: Neue Montreal carries everything from 12px captions to 145px display. Weight 400 = body, weight 530 = subhead/card titles, weight 600 = headings and display. Line-height tightens with size: 1.30 at 12-14px, 1.20 at 16-20px, 1.10 at 36-48px, 1.00 at 121px+. No letter-spacing adjustment. No italic in the primary face. Specimen pages are the only place secondary typefaces appear, always at fixed 103px for visual comparison."
+    }
+  ],
+  "elevationPhilosophy": "The design system deliberately avoids box-shadow and elevation. Separation is achieved exclusively through 1px solid #000000 hairline borders and whitespace. The flat, borderless depth creates a print-catalogue feel — surfaces sit on the page like printed sheets rather than floating digital cards. The only 'depth' technique is a subtle dark gradient overlay on hero images to ensure white text contrast."
+}

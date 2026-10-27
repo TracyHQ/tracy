@@ -1,0 +1,42 @@
+{
+  "slug": "wp-ja-impact",
+  "themeName": "WP Impact",
+  "textDomain": "wp-ja-impact",
+  "description": "JA Impact: the JoomlArt Impact non-profit and charity design as a WordPress block theme, carried from its Joomla 6 quickstart. Its look is measured from the running source, not a catalogue design system.",
+  "variations": [],
+  "rootTokens": "tokens.css",
+  "nav": "top-left",
+  "hero": "split",
+  "updateSlug": "wp-ja-impact",
+  "version": "1.0.14",
+  "roleReads": {
+    "--bg": "--ds-c-bg",
+    "--surface": "--ds-c-surface",
+    "--surface-warm": "--ds-c-surface-warm",
+    "--fg": "--ds-c-fg",
+    "--fg-2": "--ds-c-heading",
+    "--muted": "--ds-c-muted",
+    "--meta": "--ds-c-meta",
+    "--border": "--ds-c-border",
+    "--border-soft": "--ds-c-border-soft",
+    "--accent": "--ds-c-accent",
+    "--accent-on": "--ds-c-accent-on",
+    "--accent-hover": "--ds-c-accent-hover",
+    "--accent-active": "--ds-c-accent-active",
+    "--success": "--ds-c-success",
+    "--warn": "--ds-c-warn",
+    "--danger": "--ds-c-danger",
+    "--font-display": "--ds-font-display",
+    "--font-body": "--ds-font-body",
+    "--radius-sm": "--ds-input-radius",
+    "--radius-md": "--ds-btn-radius",
+    "--radius-lg": "--ds-card-radius",
+    "--radius-pill": "--ds-pill-radius",
+    "--focus-ring": {
+      "colour": "--ds-c-focus-ring"
+    },
+    "--elev-raised": {
+      "keep": "shadow depth, not a colour role"
+    }
+  }
+}

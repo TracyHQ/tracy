@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-103-pending",
+  "itemIds": ["regression:REG-103"],
+  "requirement": "Site changes: no Unknown row from building a site, a sourced file change or Tracy's own EmDash publish; titles not ULIDs; files-only restore names the backup",
+  "oracle": {
+    "source": "tests/regression/cases/REG-103-site-changes-no-unknown-from-setup-sourced-files-own-publish.json",
+    "ref": "PR #900 (fix); fix evidence: tasks/evidence/e2e-dev-0410/bugs.md items 1, 2, 3, 9, 10 (dev e2e 04/10/2026; branch qa/e2e-dev-2026-10-04 worktree e2e-dev-0410)",
+    "invariant": "The script prints verdict PASS and exits 0; every check in checks.json is PASS. build: the web, host and dsh images carry this branch (markers notFoldedSeal, 'Called ONCE, at step 6d', 'tracy_emdash write facts'). A (E1.2): for the new WordPress and Joomla sites, the history git holds exactly one commit at hand-over and tracy-release/v1 is that commit; v1 holds the files provision wrote (WordPress: wp-content/mu-plugins/tracy-access.php, wp-content/plugins/claude-cowork/claude-cowork.php, wp-config.php; Joomla: plugins/system/tracyaccess, administrator/components/com_claudecowork, .htaccess, configuration.php); after reads and CMS log pulls (read again for up to 4 minutes while a WP-Cron upgrade run that started at hand-over completes), counts.unknown = 0 and no item has origin.source 'unknown' (before the fix: 'Files changed; source unknown' 79 files on WordPress, 50 + 109 on Joomla — dev e2e 04/10). B (E5.1c): the upload by WordPress user 1 is one cms-change item, origin.source 'cms-admin', effects.files.count = the number of files the upload wrote, evidence.commitSha set; no outside-files item with origin.source 'unknown'; site_outside.paths of that commit = exactly the upload's files. C (E5.e5, E3.2): the turn's site_write content_update row is ok with target.state 'published', target.title non-empty and target.id = the home entry; the collector's publish row of that entry is in no V2 item and counts.unknown is the same as before the turn; the chat item's description.params.title = that title; on screen the row's .tv-activity-desc-text contains the title and not the ULID. D (E6.5): the files-only restore (POST /restore mode reset to the backup's sha) answers ok; its operation item has description.key 'site-changes.reset' with params.version = the backup's number; on screen the row reads exactly 'Put the site files back to Backup <N>' (before the fix: 'Put the site files back to commit <sha>').",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, seat:owner, site:create:wp, site:create:jo, site:em, model, browser:cdp-9222, playwright"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [
+    "need:stand",
+    "need:seat:owner",
+    "need:site:create:wp",
+    "need:site:create:jo",
+    "need:site:em",
+    "need:model",
+    "need:browser:cdp-9222",
+    "need:playwright"
+  ],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-103"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "flaky-model", "owner:harness"],
+  "regression": {
+    "id": "REG-103",
+    "pr": 900,
+    "kind": "fix",
+    "area": "site-changes",
+    "file": "tests/regression/cases/REG-103-site-changes-no-unknown-from-setup-sourced-files-own-publish.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": true,
+  "command": [],
+  "needs": [
+    "stand",
+    "seat:owner",
+    "site:create:wp",
+    "site:create:jo",
+    "site:em",
+    "model",
+    "browser:cdp-9222",
+    "playwright"
+  ]
+}

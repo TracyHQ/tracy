@@ -1,0 +1,409 @@
+---
+/**
+ * One collection, three looks, chosen by which fields the rows fill (no layout switch field exists):
+ * - any `step_badge` → release list (changelog): version + date on the left, badge/title/text on the right;
+ * - else any `step_phase` → steps across `columns` columns joined by a line, icon node per step (home);
+ * - else → vertical rail of dots (company story).
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { rows } from './a/panel'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the inner-page 760px column (views/Sections.astro). */
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+const items = rows(data.items).filter((row) => row.step_title || row.step_text || row.step_time)
+const variant = items.some((row) => row.step_badge)
+  ? 'releases'
+  : items.some((row) => row.step_phase)
+    ? 'steps'
+    : 'rail'
+const columns = Math.min(6, Math.max(1, Number.parseInt(String(data.columns ?? ''), 10) || items.length || 1))
+const hasHead = Boolean(data.eyebrow || data.title || data.sub)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'incident_timeline', null)
+---
+
+{
+	(hasHead || items.length > 0) && (
+		<section class:list={['tl', `tl-${variant}`, narrow && 'is-narrow']} {...s()}>
+			<div class="k-container tl-inner">
+				{hasHead && (
+					<div class="tl-head">
+						{data.eyebrow && <p class="k-eyebrow tl-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+						{data.title && <h2 class="k-h2 tl-title" {...s('title')}>{data.title}</h2>}
+						{data.sub && <p class="k-sub tl-sub" {...s('sub')}>{data.sub}</p>}
+					</div>
+				)}
+
+				{variant === 'steps' && items.length > 0 && (
+					<ol class="steps" role="list" style={`--tl-cols: ${columns}`}>
+						{items.map((row) => (
+							<li class="step" {...s.block('items')}>
+								<span class="step-line" aria-hidden="true" />
+								<div class="step-head">
+									<span class="step-node" aria-hidden="true">
+										<Icon name={row.step_icon} size={13} strokeWidth={2} />
+									</span>
+									{row.step_time && <span class="step-time" {...s('items.step_time')}>{row.step_time}</span>}
+								</div>
+								{row.step_phase && <p class="step-phase" {...s('items.step_phase')}>{row.step_phase}</p>}
+								{row.step_title && <h3 class="step-title" {...s('items.step_title')}>{row.step_title}</h3>}
+								{row.step_text && <p class="step-text" {...s('items.step_text')}>{row.step_text}</p>}
+							</li>
+						))}
+					</ol>
+				)}
+
+				{variant === 'rail' && items.length > 0 && (
+					<ol class="rail" role="list">
+						{items.map((row) => (
+							<li class="rail-item" {...s.block('items')}>
+								<span class="rail-dot" aria-hidden="true" />
+								<div class="rail-body">
+									{row.step_time && <p class="rail-time" {...s('items.step_time')}>{row.step_time}</p>}
+									{row.step_title && <h3 class="rail-title" {...s('items.step_title')}>{row.step_title}</h3>}
+									{row.step_text && <p class="rail-text" {...s('items.step_text')}>{row.step_text}</p>}
+								</div>
+							</li>
+						))}
+					</ol>
+				)}
+
+				{variant === 'releases' && items.length > 0 && (
+					<ol class="releases" role="list">
+						{items.map((row) => (
+							<li class="release" {...s.block('items')}>
+								<div class="release-meta">
+									{row.step_time && <p class="release-version" {...s('items.step_time')}>{row.step_time}</p>}
+									{row.step_phase && <p class="release-date" {...s('items.step_phase')}>{row.step_phase}</p>}
+								</div>
+								<div class="release-body">
+									{row.step_badge && <span class="release-badge" {...s('items.step_badge')}>{row.step_badge}</span>}
+									{row.step_title && <h3 class="release-title" {...s('items.step_title')}>{row.step_title}</h3>}
+									{row.step_text && <p class="release-text" {...s('items.step_text')}>{row.step_text}</p>}
+								</div>
+							</li>
+						))}
+					</ol>
+				)}
+			</div>
+		</section>
+	)
+}
+
+<style>
+	ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.tl-head {
+		max-width: 560px;
+		margin-bottom: 44px;
+	}
+	.tl-eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+	}
+	.tl-rail .tl-eyebrow {
+		line-height: 1.7;
+	}
+	.tl-title {
+		margin: 0;
+	}
+	/* Measured on the source (home steps): 34/37.4/−0.8 down to 621px, 26/28.6/−0.5 at 620px and below. */
+	.tl-steps .tl-title {
+		font-size: var(--ds-size-heading, 34px);
+		line-height: 1.1;
+		letter-spacing: -0.8px;
+	}
+	@media (max-width: 620px) {
+		.tl-steps .tl-title {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, 26px));
+			letter-spacing: -0.5px;
+		}
+	}
+	.tl-sub {
+		margin: 14px 0 0;
+	}
+
+	/* Steps: tinted band edged by 1px border lines top and bottom (the source draws both on its inner
+	   section, y=1511 and y=1973 at 1440), with a line through every step's node. The section after it
+	   (the query split) adds only its bottom line, so this bottom edge is the single seam between them. */
+	.tl-steps {
+		background: var(--k-elevated);
+		border-block: 1px solid var(--k-border);
+	}
+	.tl-steps .tl-inner {
+		padding-block: 80px;
+	}
+	.steps {
+		display: grid;
+		grid-template-columns: repeat(var(--tl-cols), minmax(0, 1fr));
+	}
+	.step {
+		position: relative;
+		padding-inline: 22px;
+	}
+	.step-line {
+		position: absolute;
+		top: 12px;
+		right: 0;
+		left: 0;
+		height: 2px;
+		background: var(--k-border);
+	}
+	.step-head {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 22px;
+	}
+	.step-node {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 26px;
+		height: 26px;
+		border: 2px solid var(--k-primary);
+		border-radius: 999px;
+		background: var(--k-surface);
+		color: var(--k-primary);
+	}
+	.step-time {
+		padding-right: 6px;
+		background: var(--k-elevated);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1.55;
+		letter-spacing: 0.5px;
+		color: var(--k-primary);
+	}
+	.step-phase {
+		margin: 0 0 8px;
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		line-height: 1.55;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.step-title {
+		margin: 0 0 8px;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 1.1;
+		letter-spacing: -0.4px;
+	}
+	.step-text {
+		margin: 0;
+		padding-right: 14px;
+		font-size: 14px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+
+	/* Rail: reading-width column, dots joined by a vertical line. The 760px caps only matter when a
+	   page places these outside the inner-page column. */
+	.tl-rail .tl-inner,
+	.tl-releases .tl-inner {
+		max-width: 760px;
+	}
+	.tl-rail .tl-inner {
+		padding-block: 72px;
+	}
+	.tl-rail .tl-title,
+	.tl-releases .tl-title {
+		font-size: 24px;
+		line-height: 1.1;
+		letter-spacing: -0.5px;
+	}
+	.rail-item {
+		position: relative;
+		display: grid;
+		grid-template-columns: 60px minmax(0, 1fr);
+		padding-bottom: 40px;
+	}
+	.rail-item:last-child {
+		padding-bottom: 0;
+	}
+	/* Line from this dot's centre to the next dot's centre. */
+	.rail-item:not(:last-child)::before {
+		content: '';
+		position: absolute;
+		top: 10px;
+		bottom: -10px;
+		left: 29px;
+		width: 2px;
+		background: var(--k-border);
+	}
+	.rail-dot {
+		position: relative;
+		width: 12px;
+		height: 12px;
+		margin: 6px 0 0 24px;
+		border-radius: 999px;
+		background: var(--k-primary-fill);
+	}
+	.rail-time {
+		margin: 0 0 6px;
+		font-family: var(--font-mono);
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.7;
+		color: var(--k-primary);
+	}
+	.rail-title {
+		margin: 0 0 8px;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 1.1;
+		letter-spacing: -0.4px;
+	}
+	.rail-text {
+		margin: 0;
+		font-size: 14.5px;
+		line-height: 1.75;
+		color: var(--k-text);
+	}
+
+	/* Releases: ruled rows. The source's column is 760 wide without inner padding. */
+	.tl-releases .tl-inner {
+		max-width: calc(760px + 64px);
+		padding-block: 64px 72px;
+	}
+	/* Inside the inner-page column the rows run edge to edge, as in the source article; below the
+	   column width the container gutter comes back so text never touches the screen edge. */
+	@media (min-width: 824px) {
+		.tl-releases.is-narrow .tl-inner {
+			padding-inline: 0;
+		}
+	}
+	.release {
+		display: grid;
+		grid-template-columns: 120px minmax(0, 1fr);
+		column-gap: 24px;
+		align-items: start;
+		padding-block: 36px;
+		border-bottom: 1px solid var(--k-border);
+	}
+	.release:first-child {
+		padding-top: 0;
+	}
+	.release:last-child {
+		border-bottom: 0;
+	}
+	.release-meta p {
+		margin: 0;
+	}
+	.release-version {
+		font-family: var(--font-heading);
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 1.3;
+		color: var(--k-heading);
+	}
+	.release-date {
+		padding-top: 2px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--k-muted);
+	}
+	.release-badge {
+		display: inline-flex;
+		align-items: center;
+		margin-bottom: 8px;
+		padding: 3px 10px;
+		border: 1px solid color-mix(in srgb, var(--k-primary) 25%, transparent);
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--k-primary) 8%, transparent);
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		line-height: 1;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.release-title {
+		margin: 0 0 8px;
+		font-size: 19px;
+		font-weight: 600;
+		line-height: 1.3;
+		letter-spacing: -0.3px;
+	}
+	.release-text {
+		margin: 0;
+		font-size: 15px;
+		line-height: 1.65;
+		color: var(--k-text);
+	}
+
+	@media (max-width: 991px) {
+		.steps {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			row-gap: 40px;
+		}
+	}
+	@media (max-width: 767px) {
+		.tl-steps .tl-inner,
+		.tl-rail .tl-inner {
+			padding-block: 56px;
+		}
+		.tl-releases .tl-inner {
+			padding-block: 40px;
+		}
+		.steps {
+			grid-template-columns: minmax(0, 1fr);
+			row-gap: 32px;
+		}
+		.step-line {
+			display: none;
+		}
+		.rail-item {
+			grid-template-columns: 44px minmax(0, 1fr);
+		}
+		.rail-item:not(:last-child)::before {
+			left: 21px;
+		}
+		.rail-dot {
+			margin-left: 16px;
+		}
+		.tl-rail .tl-title,
+		.tl-releases .tl-title {
+			font-size: 22px;
+		}
+		/* Version and date share a line; the body stacks under them. */
+		.release {
+			grid-template-columns: minmax(0, 1fr);
+			row-gap: 12px;
+			padding-block: 32px;
+		}
+		.release-meta {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: 10px;
+		}
+		.release-version {
+			font-size: 17px;
+		}
+		.release-title {
+			font-size: 18px;
+		}
+		.release-text {
+			font-size: 14.5px;
+		}
+	}
+</style>

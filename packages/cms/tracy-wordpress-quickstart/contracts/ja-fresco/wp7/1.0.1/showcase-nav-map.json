@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-fresco/wp7/1.0.1",
+  "baseHash": "f30b1c662b332ca7bee3a447b67dc12b38fd266f295a5c64ec3ff3b0be484ff2",
+  "baseFiles": {
+    "manifest.json": "3c38425d695af115421d28568a383bf71c07746378ee55683439536cc4fbc4cd",
+    "content-map.json": "8b7bbb5f3041e034f4af9b1b9ade53a4e449bd218a8a2d02cbafed9a4f2ce51d",
+    "presentation-lock.json": "ff7203a437c1454234258412682fde810aee2d214dc7ad862f7f015d5631e0bd"
+  },
+  "inputs": {
+    "navigation-source.json": "6a2f4638745589493f228457c8ea2d757d68e3ea73fa393b34ffc1d14ca8ea95",
+    "inventory.json": "b68eaf2f779e8c33209c1f814e2734f9289f20cc5aa6227fd4c699ba8efd3075"
+  },
+  "decisionsHash": "915b59fce1837399693e561286082a8f796e45af86590c99f8fc4142be31cf39",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 80,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 1",
+        "pageId": 54
+      },
+      "label": "Home 1",
+      "path": [
+        "Home",
+        "Home 1"
+      ],
+      "contains": [],
+      "rule": "hide.home-branch-variant",
+      "reason": "the home page again, under \"Home\", which already links it",
+      "key": "navigation-80",
+      "before": "56326e0a61ace6480daedf81940200e17f6fd6c9553c8c179e13b016d5f4fa2e",
+      "after": "5788230c242cb9a787923753973737ee84180a866ba94228ced9c904fbac0e48"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 80,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 2",
+        "pageId": 63
+      },
+      "label": "Home 2",
+      "path": [
+        "Home",
+        "Home 2"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (51 blocks of headings, images and buttons): another layout of the same demo; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-80",
+      "before": "5788230c242cb9a787923753973737ee84180a866ba94228ced9c904fbac0e48",
+      "after": "72b59f02eddb8535679bf9f6c64c0be3069b1602b4200424b323a512e15271aa"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 80,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 3",
+        "pageId": 64
+      },
+      "label": "Home 3",
+      "path": [
+        "Home",
+        "Home 3"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (164 blocks of headings, images and buttons): another layout of the same demo; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-80",
+      "before": "72b59f02eddb8535679bf9f6c64c0be3069b1602b4200424b323a512e15271aa",
+      "after": "03bcd180f43ded8c0998c20d1db8d05a19263b863fd8648cda57fdfe19505f0d"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-80",
+      "before": "56326e0a61ace6480daedf81940200e17f6fd6c9553c8c179e13b016d5f4fa2e",
+      "after": "03bcd180f43ded8c0998c20d1db8d05a19263b863fd8648cda57fdfe19505f0d"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 54,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "Menu",
+      "path": [
+        "Menu"
+      ],
+      "pageId": 59,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": 56,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "Gallery",
+      "path": [
+        "Gallery"
+      ],
+      "pageId": 57,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "Chiefs",
+      "path": [
+        "Chiefs"
+      ],
+      "pageId": 58,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "Offer",
+      "path": [
+        "Offer"
+      ],
+      "pageId": 60,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-80",
+      "where": "wp_navigation 80 (mainmenu)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 55,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-81",
+      "where": "wp_navigation 81 (about)",
+      "label": "Reservation Policy",
+      "path": [
+        "Reservation Policy"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-81",
+      "where": "wp_navigation 81 (about)",
+      "label": "Privacy Policy",
+      "path": [
+        "Privacy Policy"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-81",
+      "where": "wp_navigation 81 (about)",
+      "label": "Health & Safety",
+      "path": [
+        "Health & Safety"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-81",
+      "where": "wp_navigation 81 (about)",
+      "label": "FAQ",
+      "path": [
+        "FAQ"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 3,
+    "templateParts": 0,
+    "kept": 11,
+    "unresolved": 0
+  }
+}

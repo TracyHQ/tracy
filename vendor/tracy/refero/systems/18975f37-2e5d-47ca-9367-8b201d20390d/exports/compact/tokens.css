@@ -1,0 +1,30 @@
+:root {
+  /* Colors */
+  --color-canopy-green: #0a3922;
+  --color-coral-pulse: #ff643b;
+  --color-indigo-bloom: #460095;
+  --color-leaf-bright: #1dbf73;
+  --color-deep-teal: #003642;
+  --color-orchid-tint: #f3b3fe;
+  --color-sky-signal: #00b4dc;
+  --color-aubergine: #47264c;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-ash: #a6a6a6;
+  --color-slate: #7a7a7a;
+  --color-graphite: #3d3d3d;
+  --color-charcoal: #333333;
+  --color-frost-gray: #e0e0e0;
+  --color-cloud-gray: #f2f2f2;
+  --color-lavender-mist: #eee2ff;
+  --color-mint-wash: #d2f2e3;
+  --color-sky-wash: #ccf0f8;
+  --color-sage-wash: #e4f7ee;
+  --color-lilac-wash: #fdf0ff;
+  --color-peach-wash: #ffede8;
+  --color-cream: #faf7e8;
+  --color-sand: #f4ece9;
+
+  /* Typography — Font Families */
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

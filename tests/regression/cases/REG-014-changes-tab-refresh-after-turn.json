@@ -1,0 +1,43 @@
+{
+  "id": "REG-014",
+  "kind": "fix",
+  "title": "Site changes tab re-reads /activity and shows the new turn row within 3 s after a turn ends, without a reload",
+  "pr": 787,
+  "area": "site-changes/refresh",
+  "cms": ["wp"],
+  "needs": ["stand", "site:wp", "model", "seat:owner"],
+  "flaky_model": true,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY = site key of a WordPress site where seat A is owner (e.g. scv2wp.scv2.tracy.test); RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c 're-read Site changes' /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js must print a number >= 1; otherwise stop with BLOCKED note image-older-than-3961e900c.",
+    "Unit seam: node --test --test-reporter=tap packages/site/tracy-site-tabs/test/e2e/changes-refresh.test.mjs",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); use a NEW context {locale:'en-US', viewport:{width:1440,height:1000}} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; log Date.now() and the URL of every page request whose URL contains '/api/sites/' + encodeURIComponent(KEY) + '/activity?'; count main-frame 'framenavigated' events; never close a page, a context or the browser. (Reference implementation: tasks/evidence/bug-0310-leemood/issue3/after-fix/measure-open-tab-count.mjs, with scv2 values hard-coded.)",
+    "page.goto(ORIGIN + '/' + KEY); wait (<= 90 s) until page.url() contains '/s/session-' (SID = its 'session-<uuid>' part) and the first [data-composer-input='true'] is visible; goto page.url() with searchParams tab=tracy:changes and site=KEY; wait (<= 90 s) for [data-site-changes-v2] [data-total] and until no [data-site-changes-v2] [data-reading] remains. Record IDS0 = the data-event of every li.tv-activity-event, N0 = their count, T0 = the integer in [data-site-changes-v2] [data-total].",
+    "In the page, observe document.body (subtree, childList, attributes, characterData) with a MutationObserver that: the first time an li.tv-activity-event[data-kind='turn'] exists whose data-event starts with SID + ':' and is not in IDS0, sets window.__rowAt = Date.now() and window.__row = its data-event; keeps window.__minRows = the lowest count of li.tv-activity-event seen; sets window.__sawReading = true whenever [data-site-changes-v2] [data-reading] exists. Also count document 'visibilitychange' events in window.__vis.",
+    "Set T0DB=$(pq \"select now()\"); clear the request log and the navigation count; send 'Change the site tagline to exactly: REG-014-' + RUN + '. Use the content tools; do nothing else.' (README § Send a chat message: box = page.locator(\"[data-composer-input='true']\").first(); await box.fill(text); wait (<= 10 s) until box.textContent() === text, else fill once more, still different → BLOCKED note composer-rejected-text; box.press('Enter'); SENT_AT = Date.now() right after Enter; then wait (<= 15 s) until box.textContent() === '', else BLOCKED note composer-did-not-send). Never type it as click, Meta+A, Backspace, page.keyboard.insertText in one go: the composer drops the text (7/7 on scv2, 03/10).",
+    "Poll every 1 s (at most 10 min, else BLOCKED note turn-open-timeout): pq \"select turn_id, state, (extract(epoch from closed_at)*1000)::bigint from site_turn where site_key='$KEY' and actor='$A' and opened_at > '$T0DB' order by opened_at desc limit 1\" until state is not 'open'; TURN = turn_id, ENDED = the epoch ms. If pq \"select count(*) from site_write where site_key='$KEY' and turn_id='$TURN' and outcome <> 'refused'\" and pq \"select files from site_turn where turn_id='$TURN'\" both print 0 -> BLOCKED note agent-did-not-edit (a turn that wrote nothing has no row).",
+    "Wait until window.__rowAt is set or Date.now() > ENDED + 90000; then read window.__rowAt, __row, __minRows, __sawReading, __vis, the [data-total] integer, the request log and the navigation count."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "The unit seam exits 0 with TAP '# pass 5' and '# fail 0'.",
+    "window.__row === TURN, and li.tv-activity-event[data-event='<TURN>'] has data-source='chat'.",
+    "window.__rowAt - ENDED <= 3000 (fixed build on scv2: 763, 766, 1117 ms; before #787 no row within 90 s and only F5 showed it).",
+    "Main-frame navigations since SENT_AT === 0.",
+    "Exactly one logged /activity request between SENT_AT and window.__rowAt; its URL contains 'version=2' and does not contain 'cursor='.",
+    "The [data-total] integer is >= T0 + 1.",
+    "window.__sawReading === false and window.__minRows >= N0 (the rows stayed on screen during the re-read); window.__vis === 0."
+  ],
+  "selectors": {
+    "siteTabsMarker": "'re-read Site changes' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js (dsh container)",
+    "composer": "[data-composer-input='true'] (first)",
+    "changesTab": "<session URL>?tab=tracy:changes&site=<KEY>",
+    "siteChanges": "[data-site-changes-v2] (.tv-activity-v2); still reading: [data-site-changes-v2] [data-reading]",
+    "total": "[data-site-changes-v2] [data-total]",
+    "row": "li.tv-activity-event[data-event='<turnId>'][data-kind='turn'][data-source='chat']",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=all (the page's re-read; items[].id = <sessionId>:<turn>)",
+    "turnClose": "site_turn(site_key, turn_id, actor, state, opened_at, closed_at)"
+  },
+  "evidence": "tasks/evidence/bug-0310-leemood/issue3/after-fix",
+  "fence": "tracy-site-tabs followTurnEnds bumps the changes tick on the on-screen conversation's turn/end, which moves ChangesView's reloadKey and fires one 150 ms-settled GET /api/sites/:key/activity?version=2 that merges the new row in while the old rows stay on screen."
+}

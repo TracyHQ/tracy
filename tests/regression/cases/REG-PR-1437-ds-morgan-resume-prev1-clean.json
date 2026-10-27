@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1437-ds-morgan-resume-prev1-clean",
+  "kind": "fix",
+  "title": "JA Morgan 1.0.8 and JA Resume 1.0.6 (no more links to files Joomla 5/6 and the package do not ship) measure clean at probe v10, and tch holds their contracts",
+  "pr": 1437,
+  "area": "design-system/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Judge the committed design-system-measurement.json of quickstart/ja-morgan/j6 1.0.8 and quickstart/ja-resume/j6 1.0.6 with judgeMeasurement and preview-system-issues.json, as /ops judges it.",
+    "S2: Read the slot contracts joomla-ja-morgan.json and joomla-ja-resume.json maxVersion for each tag.",
+    "S3: Read each release's content contract manifest.json for the webroot sha256 the GitHub release published."
+  ],
+  "expect": [
+    "S1: both leave 0 rules failing; only SCREEN-1 may warn.",
+    "S2: maxVersion holds 1.0.8 (Morgan) and 1.0.6 (Resume).",
+    "S3: Morgan names webroot d6e4cc80..., Resume 7ebee080...."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1437-ds-morgan-resume-prev1-clean.mjs",
+    "evidence": "packages/cms/tracy-joomla-quickstart/contracts/{ja-morgan/j6/1.0.8,ja-resume/j6/1.0.6}/design-system-measurement.json"
+  },
+  "evidence": "Dev /ops 18/10/2026: PREV-1 must fix on JA Morgan 1.0.7 (10 of 44 files 404) and JA Resume 1.0.5 (1 of 28); root cause and fix in ja-products #35, #36",
+  "fence": "Measurement judging and the contract files tch serves for the two releases; does not drive a stand or a browser",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1437-ds-morgan-resume-prev1-clean.mjs"],
+    "timeout_s": 120
+  }
+}

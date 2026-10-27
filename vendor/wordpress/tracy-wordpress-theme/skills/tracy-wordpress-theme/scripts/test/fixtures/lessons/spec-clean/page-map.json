@@ -1,0 +1,29 @@
+{
+  "template": {
+    "name": "lessons-fixture",
+    "title": "Lessons fixture"
+  },
+  "pages": [
+    {
+      "file": "index.html",
+      "view": "front-page",
+      "path": "/"
+    },
+    {
+      "file": "services.html",
+      "view": "category",
+      "path": "/services"
+    },
+    {
+      "file": "about.html",
+      "view": "page-article",
+      "path": "/about"
+    },
+    {
+      "file": "404.html",
+      "view": "404",
+      "path": "/404",
+      "synthetic": true
+    }
+  ]
+}

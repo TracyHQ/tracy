@@ -1,0 +1,350 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-vega/j6/1.0.8",
+  "baseHash": "d7579215f3212199b00291154436759d65bff95d8ecd249c806494496deb8394",
+  "baseFiles": {
+    "manifest.json": "97d98e682e5b06e179947d29cf4240b6ffc58c65b13932df44e76f18833c4420",
+    "content-map.json": "f7d48dee0d8ab965f27678451b655796852c3ad25b34fa47cdc3d62f88feb8c2",
+    "presentation-lock.json": "b25f1635e3983035a3964f4a8c3ea721765e049533b97c2b8d551a78346fc32d"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-109",
+      "identity": {
+        "path": "typography",
+        "menutype": "solutions",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-111",
+      "identity": {
+        "path": "error-page",
+        "menutype": "solutions",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-112",
+      "identity": {
+        "path": "offline-pages",
+        "menutype": "solutions",
+        "language": "*"
+      },
+      "label": "Offline Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Pages\" screen"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Login Form",
+      "where": "explore/login-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Registration Form",
+      "where": "explore/registration-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Profile",
+      "where": "explore/profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Smart Search",
+      "where": "solutions/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Category Blog",
+      "where": "resources/category-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Featured Articles",
+      "where": "resources/featured-articles",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Author listing",
+      "where": "solutions/author-listing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "Blog Detail",
+      "where": "resources/blog-detail",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-118",
+      "label": "About Us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "Portfolio",
+      "where": "mainmenu/portfolio",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Careers",
+      "where": "join-us/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "Open Positions",
+      "where": "join-us/open-positions",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Database Security",
+      "where": "mainmenu/portfolio/database-security",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "IT Consultancy",
+      "where": "mainmenu/portfolio/it-consultancy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "App Development",
+      "where": "mainmenu/portfolio/app-development",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Cloud Services",
+      "where": "mainmenu/portfolio/cloud-services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "Software Development",
+      "where": "mainmenu/portfolio/software-development",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Managed Services",
+      "where": "mainmenu/portfolio/managed-services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-144",
+      "label": "Services",
+      "where": "mainmenu/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "News",
+      "where": "mainmenu/news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-146",
+      "label": "Managed Services",
+      "where": "mainmenu/services/managed-services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-147",
+      "label": "Software Development",
+      "where": "mainmenu/services/software-development",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-148",
+      "label": "Cloud Services",
+      "where": "mainmenu/services/cloud-services-2",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-149",
+      "label": "App Development",
+      "where": "mainmenu/services/app-development",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-150",
+      "label": "IT Consultancy",
+      "where": "mainmenu/services/it-consultancy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-151",
+      "label": "Database Security",
+      "where": "mainmenu/services/database-security",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-152",
+      "label": "Industry Manufacturing",
+      "where": "industry-focus/industry-manufacturing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Transportation Logistics",
+      "where": "industry-focus/transportation-logistics",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Healthcare",
+      "where": "industry-focus/healthcare",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-156",
+      "label": "Banks & Insurance",
+      "where": "industry-focus/banks-insurance",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-157",
+      "label": "Consulting Providers",
+      "where": "industry-focus/consulting-providers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-158",
+      "label": "Non Profit",
+      "where": "industry-focus/non-profit",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 17 entries stay"
+    },
+    {
+      "key": "module-129",
+      "label": "Solutions",
+      "where": "mod_menu@footnav-1",
+      "rule": "keep.default",
+      "reason": "renders solutions: 2 entries stay"
+    },
+    {
+      "key": "module-130",
+      "label": "Join us",
+      "where": "mod_menu@footnav-1",
+      "rule": "keep.default",
+      "reason": "renders join-us: 2 entries stay"
+    },
+    {
+      "key": "module-145",
+      "label": "Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 17 entries stay"
+    },
+    {
+      "key": "module-149",
+      "label": "Industry Focus",
+      "where": "mod_menu@mega-3",
+      "rule": "keep.default",
+      "reason": "renders industry-focus: 6 entries stay"
+    },
+    {
+      "key": "module-157",
+      "label": "Explore",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders explore: 3 entries stay"
+    },
+    {
+      "key": "module-158",
+      "label": "Resources",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders resources: 3 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 3,
+    "modules": 0,
+    "kept": 40,
+    "unresolved": 0
+  }
+}

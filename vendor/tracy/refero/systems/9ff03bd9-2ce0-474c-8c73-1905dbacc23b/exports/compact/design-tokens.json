@@ -1,0 +1,64 @@
+{
+  "color": {
+    "voltage-yellow": {
+      "$value": "#ffc700",
+      "$type": "color",
+      "$description": "Voltage Yellow — Primary section background and dominant display text color. Headings, borders, and full-bleed canvas bands. Carries the highest visual weight on the page"
+    },
+    "radioactive-orange": {
+      "$value": "#ff4e27",
+      "$type": "color",
+      "$description": "Radioactive Orange — Secondary section background and accent border color. Outlined action borders, dividers, icon strokes, and full-bleed canvas bands that create contrast with the yellow"
+    },
+    "electric-cobalt": {
+      "$value": "#0029ff",
+      "$type": "color",
+      "$description": "Electric Cobalt — Primary action background and tertiary section background. The only filled button color in the system; also used for full-bleed canvas bands and decorative sticker badges"
+    },
+    "burnt-sienna": {
+      "$value": "#4d170c",
+      "$type": "color",
+      "$description": "Burnt Sienna — Error and warning state. Input border in invalid state. Reads as a deep brick-red against the lighter orange, preserving the system’s warm-color vocabulary"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text on light/yellow backgrounds, and the dominant border color across all surface bands. Functions as a hairline outline and text color wherever contrast is needed against yellow or white"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Body text and button text on cobalt and orange surfaces. The inverse of Ink Black — the two together carry all foreground-to-background contrast in the system"
+    }
+  },
+  "font": {
+    "morganite": {
+      "$value": "Morganite",
+      "$type": "fontFamily",
+      "$description": "Hero display face for the single largest typographic statement per page. The extreme 0.70 line-height stacks letterforms with no air between lines — type is treated as a solid block, not a paragraph. This face defines the agency’s shock-value identity."
+    },
+    "thunder": {
+      "$value": "Thunder",
+      "$type": "fontFamily",
+      "$description": "Secondary display face used at near-hero scale. The light weight is anti-convention for a 122px headline — most agencies use 700-900 here. Thunder’s 300 whispers while still occupying monumental space, creating tension between volume and restraint. Substituted by ITC Avant Garde Gothic, Futura, or any geometric humanist sans."
+    },
+    "sentient": {
+      "$value": "Sentient",
+      "$type": "fontFamily",
+      "$description": "Workhorse text face for body copy, buttons, inputs, links, and small labels. Carries tight negative tracking (-0.0100em to -0.0200em) even at body sizes, which is a serif’s signature in a sans-dominated layout. Substituted by any transitional serif."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Fine-print and micro-label face for legal text, tiny annotations, and icon-adjacent micro-copy. Its system-serif feel is a deliberate contrast to the custom display faces, creating a visual fossil-record effect."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sick.agency",
+      "siteName": "SICK AGENCY",
+      "extractedAt": "2026-06-03T19:49:00.352Z",
+      "variant": "compact"
+    }
+  }
+}

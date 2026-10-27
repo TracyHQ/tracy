@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-void-ink: #050311;
+  --color-pure-white: #ffffff;
+  --color-carbon-black: #000000;
+  --color-ash-gray: #9b9aa0;
+  --color-graphite: #44424d;
+
+  /* Typography */
+  --font-fkgroteskneue: 'FKGroteskNeue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Parchment — Page canvas and base background — the neutral ground everything sits on"
+    },
+    "warm-cream": {
+      "$value": "#f8f4e6",
+      "$type": "color",
+      "$description": "Warm Cream — Section backgrounds, footer surface, and warm page rhythm — gives the system its apothecary warmth"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Text on dark imagery, elevated card surfaces, and bright contrast moments"
+    },
+    "mist-gray": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Mist Gray — Subtle surface fills — nav background, button hover rests, and quiet UI layers"
+    },
+    "ink": {
+      "$value": "#1e1e1f",
+      "$type": "color",
+      "$description": "Ink — Primary body text and structural borders — softer than pure black, warmer against the cream"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Heading text, heavy borders, icon strokes — the highest-contrast neutral in the system"
+    },
+    "sky-blue": {
+      "$value": "#8ec7e2",
+      "$type": "color",
+      "$description": "Sky Blue — Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "pollen-yellow": {
+      "$value": "#f7ca50",
+      "$type": "color",
+      "$description": "Pollen Yellow — Highlight labels, breadcrumb tags, scroll-indicator text — rare warm punctuation against the cream"
+    }
+  },
+  "font": {
+    "switzer": {
+      "$value": "Switzer",
+      "$type": "fontFamily",
+      "$description": "Display and heading type — geometric sans with consistent tight tracking, carries the editorial voice from 20px subheads up to 76px hero headlines"
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Body and intermediate type — comfortable reading at 15–18px, scales up to 42px for feature sub-heads"
+    },
+    "pt-mono": {
+      "$value": "PT Mono",
+      "$type": "fontFamily",
+      "$description": "Nav items, category labels, and small uppercase tags — the only monospace, used to signal nav/system elements distinct from editorial body"
+    },
+    "system-sans-serif": {
+      "$value": "system sans-serif",
+      "$type": "fontFamily",
+      "$description": "Micro-copy and fallback — only appears at 12px in utility positions"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://alpbio.com",
+      "siteName": "Alpine Bio",
+      "extractedAt": "2026-06-03T22:08:59.606Z",
+      "variant": "compact"
+    }
+  }
+}

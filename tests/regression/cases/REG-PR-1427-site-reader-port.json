@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1427-site-reader-port",
+  "kind": "fix",
+  "title": "Local PHP reads clear public custom ports while EmDash and remote sites retain their target ports",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run node --test apps/tracy-web/test/design-system-site-readers.test.mjs."],
+  "expect": [
+    "All 89 reader/native workflow tests pass. A local WordPress or Joomla site publicly served on 8443 is read through HTTP port 80, preserving path and query.",
+    "Local EmDash retains container port 4321. Remote custom public port 8443 and external font origins remain unchanged.",
+    "A refused content door retains COMPONENT_NOT_REGISTERED before any subsequent record read or mutation."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/resolver.js"
+  },
+  "fence": "Resolve protocol, hostname and port from the same target origin.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/design-system-site-readers.test.mjs",
+      "apps/tracy-web/test/brief-quickstart-first.test.mjs"
+    ],
+    "needs": []
+  }
+}

@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-signal-orange: #ff5000;
+  --color-seafoam-panel: #a5d3d4;
+  --color-cream-stock: #f9f8ea;
+  --color-charcoal: #282828;
+  --color-ink: #000000;
+  --color-pebble: #6a6a6a;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-maax-mono: 'Maax Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sofia-regular: 'Sofia-Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

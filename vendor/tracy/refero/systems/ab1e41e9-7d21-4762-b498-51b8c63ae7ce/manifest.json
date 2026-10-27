@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ab1e41e9-7d21-4762-b498-51b8c63ae7ce",
+  "status": "complete",
+  "name": "Jitter",
+  "url": "https://styles.refero.design/style/ab1e41e9-7d21-4762-b498-51b8c63ae7ce",
+  "sourceWebsite": "https://jitter.video",
+  "extractedAt": "2026-06-03T19:36:31.987Z",
+  "capturedAt": "2026-10-08T05:16:02.043538+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "kinetic playground in a Swiss design studio — soft white surfaces, pill-shaped cards, and a violet spark firing on near-black ink.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/52aa4104-ebba-430c-8932-4795dc8b6aeb.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1dd30ea9-c9c9-4c3c-a952-7b7a22f7525c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6db44593-8399-4160-8c95-1b3bf30aeeec.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3f648ff8-d317-412c-8154-7b156109f2ae.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f366a465-2cf4-41d8-980e-79027db10953.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "79e1329e92df962101720ec29c80ca648c8247162847240bcdd6f0a759073d05",
+      "bytes": 23306
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "0fd17222788c1e145c7e00ced0cf3e0b3c554cd9fe9b1b2da88129a9781fc717",
+      "bytes": 61321
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8ff3e2011db557b0f96d879383113c65f96e0374310e657e17a736d473795d58",
+      "bytes": 18059
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6bf7a19991f6e051e3fe9302894b4a50f8f49c7c0568161370366e82000084fe",
+      "bytes": 20832
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "80b3d99366a7804885d8bf9fe61e24100ce93ca64f6318359759d6d6fc678628",
+      "bytes": 14209
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "16cdca41f135f97876c206fa71c540af074097c5d3508c3a2f19941b83f0dac7",
+      "bytes": 4178
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f5529f8649bdd763768633fc50db8ee8c5c3e3dc414a4f83f5a91388cd185c57",
+      "bytes": 755
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b6308360e30ab627ab8ac93d915600897167c674bc9a5961b4182cc1e2e03042",
+      "bytes": 772
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "833b7e9dac106fbb40cbd173f4722b60f5979400011a85ebad54c9f4dde376b1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "35f3b5c461a7765659ed914f981beabe0805013e507eb61deb3a9592cf2bf5a6",
+      "bytes": 47914
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2c6ab0fd573be1310f26805d3d7a2f834f91c0d8d69945d3c4cfbfda2fc5486d",
+      "bytes": 25105
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fd9c0e246375945ce31c5a04ec541d267a313784acf865f325659789a70cdf4a",
+      "bytes": 65866
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b8f22e3cc42cc09c5ca01af3cb306f1f128f2a17a373cbc818f0d1bfe8e3ffca",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d45085307698a8f49ec3edb677eec0b5783be72052078841c304277a96a108ad",
+      "bytes": 2378
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cea864a2699d3a3e81bbebcfeadf66fdea9a3203bd055bd3f31e0a2ebfb4e0ba",
+      "bytes": 3053
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "055f12af-b7b9-46af-81b7-93e0ed6d5ce2",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "a80507cb-afda-46dd-a2b9-ba91f3a78e78",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ab1e41e9-7d21-4762-b498-51b8c63ae7ce",
+    "bf5616e4-7bd1-40ce-8b2d-aae84c2e4ebd",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

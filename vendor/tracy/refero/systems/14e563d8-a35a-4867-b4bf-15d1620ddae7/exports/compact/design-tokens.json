@@ -1,0 +1,89 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#ff6719",
+      "$type": "color",
+      "$description": "Signal Orange — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink": {
+      "$value": "#363737",
+      "$type": "color",
+      "$description": "Ink — Primary text — body copy, headings, post titles, timestamps, author names; warm-shifted near-black instead of pure #000 for less aggressive reading"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, input fields, nav background — the dominant surface, occupying the vast majority of the interface"
+    },
+    "charcoal": {
+      "$value": "#232525",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text and high-emphasis link hover state; deeper than Ink for code blocks and emphasis blocks"
+    },
+    "stone": {
+      "$value": "#777777",
+      "$type": "color",
+      "$description": "Stone — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#b6b6b6",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, button outlines, icon strokes, disabled control borders"
+    },
+    "mist": {
+      "$value": "#c8c8c8",
+      "$type": "color",
+      "$description": "Mist — Divider lines, subtle icon backgrounds, skeleton placeholder fills"
+    },
+    "cloud": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Cloud — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "slate": {
+      "$value": "#5e5e5e",
+      "$type": "color",
+      "$description": "Slate — Dark mode surface accent or pressed button state — infrequently used but present in the token set"
+    },
+    "black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Black — Icon strokes, image overlays, dark accent blocks in promo cards"
+    }
+  },
+  "font": {
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body font — used for navigation labels, buttons, post body text, metadata, input fields, and all interface chrome. The compact 12-13px metadata and 15-19px body sizes create the dense newsroom feel. Weight 400 for body, 500 for nav items and button labels, 600 for emphasized post titles and section headers."
+    },
+    "cahuenga": {
+      "$value": "Cahuenga",
+      "$type": "fontFamily",
+      "$description": "Branded display serif for product-level headings (sidebar headings, sign-up card titles, hero text). The medium weight and tight line-height give it editorial presence without feeling heavy; this is the only font that signals 'this is Substack' beyond the orange color."
+    },
+    "spectral": {
+      "$value": "Spectral",
+      "$type": "fontFamily",
+      "$description": "Long-form post body serif — used inside reader views and feed post content for editorial readability. The slightly looser line-height (1.20) keeps reading paragraphs comfortable while maintaining the compact newsroom density."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Code blocks and inline code within posts — the slight negative tracking (-0.014em) tightens the monospace for better visual alignment with surrounding serif text."
+    },
+    "apple-system-ui-serif": {
+      "$value": "-apple-system-ui-serif",
+      "$type": "fontFamily",
+      "$description": "-apple-system-ui-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://substack.com",
+      "siteName": "Substack",
+      "extractedAt": "2026-06-03T17:19:55.187Z",
+      "variant": "compact"
+    }
+  }
+}

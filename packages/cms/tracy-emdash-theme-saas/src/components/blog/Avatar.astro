@@ -1,0 +1,46 @@
+---
+// Round portrait, or the name's initials on a primary tint when the CMS has no picture.
+interface Props {
+  name: string
+  src?: string | null
+  size?: number
+}
+const { name, src, size = 44 } = Astro.props
+const initials = name
+  .split(/\s+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((w) => w[0])
+  .join('')
+  .toUpperCase()
+---
+
+<span class="av" style={`--av:${size}px`} aria-hidden="true">
+	{src ? <img src={src} alt="" width={size * 2} height={size * 2} loading="lazy" decoding="async" /> : initials}
+</span>
+
+<style>
+	.av {
+		width: var(--av);
+		height: var(--av);
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		border-radius: 50%;
+		/* Pale tint of the direction's bright accent (source #EEF9DD on the page ground) — D33. */
+		background: color-mix(in srgb, var(--k-tint) 14.5%, transparent);
+		color: var(--k-primary);
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: calc(var(--av) * 0.34);
+		line-height: 1;
+	}
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+</style>

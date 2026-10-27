@@ -1,0 +1,59 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "bone": {
+      "$value": "#f6f6f4",
+      "$type": "color",
+      "$description": "Bone — Primary text on dark surfaces, hairline borders, light section backgrounds, ghost-button outlines, nav links — the warm cream that defines the entire light/dark polarity"
+    },
+    "slate": {
+      "$value": "#7d7d7d",
+      "$type": "color",
+      "$description": "Slate — Mid-gray surface accent, secondary UI fill, muted element backgrounds — sits between bone and obsidian for tonal layering"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Inner product-image containers, pure-white card panels, maximum-contrast text — the brightest surface in the stack"
+    },
+    "char": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Char — Near-black hairline borders, subtle dark surface differentiation from the true-black canvas"
+    },
+    "solstice-gradient": {
+      "$value": "#ff8400",
+      "$type": "color",
+      "$description": "Solstice Gradient — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "recoleta": {
+      "$value": "Recoleta",
+      "$type": "fontFamily",
+      "$description": "All display and heading text from 36px to 125px. The single weight (400) and dramatic size range create an editorial magazine-cover scale. Line-height tightens to 1.00 at 80px+ for a luxurious, sculpted feel. Negative letter-spacing increases with size: -0.36px at 36px up to -3.75px at 125px."
+    },
+    "oldschool-grotesk": {
+      "$value": "Oldschool Grotesk",
+      "$type": "fontFamily",
+      "$description": "All UI, body copy, sub-labels, button text, nav, and supporting content. Weight 300 for secondary descriptions adds quietness; weight 400 for primary body and interactive elements. The slightly negative tracking at body size tightens the grotesque to feel engineered rather than casual."
+    },
+    "times-system-fallback": {
+      "$value": "Times (system fallback)",
+      "$type": "fontFamily",
+      "$description": "System-fallback serif for secondary annotations; rarely surfaces as the primary typeface when Recoleta is unavailable."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://joinclyde.com",
+      "siteName": "Clyde",
+      "extractedAt": "2026-06-03T17:39:47.209Z",
+      "variant": "compact"
+    }
+  }
+}

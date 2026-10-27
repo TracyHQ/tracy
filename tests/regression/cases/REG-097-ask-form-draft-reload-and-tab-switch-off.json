@@ -1,0 +1,39 @@
+{
+  "id": "REG-097",
+  "kind": "fix",
+  "title": "On dsh 0.2 the Questions form keeps the customer's draft across five reloads, and with tab-questions off a page opened with ?tab=tracy:ask-user shows neither the form nor the PointerCard, five loads out of five",
+  "pr": 895,
+  "area": "chat/ask-form",
+  "cms": ["wp"],
+  "needs": ["stand", "model", "seat:owner", "seat:tracy_admin"],
+  "flaky_model": true,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, Q, api. STAND_DIR = the ~/TCH-local/<name> folder whose .env has TRACY_ORIGIN equal to O (askform stand: O=http://askform.tracy.test:38080, STAND_DIR=~/TCH-local/askform, DSH=tracy-askform-dsh, PG=tracy-askform-postgres-1). Mint two cookies with that .env's SESSION_SECRET: A = an owner seat of a WordPress site S on the stand (askform: ask-form-e2e@example.test, S=askwp1.askform.tracy.test, label askwp1), ADMIN = a seat with an accepted role in the workspace kind='tracy_admin' (askform: ask-form-admin@example.test). Find them read-only: pq \"select a.email, s.site_key, s.role from seat s join account a on a.id=s.account_id where s.revoked_at is null\" and pq \"select a.email from seat_workspace sw join workspace w on w.id=sw.workspace_id join account a on a.id=sw.account_id where w.kind='tracy_admin' and sw.accepted_at is not null and sw.revoked_at is null\". No such seats → BLOCKED note no-seats.",
+    "Build check: docker exec $DSH grep -c 'ask-' /desk-home/profiles/native/node_modules/@tracy/dsh-ask-form/lib/client.js must print >= 1 and docker exec $DSH grep -c 'questionsDigest\\|0x050c5d1f\\|84696351' /desk-home/profiles/native/node_modules/@tracy/dsh-ask-form/lib/client.js must print >= 1 (the content-keyed draft is in the image); docker exec $DSH sh -c \"cat /opt/dsh/package.json | grep -m1 '\\\"version\\\"'\" — record DSH_VERSION; it must start with 0.2 (the bug exists only on dsh 0.2, which keys a request forwarded without a wait as question:<random per page load>:<n>). Otherwise BLOCKED note image-not-dsh-0.2-or-without-fix.",
+    "Switch on first: api with the ADMIN cookie PUT /api/ops/ui '{\"switches\":{\"tab-questions\":true}}' (header Origin: O) -> 200; GET /api/ui with cookie A -> HIDDEN_ON = whether hidden contains 'tab-questions'.",
+    "Browser (README rules: connectOverCDP, NEW context with cookie A on COOKIE_DOMAIN, never close anything). Use this stand's own chrome-watch: CHROME_WATCH_PORT=9380 chrome-watch (reuses one already listening) and connectOverCDP('http://127.0.0.1:9380'); if it hangs 60 s try 9381 once before BLOCKED. page.goto(O + '/' + S); wait (<= 90 s) for a URL containing /s/session- and [data-composer-input='true'], then until page.url() has not changed for 15 s. Press the button whose aria-label is exactly 'New session', wait (<= 30 s) for a new /s/session- URL and again until it has not changed for 15 s; record SESSION = the session-<uuid> part.",
+    "Send in the composer (README 'Send a chat message' recipe): 'I want to sell paid PDF downloads in the Resources section. Before you build anything, ask me how customers should pay and anything else you need, using your question tool.' Every 30 s for up to 8 minutes check for [data-ask-form='dsh'] (if the session holding the sent message differs from page.url(), goto it, as REG-068 step 4 does). Nothing after 8 minutes → FAIL note agent-never-asked with the reply text.",
+    "Draft across reloads: wait 3 s after [data-ask-form='dsh'] appears; click the first label[data-selected] inside the first [data-ask-item]; record DRAFT_ITEM = that item's data-ask-item; wait 3 s. Then FIVE times: page.reload(); wait (<= 90 s) for [data-composer-input]; if [data-ask-form='dsh'] is not there within 20 s, press the Open button inside [data-tracy-ask-pointer] and wait (<= 20 s) for it; record DRAFT_KEPT_i (i = 1..5) = whether the first label[data-selected] of [data-ask-item='DRAFT_ITEM'] has data-selected '1'. After the fifth reload record DRAFT_KEYS = the sessionStorage keys starting with 'tracy-ask-form:' (page.evaluate). Screenshot to $Q.",
+    "Switch off: api with ADMIN PUT /api/ops/ui '{\"switches\":{\"tab-questions\":false}}' -> PUT_OFF; GET /api/ui with cookie A -> HIDDEN_OFF. Then FIVE times: page.goto(O + '/' + S + '/s/' + SESSION + '?tab=tracy:ask-user&site=' + S); wait (<= 90 s) for [data-composer-input]; wait until page.url() has not changed for 10 s, then 5 s more. Record TABOFF_i = { pointer: [data-tracy-ask-pointer] exists, form: [data-ask-form='dsh'] exists, dshCard: an element [data-question-key] not inside [data-ask-form] exists (read on the live page, never a clone) }. Screenshot each to $Q.",
+    "Always restore, even after a failure above: api with ADMIN PUT /api/ops/ui '{\"switches\":{\"tab-questions\":true}}' -> PUT_BACK; GET /api/ui with cookie A -> HIDDEN_BACK. page.goto(O + '/' + S + '/s/' + SESSION) (no query); wait (<= 90 s) for [data-composer-input] then 8 s; record ON_POINTER = whether [data-tracy-ask-pointer] exists. If the session still waits on a question, press 'Decide for me' in the Questions tab (open it from the PointerCard's Open button) so the session does not stay blocked; that press is not judged."
+  ],
+  "expect": [
+    "The build check prints counts >= 1 and DSH_VERSION starts with 0.2.",
+    "HIDDEN_ON === false.",
+    "DRAFT_KEPT_1, DRAFT_KEPT_2, DRAFT_KEPT_3, DRAFT_KEPT_4 and DRAFT_KEPT_5 are all true.",
+    "DRAFT_KEYS has exactly one key and it matches /^tracy-ask-form:session-[0-9a-f-]+:ask-[0-9a-f]{16}$/ (keyed by what the request asks, not by dsh's per-load key question:<random>:<n>).",
+    "PUT_OFF is 200 and HIDDEN_OFF === true.",
+    "For every i in 1..5: TABOFF_i.pointer === false, TABOFF_i.form === false and TABOFF_i.dshCard === true.",
+    "PUT_BACK is 200, HIDDEN_BACK === false and ON_POINTER === true (the switch on again gives the request back to the form).",
+    "Model-dependent: if the agent never calls ask_user_question the verdict is FAIL with the reply text quoted — never PASS."
+  ],
+  "selectors": {
+    "form": "[data-ask-form='dsh'] [data-ask-item='<question id>'] label[data-selected] in packages/site/tracy-site-build-core/src/client/ask-form/AskForm.tsx",
+    "pointer": "[data-tracy-ask-pointer] in packages/ui/tracy-ask-form/src/client/PointerCard.tsx",
+    "draft storage": "sessionStorage key tracy-ask-form:<sessionId>:ask-<digest> (draftStorageKey/takeKey in packages/ui/tracy-ask-form/src/client/ask-state.ts)",
+    "dsh card": "[data-question-key] outside [data-ask-form] (vendor/tracy/deepseek-harness packages/client/ui-user-questions/src/client/QuestionComposer.tsx)",
+    "switch": "tab-questions in packages/core/tracy-core/src/ui-switches/catalogue.json; PUT /api/ops/ui, GET /api/ui"
+  },
+  "evidence": "e2e-dev 04/10/2026 F4 (draft lost 3/3 reloads on dsh 0.2.0-rc.2-tracy.22, key question:<hash>:1 new every load) and F5 (switch off + ?tab=tracy:ask-user drew the form and the PointerCard 1 of 2 loads); fix measured in tasks/evidence/ask-form/lot3/.",
+  "fence": "The draft and the open ledger keyed by session + a digest of the questions (never dsh's PendingQuestion.key), and the Questions tab body drawing nothing until the controller knows the switch is on. Not judged: what the agent asks or builds."
+}

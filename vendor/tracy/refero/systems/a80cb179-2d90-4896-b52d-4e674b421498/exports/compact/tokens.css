@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-glide-teal: #71eaee;
+  --color-teal-mist: #e4feff;
+  --color-ink-black: #000000;
+  --color-charcoal: #303030;
+  --color-graphite: #5c5c5c;
+  --color-obsidian: #171715;
+  --color-slate: #242421;
+  --color-ash-gray: #80807c;
+  --color-fog: #999991;
+  --color-stone: #d9dad3;
+  --color-bone: #edede8;
+  --color-paper-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-bootonfont-custom-likely-a-neo-grotesque-or-geometric-sans-similar-to-inter-shne-or-gt-america: 'bootonFont (custom — likely a neo-grotesque or geometric sans similar to Inter, Söhne, or GT America)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-affairsfont-custom-a-distinctive-display-face-possibly-a-high-contrast-serif-or-a-wide-neo-grotesque: 'affairsFont (custom — a distinctive display face, possibly a high-contrast serif or a wide neo-grotesque)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

@@ -1,0 +1,81 @@
+{
+  "id": "QA-UNIT-REG-PR-893-joomla-contact-no-account-email-happy",
+  "itemIds": ["regression:REG-PR-893-joomla-contact-no-account-email"],
+  "requirement": "Joomla Apply: no contact record carries the account email; without the owner's mailbox the template's address goes and the form is said to be off",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-joomla-contact-no-account-email.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026: with no email or phone typed, a Joomla site made with Apply kept the demo company's mailbox (sales@northgate-ind.ru) as the contact form's recipient and its telephone on the page (ledger L05, L11). A first fix (4e6ebaa4b) wrote the account email where no switch showed it; review found Joomla 5 publishes email_to anyway (vCard view, contacts finder). Reds 5facff718, 3f576e04f; fixes 4e6ebaa4b, 1bb4cab3f.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 55). Every named case is 'ok' (none 'not ok', none '# SKIP'): with no email typed the template's email_to is emptied whatever the page shows, the Apply report carries the form-off note with no address in it, the account email of the person who pressed Apply is written nowhere, the template's telephone goes when no phone is typed and its mobile and fax always; a typed email and phone still win and a {site.phone} placeholder is left.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:772",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:494",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-normalize.js:403",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-blog-articles.js:115 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:54 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:55 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-languages.js:247 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js:35 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:814 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:361 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:367 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:368 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:392 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:3063 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a design that is not another company's is not judged; without the owner's mailbox the template's address is taken off and the form is off, said, and the template's numbers go",
+    "without the owner's mailbox the account's address is written nowhere, whatever the page shows: the template's goes and the form is off",
+    "what the owner typed still wins, and the template's other numbers go with its own; a value the site fills in itself is left"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-joomla-contact-no-account-email"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-joomla-contact-no-account-email",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply/joomla",
+    "file": "tests/regression/cases/REG-PR-893-joomla-contact-no-account-email.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-joomla.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a design that is not another company's is not judged; without the owner's mailbox the template's address is taken off and the form is off, said, and the template's numbers go",
+    "without the owner's mailbox the account's address is written nowhere, whatever the page shows: the template's goes and the form is off",
+    "what the owner typed still wins, and the template's other numbers go with its own; a value the site fills in itself is left"
+  ],
+  "timeoutS": 600
+}

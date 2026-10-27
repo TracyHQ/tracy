@@ -1,0 +1,208 @@
+{
+  "dos": [
+    "Set the wordmark at 200 weight italic in Editorial New — never bold, never regular; the ultralight is the signature",
+    "Use only #ffffff text on #000000 canvas; treat the 1px white hairline as the only structural divider allowed",
+    "Anchor the project reel to the viewport bottom on every page — it functions as the site's navigation spine",
+    "Pair the body description (TT Firs Neue 16px) with a bracket-wrapped Wasted Year tagline directly beneath it; the handwriting-font punctuation is non-optional",
+    "Use #ff2936 for at most one element per viewport — it is punctuation, not paint",
+    "Set compact UI labels (reel items, counters) in Altform with 0.86-0.88 line-height and -0.03em tracking for the festival-credit-roll rhythm",
+    "Keep the MENU trigger as a bare typographic label — no border, no background, no icon button chrome"
+  ],
+  "donts": [
+    "Do not introduce shadows, gradients, or elevation of any kind — flatness is the system",
+    "Do not add card backgrounds or rounded corners; all surfaces are 0px radius on the black canvas",
+    "Do not use bold or semibold weights for headlines — the weight 200 Editorial New is the anti-convention that defines the brand",
+    "Do not use #ff2936 as a button fill or large background block — it loses all impact if used at scale",
+    "Do not add a secondary navigation, breadcrumbs, or page tabs — the MENU trigger and the reel are the entire IA",
+    "Do not set body copy above 16px or below 14px — the type scale is deliberately tight",
+    "Do not alternate between light and dark sections; the page is uniformly dark, depth comes from type scale not surface color"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Primary text, logotype fill, border strokes, and the dominant foreground on the dark canvas — carries 92% of all color instances",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Carbon Black",
+      "role": "Base canvas and primary background — the default surface for every page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#101010",
+      "name": "Charcoal Shale",
+      "role": "Secondary surface for icon wells, sub-panels, and slight tonal lift above the pure-black canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff2936",
+      "name": "Signal Red",
+      "role": "Sparingly-applied accent for active states, marquee highlights, and high-emphasis punctuation — used as a single saturated note against the monochrome system",
+      "group": "accent"
+    }
+  ],
+  "imagery": "Imagery is almost absent from the main canvas. Photography appears only as small horizontal thumbnails inside the project reel ticker — tight, cinematic crops around 80px tall with no rounded corners and no overlay treatments. The visual identity is driven entirely by the oversized italic wordmark, ultra-light editorial type, and the vertical rhythm of bracketed handwritten flourishes. No illustration, no 3D, no decorative gradients — the wordmark IS the imagery.",
+  "similar": [
+    {
+      "why": "Same editorial-meets-streetwear sensibility with oversized italic wordmarks on a near-black canvas and a ticker-like feed of content at the bottom",
+      "business": "Hypebeast"
+    },
+    {
+      "why": "Cinema-title-card aesthetic — white type on pure black, ultralight editorial headlines, minimal chrome, and the feeling that the brand IS the logotype",
+      "business": "A24 Films"
+    },
+    {
+      "why": "Indie creative agencies that use editorial type, custom serifs at weight 200, and near-zero decoration; both treat the homepage as a statement rather than a product page",
+      "business": "Bureau Cool"
+    },
+    {
+      "why": "Production/creative studios with full-bleed dark canvases, restrained type, and project reels that double as the primary navigation rhythm",
+      "business": "Buck (studio)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "0px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "48-80px",
+    "cardPadding": "12-20px",
+    "pageMaxWidth": null
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Carbon Black",
+      "level": 1,
+      "purpose": "Primary page canvas — the dominant surface covering the viewport"
+    },
+    {
+      "hex": "#101010",
+      "name": "Charcoal Shale",
+      "level": 2,
+      "purpose": "Subtle elevation for utility elements like the cookie consent bar; barely perceptible shift above the canvas"
+    }
+  ],
+  "northStar": "cinema title card on black velvet",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1
+    },
+    {
+      "role": "body",
+      "size": 17,
+      "lineHeight": 1
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Wordmark",
+      "role": "Brand identity anchor — the primary visual element on the dark canvas",
+      "description": "Full-bleed 'freshman' logotype, set ultra-large in italic Editorial New weight 200, white (#ffffff) fill on Carbon Black (#000000). Letter-spacing -0.01em. A small registered-trademark ® sits at the upper-right of the mark. No background, no border, no shadow — the wordmark is the only object on screen."
+    },
+    {
+      "name": "Project Reel Ticker",
+      "role": "Persistent bottom band showcasing latest work like a film festival credit roll",
+      "description": "Full-bleed horizontal bar anchored to the viewport bottom. Pure Black (#000000) background with a 1px top hairline in White (#ffffff). Items arranged in a single row with 12px column gaps; each item pairs a small thumbnail (Altform, condensed, weight 700) with a project title (TT Firs Neue, 14-16px, weight 400) and a secondary label (TT Firs Neue, 12px, 0.86 line-height, uppercase). 20px vertical padding, zero radius."
+    },
+    {
+      "name": "Menu Trigger",
+      "role": "Primary navigation entry point",
+      "description": "Top-right 'MENU' label prefixed by a + glyph, set in TT Firs Neue 16px weight 400 in White (#ffffff). No background, no border — a bare typographic control. Inherits the 'all type, no chrome' philosophy of the system."
+    },
+    {
+      "name": "Brand Glyph",
+      "role": "Persistent mark in the upper-left corner",
+      "description": "A small hash/cross-like symbol in White (#ffffff) on the Black canvas. Sits at the same cap height as the MENU trigger, anchoring the top bar in quiet symmetry. Likely set in TT Firs Neue or a custom icon font, ~16px."
+    },
+    {
+      "name": "Year Counter",
+      "role": "Cinematic page-position indicator",
+      "description": "Centered '2025' string set in Altform weight 400 at 14px with 0.88 line-height and -0.03em tracking in White (#ffffff). Reads as a chapter marker; updates per scroll position to mimic a film leader countdown."
+    },
+    {
+      "name": "Editorial Tagline Block",
+      "role": "Voice/mission statement with typographic personality",
+      "description": "Two stacked lines of body text in TT Firs Neue 16px weight 400, White (#ffffff), centered, max-width ~600px. Followed by a bracket-wrapped Wasted Year phrase at 14–17px — the handwritten font transforms the tagline into a signed autograph."
+    },
+    {
+      "name": "Cookie Consent Strip",
+      "role": "Bottom-right regulatory notice",
+      "description": "Minimal pill-less bar in Charcoal Shale (#101010) with 1px White (#ffffff) hairline border, ~12px text in TT Firs Neue, uppercase tracking. Rounded zero. Sits flush to the viewport edge, never centered — treated as utility, not design."
+    },
+    {
+      "name": "Project Item Cell",
+      "role": "Individual entry inside the project reel",
+      "description": "Three-line vertical stack: uppercase project name (TT Firs Neue 16px, weight 400, White), short sub-label (TT Firs Neue 12px, Altform 0.88 line-height, White at ~70% perceived opacity), and optional thumbnail to the left at ~80px tall. No border, no background tile — text sits directly on the Black bar."
+    },
+    {
+      "name": "Thin Hairline Divider",
+      "role": "Section separator — the only structural chrome in the system",
+      "description": "1px horizontal line in White (#ffffff) at 70-100% opacity. Used between the hero and ticker, and between any stacked zones. Zero radius, zero shadow."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Hero and headline display — the ultralight weight 200 is anti-convention; combined with the 20px breakpoint it reads as editorial print rather than web UI",
+      "sizes": "16px, 20px",
+      "family": "Editorial New",
+      "weight": "200",
+      "lineHeight": "1.00, 1.25",
+      "substitute": "Cormorant Garamond, Playfair Display",
+      "letterSpacing": "-0.01em"
+    },
+    {
+      "role": "Workhorse UI and body sans — the only geometric grotesque in the system, anchors the project ticker labels, menu trigger, and utility text",
+      "sizes": "16px",
+      "family": "TT Firs Neue",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Inter, Neue Haas Grotesk, Söhne"
+    },
+    {
+      "role": "Compact meta and condensed labels — tight 0.86–0.88 line-height and -0.03em tracking make it read like a festival credit roll",
+      "sizes": "14px, 16px",
+      "family": "Altform",
+      "weight": "400, 700",
+      "lineHeight": "0.86, 0.88",
+      "substitute": "Druk, Tungsten, Bebas Neue",
+      "letterSpacing": "-0.03em"
+    },
+    {
+      "role": "Signature editorial flourishes — bracket-wrapped taglines and small accent phrases; its hand-set quality is used for personality, not information density",
+      "sizes": "12px, 14px, 17px, 20px",
+      "family": "Wasted Year",
+      "weight": "400",
+      "lineHeight": "0.86, 0.94, 1.00, 1.25",
+      "substitute": "Caveat, Reenie Beanie",
+      "letterSpacing": "-0.0100em"
+    }
+  ],
+  "description": "Freshman runs a near-black canvas with almost no color noise — the white type and the lone red accent do all the heavy lifting. The visual language borrows from high-end print and cinema: a massive italicized wordmark anchors every screen, type is set ultra-light (weight 200) in Editorial New and tight in Altform, and a thin horizontal project ticker acts as the page's spine. Surfaces are flat with no shadows or gradients; hierarchy comes from scale and weight contrast, not elevation. Interaction is restrained — a single + MENU trigger, bracket-wrapped editorial labels, and a project reel that feels like a film festival credit roll rather than a SaaS nav.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- canvas/background: #000000\n- primary text: #ffffff\n- secondary surface: #101010\n- hairline border: #ffffff (1px)\n- accent / active state: #ff2936\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n\n1. *Hero wordmark screen*: full-viewport Carbon Black (#000000) background. Center a single italic 'freshman' logotype in Editorial New weight 200, white (#ffffff), sized to fill ~60% of the viewport width, letter-spacing -0.01em. Below it, a two-line description in TT Firs Neue 16px weight 400 white, centered, max-width 600px. Beneath that, a bracket-wrapped tagline in Wasted Year 14px white.\n\n2. *Project reel ticker*: pinned bar at the viewport bottom, Carbon Black (#000000) background, 1px white (#ffffff) top border. Single row of project items, 12px column gaps, 20px vertical padding. Each item = uppercase project name (TT Firs Neue 16px weight 400 white) stacked over a sub-label (TT Firs Neue 12px, line-height 0.88, white at 70% perceived opacity). Zero radius on all elements.\n\n3. *Year counter*: centered horizontally, positioned in the lower third of the viewport. Set '2025' in Altform 14px weight 400 white, line-height 0.88, letter-spacing -0.03em. No background, no border.\n\n4. *Top navigation bar*: full-width, Carbon Black background, 20px vertical padding. Left: a small 16px white hash/cross glyph. Right: '+ MENU' in TT Firs Neue 16px weight 400 white. No borders, no background fills, no separators between left and right.\n\n5. *Cookie consent strip*: bottom-right corner, Charcoal Shale (#101010) background, 1px white (#ffffff) border, 12px text in TT Firs Neue weight 400, uppercase, white. ~12px padding. Zero radius. Flush to the viewport edge, never centered."
+    }
+  ],
+  "elevationPhilosophy": "The system intentionally avoids shadows and gradients. Depth is communicated exclusively through type scale, weight contrast, and the two-step surface stack (#000000 → #101010). This is a deliberate editorial-print decision — shadows would make the screen feel like software; flatness makes it feel like cinema."
+}

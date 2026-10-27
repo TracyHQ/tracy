@@ -1,0 +1,80 @@
+{
+  "id": "QA-UNIT-REG-PR-1192-customize-readiness-gate-happy",
+  "itemIds": ["regression:REG-PR-1192-customize-readiness-gate"],
+  "requirement": "Customize your site readiness is a Road to live step: must-fix rules hold Publish (CUSTOMIZE_NOT_READY), worth-fixing rules warn, a published release only warns",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1192-customize-readiness-gate.json",
+    "ref": "PR #1192 (feat); fix evidence: Before this change /ops could publish a template whose logo, business name or language answer is not applied; the readiness check ran only on a laptop",
+    "invariant": "S1: every test passes, including must-fix, worth-fixing only, checking, published but failing and the CUSTOMIZE_NOT_READY refusal. S2: every test that runs passes; rule-severity.json names every rule of RULES with a group, a question, a line and a reason. S3: every test passes, including the Customize your site score title, the two groups, one prompt and Check again.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/contracts.js:139",
+      "apps/tracy-web/src/lib/customize-readiness.js:90",
+      "apps/tracy-web/src/lib/design-system-ready-templates.js:24",
+      "apps/tracy-web/src/lib/readiness-inputs.js:257",
+      "apps/tracy-web/src/lib/road-to-live.js:380",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/index.js:75",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/severity.js:25",
+      "apps/tracy-web/src/lib/template-design-system-readiness/severity.js:87"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "apps/tracy-web/src/lib/content-coverage/reader.js:26 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/content-coverage/reader.js:57 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/readiness-inputs.js:120 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/readiness-inputs.js:126 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/readiness-inputs.js:74 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/readiness-inputs.js:93 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/test/customize-readiness.test.mjs:513 readFileSync() with a computed path",
+      "apps/tracy-web/test/road-to-live.test.mjs:54 readFileSync() with a computed path",
+      "apps/tracy-web/test/road-to-live.test.mjs:55 readFileSync() with a computed path",
+      "apps/tracy-web/test/road-to-live.test.mjs:56 readFileSync() with a computed path",
+      "packages/web/tracy-harness/test/problem-guides.test.mjs:39 import() with a computed specifier",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1192-customize-readiness-gate.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1192-customize-readiness-gate"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1192-customize-readiness-gate",
+    "pr": 1192,
+    "kind": "feat",
+    "area": "ops/road-to-live/customize",
+    "file": "tests/regression/cases/REG-PR-1192-customize-readiness-gate.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/road-to-live.test.mjs",
+    "apps/tracy-web/test/customize-readiness.test.mjs",
+    "packages/web/tracy-harness/test/problem-guides.test.mjs",
+    "packages/web/tracy-harness/test/template-presses.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

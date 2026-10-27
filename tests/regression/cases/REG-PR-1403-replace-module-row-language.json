@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1403-replace-module-row-language",
+  "kind": "fix",
+  "title": "content.replace edits module words on a Joomla site Apply wrote in another language, and on every CMS a writable stored place that holds the words is named instead of \"do not look for another way in\"",
+  "pr": 1403,
+  "area": "site-tools/content-replace",
+  "cms": ["jo", "em", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the sealed-Joomla replace engine on the 1.2.0 inspect fixture rewritten the way Apply leaves a Dutch site (module rows nl-NL, titles still ending in \"(en)\", page lang nl-nl), replacing the words of module-441.1.",
+    "S2: Run it on the same fixture with the module rows left en-GB on the nl-nl page (the anchor misses), then again with at:[\"module-441.1\"].",
+    "S3: Run locate with a writable stored place that holds the words and an anchor that rejects it.",
+    "S4: Run content.find on a Joomla webroot of 4001 language files that do not hold the words, and on one with 60 files that all do.",
+    "S5: On EmDash, ask quotedElsewhere for words a writable stored value holds but the strict region check kept off that spot; then the same with that value unwritable."
+  ],
+  "expect": [
+    "S1: the call writes, with module-441.1 in the one apply.",
+    "S2: the first call is NOT_EDITABLE whose next is not \"do not look for another way in\" and whose held lists module-441.1; the at: call writes it.",
+    "S3: NOT_EDITABLE with held [{at, label}] and a next that carries at:[\"<that place>\"]; a place with writable:false keeps the plain next.",
+    "S4: the first answer's stopped says part of the site is unsearched and never \"search a longer phrase\"; the second still says \"search a longer phrase\".",
+    "S5: NOT_EDITABLE with held [{at, label}] and a next naming at:[\"<that value>\"]; the unwritable value keeps the plain next (\"that is an answer\"). WordPress and sealed Joomla reach the core check of S3; open Joomla never answers that next."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/{replace-joomla.mjs,replace.mjs,replace-emdash.mjs,find.mjs}"
+  },
+  "evidence": "16/10/2026 local stand (develop b472e98a1), Dutch Tracy Business site deschaar1610: content.replace refused \"Elena Gurova · IR Director\" (module-860) as words the template prints; the turn took 58 s and 8 steps before content.contract apply wrote it",
+  "fence": "The engine's store and anchor: a module's language is its row's, and the core never answers \"do not look for another way in\" while a writable stored place holds the words",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/replace-joomla.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-core.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-emdash.test.mjs",
+      "packages/tools/tracy-site-tools/test/find.test.mjs"
+    ],
+    "tests": [
+      "1.2.0 Dutch Apply site: a module's row language wins",
+      "1.2.0 an English module on a Dutch page: refused, but the answer names the module",
+      "a module whose row names no language still reads it",
+      "a writable stored place that holds the words but missed the anchor is named",
+      "a walk cut by its file budget says so",
+      "EmDash: the words as quoted, held by a writable value the strict region check kept off this spot"
+    ]
+  }
+}

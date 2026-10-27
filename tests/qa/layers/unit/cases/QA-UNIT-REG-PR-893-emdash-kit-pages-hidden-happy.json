@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-893-emdash-kit-pages-hidden-happy",
+  "itemIds": ["regression:REG-PR-893-emdash-kit-pages-hidden"],
+  "requirement": "Tracy Business EmDash: no kit showcase page is hidden by a template rule (TCH #1013, 08/10/2026: a page goes only when the customer unticks it)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-emdash-kit-pages-hidden.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 local stand: a two-language Tracy Business EmDash site made with Apply kept /kit/style-guide, /kit/newsletter, /kit/form, /kit/slides and their /vi/ copies published and linked from the sitemap page; 24 of the site's 28 demo-company words were on them. After the fix: 0 kit pages reachable, 6 demo words left (in kept demo news posts).",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 1): the personalize map's hide list is empty, and templateHideRules returns no rule for the seed pages carrying data.sample.",
+    "productSources": ["packages/cms/tracy-emdash-theme-business/tools/personalize.mjs:522"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-893-emdash-kit-pages-hidden.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-emdash-kit-pages-hidden"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-emdash-theme-business", "tracy-emdash-theme-business"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-emdash-kit-pages-hidden",
+    "pr": 893,
+    "kind": "fix",
+    "area": "emdash-theme-business/personalize",
+    "file": "tests/regression/cases/REG-PR-893-emdash-kit-pages-hidden.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/cms/tracy-emdash-theme-business/tests/personalize-hide.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

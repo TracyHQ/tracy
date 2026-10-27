@@ -1,0 +1,68 @@
+{
+  "id": "QA-UNIT-REG-PR-1415-turn-work-happy",
+  "itemIds": ["regression:REG-PR-1415-turn-work"],
+  "requirement": "A chat turn keeps what it took: the close carries its steps, tool calls and failed calls, read off its own events, and tracy-web keeps them by the newest close",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1415-turn-work.json",
+    "ref": "PR #1415 (feat); fix evidence: Plan tasks/todo-do-dung-that.md U1: a turn's steps and refused calls lived only in dsh's session log (scripts/agent-turn-cost.mjs read them from the container), so no usage view could say how hard a turn was",
+    "invariant": "S1: {steps: 2, calls: 4, failedCalls: 2}; another turn's events are not counted; no step logged reads null. S2: the first two closes carry work; the third sends none. S3: a work without a turn, missing a count, negative, fractional, over 10000 or with more failed than calls is refused before any job; the newest close's work is kept, an older one heard late writes nothing over it, a close without work keeps it; a turn closed by an older dsh reads null.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/sites/route.js:1050",
+      "apps/tracy-web/src/sites/turns.js:369",
+      "packages/site/tracy-site-tabs/src/host/turn-record.mjs:412",
+      "packages/ui/tracy-chat-input/src/client/comment-turn.mjs:1511"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "workOf counts the turn",
+    "the close carries work when",
+    "none sent → null; whole counts → kept",
+    "refused: no turn, not an object",
+    "work is written by the newest close",
+    "a turn closed by an older dsh reads null work"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1415-turn-work"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-site-tabs", "tracy-site-tabs"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1415-turn-work",
+    "pr": 1415,
+    "kind": "feat",
+    "area": "site-tabs/turn-record",
+    "file": "tests/regression/cases/REG-PR-1415-turn-work.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-site-tabs/test/turn-record.test.mjs",
+    "apps/tracy-web/test/turn-work.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "workOf counts the turn",
+    "the close carries work when",
+    "none sent → null; whole counts → kept",
+    "refused: no turn, not an object",
+    "work is written by the newest close",
+    "a turn closed by an older dsh reads null work"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1755-cowork-self-update-seal",
+  "kind": "fix",
+  "title": "A seal that is only Tracy's own Cowork package updating itself (Joomla package or WordPress plugin, a manifest moved) reads in Site changes as a Tracy update (Source deployment, Tracy deploy, deploy.updated component cowork), never 'Files changed; source unknown'; any other file in the seal keeps it unknown",
+  "pr": 1755,
+  "area": "site-changes/outside",
+  "cms": ["wp", "jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1 (JS classifier, no database): node --test --test-name-pattern='Cowork package updating itself' apps/tracy-web/test/activity-source.test.mjs",
+    "S2 (SQL and JS agree, and the V2 page) on Postgres: TEST_DATABASE_URL=<url> node --test --test-name-pattern='Cowork|classify the same|folded only when EVERY' apps/tracy-web/test/activity-source.test.mjs apps/tracy-web/test/site-activity-v2.test.mjs"
+  ],
+  "expect": [
+    "S1: 'outside seal: Tracy's Cowork package updating itself is a Tracy update; anything less stays unknown' is ok: the Joomla package seal and the WordPress plugin seal are deployment; one foreign file, no manifest, a look-alike folder, an empty or missing path list stay unknown; a housekeeping commit of the same files stays automatic.",
+    "S2: 'a seal that is only Tracy's own Cowork package updating itself reads as a Tracy update, never Unknown' is ok: both rows have origin.source deployment, actor service:tracy-deploy, description {key: deploy.updated, params: {component: cowork, files, tag: null, owner: tracy}}, timeBasis detected, counts.unknown 0 (pre-fix: files.changed-source-unknown and counts.unknown 2).",
+    "S2: 'a seal is a Tracy update only when EVERY file is the Cowork package and its manifest moved' is ok (5 rows unknown); the SQL/JS parity test is ok with the four seals with paths; E5.1c fold test is ok with unknown 4, deployment 2."
+  ],
+  "selectors": {
+    "rule": "apps/tracy-web/src/sites/activity-source.js isCoworkUpdateSeal + coworkUpdateSealSql (COWORK_PACKAGE_PATH, COWORK_MANIFESTS); classifyOutside; V2_SOURCES_SQL outside-files CASE",
+    "row": "apps/tracy-web/src/sites/activity-v2.js outside loop (selfUpdate) + activity-describe.js describeCoworkUpdate"
+  },
+  "evidence": "Dev 22/10/2026 (d1, tracywalk-1792671498, Joomla quickstart tracy-business/j6): seal c727411 at 12:28:12, 122 files all com_claudecowork / plg_system_claudecowork* / pkg_claudecowork.xml, claudecowork.xml 0.24.43 -> 0.24.53; the site's administrator/logs/1.plg_system_claudecoworkupdate.php: '2026-10-22T12:24:02 pkg_claudecowork: 0.24.43 -> 0.24.53 installed', 35 s after the webroot baseline 1160fd4 (12:23:27). Dev 26/10: 30 site_outside seals across Joomla sites whose files are all the Cowork package with its manifest.",
+  "fence": "Only a seal (cause seal) with its paths kept, every path inside the package's own folders and files, and one of the package manifests among them. A seal is one commit and is never split: one foreign file keeps it unknown whole. Nothing is written or migrated; the rule is read at request time.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=Cowork|classify the same|folded only when EVERY",
+      "apps/tracy-web/test/activity-source.test.mjs",
+      "apps/tracy-web/test/site-activity-v2.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

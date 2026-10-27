@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-midnight-carbon: #12130f;
+  --color-bone-glow: #e4dfda;
+  --color-charcoal-vein: #3c3c38;
+  --color-rose-quartz-bloom: #f5c2c8;
+
+  /* Typography — Font Families */
+  --font-arbeit-technik: 'Arbeit Technik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inline-vf: 'Inline VF', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arbeit-contrast: 'Arbeit Contrast', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

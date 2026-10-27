@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "375e255f-6e7b-4091-bf73-6df42a094263",
+  "status": "complete",
+  "name": "Apple",
+  "url": "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+  "sourceWebsite": "https://www.apple.com/apple-watch-series-12",
+  "extractedAt": "2026-09-20T21:34:21.942Z",
+  "capturedAt": "2026-10-08T05:10:19.628414+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Bronze sensor in darkness. Treat the watch hardware and its health readings as illuminated objects suspended in a near-black gallery.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ad775339-ee6f-40bc-8f03-c1f7dd4228ca.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/32c55d6e-aaa7-45de-b2a7-63c8d0304daa.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/73da23a8-9782-4321-b892-615731662014.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/492452fc-62e6-465d-8401-d3a81ca1f916.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3438831f-81d1-4f33-ae73-ff9684f2a986.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d4ca419e031dfd28c0f7778c23cfe8e86ac8bbde5b0bdec1ba54c86aa8de7a52",
+      "bytes": 22009
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "42cb571fbee85b31d7e27a2a400cb1d592957dae428b521855b831123e8f9183",
+      "bytes": 57226
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ed51c45d3c95a4a771ee57221598f34f38ae13d1fa742ef136db48bdbd1fe71b",
+      "bytes": 17899
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a0194f15ea03cd63d66c64a4afad50dcab7a96547302a8b442b06198185df147",
+      "bytes": 15814
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "85a8b5229c50c8800ec7139c96e1d3453daa49806fe48c8506286364357b1559",
+      "bytes": 12076
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e145ba1e4456b7f6626db4471162be5208043922c265f27fc97f0432c3059ce8",
+      "bytes": 3831
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1ef52eeaf26467dab3f3c4252d8996080d5fc29c89ab889ec8ef70fba68cc9aa",
+      "bytes": 808
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a6dd7d639b932e3c3c48616b1bb7156ed0c4b14e4b562f8a39e7dbd78b9b6704",
+      "bytes": 825
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "881f59cc6065c7d5d8a232bc848697b48d12aaa7419418311ae5342c7e3c4721",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6988735777eef7923ae6b9e27690dfada27c99a68bd976129b069293338334a7",
+      "bytes": 44348
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4bdef2eac4d2ff026a72ca13917b5930523e097a3ea9592ccfab106723fd90f4",
+      "bytes": 23758
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e51ce787ffc436c61b4ee4c17c3b39426e0c5ac64db5935e5c33cf6671eeade3",
+      "bytes": 73196
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5ecded4d1fe4d0e5cb9acc4857c00ce67ac1650327846adc1ea7f275cf3fc625",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "16dc25e311b6a7bd38a5e82ce334bf032cb4062f768420306cdf9539dbe4c5ee",
+      "bytes": 2440
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7a59e622103d89e6045103dc1c3d15d3d3592f41ee42b782b41a9b8aad87ab67",
+      "bytes": 2990
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "375e255f-6e7b-4091-bf73-6df42a094263",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "7d10f1d6-f2a8-43ce-b055-6ddd74e3c7e1",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "b8c2e033-3846-47cf-a52d-2bb39e493d3b",
+    "c0717d1a-b446-4166-a445-6497fe287fea",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

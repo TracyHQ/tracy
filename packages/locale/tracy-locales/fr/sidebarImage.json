@@ -1,0 +1,13 @@
+{
+  "failed": "Impossible d’afficher cette image.",
+  "loading": "Rendu du document…",
+  "preview": "Aperçu de l’image : {name}",
+  "title": "Image",
+  "unsupported": "L’aperçu de l’image nécessite le contenu complet du fichier.",
+  "zoomControls": "Commandes de zoom",
+  "zoomFitWidth": "Ajuster à la largeur",
+  "zoomIn": "Zoom avant",
+  "zoomMenu": "Choisir le niveau de zoom",
+  "zoomOut": "Zoom arrière",
+  "zoomValue": "{percent} %"
+}

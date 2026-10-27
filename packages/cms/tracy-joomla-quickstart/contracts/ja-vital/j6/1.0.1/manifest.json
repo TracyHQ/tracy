@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vital/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_vital",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vital",
+    "id": "quickstart/ja-vital/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_vital",
+    "parts": {
+      "installer": {
+        "file": "ja-vital-j6-quickstart-1.0.1.zip",
+        "bytes": 58142245,
+        "sha256": "9eb0aca29626cd7251c98f79bd599002c6ba3e5c5768b4b377ff1cdd10ea2d44"
+      }
+    },
+    "release": "quickstart/ja-vital/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

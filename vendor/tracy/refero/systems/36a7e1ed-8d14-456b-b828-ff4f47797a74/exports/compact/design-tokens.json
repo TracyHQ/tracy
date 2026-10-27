@@ -1,0 +1,109 @@
+{
+  "color": {
+    "graphite-violet": {
+      "$value": "#333b52",
+      "$type": "color",
+      "$description": "Graphite Violet — Body text, default borders, icon strokes — near-gray with a cool violet undertone carries all secondary content"
+    },
+    "slate-gray": {
+      "$value": "#656c86",
+      "$type": "color",
+      "$description": "Slate Gray — Muted body text, nav items, secondary button labels"
+    },
+    "mist": {
+      "$value": "#969bb5",
+      "$type": "color",
+      "$description": "Mist — Placeholder text, disabled input values, tertiary helper text"
+    },
+    "hairline": {
+      "$value": "#d1d6e5",
+      "$type": "color",
+      "$description": "Hairline — Input borders, dividers, secondary card borders"
+    },
+    "cloud": {
+      "$value": "#e6eaf4",
+      "$type": "color",
+      "$description": "Cloud — Card borders, soft shadow halos, light dividers — the primary neutral border for product surfaces"
+    },
+    "paper": {
+      "$value": "#f5f8ff",
+      "$type": "color",
+      "$description": "Paper — Card surface tint, section background wash — barely-there blue-white that warms the canvas without competing with content"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text, inverted text on dark — the dominant background"
+    },
+    "indigo-core": {
+      "$value": "#3e57da",
+      "$type": "color",
+      "$description": "Indigo Core — Primary CTA fill, active nav, key icon accents — the single vivid saturated accent that makes interactive elements feel switched on; Three-stop gradient for CTA hovers, premium dark accents, and feature highlights"
+    },
+    "indigo-glow": {
+      "$value": "#8098f9",
+      "$type": "color",
+      "$description": "Indigo Glow — Hover states, gradient midtones, secondary link color — the lighter step of the brand ramp; Three-stop gradient for decorative text effects, hero accents, and section dividers"
+    },
+    "lavender-mist": {
+      "$value": "#c6d7fe",
+      "$type": "color",
+      "$description": "Lavender Mist — Light gradient start, soft tag fills, decorative wash — the pale end of the violet ramp for backgrounds"
+    },
+    "midnight-indigo": {
+      "$value": "#0d0f2c",
+      "$type": "color",
+      "$description": "Midnight Indigo — Headlines, dark hero panels, footer — near-black with violet depth, anchors dark sections and high-contrast typography"
+    },
+    "deep-indigo": {
+      "$value": "#1f235b",
+      "$type": "color",
+      "$description": "Deep Indigo — Badge text on light backgrounds, secondary heading color, dark UI text — a mid-step between midnight indigo and core indigo"
+    },
+    "forest": {
+      "$value": "#1a280b",
+      "$type": "color",
+      "$description": "Forest — Success badge text, positive state icons"
+    },
+    "mint-tint": {
+      "$value": "#ebf6df",
+      "$type": "color",
+      "$description": "Mint Tint — Success badge background wash"
+    },
+    "ember": {
+      "$value": "#470800",
+      "$type": "color",
+      "$description": "Ember — Error badge text, destructive state icons"
+    },
+    "saffron": {
+      "$value": "#42230a",
+      "$type": "color",
+      "$description": "Saffron — Warning/orange badge text — earthy orange-brown, not a bright alert orange"
+    },
+    "buttercream": {
+      "$value": "#fffadb",
+      "$type": "color",
+      "$description": "Buttercream — Warning badge background, soft warm highlight surface"
+    },
+    "g2-coral": {
+      "$value": "#ff7345",
+      "$type": "color",
+      "$description": "G2 Coral — Social proof badge accent (G2 review widget) — a single warm coral that breaks the cool palette for trust signals"
+    }
+  },
+  "font": {
+    "basiersquare-webfont": {
+      "$value": "Basiersquare Webfont",
+      "$type": "fontFamily",
+      "$description": "Single custom geometric sans used for everything from 12px body to 88px display. Weight 400 is the workhorse for body, nav, buttons, and small UI; weight 500 is reserved for headings, bold labels, and emphasis. The custom face's tight apertures and squared geometry are the brand's primary identity — substituting a standard sans will make the site look generic."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.synthesia.io",
+      "siteName": "Synthesia",
+      "extractedAt": "2026-06-03T18:09:15.476Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.removed-repeat",
+  "itemIds": [
+    "letter:team.removed:en",
+    "letter:team.removed:vi",
+    "letter:team.removed:de",
+    "letter:team.removed:it",
+    "letter:team.removed:fr",
+    "letter:team.removed:nl",
+    "letter:team.removed:zh",
+    "letter:team.removed:es"
+  ],
+  "requirement": "team.removed renders identically twice and leaves its input unchanged",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7",
+    "invariant": "a held or retried letter is rendered again at send time and must read the same"
+  },
+  "edgeTags": ["repeat"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.repeat#team.removed:"],
+  "redProof": null,
+  "legacyIds": []
+}

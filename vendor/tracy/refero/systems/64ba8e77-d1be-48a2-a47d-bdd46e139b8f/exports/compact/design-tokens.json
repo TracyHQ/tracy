@@ -1,0 +1,54 @@
+{
+  "color": {
+    "canvas-void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Canvas Void — Page background, hero canvas, deepest surface layer"
+    },
+    "off-white": {
+      "$value": "#faf9f4",
+      "$type": "color",
+      "$description": "Off-White — Primary text, headlines, icon strokes, card backgrounds inside dark frames, borders on cards — warm cream gives the type a lit-from-within quality against pure black"
+    },
+    "surface-charcoal": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Surface Charcoal — Elevated surface for inputs, nav elements, card interiors — sits one step above the canvas to create depth without lightness"
+    },
+    "muted-smoke": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Muted Smoke — Secondary text, inactive link borders, subdued metadata"
+    },
+    "faint-fog": {
+      "$value": "#bdbdbd",
+      "$type": "color",
+      "$description": "Faint Fog — Tertiary borders, placeholder text, low-emphasis dividers"
+    },
+    "chartreuse-pulse": {
+      "$value": "#dcff4f",
+      "$type": "color",
+      "$description": "Chartreuse Pulse — Filled CTA buttons, active nav indicators, accent borders, highlight strokes — the single chromatic spark against the monochrome void; near-black text on this fill creates an inverted button effect"
+    }
+  },
+  "font": {
+    "favorit-extended": {
+      "$value": "Favorit extended",
+      "$type": "fontFamily",
+      "$description": "Favorit extended — detected in extracted data but not described by AI"
+    },
+    "favorit": {
+      "$value": "Favorit",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all contexts — body copy, nav, labels, cards, and headings"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.madebyon.com",
+      "siteName": "Madebyon",
+      "extractedAt": "2026-06-03T22:05:06.857Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "905beb8c-9788-4ff4-888b-13370cacd4b0",
+  "status": "complete",
+  "name": "CHELSEA",
+  "url": "https://styles.refero.design/style/905beb8c-9788-4ff4-888b-13370cacd4b0",
+  "sourceWebsite": "https://www.chelsea.com",
+  "extractedAt": "2026-06-03T20:53:54.607Z",
+  "capturedAt": "2026-10-08T05:14:50.792252+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Black-box cinema with a single blue spotlight — the roster plays, the chrome disappears.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d1e82e3c-090e-4c7a-a03d-c1dd42aa57d4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7fdc2c32-a80a-485c-ab46-c5e8b0fb3cb2.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/22fd35ee-5d53-44b4-a77a-4678822d07d8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0a7670eb-3c93-4762-9670-b5e2daf31a81.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/85ce424c-016c-4351-a0b2-6e03657031b3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6fd8ddb28e2d4ba8f129e911c85b7d183108161efb4f2c4fdf5464261dd5f4f9",
+      "bytes": 14727
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e3932384c3221f0ee12804aa4e162411ab6b720f5a26a1181a6712bd766b937b",
+      "bytes": 144184
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "631c0d52d5ff3977386986b319f5fec6a20c0b66a2e555b87c80b0a217919473",
+      "bytes": 13102
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0d933df81ee63b3ef40dc8188924a87f07f10ba0b852f7ab51bb011d0c1583b0",
+      "bytes": 5547
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "99250388543aaeb696a5c377de4817bfc6eca3bcbccaf09fc2aac59288a49b7e",
+      "bytes": 9886
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "55d31d95fd8562b4c3560d94b3c0b660aa4f79409782e0f1c156d24b82cfaa80",
+      "bytes": 1960
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b64e127b78714243733b2a4b9814d20fda355995951c9446662c5642f41560fc",
+      "bytes": 381
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2a66a3e4b95a20a4da2ea5fc782706ab4dbbae8356b0942d4ddf02248138ea52",
+      "bytes": 398
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e65f7b1d8341965f54c404dd16e8b5ab232ca88cddef13e78a592bf406cbde18",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "08c9d362d4cdcbdda96a642d2c106fea55c37d3be991844a731c1e1558cc0e11",
+      "bytes": 38119
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "51c45ee8e0435560ad261f1e58cd0530f19f994c9803b1e4b87d0c5fdbbd0e45",
+      "bytes": 19838
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8de765efdfd5225f2c772a01f4e29d915db52c7310eed3aad8334bfaf6e8b3ef",
+      "bytes": 26577
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "36ed988f7020757ca80136143f6ef07995d874780a40eb4c23193cc6a09fb3ee",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e3374fd242445f4e3d3bb2c9eb79da7a5db49dadd50c91d4dda991ecf30c801c",
+      "bytes": 834
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1e22a9ffcf84be9b551744457b963ad88df75b3e11e558033957bb3e3afe14b2",
+      "bytes": 1235
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "1775bf6a-afdd-48b1-8435-b92ec585c674",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "1cb31aee-608e-4dec-a44d-5745e4fd6bab",
+    "2d4fc4ba-2ea4-465f-8644-f3ff5c6713a2",
+    "3389358b-68b2-4fca-82a8-52c07b3a3475",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "905beb8c-9788-4ff4-888b-13370cacd4b0",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b7fc2173-c9b1-45ed-bd3a-9999320b3248",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "c406697b-677f-40c7-a3a2-10ea545278f1",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "roberta-red": {
+      "$value": "#ed2023",
+      "$type": "color",
+      "$description": "Roberta Red — Primary filled CTAs, full-bleed social section background, logo wordmark, and any place the brand must shout — vivid red against white and charcoal creates urgency and warmth without aggression"
+    },
+    "charcoal": {
+      "$value": "#2b2f36",
+      "$type": "color",
+      "$description": "Charcoal — Primary text, body copy, dark CTA fill, hairline borders, icon strokes, image borders — the structural neutral that carries 90% of the interface"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, text on dark backgrounds, button text, badge backgrounds — the dominant neutral that gives the system its airy, poster-like feel"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Input field borders and the deepest surface accent — used sparingly for the hardest possible contrast point on form elements"
+    },
+    "shadow-gray": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Shadow Gray — Supporting neutral for secondary UI, dividers, and muted labels."
+    }
+  },
+  "font": {
+    "offset-tm": {
+      "$value": "Offset TM",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for body, UI labels, buttons, navigation, and most headings up to 80px — a quirky custom face with 0.04em positive tracking that gives every line a slightly informal, sign-painter rhythm."
+    },
+    "borensa": {
+      "$value": "Borensa",
+      "$type": "fontFamily",
+      "$description": "Condensed display face for oversized posters and the most aggressive headlines — sits at 80–120px with -0.02em tight tracking and aggressive line-height (~0.88) that lets the type stack into blocks; also used at 14–26px for micro-labels that need to feel editorial."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.robertaspizza.com",
+      "siteName": "Roberta's Pizza",
+      "extractedAt": "2026-06-03T19:01:52.815Z",
+      "variant": "compact"
+    }
+  }
+}

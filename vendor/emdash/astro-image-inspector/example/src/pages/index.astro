@@ -1,0 +1,51 @@
+---
+/** Example page for @lexingtonthemes/astro-image-inspector */
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Image Inspector Example</title>
+  </head>
+  <body>
+    <h1>Image Inspector Example</h1>
+    <p>Run <code>npm run dev</code>, open the dev toolbar (hover bottom of page), click "Image Inspector", then hover each image below.</p>
+
+    <section>
+      <h2>1. Normal size (400×300 rendered, same intrinsic)</h2>
+      <img
+        src="https://placehold.co/400x300/purple/white?text=400x300"
+        alt="Placeholder"
+        width="400"
+        height="300"
+      />
+    </section>
+
+    <section>
+      <h2>2. Oversized source (4000×3000 image shown at 200×150)</h2>
+      <img
+        src="https://placehold.co/4000x3000/blue/white?text=4000x3000"
+        alt="Oversized"
+        width="200"
+        height="150"
+      />
+    </section>
+
+    <section>
+      <h2>3. Upscaled (100×100 image shown at 300×300)</h2>
+      <img
+        src="https://placehold.co/100x100/green/white?text=100x100"
+        alt="Upscaled"
+        width="300"
+        height="300"
+      />
+    </section>
+
+    <section>
+      <h2>4. No width/height (relies on intrinsic size)</h2>
+      <img
+        src="https://placehold.co/320x180/red/white?text=no+dimensions"
+        alt="No dimensions"
+      />
+    </section>
+  </body>
+</html>

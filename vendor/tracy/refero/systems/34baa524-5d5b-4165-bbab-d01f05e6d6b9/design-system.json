@@ -1,0 +1,317 @@
+{
+  "dos": [
+    "Use ppmondwest for any heading 27px and above; never use the sans for display text",
+    "Set all ppmondwest headings to weight 400, never 600 or 700 — the serif does the work",
+    "Use 1px solid #dee2de for all card and section borders; this green-tinted hairline is the visual signature",
+    "Apply 8px border-radius to buttons and 12-16px to cards — avoid mixing 4px and 24px in the same surface",
+    "Use #41a1cf as a border-only accent on CTAs; the system has no filled chromatic buttons",
+    "Let the canvas be #fefffc (warm off-white), not pure #ffffff, to maintain the book-page atmosphere",
+    "Pair display headings with line-height 1.1; pair body text with line-height 1.5 — the contrast is intentional"
+  ],
+  "donts": [
+    "Do not use #000000 for text — use #171717 (Ink Black) or #2c2c2c (Graphite) for softer warmth",
+    "Do not apply box-shadow to buttons; the system uses borders and backdrop-blur instead of elevation",
+    "Do not introduce new accent colors — the palette is deliberately 95% neutral with one blue",
+    "Do not use weight 600+ on ppmondwest; the serif's personality is in its thin strokes",
+    "Do not use rgba or transparency on body text — all text colors should be solid hex values",
+    "Do not use radius values above 24px except for the navigation pill; this is not a soft-rounded design",
+    "Do not fill buttons with #41a1cf or #0081c0; Signal Blue and Cerulean are border/surface colors only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fefffc",
+      "name": "Parchment",
+      "role": "Page canvas — warm off-white slightly creamier than pure white, gives the whole site its book-page atmosphere",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, section backgrounds, footer — the slightly cooler clean white used for elevated content areas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9faf7",
+      "name": "Linen",
+      "role": "Input fields, subtle surface wash, nav fill — barely-perceptible off-white that reads as neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Ink Black",
+      "role": "Primary foreground token, strong body text where maximum contrast is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2c2c2c",
+      "name": "Graphite",
+      "role": "Headlines and key body text — softer than pure black, pairs with the warm canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#444141",
+      "name": "Charcoal",
+      "role": "Secondary text, button text — the workhorse text tone for body copy and UI labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#646464",
+      "name": "Ash",
+      "role": "Muted helper text, descriptive copy, subdued UI",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b4b8b4",
+      "name": "Fog",
+      "role": "Tertiary borders, disabled states, lightest neutral in the scale",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dee2de",
+      "name": "Mist",
+      "role": "Hairline borders on cards, buttons, and section dividers — green-tinted to harmonize with illustrations",
+      "group": "neutral"
+    },
+    {
+      "hex": "#282834",
+      "name": "Twilight",
+      "role": "Near-black with a cool blue undertone — used for nav borders, icon strokes, and outlined actions; reads darker than its lightness suggests",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1f1f29",
+      "name": "Dusk",
+      "role": "Filled button background — a near-black with cool violet undertone, the only non-white filled surface in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#41a1cf",
+      "name": "Signal Blue",
+      "role": "Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#0081c0",
+      "name": "Cerulean",
+      "role": "Vivid blue used for a singular saturated card surface — the lone moment of pure color intensity, used sparingly as atmospheric punctuation",
+      "group": "brand"
+    }
+  ],
+  "layout": "Full-bleed illustrated hero sections alternate with clean white content sections in a vertical rhythm. The hero is a 100vh painted illustration with a floating frosted-glass navigation pill at top-center and a glassmorphic overlay card at bottom-left containing the headline and CTA. Content sections are max-width 1200px centered, with generous vertical breathing room (64-96px). Headlines are left-aligned and large, often spanning 6-8 columns. Two-column layouts pair text with diagrams or illustrations. The diagram sections use a 6+6 split: explanatory text and figure caption on the left, line-art diagram in a soft-bordered card on the right. Navigation is a single floating pill — no sidebar, no mega-menu. Footer is a white band with a large editorial statement. The overall density is spacious: one idea per screen, never crowded.",
+  "imagery": "Hand-painted digital illustrations carry the emotional narrative: a moonlit New York skyline with cherry blossom branches framing the composition, a dark wildflower meadow with golden poppies and purple flowers, a pixelated yellow-and-pink flower rendered in a low-resolution game-art style. The illustrations are painterly, not flat-vector — they have visible brush texture, atmospheric depth, and cinematic color grading (cool blues for night, warm greens for fields). All illustrations sit full-bleed or at 24px radius against the white canvas. No photography, no product screenshots, no abstract 3D. The pixelated flower is the one element that breaks the painted language — a deliberate contrast. Icons are minimal: a small sun-over-landscape glyph in the nav, simple line arrows in buttons.",
+  "similar": [
+    {
+      "why": "Same editorial use of large custom serif headings on a warm off-white canvas, with illustrations doing narrative work between clean white content sections",
+      "business": "Stripe"
+    },
+    {
+      "why": "Similar restraint in color usage — near-monochrome palette with a single chromatic accent, hairline borders, 8px button radius, and generous spacing",
+      "business": "Linear"
+    },
+    {
+      "why": "Shared literary, almost book-like visual register: warm canvas, serif display type, and painted or hand-crafted imagery replacing stock photography",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Comparable soft-green border tones (#dee2de family) and the same approach of using atmospheric illustrations as structural section dividers",
+      "business": "Notion"
+    },
+    {
+      "why": "Similar product-as-editorial-object sensibility with custom serif display type, off-white canvas, and full-bleed illustrated sections punctuating clean white content blocks",
+      "business": "Pitch"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "50px (pill)",
+      "cards": "12px or 16px",
+      "buttons": "4px or 8px",
+      "large-surfaces": "24px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "32-64px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#fefffc",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Base page background — warm off-white that gives the whole site its editorial register"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper Card",
+      "level": 1,
+      "purpose": "Elevated content surfaces, footer, white content sections between illustrations"
+    },
+    {
+      "hex": "#f9faf7",
+      "name": "Linen Wash",
+      "level": 2,
+      "purpose": "Input fields, subtle surface differentiation, nav pill fill at low opacity"
+    },
+    {
+      "hex": "#0081c0",
+      "name": "Vivid Blue",
+      "level": 3,
+      "purpose": "Rare atmospheric accent surface — the only saturated color in the system, used as a punctuation moment"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.15) 0px 2px 6px 0px",
+      "element": "Navigation Pill"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.08) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 4px 5px 0px",
+      "element": "Content Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 8px 0px",
+      "element": "Diagram Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 2px 2px 0px, rgba(0, 0, 0, 0.04) 0px 0px 0px 5px",
+      "element": "Atmospheric Card"
+    }
+  ],
+  "northStar": "Literary journal beside a bonfire",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.13
+    },
+    {
+      "role": "body-sm",
+      "size": 15,
+      "lineHeight": 1,
+      "letterSpacing": -0.15
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "heading-sm",
+      "size": 27,
+      "lineHeight": 1.5,
+      "letterSpacing": -1.08
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "display",
+      "size": 54,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.08
+    }
+  ],
+  "components": [
+    {
+      "name": "Frosted Navigation Pill",
+      "role": "Primary site navigation",
+      "description": "Floating pill at top center of the page, background rgba(255,255,255,0.06) with backdrop-blur(9-20px), 50px border-radius (fully rounded), 1px border in #282834 or white. Contains a small sun/landscape icon, three text links (About, Writing, Careers) in af 15px weight 500, and a bordered 'Get Cofounder' CTA button. The blur and transparency let the illustrated hero show through softly."
+    },
+    {
+      "name": "Primary Outlined CTA Button",
+      "role": "Main call-to-action",
+      "description": "8px border-radius, transparent background, 1px border in #41a1cf (Signal Blue), text in #41a1cf, af 15px weight 500, padding 5px 12px. The chromatic border is the entire visual identity of the button — no fill, no shadow. Arrow icon (→) inside a circle at the right edge."
+    },
+    {
+      "name": "Secondary Outlined Button",
+      "role": "Secondary action",
+      "description": "8px border-radius, transparent background, 1px border in #282834 (Twilight), text in #282834, af 15px weight 500, padding 5px 12px. The neutral cousin of the primary CTA — used when a second action appears alongside."
+    },
+    {
+      "name": "Filled Dark Button",
+      "role": "Sole filled button variant",
+      "description": "8px border-radius, background #1f1f29 (Dusk), text white, border 1px in #282834, af 15px weight 500, padding 8px 16px. Used very sparingly — the only filled button in the system, appears in footer or high-emphasis contexts."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Inline links and tertiary navigation",
+      "description": "No background, no border, text in #444141 or #282834, af 16px weight 400, often with an arrow icon. The default for 'Get to know us' style links. Underlined version used inline within headings for cross-references."
+    },
+    {
+      "name": "Frosted Hero Overlay Card",
+      "role": "Hero information card",
+      "description": "Overlays the illustrated hero. 24px border-radius, semi-transparent background, backdrop-blur, generous padding (80px on the vivid blue variant), white or dark text depending on background. The frosted glass treatment ties the UI to the painted illustration."
+    },
+    {
+      "name": "White Content Card",
+      "role": "Standard content container",
+      "description": "12px border-radius, background #ffffff (Paper), 1px border in #dee2de (Mist), shadow rgba(0,0,0,0.08) 0px 1px 1px / 0px 4px 5px. Padding varies — 0px for media cards, 16px for text cards. The soft green-tinted border is the signature edge treatment."
+    },
+    {
+      "name": "Atmospheric Illustration Card",
+      "role": "Full-bleed illustrated section",
+      "description": "Large format (often 1100000+ px area), 24px border-radius, vivid background color (#0081c0 Cerulean or painted landscape), generous internal padding 80-128px. These are the moments where color is allowed to exist — illustration-as-component."
+    },
+    {
+      "name": "Diagram Card",
+      "role": "Visual explanation container",
+      "description": "16px border-radius, semi-transparent white background, subtle shadow rgba(0,0,0,0.05) 0px 1px 8px, padding 12px. Houses line-art diagrams (isolated agent squares, coordinator nodes) — the visual explanations are always inside this soft frame."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form text input",
+      "description": "0px border-radius (flat edges), background #f9faf7 (Linen), text #444141 (Charcoal), border-bottom-only in #444141. No visible top/side borders — the input is defined by its fill color and a single bottom line, giving a paper-form feel."
+    },
+    {
+      "name": "Cookie Consent Banner",
+      "role": "Bottom-right notification",
+      "description": "White background, rounded corners, small font af 13px, inline text + Decline/Accept text buttons separated by a vertical divider. The minimal, text-first treatment is characteristic — no icons, no color, no urgency."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer",
+      "description": "White background, large editorial statement in ppmondwest serif, small navigation links in af, generous vertical padding. The footer extends the literary feel — reading like the colophon of a book."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Custom display serif for headlines and editorial copy — the voice of the brand. Tight -0.04em tracking at large sizes makes it feel set rather than typed; weight 400 even at 54px creates a confident, literary register rather than the 700-weight shouts common in tech. Liga features disabled.",
+      "sizes": "27px, 40px, 48px, 54px",
+      "family": "ppmondwest",
+      "weight": "400, 500",
+      "lineHeight": "1.1 (display), 1.5 (lead body)",
+      "substitute": "Fraunces, Recoleta, GT Sectra",
+      "letterSpacing": "-0.04em at 27px, -0.02em at 40-54px",
+      "fontFeatureSettings": "\"liga\" 0"
+    },
+    {
+      "role": "Custom sans for all UI, body copy, navigation, buttons, and small headings — a quiet, neutral workhorse. Weight 500 is the default for interactive and label text; weight 400 for body. Slight negative tracking (-0.01em) keeps dense UI from feeling airy.",
+      "sizes": "13px, 15px, 16px, 18px",
+      "family": "af",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.0 (nav/icons), 1.3 (body-sm/headings), 1.5 (body)",
+      "substitute": "Inter, Geist, Söhne",
+      "letterSpacing": "-0.01em to -0.012em"
+    }
+  ],
+  "description": "General Intelligence Company uses an editorial, almost literary visual language: a warm off-white canvas interrupted by hand-painted atmospheric illustrations (moonlit skylines, wildflower meadows) that do the emotional work, while the actual UI lives on clean white between these scenes. Typography carries the brand — a custom display serif (ppmondwest) speaks in a low, measured voice at 48–54px with tight -0.04em tracking, while a custom sans (af) handles everything utilitarian at 13–18px. Color is nearly absent: a warm parchment white, a soft green-gray border, and one vivid blue (#41a1cf) used only as an outlined action border. Components whisper — 4px and 8px radii, hairline 1px borders, subtle backdrop-blur on the navigation, no decorative shadows.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #2c2c2c (headlines), #444141 (body), #646464 (muted)\n- background: #fefffc (canvas), #ffffff (cards), #f9faf7 (inputs)\n- border: #dee2de (cards), #282834 (nav/actions), #41a1cf (primary CTA)\n- accent: #0081c0 (vivid blue — atmospheric surface only)\n- foreground: #171717\n- primary action: #41a1cf (outlined action border)\n\n## 3-5 Example Component Prompts\n\n1. **Outlined primary CTA button**: 8px border-radius, transparent background, 1px solid border in #41a1cf (Signal Blue), text #41a1cf, af family weight 500 at 15px, padding 5px 12px, with a small arrow icon in a circle on the right.\n\n2. **Editorial headline section**: White (#ffffff) background, 64px vertical padding. Headline in ppmondwest weight 400 at 48px, line-height 1.1, letter-spacing -0.02em, color #2c2c2c. Subtext below in af weight 400 at 16px, line-height 1.5, color #646464.\n\n3. Create an Outlined Primary Action: Transparent background, #41a1cf border and text, 9999px radius, compact pill padding. Use it for the main CTA instead of a filled button.\n\n4. **Content card with hairline border**: 12px border-radius, background #ffffff, 1px solid border in #dee2de (Mist), shadow rgba(0,0,0,0.08) 0px 1px 1px / 0px 4px 5px. Padding 16px. Body text in af 16px weight 400, #444141.\n\n5. **Full-bleed illustrated hero section**: 100vh height, illustration fills entire section (no border-radius or 24px). Floating glassmorphic overlay card at bottom-left: 24px border-radius, semi-transparent white background, backdrop-blur, 32px padding, serif headline in ppmondwest 48px weight 400, white text."
+    }
+  ]
+}

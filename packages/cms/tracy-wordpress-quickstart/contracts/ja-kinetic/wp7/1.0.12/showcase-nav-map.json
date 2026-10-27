@@ -1,0 +1,629 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-kinetic/wp7/1.0.12",
+  "baseHash": "aa5b795fb68ee29902ece5c62f80d493926614ad438cadadf87388be6eaca5b6",
+  "baseFiles": {
+    "manifest.json": "90f786edf079bca5c7440c631e11e6466908165927d34feeb522c4b9cb53c370",
+    "content-map.json": "323d8e95fec1a856f11a5495c36cf33b97b8b10a8ba921575901e69cad90ad72",
+    "presentation-lock.json": "a456ca5f780c319c271c81cddbac313affe819a582544bbfb243fd7a09396da8"
+  },
+  "inputs": {
+    "navigation-source.json": "13c55385bb3257c0909743b40a06afeacee703458c5e4e62fa13edb2ef753673",
+    "inventory.json": "827ceb5d46a998271194e2825accf1df37b611068a7b7ab8263fa62991b74cd1"
+  },
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "templatePart.removeBlock",
+      "templatePart": {
+        "id": 1777,
+        "slug": "header"
+      },
+      "block": {
+        "name": "core/navigation-link",
+        "navigationBlock": 0,
+        "path": [
+          "Home",
+          "Blueprint"
+        ],
+        "pageId": null
+      },
+      "label": "Blueprint",
+      "path": [
+        "Home",
+        "Blueprint"
+      ],
+      "contains": [],
+      "rule": "hide.home-branch-variant",
+      "reason": "a copy of the home page (the same block skeleton, other words), under \"Home\"",
+      "key": "templatePart-1777",
+      "before": "2d4ba41f179a7c59dd3c9692175edd23f36f4f4ec4160cedd53a655f37a1f693",
+      "after": "d7372881c638632f075aeffa69090377f4a48923597f6f1648bf4cc743383e33"
+    },
+    {
+      "op": "templatePart.removeBlock",
+      "templatePart": {
+        "id": 1777,
+        "slug": "header"
+      },
+      "block": {
+        "name": "core/navigation-link",
+        "navigationBlock": 0,
+        "path": [
+          "Home",
+          "Signal"
+        ],
+        "pageId": null
+      },
+      "label": "Signal",
+      "path": [
+        "Home",
+        "Signal"
+      ],
+      "contains": [],
+      "rule": "hide.home-branch-variant",
+      "reason": "a copy of the home page (the same block skeleton, other words), under \"Home\"",
+      "key": "templatePart-1777",
+      "before": "d7372881c638632f075aeffa69090377f4a48923597f6f1648bf4cc743383e33",
+      "after": "1d33227203e1ff38511cbc50fd26ee697560a3eb8673821fadfe74c2d87d6a0d"
+    },
+    {
+      "op": "templatePart.removeBlock",
+      "templatePart": {
+        "id": 1777,
+        "slug": "header"
+      },
+      "label": "Blueprint",
+      "block": {
+        "name": "core/list-item",
+        "contains": "<a href=\"/home-menu/home-blueprint\">"
+      },
+      "rule": "hide.alias-of-hidden",
+      "reason": "another link to \"Blueprint\", which leaves the navigation (Home › Blueprint)",
+      "key": "templatePart-1777",
+      "before": "1d33227203e1ff38511cbc50fd26ee697560a3eb8673821fadfe74c2d87d6a0d",
+      "after": "8b90ccde7d08af9b1cc2b214724de2e9d1d851fed4e846af9d5f3d4cf59a3dbd"
+    },
+    {
+      "op": "templatePart.removeBlock",
+      "templatePart": {
+        "id": 1777,
+        "slug": "header"
+      },
+      "label": "Signal",
+      "block": {
+        "name": "core/list-item",
+        "contains": "<a href=\"/home-menu/home-signal\">"
+      },
+      "rule": "hide.alias-of-hidden",
+      "reason": "another link to \"Signal\", which leaves the navigation (Home › Signal)",
+      "key": "templatePart-1777",
+      "before": "8b90ccde7d08af9b1cc2b214724de2e9d1d851fed4e846af9d5f3d4cf59a3dbd",
+      "after": "dd43a46af328e9ef1ad79c4ce90c2f720cb5507ee33cb90672325a199c98d7a9"
+    }
+  ],
+  "finals": [
+    {
+      "key": "templatePart-1777",
+      "before": "2d4ba41f179a7c59dd3c9692175edd23f36f4f4ec4160cedd53a655f37a1f693",
+      "after": "dd43a46af328e9ef1ad79c4ce90c2f720cb5507ee33cb90672325a199c98d7a9"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-1772",
+      "where": "wp_navigation 1772 (mainmenu)",
+      "label": "Pricing",
+      "path": [
+        "Pricing"
+      ],
+      "pageId": 1741,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1773",
+      "where": "wp_navigation 1773 (footer-product)",
+      "label": "Features",
+      "path": [
+        "Features"
+      ],
+      "pageId": 1750,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1773",
+      "where": "wp_navigation 1773 (footer-product)",
+      "label": "Pricing",
+      "path": [
+        "Pricing"
+      ],
+      "pageId": 1741,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1773",
+      "where": "wp_navigation 1773 (footer-product)",
+      "label": "Integrations",
+      "path": [
+        "Integrations"
+      ],
+      "pageId": 1751,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1773",
+      "where": "wp_navigation 1773 (footer-product)",
+      "label": "Changelog",
+      "path": [
+        "Changelog"
+      ],
+      "pageId": 1752,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1774",
+      "where": "wp_navigation 1774 (footer-dev)",
+      "label": "Blog",
+      "path": [
+        "Blog"
+      ],
+      "pageId": 1766,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1774",
+      "where": "wp_navigation 1774 (footer-dev)",
+      "label": "KineticQL",
+      "path": [
+        "KineticQL"
+      ],
+      "pageId": 1758,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1774",
+      "where": "wp_navigation 1774 (footer-dev)",
+      "label": "Search",
+      "path": [
+        "Search"
+      ],
+      "pageId": 1767,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1774",
+      "where": "wp_navigation 1774 (footer-dev)",
+      "label": "All Tags",
+      "path": [
+        "All Tags"
+      ],
+      "pageId": 1759,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1775",
+      "where": "wp_navigation 1775 (footer-company)",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": 1754,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1775",
+      "where": "wp_navigation 1775 (footer-company)",
+      "label": "Team",
+      "path": [
+        "Team"
+      ],
+      "pageId": 1755,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1775",
+      "where": "wp_navigation 1775 (footer-company)",
+      "label": "FAQ",
+      "path": [
+        "FAQ"
+      ],
+      "pageId": 1753,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1775",
+      "where": "wp_navigation 1775 (footer-company)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 1756,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1776",
+      "where": "wp_navigation 1776 (legal)",
+      "label": "Privacy Policy",
+      "path": [
+        "Privacy Policy"
+      ],
+      "pageId": 3,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1776",
+      "where": "wp_navigation 1776 (legal)",
+      "label": "Terms of Service",
+      "path": [
+        "Terms of Service"
+      ],
+      "pageId": 1743,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Terminal",
+      "path": [
+        "Home",
+        "Terminal"
+      ],
+      "pageId": null,
+      "rule": "keep.homepage",
+      "reason": "the home page, the entry that makes \"Home\" its branch"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Product",
+      "path": [
+        "Product"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Features",
+      "path": [
+        "Product",
+        "Features"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Integrations",
+      "path": [
+        "Product",
+        "Integrations"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Changelog",
+      "path": [
+        "Product",
+        "Changelog"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Blog",
+      "path": [
+        "Product",
+        "Blog"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "FAQ",
+      "path": [
+        "Product",
+        "FAQ"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "All Categories",
+      "path": [
+        "Product",
+        "All Categories"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Article Archive",
+      "path": [
+        "Product",
+        "Article Archive"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Our Writers",
+      "path": [
+        "Product",
+        "Our Writers"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Pricing",
+      "path": [
+        "Pricing"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Company",
+      "path": [
+        "Company"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "About",
+      "path": [
+        "Company",
+        "About"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Team",
+      "path": [
+        "Company",
+        "Team"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Contact",
+      "path": [
+        "Company",
+        "Contact"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Pages",
+      "path": [
+        "Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Landing",
+      "path": [
+        "Pages",
+        "Landing"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Single Article",
+      "path": [
+        "Pages",
+        "Single Article"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "All Tags",
+      "path": [
+        "Pages",
+        "All Tags"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Search",
+      "path": [
+        "Pages",
+        "Search"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Login",
+      "path": [
+        "Pages",
+        "Login"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Register",
+      "path": [
+        "Pages",
+        "Register"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Password Reset",
+      "path": [
+        "Pages",
+        "Password Reset"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Username Reminder",
+      "path": [
+        "Pages",
+        "Username Reminder"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Engineering",
+      "path": [
+        "Pages",
+        "Engineering"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Author",
+      "path": [
+        "Pages",
+        "Author"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Sign in",
+      "path": [
+        "Sign in"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-1777",
+      "where": "template part 1777 (header), inline navigation 0",
+      "label": "Start free",
+      "path": [
+        "Start free"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 2,
+    "templateParts": 2,
+    "kept": 44,
+    "unresolved": 0
+  }
+}

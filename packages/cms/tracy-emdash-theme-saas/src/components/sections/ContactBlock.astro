@@ -1,0 +1,357 @@
+---
+/**
+ * contact_block — the source's contact row (DECISIONS D35): the message form beside the three
+ * contact methods. The form is the real Forms-plugin form named by `form_id`; the methods are
+ * entry data (title, description, mailto address, lucide icon name).
+ */
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
+import Icon from '@/components/Icon.astro'
+import FormWords from '@/components/site/FormWords.astro'
+import { splitPath } from '@/lib/i18n'
+import type { Style } from '@/lib/sections'
+import '@emdash-cms/plugin-forms/styles'
+import { stampFor, type Stamp } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the 760px article column of inner pages (DECISIONS D18). */
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+const items = ((data.items ?? []) as any[]).filter((m) => m?.title || m?.email)
+const FormEmbed = (blockComponents as any)['emdash-form']
+// The language the page is written in, for the plugin's own words (`FormWords.astro`).
+const tag = uiTag(splitPath(Astro.url.pathname).locale)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'contact_block', null)
+---
+
+<section class:list={["cb", narrow && "is-narrow"]} {...s()}>
+	<div class="k-container">
+		<div class="cb-inner">
+			{
+				(data.heading || data.form_id) && (
+					<div class="k-card cb-card">
+						{data.heading && <h2 class="cb-heading" {...s('heading')}>{data.heading}</h2>}
+						{data.form_id && (
+							<div class="cb-form" data-contact-form>
+								<FormWords tag={tag}><FormEmbed node={{ formId: data.form_id }} /></FormWords>
+							</div>
+						)}
+					</div>
+				)
+			}
+			{
+				items.length > 0 && (
+					<ul class="cb-methods">
+						{items.map((m) => (
+							<li class="k-card cb-method" {...s.block('items')}>
+								{m.icon && (
+									<span class="cb-method-icon" aria-hidden="true">
+										<Icon name={m.icon} size={20} />
+									</span>
+								)}
+								<div class="cb-method-body">
+									{m.title && <p class="cb-method-title" {...s('items.title')}>{m.title}</p>}
+									{m.desc && <p class="cb-method-desc" {...s('items.desc')}>{m.desc}</p>}
+									{m.email && (
+										<a class="cb-method-email" href={`mailto:${m.email}`} {...s('items.email')}>
+											{m.email}
+										</a>
+									)}
+								</div>
+							</li>
+						))}
+					</ul>
+				)
+			}
+		</div>
+	</div>
+</section>
+
+<script>
+	// The plugin's template indents inside <textarea>, and that whitespace is a value: the placeholder
+	// never shows and `required` passes on blank input. Clear the default value itself.
+	for (const ta of document.querySelectorAll<HTMLTextAreaElement>("[data-contact-form] textarea")) {
+		if (!ta.value.trim()) {
+			ta.defaultValue = ""
+			ta.value = ""
+		}
+	}
+	// After a submit the plugin restores `data-submit-label` and falls back to the word "Submit",
+	// which the embed never sets — the form's own button label would be lost. Record it up front.
+	for (const form of document.querySelectorAll<HTMLFormElement>("[data-contact-form] form.ec-form")) {
+		const label = form.querySelector(".ec-form-submit")?.textContent?.trim()
+		if (label) form.dataset.submitLabel = label
+	}
+</script>
+
+<style>
+	.cb {
+		padding-block: 64px;
+	}
+	.cb-inner {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+		gap: 48px;
+		max-width: 1100px;
+		margin-inline: auto;
+	}
+	.cb-card {
+		padding: 32px;
+	}
+	.cb-heading {
+		margin: 0 0 20px;
+		font-size: 22px;
+		line-height: 1.2;
+		letter-spacing: -0.3px;
+	}
+	/* The source sets the methods column 6px below the form card. */
+	.cb-methods {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		margin-top: 6px;
+	}
+	.cb-method {
+		display: flex;
+		gap: 14px;
+		padding: 22px;
+		border-radius: 14px;
+	}
+	.cb-method-icon {
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 42px;
+		height: 42px;
+		border-radius: 11px;
+		/* Pale tile: the direction's bright accent at 12%, as the source mixes it (D33). */
+		background: color-mix(in srgb, var(--k-tint) 12%, transparent);
+		color: var(--k-primary);
+	}
+	.cb-method-body {
+		display: flex;
+		min-width: 0;
+		flex-direction: column;
+		gap: 4px;
+	}
+	.cb-method-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 20px;
+		color: var(--k-heading);
+	}
+	.cb-method-desc {
+		margin: 0;
+		font-size: 13.5px;
+		line-height: 1.5;
+	}
+	.cb-method-email {
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		line-height: 25px;
+		color: var(--k-primary);
+		overflow-wrap: anywhere;
+	}
+	.cb-method-email:hover {
+		color: var(--k-primary-hover);
+	}
+
+	/* Forms-plugin markup (ec-form-*) in the design's field styles; loaded with the form only. */
+	.cb-form :global(.ec-form) {
+		display: grid;
+		gap: 20px;
+		container-type: inline-size;
+	}
+	.cb-form :global(.ec-form-page) {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 28px 14px;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		min-width: 0;
+	}
+	.cb-form :global(.ec-form-field) {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		grid-column: span 2;
+		min-width: 0;
+	}
+	.cb-form :global(.ec-form-field--half) {
+		grid-column: span 1;
+	}
+	/* Below this the two half fields would be narrower than their own labels: stack instead. */
+	@container (max-width: 320px) {
+		.cb-form :global(.ec-form-field--half) {
+			grid-column: span 2;
+		}
+	}
+	.cb-form :global(.ec-form-label) {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1.55;
+		color: var(--k-text);
+	}
+	.cb-form :global(.ec-form-required) {
+		margin-left: 2px;
+		color: var(--k-primary);
+	}
+	.cb-form :global(.ec-form-input),
+	.cb-form :global(.ec-form input),
+	.cb-form :global(.ec-form select),
+	.cb-form :global(.ec-form textarea) {
+		width: 100%;
+		padding: 12px 13px;
+		border: 1px solid var(--k-border);
+		border-radius: 9px;
+		background: var(--k-bg);
+		font-family: var(--font-sans);
+		font-size: 15px;
+		line-height: 21px;
+		color: var(--k-heading);
+	}
+	.cb-form :global(.ec-form-input::placeholder),
+	.cb-form :global(.ec-form textarea::placeholder) {
+		color: var(--k-muted);
+	}
+	.cb-form :global(.ec-form-input:focus-visible),
+	.cb-form :global(.ec-form textarea:focus-visible),
+	.cb-form :global(.ec-form select:focus-visible) {
+		outline: 2px solid var(--k-primary);
+		outline-offset: 0;
+		border-color: transparent;
+	}
+	.cb-form :global(.ec-form textarea) {
+		min-height: 110px;
+		resize: vertical;
+	}
+	.cb-form :global(.ec-form-checkbox-label) {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		font-size: 13.5px;
+		line-height: 1.5;
+		color: var(--k-text);
+		cursor: pointer;
+	}
+	.cb-form :global(.ec-form-checkbox-label input) {
+		width: 18px;
+		height: 18px;
+		flex: none;
+		margin-top: 1px;
+		padding: 0;
+		border-radius: 5px;
+		accent-color: var(--k-primary);
+	}
+	.cb-form :global(.ec-form-help) {
+		font-size: 12.5px;
+		color: var(--k-muted);
+	}
+	.cb-form :global(.ec-form-error) {
+		font-size: 12.5px;
+		line-height: 1.4;
+		color: var(--k-heading);
+	}
+	.cb-form :global(.ec-form-error:empty) {
+		display: none;
+	}
+	.cb-form :global(.ec-form-nav) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		align-items: center;
+	}
+	.cb-form :global(.ec-form-submit),
+	.cb-form :global(.ec-form-next),
+	.cb-form :global(.ec-form-prev) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 43px;
+		padding: 0 24px;
+		border: 1px solid transparent;
+		border-radius: 9px;
+		background: var(--k-primary-fill);
+		font-family: var(--font-sans);
+		font-size: 14.5px;
+		font-weight: 600;
+		line-height: 1;
+		color: var(--k-primary-ink);
+		cursor: pointer;
+		transition: background-color 0.15s;
+	}
+	.cb-form :global(.ec-form-submit:hover),
+	.cb-form :global(.ec-form-next:hover) {
+		background: var(--k-primary-fill-hover);
+	}
+	.cb-form :global(.ec-form-prev) {
+		background: transparent;
+		border-color: var(--k-border);
+		color: var(--k-text);
+	}
+	.cb-form :global(.ec-form-submit:disabled) {
+		opacity: 0.7;
+		cursor: progress;
+	}
+	.cb-form :global(.ec-form-status) {
+		padding: 12px 14px;
+		border: 1px solid var(--k-border);
+		border-radius: 9px;
+		background: var(--k-elevated);
+		font-size: 14px;
+		line-height: 1.5;
+		color: var(--k-heading);
+	}
+	.cb-form :global(.ec-form-status--success) {
+		border-color: var(--k-primary);
+	}
+	.cb-form :global(.ec-form-status--error) {
+		border-color: var(--k-muted);
+	}
+	.cb-form :global(.ec-form-status:empty) {
+		display: none;
+	}
+	.cb-form :global(.ec-form-progress) {
+		font-size: 13px;
+		color: var(--k-muted);
+	}
+
+	/* One column: the source stacks the form and the methods (gap 16) below 880px. */
+	@media (max-width: 879.98px) {
+		.cb-inner {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 16px;
+		}
+	}
+	/* Inside the 760px article column there is no room for two columns. */
+	.cb.is-narrow .cb-inner {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 16px;
+	}
+	/* The source tightens the cards and the heading at 768, not at the stacking breakpoint. */
+	@media (max-width: 768px) {
+		.cb {
+			padding-block: 48px;
+		}
+		.cb-card {
+			padding: 24px;
+		}
+		.cb-heading {
+			font-size: 20px;
+		}
+		.cb-method {
+			padding: 20px;
+		}
+	}
+</style>

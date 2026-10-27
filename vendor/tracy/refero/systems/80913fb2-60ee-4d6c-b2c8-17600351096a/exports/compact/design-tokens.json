@@ -1,0 +1,54 @@
+{
+  "color": {
+    "manifesto-orange": {
+      "$value": "#ff7a00",
+      "$type": "color",
+      "$description": "Manifesto Orange — Full-viewport canvas, page background — one unmodulated orange flood with no gradients, no overlays, no surface variation"
+    },
+    "magenta-backdrop": {
+      "$value": "#ff29f1",
+      "$type": "color",
+      "$description": "Magenta Backdrop — Photography studio backdrop — appears as flat color blocks behind models, not as UI chrome"
+    },
+    "cobalt-backdrop": {
+      "$value": "#287aea",
+      "$type": "color",
+      "$description": "Cobalt Backdrop — Photography studio backdrop — second flat color block behind models in the photo grid"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All text, wordmark, hairline borders, nav links, photo tile labels — pure black with no softening"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Inset text on dark photo backgrounds, photo label cards where reverse-out is needed"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI — navigation, body, subheadings, and display headlines. Used exclusively at weight 400; the design system gains its heaviness from size and uppercase transforms, not from font weight. A geometric humanist sans with high x-height and clean terminals that reads as modern European editorial. Free substitute: Inter or Söhne."
+    },
+    "roobert-bubble-display-cut": {
+      "$value": "Roobert (Bubble Display Cut)",
+      "$type": "fontFamily",
+      "$description": "Reserved for the 'POP' wordmark in the masthead — a custom balloon/bubble script with rounded inflated letterforms that is the system's only counterpoint to the otherwise hard-edged sans-serif. Never use this style for body, nav, or section labels."
+    },
+    "roobert-bold": {
+      "$value": "Roobert Bold",
+      "$type": "fontFamily",
+      "$description": "Roobert Bold — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://thepopmanifesto.com",
+      "siteName": "The Pop Manifesto",
+      "extractedAt": "2026-06-03T21:55:48.882Z",
+      "variant": "compact"
+    }
+  }
+}

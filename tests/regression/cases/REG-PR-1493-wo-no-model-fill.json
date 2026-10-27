@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1493-wo-no-model-fill",
+  "kind": "feat",
+  "title": "WO EmDash drops the generic model; read and write errors are not handed off early",
+  "pr": 1493,
+  "area": "website-opportunities/outreach-v3",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run WO with and without posts with a model configured; run an ordinary site; trigger identity, source, report and CMS write errors.",
+    "Call the real create door with a held WO build and check the link right after the brief engine starts."
+  ],
+  "expect": [
+    "WO loads no model and does no warm-up; the tool gets --no-model --no-images and no key; an ordinary site keeps warm-up/replay.",
+    "Identity/source errors create no credential file; a timeout, a broken report or a write error stops the fill; missing copy without a write error may be handed to the agent.",
+    "site_creation and wo_build are linked before prepare, even without a create receipt/page plan/items."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/brief-emdash-wo-mode.test.mjs, apps/tracy-web/test/website-opportunities-site-content.test.mjs, apps/tracy-web/test/site-creation.test.mjs"
+  },
+  "fence": "Identity from the DB before the model, strict reads, receipts written before handoff.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-emdash-wo-mode.test.mjs",
+      "apps/tracy-web/test/website-opportunities-site-content.test.mjs",
+      "apps/tracy-web/test/site-creation.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "WO without posts skips warm-up and all generic model configuration",
+      "WO with posts skips warm-up and all generic model configuration",
+      "an ordinary site retains model warm-up, replay and image configuration",
+      "an unreadable WO identity fails before models, tools or temporary credential files",
+      "WO sourceError cannot be mistaken for missing source content",
+      "WO copyError cannot be mistaken for missing source content",
+      "WO copy skipped without a write error can continue to the agent",
+      "WO sourced posts refused by the site fail the fill instead of continuing to handoff",
+      "WO sourced slot writes refused by the site fail the fill instead of continuing to handoff",
+      "WO setup refuses incomplete tool work:",
+      "WO identity exists before its create receipt, even without a page plan or sourced posts",
+      "WO identity and strict source readers reject database errors instead of reporting an ordinary or empty site",
+      "the create door commits WO identity before starting the brief engine"
+    ]
+  }
+}

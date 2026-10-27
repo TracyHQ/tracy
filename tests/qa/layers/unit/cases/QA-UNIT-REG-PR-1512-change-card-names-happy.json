@@ -1,0 +1,62 @@
+{
+  "id": "QA-UNIT-REG-PR-1512-change-card-names-happy",
+  "itemIds": ["regression:REG-PR-1512-change-card-names"],
+  "requirement": "A changed record is named by its kind in words and its title, never by its record id, on the chat card, the undo dialog and the Site changes line; the Apply door keeps the dsh host's title only from its signed actor",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1512-change-card-names.json",
+    "ref": "PR #1512 (fix); fix evidence: Local stand 20/10/2026 (#1480 voice run): the card under a reply said 'Nội dung · article 4'; in the local DB 370 of 13,129 site_write rows carried a title, because the Apply door kept {kind, id, fields} only (council D1, ~/tracy-bench-work/voice-mode/council/a6-codex.md).",
+    "invariant": "Exit 0, 0 failures. targetText({kind:'article', id:'4', title:null}, say) is 'an article' and with title 'Yêu chính mình' is 'article “Yêu chính mình”'; WordPress 'post' reads 'a page or post' or the title alone; an unknown kind reads 'an item'; no output for article, post, services or menu_item contains a digit. whatOf counts records that read the same ('Content · an article, +1 more'); putsBackOf gives ['article “Yêu chính mình”', 'an article', '+1 more']. resourceText of a titled article reads 'Updated article “Yêu chính mình”'; untitled WordPress post 42 still reads 'Updated post 42' (E3.2); a titled WordPress post reads 'Updated “Home”'. writeTitleOf decodes, trims and puts on one line; '%', '%E0%A4%A', blank and absent give null; 300 characters cap at 200 without splitting an emoji.",
+    "productSources": [
+      "apps/tracy-web/src/sites/route.js:982",
+      "packages/core/tracy-core/src/site-tabs/activity-v2.ts:840",
+      "packages/core/tracy-core/src/site-tabs/revert-prompt.ts:236",
+      "packages/site/tracy-site-tabs/src/client/strings.ts:21",
+      "packages/ui/tracy-chat-input/src/client/strings.ts:8",
+      "packages/ui/tracy-chat-input/src/client/turn-card.mjs:34",
+      "packages/ui/tracy-chat-input/src/client/turn-undo.mjs:6"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/site-changes-undo-request.test.mjs:304 require() with a computed specifier",
+      "packages/core/tracy-core/test/site-changes-undo-request.test.mjs:31 import() with a computed specifier",
+      "packages/core/tracy-core/test/site-changes-undo-request.test.mjs:34 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1512-change-card-names.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1512-change-card-names"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1512-change-card-names",
+    "pr": 1512,
+    "kind": "fix",
+    "area": "site-changes/undo",
+    "file": "tests/regression/cases/REG-PR-1512-change-card-names.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-chat-input/test/turn-card.test.mjs",
+    "packages/core/tracy-core/test/site-changes-undo-request.test.mjs",
+    "packages/core/tracy-core/test/activity-v2.test.mjs",
+    "apps/tracy-web/test/apply-write-title.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

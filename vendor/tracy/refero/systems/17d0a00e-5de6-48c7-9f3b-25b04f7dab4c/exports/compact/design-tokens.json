@@ -1,0 +1,89 @@
+{
+  "color": {
+    "canva-violet": {
+      "$value": "#8b3dff",
+      "$type": "color",
+      "$description": "Canva Violet — Primary brand color — filled buttons, active navigation, link text, gradient anchors, brand icons, tag fills"
+    },
+    "deep-violet": {
+      "$value": "#9729ff",
+      "$type": "color",
+      "$description": "Deep Violet — Secondary violet for decorative elements, secondary icon accents, gradient stop"
+    },
+    "lavender-mist": {
+      "$value": "#a370fc",
+      "$type": "color",
+      "$description": "Lavender Mist — Tertiary violet tint — outlined/ghost action borders, muted brand accents, image overlays"
+    },
+    "coral-ember": {
+      "$value": "#ff6105",
+      "$type": "color",
+      "$description": "Coral Ember — Vivid orange — decorative icon accent, category tag, gradient co-stop alongside violet"
+    },
+    "magenta-pop": {
+      "$value": "#ff3d4d",
+      "$type": "color",
+      "$description": "Magenta Pop — Vivid red-pink — decorative icon accent, category tag, energetic gradient endpoint"
+    },
+    "fuchsia-bloom": {
+      "$value": "#e950f7",
+      "$type": "color",
+      "$description": "Fuchsia Bloom — Vivid magenta — decorative icon accent, category tag, playful gradient endpoint"
+    },
+    "midnight-ink": {
+      "$value": "#0f1015",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, heading, navigation, button labels, card surface dark mode accent"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page background, card surface, inverse text on dark/violet fills"
+    },
+    "slate-gray": {
+      "$value": "#575a5f",
+      "$type": "color",
+      "$description": "Slate Gray — Secondary text, muted helper copy, nav dividers, disabled chrome"
+    },
+    "pale-mist": {
+      "$value": "#d7d9de",
+      "$type": "color",
+      "$description": "Pale Mist — Subtle button shadow tint, very light dividers, off-white surface"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Pure black for maximum-contrast text, sharp icons, decorative dots"
+    },
+    "teal-aurora": {
+      "$value": "#00c4cc",
+      "$type": "color",
+      "$description": "Teal Aurora — Signature gradient starting point — teal-to-violet hero washes"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    },
+    "canva-sans": {
+      "$value": "Canva Sans",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface. Weight 400 for body and UI labels, 500 for emphasized subheadings and button text, 600 for section headings. Headlines 56–84px use weight 600 with tight tracking for poster-like presence. Font features \"ss02\" and \"ss03\" enable brand-specific alternates (likely single-story g/a, geometric g/cuts) that give the type its warm, custom-cut character — never substitute these off in body text."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.canva.com",
+      "siteName": "Canva",
+      "extractedAt": "2026-06-03T21:53:09.561Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "failed": "Không thể hiển thị PDF: {message}",
+  "loading": "Đang hiển thị tài liệu...",
+  "pageImage": "Trang PDF {page}",
+  "password": "PDF này cần mật khẩu; chưa hỗ trợ xem trước tệp có mật khẩu.",
+  "rendering": "Đang hiển thị trang…",
+  "retry": "Thử lại",
+  "title": "PDF",
+  "unsupported": "Xem trước PDF cần toàn bộ nội dung tệp.",
+  "workerFailed": "Tiến trình hiển thị PDF không thể tiếp tục. Vui lòng thử lại.",
+  "zoomControls": "Điều khiển thu phóng",
+  "zoomFitWidth": "Vừa chiều rộng",
+  "zoomIn": "Phóng to",
+  "zoomMenu": "Chọn mức thu phóng",
+  "zoomOut": "Thu nhỏ",
+  "zoomValue": "{percent}%"
+}

@@ -1,0 +1,249 @@
+/* ============================================================
+   page-227.css — Contact (Itemid 227) per-page overlay
+   Every rule scoped to body.item-227 — never bleeds.
+   Load order: AFTER template.css + darkmode.css (index.php).
+   Shared files NOT touched here (see SHARED-ISSUES section):
+     html/com_contact/*   acm/page-masthead   acm/cta
+   ============================================================ */
+
+/* ── 1. Body section: padding + h-centering ─────────────────── */
+body.item-227 .t4-section.t4-main-body {
+  padding-top: 64px !important;
+  padding-bottom: 64px !important;
+  padding-left: 32px;
+  padding-right: 32px;
+  box-sizing: border-box;
+}
+
+body.item-227 .contact.kinetic-contact {
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+/* ── 2. Column layout: form LEFT, methods RIGHT ──────── */
+body.item-227 .kinetic-contact__grid {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 48px !important;
+  margin-top: 0 !important;
+  align-items: start;
+}
+body.item-227 .kinetic-contact__formwrap { order: 1; }
+body.item-227 .kinetic-contact__info     { order: 2; }
+
+/* ── 3. Form card: flex-column ──────────────────────── */
+body.item-227 .kinetic-contact__formcard {
+  padding: 32px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* ── 4. Form heading: real editable <h2> (no CSS ::before) ───── */
+body.item-227 .kinetic-contact__formcard > .hx-form-title {
+  display: block;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+  margin: 0 0 20px;
+}
+
+/* ── 5. Form row gap: 14px (design) vs 18px (default) ───────── */
+body.item-227 .kinetic-contactform__row {
+  gap: 14px !important;
+  margin-bottom: 14px;
+}
+
+/* ── 6. Field bottom margin ───────────────────────────── */
+body.item-227 .kinetic-contactform .kinetic-contactform__field {
+  margin-bottom: 14px !important;
+}
+
+/* ── 7. Labels: IBM Plex Sans 13px --text (design)
+        vs JetBrains Mono 11px uppercase --muted (default) ──── */
+body.item-227 .kinetic-contact .control-label,
+body.item-227 .kinetic-contact .kinetic-contactform label {
+  font-family: "IBM Plex Sans", system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--text) !important;
+  margin-bottom: 6px;
+}
+
+/* ── 8. Inputs ──────────────────── */
+body.item-227 .kinetic-contact .kinetic-contactform .form-control,
+body.item-227 .kinetic-contact .kinetic-contactform input[type="text"],
+body.item-227 .kinetic-contact .kinetic-contactform input[type="email"],
+body.item-227 .kinetic-contact .kinetic-contactform textarea,
+body.item-227 .kinetic-contact .kinetic-contactform select {
+  background: var(--bg) !important;
+  border-radius: 9px !important;
+  padding: 12px 13px !important;
+}
+
+/* ── 9. Textarea ────────────────────────────────── */
+body.item-227 .kinetic-contact .kinetic-contactform textarea {
+  min-height: 110px !important;
+  height: 110px !important;
+  resize: vertical;
+}
+
+/* ── 10. Hide Subject field (not in design) ─────────────────── */
+body.item-227 .kinetic-contactform fieldset > div.kinetic-contactform__field:not(.contact-mes) {
+  display: none !important;
+}
+
+/* ── 11. Hide Privacy / consent fieldset (not in design) ────── */
+body.item-227 .kinetic-contactform fieldset > fieldset.dynamic-fields {
+  display: none !important;
+}
+
+/* ── 12. Submit button ───── */
+body.item-227 .kinetic-contactform__actions .hx-btn,
+body.item-227 .kinetic-contactform__actions button {
+  border-radius: 9px !important;
+  padding: 13px 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+}
+
+/* ── 13. Info column: transparent card wrapper ───────────────── */
+body.item-227 .kinetic-contact__info .hx-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Hide address eyebrow (// details) */
+body.item-227 .kinetic-contact__info .kinetic-eyebrow {
+  display: none !important;
+}
+
+/* Remove top separator from misc (no address above it) */
+body.item-227 .kinetic-contact__misc {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: none !important;
+}
+
+/* ── 14. Hide contact name heading (not in design) ───────────── */
+body.item-227 .kinetic-contact__name {
+  display: none !important;
+}
+
+/* ── 15. Method cards (.hx-method) ─────────────────────────── */
+body.item-227 .hx-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.item-227 .hx-method {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+body.item-227 .hx-method__icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: rgba(163, 230, 53, .12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+body.item-227 .hx-method__icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+body.item-227 .hx-method__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+body.item-227 .hx-method__title {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading);
+  margin: 0;
+}
+
+body.item-227 .hx-method__desc {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text);
+  margin: 0;
+}
+
+body.item-227 .hx-method__email {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12.5px;
+  color: var(--primary);
+  text-decoration: none;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+body.item-227 .hx-method__email:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* ── 16. Responsive: ≤ 860px stack, adjust padding ─────────── */
+@media (max-width: 860px) {
+  body.item-227 .kinetic-contact__grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  body.item-227 .kinetic-contact__formwrap { order: 1; }
+  body.item-227 .kinetic-contact__info     { order: 2; }
+}
+
+/* ── 17. Mobile (≤ 768px) ─────── */
+@media (max-width: 768px) {
+  body.item-227 .t4-section.t4-main-body {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  body.item-227 .kinetic-contact__formcard {
+    padding: 24px !important;
+  }
+
+  body.item-227 .kinetic-contact__formcard > .hx-form-title {
+    font-size: 20px;
+  }
+
+  body.item-227 .kinetic-contactform__row {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.item-227 .hx-method {
+    padding: 20px;
+  }
+}

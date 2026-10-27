@@ -1,0 +1,57 @@
+---
+title: Working with your site
+description: Read current content, make a focused edit, inspect its receipt, and undo supported changes.
+---
+
+import { Aside, CardGrid, LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Work on one task at a time. Start with a sample site and a small, reversible change.
+
+## Read before editing
+
+<Steps>
+
+1. Ask which website is connected and check its address.
+2. List the pages or supported record kinds, then identify the exact page or record.
+3. Read the current fields and revision. Ask the app to show the current value before deciding what should change.
+
+</Steps>
+
+```text wrap title="Read a specific page"
+Use Tracy to find the About page on my connected website.
+Read its current title and identify the record. Do not change it yet.
+```
+
+## Make a focused change
+
+```text wrap title="Change one field"
+Change only the title of the page we just read to "About our team".
+Keep its body, URL, and publication status unchanged.
+Show the change receipt, then read the title again to confirm the result.
+```
+
+Tracy applies supported edits to the real website. There is no separate Tracy approval queue before an edit. Your AI app may have its own tool confirmation controls.
+
+<Aside type="caution" title="The content may have changed">
+If Tracy reports a stale revision, read the record again before deciding on the next edit. If a write times out, check the record and change receipts before retrying: the first request may already have changed it.
+</Aside>
+
+## Inspect the receipt
+
+Successful writes return an **apply id** that identifies the change receipt. Ask your app to inspect it and explain which steps succeeded or failed. A content/database edit does not necessarily create a file diff or Git commit.
+
+## Undo and verify
+
+```text wrap title="Undo the previous change"
+Undo the change using the exact receipt from the title edit.
+Then read the page again and compare its title with the original value.
+Report any step that could not be restored.
+```
+
+Undo applies only to supported steps and can be refused if its preconditions no longer hold. Do not assume an entire change was restored from a single success message; inspect the receipt and read back the affected content.
+
+## Work across websites
+
+Each connection is limited to the one website selected during sign-in. Asking for another site's URL does not expand that access. Establish the appropriate connection and check its site identity before working on a different website.
+
+[More prompt examples →](/mcp/examples/)

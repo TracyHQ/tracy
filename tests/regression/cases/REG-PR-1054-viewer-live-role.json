@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1054-viewer-live-role",
+  "kind": "fix",
+  "title": "A Viewer promoted to Editor (or an Editor demoted to Viewer) sees the page follow the new role without a reload: viewer attribute, bar and notice",
+  "pr": 1054,
+  "area": "seats/roles",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run the command in `run.cmd`.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures.",
+    "Every test named in run.tests reports ok: the role store re-reads on the team-changed event and on coming back into sight, a new role reaches every listener, an older answer never overwrites a newer one, the <html> viewer attribute follows the role both ways, and a promotion shows the notice."
+  ],
+  "selectors": {
+    "function": "packages/ui/tracy-chat-input/src/client/seat-role.mjs",
+    "test": "packages/ui/tracy-chat-input/test/seat-role-live.test.mjs"
+  },
+  "fence": "Client role store of the chat input with a stubbed /api/sites; no server, no browser.",
+  "run": {
+    "cwd": ".",
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-chat-input/test/seat-role-live.test.mjs"
+    ],
+    "tests": [
+      "refresh reads the door again with refresh, and a new role tells every listener",
+      "only the newest read writes: an older answer arriving last is dropped",
+      "the page reads the role again on the book-changed event and on coming back into sight",
+      "the viewer attribute on <html> follows the role both ways and goes on stop",
+      "the notice shows on a promotion, goes after its time, and goes at once on a demotion"
+    ]
+  }
+}

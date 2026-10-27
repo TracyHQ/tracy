@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #f3f4ee;
+  --color-bone-white: #f8f8f8;
+  --color-press-black: #231f20;
+  --color-charcoal-headline: #383435;
+  --color-mid-gray: #9a9a9a;
+  --color-pure-black: #000000;
+  --color-cobalt-ink: #245dc5;
+  --color-peach-wash: #ffc6a6;
+  --color-fire-red: #f04736;
+  --color-vermillion: #f52302;
+  --color-crimson: #d42121;
+  --color-marigold: #feee71;
+  --color-terracotta: #b45e42;
+
+  /* Typography — Font Families */
+  --font-foundersgrotesk: 'FoundersGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-timesnow-semilight: 'TimesNow SemiLight', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sackville-script-hand-drawn-wordmark: 'Sackville Script (hand-drawn wordmark)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

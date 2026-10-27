@@ -1,0 +1,208 @@
+{
+  "seedSchema": "https://emdashcms.com/seed.schema.json",
+  "seedVersion": "1",
+  "meta": {
+    "name": "Northgate Industrial",
+    "description": "Tracy EmDash template built from the Northgate Industrial design source (EN/RU).",
+    "author": "Tracy"
+  },
+  "collections": {
+    "site": {
+      "label": "Site chrome",
+      "labelSingular": "Site chrome",
+      "sortOrder": 1,
+      "routable": false,
+      "description": "Topbar, header, footer, search and 404 copy. One entry per locale.",
+      "supports": [
+        "revisions"
+      ],
+      "editLocking": false
+    },
+    "home": {
+      "urlPattern": "/",
+      "label": "Home page",
+      "labelSingular": "Home page",
+      "sortOrder": 2,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "about": {
+      "urlPattern": "/about",
+      "label": "About page",
+      "labelSingular": "About page",
+      "sortOrder": 3,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "services_page": {
+      "urlPattern": "/services",
+      "label": "Services page",
+      "labelSingular": "Services page",
+      "sortOrder": 4,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "services": {
+      "label": "Services",
+      "labelSingular": "Service",
+      "sortOrder": 10,
+      "urlPattern": "/services/{slug}",
+      "supports": [
+        "drafts",
+        "revisions",
+        "search",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "projects_page": {
+      "urlPattern": "/projects",
+      "label": "Projects page",
+      "labelSingular": "Projects page",
+      "sortOrder": 5,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "projects": {
+      "label": "Projects",
+      "labelSingular": "Project",
+      "sortOrder": 11,
+      "urlPattern": "/projects/{slug}",
+      "supports": [
+        "drafts",
+        "revisions",
+        "search",
+        "seo"
+      ],
+      "admin": {
+        "listColumns": [
+          "year",
+          "city",
+          "featured"
+        ]
+      },
+      "editLocking": false
+    },
+    "news_page": {
+      "urlPattern": "/news",
+      "label": "News page",
+      "labelSingular": "News page",
+      "sortOrder": 6,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "posts": {
+      "label": "News",
+      "labelSingular": "Article",
+      "sortOrder": 12,
+      "urlPattern": "/news/{slug}",
+      "supports": [
+        "drafts",
+        "revisions",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "dateField": "date",
+      "admin": {
+        "listColumns": [
+          "date",
+          "author",
+          "featured"
+        ]
+      },
+      "editLocking": false
+    },
+    "careers": {
+      "urlPattern": "/careers",
+      "label": "Careers page",
+      "labelSingular": "Careers page",
+      "sortOrder": 7,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "vacancies": {
+      "label": "Vacancies",
+      "labelSingular": "Vacancy",
+      "sortOrder": 13,
+      "routable": false,
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "editLocking": false
+    },
+    "investors": {
+      "urlPattern": "/investors",
+      "label": "Investor relations page",
+      "labelSingular": "Investor relations page",
+      "sortOrder": 8,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "contact": {
+      "urlPattern": "/contact",
+      "label": "Contact page",
+      "labelSingular": "Contact page",
+      "sortOrder": 9,
+      "routable": false,
+      "supports": [
+        "revisions",
+        "seo"
+      ],
+      "editLocking": false
+    },
+    "pages": {
+      "label": "Pages",
+      "labelSingular": "Page",
+      "sortOrder": 14,
+      "urlPattern": "/{slug}",
+      "supports": [
+        "drafts",
+        "revisions",
+        "search",
+        "seo"
+      ],
+      "editLocking": false
+    }
+  },
+  "fields": {
+    "posts.content": {
+      "type": "portableText"
+    },
+    "pages.content": {
+      "type": "portableText"
+    },
+    "pages.template": {
+      "type": "select"
+    }
+  }
+}

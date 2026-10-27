@@ -1,0 +1,1362 @@
+{
+  "meta": {
+    "url": "https://bajgartoffice.com",
+    "siteName": "Bajgart Office",
+    "extractedAt": "2026-09-20T19:27:08.127Z",
+    "durationMs": 73637,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 3533,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "other",
+            "body",
+            "button",
+            "card"
+          ],
+          "frequency": 424,
+          "confidence": 1,
+          "prominence": 174263157.74881065,
+          "properties": [
+            "backgroundColor",
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 6,
+            "other/fill": 1,
+            "card/backgroundColor": 5,
+            "other/backgroundColor": 411,
+            "button/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "other",
+            "body",
+            "button",
+            "heading"
+          ],
+          "frequency": 190,
+          "confidence": 1,
+          "prominence": 1742111.5069960428,
+          "properties": [
+            "fill",
+            "color",
+            "backgroundColor",
+            "stroke"
+          ],
+          "usageCounts": {
+            "body/color": 102,
+            "other/fill": 45,
+            "other/color": 11,
+            "button/color": 1,
+            "other/stroke": 11,
+            "heading/color": 14,
+            "button/backgroundColor": 6
+          }
+        },
+        {
+          "hex": "#f6f6f6",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9731459330353415
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 163,
+          "confidence": 1,
+          "prominence": 1189009.8341543009,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 163
+          }
+        },
+        {
+          "hex": "#878787",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.6234091788000394
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 80761.98639775316,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 6
+          }
+        },
+        {
+          "hex": "#189e48",
+          "oklch": {
+            "c": 0.16508135309912214,
+            "h": 149.16781683390545,
+            "l": 0.613294743981462
+          },
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 5,
+          "confidence": 1,
+          "prominence": 8690.643927424526,
+          "properties": [
+            "backgroundColor",
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 1,
+            "other/backgroundColor": 4
+          }
+        },
+        {
+          "hex": "#808080",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.5981807305268477
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 4186,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 1
+          }
+        },
+        {
+          "hex": "#212121",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.24775871011467596
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 3984,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1
+          }
+        },
+        {
+          "hex": "#0f00fe",
+          "oklch": {
+            "c": 0.3106027208025104,
+            "h": 265.0894831342605,
+            "l": 0.45284874914838785
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 8,
+          "confidence": 1,
+          "prominence": 202.87520009230798,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 8
+          }
+        },
+        {
+          "hex": "#db12ff",
+          "oklch": {
+            "c": 0.3069945537819527,
+            "h": 320.02958862528465,
+            "l": 0.6518177021580751
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 179.67071501168667,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 6
+          }
+        },
+        {
+          "hex": "#ff1414",
+          "oklch": {
+            "c": 0.2530612287540759,
+            "h": 28.681372071068495,
+            "l": 0.6324998970920555
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 5,
+          "confidence": 1,
+          "prominence": 165.437600046154,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 5
+          }
+        },
+        {
+          "hex": "#4be2ff",
+          "oklch": {
+            "c": 0.12964147943365714,
+            "h": 213.31113513496484,
+            "l": 0.8457888094643237
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "confidence": 1,
+          "prominence": 128,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 3
+          }
+        },
+        {
+          "hex": "#f75a1c",
+          "oklch": {
+            "c": 0.20345472329000844,
+            "h": 38.76823950407461,
+            "l": 0.6695599905429549
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "confidence": 1,
+          "prominence": 128,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 3
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.024595558303925673,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#000000",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 19.43,
+          "background": "#f6f6f6",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.1,
+          "background": "#ffffff",
+          "foreground": "#212121"
+        },
+        {
+          "level": "AAA",
+          "ratio": 14.9,
+          "background": "#f6f6f6",
+          "foreground": "#212121"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.62,
+          "background": "#4be2ff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 10.44,
+          "background": "#4be2ff",
+          "foreground": "#212121"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.57,
+          "background": "#0f00fe",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.93,
+          "background": "#f6f6f6",
+          "foreground": "#0f00fe"
+        },
+        {
+          "level": "AA",
+          "ratio": 6.43,
+          "background": "#f75a1c",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AA",
+          "ratio": 6.02,
+          "background": "#189e48",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.85,
+          "background": "#000000",
+          "foreground": "#878787"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.56,
+          "background": "#4be2ff",
+          "foreground": "#0f00fe"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.54,
+          "background": "#db12ff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.36,
+          "background": "#ff1414",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.32,
+          "background": "#000000",
+          "foreground": "#808080"
+        },
+        {
+          "level": "fail",
+          "ratio": 3.95,
+          "background": "#ffffff",
+          "foreground": "#808080"
+        },
+        {
+          "level": "fail",
+          "ratio": 3.92,
+          "background": "#ff1414",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "fail",
+          "ratio": 3.79,
+          "background": "#db12ff",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "fail",
+          "ratio": 3.65,
+          "background": "#f6f6f6",
+          "foreground": "#808080"
+        },
+        {
+          "level": "fail",
+          "ratio": 3.59,
+          "background": "#ffffff",
+          "foreground": "#878787"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [
+        {
+          "value": 50,
+          "contexts": [
+            "button",
+            "link",
+            "other"
+          ],
+          "frequency": 46
+        },
+        {
+          "value": 9999,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 29
+        },
+        {
+          "value": 80,
+          "contexts": [
+            "other",
+            "image"
+          ],
+          "frequency": 18
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "other",
+            "image"
+          ],
+          "frequency": 9
+        },
+        {
+          "value": 20,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 5
+        },
+        {
+          "value": 60,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 3
+        },
+        {
+          "value": 15,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1
+        }
+      ],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 4,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 24,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 7,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "button",
+            "link",
+            "other"
+          ],
+          "frequency": 152,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button",
+            "paddingTop|link",
+            "paddingBottom|link",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 10,
+          "contexts": [
+            "other",
+            "button",
+            "link"
+          ],
+          "frequency": 98,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "rowGap|button",
+            "columnGap|button",
+            "rowGap|link",
+            "columnGap|link"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 39,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "button",
+            "link",
+            "other"
+          ],
+          "frequency": 124,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingRight|link",
+            "paddingLeft|link",
+            "paddingRight|other",
+            "paddingLeft|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 20,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 24,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 132,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 25,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 28,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 40,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 8,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 56,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 64,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 6,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 118,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 8
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "sans-serif",
+          "source": "system",
+          "weights": [
+            400
+          ],
+          "frequency": 3306,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "Saans Regular",
+          "source": "custom",
+          "weights": [
+            400,
+            700
+          ],
+          "frequency": 137,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "Satoshi",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 18,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "Rhymes Text Light",
+          "source": "custom",
+          "weights": [
+            300
+          ],
+          "frequency": 9,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "Rhymes Text Light Italic",
+          "source": "custom",
+          "weights": [
+            300
+          ],
+          "frequency": 4,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "Saans Medium",
+          "source": "custom",
+          "weights": [
+            500
+          ],
+          "frequency": 4,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": {
+        "base": 16,
+        "name": "Minor Third",
+        "ratio": 1.2,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 12,
+          "family": "sans-serif",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "image",
+            "button",
+            "link",
+            "card"
+          ],
+          "frequency": 3306,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 12,
+          "family": "Satoshi",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "card",
+            "image"
+          ],
+          "frequency": 18,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 28,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 5,
+          "lineHeight": 1.71,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Saans Medium",
+          "weight": 500,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.29,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Saans Medium",
+          "weight": 500,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.29,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.21,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 65,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Saans Regular",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 11,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 12,
+          "lineHeight": 1.33,
+          "letterSpacing": -0.01,
+          "textTransform": "none"
+        },
+        {
+          "size": 26,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 2.27,
+          "letterSpacing": -0.02,
+          "textTransform": "none"
+        },
+        {
+          "size": 56,
+          "family": "Rhymes Text Light",
+          "weight": 300,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.05,
+          "letterSpacing": -0.06,
+          "textTransform": "none"
+        },
+        {
+          "size": 56,
+          "family": "Rhymes Text Light Italic",
+          "weight": 300,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.05,
+          "letterSpacing": -0.06,
+          "textTransform": "none"
+        },
+        {
+          "size": 70,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.03,
+          "letterSpacing": -0.07,
+          "textTransform": "none"
+        },
+        {
+          "size": 70,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.03,
+          "letterSpacing": -0.02,
+          "textTransform": "none"
+        },
+        {
+          "size": 72,
+          "family": "Rhymes Text Light",
+          "weight": 300,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 3,
+          "lineHeight": 1,
+          "letterSpacing": -0.06,
+          "textTransform": "none"
+        },
+        {
+          "size": 72,
+          "family": "Saans Regular",
+          "weight": 400,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1,
+          "letterSpacing": -0.07,
+          "textTransform": "none"
+        },
+        {
+          "size": 72,
+          "family": "Rhymes Text Light Italic",
+          "weight": 300,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": -0.07,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use #ffffff as the page canvas and #f6f6f6 only for quiet utility surfaces and pill navigation.",
+      "Set principal editorial headlines in Rhymes Text Light 300 at 56px/59px or 72px/72px with -3.36px or -4.32px tracking.",
+      "Use Rhymes Text Light Italic 300 for one selected phrase within a display statement, at the matching upright headline size.",
+      "Set standard reading copy in Saans Regular 16px with 24px line-height.",
+      "Use #000000-filled conversion buttons with #ffffff text; use 50px radius with 8px 16px padding or 60px radius with 12px 16px padding.",
+      "Keep portfolio cards at 0px radius and without box shadows.",
+      "Reserve #189e48 for a small availability dot and capacity-related supporting text."
+    ],
+    "donts": [
+      "Do not use #189e48 as a filled button, generic success state, section background, or decorative color block.",
+      "Do not introduce gradients, colored page backgrounds, or tinted panels.",
+      "Do not use rounded white cards; testimonial, FAQ, and proof content stays unboxed on #ffffff.",
+      "Do not set display headings in heavy sans weights or use Rhymes Text above weight 300.",
+      "Do not replace the 50px and 60px button radii with small rounded rectangles.",
+      "Do not add drop shadows to portfolio crops, navigation pills, or content modules.",
+      "Do not treat project-artwork colors as global interface accents."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#ffffff",
+        "name": "Gallery White",
+        "role": "Page canvas, header field, testimonial background, and unframed content surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#000000",
+        "name": "Ink",
+        "role": "Headlines, body copy, logo, filled conversion buttons, accordion labels, and monochrome marks",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f6f6f6",
+        "name": "Paper Gray",
+        "role": "Pill navigation backgrounds, quiet swatches, subdued icon containers, and low-contrast secondary surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#878787",
+        "name": "Quiet Gray",
+        "role": "Muted attribution, supporting metadata, and secondary logo treatment",
+        "group": "neutral"
+      },
+      {
+        "hex": "#189e48",
+        "name": "Availability Green",
+        "role": "Small availability dots and live-capacity copy — a restrained signal against the otherwise achromatic interface",
+        "group": "accent"
+      }
+    ],
+    "layout": "The page is a broad white editorial canvas with a persistent split header: compact pill navigation on the left, a centered two-line wordmark, and availability plus conversion control on the right. The opening hero is left-aligned, led by a large multi-line serif/sans/italic statement, a short explanatory line, filter-like industry tags, and a black pill; beneath it, an unequal-width horizontal collage of raw case-study crops creates the visual counterweight. Subsequent sections use long white intervals: a centered client-proof row, a centered manifesto with a small visual swatch sequence and offset project cards, then a split FAQ with utility copy left and questions right. Social proof resolves as three unboxed testimonial columns, preserving the page's spacious, text-led rhythm.",
+    "imagery": "Imagery is portfolio-first rather than lifestyle-led: contained project screenshots, typographic compositions, and campaign crops appear as a horizontally assembled collage with raw square edges. Tiles are large, unevenly sized, and sometimes visibly clipped by the viewport, making the work feel like physical sheets spread across a white studio table. Brand graphics inside those crops may be vivid and multicolored, but the surrounding interface remains monochrome; client marks are converted to subdued gray, and icons are minimal mono marks.",
+    "similar": [
+      {
+        "why": "Editorial serif-led messaging paired with sparse monochrome conversion controls and wide white-space intervals.",
+        "business": "Daylight"
+      },
+      {
+        "why": "Studio portfolio rhythm built from oversized type, raw case-study imagery, and deliberately reduced interface chrome.",
+        "business": "Porto Rocha"
+      },
+      {
+        "why": "High-contrast black-and-white agency presentation where typography and cropped project work carry the composition.",
+        "business": "Studio Freight"
+      },
+      {
+        "why": "Gallery-like white canvas, minimal navigation, and case-study artwork treated as large unboxed visual material.",
+        "business": "Practice"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "cards": "0px",
+        "pills": "9999px",
+        "images": "80px",
+        "buttons": "50px",
+        "imageSmall": "12px",
+        "buttonLarge": "60px",
+        "utilitySurfaces": "20px"
+      },
+      "elementGap": "8px",
+      "sectionGap": "64px",
+      "cardPadding": "16px",
+      "pageMaxWidth": null
+    },
+    "industry": "agency",
+    "surfaces": [
+      {
+        "hex": "#ffffff",
+        "name": "Gallery White",
+        "level": 0,
+        "purpose": "Page background, content field, header, testimonials, and base component surface."
+      },
+      {
+        "hex": "#f6f6f6",
+        "name": "Paper Gray",
+        "level": 1,
+        "purpose": "Low-emphasis navigation pills, utility chips, and restrained decorative blocks."
+      }
+    ],
+    "northStar": "Editorial gallery wall. Use a vast white field where whisper-weight serif statements and raw portfolio crops carry more visual mass than interface chrome.",
+    "typeScale": [
+      {
+        "role": "micro-metadata",
+        "size": 12,
+        "family": "Satoshi",
+        "weight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "label",
+        "size": 14,
+        "family": "Saans Regular",
+        "weight": 400,
+        "lineHeight": 1.21,
+        "letterSpacing": 0
+      },
+      {
+        "role": "label-medium",
+        "size": 14,
+        "family": "Saans Medium",
+        "weight": 500,
+        "lineHeight": 1.29,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body",
+        "size": 16,
+        "family": "Saans Regular",
+        "weight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body-strong",
+        "size": 16,
+        "family": "Saans Regular",
+        "weight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": 0
+      },
+      {
+        "role": "display",
+        "size": 56,
+        "family": "Rhymes Text Light",
+        "weight": 300,
+        "lineHeight": 1.05,
+        "letterSpacing": -3.36
+      },
+      {
+        "role": "display-italic",
+        "size": 56,
+        "family": "Rhymes Text Light Italic",
+        "weight": 300,
+        "lineHeight": 1.05,
+        "letterSpacing": -3.36
+      },
+      {
+        "role": "hero-sans-emphasis",
+        "size": 70,
+        "family": "Saans Regular",
+        "weight": 400,
+        "lineHeight": 1.03,
+        "letterSpacing": -1.4
+      },
+      {
+        "role": "hero-display",
+        "size": 72,
+        "family": "Rhymes Text Light",
+        "weight": 300,
+        "lineHeight": 1,
+        "letterSpacing": -4.32
+      },
+      {
+        "role": "hero-display-italic",
+        "size": 72,
+        "family": "Rhymes Text Light Italic",
+        "weight": 300,
+        "lineHeight": 1,
+        "letterSpacing": -5.04
+      }
+    ],
+    "components": [
+      {
+        "name": "Persistent Split Header",
+        "role": "Site-wide navigation",
+        "description": "A white horizontal header with the Bajgart Design Office wordmark centered as a two-line Rhymes-style lockup; compact navigation pills sit left, while an #189e48 availability dot and text sit beside a black conversion pill on the right. Keep all surrounding header surfaces #ffffff and avoid a visible divider."
+      },
+      {
+        "name": "Soft Navigation Pill",
+        "role": "Public navigation link",
+        "description": "Use #f6f6f6 background, #000000 14px Saans text, 50px radius, and 8px vertical by 16px horizontal padding. Keep the control compact and separated from adjacent pills by an 8px gap."
+      },
+      {
+        "name": "Availability Indicator",
+        "role": "Live capacity status",
+        "description": "Pair a small circular #189e48 dot with 14px Saans Regular copy on #ffffff; use it only for current capacity or time-sensitive availability, never as a generic success badge."
+      },
+      {
+        "name": "Compact Black Pill Button",
+        "role": "Header and inline conversion control",
+        "description": "Set #000000 fill with #ffffff text, 50px radius, and 8px 16px padding. Use the compact pill for header-level conversion and short in-flow prompts."
+      },
+      {
+        "name": "Standard Black Pill Button",
+        "role": "Section conversion control",
+        "description": "Set #000000 fill with #ffffff text, 60px radius, and 12px vertical by 16px horizontal padding. Use the taller treatment beside introductory copy and at the opening of utility sections."
+      },
+      {
+        "name": "Industry Filter Tag",
+        "role": "Audience/category marker",
+        "description": "Build as a #f6f6f6 pill with #000000 12px Saans text, 50px radius, 8px vertical and 16px horizontal padding; place a tiny colored dot before the label. Maintain an 8px gap between tags."
+      },
+      {
+        "name": "Case Study Crop",
+        "role": "Portfolio showcase tile",
+        "description": "Use raw, edge-to-edge project screenshots or artwork as sharp rectangular crops with 0px radius and no shadow. Arrange tiles at intentionally unequal widths and allow the gallery to run beyond the central text alignment."
+      },
+      {
+        "name": "Client Proof Row",
+        "role": "Credibility strip",
+        "description": "Center a single 14px Saans supporting sentence above a widely spaced row of muted client wordmarks. Render wordmarks in #878787 or grayscale rather than introducing brand colors."
+      },
+      {
+        "name": "Editorial Manifesto Block",
+        "role": "Centered positioning statement",
+        "description": "Center a 56px Rhymes Text Light heading at 59px line-height with -3.36px tracking; swap a meaningful phrase into Rhymes Text Light Italic at the same measured treatment. Set explanatory copy below in 16px Saans Regular, 24px line-height."
+      },
+      {
+        "name": "FAQ Split Section",
+        "role": "Question-and-answer navigation",
+        "description": "Use a left text column with a compact black 60px-radius button and a right column of plain #000000 16px Saans questions. Each row is separated by generous white space and ends with a minimal circular plus affordance on #ffffff; do not place FAQ rows inside bordered cards."
+      },
+      {
+        "name": "Founder Testimonial Column",
+        "role": "Social proof",
+        "description": "Lay out three unboxed columns on #ffffff. Use 16px Saans Regular quote text at 24px line-height, then a compact attribution row with a circular 80px or 12px-cropped avatar, #000000 name, and #878787 role/company metadata."
+      }
+    ],
+    "typography": [
+      {
+        "role": "sans-serif — detected in extracted data but not described by AI",
+        "sizes": "12px",
+        "family": "sans-serif",
+        "weight": "400",
+        "lineHeight": "1.2"
+      },
+      {
+        "role": "Primary editorial display face for multi-line section headlines. The 300 weight and aggressive -3.36px at 56px or -4.32px at 72px tracking make statements feel typeset rather than interface-generated.",
+        "sizes": "56px, 72px",
+        "family": "Rhymes Text Light",
+        "weight": "300",
+        "lineHeight": "1.05 at 56px; 1.00 at 72px",
+        "substitute": "Cormorant Garamond Light",
+        "letterSpacing": "-3.36px at 56px; -4.32px at 72px"
+      },
+      {
+        "role": "Italic interruption within Rhymes display headlines; use for one emotionally weighted word or closing phrase, not an entire paragraph. Its -3.36px at 56px and -5.04px at 72px tracking lets the italic splice lock tightly into the upright headline.",
+        "sizes": "56px, 72px",
+        "family": "Rhymes Text Light Italic",
+        "weight": "300",
+        "lineHeight": "1.05 at 56px; 1.00 at 72px",
+        "substitute": "Cormorant Garamond Light Italic",
+        "letterSpacing": "-3.36px at 56px; -5.04px at 72px"
+      },
+      {
+        "role": "Functional sans for body copy, labels, proof copy, and occasional oversized sans emphasis inside display lines. The 70px word treatment is deliberately a near-peer to the 72px Rhymes line, creating a blunt sans-versus-serif contrast.",
+        "sizes": "14px, 16px, 24px, 26px, 70px, 72px",
+        "family": "Saans Regular",
+        "weight": "400, 700",
+        "lineHeight": "1.00, 1.03, 1.21, 1.29, 1.33, 1.40, 1.50, 1.71, 2.27",
+        "substitute": "DM Sans",
+        "letterSpacing": "-1.4px at 70px; -0.52px at 26px; use normal tracking for 16px body copy"
+      },
+      {
+        "role": "Compact emphasis for small labels and utility text without turning the interface into a bold sans system.",
+        "sizes": "14px",
+        "family": "Saans Medium",
+        "weight": "500",
+        "lineHeight": "1.00, 1.29",
+        "substitute": "DM Sans Medium",
+        "letterSpacing": "normal"
+      },
+      {
+        "role": "Tiny metadata inside portfolio imagery and embedded visual artifacts.",
+        "sizes": "12px",
+        "family": "Satoshi",
+        "weight": "400",
+        "lineHeight": "1.20",
+        "substitute": "Inter",
+        "letterSpacing": "normal"
+      }
+    ],
+    "description": "Bajgart Office — editorial clarity on a white gallery wall. The interface holds nearly everything in black, white, and pale gray, reserving a small green availability signal for real-time scarcity. Oversized Rhymes Text headlines alternate upright and italic phrases, while Saans carries the practical voice in compact, tightly set supporting copy. Pages move between expansive editorial statements, sharp-edged case-study imagery, sparse proof rows, and lightweight pill controls rather than boxed marketing modules.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Gallery White: #ffffff — Page canvas, header field, testimonial background, and unframed content surfaces\n- Ink: #000000 — Headlines, body copy, logo, filled conversion buttons, accordion labels, and monochrome marks\n- Paper Gray: #f6f6f6 — Pill navigation backgrounds, quiet swatches, subdued icon containers, and low-contrast secondary surfaces\n- Quiet Gray: #878787 — Muted attribution, supporting metadata, and secondary logo treatment\n- Availability Green: #189e48 — Small availability dots and live-capacity copy — a restrained signal against the otherwise achromatic interface\n\nCreate a left-aligned introductory hero on Gallery White with a 72px/72px Rhymes Text Light 300 headline at -4.32px tracking; splice one phrase in Rhymes Text Light Italic 300 at 72px/72px and follow with 16px/24px Ink Saans Regular copy.\nCreate a persistent white header with centered two-line Bajgart Office-style wordmark, left-aligned Paper Gray navigation pills, and a right-side Availability Green status dot followed by a Compact Black Pill Button.\nCreate an edge-to-edge horizontal case-study collage using raw 0px-radius artwork crops of unequal widths; do not frame, shadow, or recolor the project imagery.\nCreate a centered manifesto using 56px/59px Rhymes Text Light 300 at -3.36px tracking, a matching italic phrase, then a 16px/24px Saans explanation on Gallery White.\nCreate a three-column testimonial section on Gallery White using 16px/24px Ink Saans quote text and #878787 attribution metadata beside circular cropped avatars."
+      }
+    ],
+    "elevationPhilosophy": "Depth is removed rather than simulated: white content sits directly on the white canvas, portfolio work gains presence from scale and cropping, and pills separate through pale fills and fully rounded silhouettes instead of shadows."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/c557f855-2bd5-444f-bf0f-41123ddb0599.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/7ab41dc3-56da-47ad-a2bb-4c1367eb77d2.jpg"
+  }
+}

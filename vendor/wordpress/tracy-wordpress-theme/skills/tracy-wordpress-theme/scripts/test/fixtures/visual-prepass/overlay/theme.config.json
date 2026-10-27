@@ -1,0 +1,8 @@
+{
+  "slug": "fixture-site",
+  "themeName": "Fixture Site",
+  "textDomain": "fixture-site",
+  "variations": ["apple"],
+  "rootVariation": "apple",
+  "updateSlug": "fixture-site"
+}

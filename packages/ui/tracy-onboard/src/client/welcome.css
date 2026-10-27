@@ -1,0 +1,161 @@
+/* The "Welcome to Tracy" popup (Welcome.tsx), a port of the approved prototype's welcome-shell.css
+   (bao-cao/onboarding-tracy/welcome-popup-assets, desktop navigation layout "D", 25/10/2026). Each
+   prototype class `.x` is `.tv-wl-x` here, in the prototype's order, so a change asked on the
+   prototype is the same small diff here. The prototype's review bar and fake backdrop are not ported:
+   the real app is the backdrop.
+
+   MODE B (DESIGN.md §0): this lives inside dsh's page. No reset, no rule on html/body; everything
+   is under `.tv-welcome`. Colours are Tracy's tokens (packages/ui/tracy-ui/src/tokens.css), with the
+   prototype's light values as fallback; dark is dsh's own `[data-ds-dark-theme]`. The scrim and the
+   shadows are the prototype's own, one pair per theme. */
+
+.tv-welcome {
+  --wl-bg: var(--background, #fdfdfd);
+  --wl-fg: var(--foreground, #232323);
+  --wl-muted: var(--muted-foreground, #68686d);
+  --wl-layer: var(--muted, #ededee);
+  /* Not --accent: on dsh light it is white, the same as the dialog, so hover would not show. */
+  --wl-soft: color-mix(in oklab, var(--wl-fg) 5%, var(--wl-bg));
+  /* Not --border: dsh sets it to 4% black, which leaves the arrows' ring and the dialog edge invisible. */
+  --wl-border: color-mix(in oklab, var(--wl-fg) 14%, var(--wl-bg));
+  --wl-primary: var(--primary, #bf5b3d);
+  --wl-on-primary: var(--primary-foreground, #fff);
+  --wl-browser-bar: var(--muted, #ededee);
+  --wl-browser-address: color-mix(in oklab, var(--wl-bg) 70%, var(--wl-layer));
+  --wl-scrim: rgb(33 33 38 / 28%);
+  --wl-shadow: rgb(0 0 0 / 14%);
+  --wl-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  color: var(--wl-fg);
+  font: 14px/1.5 var(--wl-font);
+  -webkit-font-smoothing: antialiased;
+}
+[data-ds-dark-theme] .tv-welcome,
+.tv-welcome[data-theme="dark"] {
+  --wl-scrim: rgb(0 0 0 / 45%);
+  --wl-shadow: rgb(0 0 0 / 28%);
+}
+.tv-welcome * { box-sizing: border-box; }
+.tv-welcome button { font: inherit; color: inherit; cursor: pointer; border: 1px solid transparent; background: none; }
+.tv-welcome button:focus-visible { outline: none; border-color: var(--wl-primary); }
+.tv-welcome button:disabled { cursor: default; opacity: .2; }
+.tv-welcome svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.tv-wl-scrim { position: fixed; inset: 0; background: var(--wl-scrim); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+.tv-wl-stage { position: relative; height: 100%; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px 0; }
+.tv-wl-wrap { position: relative; width: min(1280px, 94vw); margin: auto; }
+.tv-wl-dialog { position: relative; background: var(--wl-bg); border: 1px solid var(--wl-border); border-radius: 28px; padding: 10px 12px 8px; box-shadow: 0 14px 48px var(--wl-shadow); overflow: hidden; }
+.tv-wl-dialog:focus { outline: none; }
+
+/* The browser window the scenes play in. 250px is the popup's own height around it (the prototype's
+   302px less its 52px review bar). */
+.tv-wl-demo-stage { position: relative; display: flex; align-items: flex-start; justify-content: center; padding: 38px 18px 7px; isolation: isolate; }
+.tv-wl-browser { position: relative; flex: none; width: min(100%, calc((100svh - 250px) * 1280 / 696 + 2px)); border: 1px solid var(--wl-border); border-radius: 10px; background: var(--wl-layer); box-shadow: 0 4px 16px var(--wl-shadow); overflow: hidden; }
+.tv-wl-bar { position: relative; display: flex; align-items: center; justify-content: center; height: 34px; background: var(--wl-browser-bar); border-bottom: 1px solid var(--wl-border); }
+.tv-wl-lights { position: absolute; left: 12px; display: flex; gap: 8px; }
+.tv-wl-lights span { width: 12px; height: 12px; border: 1px solid rgb(0 0 0 / 13%); border-radius: 50%; background: #ff5f57; }
+.tv-wl-lights span:nth-child(2) { background: #febc2e; }
+.tv-wl-lights span:nth-child(3) { background: #28c840; }
+.tv-wl-address { display: flex; align-items: center; justify-content: center; gap: 6px; width: 40%; height: 23px; border-radius: 5px; background: var(--wl-browser-address); color: var(--wl-muted); font-size: 11px; line-height: 1; white-space: nowrap; }
+.tv-welcome .tv-wl-address svg { width: 11px; height: 11px; stroke-width: 1.5; }
+.tv-wl-demo { position: relative; width: 100%; aspect-ratio: 1280 / 696; overflow: hidden; background: var(--wl-layer); isolation: isolate; min-width: 0; }
+.tv-wl-demo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; background: var(--wl-layer); }
+
+.tv-welcome .tv-wl-close { position: absolute; z-index: 30; top: 14px; right: 14px; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 1px solid color-mix(in srgb, var(--wl-fg) 12%, transparent); border-radius: 50%; background: color-mix(in srgb, var(--wl-bg) 75%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--wl-fg); }
+.tv-welcome .tv-wl-close svg { width: 14px; height: 14px; stroke-width: 1.25; }
+.tv-welcome .tv-wl-close:hover { background: var(--wl-bg); }
+
+.tv-wl-panel { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; gap: 28px; min-height: 86px; padding: 10px 5px 8px; }
+.tv-wl-copy { min-width: 0; align-self: center; text-align: center; }
+.tv-wl-copy h2 { font: 600 22px/1.2 var(--wl-font); letter-spacing: -.02em; margin: 0 0 5px; color: var(--wl-fg); }
+.tv-wl-copy p { font: 400 17px/1.4 var(--wl-font); color: var(--wl-fg); margin: 0 auto; max-width: 70ch; text-wrap: balance; }
+.tv-welcome .tv-wl-arrow { display: grid; place-items: center; width: 40px; height: 58px; padding: 0; border-radius: 10px; color: var(--wl-muted); transition: background .15s, color .15s; }
+.tv-welcome .tv-wl-arrow svg { width: 22px; height: 38px; stroke-width: 1.6; }
+.tv-welcome .tv-wl-arrow:hover:not(:disabled) { background: var(--wl-soft); color: var(--wl-fg); }
+.tv-wl-next { justify-self: end; }
+
+.tv-wl-pagination { display: flex; align-items: center; justify-content: flex-end; gap: 20px; min-height: 26px; margin: 0 73px; }
+.tv-wl-dots { display: flex; align-items: center; gap: 8px; }
+.tv-welcome .tv-wl-dot { display: block; position: relative; width: 6px; height: 6px; padding: 0; border: 0; border-radius: 99px; background: var(--wl-fg); opacity: .18; transition: width .18s, opacity .18s; }
+.tv-welcome .tv-wl-dot::before { content: ""; position: absolute; inset: -9px -4px; }
+.tv-welcome .tv-wl-dot:hover { opacity: .5; }
+.tv-welcome .tv-wl-dot.is-current { width: 20px; opacity: 1; }
+.tv-welcome .tv-wl-dot:focus-visible { outline: 1px solid var(--wl-primary); outline-offset: 3px; }
+.tv-welcome .tv-wl-primary { background: var(--wl-primary); color: var(--wl-on-primary); border-radius: 7px; padding: 8px 14px; min-height: 36px; font-size: 13px; font-weight: 500; }
+
+@media (max-width: 899px) {
+  .tv-wl-dialog { padding: 10px 9px; border-radius: 24px; }
+  .tv-wl-demo-stage { padding: 38px 16px 7px; }
+  .tv-wl-browser { width: min(100%, calc((100svh - 266px) * 1280 / 696 + 2px)); }
+  .tv-wl-panel { gap: 16px; grid-template-columns: 34px minmax(0, 1fr) 34px; padding: 17px 0 13px; min-height: 105px; }
+  .tv-welcome .tv-wl-arrow { width: 34px; height: 60px; }
+  .tv-wl-copy p { font-size: 16px; }
+  .tv-wl-copy h2 { font-size: 22px; }
+  .tv-wl-pagination { margin: 0 50px; min-height: 28px; }
+}
+@media (max-width: 519px) {
+  .tv-wl-stage { padding: 16px 0; }
+  .tv-wl-dialog { padding: 8px 8px 12px; border-radius: 22px; }
+  .tv-wl-demo-stage { padding: 38px 8px 6px; }
+  .tv-welcome .tv-wl-close { top: 10px; right: 10px; }
+  .tv-wl-browser { width: 100%; border-radius: 8px; }
+  .tv-wl-bar { height: 28px; }
+  .tv-wl-lights { left: 8px; gap: 5px; }
+  .tv-wl-lights span { width: 8px; height: 8px; }
+  .tv-wl-address { width: 52%; height: 20px; font-size: 9px; gap: 4px; }
+  .tv-welcome .tv-wl-address svg { width: 9px; height: 9px; }
+  .tv-wl-panel { grid-template-columns: 25px minmax(0, 1fr) 25px; gap: 10px; padding: 20px 0 14px; min-height: 150px; }
+  .tv-welcome .tv-wl-arrow { width: 25px; height: 58px; }
+  .tv-welcome .tv-wl-arrow svg { width: 18px; height: 32px; }
+  .tv-wl-copy h2 { font-size: 20px; line-height: 1.25; margin-bottom: 8px; }
+  .tv-wl-copy p { font-size: 15px; line-height: 1.5; }
+  .tv-wl-pagination { margin: 0 35px; gap: 8px; }
+  .tv-wl-dots { gap: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-welcome *, .tv-welcome *::before { scroll-behavior: auto !important; transition: none !important; }
+}
+.tv-welcome[data-reduced] * { transition: none !important; }
+
+/* The scene progress belongs to the app screen, inside the browser window. */
+.tv-wl-progress { position: absolute; z-index: 10; left: 0; right: 0; bottom: 0; height: 2.5px; background: color-mix(in srgb, var(--wl-primary) 14%, transparent); border-radius: 2px; overflow: hidden; pointer-events: none; }
+.tv-wl-progress span { display: block; width: 0; height: 100%; background: var(--wl-primary); border-radius: inherit; }
+
+/* Last scene: the call to action takes the next arrow's place once the replay has ended. */
+.tv-wl-panel.has-cta { grid-template-columns: 40px minmax(0, 1fr) auto; }
+.tv-wl-panel.has-cta .tv-wl-next { display: none; }
+.tv-welcome .tv-wl-cta { grid-column: 3; white-space: nowrap; padding: 8px 18px; font-size: 14px; animation: tv-wl-cta-in .3s ease both; }
+.tv-welcome .tv-wl-cta:hover { filter: brightness(1.06); }
+@keyframes tv-wl-cta-in { from { opacity: 0; transform: translateY(4px); } }
+.tv-welcome[data-reduced] .tv-wl-cta { animation: none; }
+@media (max-width: 899px) { .tv-wl-panel.has-cta { grid-template-columns: 34px minmax(0, 1fr) auto; } }
+@media (max-width: 519px) {
+  .tv-wl-panel.has-cta { grid-template-columns: 25px minmax(0, 1fr) 25px; row-gap: 10px; }
+  .tv-wl-panel.has-cta .tv-wl-next { display: grid; visibility: hidden; }
+  .tv-welcome .tv-wl-cta { grid-column: 1 / -1; justify-self: center; }
+}
+/* Desktop: Back and Next sit right beside the centered caption; on the last screen the CTA takes the dots row. */
+@media (min-width: 900px) {
+  /* A large sheet: about three quarters of a laptop screen, never taller than 88% of it, at most
+     1280px. The height term is the width at which the popup is 88svh tall: the demo keeps its
+     1280:696 ratio, and the popup adds up to 226px of height (a one-line title and a two-line
+     caption, the most the approved copy takes on desktop) and 64px of width around it. */
+  .tv-wl-wrap { width: min(1280px, 74vw, calc((88svh - 226px) * 1280 / 696 + 64px)); }
+  /* The caption takes the whole width between Back and Next, so a body stays within two lines. */
+  .tv-wl-panel, .tv-wl-panel.has-cta { grid-template-columns: 44px minmax(0, 1fr) 44px; column-gap: 20px; }
+  .tv-wl-copy { grid-column: 2; }
+  .tv-wl-copy p { max-width: none; }
+  .tv-wl-prev { grid-column: 1; grid-row: 1; }
+  .tv-wl-next { grid-column: 3; grid-row: 1; }
+  .tv-welcome .tv-wl-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--wl-border); color: var(--wl-fg); }
+  .tv-welcome .tv-wl-arrow svg { width: 16px; height: 26px; }
+  .tv-welcome .tv-wl-arrow:disabled { opacity: 0; pointer-events: none; }
+  .tv-wl-panel.has-cta .tv-wl-next { display: grid; visibility: hidden; }
+  .tv-wl-pagination { justify-content: center; }
+  .tv-welcome .tv-wl-cta { position: absolute; left: 0; right: 0; bottom: 6px; width: max-content; margin: 0 auto; z-index: 5; }
+  .tv-wl-dialog:has(.tv-wl-panel.has-cta) .tv-wl-dots { visibility: hidden; }
+  .tv-wl-dialog:has(.tv-wl-panel.has-cta) .tv-wl-pagination { min-height: 36px; }
+  .tv-wl-panel.has-cta .tv-wl-cta { padding: 6px 16px; }
+}

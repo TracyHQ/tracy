@@ -1,0 +1,20 @@
+{
+  "appearance.dark": "Sombre",
+  "appearance.light": "Clair",
+  "appearance.system": "Système",
+  "appearance.title": "Apparence",
+  "font.code.description": "Blocs de code et terminal",
+  "font.code.title": "Police du code",
+  "font.default": "Par défaut",
+  "font.global.description": "Texte de toute l’interface",
+  "font.global.title": "Police globale",
+  "fontSize.decrease": "Réduire la taille de police",
+  "fontSize.description": "S’applique uniquement au contenu de la conversation",
+  "fontSize.increase": "Augmenter la taille de police",
+  "fontSize.title": "Taille de police",
+  "hero.title": "Que souhaitez-vous modifier aujourd’hui ?",
+  "primary.description": "Accent pour les boutons, links et sélections",
+  "primary.hex": "Couleur hexadécimale",
+  "primary.swatch": "Utiliser {color}",
+  "primary.title": "Couleur principale"
+}

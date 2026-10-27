@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-ink: #0f0e0b;
+  --color-bone: #f9f9f0;
+  --color-ash: #6d6c67;
+  --color-charcoal: #21201c;
+  --color-graphite: #555450;
+  --color-mist: #84837d;
+  --color-deep-earth: #3d3b34;
+  --color-soft-sand: #ccc5a3;
+  --color-warm-stone: #9d937c;
+  --color-sage: #d5fad3;
+  --color-powder-blue: #badbee;
+
+  /* Typography */
+  --font-season-serif: 'Season Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

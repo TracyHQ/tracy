@@ -1,0 +1,64 @@
+{
+  "color": {
+    "lime-canopy": {
+      "$value": "#d7eb80",
+      "$type": "color",
+      "$description": "Lime Canopy — Primary action buttons, brand accent border, surface highlight — the single chromatic accent; warm yellow-green reads as young foliage and gives the CTA a nature-coded urgency without alarm"
+    },
+    "ink-black": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, icon strokes, hairlines, structural borders, footer text — carries the entire interface's information hierarchy"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, card surfaces, button text on lime fills, search bar fill — the dominant canvas"
+    },
+    "warm-mist": {
+      "$value": "#f8f8f6",
+      "$type": "color",
+      "$description": "Warm Mist — Secondary card surfaces, subtle elevated panels — a barely-warm off-white that softens the page from clinical white"
+    },
+    "linen-cream": {
+      "$value": "#f0f0eb",
+      "$type": "color",
+      "$description": "Linen Cream — Tertiary card surfaces, section backgrounds — the warmest neutral, used as gentle banding between content blocks"
+    },
+    "stone-gray": {
+      "$value": "#6c6c6c",
+      "$type": "color",
+      "$description": "Stone Gray — Secondary text, link borders, icon strokes, muted descriptions, footer secondary copy"
+    },
+    "ash-border": {
+      "$value": "#bebeb9",
+      "$type": "color",
+      "$description": "Ash Border — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color"
+    },
+    "silver-surface": {
+      "$value": "#b6b6b6",
+      "$type": "color",
+      "$description": "Silver Surface — Occasional card surface or muted image treatment — the deepest achromatic before true shadow territory"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body text, UI controls, labels, captions, links, buttons, input fields, badges, list items, footer. Inter is the workhorse — neutral and highly legible at 14-16px body, with 600 for emphasis and 700 reserved for compact labels. Positive tracking of 0.006-0.007em gives body copy a slightly airier feel than Inter's default."
+    },
+    "founders-grotesk": {
+      "$value": "Founders Grotesk",
+      "$type": "fontFamily",
+      "$description": "Display headlines, section headings, hero text, large feature titles. Founders Grotesk is the signature typeface — used at 48-54px for hero and section titles with tight 1.10 line-height. The combination of geometric grotesk with Ecosia's lime accent and leaf photography creates the brand's editorial, magazine-meets-environment tone. No tracking adjustments — Founders handles its own optical spacing."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ecosia.org",
+      "siteName": "Ecosia",
+      "extractedAt": "2026-06-03T20:45:16.420Z",
+      "variant": "compact"
+    }
+  }
+}

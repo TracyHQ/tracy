@@ -1,0 +1,59 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#dbd7d3",
+      "$type": "color",
+      "$description": "Bone — Primary page canvas — warm off-white that carries the entire reading surface; everything else floats on or beside it"
+    },
+    "ash": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash — Structural divider lines and hairline borders — the single most-used color in the system at 2300+ occurrences, used exclusively to draw the rules that separate sections"
+    },
+    "inkstone": {
+      "$value": "#2b2b2b",
+      "$type": "color",
+      "$description": "Inkstone — Primary text and graphic fill — near-black with no pure-black harshness, used for all type at every size and for icon/illustration fills"
+    },
+    "graphite": {
+      "$value": "#535251",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and muted borders — for sub-labels, metadata, and the dimmer secondary rule lines"
+    },
+    "sand": {
+      "$value": "#e5d5c3",
+      "$type": "color",
+      "$description": "Sand — Warm section surface — slightly more saturated beige used to differentiate bands or sidebar zones from the main bone canvas"
+    },
+    "linen": {
+      "$value": "#cdc0b1",
+      "$type": "color",
+      "$description": "Linen — Deepest warm surface — tan accent band, used sparingly as a third surface level for footer blocks or inverted sections"
+    },
+    "frost": {
+      "$value": "#c9c8c9",
+      "$type": "color",
+      "$description": "Frost — Muted UI surface for disabled controls, low-emphasis panels, and placeholder blocks."
+    },
+    "sage-stone": {
+      "$value": "#82887c",
+      "$type": "color",
+      "$description": "Sage Stone — Subtle warm-gray accent — the only chromatically-tinged neutral, reserved for occasional emphasis on a word or number"
+    }
+  },
+  "font": {
+    "plain": {
+      "$value": "Plain",
+      "$type": "fontFamily",
+      "$description": "The sole typeface — a geometric grotesque carrying every role from 10px wordmark to 190px bleeding display. Two weights only: 400 for body and 700 for display/emphasis. The brand's voice is this single family; never pair it with a secondary face."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://odins-crow.com",
+      "siteName": "Odin's Crow",
+      "extractedAt": "2026-06-03T18:07:27.708Z",
+      "variant": "compact"
+    }
+  }
+}

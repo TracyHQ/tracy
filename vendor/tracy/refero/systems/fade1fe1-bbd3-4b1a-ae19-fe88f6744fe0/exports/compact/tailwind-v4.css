@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-forest-command: #2d9b4c;
+  --color-mint-boarding-pass: #d3ffc3;
+  --color-champagne-beige: #e7d5ba;
+  --color-linen-cream: #e4e9dc;
+  --color-parchment: #efefe7;
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-carbon: #020202;
+
+  /* Typography */
+  --font-labour-grotesk: 'Labour Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-reckless-neue: 'Reckless Neue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

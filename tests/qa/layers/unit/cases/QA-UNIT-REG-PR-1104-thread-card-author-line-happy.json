@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-1104-thread-card-author-line-happy",
+  "itemIds": ["regression:REG-PR-1104-thread-card-author-line"],
+  "requirement": "A comment thread card whose newest message is taller than its list opens at that message's top (author line in view)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1104-thread-card-author-line.json",
+    "ref": "PR #1104 (fix); fix evidence: Measured on dev 09/10/2026 (account-menu acceptance hc-faces-hca-pin2.jpg): a 160px card On body showed only the lower half of the author's face; the list was aimed at scrollHeight",
+    "invariant": "S1: one message on an element taller than the frame (\"On body\", card capped to THREAD_CARD_MIN): the message's top edge is not above the list's top edge (its face and author line are in view). S1: a four-message thread whose newest reply is taller than the list: the list stands at that reply's top, scrolled past the earlier messages.",
+    "productSources": [
+      "vendor/tracy/dsh-better-sidebar/src/client/CommentLayer.tsx:1613",
+      "vendor/tracy/dsh-better-sidebar/src/client/chunks/locale.tsx:42",
+      "vendor/tracy/dsh-better-sidebar/src/client/comment-attachments.ts:36",
+      "vendor/tracy/dsh-better-sidebar/src/client/comment-controller.ts:260",
+      "vendor/tracy/dsh-better-sidebar/src/client/comment-model.ts:1056",
+      "vendor/tracy/dsh-better-sidebar/src/client/comment-store.ts:381",
+      "vendor/tracy/dsh-better-sidebar/src/client/face.tsx:25",
+      "vendor/tracy/dsh-better-sidebar/src/client/locales.ts:669",
+      "vendor/tracy/dsh-better-sidebar/src/client/preview-protocol.generated.ts:54",
+      "vendor/tracy/dsh-better-sidebar/src/client/sidebar.module.css:35"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "vendor/tracy/dsh-better-sidebar/tests/comment-people-layer.spec.tsx:2029 readFileSync() with a computed path",
+      "vendor/tracy/dsh-better-sidebar/tests/comment-people-layer.spec.tsx:40 import '../src/client/sidebar.module.css' does not resolve to a source file"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1104-thread-card-author-line.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1104-thread-card-author-line"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1104-thread-card-author-line",
+    "pr": 1104,
+    "kind": "fix",
+    "area": "comments/thread-card",
+    "file": "tests/regression/cases/REG-PR-1104-thread-card-author-line.json"
+  },
+  "command": [
+    "npx",
+    "vitest",
+    "run",
+    "tests/comment-people-layer.spec.tsx",
+    "-t",
+    "the newest message taller than the list"
+  ],
+  "cwd": "vendor/tracy/dsh-better-sidebar",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

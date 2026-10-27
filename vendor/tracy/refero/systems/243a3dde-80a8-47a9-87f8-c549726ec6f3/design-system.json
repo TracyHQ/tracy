@@ -1,0 +1,256 @@
+{
+  "dos": [
+    "Use HelveticaNowDisplay weight 800 at 160px for the primary hero headline — it must feel oversized and compressed, never comfortable or safe",
+    "Pair the ultra-bold display with EditorialNew weight 200 for subheadings — the 200-vs-800 contrast is the typographic identity",
+    "Keep all UI chrome to the monochrome palette (#fafafa, #d9d9d9, #07060b, #cdcdce) — color belongs only in product photography",
+    "Use 100px border-radius for navigation pills and primary buttons; 44px for product cards and content containers",
+    "Set all navigation, button labels, and metadata in DepartureMono uppercase at 11-12px with -0.071em tracking",
+    "Maintain a section gap of 36-80px between major content blocks to let the editorial whitespace breathe",
+    "Let product photography be the only chromatic element — never introduce a brand accent color into UI components"
+  ],
+  "donts": [
+    "Do not add shadows to any component — use surface color steps (#fafafa → #d9d9d9) and gradient transitions for all depth",
+    "Do not use rounded corners below 44px for cards or 100px for buttons — the system is defined by its pill/lozenge geometry",
+    "Do not set body text in HelveticaNowDisplay — reserve that face for display headlines at 60px+ only",
+    "Do not use color for buttons, badges, or interactive elements — all actions are black text on warm gray or white surfaces",
+    "Do not break the light/dark alternation with a chromatic section — the dark gradient is the only non-monochrome surface",
+    "Do not use line-heights above 1.06 for headlines — the tight leading is part of the compressed, editorial feel",
+    "Do not add icons or illustrations to the UI — the system relies on photography, monogram marks, and pure typography"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#fafafa",
+      "name": "Canvas White",
+      "role": "Page background, card surfaces, primary canvas — the dominant near-white that lets photography and type carry all visual weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Warm Ash",
+      "role": "Elevated surface backgrounds for cards, buttons, and nav pill container — a warm gray one step darker than canvas for subtle layering without shadows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cdcdce",
+      "name": "Mid Gray",
+      "role": "Hairline borders, link underlines, and divider lines — sits between canvas and text to create structure without weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#07060b",
+      "name": "Ink Black",
+      "role": "Primary text, button labels, heading copy — a near-pure black with a faint blue undertone for maximum contrast against the warm canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Navigation borders and secondary text accents — used sparingly where a slightly harder edge is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ddfcff",
+      "name": "Glacial Mist",
+      "role": "Faint cool-tinted accent on borders and fills — a barely-perceptible icy wash that adds micro-contrast without breaking the monochrome discipline",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed horizontal sections that alternate between light (#fafafa) and dark (gradient to near-black). The navigation is a floating pill centered at the top, absolutely positioned with the logo top-left and a small circular icon top-right. The hero is a single massive display headline (160px) with one sentence of editorial serif subtext and a single text button. Below the hero, product sections use a card-slot layout: one large feature card and one smaller floating product card overlapping it. The dark section spans full width as a tonal reset — a single near-black canvas with a faintly visible watermark wordmark. Vertical rhythm is generous (36-80px section gaps) with content centered on a max-width ~1200px. No sidebar, no grid-heavy information density — every section is a single statement.",
+  "imagery": "Photography is the sole source of color in this system. Product shots are tightly cropped on cans against saturated gradient backgrounds (orange, warm red, amber) — the cans themselves carry gradient wraps from dark to light. Lifestyle elements appear as floating garnishes (lime slice, rosemary sprig, flower) that add organic texture. No illustrations, no icons beyond minimal monogram marks. Imagery is always full-bleed or tightly contained within rounded frames — never small thumbnails. The visual rhythm alternates between this dense photographic energy and empty monochrome whitespace.",
+  "similar": [
+    {
+      "why": "Same ultra-minimal monochrome product aesthetic with a single serif/sans type pairing and pill-shaped navigation, where photography carries all color",
+      "business": "Aesop"
+    },
+    {
+      "why": "Similar restrained neutral palette with a single bold display headline and product photography as the chromatic anchor",
+      "business": "Glossier"
+    },
+    {
+      "why": "Premium product brand using near-white canvas, massive compressed display type, and no decorative UI chrome beyond pill buttons",
+      "business": "Aarke"
+    },
+    {
+      "why": "Editorial fashion-house treatment of a product page — light serif + bold sans typographic tension, generous whitespace, photography as the only color",
+      "business": "Maison Margiela (fragrance)"
+    },
+    {
+      "why": "Full-bleed sectional layout with dramatic light/dark tonal alternation, oversized display headlines, and minimal UI ornamentation",
+      "business": "Skims"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "100px",
+      "cards": "44px",
+      "inputs": "44px",
+      "buttons": "100px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "36-80px",
+    "cardPadding": "16-24px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#fafafa",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the light gallery wall"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Pill Surface",
+      "level": 1,
+      "purpose": "Navigation pill container, button fills, card backgrounds — one step up from canvas"
+    },
+    {
+      "hex": "#0c0c14",
+      "name": "Dark Gradient",
+      "level": 2,
+      "purpose": "Full-bleed dark section transition — cinematic counterpoint to the light canvas"
+    }
+  ],
+  "northStar": "Monochrome editorial spread. Imagine a fashion magazine spread stripped of all color except the product photography — the type and whitespace do all the storytelling.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.79,
+      "letterSpacing": -0.78
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -1.14
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.9
+    },
+    {
+      "role": "heading-sm",
+      "size": 40,
+      "lineHeight": 1.06,
+      "letterSpacing": -1
+    },
+    {
+      "role": "heading",
+      "size": 60,
+      "lineHeight": 1.06,
+      "letterSpacing": -1.5
+    },
+    {
+      "role": "display",
+      "size": 160,
+      "lineHeight": 0.9,
+      "letterSpacing": -8
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Floating pill container with 100px border-radius, #d9d9d9 background, positioned absolute at top center. Contains 4 monospace links (SHOP, ABOUT, FIND US, CART (0)) in 11-12px DepartureMono uppercase, #07060b text. Logo sits independently top-left, a 40px circular icon button top-right. The nav floats over whatever section is beneath it with no background blur or border."
+    },
+    {
+      "name": "Pill Text Button",
+      "role": "Outlined/ghost action trigger",
+      "description": "Fully rounded 100px radius button with #fafafa background, 1px #cdcdce border, 16-20px horizontal padding × 17px vertical. Label in DepartureMono at 11-12px, #07060b, uppercase, -0.071em letter-spacing. The pill shape and monospaced label read as a technical/functional action, not a marketing CTA."
+    },
+    {
+      "name": "Display Hero Headline",
+      "role": "Primary page statement",
+      "description": "HelveticaNowDisplay weight 800 at 160px, line-height 0.90, letter-spacing -0.05em (-8px). Color #07060b. One single line or two lines maximum. This is the typographic anchor of the entire system — it must be massive, compressed, and singular."
+    },
+    {
+      "name": "Editorial Subheadline",
+      "role": "Supporting editorial text below display",
+      "description": "EditorialNew weight 200 at 40-60px, line-height 1.06, letter-spacing -0.025em. Color #07060b. The extreme light weight against the heavy display creates the system's signature tension. Used for pull-quotes, flavor descriptions, and section openers."
+    },
+    {
+      "name": "Product Feature Card",
+      "role": "Large hero product showcase",
+      "description": "Rounded container at 44px border-radius with full-bleed product photography as the visual. Contains a floating smaller product card anchored to bottom-right corner (overlapping the larger card). Overlay text in DepartureMono at 11px for category labels and EditorialNew for product names."
+    },
+    {
+      "name": "Floating Product Card",
+      "role": "Compact product preview with details",
+      "description": "44px radius card with warm gray (#d9d9d9) background or photographic fill. Contains a small can product shot, product name in EditorialNew, and a DepartureMono category line at 11px. Overlaps the main feature card to create depth without shadows."
+    },
+    {
+      "name": "Dark Gradient Section",
+      "role": "Full-bleed tonal reset between light sections",
+      "description": "Full-width background using the multi-stop linear gradient from #06050a to #f5f6f1 (dark to light, top to bottom). Faintly visible watermark wordmark ('altitude') centered in the gradient. No other UI content — this section is purely atmospheric and cinematic."
+    },
+    {
+      "name": "Monospace Label Tag",
+      "role": "Small category or metadata indicator",
+      "description": "DepartureMono at 11-12px, uppercase, -0.071em letter-spacing, #07060b. No background, no border — pure typographic label. Used for 'NON-ALCOHOLIC', 'CHIN | CHIP | LIMEGRASS', ingredient lists, and metadata."
+    },
+    {
+      "name": "Circular Icon Button",
+      "role": "Standalone utility action (profile, account)",
+      "description": "40-44px diameter circle (100px radius), #d9d9d9 background, containing a minimal glyph or monogram. Sits in the top-right of the navigation as a floating utility anchor."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Structural separation between elements",
+      "description": "1px line at #cdcdce color. No padding, no margin logic — just a minimal line. Rarely used; the system prefers whitespace to explicit dividers."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and hero headlines — weight 800 at 160px with -0.05em tracking is the signature: massively compressed, ultra-bold statement type that dominates the viewport. Also used at 18px/500 for emphasized inline labels and 11px for caption-level brand marks",
+      "sizes": "11px, 18px, 160px",
+      "family": "HelveticaNowDisplay",
+      "weight": "400, 500, 800",
+      "lineHeight": "0.90, 1.00",
+      "substitute": "Inter Tight, Archivo Black, or Manrope ExtraBold",
+      "letterSpacing": "-0.05em"
+    },
+    {
+      "role": "Editorial body and subheadings — the light-weight serif (weight 200) at 40-60px creates the 'fashion magazine pull-quote' feeling. The extreme thinness against the massive Helvetica display generates typographic tension. Also flows at 14-16px for editorial paragraph text",
+      "sizes": "14px, 16px, 40px, 60px",
+      "family": "EditorialNew",
+      "weight": "200",
+      "lineHeight": "1.06",
+      "substitute": "PP Editorial New, Cormorant Garamond Light, or Playfair Display",
+      "letterSpacing": "-0.025em"
+    },
+    {
+      "role": "Monospaced utility face for navigation labels, button text, form inputs, and small data — uppercase tracked monospace signals 'technical/informational' against the display serif and sans",
+      "sizes": "11px, 12px, 14px, 16px",
+      "family": "DepartureMono",
+      "weight": "400",
+      "lineHeight": "1.00, 1.06, 1.43, 1.50, 1.79, 2.33",
+      "substitute": "JetBrains Mono, IBM Plex Mono, or Space Mono",
+      "letterSpacing": "-0.071em"
+    },
+    {
+      "role": "Fallback body text and generic UI copy — system sans at 16px handles the long tail of small interface labels that don't warrant the custom faces",
+      "sizes": "16px",
+      "family": "ui-sans-serif",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "system-ui, -apple-system, sans-serif"
+    }
+  ],
+  "description": "Altitude Beverages reads as a monochrome editorial spread: a near-white canvas (#fafafa) carrying oversized typographic statements while saturated product photography provides the only chromatic energy. The system oscillates between two extremes — an airy, gallery-like light surface with a massive 160px display headline and pill-shaped monospace navigation, and a dense charcoal-to-slate gradient section that functions as a cinematic counterpoint. Every UI element is reduced to its bare geometry: pill buttons, hairline borders, no shadows, no decorative ornamentation. The typographic cast — light-weight serif (EditorialNew) for editorial flourishes, ultra-bold display sans (HelveticaNowDisplay) for hero impact, and a monospaced label face (DepartureMono) for navigation — is the actual identity system; color and components deliberately recede so the type and photography can perform.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- background: #fafafa\n- surface (cards, nav pill, buttons): #d9d9d9\n- border (hairlines, dividers): #cdcdce\n- text: #07060b\n- accent (micro-contrast only): #ddfcff\n- primary action: no distinct CTA color\n\nExample Component Prompts:\n1. Create a hero section: #fafafa background. Headline 'Low-Key Sophisticated Rosemary Spritz' at 160px HelveticaNowDisplay weight 800, #07060b, letter-spacing -0.05em, line-height 0.90. Subtext 'Non-Alcoholic Pairings for Perfect Vibes' at 18px EditorialNew weight 200, #07060b. Below, a pill text button with #fafafa fill, 1px #cdcdce border, 100px radius, 16px 20px padding, label 'SHOP' in DepartureMono 12px uppercase #07060b.\n2. Create a product feature card: 44px border-radius, full-bleed warm orange product photograph of a beverage can. In the bottom-right corner, overlap a 44px-radius secondary card with #d9d9d9 background, 16px padding, containing a small product image, product name in EditorialNew 16px #07060b, and a DepartureMono 11px uppercase label 'Herbal | Bittersweet | Refreshing' in #07060b.\n3. Create the pill navigation: a 100px-radius floating container with #d9d9d9 background, horizontally centered at the top of the page. Inside, four monospace links — 'SHOP', 'ABOUT', 'FIND US', 'CART (0)' — in DepartureMono 12px uppercase #07060b with 24px horizontal padding each. To the top-left, the wordmark 'altitude' in HelveticaNowDisplay 18px weight 500 #07060b. To the top-right, a 40px circular icon button with #d9d9d9 background containing a small 'A' monogram in HelveticaNowDisplay 11px weight 800."
+    },
+    {
+      "title": "Type Pairing Rules",
+      "content": "The system runs on a strict type hierarchy: HelveticaNowDisplay owns the mega-scale (160px/800) and caption marks (11px/800). EditorialNew owns all mid-scale editorial copy (40-60px/200). DepartureMono owns everything functional (11-12px/400). Never use EditorialNew below 14px — the thin weight loses readability. Never use HelveticaNowDisplay display sizes for body content. The monospace face is the only one permitted in buttons, nav, inputs, and metadata — it signals 'system/utility' against the editorial and display faces."
+    }
+  ],
+  "elevationPhilosophy": "No shadows. Depth is created exclusively through surface color steps (#fafafa → #d9d9d9) and dramatic gradient transitions between light and dark sections. The design treats shadow as unnecessary noise — separation comes from tone, not blur."
+}

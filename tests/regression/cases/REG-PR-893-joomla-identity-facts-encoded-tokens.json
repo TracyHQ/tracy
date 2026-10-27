@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-893-joomla-identity-facts-encoded-tokens",
+  "kind": "fix",
+  "title": "Joomla Site identity takes the email, hours and profiles the customer gave; an identity token whose braces a link percent-encoded is still filled, and still a token to the planner and the replace tool",
+  "pr": 893,
+  "area": "seeder/joomla-identity",
+  "cms": ["jo"],
+  "needs": ["node", "php"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-seeder/test/identity-slots.test.mjs",
+    "S2: Run: node --test --test-reporter=tap packages/cms/tracy-joomla-quickstart/test/identity-plugin.test.mjs (php runs from the php:8.3-cli-alpine container when none is on PATH). Record whether any case is skipped.",
+    "S3: Run: node --test --test-reporter=tap --test-name-pattern=percent-encoded packages/tools/tracy-site-tools/test/replace-joomla.test.mjs",
+    "S4: Run: node --test --test-reporter=tap --test-name-pattern='site identity takes|ride in the site block' apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/brief-shared.test.mjs",
+    "S5: Run: node --input-type=module -e \"import { contactOf } from './packages/cms/tracy-seeder/src/chrome-slots.mjs'; console.log(JSON.stringify([contactOf({contact:'0912 345 678 · hello@goldencrust.example · 12 Hang Bac, Hanoi'}), contactOf({contact:'Điện thoại: 0905 123 456, Địa chỉ: 12 Lê Lợi'}), contactOf({contact:'12 Hang Bac; Hanoi | Vietnam'})]))\" and record the output.",
+    "S6: Run: node --input-type=module -e \"import t from './packages/cms/tracy-seeder/src/chrome-slots.json' with { type: 'json' }; const p = t.profiles; console.log(JSON.stringify(['tracy-business/j6/1.2.0:module-4369','tracy-apple/j6/1.3.0:module-224','tracy-airbnb/j6/1.2.0:module-224'].map((s) => { const [c, e] = s.split(':'); return [4, 7, 9].map((i) => p[c][e + '.' + i].template) })))\" and record the output."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 21): the identity module takes the email, hours and Instagram profile of the Golden Crust brief on all three identity profiles; Apply's own phone/email/address win over the joined line; every free-line case keeps labels, emails and second numbers out of the address; encoded token-only links are chrome and never reach the model.",
+    "S2 exits 0 with '# fail 0' and '# skipped 0' (at least 13 tests): 'a token whose braces a link percent-encoded is filled like any other, in any letter case' and 'a layout tells a percent-encoded token with nothing behind it from one with a value' are 'ok'.",
+    "S3 exits 0 with 2 tests passed and '# fail 0': a link stored as tel:%7Bcontact.tel%7D (either case) answers with the apply that sets module-4369.5 (Site identity / phone) to 0909123456.",
+    "S4 exits 0 with 4 tests passed and '# fail 0'.",
+    "S5 prints exactly: [{\"phone\":\"0912 345 678\",\"email\":\"hello@goldencrust.example\",\"address\":\"12 Hang Bac, Hanoi\"},{\"phone\":\"0905 123 456\",\"email\":null,\"address\":\"12 Lê Lợi\"},{\"phone\":null,\"email\":null,\"address\":\"12 Hang Bac; Hanoi | Vietnam\"}]",
+    "S6 prints exactly: [[\"{email}\",\"{hours}\",\"{instagram}\"],[\"{email}\",\"{hours}\",\"{instagram}\"],[\"{email}\",\"{hours}\",\"{instagram}\"]]"
+  ],
+  "selectors": {
+    "identity facts": "contactOf, resolveChromeSlots, isTokenOnly in packages/cms/tracy-seeder/src/chrome-slots.mjs; packages/cms/tracy-seeder/src/chrome-slots.json",
+    "site block": "siteBlock in apps/tracy-web/src/sites/brief-engines/shared.js",
+    "renderer": "Identity::render, Identity::isBlankToken in packages/cms/tracy-joomla-quickstart/plugins/plg_system_tracyidentity/src/Identity.php",
+    "replace tool": "readBraces, linkAddressRefusal in packages/tools/tracy-site-tools/src/host/replace-joomla.mjs"
+  },
+  "evidence": "05/10/2026 benchjoomlaapply01 (Tracy Business j6, Apply en-GB + vi-VN; the customer typed 0912 345 678, hello@goldencrust.example, 12 Hang Bac, Hanoi, Open 6am-8pm every day): the vi-VN top bar went out as href=\"tel:%7Bcontact.tel%7D\" and href=\"mailto:%7Bcontact.email%7D\"; the en-GB top bar had <a href=\"mailto:\"></a> and the address line 'hello@goldencrust.example · 12 Hang Bac, Hanoi'. ng_modules 4369 held email '' and that address; 4126 (the derived vi copy of 428) held the encoded hrefs, re-saved by the Cowork plugin's ContentSlots::htmlPatch (PHP saveHTML, libxml2 2.9.14 in tracy/web-joomla:6-apache-20260923-r1).",
+  "fence": "The identity module is written from the contact facts the customer gave (empty when none); every identity token spelling, raw or percent-encoded in either case, is filled by plg_system_tracyidentity, kept out of the planner's model batches, and read as Site identity's by the agent's replace tool.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-893-joomla-identity-facts-encoded-tokens.mjs"]
+  }
+}

@@ -1,0 +1,428 @@
+/* ==============================================================
+   ja_kinetic — Features page (item-218) pixel-parity overlay
+   ALL rules scoped to body.item-218 to prevent bleed.
+   Auto-loaded via index.php addCustomTag with ?cb=$RANDOM;
+   no optimize-cache flush needed for this file.
+   ==============================================================
+
+   Primary colour tokens (Terminal palette):
+     dark: --primary #A3E635 (lime) · --surface #121614 · --elevated #161B18
+           --heading #F2F5F3 · --text #9AA6A1 · --muted #5F6B66 · --border #232A27
+     light: --primary #4D7C0F (olive) · --surface #E8EFE3 · --elevated #D8E5D3
+            --heading #1A2117 · --text #4A5A44 · --muted #7A8A74 · --border #C5D5BF
+
+   Alpha-tint companions (no --primary-rgb defined in theme, define here):
+   ============================================================== */
+
+/* --- Alpha-tint tokens: dark defaults, light override --- */
+body.item-218 {
+  /* design-system §A: pill / icon-mark tints are FIXED brand lime in BOTH
+     themes — they must NOT re-tint to olive in light. Pin to lime-alpha. */
+  --p-a08: rgba(163, 230, 53, 0.082);
+  --p-a12: rgba(163, 230, 53, 0.125);
+  --p-a09: rgba(163, 230, 53, 0.094);
+  --p-a25: rgba(163, 230, 53, 0.25);
+}
+html.t4-dark body.item-218 {
+  --p-a08: rgba(163, 230, 53, 0.082);
+  --p-a12: rgba(163, 230, 53, 0.125);
+  --p-a09: rgba(163, 230, 53, 0.094);
+  --p-a25: rgba(163, 230, 53, 0.25);
+}
+
+
+/* ==============================================================
+   1. MASTHEAD (module 191)
+   ============================================================== */
+
+body.item-218 .acm-page-masthead .hx-section {
+  padding-top: 66px;
+  padding-bottom: 58px;
+}
+
+body.item-218 .acm-page-masthead .hx-h1 {
+  font-size: 46px;
+  letter-spacing: -1.3px;
+  line-height: 1.08;
+}
+
+/* Sub color: .pen fill #9AA6A1 = --text, base CSS uses --muted */
+body.item-218 .acm-page-masthead .hx-mast-sub {
+  color: var(--text);
+}
+
+body.item-218 .acm-page-masthead .hx-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  /* .pen: pill tint is FIXED brand lime in BOTH themes; only the label + dot flip
+     to the theme primary. --p-a08/--p-a25 flip the tint to olive in light → leak. */
+  background: rgba(163, 230, 53, 0.078);
+  border: 1px solid rgba(163, 230, 53, 0.251);
+  border-radius: 100px;
+  margin: 0 0 16px;
+  /* .pen pill label: 11.5px mono, tracking 1.5px (base CSS ships 12.5px/2px) */
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+}
+body.item-218 .acm-page-masthead .hx-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Mobile: masthead responsive adjustments */
+@media (max-width: 860px) {
+  body.item-218 .acm-page-masthead .hx-h1 {
+    font-size: 30px;
+    letter-spacing: -0.8px;
+  }
+}
+
+
+/* ==============================================================
+   2. CAPABILITIES LEDGER (module 192 — layout: ledger)
+   ============================================================== */
+
+body.item-218 .acm-features-ledger .hx-section {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+body.item-218 .acm-features-ledger .hx-fl-ruled {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-bottom: 24px;
+}
+body.item-218 .acm-features-ledger .hx-fl-ruled-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+body.item-218 .acm-features-ledger .hx-fl-ruled-l {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+body.item-218 .acm-features-ledger .hx-fl-ruled-idx {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--primary);
+}
+body.item-218 .acm-features-ledger .hx-fl-ruled-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  line-height: 1;
+  color: var(--heading);
+}
+body.item-218 .acm-features-ledger .hx-fl-ruled-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+body.item-218 .acm-features-ledger .hx-spec-cardhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+}
+body.item-218 .acm-features-ledger .hx-spec-cardhead-l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+body.item-218 .acm-features-ledger .hx-spec-cardhead-r {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--primary);
+}
+
+/* Ledger row desc: .pen 14.5px / line-height 22px (base CSS ships 15px/1.55) */
+body.item-218 .acm-features-ledger .hx-spec-text {
+  font-size: 14.5px;
+  line-height: 22px;
+}
+
+body.item-218 .acm-features-ledger .hx-specrows {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Remove the inherited top-border on first row — card border handles it */
+body.item-218 .acm-features-ledger .hx-specrows > .hx-specrow:first-child {
+  border-top: none;
+}
+
+body.item-218 .acm-features-ledger .hx-specrow {
+  grid-template-columns: 96px 1fr 46px;
+  padding: 24px 28px;
+  align-items: center;
+}
+
+body.item-218 .acm-features-ledger .hx-spec-num {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  color: var(--primary);
+}
+
+/* Reposition icon to right column via display:contents on the wrapper.
+   Children (hx-spec-icon + hx-spec-copy) become direct grid items:
+     auto-placed col→1 (spec-num), explicit col2 (copy), explicit col3 (icon). */
+body.item-218 .acm-features-ledger .hx-spec-main {
+  display: contents;
+}
+body.item-218 .acm-features-ledger .hx-spec-copy {
+  grid-column: 2;
+  grid-row: 1;              /* keep on row 1 — else auto-placement drops it below */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-self: center;
+}
+
+body.item-218 .acm-features-ledger .hx-spec-icon {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: var(--p-a12);
+  color: var(--primary);
+  margin-top: 0;
+}
+body.item-218 .acm-features-ledger .hx-spec-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+
+/* ==============================================================
+   3. SIGNALS SECTION (module 193 — features-intro / signals)
+   ============================================================== */
+
+body.item-218 #acm-features-intro-193 .hx-section {
+  background: var(--elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+/* .pen Signals band = $elevated (#161B18 dark / #F2F5EE light). The BODY
+   --elevated dark token in this build is #0F1311 (too dark — reads below the
+   cards on it), so pin the DARK band to the design $elevated. Light keeps
+   var(--elevated)=#F2F5EE which already matches. ([CHROME-PERMA-DARK-VS-THEMED]) */
+html.t4-dark body.item-218 #acm-features-intro-193 .hx-section {
+  background: #161B18;
+}
+
+/* Section eyebrow: .pen 12px (base CSS ships 12.5px) */
+body.item-218 #acm-features-intro-193 .hx-eyebrow {
+  font-size: 12px;
+}
+
+/* Card desc: .pen 14.5px / line-height 22px (base CSS ships 15px/24px) */
+body.item-218 #acm-features-intro-193 .hx-feat-text {
+  font-size: 14.5px;
+  line-height: 22px;
+}
+
+/* Section title: 32px (not 38px), tighter tracking */
+body.item-218 #acm-features-intro-193 .hx-h2 {
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+}
+
+/* Card grid: tighten gap 24→20px */
+body.item-218 #acm-features-intro-193 .hx-fi-grid {
+  gap: 20px;
+}
+
+/* Reset the base block's negative margin (-10px -12px, meant for the borderless
+   hover variant) — otherwise cards bleed into the grid gap and visually touch. */
+body.item-218 #acm-features-intro-193 .hx-feat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin: 0;
+  gap: 14px;
+}
+
+/* Signal cards: neutral by default, lime border on HOVER only (no stuck first card) */
+body.item-218 #acm-features-intro-193 .hx-feat {
+  transition: border-color .15s ease;
+}
+body.item-218 #acm-features-intro-193 .hx-feat:hover {
+  border-color: var(--primary);
+}
+
+body.item-218 #acm-features-intro-193 .hx-feat-icon {
+  background: var(--p-a09);
+  border: none;
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0; /* gap on parent handles spacing */
+}
+
+/* Flex gap drives spacing */
+body.item-218 #acm-features-intro-193 .hx-feat-text {
+  margin-top: 0;
+}
+
+/* Stat label: JetBrains Mono 12px muted (not lime 22px Space Grotesk) */
+body.item-218 #acm-features-intro-193 .hx-feat-stat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-top: 0;
+}
+
+
+/* ==============================================================
+   4. STATS SECTION (module 194 — features-intro as 4-col stats)
+   ============================================================== */
+
+body.item-218 #acm-features-intro-194 .hx-section {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+/* Head: tighten bottom margin (no subtitle) */
+body.item-218 #acm-features-intro-194 .hx-fi-head {
+  margin-bottom: 32px;
+}
+
+body.item-218 #acm-features-intro-194 .hx-fi-grid {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  gap: 0;
+}
+
+body.item-218 #acm-features-intro-194 .hx-feat {
+  padding: 28px;
+  border-radius: 0;
+  gap: 6px;
+  border: none;
+  border-left: 1px solid var(--border);
+}
+body.item-218 #acm-features-intro-194 .hx-feat:first-child {
+  border-left: none;
+}
+
+body.item-218 #acm-features-intro-194 .hx-feat-title {
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+  line-height: 1;
+  color: var(--heading);
+}
+
+body.item-218 #acm-features-intro-194 .hx-feat-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  margin-top: 0;
+}
+
+
+/* ==============================================================
+   5. RESPONSIVE — mobile 390px (≤620px breakpoint)
+   Mirrors the base-CSS mobile overrides but scoped to item-218.
+   ============================================================== */
+@media (max-width: 620px) {
+
+  /* Masthead */
+  body.item-218 .acm-page-masthead .hx-section {
+    padding-top: 56px;
+    padding-bottom: 48px;
+  }
+
+  /* Ledger */
+  body.item-218 .acm-features-ledger .hx-section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  body.item-218 .acm-features-ledger .hx-specrow {
+    grid-template-columns: 56px 1fr 40px;
+    padding: 20px 20px;
+  }
+  body.item-218 .acm-features-ledger .hx-spec-num {
+    /* base block hides the number <560px (.hx-specrow > .hx-spec-num); Features
+       keeps the big lime number (the 01–06 sequence is a core .pen element) in
+       its 56px column — !important to beat the base child-combinator rule */
+    display: block !important;
+    font-size: 24px;
+  }
+  body.item-218 .acm-features-ledger .hx-spec-icon {
+    width: 40px;
+    height: 40px;
+  }
+  body.item-218 .acm-features-ledger .hx-spec-cardhead {
+    padding: 16px 20px;
+  }
+
+  /* Signals */
+  body.item-218 #acm-features-intro-193 .hx-section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  body.item-218 #acm-features-intro-193 .hx-h2 {
+    font-size: 26px;
+  }
+  body.item-218 #acm-features-intro-193 .hx-feat {
+    padding: 24px;
+  }
+
+  /* Stats: 2-col wrap on mobile */
+  body.item-218 #acm-features-intro-194 .hx-section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  body.item-218 #acm-features-intro-194 .hx-fi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    border-radius: 12px;
+  }
+  body.item-218 #acm-features-intro-194 .hx-feat {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+  body.item-218 #acm-features-intro-194 .hx-feat:first-child,
+  body.item-218 #acm-features-intro-194 .hx-feat:nth-child(2) {
+    border-top: none;
+  }
+  body.item-218 #acm-features-intro-194 .hx-feat-title {
+    font-size: 32px;
+    letter-spacing: -0.8px;
+  }
+}

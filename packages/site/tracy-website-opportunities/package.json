@@ -1,0 +1,64 @@
+{
+  "name": "@tracy/dsh-website-opportunities",
+  "version": "0.1.9",
+  "description": "Website Opportunities: find restaurants near a place or from a link, collect their public website and social presence, write a site brief and build a demo site in Tracy",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./find": "./src/client/find-entry.ts",
+    "./strings": "./src/client/strings.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/site/tracy-website-opportunities"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "dsh-better-sidebar"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "dsh-better-sidebar": ">=0.24.1-tracy.40 <0.24.1"
+  },
+  "peerDependenciesMeta": {
+    "dsh-better-sidebar": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+    "@tailwindcss/cli": "^4.3.3",
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@tracy/wo-views": "workspace:^",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.5",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "qrcode": "1.5.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0",
+    "website-opportunities": "workspace:*"
+  },
+  "license": "MIT"
+}

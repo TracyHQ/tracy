@@ -1,0 +1,2696 @@
+/**
+ * Self-contained inline Portable Text editor for visual editing.
+ *
+ * Uses TipTap directly with content extensions — no admin UI deps.
+ * Includes BubbleMenu for inline formatting (bold, italic, etc.)
+ * but no toolbar, no media picker, no section picker.
+ *
+ * Converts between Portable Text and ProseMirror on mount/save.
+ * Auto-saves on blur, dispatches custom events for toolbar integration.
+ */
+
+import { htmlBlockFields } from "@emdash-cms/admin/html-block";
+import { autoUpdate, flip, offset, shift, useFloating } from "@floating-ui/react";
+import { Extension, Node, mergeAttributes, type JSONContent, type Range } from "@tiptap/core";
+import Focus from "@tiptap/extension-focus";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import TextAlign from "@tiptap/extension-text-align";
+import Typography from "@tiptap/extension-typography";
+import Underline from "@tiptap/extension-underline";
+import { Plugin } from "@tiptap/pm/state";
+import { useEditor, EditorContent, type Editor } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
+import StarterKit from "@tiptap/starter-kit";
+import Suggestion from "@tiptap/suggestion";
+import * as React from "react";
+import { createPortal } from "react-dom";
+
+import { resolveImageMedia } from "../content/converters/gallery.js";
+import {
+	deriveLegacyListId,
+	normalizeProseMirrorOrderedListJson,
+	normalizeListId,
+	normalizeListStart,
+	readOrderedListMetadata,
+} from "../content/converters/numbered-list.js";
+import { computeThumbnailSize } from "../media/thumbnail.js";
+import { CodeMarkExtension } from "./code-mark.js";
+import { InlineCodeBlockExtension } from "./inline-code-block.js";
+import { EmDashOrderedList } from "./ordered-list.js";
+
+// ── Portable Text types ────────────────────────────────────────────
+
+interface PTSpan {
+	_type: "span";
+	_key: string;
+	text: string;
+	marks?: string[];
+}
+
+interface PTMarkDef {
+	_type: string;
+	_key: string;
+	[key: string]: unknown;
+}
+
+interface PTTextBlock {
+	_type: "block";
+	_key: string;
+	style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+	listItem?: "bullet" | "number";
+	level?: number;
+	listId?: string;
+	listStart?: number;
+	children: PTSpan[];
+	markDefs?: PTMarkDef[];
+	textAlign?: "left" | "center" | "right" | "justify";
+}
+
+type PTTableBlock = { _type: "table"; [key: string]: unknown };
+type PTBlock = PTTextBlock | PTTableBlock | { _type: string; _key: string; [key: string]: unknown };
+const TABLE_BLOCK_PLACEHOLDER_HTML = /<[^>]+\bdata-emdash-table-block(?:\s|=|>)/i;
+
+/** Type guard for PTTextBlock */
+function isPTTextBlock(block: PTBlock): block is PTTextBlock {
+	return block._type === "block";
+}
+
+function isPTTableBlock(value: unknown): value is PTTableBlock {
+	return typeof value === "object" && value !== null && "_type" in value && value._type === "table";
+}
+
+/** Type guard for ProseMirror JSON document node */
+function isPMNode(value: unknown): value is PMNode {
+	return (
+		typeof value === "object" && value !== null && "type" in value && typeof value.type === "string"
+	);
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
+
+function k(): string {
+	return Math.random().toString(36).substring(2, 11);
+}
+
+function getUnsupportedFileGuidance(locale: string): string {
+	if (locale.toLowerCase().startsWith("ar")) {
+		return "لا يمكن إفلات الملفات أو لصقها هنا. اكتب /image لاختيار صورة من مكتبة الوسائط.";
+	}
+	return "Files can’t be dropped or pasted here. Type /image to choose an image from the media library.";
+}
+
+function hasTransferredFiles(transfer: DataTransfer | null): boolean {
+	if (!transfer) return false;
+	if (transfer.files.length > 0) return true;
+	for (let index = 0; index < transfer.items.length; index++) {
+		if (transfer.items[index]?.kind === "file") return true;
+	}
+	return false;
+}
+
+function createUnsupportedFileHandlers(showGuidance: () => void) {
+	const keepFileDragInEditor = (_view: unknown, event: DragEvent): boolean => {
+		if (!hasTransferredFiles(event.dataTransfer)) return false;
+		event.preventDefault();
+		return true;
+	};
+	return {
+		handleDOMEvents: {
+			dragenter: keepFileDragInEditor,
+			dragover: keepFileDragInEditor,
+			drop: (_view: unknown, event: DragEvent): boolean => {
+				if (!hasTransferredFiles(event.dataTransfer)) return false;
+				event.preventDefault();
+				showGuidance();
+				return true;
+			},
+			paste: (_view: unknown, event: ClipboardEvent): boolean => {
+				if (!hasTransferredFiles(event.clipboardData)) return false;
+				event.preventDefault();
+				showGuidance();
+				return true;
+			},
+		},
+	};
+}
+
+// ── ProseMirror → Portable Text ────────────────────────────────────
+
+type PMNode = {
+	type: string;
+	attrs?: Record<string, unknown>;
+	content?: PMNode[];
+	marks?: Array<{ type: string; attrs?: Record<string, unknown> }>;
+	text?: string;
+};
+
+/** Safely extract a string attribute from ProseMirror attrs */
+function attrStr(attrs: Record<string, unknown> | undefined, key: string): string {
+	const v = attrs?.[key];
+	return typeof v === "string" ? v : "";
+}
+
+/** Safely extract an optional string attribute from ProseMirror attrs */
+function attrStrOpt(attrs: Record<string, unknown> | undefined, key: string): string | undefined {
+	const v = attrs?.[key];
+	return typeof v === "string" && v ? v : undefined;
+}
+
+/** Safely extract a number attribute from ProseMirror attrs */
+function attrNum(attrs: Record<string, unknown> | undefined, key: string): number | undefined {
+	const v = attrs?.[key];
+	return typeof v === "number" ? v : undefined;
+}
+
+function attrDimension(
+	attrs: Record<string, unknown> | undefined,
+	key: string,
+): number | undefined {
+	const value = attrNum(attrs, key);
+	return value !== undefined && Number.isFinite(value) && value > 0 ? value : undefined;
+}
+
+function canonicalMediaProviderId(provider: string | undefined): string | undefined {
+	return provider === "external-url" ? "external" : provider;
+}
+
+function pmToPortableText(doc: PMNode): PTBlock[] {
+	if (!doc || doc.type !== "doc" || !doc.content) return [];
+	const blocks: PTBlock[] = [];
+	for (let i = 0; i < doc.content.length; i++) {
+		const r = convertPMNode(doc.content[i]!, `root:${i}`);
+		if (r) {
+			if (Array.isArray(r)) blocks.push(...r);
+			else blocks.push(r);
+		}
+	}
+	return blocks;
+}
+
+function convertPMNode(node: PMNode, path: string): PTBlock | PTBlock[] | null {
+	switch (node.type) {
+		case "paragraph": {
+			const { children, markDefs } = convertInline(node.content || []);
+			if (children.length === 0) return null;
+			const ta = node.attrs?.textAlign;
+			const textAlign = ta === "center" || ta === "right" || ta === "justify" ? ta : undefined;
+			return {
+				_type: "block",
+				_key: k(),
+				style: "normal",
+				children,
+				markDefs: markDefs.length > 0 ? markDefs : undefined,
+				...(textAlign ? { textAlign } : {}),
+			};
+		}
+		case "heading": {
+			const { children, markDefs } = convertInline(node.content || []);
+			const level = attrNum(node.attrs, "level") ?? 1;
+			if (children.length === 0) return null;
+			const headingStyles: Record<number, PTTextBlock["style"]> = {
+				1: "h1",
+				2: "h2",
+				3: "h3",
+				4: "h4",
+				5: "h5",
+				6: "h6",
+			};
+			const headingStyle = headingStyles[level] ?? "h1";
+			const ta = node.attrs?.textAlign;
+			const textAlign = ta === "center" || ta === "right" || ta === "justify" ? ta : undefined;
+			return {
+				_type: "block",
+				_key: k(),
+				style: headingStyle,
+				children,
+				markDefs: markDefs.length > 0 ? markDefs : undefined,
+				...(textAlign ? { textAlign } : {}),
+			};
+		}
+		case "bulletList":
+			return convertPMList(node.content || [], "bullet", 1, node.attrs, path);
+		case "orderedList":
+			return convertPMList(node.content || [], "number", 1, node.attrs, path);
+		case "blockquote": {
+			const blocks: PTTextBlock[] = [];
+			for (const child of node.content || []) {
+				if (child.type === "paragraph") {
+					const { children, markDefs } = convertInline(child.content || []);
+					if (children.length > 0) {
+						blocks.push({
+							_type: "block",
+							_key: k(),
+							style: "blockquote",
+							children,
+							markDefs: markDefs.length > 0 ? markDefs : undefined,
+						});
+					}
+				}
+			}
+			if (blocks.length === 1) {
+				const first = blocks[0];
+				return first ?? null;
+			}
+			return blocks.length > 0 ? blocks : null;
+		}
+		case "codeBlock": {
+			const code = (node.content || []).map((n) => n.text || "").join("");
+			return {
+				_type: "code",
+				_key: k(),
+				code,
+				language: attrStrOpt(node.attrs, "language"),
+			};
+		}
+		case "htmlBlock":
+			return {
+				_type: "htmlBlock",
+				_key: k(),
+				...htmlBlockFields(node.attrs ?? {}),
+			};
+		case "image": {
+			const provider = attrStrOpt(node.attrs, "provider");
+			const blurhash = attrStrOpt(node.attrs, "blurhash");
+			const dominantColor = attrStrOpt(node.attrs, "dominantColor");
+			const title = attrStrOpt(node.attrs, "title");
+			const caption = Object.hasOwn(node.attrs ?? {}, "caption")
+				? (attrStrOpt(node.attrs, "caption") ?? (title ? "" : undefined))
+				: title;
+			// Persist LQIP as first-class block fields (matching the image-field
+			// MediaValue path) rather than nesting in `asset.meta`, so read sites
+			// and normalize don't need a dual-shape fallback. `asset.meta` is left
+			// to carry only provider-specific data — it isn't reconstructed here,
+			// so non-LQIP meta keys are never silently dropped on editor round-trip.
+			return {
+				_type: "image",
+				_key: k(),
+				asset: {
+					_ref: attrStr(node.attrs, "mediaId"),
+					url: attrStr(node.attrs, "src"),
+					provider: provider && provider !== "local" ? provider : undefined,
+				},
+				alt: attrStrOpt(node.attrs, "alt"),
+				caption,
+				title,
+				width: attrDimension(node.attrs, "width"),
+				height: attrDimension(node.attrs, "height"),
+				...(blurhash ? { blurhash } : {}),
+				...(dominantColor ? { dominantColor } : {}),
+				displayWidth: attrDimension(node.attrs, "displayWidth"),
+				displayHeight: attrDimension(node.attrs, "displayHeight"),
+			};
+		}
+		case "horizontalRule":
+			return { _type: "break", _key: k(), style: "lineBreak" };
+		case "table": {
+			const rawTable = node.attrs?.rawTable;
+			if (isPTTableBlock(rawTable)) return rawTable;
+			return null;
+		}
+		case "pluginBlock": {
+			// Spread the captured data back out so the block round-trips losslessly.
+			// `data` holds every field except _type / _key and the identity field
+			// (`id` or `url`, named by `identityField`), which live on dedicated attrs.
+			const { blockType, id, identityField, data } = node.attrs ?? {};
+			const field = identityField === "url" || identityField === "" ? identityField : "id";
+			return {
+				...(data && typeof data === "object" ? data : {}),
+				_type: typeof blockType === "string" ? blockType : "embed",
+				_key: k(),
+				...(field ? { [field]: typeof id === "string" ? id : "" } : {}),
+			};
+		}
+		default:
+			return null;
+	}
+}
+
+function convertPMList(
+	items: PMNode[],
+	listItem: "bullet" | "number",
+	level: number,
+	attrs: Record<string, unknown> | undefined,
+	path: string,
+): PTTextBlock[] {
+	const blocks: PTTextBlock[] = [];
+	const metadata = listItem === "number" ? readOrderedListMetadata(attrs, path) : undefined;
+	for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+		const item = items[itemIndex]!;
+		if (item.type === "listItem") {
+			for (let childIndex = 0; childIndex < (item.content?.length ?? 0); childIndex++) {
+				const child = item.content![childIndex]!;
+				if (child.type === "paragraph") {
+					const { children, markDefs } = convertInline(child.content || []);
+					if (children.length > 0) {
+						blocks.push({
+							_type: "block",
+							_key: k(),
+							style: "normal",
+							listItem,
+							level,
+							...metadata,
+							children,
+							markDefs: markDefs.length > 0 ? markDefs : undefined,
+						});
+					}
+				} else if (child.type === "bulletList" || child.type === "orderedList") {
+					const childListItem = child.type === "bulletList" ? "bullet" : "number";
+					blocks.push(
+						...convertPMList(
+							child.content || [],
+							childListItem,
+							level + 1,
+							child.attrs,
+							`${path}:${itemIndex}:${childIndex}`,
+						),
+					);
+				}
+			}
+		}
+	}
+	return blocks;
+}
+
+function convertInline(nodes: PMNode[]): { children: PTSpan[]; markDefs: PTMarkDef[] } {
+	const children: PTSpan[] = [];
+	const markDefs: PTMarkDef[] = [];
+	const markDefMap = new Map<string, string>();
+
+	for (const node of nodes) {
+		if (node.type === "text" && node.text) {
+			const marks: string[] = [];
+			for (const mark of node.marks || []) {
+				const m = convertPMMark(mark, markDefs, markDefMap);
+				if (m) marks.push(m);
+			}
+			children.push({
+				_type: "span",
+				_key: k(),
+				text: node.text,
+				marks: marks.length > 0 ? marks : undefined,
+			});
+		} else if (node.type === "hardBreak") {
+			if (children.length > 0) {
+				const last = children.at(-1);
+				if (last) last.text += "\n";
+			} else {
+				children.push({ _type: "span", _key: k(), text: "\n" });
+			}
+		}
+	}
+
+	if (children.length === 0) {
+		children.push({ _type: "span", _key: k(), text: "" });
+	}
+	return { children, markDefs };
+}
+
+function convertPMMark(
+	mark: { type: string; attrs?: Record<string, unknown> },
+	markDefs: PTMarkDef[],
+	markDefMap: Map<string, string>,
+): string | null {
+	switch (mark.type) {
+		case "bold":
+		case "strong":
+			return "strong";
+		case "italic":
+		case "em":
+			return "em";
+		case "underline":
+			return "underline";
+		case "strike":
+		case "strikethrough":
+			return "strike-through";
+		case "code":
+			return "code";
+		case "link": {
+			const href = attrStr(mark.attrs, "href");
+			if (markDefMap.has(href)) return markDefMap.get(href)!;
+			const key = k();
+			markDefs.push({
+				_type: "link",
+				_key: key,
+				href,
+				blank: mark.attrs?.target === "_blank",
+			});
+			markDefMap.set(href, key);
+			return key;
+		}
+		default:
+			return mark.type;
+	}
+}
+
+// ── Portable Text → ProseMirror ────────────────────────────────────
+
+function portableTextToPM(blocks: PTBlock[]): JSONContent {
+	if (!blocks || blocks.length === 0) return { type: "doc", content: [{ type: "paragraph" }] };
+
+	const content: PMNode[] = [];
+	let i = 0;
+
+	while (i < blocks.length) {
+		const block = blocks[i];
+		if (!block) {
+			i++;
+			continue;
+		}
+		if (isPTTextBlock(block) && block.listItem) {
+			const listBlocks: PTTextBlock[] = [];
+			const listType = block.listItem;
+			const runStart = i;
+			const rootId = listType === "number" ? normalizeListId(block.listId) : undefined;
+			while (i < blocks.length) {
+				const cur = blocks[i];
+				if (!cur || !isPTTextBlock(cur) || !cur.listItem) break;
+				const level = cur.level || 1;
+				const currentId = cur.listItem === "number" ? normalizeListId(cur.listId) : undefined;
+				const sameIdentity =
+					listType !== "number" ||
+					level > 1 ||
+					(rootId ? currentId === rootId : currentId === undefined);
+				if (level > 1 || (cur.listItem === listType && sameIdentity)) {
+					listBlocks.push(cur);
+					i++;
+				} else break;
+			}
+			content.push(convertPTList(listBlocks, listType, `root:${runStart}`));
+		} else if (
+			isPTTextBlock(block) &&
+			block.style === "blockquote" &&
+			block.listItem === undefined
+		) {
+			// Group consecutive blockquote blocks into ONE blockquote node —
+			// PT is flat, so a multi-paragraph quote is stored as a run of
+			// blockquote-styled blocks. Mirrors the grouping in
+			// content/converters/portable-text-to-prosemirror.ts; without it
+			// merges revert on reload in the inline editor too.
+			const quoteBlocks: PTTextBlock[] = [];
+			while (i < blocks.length) {
+				const cur = blocks[i];
+				if (
+					!cur ||
+					!isPTTextBlock(cur) ||
+					cur.style !== "blockquote" ||
+					cur.listItem !== undefined
+				) {
+					break;
+				}
+				quoteBlocks.push(cur);
+				i++;
+			}
+			content.push({
+				type: "blockquote",
+				content: quoteBlocks.map((quoteBlock) => {
+					const pmContent = convertPTSpans(quoteBlock.children, quoteBlock.markDefs || []);
+					return {
+						type: "paragraph",
+						content: pmContent.length > 0 ? pmContent : undefined,
+					};
+				}),
+			});
+		} else {
+			const c = convertPTBlock(block);
+			if (c) content.push(c);
+			i++;
+		}
+	}
+
+	return normalizeProseMirrorOrderedListJson({
+		type: "doc",
+		content: content.length > 0 ? content : [{ type: "paragraph" }],
+	});
+}
+
+function convertPTBlock(block: PTBlock): PMNode | null {
+	if (isPTTextBlock(block)) {
+		const { style = "normal", children, markDefs = [], textAlign } = block;
+		const pmContent = convertPTSpans(children, markDefs);
+
+		if (style === "blockquote") {
+			return {
+				type: "blockquote",
+				content: [
+					{
+						type: "paragraph",
+						content: pmContent.length > 0 ? pmContent : undefined,
+					},
+				],
+			};
+		}
+		if (style?.startsWith("h")) {
+			const level = parseInt(style.substring(1), 10);
+			return {
+				type: "heading",
+				attrs: { level, ...(textAlign ? { textAlign } : {}) },
+				content: pmContent.length > 0 ? pmContent : undefined,
+			};
+		}
+		return {
+			type: "paragraph",
+			attrs: textAlign ? { textAlign } : undefined,
+			content: pmContent.length > 0 ? pmContent : undefined,
+		};
+	}
+	if (block._type === "code") {
+		const cb = block as PTBlock & { code?: string; language?: string };
+		const language = typeof cb.language === "string" && cb.language.length > 0 ? cb.language : null;
+		return {
+			type: "codeBlock",
+			attrs: { language },
+			content: cb.code ? [{ type: "text", text: cb.code }] : undefined,
+		};
+	}
+	if (block._type === "break") {
+		return { type: "horizontalRule" };
+	}
+	if (block._type === "htmlBlock") {
+		return {
+			type: "htmlBlock",
+			attrs: { ...htmlBlockFields(block) },
+		};
+	}
+	if (block._type === "image") {
+		const ib = block as PTBlock & {
+			asset?: {
+				_ref?: string;
+				url?: string;
+				provider?: string;
+				meta?: Record<string, unknown>;
+			};
+			url?: string;
+			alt?: string;
+			caption?: string;
+			title?: string;
+			width?: number;
+			height?: number;
+			/** LQIP — first-class field (legacy snapshots keep it in `asset.meta`). */
+			blurhash?: string;
+			dominantColor?: string;
+			displayWidth?: number;
+			displayHeight?: number;
+		};
+		const meta = ib.asset?.meta;
+		const { asset, alt, width, height } = resolveImageMedia(ib);
+		// Prefer first-class LQIP fields; fall back to `asset.meta` for legacy.
+		const blurhash =
+			typeof ib.blurhash === "string"
+				? ib.blurhash
+				: typeof meta?.blurhash === "string"
+					? meta.blurhash
+					: null;
+		const dominantColor =
+			typeof ib.dominantColor === "string"
+				? ib.dominantColor
+				: typeof meta?.dominantColor === "string"
+					? meta.dominantColor
+					: null;
+		return {
+			type: "image",
+			attrs: {
+				src: asset.url || ib.url || (asset._ref ? `/_emdash/api/media/file/${asset._ref}` : ""),
+				alt: alt || "",
+				title: ib.title || "",
+				caption: Object.hasOwn(ib, "caption") ? ib.caption || "" : ib.title || "",
+				mediaId: asset._ref || undefined,
+				provider: canonicalMediaProviderId(asset.provider),
+				width,
+				height,
+				blurhash,
+				dominantColor,
+				displayWidth: ib.displayWidth,
+				displayHeight: ib.displayHeight,
+			},
+		};
+	}
+	if (block._type === "table") {
+		return {
+			type: "table",
+			attrs: { rawTable: block },
+		};
+	}
+	// Unknown block types — treat as plugin blocks. Capture every field other
+	// than the well-known ones into `data` so the block round-trips losslessly,
+	// even if no plugin currently registers this type. Matches the admin
+	// editor's `convertCustomBlock`.
+	// The identity lives under whichever of `id` / `url` the block arrived with,
+	// so the PM → PT direction can write it back under the same key.
+	const identityField =
+		typeof block.id === "string" ? "id" : typeof block.url === "string" ? "url" : "";
+	const identity = identityField ? block[identityField] : undefined;
+	// Filter out _-prefixed keys to prevent accumulation across edit cycles.
+	const data = Object.fromEntries(
+		Object.entries(block).filter(([key]) => !key.startsWith("_") && key !== identityField),
+	);
+	return {
+		type: "pluginBlock",
+		attrs: {
+			blockType: typeof block._type === "string" ? block._type : "embed",
+			id: typeof identity === "string" ? identity : "",
+			identityField,
+			data,
+		},
+	};
+}
+
+function convertPTList(
+	items: PTTextBlock[],
+	listType: "bullet" | "number",
+	context: string,
+): PMNode {
+	const rootItems: PMNode[] = [];
+	let index = 0;
+
+	while (index < items.length) {
+		const item = items[index]!;
+		const level = item.level || 1;
+		if (level === 1) {
+			const nestedItems: PTTextBlock[] = [];
+			index++;
+			while (index < items.length && (items[index]!.level || 1) > 1) {
+				nestedItems.push(items[index]!);
+				index++;
+			}
+			rootItems.push(
+				convertPTListItem(item, nestedItems, listType, `${context}:${rootItems.length}`),
+			);
+		} else {
+			rootItems.push(convertPTListItem(item, [], listType, `${context}:${rootItems.length}`));
+			index++;
+		}
+	}
+
+	const firstItem = items[0]!;
+	const listId =
+		normalizeListId(firstItem.listId) ?? deriveLegacyListId(`${context}:${firstItem._key}`);
+	const listStart = normalizeListStart(firstItem.listStart);
+	const metadata =
+		listType === "number"
+			? {
+					listId,
+					...(listStart === undefined ? {} : { listStart }),
+				}
+			: undefined;
+	return {
+		type: listType === "bullet" ? "bulletList" : "orderedList",
+		attrs: metadata ? { ...metadata, start: metadata.listStart ?? 1 } : undefined,
+		content: rootItems,
+	};
+}
+
+function belongsToNestedPTGroup(
+	item: PTTextBlock,
+	minLevel: number,
+	parentListType: "bullet" | "number",
+	anchorType: "bullet" | "number",
+	anchorId: string | undefined,
+): boolean {
+	if ((item.level || 2) > minLevel) return true;
+	if ((item.listItem || parentListType) !== anchorType) return false;
+	if (anchorType !== "number") return true;
+	const itemId = normalizeListId(item.listId);
+	return anchorId ? itemId === anchorId : itemId === undefined;
+}
+
+function convertPTListItem(
+	item: PTTextBlock,
+	nestedItems: PTTextBlock[],
+	parentListType: "bullet" | "number",
+	context: string,
+): PMNode {
+	const content: PMNode[] = [
+		{
+			type: "paragraph",
+			content: convertPTSpans(item.children, item.markDefs || []),
+		},
+	];
+
+	if (nestedItems.length > 0) {
+		let minLevel = Infinity;
+		for (const nestedItem of nestedItems) {
+			const level = nestedItem.level || 2;
+			if (level < minLevel) minLevel = level;
+		}
+
+		let index = 0;
+		while (index < nestedItems.length) {
+			const groupStart = index;
+			const anchorType = nestedItems[index]!.listItem || parentListType;
+			const anchorId =
+				anchorType === "number" ? normalizeListId(nestedItems[index]!.listId) : undefined;
+			const nestedGroup: PTTextBlock[] = [];
+			do {
+				nestedGroup.push(nestedItems[index]!);
+				index++;
+			} while (
+				index < nestedItems.length &&
+				belongsToNestedPTGroup(nestedItems[index]!, minLevel, parentListType, anchorType, anchorId)
+			);
+
+			content.push(
+				convertPTList(
+					nestedGroup.map((nestedItem) => ({
+						...nestedItem,
+						level: (nestedItem.level || 2) - 1,
+					})),
+					anchorType,
+					`${context}:nested:${groupStart}`,
+				),
+			);
+		}
+	}
+
+	return { type: "listItem", content };
+}
+
+function convertPTSpans(spans: PTSpan[], markDefs: PTMarkDef[]): PMNode[] {
+	const nodes: PMNode[] = [];
+	const mdMap = new Map(markDefs.map((md) => [md._key, md]));
+
+	for (const span of spans) {
+		if (span._type !== "span") continue;
+		const parts = span.text.split("\n");
+		for (let i = 0; i < parts.length; i++) {
+			const text = parts[i];
+			if (text && text.length > 0) {
+				const marks = convertPTMarks(span.marks || [], mdMap);
+				const node: PMNode = {
+					type: "text",
+					text,
+				};
+				if (marks.length > 0) node.marks = marks;
+				nodes.push(node);
+			}
+			if (i < parts.length - 1) nodes.push({ type: "hardBreak" });
+		}
+	}
+	return nodes;
+}
+
+type MarkJSON = { type: string; attrs?: Record<string, unknown>; [key: string]: unknown };
+
+function convertPTMarks(marks: string[], markDefs: Map<string, PTMarkDef>): MarkJSON[] {
+	const pm: MarkJSON[] = [];
+	for (const mark of marks) {
+		switch (mark) {
+			case "strong":
+				pm.push({ type: "bold" });
+				break;
+			case "em":
+				pm.push({ type: "italic" });
+				break;
+			case "underline":
+				pm.push({ type: "underline" });
+				break;
+			case "strike-through":
+				pm.push({ type: "strike" });
+				break;
+			case "code":
+				pm.push({ type: "code" });
+				break;
+			default: {
+				const md = markDefs.get(mark);
+				if (md && md._type === "link") {
+					pm.push({
+						type: "link",
+						attrs: { href: md.href, target: md.blank ? "_blank" : null },
+					});
+				}
+				break;
+			}
+		}
+	}
+	return pm;
+}
+
+// ── Inline BubbleMenu ──────────────────────────────────────────────
+
+function InlineBubbleMenu({ editor }: { editor: Editor }) {
+	const [showLinkInput, setShowLinkInput] = React.useState(false);
+	const [linkUrl, setLinkUrl] = React.useState("");
+	const inputRef = React.useRef<HTMLInputElement>(null);
+
+	React.useEffect(() => {
+		if (showLinkInput) {
+			const existingUrl = editor.getAttributes("link").href || "";
+			setLinkUrl(existingUrl);
+			setTimeout(() => inputRef.current?.focus(), 0);
+		}
+	}, [showLinkInput, editor]);
+
+	const handleSetLink = () => {
+		if (linkUrl.trim() === "") {
+			editor.chain().focus().extendMarkRange("link").unsetLink().run();
+		} else {
+			editor.chain().focus().extendMarkRange("link").setLink({ href: linkUrl.trim() }).run();
+		}
+		setShowLinkInput(false);
+		setLinkUrl("");
+	};
+
+	const handleRemoveLink = () => {
+		editor.chain().focus().extendMarkRange("link").unsetLink().run();
+		setShowLinkInput(false);
+		setLinkUrl("");
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			handleSetLink();
+		} else if (e.key === "Escape") {
+			setShowLinkInput(false);
+			setLinkUrl("");
+			editor.commands.focus();
+		}
+	};
+
+	return (
+		<BubbleMenu
+			editor={editor}
+			options={{ placement: "top", offset: 8, flip: true, shift: true }}
+			className="emdash-bubble-menu"
+		>
+			{showLinkInput ? (
+				<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+					<input
+						ref={inputRef}
+						type="url"
+						placeholder="https://..."
+						value={linkUrl}
+						onChange={(e) => setLinkUrl(e.target.value)}
+						onKeyDown={handleKeyDown}
+						className="emdash-bubble-link-input"
+					/>
+					<button
+						type="button"
+						className="emdash-bubble-btn"
+						onClick={handleSetLink}
+						title="Apply link"
+					>
+						↗
+					</button>
+					{editor.isActive("link") && (
+						<button
+							type="button"
+							className="emdash-bubble-btn emdash-bubble-btn--danger"
+							onClick={handleRemoveLink}
+							title="Remove link"
+						>
+							✕
+						</button>
+					)}
+				</div>
+			) : (
+				<>
+					<button
+						type="button"
+						className={`emdash-bubble-btn ${editor.isActive("bold") ? "emdash-bubble-btn--active" : ""}`}
+						onClick={() => editor.chain().focus().toggleBold().run()}
+						title="Bold"
+					>
+						<strong>B</strong>
+					</button>
+					<button
+						type="button"
+						className={`emdash-bubble-btn ${editor.isActive("italic") ? "emdash-bubble-btn--active" : ""}`}
+						onClick={() => editor.chain().focus().toggleItalic().run()}
+						title="Italic"
+					>
+						<em>I</em>
+					</button>
+					<button
+						type="button"
+						className={`emdash-bubble-btn ${editor.isActive("underline") ? "emdash-bubble-btn--active" : ""}`}
+						onClick={() => editor.chain().focus().toggleUnderline().run()}
+						title="Underline"
+					>
+						<span style={{ textDecoration: "underline" }}>U</span>
+					</button>
+					<button
+						type="button"
+						className={`emdash-bubble-btn ${editor.isActive("strike") ? "emdash-bubble-btn--active" : ""}`}
+						onClick={() => editor.chain().focus().toggleStrike().run()}
+						title="Strikethrough"
+					>
+						<span style={{ textDecoration: "line-through" }}>S</span>
+					</button>
+					<button
+						type="button"
+						className={`emdash-bubble-btn ${editor.isActive("code") ? "emdash-bubble-btn--active" : ""}`}
+						onClick={() => editor.chain().focus().toggleCode().run()}
+						title="Code"
+					>
+						<span style={{ fontFamily: "monospace", fontSize: "13px" }}>&lt;/&gt;</span>
+					</button>
+					<span className="emdash-bubble-divider" />
+					<button
+						type="button"
+						className={`emdash-bubble-btn ${editor.isActive("link") ? "emdash-bubble-btn--active" : ""}`}
+						onClick={() => setShowLinkInput(true)}
+						title={editor.isActive("link") ? "Edit link" : "Add link"}
+					>
+						🔗
+					</button>
+				</>
+			)}
+		</BubbleMenu>
+	);
+}
+
+// ── Slash Menu ──────────────────────────────────────────────────────
+
+interface SlashCommandItem {
+	id: string;
+	title: string;
+	description: string;
+	icon: string;
+	command: (props: { editor: Editor; range: Range }) => void;
+	aliases?: string[];
+}
+
+const slashCommands: SlashCommandItem[] = [
+	{
+		id: "heading1",
+		title: "Heading 1",
+		description: "Large section heading",
+		icon: "H1",
+		aliases: ["h1", "title"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run();
+		},
+	},
+	{
+		id: "heading2",
+		title: "Heading 2",
+		description: "Medium section heading",
+		icon: "H2",
+		aliases: ["h2", "subtitle"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run();
+		},
+	},
+	{
+		id: "heading3",
+		title: "Heading 3",
+		description: "Small section heading",
+		icon: "H3",
+		aliases: ["h3"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run();
+		},
+	},
+	{
+		id: "bulletList",
+		title: "Bullet List",
+		description: "Create a bullet list",
+		icon: "•",
+		aliases: ["ul", "unordered"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).toggleBulletList().run();
+		},
+	},
+	{
+		id: "numberedList",
+		title: "Numbered List",
+		description: "Create a numbered list",
+		icon: "1.",
+		aliases: ["ol", "ordered"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).toggleOrderedList().run();
+		},
+	},
+	{
+		id: "quote",
+		title: "Quote",
+		description: "Insert a blockquote",
+		icon: "\u201C",
+		aliases: ["blockquote", "cite"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).toggleBlockquote().run();
+		},
+	},
+	{
+		id: "codeBlock",
+		title: "Code Block",
+		description: "Insert a code block",
+		icon: "</>",
+		aliases: ["code", "pre", "```"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).toggleCodeBlock().run();
+		},
+	},
+	{
+		id: "htmlBlock",
+		title: "HTML",
+		description: "Insert raw HTML",
+		icon: "< >",
+		aliases: ["html", "raw", "markup"],
+		command: ({ editor, range }) => {
+			editor
+				.chain()
+				.focus()
+				.deleteRange(range)
+				.insertContent({ type: "htmlBlock", attrs: { html: "", isolated: true } })
+				.run();
+		},
+	},
+	{
+		id: "divider",
+		title: "Divider",
+		description: "Insert a horizontal rule",
+		icon: "—",
+		aliases: ["hr", "---", "separator"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+		},
+	},
+	{
+		id: "image",
+		title: "Image",
+		description: "Insert an image",
+		icon: "🖼",
+		aliases: ["img", "photo", "picture"],
+		command: ({ editor, range }) => {
+			editor.chain().focus().deleteRange(range).run();
+			// Signal the component to open the media picker
+			document.dispatchEvent(new CustomEvent("emdash:open-media-picker"));
+		},
+	},
+];
+
+interface SlashMenuState {
+	isOpen: boolean;
+	items: SlashCommandItem[];
+	selectedIndex: number;
+	clientRect: (() => DOMRect | null) | null;
+	range: Range | null;
+}
+
+const initialSlashMenuState: SlashMenuState = {
+	isOpen: false,
+	items: [],
+	selectedIndex: 0,
+	clientRect: null,
+	range: null,
+};
+
+/**
+ * Minimal `htmlBlock` TipTap node for the inline (visual-editing) editor.
+ *
+ * Like PluginBlockNode below, this renders as a read-only placeholder so the
+ * block's data is preserved across edits in the visual editor. Full editing
+ * (textarea + preview) is only available in the admin editor.
+ */
+const HtmlBlockNode = Node.create({
+	name: "htmlBlock",
+	group: "block",
+	atom: true,
+	selectable: true,
+	draggable: true,
+
+	addAttributes() {
+		const noDom = { rendered: false, parseHTML: () => null };
+		return {
+			html: { default: "", ...noDom },
+			css: { default: "", ...noDom },
+			js: { default: "", ...noDom },
+			isolated: { default: false, ...noDom },
+		};
+	},
+
+	parseHTML() {
+		return [{ tag: 'div[data-emdash-html-block="true"]' }];
+	},
+
+	renderHTML({ HTMLAttributes }) {
+		return [
+			"div",
+			mergeAttributes(HTMLAttributes, {
+				"data-emdash-html-block": "true",
+				class: "emdash-plugin-block-placeholder",
+				contenteditable: "false",
+			}),
+			"HTML block (edit in admin)",
+		];
+	},
+});
+
+const TableBlockNode = Node.create<{ placeholder: string }>({
+	name: "table",
+	group: "block",
+	atom: true,
+	selectable: true,
+	draggable: true,
+
+	addOptions() {
+		return { placeholder: "Table (edit in admin)" };
+	},
+
+	addAttributes() {
+		return {
+			rawTable: { default: null, rendered: false, parseHTML: () => null },
+		};
+	},
+
+	parseHTML() {
+		return [{ tag: 'div[data-emdash-table-block="true"]' }];
+	},
+
+	addProseMirrorPlugins() {
+		return [
+			new Plugin({
+				props: {
+					handleDOMEvents: {
+						cut: (view, event) => {
+							let hasTable = false;
+							view.state.selection.content().content.descendants((node) => {
+								hasTable ||= node.type.name === "table";
+							});
+							if (!hasTable) return false;
+							event.preventDefault();
+							return true;
+						},
+					},
+					handlePaste: (_view, event, slice) => {
+						const html = event.clipboardData?.getData("text/html") ?? "";
+						if (!TABLE_BLOCK_PLACEHOLDER_HTML.test(html)) return false;
+
+						let hasTable = false;
+						let hasMissingPayload = false;
+						slice.content.descendants((node) => {
+							if (node.type.name !== "table") return;
+							hasTable = true;
+							if (!isPTTableBlock(node.attrs.rawTable)) hasMissingPayload = true;
+						});
+						if (hasTable && !hasMissingPayload) return false;
+
+						event.preventDefault();
+						return true;
+					},
+				},
+			}),
+		];
+	},
+
+	renderHTML({ HTMLAttributes }) {
+		return [
+			"div",
+			mergeAttributes(HTMLAttributes, {
+				"data-emdash-table-block": "true",
+				class: "emdash-plugin-block-placeholder",
+				contenteditable: "false",
+			}),
+			this.options.placeholder,
+		];
+	},
+});
+
+/**
+ * Minimal `pluginBlock` TipTap node for the inline (visual-editing) editor.
+ *
+ * Plugin-contributed Portable Text block types (e.g. `marketing.hero`) are
+ * editable in the admin via a Block Kit modal. The visual-editing surface
+ * deliberately does NOT offer that UX — it would need to fetch the manifest,
+ * mount the modal, and round-trip through plugin-block plumbing that lives in
+ * `@emdash-cms/admin`. Instead, the inline editor renders these blocks as a
+ * read-only placeholder so editors can see they exist and edit the surrounding
+ * content without losing the block's data.
+ *
+ * The full block payload is preserved on `data` and round-tripped losslessly
+ * through PT ↔ PM conversion (see convertPTBlock/convertPMNode). Without this
+ * extension, ProseMirror's schema would silently filter unknown nodes on load
+ * and the next save would persist the block's disappearance.
+ */
+const PluginBlockNode = Node.create({
+	name: "pluginBlock",
+	group: "block",
+	atom: true,
+	selectable: true,
+	draggable: true,
+
+	addAttributes() {
+		// These attributes are stored on the ProseMirror node but not
+		// rendered as DOM attributes — they're metadata for the round-trip,
+		// not styling or behaviour the placeholder DOM needs to expose.
+		const noDom = { rendered: false, parseHTML: () => null };
+		return {
+			blockType: { default: "", ...noDom },
+			id: { default: "", ...noDom },
+			identityField: { default: "id", ...noDom },
+			data: { default: {}, ...noDom },
+		};
+	},
+
+	parseHTML() {
+		return [{ tag: 'div[data-emdash-plugin-block="true"]' }];
+	},
+
+	renderHTML({ HTMLAttributes, node }) {
+		const blockType = typeof node.attrs.blockType === "string" ? node.attrs.blockType : "";
+		const label = blockType || "Block";
+		return [
+			"div",
+			mergeAttributes(HTMLAttributes, {
+				"data-emdash-plugin-block": "true",
+				"data-block-type": blockType,
+				class: "emdash-plugin-block-placeholder",
+				contenteditable: "false",
+			}),
+			`Plugin block: ${label} (edit in admin)`,
+		];
+	},
+});
+
+function createSlashCommandsExtension(options: {
+	filterCommands: (query: string) => SlashCommandItem[];
+	onStateChange: React.Dispatch<React.SetStateAction<SlashMenuState>>;
+	getState: () => SlashMenuState;
+}) {
+	const { filterCommands, onStateChange, getState } = options;
+
+	return Extension.create({
+		name: "slashCommands",
+
+		addProseMirrorPlugins() {
+			return [
+				Suggestion({
+					editor: this.editor,
+					char: "/",
+					startOfLine: true,
+					command: ({ editor, range, props }) => {
+						const item: unknown = props;
+						if (
+							typeof item === "object" &&
+							item !== null &&
+							"command" in item &&
+							typeof item.command === "function"
+						) {
+							item.command({ editor, range });
+						}
+					},
+					items: ({ query }) => filterCommands(query),
+					render: () => {
+						return {
+							onStart: (props) => {
+								onStateChange({
+									isOpen: true,
+									items: props.items,
+									selectedIndex: 0,
+									clientRect: props.clientRect ?? null,
+									range: props.range,
+								});
+							},
+							onUpdate: (props) => {
+								onStateChange((prev) => ({
+									...prev,
+									items: props.items,
+									selectedIndex: 0,
+									clientRect: props.clientRect ?? null,
+									range: props.range,
+								}));
+							},
+							onKeyDown: (props) => {
+								if (props.event.key === "Escape") {
+									onStateChange((prev) => ({ ...prev, isOpen: false }));
+									return true;
+								}
+								if (props.event.key === "ArrowUp") {
+									onStateChange((prev) => ({
+										...prev,
+										selectedIndex: (prev.selectedIndex - 1 + prev.items.length) % prev.items.length,
+									}));
+									return true;
+								}
+								if (props.event.key === "ArrowDown") {
+									onStateChange((prev) => ({
+										...prev,
+										selectedIndex: (prev.selectedIndex + 1) % prev.items.length,
+									}));
+									return true;
+								}
+								if (props.event.key === "Enter") {
+									const state = getState();
+									if (state.items.length > 0 && state.range) {
+										const item = state.items[state.selectedIndex];
+										if (item) {
+											item.command({ editor: this.editor, range: state.range });
+											onStateChange((prev) => ({ ...prev, isOpen: false }));
+											return true;
+										}
+									}
+									return false;
+								}
+								return false;
+							},
+							onExit: () => {
+								onStateChange((prev) => ({ ...prev, isOpen: false }));
+							},
+						};
+					},
+				}),
+			];
+		},
+	});
+}
+
+function InlineSlashMenu({
+	state,
+	onCommand,
+	setSelectedIndex,
+}: {
+	state: SlashMenuState;
+	onCommand: (item: SlashCommandItem) => void;
+	setSelectedIndex: (index: number) => void;
+}) {
+	const containerRef = React.useRef<HTMLDivElement>(null);
+
+	// Track whether we have a positioned reference to avoid rendering at (0,0)
+	const [hasReference, setHasReference] = React.useState(false);
+
+	const { refs, floatingStyles } = useFloating({
+		open: state.isOpen && hasReference,
+		placement: "bottom-start",
+		middleware: [offset(8), flip(), shift({ padding: 8 })],
+		whileElementsMounted: autoUpdate,
+	});
+
+	React.useEffect(() => {
+		if (state.clientRect) {
+			const clientRectFn = state.clientRect;
+			refs.setReference({
+				getBoundingClientRect: () => clientRectFn() ?? new DOMRect(),
+			});
+			setHasReference(true);
+		} else {
+			setHasReference(false);
+		}
+	}, [state.clientRect, refs]);
+
+	// Reset reference tracking when menu closes
+	React.useEffect(() => {
+		if (!state.isOpen) setHasReference(false);
+	}, [state.isOpen]);
+
+	React.useEffect(() => {
+		if (!state.isOpen || !hasReference) return;
+		const container = containerRef.current;
+		if (!container) return;
+		const selected = container.querySelector(`[data-index="${state.selectedIndex}"]`);
+		if (selected instanceof HTMLElement) {
+			// Use scrollIntoView only within the menu container to avoid scrolling the page
+			const containerTop = container.scrollTop;
+			const containerBottom = containerTop + container.clientHeight;
+			const itemTop = selected.offsetTop;
+			const itemBottom = itemTop + selected.offsetHeight;
+			if (itemTop < containerTop) {
+				container.scrollTop = itemTop;
+			} else if (itemBottom > containerBottom) {
+				container.scrollTop = itemBottom - container.clientHeight;
+			}
+		}
+	}, [state.selectedIndex, state.isOpen, hasReference]);
+
+	if (!state.isOpen || !hasReference) return null;
+
+	return createPortal(
+		<div
+			ref={(node) => {
+				containerRef.current = node;
+				refs.setFloating(node);
+			}}
+			style={{
+				...floatingStyles,
+				zIndex: 100,
+				borderRadius: "8px",
+				border: "1px solid #d1d5db",
+				background: "white",
+				padding: "4px",
+				boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+				minWidth: "220px",
+				maxHeight: "300px",
+				overflowY: "auto",
+			}}
+			className="emdash-slash-menu"
+		>
+			{state.items.length === 0 ? (
+				<p
+					style={{
+						padding: "8px 12px",
+						fontSize: "13px",
+						color: "#9ca3af",
+						margin: 0,
+					}}
+				>
+					No results
+				</p>
+			) : (
+				state.items.map((item, index) => (
+					<button
+						key={item.id}
+						type="button"
+						data-index={index}
+						style={{
+							display: "flex",
+							alignItems: "center",
+							gap: "12px",
+							width: "100%",
+							padding: "8px 12px",
+							fontSize: "13px",
+							borderRadius: "4px",
+							border: "none",
+							textAlign: "left",
+							cursor: "pointer",
+							background: index === state.selectedIndex ? "#f3f4f6" : "transparent",
+						}}
+						onClick={() => onCommand(item)}
+						onMouseEnter={() => setSelectedIndex(index)}
+					>
+						<span
+							style={{
+								width: "24px",
+								height: "24px",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								flexShrink: 0,
+								fontSize: "14px",
+								fontWeight: 600,
+								color: "#6b7280",
+								background: "#f3f4f6",
+								borderRadius: "4px",
+							}}
+						>
+							{item.icon}
+						</span>
+						<span style={{ display: "flex", flexDirection: "column" }}>
+							<span style={{ fontWeight: 500 }}>{item.title}</span>
+							<span style={{ fontSize: "12px", color: "#9ca3af" }}>{item.description}</span>
+						</span>
+					</button>
+				))
+			)}
+		</div>,
+		document.body,
+	);
+}
+
+// ── Media Picker ───────────────────────────────────────────────────
+
+interface MediaItemData {
+	id: string;
+	filename: string;
+	mimeType: string;
+	url: string;
+	storageKey?: string;
+	width?: number;
+	height?: number;
+	blurhash?: string;
+	dominantColor?: string;
+	alt?: string;
+	provider?: string;
+	previewUrl?: string;
+	meta?: Record<string, unknown>;
+}
+
+interface ProviderInfo {
+	id: string;
+	name: string;
+	icon?: string;
+	capabilities: { browse: boolean; search: boolean; upload: boolean; delete: boolean };
+}
+
+const API_BASE = "/_emdash/api";
+
+async function ecFetch(url: string, init?: RequestInit): Promise<Response> {
+	const base = new Headers(init?.headers);
+	base.set("X-EmDash-Request", "1");
+	return fetch(url, {
+		credentials: "same-origin",
+		...init,
+		headers: base,
+	});
+}
+
+function InlineMediaPicker({
+	open,
+	onClose,
+	onSelect,
+}: {
+	open: boolean;
+	onClose: () => void;
+	onSelect: (item: MediaItemData) => void;
+}) {
+	const [providers, setProviders] = React.useState<ProviderInfo[]>([]);
+	const [activeProvider, setActiveProvider] = React.useState("local");
+	const [items, setItems] = React.useState<MediaItemData[]>([]);
+	const [loading, setLoading] = React.useState(false);
+	const [uploading, setUploading] = React.useState(false);
+	const [selectedId, setSelectedId] = React.useState<string | null>(null);
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+	// Fetch providers on open
+	React.useEffect(() => {
+		if (!open) return;
+		setSelectedId(null);
+		setActiveProvider("local");
+		ecFetch(`${API_BASE}/media/providers`)
+			.then((r) => r.json())
+			.then((d) => setProviders(d.data.items ?? []))
+			.catch(() => setProviders([]));
+	}, [open]);
+
+	// Fetch items when provider changes
+	React.useEffect(() => {
+		if (!open) return;
+		setLoading(true);
+		setSelectedId(null);
+
+		const url =
+			activeProvider === "local"
+				? `${API_BASE}/media?mimeType=image/&limit=50`
+				: `${API_BASE}/media/providers/${activeProvider}?mimeType=image/&limit=50`;
+
+		void (async () => {
+			try {
+				const r = await ecFetch(url);
+				const d = await r.json();
+				const raw = d.data.items ?? [];
+				// eslint-disable-next-line typescript/no-unsafe-type-assertion -- API response items mapped to MediaItem shape
+				const typedRaw = raw as Array<{
+					id: string;
+					filename?: string;
+					mimeType?: string;
+					url?: string;
+					previewUrl?: string;
+					storageKey?: string;
+					width?: number;
+					height?: number;
+					blurhash?: string;
+					dominantColor?: string;
+					alt?: string;
+					meta?: Record<string, unknown>;
+				}>;
+				setItems(
+					typedRaw.map((item) => ({
+						id: item.id,
+						filename: item.filename || "",
+						mimeType: item.mimeType || "image/unknown",
+						url:
+							item.url ||
+							item.previewUrl ||
+							(item.storageKey ? `${API_BASE}/media/file/${item.storageKey}` : ""),
+						storageKey: item.storageKey,
+						width: item.width,
+						height: item.height,
+						blurhash: item.blurhash,
+						dominantColor: item.dominantColor,
+						alt: item.alt,
+						provider: activeProvider === "local" ? undefined : activeProvider,
+						previewUrl: item.previewUrl,
+						meta: item.meta,
+					})),
+				);
+			} catch {
+				setItems([]);
+			} finally {
+				setLoading(false);
+			}
+		})();
+	}, [open, activeProvider]);
+
+	const handleUpload = async (file: File) => {
+		setUploading(true);
+		try {
+			// Detect dimensions and generate a thumbnail for large images to
+			// avoid OOM in server-side blurhash generation on Workers.
+			const dims = await new Promise<{
+				width?: number;
+				height?: number;
+				thumbnail?: Blob;
+			}>((resolve) => {
+				if (!file.type.startsWith("image/")) return resolve({});
+				const img = new window.Image();
+				img.onload = () => {
+					const w = img.naturalWidth;
+					const h = img.naturalHeight;
+					// 32 MB RGBA threshold — matches server MAX_DECODED_BYTES
+					if (w * h * 4 > 32 * 1024 * 1024) {
+						const { width: thumbW, height: thumbH } = computeThumbnailSize(w, h);
+						try {
+							const canvas = document.createElement("canvas");
+							canvas.width = thumbW;
+							canvas.height = thumbH;
+							const ctx = canvas.getContext("2d");
+							if (ctx) {
+								ctx.drawImage(img, 0, 0, thumbW, thumbH);
+								canvas.toBlob((blob) => {
+									URL.revokeObjectURL(img.src);
+									resolve({ width: w, height: h, thumbnail: blob ?? undefined });
+								}, "image/png");
+								return;
+							}
+						} catch {
+							// Canvas allocation or draw failed — fall through to no-thumbnail path
+						}
+					}
+					URL.revokeObjectURL(img.src);
+					resolve({ width: w, height: h });
+				};
+				img.onerror = () => {
+					resolve({});
+					URL.revokeObjectURL(img.src);
+				};
+				img.src = URL.createObjectURL(file);
+			});
+
+			let item: MediaItemData;
+
+			if (activeProvider === "local") {
+				const formData = new FormData();
+				formData.append("file", file);
+				if (dims.width) formData.append("width", String(dims.width));
+				if (dims.height) formData.append("height", String(dims.height));
+				if (dims.thumbnail) formData.append("thumbnail", dims.thumbnail, "thumb.png");
+				const res = await ecFetch(`${API_BASE}/media`, { method: "POST", body: formData });
+				const data = await res.json();
+				const unwrapped = data.data ?? data;
+				if (!unwrapped.item) throw new Error("Upload failed");
+				const raw = unwrapped.item;
+				item = {
+					id: raw.id,
+					filename: raw.filename || file.name,
+					mimeType: raw.mimeType || file.type,
+					url: raw.url || raw.previewUrl || `${API_BASE}/media/file/${raw.storageKey}`,
+					storageKey: raw.storageKey,
+					width: raw.width || dims.width,
+					height: raw.height || dims.height,
+					blurhash: raw.blurhash,
+					dominantColor: raw.dominantColor,
+					alt: raw.alt,
+				};
+			} else {
+				const formData = new FormData();
+				formData.append("file", file);
+				const res = await ecFetch(`${API_BASE}/media/providers/${activeProvider}`, {
+					method: "POST",
+					body: formData,
+				});
+				const data = await res.json();
+				const unwrapped = data.data ?? data;
+				if (!unwrapped.item) throw new Error("Upload failed");
+				const raw = unwrapped.item;
+				item = {
+					id: raw.id,
+					filename: raw.filename || file.name,
+					mimeType: raw.mimeType || file.type,
+					url: raw.previewUrl || "",
+					width: raw.width || dims.width,
+					height: raw.height || dims.height,
+					blurhash: raw.blurhash,
+					dominantColor: raw.dominantColor,
+					alt: raw.alt,
+					provider: activeProvider,
+					previewUrl: raw.previewUrl,
+					meta: raw.meta,
+				};
+			}
+
+			setItems((prev) => [item, ...prev]);
+			setSelectedId(item.id);
+		} catch (err) {
+			console.error("Upload failed:", err);
+		} finally {
+			setUploading(false);
+		}
+	};
+
+	const handleConfirm = () => {
+		const item = items.find((i) => i.id === selectedId);
+		if (item) onSelect(item);
+	};
+
+	const providerTabs = React.useMemo(() => {
+		const tabs: Array<{ id: string; name: string; icon?: string }> = [
+			{ id: "local", name: "Library" },
+		];
+		for (const p of providers) {
+			if (p.id !== "local") tabs.push({ id: p.id, name: p.name, icon: p.icon });
+		}
+		return tabs;
+	}, [providers]);
+
+	if (!open) return null;
+
+	return createPortal(
+		<div
+			style={{
+				position: "fixed",
+				inset: 0,
+				zIndex: 10000,
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				background: "rgba(0,0,0,0.5)",
+				fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+			}}
+			onClick={(e) => {
+				if (e.target === e.currentTarget) onClose();
+			}}
+		>
+			<div
+				style={{
+					background: "white",
+					borderRadius: "12px",
+					width: "min(700px, 90vw)",
+					maxHeight: "80vh",
+					display: "flex",
+					flexDirection: "column",
+					overflow: "hidden",
+					boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+				}}
+				className="emdash-media-picker"
+			>
+				{/* Header */}
+				<div
+					style={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "space-between",
+						padding: "16px 20px",
+						borderBottom: "1px solid #e5e7eb",
+					}}
+				>
+					<span style={{ fontSize: "16px", fontWeight: 600 }}>Insert Image</span>
+					<button
+						type="button"
+						onClick={onClose}
+						style={{
+							background: "none",
+							border: "none",
+							cursor: "pointer",
+							fontSize: "18px",
+							padding: "4px 8px",
+							borderRadius: "4px",
+							color: "#6b7280",
+						}}
+						aria-label="Close"
+					>
+						✕
+					</button>
+				</div>
+
+				{/* Provider tabs */}
+				{providerTabs.length > 1 && (
+					<div
+						style={{
+							display: "flex",
+							gap: "6px",
+							padding: "12px 20px",
+							borderBottom: "1px solid #e5e7eb",
+							flexWrap: "wrap",
+						}}
+					>
+						{providerTabs.map((tab) => (
+							<button
+								key={tab.id}
+								type="button"
+								onClick={() => setActiveProvider(tab.id)}
+								style={{
+									padding: "6px 14px",
+									fontSize: "13px",
+									fontWeight: 500,
+									borderRadius: "6px",
+									border: "none",
+									cursor: "pointer",
+									background: activeProvider === tab.id ? "#3b82f6" : "#f3f4f6",
+									color: activeProvider === tab.id ? "white" : "#4b5563",
+								}}
+							>
+								{tab.icon && (
+									<span
+										style={{ marginRight: "6px", display: "inline-flex", alignItems: "center" }}
+									>
+										{tab.icon.startsWith("data:") || tab.icon.startsWith("http") ? (
+											<img src={tab.icon} alt="" style={{ width: "16px", height: "16px" }} />
+										) : (
+											tab.icon
+										)}
+									</span>
+								)}
+								{tab.name}
+							</button>
+						))}
+					</div>
+				)}
+
+				{/* Upload bar */}
+				<div
+					style={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "space-between",
+						padding: "12px 20px",
+						borderBottom: "1px solid #e5e7eb",
+					}}
+				>
+					<span style={{ fontSize: "13px", color: "#6b7280" }}>
+						{loading ? "Loading…" : `${items.length} image${items.length !== 1 ? "s" : ""}`}
+					</span>
+					<button
+						type="button"
+						onClick={() => fileInputRef.current?.click()}
+						disabled={uploading}
+						style={{
+							padding: "6px 14px",
+							fontSize: "13px",
+							fontWeight: 500,
+							borderRadius: "6px",
+							border: "1px solid #d1d5db",
+							cursor: uploading ? "not-allowed" : "pointer",
+							background: "white",
+							color: "#374151",
+							opacity: uploading ? 0.6 : 1,
+						}}
+					>
+						{uploading ? "Uploading…" : "Upload"}
+					</button>
+					<input
+						ref={fileInputRef}
+						type="file"
+						accept="image/*"
+						style={{ display: "none" }}
+						onChange={(e) => {
+							const file = e.target.files?.[0];
+							if (file) void handleUpload(file);
+							if (fileInputRef.current) fileInputRef.current.value = "";
+						}}
+					/>
+				</div>
+
+				{/* Grid */}
+				<div
+					style={{
+						flex: 1,
+						overflowY: "auto",
+						padding: "16px 20px",
+						minHeight: "250px",
+					}}
+				>
+					{loading ? (
+						<div
+							style={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								height: "200px",
+								color: "#9ca3af",
+								fontSize: "14px",
+							}}
+						>
+							Loading…
+						</div>
+					) : items.length === 0 ? (
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								justifyContent: "center",
+								height: "200px",
+								color: "#9ca3af",
+								fontSize: "14px",
+								textAlign: "center",
+							}}
+						>
+							<div style={{ fontSize: "32px", marginBottom: "8px" }}>🖼</div>
+							No images found
+							<button
+								type="button"
+								onClick={() => fileInputRef.current?.click()}
+								style={{
+									marginTop: "12px",
+									padding: "8px 16px",
+									fontSize: "13px",
+									borderRadius: "6px",
+									border: "1px solid #d1d5db",
+									background: "white",
+									cursor: "pointer",
+									color: "#374151",
+								}}
+							>
+								Upload an image
+							</button>
+						</div>
+					) : (
+						<div
+							style={{
+								display: "grid",
+								gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))",
+								gap: "10px",
+							}}
+						>
+							{items.map((item) => {
+								const isSelected = selectedId === item.id;
+								const thumb = item.url || item.previewUrl || "";
+								return (
+									<button
+										key={item.id}
+										type="button"
+										onClick={() => setSelectedId(item.id)}
+										onDoubleClick={() => onSelect(item)}
+										style={{
+											position: "relative",
+											aspectRatio: "1",
+											borderRadius: "8px",
+											border: isSelected ? "2px solid #3b82f6" : "2px solid transparent",
+											overflow: "hidden",
+											cursor: "pointer",
+											padding: 0,
+											background: "#f3f4f6",
+											outline: isSelected ? "2px solid rgba(59,130,246,0.3)" : "none",
+											outlineOffset: "1px",
+										}}
+										aria-label={item.filename}
+									>
+										{thumb ? (
+											<img
+												src={thumb}
+												alt=""
+												style={{ width: "100%", height: "100%", objectFit: "cover" }}
+											/>
+										) : (
+											<div
+												style={{
+													width: "100%",
+													height: "100%",
+													display: "flex",
+													alignItems: "center",
+													justifyContent: "center",
+													fontSize: "24px",
+												}}
+											>
+												🖼
+											</div>
+										)}
+										{isSelected && (
+											<div
+												style={{
+													position: "absolute",
+													inset: 0,
+													background: "rgba(59,130,246,0.15)",
+													display: "flex",
+													alignItems: "center",
+													justifyContent: "center",
+												}}
+											>
+												<div
+													style={{
+														width: "24px",
+														height: "24px",
+														borderRadius: "50%",
+														background: "#3b82f6",
+														color: "white",
+														display: "flex",
+														alignItems: "center",
+														justifyContent: "center",
+														fontSize: "14px",
+													}}
+												>
+													✓
+												</div>
+											</div>
+										)}
+										<div
+											style={{
+												position: "absolute",
+												bottom: 0,
+												left: 0,
+												right: 0,
+												background: "linear-gradient(transparent, rgba(0,0,0,0.6))",
+												padding: "16px 6px 4px",
+											}}
+										>
+											<div
+												style={{
+													fontSize: "11px",
+													color: "white",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+													whiteSpace: "nowrap",
+												}}
+											>
+												{item.filename}
+											</div>
+										</div>
+									</button>
+								);
+							})}
+						</div>
+					)}
+				</div>
+
+				{/* Footer */}
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "flex-end",
+						gap: "8px",
+						padding: "12px 20px",
+						borderTop: "1px solid #e5e7eb",
+					}}
+				>
+					<button
+						type="button"
+						onClick={onClose}
+						style={{
+							padding: "8px 16px",
+							fontSize: "13px",
+							fontWeight: 500,
+							borderRadius: "6px",
+							border: "1px solid #d1d5db",
+							background: "white",
+							cursor: "pointer",
+							color: "#374151",
+						}}
+					>
+						Cancel
+					</button>
+					<button
+						type="button"
+						onClick={handleConfirm}
+						disabled={!selectedId}
+						style={{
+							padding: "8px 16px",
+							fontSize: "13px",
+							fontWeight: 500,
+							borderRadius: "6px",
+							border: "none",
+							background: selectedId ? "#3b82f6" : "#93c5fd",
+							color: "white",
+							cursor: selectedId ? "pointer" : "not-allowed",
+						}}
+					>
+						Insert
+					</button>
+				</div>
+			</div>
+		</div>,
+		document.body,
+	);
+}
+
+// ── Component ──────────────────────────────────────────────────────
+
+export interface InlinePortableTextEditorProps {
+	value: PTBlock[];
+	collection: string;
+	entryId: string;
+	field: string;
+	tablePlaceholder?: string;
+}
+
+export function InlinePortableTextEditor({
+	value,
+	collection,
+	entryId,
+	field,
+	tablePlaceholder = TableBlockNode.options.placeholder,
+}: InlinePortableTextEditorProps) {
+	const initialRef = React.useRef(value);
+	// The editor document last known to be stored: the one the loaded content
+	// produced, then the one each successful save sent. `save()` does nothing
+	// while the current document is structurally equal to it (`Node.eq`).
+	const savedDocRef = React.useRef<Editor["state"]["doc"] | null>(null);
+	const savingRef = React.useRef(false);
+	const editorRef = React.useRef<ReturnType<typeof useEditor>>(null);
+
+	// Media picker state
+	const [mediaPickerOpen, setMediaPickerOpen] = React.useState(false);
+	const [unsupportedFileGuidance, setUnsupportedFileGuidance] = React.useState<{
+		message: string;
+		version: number;
+	} | null>(null);
+	const showUnsupportedFileGuidance = React.useCallback(() => {
+		const locale = document.documentElement.lang || navigator.language;
+		setUnsupportedFileGuidance((current) => ({
+			message: getUnsupportedFileGuidance(locale),
+			version: (current?.version ?? 0) + 1,
+		}));
+	}, []);
+	const unsupportedFileHandlers = React.useMemo(
+		() => createUnsupportedFileHandlers(showUnsupportedFileGuidance),
+		[showUnsupportedFileGuidance],
+	);
+
+	// Listen for the slash command's media picker event
+	React.useEffect(() => {
+		const handler = () => setMediaPickerOpen(true);
+		document.addEventListener("emdash:open-media-picker", handler);
+		return () => document.removeEventListener("emdash:open-media-picker", handler);
+	}, []);
+
+	// Slash menu state — use ref to avoid re-creating the extension on state change
+	const [slashMenuState, setSlashMenuState] = React.useState<SlashMenuState>(initialSlashMenuState);
+	const slashMenuStateRef = React.useRef(slashMenuState);
+	slashMenuStateRef.current = slashMenuState;
+
+	const filterCommandsRef = React.useRef((query: string): SlashCommandItem[] => {
+		const q = query.toLowerCase();
+		return slashCommands.filter(
+			(cmd) =>
+				cmd.title.toLowerCase().includes(q) ||
+				cmd.description.toLowerCase().includes(q) ||
+				cmd.aliases?.some((a) => a.toLowerCase().includes(q)),
+		);
+	});
+
+	const initialContent = React.useMemo(
+		() => portableTextToPM(value || []),
+		[], // Only compute once on mount
+	);
+
+	const getBlocks = React.useCallback((): PTBlock[] => {
+		const editor = editorRef.current;
+		if (!editor) return initialRef.current;
+		const json: unknown = editor.getJSON();
+		if (!isPMNode(json)) return initialRef.current;
+		return pmToPortableText(json);
+	}, []);
+
+	const save = React.useCallback(
+		async (options?: { keepalive?: boolean }) => {
+			// A pagehide flush must not be skipped: an in-flight blur save is
+			// cancelled by the navigation, so the keepalive request is the only
+			// one that can still land.
+			if (savingRef.current && !options?.keepalive) return;
+
+			const doc = editorRef.current?.state.doc;
+			if (!doc || !savedDocRef.current || doc.eq(savedDocRef.current)) return;
+			const blocks = getBlocks();
+
+			savingRef.current = true;
+			try {
+				const res = await fetch(
+					`/_emdash/api/content/${encodeURIComponent(collection)}/${encodeURIComponent(entryId)}`,
+					{
+						method: "PUT",
+						credentials: "same-origin",
+						headers: { "Content-Type": "application/json", "X-EmDash-Request": "1" },
+						body: JSON.stringify({ data: { [field]: blocks } }),
+						keepalive: options?.keepalive ?? false,
+					},
+				);
+
+				if (res.ok) {
+					initialRef.current = blocks;
+					savedDocRef.current = doc;
+					document.dispatchEvent(new CustomEvent("emdash:save", { detail: { state: "saved" } }));
+					document.dispatchEvent(
+						new CustomEvent("emdash:content-changed", {
+							detail: { collection, id: entryId },
+						}),
+					);
+				} else {
+					document.dispatchEvent(new CustomEvent("emdash:save", { detail: { state: "error" } }));
+					console.error("Save failed:", res.status);
+				}
+			} catch (err) {
+				document.dispatchEvent(new CustomEvent("emdash:save", { detail: { state: "error" } }));
+				console.error("Save failed:", err);
+			} finally {
+				savingRef.current = false;
+			}
+		},
+		[collection, entryId, field, getBlocks],
+	);
+
+	// Flush unsaved edits when the page goes away (browser back/forward,
+	// link click, tab close). The blur handler doesn't cover this: unload
+	// doesn't reliably fire React blur, and a plain fetch started during
+	// unload is cancelled by the navigation — edits were silently lost.
+	// `keepalive` lets the PUT outlive the page.
+	// Caveat: keepalive caps the body at 64KB — a very long document
+	// can still be lost on unload. Upgrade path: debounced autosave
+	// while typing (like the admin editor) so unload flushes are rare.
+	React.useEffect(() => {
+		const flush = () => void save({ keepalive: true });
+		window.addEventListener("pagehide", flush);
+		return () => window.removeEventListener("pagehide", flush);
+	}, [save]);
+
+	// Create slash commands extension once — uses refs to avoid re-render loop
+	const slashCommandsExtension = React.useMemo(
+		() =>
+			createSlashCommandsExtension({
+				filterCommands: (query: string) => filterCommandsRef.current(query),
+				onStateChange: setSlashMenuState,
+				getState: () => slashMenuStateRef.current,
+			}),
+		[],
+	);
+
+	const editor = useEditor({
+		extensions: [
+			StarterKit.configure({
+				heading: { levels: [1, 2, 3] },
+				dropcursor: { color: "#3b82f6", width: 2 },
+				// Replaced with InlineCodeBlockExtension below (adds language picker).
+				codeBlock: false,
+				// Replaced with CodeMarkExtension so inline code can combine with link/etc.
+				code: false,
+				orderedList: false,
+			}),
+			EmDashOrderedList,
+			CodeMarkExtension,
+			InlineCodeBlockExtension,
+			Image.extend({
+				addAttributes() {
+					return {
+						...this.parent?.(),
+						mediaId: { default: null },
+						provider: { default: null },
+						width: { default: null },
+						height: { default: null },
+						displayWidth: { default: null },
+						displayHeight: { default: null },
+						caption: { default: null },
+						blurhash: { default: null },
+						dominantColor: { default: null },
+					};
+				},
+			}),
+			Underline,
+			Link.configure({
+				openOnClick: false,
+				HTMLAttributes: { class: "underline text-blue-600 dark:text-blue-400" },
+			}),
+			Placeholder.configure({
+				includeChildren: true,
+				placeholder: ({ node }) => {
+					if (node.type.name === "paragraph") return "Type / for commands...";
+					return "";
+				},
+			}),
+			TextAlign.configure({
+				types: ["heading", "paragraph"],
+			}),
+			Focus.configure({
+				className: "has-focus",
+				mode: "all",
+			}),
+			Typography,
+			HtmlBlockNode,
+			TableBlockNode.configure({ placeholder: tablePlaceholder }),
+			PluginBlockNode,
+			slashCommandsExtension,
+		],
+		content: initialContent,
+		immediatelyRender: false,
+		editorProps: {
+			attributes: {
+				class: "prose prose-sm sm:prose-base dark:prose-invert max-w-none emdash-inline-editor",
+				dir: "auto",
+			},
+			...unsupportedFileHandlers,
+		},
+		onUpdate: () => {
+			document.dispatchEvent(new CustomEvent("emdash:save", { detail: { state: "unsaved" } }));
+		},
+	});
+
+	// Store editor ref for getBlocks, and record the loaded document as saved.
+	React.useEffect(() => {
+		editorRef.current = editor;
+		if (editor && !savedDocRef.current) savedDocRef.current = editor.state.doc;
+	}, [editor]);
+
+	// Slash menu command handler
+	const handleSlashCommand = React.useCallback(
+		(item: SlashCommandItem) => {
+			if (!editor || !slashMenuStateRef.current.range) return;
+			item.command({ editor, range: slashMenuStateRef.current.range });
+			setSlashMenuState((prev) => ({ ...prev, isOpen: false }));
+		},
+		[editor],
+	);
+
+	// Handle media selection from the picker
+	const handleMediaSelect = React.useCallback(
+		(item: MediaItemData) => {
+			if (!editor) return;
+			const src =
+				item.url || item.previewUrl || `/_emdash/api/media/file/${item.storageKey || item.id}`;
+			editor
+				.chain()
+				.focus()
+				.setImage({
+					src,
+					alt: item.alt || item.filename || "",
+					mediaId: item.id,
+					provider: canonicalMediaProviderId(item.provider) || "local",
+					width: item.width,
+					height: item.height,
+					blurhash: item.blurhash,
+					dominantColor: item.dominantColor,
+				})
+				.run();
+			setMediaPickerOpen(false);
+			void save();
+		},
+		[editor, save],
+	);
+
+	// Save on blur — but not when interacting with slash menu or media picker
+	const handleBlur = React.useCallback(
+		(e: React.FocusEvent<HTMLDivElement>) => {
+			if (mediaPickerOpen) return;
+			const related = e.relatedTarget instanceof HTMLElement ? e.relatedTarget : null;
+			if (related && e.currentTarget.contains(related)) return;
+			// The copy fallback briefly moves focus to its textarea before restoring the editor.
+			if (related?.hasAttribute("data-emdash-clipboard-fallback")) return;
+			// Don't save if focus moved to the slash menu (portalled to body)
+			if (related?.closest(".emdash-slash-menu")) return;
+			if (related?.closest(".emdash-media-picker")) return;
+			void save();
+		},
+		[save, mediaPickerOpen],
+	);
+
+	if (!editor) return null;
+
+	return (
+		<div onBlur={handleBlur}>
+			<InlineBubbleMenu editor={editor} />
+			<EditorContent editor={editor} />
+			{unsupportedFileGuidance ? (
+				<div
+					key={unsupportedFileGuidance.version}
+					className="emdash-inline-editor-guidance"
+					role="status"
+					aria-live="polite"
+					dir="auto"
+				>
+					{unsupportedFileGuidance.message}
+				</div>
+			) : null}
+			<InlineSlashMenu
+				state={slashMenuState}
+				onCommand={handleSlashCommand}
+				setSelectedIndex={(index) =>
+					setSlashMenuState((prev) => ({ ...prev, selectedIndex: index }))
+				}
+			/>
+			<InlineMediaPicker
+				open={mediaPickerOpen}
+				onClose={() => {
+					setMediaPickerOpen(false);
+					editor?.commands.focus();
+				}}
+				onSelect={handleMediaSelect}
+			/>
+			<style>{`
+				.emdash-inline-code-block {
+					position: relative;
+					margin-block: 1rem;
+					--emdash-code-background: var(--emdash-inline-code-background, #f7f7f5);
+					--emdash-code-foreground: var(--emdash-inline-code-foreground, #24292f);
+					--emdash-code-muted: var(--emdash-inline-code-muted, #57606a);
+					--emdash-code-keyword: var(--emdash-inline-code-keyword, #b8172a);
+					--emdash-code-string: var(--emdash-inline-code-string, #0a3069);
+					--emdash-code-number: var(--emdash-inline-code-number, #0550ae);
+					--emdash-code-title: var(--emdash-inline-code-title, #7545c7);
+					--emdash-code-border: var(--emdash-inline-code-border, #7d8590);
+					--emdash-code-control-background: var(
+						--emdash-inline-code-control-background,
+						var(--emdash-inline-bg, #ffffff)
+					);
+					--emdash-code-control-foreground: var(
+						--emdash-inline-code-control-foreground,
+						#24292f
+					);
+					--emdash-code-focus: var(--emdash-inline-code-focus, #0550ae);
+				}
+				.emdash-inline-code-block .emdash-code-block {
+					margin: 0;
+					padding: 1rem;
+					padding-block: 30px !important;
+					border: 0 !important;
+					border-radius: 0.5rem;
+					background: var(--emdash-code-background) !important;
+					color: var(--emdash-code-foreground) !important;
+					caret-color: var(--emdash-code-foreground) !important;
+					overflow-x: auto;
+				}
+				.emdash-inline-code-block .emdash-code-block code {
+					background: transparent !important;
+					color: inherit !important;
+					font-size: 13px !important;
+				}
+				.emdash-inline-code-block :is(.hljs-comment, .hljs-quote) {
+					color: var(--emdash-code-muted);
+				}
+				.emdash-inline-code-block
+					:is(.hljs-keyword, .hljs-literal, .hljs-selector-tag, .hljs-section, .hljs-link, .hljs-deletion) {
+					color: var(--emdash-code-keyword);
+				}
+				.emdash-inline-code-block
+					:is(.hljs-string, .hljs-attr, .hljs-attribute, .hljs-symbol, .hljs-bullet, .hljs-addition) {
+					color: var(--emdash-code-string);
+				}
+				.emdash-inline-code-block :is(.hljs-number, .hljs-meta) {
+					color: var(--emdash-code-number);
+				}
+				.emdash-inline-code-block
+					:is(.hljs-title, .hljs-name, .hljs-type, .hljs-built_in, .hljs-selector-id, .hljs-selector-class) {
+					color: var(--emdash-code-title);
+				}
+				.emdash-inline-code-block-popover,
+				.emdash-inline-code-block-chip {
+					box-sizing: border-box;
+					border: 1px solid var(--emdash-code-border);
+					background: var(--emdash-code-control-background);
+					color: var(--emdash-code-control-foreground);
+				}
+				.emdash-inline-code-block-controls-wrap {
+					position: absolute;
+					inset-block-start: 0;
+					inset-inline-end: 0.25rem;
+					z-index: 100;
+					max-inline-size: min(calc(100% - 0.25rem), calc(100vw - 1rem));
+					opacity: 0;
+					pointer-events: none;
+					user-select: none;
+					transition: opacity 120ms ease-out;
+				}
+				.emdash-inline-code-block:hover .emdash-inline-code-block-controls-wrap,
+				.emdash-inline-code-block:focus-within .emdash-inline-code-block-controls-wrap,
+				.emdash-inline-code-block-controls-wrap[data-persistent="true"] {
+					opacity: 1;
+					pointer-events: auto;
+				}
+				.emdash-inline-code-block-popover {
+					inline-size: min(14rem, 100%, calc(100vw - 1rem));
+				}
+				.emdash-inline-code-block-language-input {
+					min-inline-size: 0;
+					flex: 1;
+					border: 1px solid var(--emdash-code-border);
+					background: transparent;
+					color: inherit;
+				}
+				.emdash-inline-code-block-controls-wrap button:focus-visible,
+				.emdash-inline-code-block-language-input:focus-visible {
+					outline: 2px solid var(--emdash-code-focus);
+					outline-offset: 2px;
+				}
+				@media (hover: none), (pointer: coarse) {
+					.emdash-inline-code-block-controls-wrap {
+						opacity: 1;
+						pointer-events: auto;
+					}
+				}
+				@media (prefers-reduced-motion: reduce) {
+					.emdash-inline-code-block-controls-wrap {
+						transition: none;
+					}
+				}
+				@media (prefers-color-scheme: dark) {
+					.emdash-inline-code-block {
+						--emdash-code-background: var(--emdash-inline-code-background, #202020);
+						--emdash-code-foreground: var(--emdash-inline-code-foreground, #f0f3f6);
+						--emdash-code-muted: var(--emdash-inline-code-muted, #c9d1d9);
+						--emdash-code-keyword: var(--emdash-inline-code-keyword, #ffc1bb);
+						--emdash-code-string: var(--emdash-inline-code-string, #b9ddff);
+						--emdash-code-number: var(--emdash-inline-code-number, #a8d5ff);
+						--emdash-code-title: var(--emdash-inline-code-title, #e5ccff);
+						--emdash-code-border: var(--emdash-inline-code-border, #6e7681);
+						--emdash-code-control-background: var(
+							--emdash-inline-code-control-background,
+							var(--emdash-inline-bg, #161b22)
+						);
+						--emdash-code-control-foreground: var(
+							--emdash-inline-code-control-foreground,
+							#f0f3f6
+						);
+						--emdash-code-focus: var(--emdash-inline-code-focus, #a8d5ff);
+					}
+				}
+				.emdash-bubble-menu {
+					z-index: 100;
+					display: flex;
+					align-items: center;
+					gap: 2px;
+					padding: 4px;
+					border-radius: 8px;
+					border: 1px solid #d1d5db;
+					background: white;
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+				}
+				.emdash-bubble-btn {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 32px;
+					height: 32px;
+					border-radius: 6px;
+					border: none;
+					background: transparent;
+					cursor: pointer;
+					color: inherit;
+					font-size: 14px;
+					line-height: 1;
+					padding: 0;
+				}
+				.emdash-bubble-btn:hover {
+					background: #f3f4f6;
+				}
+				.emdash-bubble-btn--active {
+					background: #dbeafe;
+					color: #1d4ed8;
+				}
+				.emdash-bubble-btn--active:hover {
+					background: #bfdbfe;
+				}
+				.emdash-bubble-btn--danger {
+					color: #dc2626;
+				}
+				.emdash-bubble-divider {
+					display: block;
+					width: 1px;
+					height: 20px;
+					background: #d1d5db;
+					margin: 0 4px;
+				}
+				.emdash-bubble-link-input {
+					height: 28px;
+					width: 200px;
+					font-size: 13px;
+					padding: 0 8px;
+					border: 1px solid #d1d5db;
+					border-radius: 4px;
+					outline: none;
+					background: white;
+					color: inherit;
+					font-family: inherit;
+				}
+				.emdash-bubble-link-input:focus {
+					border-color: #3b82f6;
+				}
+				@media (prefers-color-scheme: dark) {
+					.emdash-bubble-menu {
+						background: #1f2937;
+						border-color: #374151;
+						color: #e5e7eb;
+					}
+					.emdash-bubble-btn:hover {
+						background: #374151;
+					}
+					.emdash-bubble-btn--active {
+						background: #1e3a5f;
+						color: #93c5fd;
+					}
+					.emdash-bubble-btn--active:hover {
+						background: #1e40af;
+					}
+					.emdash-bubble-divider {
+						background: #4b5563;
+					}
+					.emdash-bubble-link-input {
+						background: #111827;
+						border-color: #4b5563;
+						color: #e5e7eb;
+					}
+					.emdash-bubble-link-input:focus {
+						border-color: #60a5fa;
+					}
+					.emdash-slash-menu {
+						background: #1f2937 !important;
+						border-color: #374151 !important;
+						color: #e5e7eb !important;
+					}
+					.emdash-slash-menu button:hover,
+					.emdash-slash-menu button[style*="background: rgb(243, 244, 246)"] {
+						background: #374151 !important;
+					}
+					.emdash-media-picker {
+						background: #1f2937 !important;
+						color: #e5e7eb !important;
+					}
+					.emdash-media-picker button {
+						color: #e5e7eb !important;
+					}
+				}
+				.emdash-inline-editor:focus {
+					outline: none;
+				}
+				.emdash-inline-editor-guidance {
+					margin-block-start: 0.75rem;
+					padding-block: 0.625rem;
+					padding-inline: 0.875rem;
+					border: 1px solid #bfdbfe;
+					border-radius: 0.5rem;
+					background: #eff6ff;
+					color: #1e3a8a;
+					font-size: 0.875rem;
+					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+					line-height: 1.4;
+					text-align: start;
+				}
+				.emdash-plugin-block-placeholder {
+					margin: 0.75rem 0;
+					padding: 0.625rem 0.875rem;
+					border: 1px dashed #d1d5db;
+					border-radius: 0.5rem;
+					background: #f9fafb;
+					color: #4b5563;
+					font-size: 0.875rem;
+					font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+					user-select: none;
+				}
+				@media (prefers-color-scheme: dark) {
+					.emdash-inline-editor-guidance {
+						border-color: #1e40af;
+						background: #172554;
+						color: #dbeafe;
+					}
+					.emdash-plugin-block-placeholder {
+						border-color: #374151;
+						background: #111827;
+						color: #9ca3af;
+					}
+				}
+			`}</style>
+		</div>
+	);
+}
+
+// Test-only exports for unit tests.
+export { pmToPortableText as _pmToPortableText };
+export { portableTextToPM as _portableTextToPM };
+export { createUnsupportedFileHandlers as _createUnsupportedFileHandlers };
+export { TableBlockNode as _InlineTableBlockNode };

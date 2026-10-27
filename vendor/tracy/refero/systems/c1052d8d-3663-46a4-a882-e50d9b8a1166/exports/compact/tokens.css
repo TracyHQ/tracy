@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-parchment-cream: #f5f4df;
+  --color-carbon-ink: #0e1620;
+  --color-pale-sky: #c1dfef;
+  --color-shadow-khaki: #abab9c;
+  --color-electric-blue: #007ae5;
+  --color-deep-cobalt: #1c3f99;
+  --color-outlined-action: #083e6f;
+  --color-sunset-orange: #eb6110;
+  --color-peach-glow: #ffd9c9;
+  --color-signal-blue: #319fff;
+
+  /* Typography — Font Families */
+  --font-jobydisplay: 'jobyDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-jobytext: 'jobyText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-joby-sans-display: 'Joby Sans Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

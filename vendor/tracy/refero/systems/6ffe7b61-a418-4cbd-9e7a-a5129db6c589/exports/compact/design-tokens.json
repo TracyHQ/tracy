@@ -1,0 +1,74 @@
+{
+  "color": {
+    "brand-blue": {
+      "$value": "#0066cc",
+      "$type": "color",
+      "$description": "Brand Blue — Primary action background, link underlines, heading accents, card fills on light surfaces — the single chromatic voice that powers CTAs, active states, and iconography"
+    },
+    "deep-indigo": {
+      "$value": "#0e2575",
+      "$type": "color",
+      "$description": "Deep Indigo — Dark section backgrounds (feature/why panels), hero image frames — the only place a full-bleed surface goes deep and saturated"
+    },
+    "midnight-card": {
+      "$value": "#213680",
+      "$type": "color",
+      "$description": "Midnight Card — Elevated card surface when sitting on Deep Indigo backgrounds — one step lighter than the panel to separate without using shadow"
+    },
+    "charcoal-ink": {
+      "$value": "#101820",
+      "$type": "color",
+      "$description": "Charcoal Ink — Body text and dark-surface secondary fills — slightly cooler than pure black, anchors reading text without harshness"
+    },
+    "paper-cream": {
+      "$value": "#f4f1ea",
+      "$type": "color",
+      "$description": "Paper Cream — Primary page canvas — the warm base that gives the whole site its editorial, printed feel"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Card surfaces, nav background, button text on blue, input fills — the clean highlight layer above cream"
+    },
+    "lavender-mist": {
+      "$value": "#e6e0f8",
+      "$type": "color",
+      "$description": "Lavender Mist — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "ice-blue": {
+      "$value": "#e9f4ff",
+      "$type": "color",
+      "$description": "Ice Blue — Alternate light surface wash, subtle card background variant — the cool counterpoint to Paper Cream"
+    },
+    "peach-blush": {
+      "$value": "#f7e1d5",
+      "$type": "color",
+      "$description": "Peach Blush — Icon circle backgrounds in audience/feature cards — the only warm accent that breaks the cream-on-cream"
+    },
+    "ash-border": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Ash Border — Hairline dividers, subtle borders on neutral surfaces — the quietest structural line"
+    }
+  },
+  "font": {
+    "maison-neue": {
+      "$value": "Maison Neue",
+      "$type": "fontFamily",
+      "$description": "The sole workhorse font across body, nav, headings, buttons, inputs, cards, and footers. Weight 400 carries body and UI labels; 500 steps up to subheadings and nav; 600 owns display sizes (56–120px). The type behaves like a neo-grotesque with humanist warmth — readable at 12px, monumental at 120px. Negative tracking tightens aggressively at display sizes (-0.03em at 120px, -0.02em at 56–80px, -0.01em at 32–40px) so headlines sit visually compact despite their scale."
+    },
+    "spoof": {
+      "$value": "Spoof",
+      "$type": "fontFamily",
+      "$description": "Reserved for a single accent heading or card label at 22px / weight 500. Its ultra-tight 0.90 leading and -0.02em tracking create a display-quality mark at a mid size — used as a typographic exclamation point, never as a workhorse. Free substitute: GT America or a tight condensed sans like Druk Wide."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://metamusic.ca",
+      "siteName": "MetaMusic",
+      "extractedAt": "2026-06-03T20:40:39.860Z",
+      "variant": "compact"
+    }
+  }
+}

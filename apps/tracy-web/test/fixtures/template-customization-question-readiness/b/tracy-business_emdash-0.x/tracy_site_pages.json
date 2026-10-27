@@ -1,0 +1,29 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "home": true
+    },
+    {
+      "id": "about",
+      "label": "About"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "projects",
+      "label": "Projects"
+    },
+    {
+      "id": "news",
+      "label": "News"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ]
+}

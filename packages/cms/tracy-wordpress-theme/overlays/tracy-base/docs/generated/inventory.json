@@ -1,0 +1,1598 @@
+{
+  "format": 1,
+  "scope": "Read from theme files, the spec-pack and the seed report only. No live site, no database, no ids. Counts under \"seed\" are at seed time, not live.",
+  "theme": {
+    "slug": "tracy-base",
+    "dir": "tracy-base",
+    "header": {
+      "License": "GPL-2.0-or-later",
+      "Requires at least": "7.0",
+      "Requires PHP": "8.1",
+      "Tested up to": "7.1",
+      "Text Domain": "tracy-base",
+      "Theme Name": "Tracy Base",
+      "Update URI": "https://github.com/TracyHQ/claude-cowork",
+      "Version": "0.1.0"
+    },
+    "themeJson": {
+      "version": 3,
+      "customTemplates": [
+        {
+          "name": "landing",
+          "title": "Landing (section library)",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "fixture",
+          "title": "Design system page",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "artifact",
+          "title": "Design page (engine)",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "pricing",
+          "title": "Pricing",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "page-landing",
+          "title": "Landing",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "page-onepage",
+          "title": "One page",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "page-no-sidebar",
+          "title": "No sidebar",
+          "postTypes": ["page"]
+        },
+        {
+          "name": "page-sidebar-left",
+          "title": "Sidebar left",
+          "postTypes": ["page"]
+        }
+      ],
+      "templateParts": [
+        {
+          "name": "header",
+          "title": "Header",
+          "area": "header"
+        },
+        {
+          "name": "footer",
+          "title": "Footer",
+          "area": "footer"
+        }
+      ]
+    },
+    "presets": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta"
+        },
+        {
+          "slug": "border",
+          "name": "Border"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active"
+        },
+        {
+          "slug": "success",
+          "name": "Success"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger"
+        }
+      ],
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display"
+        },
+        {
+          "slug": "body",
+          "name": "Body"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono"
+        }
+      ],
+      "fontSizes": ["xs", "sm", "base", "lg", "xl", "xxl", "xxxl", "xxxxl"],
+      "spacingSizes": ["1", "2", "3", "4", "5", "6", "8", "12"],
+      "layout": {
+        "contentSize": "1024px",
+        "wideSize": "1024px"
+      },
+      "customKeys": [
+        "container",
+        "ease",
+        "elev",
+        "focusRing",
+        "leading",
+        "motion",
+        "radius",
+        "sectionY",
+        "tracking",
+        "tracy"
+      ],
+      "inspiration": "apple",
+      "stylesCss": 2027
+    },
+    "templates": [
+      {
+        "name": "404",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "archive",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "artifact",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "author",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "category",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "date",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "fixture",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "front-page",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "home",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "index",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "landing",
+        "own": false,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-landing",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-no-sidebar",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-onepage",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-sidebar-left",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "pricing",
+        "own": false,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/section-cta-final"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "single",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "tag",
+        "own": true,
+        "parts": ["footer", "header"],
+        "patterns": ["tracy/cards"],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "parts": [
+      {
+        "name": "footer",
+        "own": true,
+        "parts": [],
+        "patterns": ["tracy-base/section-site-notice", "tracy-base/section-social-links"],
+        "navigationBlocks": 3,
+        "customBlocks": []
+      },
+      {
+        "name": "header",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 1,
+        "customBlocks": ["tracy-base/mega-menu"]
+      }
+    ],
+    "patterns": [
+      {
+        "file": "patterns/section-accordion.php",
+        "slug": "tracy-base/section-accordion",
+        "title": "Accordion",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": ["core/details"],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 12,
+        "namedBlocks": 13,
+        "own": true
+      },
+      {
+        "file": "patterns/section-carousel.php",
+        "slug": "tracy-base/section-carousel",
+        "title": "Carousel",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 18,
+        "namedBlocks": 23,
+        "own": true
+      },
+      {
+        "file": "patterns/section-clients.php",
+        "slug": "tracy-base/section-clients",
+        "title": "Clients",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 7,
+        "own": true
+      },
+      {
+        "file": "patterns/section-contact-information.php",
+        "slug": "tracy-base/section-contact-information",
+        "title": "Contact information",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/section-cta-capsule.php",
+        "slug": "tracy-base/section-cta-capsule",
+        "title": "CTA capsule",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/section-features-intro.php",
+        "slug": "tracy-base/section-features-intro",
+        "title": "Features intro",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 16,
+        "namedBlocks": 20,
+        "own": true
+      },
+      {
+        "file": "patterns/section-hero-centered.php",
+        "slug": "tracy-base/section-hero-centered",
+        "title": "Hero — centered",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/section-hero-split.php",
+        "slug": "tracy-base/section-hero-split",
+        "title": "Hero — split",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/section-marketing-samples.php",
+        "slug": "tracy-base/section-marketing-samples",
+        "title": "Marketing samples",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 16,
+        "namedBlocks": 22,
+        "own": true
+      },
+      {
+        "file": "patterns/section-menu-feature.php",
+        "slug": "tracy-base/section-menu-feature",
+        "title": "Menu feature",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/section-pricing-tiers.php",
+        "slug": "tracy-base/section-pricing",
+        "title": "Pricing tiers",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 22,
+        "namedBlocks": 25,
+        "own": true
+      },
+      {
+        "file": "patterns/section-site-notice.php",
+        "slug": "tracy-base/section-site-notice",
+        "title": "Site notice",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 1,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/section-social-links.php",
+        "slug": "tracy-base/section-social-links",
+        "title": "Social links",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": ["core/social-links"],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 6,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/section-statistics.php",
+        "slug": "tracy-base/section-statistics",
+        "title": "Statistics",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 10,
+        "namedBlocks": 14,
+        "own": true
+      },
+      {
+        "file": "patterns/section-story-chapter-media-left.php",
+        "slug": "tracy-base/section-story-chapter-media-left",
+        "title": "Story chapter — media left",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/section-story-chapter-media-right.php",
+        "slug": "tracy-base/section-story-chapter-media-right",
+        "title": "Story chapter — media right",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 4,
+        "own": true
+      },
+      {
+        "file": "patterns/section-tabs.php",
+        "slug": "tracy-base/section-tabs",
+        "title": "Tabs",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 11,
+        "namedBlocks": 14,
+        "own": true
+      },
+      {
+        "file": "patterns/section-team-grid.php",
+        "slug": "tracy-base/section-team-grid",
+        "title": "Team — grid",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 18,
+        "namedBlocks": 22,
+        "own": true
+      },
+      {
+        "file": "patterns/section-team-query.php",
+        "slug": "tracy-base/section-team-query",
+        "title": "Team — from posts",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": ["core/query"],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 3,
+        "own": true
+      },
+      {
+        "file": "patterns/section-testimonials.php",
+        "slug": "tracy-base/section-testimonials",
+        "title": "Testimonials",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 11,
+        "namedBlocks": 14,
+        "own": true
+      },
+      {
+        "file": "patterns/section-timeline.php",
+        "slug": "tracy-base/section-timeline",
+        "title": "Timeline",
+        "categories": ["tracy-base", "tracy"],
+        "blockTypes": [],
+        "postTypes": ["page"],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 15,
+        "namedBlocks": 19,
+        "own": true
+      },
+      {
+        "file": "patterns/cards.php",
+        "slug": "tracy/cards",
+        "title": "Cards",
+        "categories": ["query"],
+        "blockTypes": ["core/query"],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/landing.php",
+        "slug": "tracy/landing",
+        "title": "Landing page",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/pricing.php",
+        "slug": "tracy/pricing",
+        "title": "Pricing table",
+        "categories": ["text"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-contact.php",
+        "slug": "tracy/section-contact",
+        "title": "Contact",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-final.php",
+        "slug": "tracy/section-cta-final",
+        "title": "Call to action, final",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-inline.php",
+        "slug": "tracy/section-cta-inline",
+        "title": "Call to action, inline",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-faq.php",
+        "slug": "tracy/section-faq",
+        "title": "FAQ",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-features.php",
+        "slug": "tracy/section-features",
+        "title": "Features",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-hero.php",
+        "slug": "tracy/section-hero",
+        "title": "Hero",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-how-it-works.php",
+        "slug": "tracy/section-how-it-works",
+        "title": "How it works",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pillars.php",
+        "slug": "tracy/section-pillars",
+        "title": "Value pillars",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pricing.php",
+        "slug": "tracy/section-pricing",
+        "title": "Pricing plans",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-problem.php",
+        "slug": "tracy/section-problem",
+        "title": "Problem",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-proof.php",
+        "slug": "tracy/section-proof",
+        "title": "Proof",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-social-proof.php",
+        "slug": "tracy/section-social-proof",
+        "title": "Social proof",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-styleguide.php",
+        "slug": "tracy/section-styleguide",
+        "title": "Style guide",
+        "categories": ["tracy"],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      }
+    ],
+    "variations": [
+      {
+        "id": "airbnb",
+        "title": "Airbnb",
+        "inspiration": "airbnb"
+      },
+      {
+        "id": "apple",
+        "title": "Apple",
+        "inspiration": "apple"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "tracy-base/mega-menu",
+        "title": "Mega menu",
+        "version": "0.1.0",
+        "attributes": ["label"],
+        "render": "file:./render.php",
+        "editorScript": "file:./editor.js",
+        "dir": "blocks/mega-menu"
+      }
+    ],
+    "enqueued": [
+      {
+        "kind": "style",
+        "handle": "tracy",
+        "path": "assets/css/tracy.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy",
+        "path": "assets/js/tracy.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-base",
+        "path": "assets/css/tracy-base.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-base-dark",
+        "path": "assets/js/tracy-base-dark.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-base-mega",
+        "path": "assets/js/tracy-base-mega.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-base-sections-extra",
+        "path": "assets/css/sections-extra.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-fixture-page",
+        "path": "assets/css/fixture-page.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-layout",
+        "path": "assets/css/layout.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-motion",
+        "path": "assets/css/tracy-motion.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-motion",
+        "path": "assets/js/tracy-motion.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-sections",
+        "path": "assets/css/sections.css",
+        "file": "functions.php"
+      }
+    ],
+    "optionsRead": [
+      "admin_email",
+      "tracy_base_redirects",
+      "tracy_contact_to",
+      "tracy_hero",
+      "tracy_inspiration",
+      "tracy_motion",
+      "tracy_nav"
+    ],
+    "hooks": [
+      {
+        "kind": "action",
+        "hook": "admin_post_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "admin_post_nopriv_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "auto_update_theme",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "run_wptexturize",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_content",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "update_themes_github.com",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "functions.php"
+      }
+    ],
+    "overlay": {
+      "dir": "tracy-base",
+      "files": [
+        "assets/css/sections-extra.css",
+        "assets/css/tracy-base.css",
+        "assets/js/tracy-base-dark.js",
+        "assets/js/tracy-base-mega.js",
+        "blocks/mega-menu/block.json",
+        "blocks/mega-menu/editor.asset.php",
+        "blocks/mega-menu/editor.js",
+        "blocks/mega-menu/render.php",
+        "inc/extra.php",
+        "inc/update.php",
+        "parts/footer.html",
+        "parts/header.html",
+        "patterns.map.json",
+        "patterns/section-accordion.php",
+        "patterns/section-carousel.php",
+        "patterns/section-clients.php",
+        "patterns/section-contact-information.php",
+        "patterns/section-cta-capsule.php",
+        "patterns/section-features-intro.php",
+        "patterns/section-hero-centered.php",
+        "patterns/section-hero-split.php",
+        "patterns/section-marketing-samples.php",
+        "patterns/section-menu-feature.php",
+        "patterns/section-pricing-tiers.php",
+        "patterns/section-site-notice.php",
+        "patterns/section-social-links.php",
+        "patterns/section-statistics.php",
+        "patterns/section-story-chapter-media-left.php",
+        "patterns/section-story-chapter-media-right.php",
+        "patterns/section-tabs.php",
+        "patterns/section-team-grid.php",
+        "patterns/section-team-query.php",
+        "patterns/section-testimonials.php",
+        "patterns/section-timeline.php",
+        "readme.txt",
+        "style.css",
+        "templates/404.html",
+        "templates/archive.html",
+        "templates/author.html",
+        "templates/category.html",
+        "templates/date.html",
+        "templates/front-page.html",
+        "templates/home.html",
+        "templates/index.html",
+        "templates/page-landing.html",
+        "templates/page-no-sidebar.html",
+        "templates/page-onepage.html",
+        "templates/page-sidebar-left.html",
+        "templates/page.html",
+        "templates/search.html",
+        "templates/single.html",
+        "templates/tag.html",
+        "theme.config.json",
+        "theme.overlay.json"
+      ]
+    },
+    "fileCount": 94,
+    "fingerprints": {
+      "assets/css/artifacts/form/airbnb.css": "sha256:2cfc63d9708fccfa536f3e7f7a9ff86f7518f49d739f1541b12aafa45f8bf0b6",
+      "assets/css/artifacts/form/apple.css": "sha256:c867af53fdfb7815004c1095d5aa4c9c2acfe3c7f614cc285008976dd24689bd",
+      "assets/css/artifacts/landing/airbnb.css": "sha256:41ca3208f54def63dd1a74eb41433f6da3c70c03cd1f059b9aca8f400f55749b",
+      "assets/css/artifacts/landing/apple.css": "sha256:821ab3fdd1048d860e4abbd47bff8977db2e901f01818a29e16e579d1f67ac61",
+      "assets/css/artifacts/typography/airbnb.css": "sha256:1b3bc5c4721d339ceb62d59d2e9ed7fdc7bd2aae3d200d46f3667db0b439de40",
+      "assets/css/artifacts/typography/apple.css": "sha256:2aca9a420f814a8fde17dce4bab4f7bed63b3d8c146686c5a7977f15045bff3a",
+      "assets/css/fixture-page.css": "sha256:d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+      "assets/css/fixtures/airbnb.css": "sha256:a8e2fe34a0526fe97ba69b24a634723266339eaaab73887d2806af8a4e16fb52",
+      "assets/css/fixtures/apple.css": "sha256:9c565d2fea9d863c74180ba866da414a1011ae52e91394deb24cda42a7b6c050",
+      "assets/css/layout.css": "sha256:dca7d68d13067d81e306200f1ec08e2a5fa03b05bf3b46202ebe69ae86d9c06f",
+      "assets/css/sections-extra.css": "sha256:ddc4ec17c7eb7ea2642b7ab095907369361a594d1183c6a7ab5edcf2e076e956",
+      "assets/css/sections.css": "sha256:8b90e62733a68e96de7ace7095416c3995d45025d00540911ae0c99c02d91fe2",
+      "assets/css/tracy-base.css": "sha256:672849527ed1f44c8f4d1369a7d7d669ee2bef79ce7ae8aeda81c0f3e1e4b334",
+      "assets/css/tracy-motion.css": "sha256:6a13c448d945837ad0b6fc02502060a43d02112f700b4912142f7f3a49de5e81",
+      "assets/css/tracy.css": "sha256:e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+      "assets/img/hero-placeholder.svg": "sha256:76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+      "assets/js/tracy-base-dark.js": "sha256:69123216540ff971475099238e27a64d8517d6032f3438567ed92cdc82578d25",
+      "assets/js/tracy-base-mega.js": "sha256:f7a48746e3f4f8b93eac64c636edf5b8dc48144d58c5cbdea31ca3c27de5e672",
+      "assets/js/tracy-motion.js": "sha256:5e683668832ee13a1b80ecb9a460ef9c34a14cdfe9ff7361e68be489dd1b8c5e",
+      "assets/js/tracy.js": "sha256:88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+      "blocks/mega-menu/block.json": "sha256:f2e26f2a9017c2489f472c3a4aa158a00241aa33a0fea1bc88bd1b9e18289a05",
+      "blocks/mega-menu/editor.asset.php": "sha256:539a1b5d42caabb384d99d250b0fff4c5e48e4f912830e70ed78332b13688ded",
+      "blocks/mega-menu/editor.js": "sha256:d4b77a0f96e30a5ccc9f36dd56f61b158ae9c760337cd0fc7de660f3cd445189",
+      "blocks/mega-menu/render.php": "sha256:421698117db785efe5e305b1a5674741619cf23ce63ca54c23e4bef9438a945b",
+      "functions.php": "sha256:d22dd4f4155f63376cb64f98c0d8a6443030c49f3393b8c3dd001c25602f9741",
+      "inc/extra.php": "sha256:fa99eb3bc79bc6927b84cdb6af3b11c8595c4f6ab1d0c484ff36e1b1fd007b69",
+      "inc/motion-head.php": "sha256:e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+      "inc/update.php": "sha256:3e0b4c26e8722d11aa7d46ae96744c6c588c3e5fb9a26c9563c82bb15b6c4e36",
+      "inspirations.json": "sha256:cc2cf1626c5809cf5ac2ea8dcc5cb15912e75fbbe9d6063ea0b6f902200a571d",
+      "parts/footer.html": "sha256:94710108385f9734cc9bedcf4ddfbd5f5f14b112ea83d0ccd3963cce312a78fa",
+      "parts/header.html": "sha256:f30a86bfc411b7b0f0082d5185e1205fdeea5a1ad1c2218168096c1374ad5646",
+      "patterns/cards.php": "sha256:b9cff6d1aebcff1665eb25508e27b38d9527e406740683b56035a715b57b3f85",
+      "patterns/landing.php": "sha256:8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+      "patterns/pricing.php": "sha256:31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+      "patterns/section-accordion.php": "sha256:81ab76b7a17ca48ff2d898a24488aa1c0e92c6dc2e4edcb5bc3c220d11c3cf99",
+      "patterns/section-carousel.php": "sha256:1a01d12e100d070231b4b9d4ad917f4abfdb09d86b7f064ebddc35c62071e50c",
+      "patterns/section-clients.php": "sha256:d5a42aa8dc17b621c6cd483b2e5883dd939ec5bd06563ce81e22ccbb8422bef4",
+      "patterns/section-contact-information.php": "sha256:2f423ad0e14fe9384382e479cb4332ea6971d5b61ef42240b4ace1afcc8b1dc3",
+      "patterns/section-contact.php": "sha256:60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+      "patterns/section-cta-capsule.php": "sha256:e0826cee801bea439590ac0f8a2f77e8c7399d22221416b8253c44106e96bc08",
+      "patterns/section-cta-final.php": "sha256:ecd60c0133ebf1d5a02cec4f4eca766ea449864f5c767e0c10a84745d61c547e",
+      "patterns/section-cta-inline.php": "sha256:462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+      "patterns/section-faq.php": "sha256:2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+      "patterns/section-features-intro.php": "sha256:88892d6fa3ccf151d23bfbd20aad5b8983a029714ec1d346f276203393b40b34",
+      "patterns/section-features.php": "sha256:abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+      "patterns/section-hero-centered.php": "sha256:00bfedde64853d2defe352ff15a44a2909c8b73af0ef4b507cb5c8050b787411",
+      "patterns/section-hero-split.php": "sha256:4e979688ce4c68d59ab51788a0cc7e0e7a927788952cfa7324503ed194c5d417",
+      "patterns/section-hero.php": "sha256:2b6d329d57d9f244e740dcf727d33c5b02a187c4fac52137aeb10760fe1a28be",
+      "patterns/section-how-it-works.php": "sha256:39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+      "patterns/section-marketing-samples.php": "sha256:53a59f75d96bfabbf6324620561fcf07a4f24fdff22c6f021a9501c39b70535c",
+      "patterns/section-menu-feature.php": "sha256:fcb17a799b6be3169a971bd9862bd93fb048209bc07c16015d45c76162337c3b",
+      "patterns/section-pillars.php": "sha256:dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+      "patterns/section-pricing-tiers.php": "sha256:038d86cfaf45baebff8c3f991489266f224862abb8faedd5ed4e7b4967df55d0",
+      "patterns/section-pricing.php": "sha256:54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+      "patterns/section-problem.php": "sha256:c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+      "patterns/section-proof.php": "sha256:2ece2c6165809cfa08aeec8ec68620bcecd9a4762dfd7de8b1b1e1c060bcfc09",
+      "patterns/section-site-notice.php": "sha256:331c338ed6fb4d49ec1271826ac164117450ae195549fbd09d806bf1e4534000",
+      "patterns/section-social-links.php": "sha256:11d164fa7fa0e8069ad9dd69723ed8739982ed841bbf323334b111c610b76cee",
+      "patterns/section-social-proof.php": "sha256:3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+      "patterns/section-statistics.php": "sha256:d500d3252dd976178ab05ebba7d81cd9756fa42e2ff30f2e6890786e6e6d920c",
+      "patterns/section-story-chapter-media-left.php": "sha256:685014c3f3d90835f27a0d1307f552a64ed8ca85f0992456ae175e3e75ad6f26",
+      "patterns/section-story-chapter-media-right.php": "sha256:a0f2d5e8e698cb1ab13c1eaf31f90a8d0a1c1a0919d6da5539e931e27fcfdc7e",
+      "patterns/section-styleguide.php": "sha256:036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+      "patterns/section-tabs.php": "sha256:e8fb4cdfb820bf8ebdd1932d57b2b91f4018f746208fb3e7feb7073cc8a002d5",
+      "patterns/section-team-grid.php": "sha256:2d0f0a6aa81c0e6fce2ea5c5044e428e6a1b7f197263f6347e2d774c5375a9e6",
+      "patterns/section-team-query.php": "sha256:e018089766be0ccec2f7fb8afa1b1a530f56e433b2b45a6285b945aecc4715db",
+      "patterns/section-testimonials.php": "sha256:7c8a2c898c515c052a4c4848cad9828896a763dda0a1e45d50783ed4cdbf5d4e",
+      "patterns/section-timeline.php": "sha256:3b2d7f7d488d9376bd040eae1d2f7487f5932c44737e23150eb185f41474250b",
+      "readme.txt": "sha256:e0355f98de6ad2eb6e9b98107bc4753c482f9ca88408a22c915a239b12595ec1",
+      "screenshot.png": "sha256:f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+      "style.css": "sha256:7441df84e97f0909fa52c2e593b4f8ef57f8180fbbb35bdc88821314676a5c54",
+      "styles/airbnb.json": "sha256:fd1b86c88f9b7272f4fb8607113e5b38837bf0cfd8e8cc8a1d3a7319a8118bad",
+      "styles/apple.json": "sha256:4c580dedeafe139e3328515161629217f33512d852d00c59ace9a748417b296e",
+      "templates/404.html": "sha256:7f1c90bb5c170e0f0956dedeb21050ddaf42031a89cb1951712c26f3ab5c6fd2",
+      "templates/archive.html": "sha256:507d8a89c4a2e6f54c7155328a29d9f1cd8fe7fedfec79f1f8894141e34907cc",
+      "templates/artifact.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/author.html": "sha256:eada041b2708a4819ec21fe45f946ed9aaa3e12db5538cf80624ced8b383dd67",
+      "templates/category.html": "sha256:507d8a89c4a2e6f54c7155328a29d9f1cd8fe7fedfec79f1f8894141e34907cc",
+      "templates/date.html": "sha256:ddfd68fa86e16a783b7189fa66072c8325fae911279693119d6ea0f0d80908da",
+      "templates/fixture.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/front-page.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/home.html": "sha256:461fdfdeb3b1e2901d90c4a41781805d25f3bef6bc2044a30a5605c90881e3ca",
+      "templates/index.html": "sha256:275bb18326eaa50fd6661d6a29edd535e38a37ba2b9ed353ca8c02400d2ffe50",
+      "templates/landing.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-landing.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-no-sidebar.html": "sha256:fe905360c9cdedb59aad6e5ebbac67af813e501a187dfdab075d95a23a9f81a9",
+      "templates/page-onepage.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-sidebar-left.html": "sha256:e3611a837adfb098183363a0f9573da4d1c8553dc8f5a6134c5c6dab5ffa36bb",
+      "templates/page.html": "sha256:84313806e7a5a145183084f6fca28d778e1ce66547b48c8b355563873f68f16d",
+      "templates/pricing.html": "sha256:4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+      "templates/search.html": "sha256:69329556100e01e24a0a6e3085215abb40ffa76e40512d1562be5017a0b58e68",
+      "templates/single.html": "sha256:bdb2aa12ea676bde54986051d18a6a645c76aa611dc5ef4d14c52095aeac3cdd",
+      "templates/tag.html": "sha256:507d8a89c4a2e6f54c7155328a29d9f1cd8fe7fedfec79f1f8894141e34907cc",
+      "theme.json": "sha256:c8ac950ce6aae33c74bc125d5b64ab2c1a38b033b8d3a5b0177d6cf63160549e"
+    }
+  },
+  "spec": {
+    "dir": "spec",
+    "theme": {
+      "palette": {
+        "light": {
+          "primary": "#0071e3",
+          "secondary": "#f5f5f7",
+          "body_bg": "#ffffff",
+          "text": "#1d1d1f"
+        },
+        "dark": {
+          "primary": "#2997ff",
+          "secondary": "#1d1d1f",
+          "body_bg": "#000000",
+          "text": "#f8f8f8"
+        }
+      },
+      "darkDerived": false,
+      "fonts": {
+        "body": "SF Pro Text",
+        "heading": "SF Pro Display"
+      },
+      "hook": {
+        "selector": "html",
+        "attribute": "data-theme",
+        "lightValue": "light",
+        "darkValue": "dark"
+      }
+    },
+    "routes": [
+      {
+        "path": "/",
+        "view": "front-page",
+        "title": "Landing"
+      },
+      {
+        "path": "/404",
+        "view": "404",
+        "title": "Error page"
+      },
+      {
+        "path": "/account/create-account",
+        "view": "page-register",
+        "title": "Create account"
+      },
+      {
+        "path": "/account/forgot-username",
+        "view": "page-password",
+        "title": "Forgot username"
+      },
+      {
+        "path": "/account/profile",
+        "view": "page-account",
+        "title": "Profile"
+      },
+      {
+        "path": "/account/reset-password",
+        "view": "page-password",
+        "title": "Reset password"
+      },
+      {
+        "path": "/company/about",
+        "view": "page",
+        "title": "About"
+      },
+      {
+        "path": "/company/careers",
+        "view": "page",
+        "title": "Careers"
+      },
+      {
+        "path": "/company/team",
+        "view": "category",
+        "title": "Team"
+      },
+      {
+        "path": "/pages/authors",
+        "view": "author",
+        "title": "Authors"
+      },
+      {
+        "path": "/pricing",
+        "view": "page",
+        "title": "Pricing"
+      },
+      {
+        "path": "/product",
+        "view": "page",
+        "title": "Product"
+      },
+      {
+        "path": "/resources/all-categories",
+        "view": "page",
+        "title": "Topics"
+      },
+      {
+        "path": "/resources/archive",
+        "view": "date",
+        "title": "Archive"
+      },
+      {
+        "path": "/resources/blog",
+        "view": "category",
+        "title": "Blog"
+      },
+      {
+        "path": "/resources/category-list",
+        "view": "category",
+        "title": "All articles"
+      },
+      {
+        "path": "/resources/colors",
+        "view": "page",
+        "title": "Color roles"
+      },
+      {
+        "path": "/resources/contact",
+        "view": "page-contact",
+        "title": "Contact us"
+      },
+      {
+        "path": "/resources/faq",
+        "view": "page",
+        "title": "Questions"
+      },
+      {
+        "path": "/resources/home-2",
+        "view": "page-landing",
+        "title": "Home — variant"
+      },
+      {
+        "path": "/resources/home-onepage",
+        "view": "page-onepage",
+        "title": "Landing"
+      },
+      {
+        "path": "/resources/home-variation",
+        "view": "page-landing",
+        "title": "Home variation"
+      },
+      {
+        "path": "/resources/marketing-samples",
+        "view": "page",
+        "title": "Marketing samples"
+      },
+      {
+        "path": "/resources/search",
+        "view": "search",
+        "title": "Search"
+      },
+      {
+        "path": "/resources/sign-in",
+        "view": "page-login",
+        "title": "Sign in"
+      },
+      {
+        "path": "/resources/single-tag",
+        "view": "tag",
+        "title": "Browse by tag"
+      },
+      {
+        "path": "/resources/spacing",
+        "view": "page",
+        "title": "Spacing and radius"
+      },
+      {
+        "path": "/resources/studio-notes",
+        "view": "category",
+        "title": "Studio notes"
+      },
+      {
+        "path": "/resources/style-guide",
+        "view": "page",
+        "title": "Style guide"
+      },
+      {
+        "path": "/resources/tags",
+        "view": "page",
+        "title": "Tags"
+      },
+      {
+        "path": "/resources/typography",
+        "view": "page",
+        "title": "Typography"
+      },
+      {
+        "path": "/resources/website-operations",
+        "view": "category",
+        "title": "Website operations"
+      },
+      {
+        "path": "/resources/website-planning",
+        "view": "category",
+        "title": "Website planning"
+      },
+      {
+        "path": "/services",
+        "view": "category",
+        "title": "Service"
+      },
+      {
+        "path": "/services/brand-and-interface-design",
+        "view": "page",
+        "title": "Brand and interface design"
+      },
+      {
+        "path": "/services/content-and-photography",
+        "view": "page",
+        "title": "Content and photography"
+      },
+      {
+        "path": "/services/service-detail",
+        "view": "page",
+        "title": "Website design and build"
+      },
+      {
+        "path": "/services/website-care",
+        "view": "single",
+        "title": "Website care"
+      },
+      {
+        "path": "/services/website-development",
+        "view": "page",
+        "title": "Website development"
+      },
+      {
+        "path": "/services/website-strategy",
+        "view": "page",
+        "title": "Website strategy"
+      }
+    ],
+    "routesByView": {
+      "404": 1,
+      "author": 1,
+      "category": 7,
+      "date": 1,
+      "front-page": 1,
+      "page": 17,
+      "page-account": 1,
+      "page-contact": 1,
+      "page-landing": 2,
+      "page-login": 1,
+      "page-onepage": 1,
+      "page-password": 2,
+      "page-register": 1,
+      "search": 1,
+      "single": 1,
+      "tag": 1
+    },
+    "gaps": 5,
+    "menus": [
+      {
+        "slug": "tracy",
+        "title": "tracy",
+        "items": 52
+      },
+      {
+        "slug": "tracy-utility",
+        "title": "tracy-utility",
+        "items": 14
+      },
+      {
+        "slug": "tracy-onepage",
+        "title": "tracy-onepage",
+        "items": 6
+      }
+    ],
+    "redirects": 8,
+    "inputs": {
+      "page-map.json": "sha256:ca1bedb13b00201bec210dbe79dd56d6da226424ee2387be6afd9051ef649dbf",
+      "menus.json": "sha256:bd0bb48cb52c4e90705a012cf0349176e5ad45d3c288c95be28822a97e9764aa",
+      "redirects.json": "sha256:bb44424807790cb1460b180e0577ec9ebc28ec0cc85d63e9134c1bc4fbda86c9"
+    }
+  },
+  "seed": {
+    "file": "report-run2.json",
+    "startedAt": "2026-09-14T03:27:59.636Z",
+    "label": "at seed time, not live",
+    "counts": {
+      "categories": {
+        "total": 14,
+        "created": 0,
+        "updated": 14,
+        "skipped": 0
+      },
+      "forms": {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 1
+      },
+      "navigation": {
+        "total": 6,
+        "created": 0,
+        "updated": 2,
+        "skipped": 4
+      },
+      "options": {
+        "total": 6,
+        "created": 0,
+        "updated": 1,
+        "skipped": 5
+      },
+      "pages": {
+        "total": 43,
+        "created": 0,
+        "updated": 0,
+        "skipped": 43
+      },
+      "posts": {
+        "total": 51,
+        "created": 0,
+        "updated": 0,
+        "skipped": 51
+      },
+      "templateParts": {
+        "total": 2,
+        "created": 0,
+        "updated": 0,
+        "skipped": 2
+      }
+    },
+    "navigation": [
+      "tracy",
+      "tracy-footer-company",
+      "tracy-footer-product",
+      "tracy-footer-resources",
+      "tracy-onepage",
+      "tracy-utility"
+    ],
+    "templateParts": ["footer", "header"],
+    "redirects": 8,
+    "sections": {
+      "total": 56,
+      "byKind": {
+        "acm": 35,
+        "fallback": 2,
+        "html": 5,
+        "library": 14
+      },
+      "byPattern": {
+        "tracy-base/section-accordion": 4,
+        "tracy-base/section-carousel": 1,
+        "tracy-base/section-clients": 1,
+        "tracy-base/section-contact-information": 1,
+        "tracy-base/section-cta-capsule": 7,
+        "tracy-base/section-features-intro": 1,
+        "tracy-base/section-hero-centered": 2,
+        "tracy-base/section-hero-split": 1,
+        "tracy-base/section-marketing-samples": 1,
+        "tracy-base/section-pricing": 2,
+        "tracy-base/section-statistics": 4,
+        "tracy-base/section-story-chapter-media-left": 2,
+        "tracy-base/section-story-chapter-media-right": 3,
+        "tracy-base/section-tabs": 1,
+        "tracy-base/section-team-grid": 2,
+        "tracy-base/section-testimonials": 1,
+        "tracy-base/section-timeline": 1,
+        "tracy/section-contact": 1,
+        "tracy/section-cta-final": 1,
+        "tracy/section-cta-inline": 1,
+        "tracy/section-faq": 2,
+        "tracy/section-features": 1,
+        "tracy/section-hero": 2,
+        "tracy/section-how-it-works": 1,
+        "tracy/section-pillars": 1,
+        "tracy/section-pricing": 1,
+        "tracy/section-problem": 1,
+        "tracy/section-proof": 1,
+        "tracy/section-social-proof": 2,
+        "tracy/section-team": 1
+      },
+      "pages": 12
+    },
+    "routes": {
+      "checked": 49,
+      "ok": 49
+    },
+    "media": {
+      "files": 36,
+      "imported": 0
+    },
+    "notes": [
+      "no section of the spec references a newsletter form (marketing-samples lists a \"Newsletter\" document, not a form); no newsletter form created",
+      "synthesised parent page for /pages/authors",
+      "template page-account does not exist in the theme; layout default used",
+      "/resources/blog is a category archive (content-guides) in the source, not a posts index; page_for_posts left unset"
+    ],
+    "hash": "sha256:ca4f1efbbfac8b5b3367e1c13efb477dbf4cbcf10d78df4bfa1f6d06d7bc2a4e"
+  }
+}

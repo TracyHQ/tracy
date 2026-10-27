@@ -1,0 +1,14 @@
+{
+  "extends": "joomla-ja-titan",
+  "template": "joomla/ja-titan",
+  "modes": true,
+  "modeHook": ":has(> body.dark-active)",
+  "modesAuto": false,
+  "modesNote": "15/10/2026 (#1375): JA Titan's light/dark switch (.ja-dark-mode) marks the dark side with body.dark-active and keeps the visitor's choice in a cookie; a page without the class is light whatever the OS says. The contract it extends hid the switch under every system, which ADR 0031 decision 3 calls a bug (MODE-2 failed). From 1.0.2 on, the release's template.js opens the page on the worn system's side (the slot's /* mode: */ line) while the visitor has chosen none, so both sides are worn and the switch stays; releases up to the one the base contract confirms keep one look.",
+  "minVersion": {
+    "quickstart/ja-titan/j6": "1.0.2"
+  },
+  "maxVersion": {
+    "quickstart/ja-titan/j6": "1.0.2"
+  }
+}

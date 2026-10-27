@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ultra-light-azak-grey": {
+      "$value": "#f8f7f3",
+      "$type": "color",
+      "$description": "Ultra Light Azak Grey — Light editorial canvas, reversed text, navigation text, feature-tile text, and fine underlines"
+    },
+    "dark-azak-black": {
+      "$value": "#121211",
+      "$type": "color",
+      "$description": "Dark Azak Black — Primary page field, dark section surface, dark text on the pale product stage, and footer base"
+    },
+    "medium-azak-grey": {
+      "$value": "#85837e",
+      "$type": "color",
+      "$description": "Medium Azak Grey — Secondary explanatory copy, inactive feature labels, metadata, and legal text"
+    },
+    "terrain-slate": {
+      "$value": "#3a4a49",
+      "$type": "color",
+      "$description": "Terrain Slate — Contained product-render backdrop and muted dark visual surface"
+    }
+  },
+  "font": {
+    "ft-aktual": {
+      "$value": "FT Aktual",
+      "$type": "fontFamily",
+      "$description": "The sole interface and display family. Weight 300 at 45px/45px carries all large statements with an unusually whisper-light technical tone; 68px/68px identifies product series, while 16px weight 400 carries navigation and body copy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://azak.co",
+      "siteName": "AZAK",
+      "extractedAt": "2026-09-20T19:24:35.459Z",
+      "variant": "compact"
+    }
+  }
+}

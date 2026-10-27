@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-vega/mega-menu",
+  "version": "0.1.0",
+  "title": "Mega menu",
+  "category": "design",
+  "icon": "menu-alt",
+  "description": "A header item that is a link and opens a wide panel of columns — link lists, feature links, the latest projects. Opens on hover, focus or the caret button; on a phone it opens in place inside the menu drawer. The columns are edited in place.",
+  "keywords": ["menu", "navigation", "mega", "header"],
+  "textdomain": "wp-ja-vega",
+  "attributes": {
+    "label": { "type": "string", "default": "Menu" },
+    "url": { "type": "string", "default": "" }
+  },
+  "supports": {
+    "html": false,
+    "inserter": true,
+    "reusable": false,
+    "anchor": false,
+    "className": true
+  },
+  "editorScript": "file:./editor.js",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,335 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-tour",
+  "release": "quickstart/ja-tour/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "div.slider-content-inner.f-in h1.slide-title.text-white",
+    "heading": "h2.text-white.mt-0",
+    "body": "p",
+    "button-primary": "a.btn.btn-secondary",
+    "container": "div.t4-section-inner.container",
+    "section": "#t4-section-1",
+    "input": "#email_field_831"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 80px",
+    "displayFace": "Frank Ruhl Libre 400, tracking 0em",
+    "heading": "first section heading: 48px",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(48, 64, 141)",
+    "container": "first content container, max-width 1230px",
+    "section": "first padded full-width section, padding-top 120px",
+    "input": "first text field"
+  },
+  "keepScopes": ["#t4-header", ".t4-sideshow"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--fg-2": "#212529",
+    "--accent": "#f68c05",
+    "--surface": "#f0f3ff",
+    "--success": "#28a745",
+    "--warn": "#f68c05",
+    "--border": "#f4f4f4",
+    "--muted": "#696f8d",
+    "--bg": "#ffffff",
+    "--fg": "#696f8d",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#000000"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "fg-2": "#212529",
+      "accent": "#f68c05",
+      "surface": "#f0f3ff",
+      "success": "#28a745",
+      "warn": "#f68c05",
+      "border": "#f4f4f4",
+      "muted": "#696f8d"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#696f8d",
+      "fg-2": "#212c64",
+      "accent": "#f68c05",
+      "accent-on": "#ffffff",
+      "surface-warm": "#000000"
+    },
+    {
+      "accent": "#212c64"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface-warm": "#000000",
+      "surface": "#f4f4f5",
+      "accent-hover": "#007bff",
+      "border-soft": "#dddddd"
+    },
+    {
+      "surface": "#f4f4f4"
+    },
+    {
+      "surface": "#eaedf1"
+    },
+    {
+      "surface": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (88 line colours, 116 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [
+      ".btn:not(.btn-readmore, .btn-danger, .btn-success, .btn-info, .btn-warning)",
+      "a.btn.btn-secondary"
+    ],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-secondary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#t4-section-1"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": "p.mod-articles-category-introtext, div.wrap-info > div.date, span.tour-person, .t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "div.desc-article > p, div.features-content > span, main p",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 5177); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#000000",
+      "uses": 29,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#000000",
+      "distance": 0
+    },
+    {
+      "hex": "#f4f4f5",
+      "uses": 25,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f0f3ff",
+      "distance": 11
+    },
+    {
+      "hex": "#007bff",
+      "uses": 8,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#0077ed",
+      "distance": 18
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f0f3ff",
+      "distance": 12
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f0f3ff",
+      "distance": 16
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f0f3ff",
+      "distance": 13
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the local build of ja-tour/j6 1.0.1 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-tour-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 85% or more of the page follows; without a system 1.0.1 computes exactly what 1.0.0 does; the page, its filled buttons and .bg-light that T4 writes as literals take the worn roles (followRules); the 15 painted differences from 1.0.0 are article pictures the home page draws at random. Re-measured 11/10/2026 with the per-element probe on the same 1.0.1 build (stand.mjs --from-dir; tasks/evidence/ds-remeasure-5-2026-10-11/ja-tour): 12/12 with Moxie, MotherDuck, Toggl Track, Apple after one fix, controls 0, 85%–95% follows, checked by eye. The per-element probe found the Read More link and the phone number (.link-primary) painted by T4's generated theme CSS in the template's literal orange (#f68c05; T4 rewrites that file on a new site, so it is not tokenized): 2.12 on MotherDuck's page against the template's own 2.42 on white. Both now take the readable accent (followRules, .link-primary with ! as the template writes it)",
+  "followRules": {
+    "body": {
+      "color": "fg",
+      "background-color": "bg"
+    },
+    ".t4-content": {
+      "background-color": "bg"
+    },
+    ".btn.btn-primary": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".btn.btn-secondary": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".bg-light": {
+      "background-color": "surface!"
+    },
+    ".article-more a": {
+      "color": "accent-text"
+    },
+    ".link-primary": {
+      "color": "accent-text!"
+    }
+  },
+  "followNote": "T4 writes the page (body colour and ground, .t4-content), its filled buttons and .bg-light into its generated theme CSS (media/t4/css, literals, buttons and backgrounds !important, rewritten whenever the style colours change): running text kept #696f8d on cards that followed a dark system (Toggl Track 3.14:1) and the Book Tour button kept #30408d. Those take the worn roles; kept bands keep the template own",
+  "contrastNote": "the home page has no main p: its article and feature text (body) and the tour intros, dates and details (muted) are what a reader reads (11/10/2026)",
+  "minVersion": {
+    "quickstart/ja-tour/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-tour/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 3): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css, css/tpl/theme.tpl.css differ (and their SCSS/LESS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); unworn the page is the release's own (VERIFICATION.json). 1.0.4 16/10/2026 (batch 2): the template reads the design-system role variables (--ds-c-*, corners, faces) with its own values as fallback; Bootstrap components read the roles; unworn the page is the release's own (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#696f8d",
+    "--body-link-color": "#007bff",
+    "--body-link-hover-color": "#0056b3",
+    "--color-primary": "#f68c05",
+    "--color-secondary": "#30408d",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#f68c05",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f0f3ff",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "keepColors": {
+    "#t4-header": "rgb(255, 255, 255)",
+    ".t4-sideshow": "rgb(255, 255, 255)"
+  },
+  "bands": {
+    "#t4-header": {
+      "ground": "#30408d",
+      "kind": "ink",
+      "texts": ["#ffffff"],
+      "picture": false,
+      "paint": {
+        ".link-primary": {
+          "color": "accent"
+        },
+        ".nav-link::after": {
+          "border-color": "accent-fill"
+        },
+        ".item-caret::before": {
+          "border-top-color": "accent-fill"
+        },
+        "li.active > a.nav-link .menu-item-title": {
+          "color": "accent"
+        },
+        ".navbar-nav > li > a:hover, .navbar-nav > li > a:focus, .navbar-nav > li.show > a, .navbar-nav > li > a:hover .menu-item-title, .navbar-nav > li > a:focus .menu-item-title, .navbar-nav > li.show > a .menu-item-title": {
+          "color": "accent"
+        },
+        ".item-caret": {
+          "color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".t4-sideshow": {
+      "ground": "#30408d",
+      "kind": "ink",
+      "texts": ["#ffffff"],
+      "picture": false,
+      "paint": {
+        ".description": {
+          "color": "accent"
+        },
+        ".heading-link:hover, .heading-link:focus": {
+          "color": "accent"
+        },
+        ".owl-dot.active": {
+          "border-color": "accent-fill"
+        },
+        ".owl-dot.active span": {
+          "background-color": "accent-fill"
+        },
+        ".owl-dot span:hover, .owl-dot span:focus": {
+          "background-color": "accent-fill"
+        },
+        ".owl-nav button:hover, .owl-nav button:focus, .owl-nav button:active": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 14/10/2026 (visual review: the header’s menu and phone number near black on its blue bar, 1.8–2.1:1, every system, home and inner pages): the header (#t4-header, T4’s .t4-palette-secondary #30408d) was a picture band only because of a faint repeated pattern (a small data-URI PNG) over its flat ground, so its ground stayed the template blue while its accent paints were judged on a photo assumed lighter and came out near black; and its paint named every .menu-item-title, the dropdowns’ too, where the template paints only the active link orange. It is a worn band now (picture: false): it wears the system’s accent where the template’s white words read on it, else its ink, the pattern still over it; the active level-0 link (li.active > a.nav-link) and the phone number take the accent made readable on that ground, the other links keep their white, the dropdown panels their own words, and its call to action the band’s pair; 17/10/2026 (Akemi's review under Mailchimp: the home page's About, Ready to rest, We Value Relationships and footer-wave bands stayed the template's blue #30408d under every system, the accent-leak finder named them with the slideshow dots, arrows and tagline): .t4-section-1/6/9/10 are T4's .t4-palette-secondary over the same faint data-URI pattern as the header and were drafted as picture bands, so the keep scope reset every role inside them and the template's own palette rule (--vds-pal-bg: ink, on-ink words, the wave ::after reading --vds-pal-bg) fell back to the blue. They are no longer kept: the template's palette wears the system's ink with on-ink words. The slideshow stays a band (its photo slides) worn as ink, its tagline, title-link hover, active dot, dot and arrow hovers take the accent made readable on that ground (they read --ds-c-accent, reset inside the band). The header's top-level hover and open links take the same accent as its active link (they read the palette hover, which was white then the dull accent-on-ink)",
+  "sideRules": {
+    "light": {
+      "#t4-header .head-info .link-primary": {
+        "white-space": "nowrap"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      "#t4-header .head-info .link-primary": {
+        "white-space": "nowrap"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "sideNote": "14/10/2026 (visual review: under Eddie and MotherDuck the header’s phone number wrapped onto two lines): the number (#t4-header .head-info .link-primary, an icon and 13 characters at 26px in a 16.7% column) is one line in the template; a wider face (MotherDuck’s monospace) broke it at its hyphens. It keeps one line on both sides (checked at 1440: it ends before the centred logo, no sideways scroll)",
+  "containerGutter": 64,
+  "containerGutterNote": "14/10/2026 (visual review): a row of the destinations band (div.row, its negative gutters and arrows) hangs 45px off the container's edge; under Notion and Apple it was cut at the window's edge. The container keeps 64px from the window's edges instead of 32.",
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 3): article titles, 'Read More' and tag links read one role at rest and on hover under some systems (Moxie, 5fd3), so hover and focus also underline; buttons, dropdown items, the logo and pagination keep their own states. The header menu's caret icon kept the template's own orange #f68c05 (ACCENT-LEAK): the band paints its colour with the system's accent fill, as it does the caret's triangle. The same underline is written on the link's inner words (span, strong, em, b, small, headings, p): the probe reads the cue on the element that holds the words, and an underline set on the link alone does not change that element's computed style."
+}

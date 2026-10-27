@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-1403-held-resend-and-cause",
+  "kind": "fix",
+  "title": "A message the update stopped before the model saw it is sent once more and runs once; an interrupted turn says Tracy restarted unless a deploy record shows an update cut it",
+  "pr": 1403,
+  "area": "chat/deploy-hold",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With dsh's own agent loop and session store: hold two follow-ups during a drain, restart, and let the first release fail half way so the second is cancelled; tick until settled.",
+    "S2: Same, with every release that finds the message failing half way.",
+    "S3: mayResend over cancelled / claimed / dropped / split / unknown fates, a record sent once already, a version 1 record, and an author who wrote after.",
+    "S4: The held door asked with and without cut: true while cut-by-deploy.json names a deploy that cut a chat turn of the conversation, from its site and from another site.",
+    "S5: The turn card of an interrupted turn whose span holds a deploy cut, and one whose span holds none (no record, a cut after it ended, a cut long before)."
+  ],
+  "expect": [
+    "S1: the cancelled message is put back at the head of the queue (state held, resent: true in the file), released by the next pass, and the model is asked 'one' then 'two' — each once; nothing left to tell.",
+    "S2: sent once more, then a failed notice for it; released exactly twice; the model never asked.",
+    "S3: true only for cancelled or claimed messages, once, while nothing newer was written; false otherwise.",
+    "S4: cutAt lists that deploy's time for the conversation's own site, [] for another site; the plain answer carries no cutAt.",
+    "S5: \"This request was interrupted by a Tracy update.\" for the first; \"This request was interrupted when Tracy restarted.\" for every other, never \"Tracy update\"."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/{deploy-hold.mjs,cut-by-deploy.mjs,index.ts}, packages/ui/tracy-chat-input/src/client/{interrupted.mjs,TurnUndoCard.tsx}",
+    "dom": "[data-interrupt-cause]"
+  },
+  "evidence": "Plan #1403 item 11 (code read 16/10/2026): a follow-up a broken release or a disposal cancelled — one the model never saw — ended as a notice asking the customer to send it again; cut-by-deploy.json, written by deploy-host-dsh.sh since #295, had no reader, so every interrupted turn was blamed on an update, a crash or a host reboot included",
+  "fence": "Only messages the update stopped before the model saw them, only once, only while the author wrote nothing after; the cause is an update only when the deploy's own record names the conversation",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/deploy-hold-restart.test.mjs",
+      "packages/tools/tracy-site-tools/test/deploy-hold.test.mjs",
+      "packages/tools/tracy-site-tools/test/cut-by-deploy.test.mjs",
+      "packages/ui/tracy-chat-input/test/interrupted.test.mjs",
+      "packages/ui/tracy-chat-input/test/turn-undo-card.test.mjs"
+    ],
+    "tests": [
+      "a release that fails after taking the queue out: what it could not send back is sent once more and runs once, never taken for a removal",
+      "a message sent once more that again does not run is told as not run — never a third time",
+      "mayResend: only messages the update stopped before the model saw them, once, while the author wrote nothing after",
+      "a record sent once more keeps that through a restart; any other value of the key is a failed read",
+      "a resend dsh cannot make (an agent running, a message the log lost) is told as not run, as before",
+      "the shipped plugin leases a running turn, holds a follow-up while draining, and tells its author",
+      "the deploys that cut a chat turn of the conversation, oldest first, in the site the page stands in",
+      "interruptCause: an update only when a deploy cut a turn of the chat while this one ran",
+      "readCutTimes asks the held door with cut: true and keeps only numbers; anything else is none",
+      "an interrupted turn: one card, with the interrupted line and Continue through the composer",
+      "an interrupted turn no deploy cut: \"when Tracy restarted\", never an update"
+    ]
+  }
+}

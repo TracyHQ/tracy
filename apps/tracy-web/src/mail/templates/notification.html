@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>{{title}}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;padding:0;background:#faf7f4;-webkit-text-size-adjust:100%}
+    a{color:#a3462a}
+    @media (max-width:600px){.mail-pad{padding-left:24px!important;padding-right:24px!important}.mail-title{font-size:28px!important}}
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#faf7f4;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#faf7f4;">{{preheader}}&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#faf7f4;">
+    <tr><td align="center" style="padding:32px 12px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;">
+        <tr><td background="https://tracy.ai/assets/bg.jpg" bgcolor="#f3dccd" class="mail-pad" style="background:#f3dccd url('https://tracy.ai/assets/bg.jpg') center/cover no-repeat;border-radius:16px 16px 0 0;padding:28px 40px 26px;">
+          <img src="https://tracy.ai/assets/logo.png" width="120" alt="Tracy" style="display:block;border:0;width:120px;height:auto;">
+        </td></tr>
+        <tr><td bgcolor="#fffdfb" class="mail-pad" style="background:#fffdfb;border:1px solid #e9e1dc;border-top:0;border-radius:0 0 16px 16px;padding:36px 40px 34px;">
+          {{badge}}
+          <h1 class="mail-title" style="margin:0 0 18px;font-family:system-ui,BlinkMacSystemFont,-apple-system,'Segoe UI',Roboto,'Noto Sans','PingFang SC','Microsoft YaHei',sans-serif;font-size:32px;line-height:1.15;font-weight:600;color:#1a1715;">{{heading}}</h1>
+          {{body}}{{button}}
+        </td></tr>
+{{brandFooter}}
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

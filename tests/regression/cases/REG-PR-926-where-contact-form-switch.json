@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-926-where-contact-form-switch",
+  "kind": "fix",
+  "title": "Each Tracy Business where-map names how the contact form goes off for a while and comes back exactly: WordPress the Contact Form 7 shortcode in each language's contact page (apply.revert), Joomla com_contact's show_email_form (apply.revert), EmDash form_id \"\" (the receipt's before)",
+  "pr": 926,
+  "area": "web/sites/where",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised; vendor/emdash/emdash must be checked out (EmDash proofs read its core files).",
+    "S2: From the checkout root run: node --test apps/tracy-web/test/content-where.test.mjs — keep its last 12 lines and its exit code.",
+    "S3: Run: node --input-type=module -e \"import {describeWhere, readWhereMaps} from './apps/tracy-web/src/sites/content-where.js'; import {toolsetOfDoor} from './apps/tracy-web/src/sites/route.js'; for (const m of readWhereMaps()) { const v = {emdash: '1.6.0', joomla: '1.2.0', wordpress: '1.3.2'}[m.platform]; const tag = m.platform === 'emdash' ? m.quickstart + '/emdash-0.x' : m.quickstart; const w = describeWhere({platform: m.platform, quickstart_tag: tag, quickstart_version: v}, {profile: null, toolsetOfDoor}); const s = w.topics.forms.find((e) => / off/.test(e.what)); console.log(m.platform, v, s.toolset, JSON.stringify(s.door.call).slice(0, 160)) }\" — keep the three lines. The versions are pinned to the releases the case was written on (the maps have since gained EmDash 1.7.0-1.7.2 and j6 1.2.1; S2 checks every version), so the lines do not move when a release is added.",
+    "S4: Read the 'ℹ pass' and 'ℹ fail' lines of S2. A command that cannot start (missing module) is BLOCKED, not FAIL."
+  ],
+  "expect": [
+    "S2: fail 0, exit 0, at least 10 pass (11 since 34197e035, in the same PR, added the WordPress search-title test). 'where-maps: every release says how its contact form goes off for a while and comes back exactly' passes for every version of the three maps (before the fix it fails at tracy-business@1.4.5: no forms entry takes the contact form off), and 'where-maps: every entry is complete, and every proof holds on the released bytes' passes: the inventory pointers (page 39 is page-contact on wp7 1.1.0-1.3.2), the j6 1.2.0 lock pointers (menu items 604/637 open contacts 14/15 through component 8 with params \"[]\"), the fixture and source strings all hold.",
+    "S3: one line per platform. emdash 1.6.0 content {\"tool\":\"content_update\",…\"data\":{\"form_id\":\"\"}…}; joomla 1.2.0 site {\"action\":\"content.update\",\"params\":{\"kind\":\"extensionParams\",\"id\":8,\"fields\":{\"params\":{\"patch\":{\"show_email_form\":0}}}…}; wordpress 1.3.2 content {\"action\":\"content.update\",\"params\":{\"kind\":\"post\",\"id\":39,…\"blocks\":{…\"find\":\"<the [contact-form-7 …] shortcode…\",\"replace\":\"\"}}}}.",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "maps": "apps/tracy-web/src/sites/where/{wordpress-tracy-business-wp7,joomla-tracy-business-j6,emdash-tracy-business}.json — topics.forms, the entry whose what says 'off'",
+    "served": "apps/tracy-web/src/sites/content-where.js describeWhere (the where block of content.read {describe:true})",
+    "test": "apps/tracy-web/test/content-where.test.mjs CONTACT_FORM_OFF / CONTACT_FORM_BACK"
+  },
+  "evidence": "Flow D of the Apply audit, 05/10/2026, case M-L3-form-toggle ('the contact form is spammed, turn it off; now turn it back on exactly as before'): WordPress 28 calls (8 steps reading Contact Form 7's PHP), EmDash 34 (13 steps in the Forms plugin, then a template patch and a rebuild), Joomla 42 (23k + 50k listings, then com_contact core), 3.3M prompt tokens for the three. Read-only check of benchjoomlaapply01 after the run: com_contact's show_email_form is \"1\", contacts 14/15 hold none, menu items 604/637/2231 hold params []: a contact record's own value loses to com_contact's on its own menu item (Joomla's contact HtmlView merges the menu/global params over it), so the switch named is com_contact's.",
+  "fence": "Mechanism only: the where-map entries, their proofs on the released bytes and the doors they name (every door's action, kind and arguments are checked by the same suite). Not covered: whether a model reads the describe and follows the entry (a bench measure, flaky by nature), and the Joomla template's empty form card after the switch (its override is not in this repository).",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-926-where-contact-form-switch.mjs"] }
+}

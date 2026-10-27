@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-893-wp-demo-contact-links-lead-to-customer",
+  "kind": "fix",
+  "title": "WordPress Apply: the demo company's mailto and tel links lead to the customer's typed mailbox and phone",
+  "pr": 893,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/brief-wp-residue.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"the mailbox and phone the customer typed are where the template's company had its own, in every part the sweep reads\"; \"with no mailbox typed, the demo's e-mail tile goes, and the account that receives the forms' mail is not put in its place\"; \"a link that mails or calls the template's company leads to the customer's own mailbox and phone, and shows them where it showed the demo's\"; \"with no mailbox and no phone typed, a link to the demo that is all its block says goes with the block; one inside a sentence is left and said\"; \"a sweep asked nothing about contacts leaves every mail and phone link as it is\"; \"a raw HTML row of icon links, or a linked picture, is never cut whole for the one demo link in it\"; \"a phone link is read as a dialler reads it, every number or address a contact link shows becomes the typed one, and only the first typed one is used\"; \"a block's own contact link is found however its comment spells it, and the note says why a link was left\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 96).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): every mailto:/tel: link to the template's company in every part the sweep reads points at (and shows) the first typed mailbox/phone, read decoded as a dialler reads it; with nothing typed a demo link that is all its block says goes with the block, one in a sentence, a row of icons or a linked picture is left and said; a block's own url is found however its comment spells it; the account that receives form mail never replaces the demo tile."
+  ],
+  "selectors": {
+    "contacts": "contactLinks in apps/tracy-web/src/sites/brief-engines/wp-contacts.js",
+    "sweep": "sweepWordPress in apps/tracy-web/src/sites/brief-engines/wp-residue.js"
+  },
+  "evidence": "Ledger L17, 05/10/2026: after Apply on ja-kinetic (WordPress) the Contact page still invited mail to the demo company (mailto:sales@kinetic.dev, support@..., security@...) and the customer's typed email and phone were on no page. Reds afbe7714f, 1b9ce6e02, 2a389803b, 8815b8f1e; fixes 756c1c8c5, 907052ca9, ce3341830, 3022ab631.",
+  "fence": "A sweep asked nothing about contacts changes no link; links to anyone but the template company are left.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-wp-residue.test.mjs"
+    ],
+    "tests": [
+      "the mailbox and phone the customer typed are where the template's company had its own, in every part the sweep reads",
+      "with no mailbox typed, the demo's e-mail tile goes, and the account that receives the forms' mail is not put in its place",
+      "a link that mails or calls the template's company leads to the customer's own mailbox and phone, and shows them where it showed the demo's",
+      "with no mailbox and no phone typed, a link to the demo that is all its block says goes with the block; one inside a sentence is left and said",
+      "a sweep asked nothing about contacts leaves every mail and phone link as it is",
+      "a raw HTML row of icon links, or a linked picture, is never cut whole for the one demo link in it",
+      "a phone link is read as a dialler reads it, every number or address a contact link shows becomes the typed one, and only the first typed one is used",
+      "a block's own contact link is found however its comment spells it, and the note says why a link was left"
+    ]
+  }
+}

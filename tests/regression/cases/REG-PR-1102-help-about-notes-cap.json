@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1102-help-about-notes-cap",
+  "kind": "fix",
+  "title": "Settings › Help & about: long release notes keep the What's new box at 150 px after it measures them, instead of growing to the 480 px ceiling",
+  "pr": 1102,
+  "area": "settings/help-about",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Mount the real Help & about view with React in jsdom, once with long notes and once with short ones."
+  ],
+  "expect": [
+    "S1: long notes leave the box with an inline height of 150px; short notes leave it with no inline height."
+  ],
+  "selectors": {
+    "section": ".ts-help-notes-box"
+  },
+  "fence": "jsdom lays nothing out, so the text's height is given; the box in a real browser is measured on dev (cowork.tracy.site, ?settings=help with the bridge stubbed) after merge.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-settings/test/help-about-notes-box.test.mjs"
+    ],
+    "timeout_s": 120,
+    "tests": [
+      "long notes: the box stays at the 150px cap after it measures them",
+      "short notes: the box has no fixed height, so it is as tall as its text"
+    ]
+  }
+}

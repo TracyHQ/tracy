@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+  "status": "complete",
+  "name": "Jonas Pelzer",
+  "url": "https://styles.refero.design/style/dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+  "sourceWebsite": "https://jonaspelzer.com",
+  "extractedAt": "2026-06-03T22:05:42.926Z",
+  "capturedAt": "2026-10-08T05:18:21.600731+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Literary broadsheet on white paper. A single weight-400 display headline sets the tone — roman and italic interleave in one breath, all type shares one weight, and a rationed violet ink punctuates an otherwise achromatic page.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9ae94cda-e9a2-4b1e-87f5-13165032813a.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "cf958121c20fdb48c38b6e21cd1c59d971e4daac1e970408b060dab124545e31",
+      "bytes": 17858
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ab2228c3144262a3c57182886a1b1aae8ef1281dbbd09afb29a1177926d256b6",
+      "bytes": 105009
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3aa869e0bb9112a6ca669bda75fc6adf10f4908893adb6a0f1a8de5c4d87a64f",
+      "bytes": 15446
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "61b953c7e73f0db924eb1bbcc7d3e6ab2374ab2e89457578f131a1bc6963bf23",
+      "bytes": 7804
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b3e7377e43b348dfa4d35f74ee90fdb19181b80e9c5d9b169f2c70edfdcaa897",
+      "bytes": 11134
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ff0b0fbd4fb53a591dc0e634f8a7a42bdce373a98dc406092272ade249361732",
+      "bytes": 2453
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7951ffa3310c197e8e38708295941d0ba159df03b29db5e31ca641e25f30f5eb",
+      "bytes": 513
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f1c59596ef0b2230bf4261d6186b827fe5bd65fb73f4ce796d3e26db7683d1bb",
+      "bytes": 530
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c837799cfc0acde35cea5204926de8dde0a0de00668bc8734a56b9bb5d3c9839",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "41b64319143598a2af356875885efd9a8b6e565144e1d2e7ea9fda77225f21c7",
+      "bytes": 41522
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "171c726ab37f34a3c225fdb132afb4f935e10c321e980ac9cae57ce7736afd26",
+      "bytes": 21401
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "77ace67e30e78b5abb31a04ee58954e3ee456abaaf33fe08786d31a459c1641b",
+      "bytes": 34220
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7fa562d453632d27955d65c1f19ffe5e56c95d019776c5ed669f66a5d9cda00b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f3fbf473b7b441adcba6896c17655d8c9b819070a9be89603baa09ddd39b417a",
+      "bytes": 1304
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0ded7c7e748b7cae213a45ddff871b1d9569a8f790487f2bd73ee23398e82b68",
+      "bytes": 1753
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "6262b0bb-ea6f-481b-b706-65df29507b6c",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "a21cf7a4-80e0-4f4a-9297-823a5180c2d3",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

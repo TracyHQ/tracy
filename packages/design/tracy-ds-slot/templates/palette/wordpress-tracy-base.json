@@ -1,0 +1,477 @@
+{
+  "source": "tracy-base/wp7@1.1.4",
+  "pages": ["/", "/product/", "/pricing/", "/product"],
+  "page": "#ffffff",
+  "rules": [
+    [":where(.wp-block-search__button)", "border-top-color", "border", 0],
+    [":where(.wp-block-search__button)", "border-right-color", "border", 0],
+    [":where(.wp-block-search__button)", "border-bottom-color", "border", 0],
+    [":where(.wp-block-search__button)", "border-left-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-top-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-right-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-bottom-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-left-color", "border", 0],
+    [":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)", "background-color", "bg", 0],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-facebook",
+      "color",
+      "accent-text",
+      0
+    ],
+    [
+      ":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-instagram",
+      "color",
+      "accent-text",
+      0
+    ],
+    [
+      ":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-linkedin",
+      "color",
+      "accent-text",
+      0
+    ],
+    [":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-youtube", "color", "accent-text", 0],
+    [".screen-reader-text:focus", "color", "fg", 0],
+    [".screen-reader-text:focus", "background-color", "surface", 0],
+    ["body", "color", "fg", 0, "--wp--preset--color--fg"],
+    ["body", "background-color", "bg", 0, "--wp--preset--color--bg"],
+    ["h1, h2, h3, h4, h5, h6", "color", "fg", 0, "--wp--preset--color--fg"],
+    [
+      ":root :where(.wp-element-button, .wp-block-button__link)",
+      "color",
+      "on-band",
+      0,
+      "--wp--preset--color--accent-on"
+    ],
+    [
+      ":root :where(.wp-element-button, .wp-block-button__link)",
+      "background-color",
+      "band",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [
+      ":root :where(.wp-element-button:hover, .wp-block-button__link:hover)",
+      "color",
+      "on-band",
+      0,
+      "--wp--preset--color--accent-on"
+    ],
+    [
+      ":root :where(.wp-element-button:hover, .wp-block-button__link:hover)",
+      "background-color",
+      "accent",
+      0,
+      "--wp--preset--color--accent-hover"
+    ],
+    [".skip-link.screen-reader-text:focus", "color", "fg", 0],
+    [".skip-link.screen-reader-text:focus", "background-color", "surface", 0],
+    [".tracy-eyebrow", "color", "muted", 0, "--wp--preset--color--meta"],
+    [".tracy-lead", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [".tracy-meta", "color", "muted", 0, "--wp--preset--color--muted"],
+    [
+      ".tracy .wp-block-button.is-style-outline .wp-block-button__link, .tracy .tracy-btn--ghost .wp-block-button__link",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [".tracy .tracy-btn:not(.wp-block-button)", "color", "fg", 0, "--wp--preset--color--fg"],
+    [
+      ".tracy .tracy-btn:not(.wp-block-button)",
+      "background-color",
+      "surface",
+      0,
+      "--wp--preset--color--surface"
+    ],
+    [
+      ".tracy .tracy-btn--primary:not(.wp-block-button)",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--accent-on"
+    ],
+    [
+      ".tracy .tracy-btn--primary:not(.wp-block-button)",
+      "background-color",
+      "band",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [
+      ".tracy .tracy-btn--primary:not(.wp-block-button):hover",
+      "background-color",
+      "accent",
+      0,
+      "--wp--preset--color--accent-hover"
+    ],
+    [
+      ".tracy .tracy-btn--primary:not(.wp-block-button):active",
+      "background-color",
+      "accent",
+      0,
+      "--wp--preset--color--accent-active"
+    ],
+    [".tracy-header", "background-color", "bg", 0, "--wp--preset--color--bg"],
+    [".tracy-nav .wp-block-navigation-item__content", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [
+      ".tracy-nav .current-menu-item > .wp-block-navigation-item__content, .tracy-nav .current-menu-ancestor > .wp-block-navigation-item__content",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [".tracy-nav .wp-block-navigation-item__content:hover", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".tracy-hero", "background-color", "bg", 0, "--wp--preset--color--bg"],
+    [".tracy-card", "background-color", "surface", 0, "--wp--preset--color--surface"],
+    [".tracy-footer", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".bg-accent", "background-color", "band", 0, "--wp--preset--color--accent"],
+    [".bg-accent\\/10", "background-color", "band", 0, "--wp--preset--color--accent"],
+    [".bg-surface", "background-color", "surface", 0, "--wp--preset--color--surface"],
+    [".text-accent-on", "color", "on-band", 0, "--wp--preset--color--accent-on"],
+    [".text-fg", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".text-fg-2", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [".text-muted", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy-faq__item summary::after", "color", "accent-text", 0, "--wp--preset--color--accent"],
+    [".tracy-plan__list li::before", "color", "accent-text", 0, "--wp--preset--color--success"],
+    [
+      ".tracy-btn--inverse .wp-block-button__link, .tracy-btn--inverse.tracy-btn",
+      "color",
+      "accent-text",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [
+      ".tracy-btn--inverse .wp-block-button__link, .tracy-btn--inverse.tracy-btn",
+      "background-color",
+      "bg",
+      0,
+      "--wp--preset--color--accent-on"
+    ],
+    [".tracy-header__link a", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [".tracy-header__link a:hover", "color", "fg", 0, "--wp--preset--color--fg"],
+    [
+      ".tracy .wp-block-button.is-style-outline .wp-block-button__link, .tracy .tracy-btn--ghost .wp-block-button__link",
+      "color",
+      "accent-text",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [".tracy-mega__trigger", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [
+      ".tracy-mega__trigger:hover, .tracy-mega.is-open > .tracy-mega__trigger",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [".tracy-mega__panel", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".tracy-mega__panel", "background-color", "surface", 0, "--wp--preset--color--surface"],
+    [".tracy-mega__title", "color", "muted", 0, "--wp--preset--color--meta"],
+    [
+      ".tracy-mega__links a, .tracy-mega__latest .wp-block-post-title a",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".tracy-mega__links a:hover, .tracy-mega__latest .wp-block-post-title a:hover",
+      "color",
+      "accent-text",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [".tracy-mega__latest .wp-block-post-date", "color", "muted", 0, "--wp--preset--color--meta"],
+    [".tracy-mega__feature", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy-theme-toggle", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [".tracy-theme-toggle:hover", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".tracy-footer__band", "background-color", "surface", 0, "--wp--preset--color--surface"],
+    [
+      ".tracy-footer__title, .tracy-footer__social .wp-block-heading",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".tracy-footer__links .wp-block-navigation-item__content",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--muted"
+    ],
+    [
+      ".tracy-footer__links .wp-block-navigation-item__content:hover",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [".tracy-footer__social .acm-social-links__handle", "color", "muted", 0, "--wp--preset--color--muted"],
+    [
+      ".tracy-footer__social .wp-block-social-links .wp-social-link .wp-block-social-link-anchor",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--muted"
+    ],
+    [
+      ".tracy-footer__social .wp-block-social-links .wp-social-link .wp-block-social-link-anchor:hover",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [".tracy-footer__strip", "background-color", "surface", 0, "--wp--preset--color--surface"],
+    [".tracy-footer__strip .tracy-site-notice", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy .tracy-eyebrow", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy.home .tracy-eyebrow", "color", "accent-text", 0, "--wp--preset--color--accent"],
+    [".tracy.home .tracy-social-proof__label", "color", "muted", 0, "--wp--preset--color--muted"],
+    [
+      ".tracy.home .tracy-hero .tracy-eyebrow",
+      "background-color",
+      "surface",
+      0,
+      "--wp--preset--color--surface"
+    ],
+    [".tracy .tracy-stat__label", "color", "on-band", 0, "--wp--preset--color--muted"],
+    [".tracy li.border-border-soft", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [
+      ".tracy .tracy-hero__note, .tracy .tracy-plans__note, .tracy .acm-testimonials__role",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--meta"
+    ],
+    [
+      ".tracy .tracy-header__brand .tracy-brand, .tracy .tracy-header__brand .tracy-brand a",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".tracy.home .tracy-hero .wp-block-button + .wp-block-button .wp-block-button__link",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".tracy.home .tracy-hero .wp-block-button + .wp-block-button .wp-block-button__link",
+      "background-color",
+      "bg",
+      0,
+      "--wp--preset--color--bg"
+    ],
+    [
+      ".tracy.home .tracy-hero__copy > p.wp-block-paragraph:last-child:not([class*=\"tracy-\"])",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--meta"
+    ],
+    [".tracy p.text-fg-2.mb-0.wp-block-paragraph", "color", "fg", 0, "--wp--preset--color--fg-2"],
+    [".tracy p.tracy-meta.text-center.mt-6", "color", "fg", 0, "--wp--preset--color--fg"],
+    [
+      ".tracy p.tracy-social-proof__rating.tracy-meta.text-fg-2",
+      "color",
+      "accent-text",
+      0,
+      "--wp--preset--color--warn"
+    ],
+    [
+      ".tracy p.tracy-lead.has-text-align-center.wp-block-paragraph",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--muted"
+    ],
+    [".tracy p.tracy-lead.mb-0.has-text-align-center", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy p.tracy-meta.tracy-plans__note.text-center", "color", "muted", 0, "--wp--preset--color--meta"],
+    [
+      ".tracy .tracy-section--band.bg-surface:not(.acm-carousel--gray)",
+      "background-color",
+      "bg",
+      0,
+      "--wp--preset--color--bg"
+    ],
+    [".tracy .tracy-plan .tracy-actions .wp-block-button__link", "color", "fg", 0, "--wp--preset--color--fg"],
+    [
+      ".tracy .tracy-plan .tracy-actions .wp-block-button__link",
+      "background-color",
+      "bg",
+      0,
+      "--wp--preset--color--bg"
+    ],
+    [
+      ".tracy .tracy-plan:nth-child(2) .tracy-actions .wp-block-button__link",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--accent-on"
+    ],
+    [
+      ".tracy .tracy-plan:nth-child(2) .tracy-actions .wp-block-button__link",
+      "background-color",
+      "band",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [".tracy .tracy-pillars .tracy-pillar", "background-color", "bg", 0, "--wp--preset--color--bg"],
+    [
+      ".tracy main :is(input[type=\"text\"], input[type=\"password\"], input[type=\"email\"], input[type=\"search\"], input[type=\"tel\"], input[type=\"url\"], textarea, select)",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".tracy main :is(input[type=\"text\"], input[type=\"password\"], input[type=\"email\"], input[type=\"search\"], input[type=\"tel\"], input[type=\"url\"], textarea, select)",
+      "background-color",
+      "bg",
+      0,
+      "--wp--preset--color--bg"
+    ],
+    [".tracy-footer__strip .tracy-footer__copyright", "color", "muted", 0, "--wp--preset--color--muted"],
+    [
+      ".tracy .acm-hero .tracy-eyebrow, .tracy .acm-features-intro .tracy-eyebrow",
+      "color",
+      "accent-text",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [".tracy li.acm-tabs__tab", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy p.acm-cta-capsule__support.text-fg-2.mb-0", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy p.text-sm.text-fg-2.mb-0", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy p.tracy-stat__label.text-sm.text-fg-2", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy li.acm-tabs__tab.is-active", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".acm-tabs__tab a", "color", "muted", 0, "--wp--preset--color--muted"],
+    [
+      ".acm-tabs__tab a:hover, .acm-tabs__tab a:focus-visible, .acm-tabs__tab.is-active a",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".acm-cta-capsule .acm-cta-capsule__box",
+      "background-color",
+      "surface",
+      0,
+      "--wp--preset--color--surface"
+    ],
+    [".acm-cta-capsule .acm-cta-capsule__support", "color", "muted", 0, "--wp--preset--color--muted"],
+    [
+      ".tracy .acm-cta-capsule .tracy-btn--ghost .wp-block-button__link",
+      "color",
+      "fg",
+      0,
+      "--wp--preset--color--fg"
+    ],
+    [
+      ".tracy .acm-cta-capsule .tracy-btn--ghost .wp-block-button__link:hover",
+      "color",
+      "accent-text",
+      0,
+      "--wp--preset--color--accent"
+    ],
+    [".acm-carousel__step", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".acm-carousel__step:disabled", "color", "muted", 0, "--wp--preset--color--meta"],
+    [
+      ".tracy .acm-carousel .acm-carousel__slide .tracy-eyebrow",
+      "color",
+      "muted",
+      0,
+      "--wp--preset--color--muted"
+    ],
+    [".tracy .acm-tabs__tab.is-active a", "color", "fg", 0, "--wp--preset--color--fg"],
+    [".bg-bg", "background-color", "bg", 0, "--wp--preset--color--bg"],
+    [".tracy p.text-sm.text-fg-2.mb-4", "color", "muted", 0, "--wp--preset--color--muted"],
+    [".tracy .acm-pricing .tracy-plan", "background-color", "bg", 0, "--wp--preset--color--bg"],
+    [
+      ".tracy .acm-pricing .tracy-plan:nth-child(2)",
+      "background-color",
+      "bg",
+      0,
+      "--wp--preset--color--surface-warm"
+    ],
+    [
+      ".tracy .acm-accordion > .tracy-section__inner",
+      "background-color",
+      "surface",
+      0,
+      "--wp--preset--color--surface"
+    ]
+  ],
+  "vars": [
+    ["--wp-block-synced-color", "accent"],
+    ["--wp-admin-theme-color", "accent"],
+    ["--wp-admin-theme-color-darker-10", "accent"],
+    ["--wp-admin-theme-color-darker-20", "accent"],
+    ["--wp--preset--color--pale-pink", "accent"],
+    ["--wp--preset--color--vivid-red", "accent"],
+    ["--wp--preset--color--luminous-vivid-orange", "accent"],
+    ["--wp--preset--color--luminous-vivid-amber", "accent"],
+    ["--wp--preset--color--light-green-cyan", "accent"],
+    ["--wp--preset--color--vivid-green-cyan", "accent"],
+    ["--wp--preset--color--pale-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-purple", "accent"],
+    ["--wp--preset--color--accent", "accent"],
+    ["--wp--preset--color--accent-hover", "accent"],
+    ["--wp--preset--color--accent-active", "accent"],
+    ["--wp--preset--color--success", "accent"],
+    ["--wp--preset--color--warn", "accent-text"],
+    ["--wp--preset--color--danger", "accent"]
+  ],
+  "inline": [],
+  "colours": {
+    "#cccccc": "border",
+    "#949494": "border",
+    "#ffffff": "bg",
+    "#0866ff": "accent-text",
+    "#f00075": "accent-text",
+    "#0d66c2": "accent-text",
+    "#ff0000": "accent-text",
+    "#444444": "fg",
+    "#dddddd": "surface",
+    "#1d1d1f": "fg",
+    "#0071e3": "band",
+    "#0077ed": "accent",
+    "#eeeeee": "surface",
+    "#86868b": "muted",
+    "#424245": "fg",
+    "#6e6e73": "muted",
+    "#f5f5f7": "surface",
+    "#0066cc": "accent",
+    "#16a34a": "accent-text",
+    "#eab308": "accent-text",
+    "#fbfbfd": "bg"
+  }
+}

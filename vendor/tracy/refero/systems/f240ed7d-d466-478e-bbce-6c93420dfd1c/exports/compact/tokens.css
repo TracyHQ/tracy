@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-midnight-wine: #42022e;
+  --gradient-midnight-wine: linear-gradient(90deg, #42022, rgba(66, 2, 46, 0));
+  --color-coral-ember: #ff4143;
+  --color-slate-ink: #455360;
+  --color-fog-gray: #939598;
+  --color-paper-white: #ffffff;
+  --color-mist: #e0e0e0;
+  --color-graphite: #11110f;
+  --color-google-signal-blue: #4285f4;
+
+  /* Typography — Font Families */
+  --font-sentinel: 'Sentinel', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-whitney: 'Whitney', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

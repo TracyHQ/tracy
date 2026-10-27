@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b2ace2c1-d6ee-4d57-915e-901224cded11",
+  "status": "complete",
+  "name": "Alison Roman",
+  "url": "https://styles.refero.design/style/b2ace2c1-d6ee-4d57-915e-901224cded11",
+  "sourceWebsite": "https://www.alisoneroman.com",
+  "extractedAt": "2026-06-03T20:57:40.601Z",
+  "capturedAt": "2026-10-08T05:16:23.243805+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "cookbook pages on warm cream paper — a printed spread from an artisan food memoir, translated to screen with zero loss of tactility",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ae45e02c-c237-4235-b076-72821aff1d2c.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f6cc7c72-7eaf-4f7e-9b14-732212ef7890.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c93fb610-421e-465e-86ca-e030ddd12985.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8839e688-058b-4255-aae6-aa5a07c258fa.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0c301d44-fc42-4d71-bcd1-96a83b9a8dea.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0649e7b6dbd14c3a59b22d64f97d13dc7ff352c68e3f8b7dc1d7dd59c8825384",
+      "bytes": 18706
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6da79e45312809f7ed40532584df528e6b254e2ddf45eff0e867ce3e3c313001",
+      "bytes": 101686
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "050491448e47c4cec9e52e98f443245e5dc3afe708dc5bbed1a2bc72451ea908",
+      "bytes": 14928
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d889f0fd6231a901f81a9bdfd625152374efb879fbdfff79ef024ef64dbad6f9",
+      "bytes": 8102
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6b70c32f3c37042430f102d819a2ccf43ce3555dc1d46922b0c570f948cae0cc",
+      "bytes": 11742
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1be3242221f1547a23f42d329c62d63428eb40bef18b60fa2842e4c74b6f0671",
+      "bytes": 3277
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "973a3844a97eaa5d4a1e693ef1719ffc5a3ef52fffe8d07f517596e6fd37ecc2",
+      "bytes": 685
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f117adbfe0c2e126178ac30aba767a52e0dc9b4dacbad7dc1f3b3728ea2960b5",
+      "bytes": 702
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1ee79ef63696518f6d26fa0085c4f0c58cbdffcb9f4ddb4f00985a78cb63a2eb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5e54b4a7db6ab021240d25ec317f812a1a9c884c776d399814b206a725831470",
+      "bytes": 41046
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cca2abf7bcd822effdb6ea13dc507f99fa7a2b8d93128e188d655334305d5c4f",
+      "bytes": 20962
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8dc1c38b20b81f1f7251014a1206767bb64e76438032f2c8bd014601461f0be8",
+      "bytes": 33485
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2defdefcf4f87df452502eb8f0b630280dc59cbac993bf6af2b097463e02955b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c1d218dc72c179d1b703c9392ecf26ca1be957248ea576be5ad5ddcbdff93619",
+      "bytes": 1568
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1cd561c5e87c1ab5ccb1f083eb9a8e1e7ee9c6e34e2eb9bbf9e8c45a857d0c63",
+      "bytes": 2122
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "6120469b-a1c8-46d3-b7fd-8aa6dc22c0d9",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "71717c5a-324a-40ed-8a09-9a35df74f1d3",
+    "7fdd9506-0a85-41a5-b2a7-c5ce1f31d863",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b2ace2c1-d6ee-4d57-915e-901224cded11",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1580-import-problem-locale-grammar",
+  "kind": "fix",
+  "title": "Import problem guidance uses correct Spanish and Italian grammar",
+  "pr": 1580,
+  "area": "site/import/locale",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the deterministic locale grammar test against the checked-out source dictionaries."],
+  "expect": ["All seven Spanish and one Italian guidance values contain their corrected phrase."],
+  "selectors": {
+    "dictionary": "packages/locale/tracy-locales/{es,it}/tracy-add-site.json"
+  },
+  "fence": "Checks the eight customer-visible import problem guidance phrases at their source keys.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/import-problem-locale-grammar.test.mjs"
+    ],
+    "tests": ["import problem guidance uses correct Spanish and Italian grammar"]
+  }
+}

@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-wine-maroon: #2d070b;
+  --color-hot-pink: #ff0389;
+  --color-cream-paper: #fef0e6;
+  --color-blush-card: #ffdce2;
+  --color-soft-pink: #ffc7de;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-instrument-serif: 'Instrument Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-dm-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-manrope: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

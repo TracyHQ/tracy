@@ -1,0 +1,22 @@
+# The PostgreSQL that `tests/regression/scripts/site-own-domain-stand.mjs` starts for one run and
+# removes when the run ends. Only that script brings this up, under a compose project of its own
+# (`tchdomainchecks`, `tchdomainpilot`); nothing here is shared with another stand.
+#
+# No named volume and no fixed host port: the data lives in the container's own anonymous volume
+# (gone with `down -v`), and the port is whichever the machine has free, bound to loopback only.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: tracy
+      POSTGRES_PASSWORD: ${STAND_POSTGRES_PASSWORD:?the stand script sets this}
+      POSTGRES_DB: tracy
+    # Many test files each create a database of their own and open several connections to it.
+    command: ['postgres', '-c', 'max_connections=400', '-c', 'fsync=off', '-c', 'full_page_writes=off']
+    ports:
+      - '127.0.0.1::5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U tracy -d tracy']
+      interval: 1s
+      timeout: 3s
+      retries: 60

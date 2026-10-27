@@ -1,0 +1,30 @@
+{
+  "id": "REG-048",
+  "kind": "fix",
+  "title": "JA Morgan wp7: the Contact Form mails the site administrator only, refuses over-limit and non-string fields, limits five mails an hour per connecting address shared with Quick Contact, and keeps its trap field out of reach",
+  "pr": 865,
+  "area": "wordpress-theme/wp-ja-morgan",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-morgan theme 1.1.6 under test (local stand from the quickstart pack) with the stand mail-capture plugin tasks/ja-morgan-wp7/tools/stand-mail-capture.php in wp-content/mu-plugins, and a second client on the stand's network that can run curl against the web service.",
+    "S2: From the TCH checkout run: node tasks/ja-morgan-wp7/tools/measure116.mjs --site <site> --out <dir> --wp \"<wp-cli runner>\" --peer \"<runner of a second container>\" --peer-site <web service url> (add --zip <theme.zip> --record <BROWSER.json> to bind the run to the theme bytes).",
+    "S3: Read the final line and each PASS/FAIL line."
+  ],
+  "expect": [
+    "measure116: TOTAL 6/6 checks pass.",
+    "M1: a normal Contact submit in a browser delivers exactly one mail, to admin_email, carrying the visitor's name, email, subject and message, and the page says it was sent.",
+    "M2: with the copy-to-yourself flag forced on in the POST and a third party as the visitor's address, nothing is mailed to that address (only admin_email receives); the box is rendered disabled and unnamed.",
+    "M3: a 61-character name, a 255-character email, a 201-character subject, a 5001-character message and an array in each field are refused with no mail and the form's notice; the same fields at 60/254/200/5000 are accepted; the form's maxlength attributes are 60/254/200/5000.",
+    "M4: the sixth mail within the hour from one connecting address is refused with no mail sent, Contact and Quick Contact share the count, a second client's mail still goes out, and the counter is per hour.",
+    "M5: a filled jform[contact_url] sends no mail and a form without it is refused; the field is tabindex -1, inside an aria-hidden block, off screen, and a Tab walk never reaches it.",
+    "M6: Quick Contact still sends one mail to the administrator, a failed send keeps the typed text and says so, and a double click sends one mail."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-morgan-wp7/tools/measure116.mjs",
+    "evidence": "tasks/ja-morgan-wp7/release/BROWSER.json"
+  },
+  "evidence": "PR #844 hardened the handlers but was checked only against stubbed WordPress functions; measure116 6/6 on 1.1.6 bound to wp-ja-morgan-1.1.6.zip bee8ddb8 (tasks/ja-morgan-wp7/release/BROWSER.json), and 2/6 (M1, M6) on the 1.1.5 theme, where the forced copy flag mailed the third-party address",
+  "fence": "Browser-measured behaviour of the shipped theme on a real WordPress; the tool fails closed on a crash"
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Primary page background, top of surface stack"
+    },
+    "warm-cream": {
+      "$value": "#fffcf6",
+      "$type": "color",
+      "$description": "Warm Cream — Card and elevated surface backgrounds, gentle warmth against pure white"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, icons, borders, and dark hero panels — the dominant structural color"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text and softer borders where pure black would feel too heavy"
+    },
+    "deep-panel": {
+      "$value": "#161616",
+      "$type": "color",
+      "$description": "Deep Panel — Dark feature cards, inverse surface for hero blocks, and high-contrast panels"
+    },
+    "fog-gray": {
+      "$value": "#8c8c8c",
+      "$type": "color",
+      "$description": "Fog Gray — Muted helper text, disabled button fills, and tertiary borders"
+    },
+    "mist-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Mist Gray — Hairline dividers, nav separators, subtle structural borders"
+    },
+    "lilac-mist": {
+      "$value": "#c4c9dd",
+      "$type": "color",
+      "$description": "Lilac Mist — Cool-toned decorative borders, illustration fills, and subtle chrome highlights"
+    },
+    "bubblegum": {
+      "$value": "#ff83da",
+      "$type": "color",
+      "$description": "Bubblegum — Primary brand accent — pill-shaped CTAs, announcement bar background, active highlights; vivid pink against white is the visual signature"
+    },
+    "cotton-pink": {
+      "$value": "#ffc5ee",
+      "$type": "color",
+      "$description": "Cotton Pink — Softer pink surface for secondary buttons and pastel card variants"
+    },
+    "blush-mist": {
+      "$value": "#f7e1f7",
+      "$type": "color",
+      "$description": "Blush Mist — Lightest pink wash for category tile backgrounds and quiet brand surfaces"
+    },
+    "ice-blue": {
+      "$value": "#d2f4ff",
+      "$type": "color",
+      "$description": "Ice Blue — Cool supporting accent for product UI screenshots, informational tiles, and category surface variation"
+    },
+    "voltage-lime": {
+      "$value": "#e8ff5b",
+      "$type": "color",
+      "$description": "Voltage Lime — High-energy accent for spotlight highlights, image overlays, and surprise moments — used sparingly for visual punctuation"
+    }
+  },
+  "font": {
+    "soehne": {
+      "$value": "Soehne",
+      "$type": "fontFamily",
+      "$description": "Single typeface across all UI. Body and UI copy at 400–500, navigation and labels at 500–600, subheads at 700, and display headlines at 900 — the extreme weight contrast between 400 body and 900 display is the signature typographic move. Aggressive negative tracking (-0.025em at display sizes) tightens headlines into bold block-like forms that feel architectural rather than airy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.mews.com/en",
+      "siteName": "Mews",
+      "extractedAt": "2026-06-03T19:44:30.042Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#191a1b",
+      "$type": "color",
+      "$description": "Ink — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills, list backgrounds"
+    },
+    "warm-shell": {
+      "$value": "#fdf1ef",
+      "$type": "color",
+      "$description": "Warm Shell — Hero gradient base, secondary surfaces — the warm cream that gives the whole site its sunset atmosphere"
+    },
+    "driftwood": {
+      "$value": "#beb9b3",
+      "$type": "color",
+      "$description": "Driftwood — Muted body text, subtle borders, image shadows — warm gray that harmonizes with the peach canvas"
+    },
+    "smoke": {
+      "$value": "#5e5a5a",
+      "$type": "color",
+      "$description": "Smoke — Nav text, icon strokes, list borders, secondary text"
+    },
+    "graphite": {
+      "$value": "#4e5154",
+      "$type": "color",
+      "$description": "Graphite — Body text at reduced contrast, fine borders in content blocks"
+    },
+    "iron": {
+      "$value": "#3f3f46",
+      "$type": "color",
+      "$description": "Iron — Deeper secondary text, fine separator borders"
+    },
+    "mist": {
+      "$value": "#cbd5e0",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, light dividers between sections and cards"
+    },
+    "electric-lime": {
+      "$value": "#d4ff4c",
+      "$type": "color",
+      "$description": "Electric Lime — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "lavender-whisper": {
+      "$value": "#cbc2ea",
+      "$type": "color",
+      "$description": "Lavender Whisper — Outlined action borders, ghost button strokes, soft decorative accents — a desaturated violet that signals interactivity without shouting"
+    },
+    "lilac-mist": {
+      "$value": "#d7e5fe",
+      "$type": "color",
+      "$description": "Lilac Mist — Decorative pastel wash, soft card accents, illustration tints"
+    },
+    "blossom": {
+      "$value": "#f5ddee",
+      "$type": "color",
+      "$description": "Blossom — Decorative pastel wash, hero gradient highlight, soft illustration tint"
+    },
+    "plum-shadow": {
+      "$value": "#4c305a",
+      "$type": "color",
+      "$description": "Plum Shadow — Deep accent in image shadows and illustration depth — gives floating islands their grounded dimensionality"
+    },
+    "dusk-gradient": {
+      "$value": "#334155",
+      "$type": "color",
+      "$description": "Dusk Gradient — Gradient endpoint for dark image overlays"
+    },
+    "aurora-wash": {
+      "$value": "#32c5ff",
+      "$type": "color",
+      "$description": "Aurora Wash — Subtle multi-hue gradient wash on feature sections — used at 0.08 opacity for atmospheric backgrounds"
+    }
+  },
+  "font": {
+    "p22-mackinac-pro": {
+      "$value": "p22-mackinac-pro",
+      "$type": "fontFamily",
+      "$description": "Display headlines and editorial accents. Weight 300-400 at 60-96px creates the signature warm, literary feel — the serif whispers rather than commands. Italic variant used for emphasis words in headlines ('actually', 'Statamic')."
+    },
+    "lexend": {
+      "$value": "Lexend",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface. Nav, buttons, body text, card titles, footer. Weight 300 for nav and secondary text keeps the interface light; 500-600 for buttons and labels. The wide weight range lets it carry both quiet metadata and confident CTAs."
+    },
+    "code-saver": {
+      "$value": "code-saver",
+      "$type": "fontFamily",
+      "$description": "Monospace for code blocks, file tree, technical content, input fields. Weight 700 for syntax emphasis, 300 for ambient code display."
+    },
+    "lore": {
+      "$value": "Lore",
+      "$type": "fontFamily",
+      "$description": "Icon font — single weight at 14px for UI iconography"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://statamic.com",
+      "siteName": "Statamic",
+      "extractedAt": "2026-06-03T21:47:59.310Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "about": "sheet-failed: probe data of JA Directory Joomla 1.0.2 under Moxie, light, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1). broken: the asset door answering 502 as dev's did that day (PREVIEW_ASSET_FAIL=1); clean: the door serving every sheet (the demo's own 404 for templates/system/css/system.css is not a preview failure).",
+  "broken": [
+    {
+      "source": "quickstart/ja-directory/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light asset door 502",
+      "plain": {
+        "data": [
+          "/t3-assets/css/css-f4486-76277.css",
+          "/templates/system/css/system.css",
+          "/t3-assets/css/css-e51bf-76277.css",
+          "/t3-assets/css/css-67cae-76279.css",
+          "/t3-assets/css/css-dbfad-76277.css",
+          "/t3-assets/css/css-3b626-76277.css"
+        ]
+      },
+      "worn": {
+        "data": [
+          "/t3-assets/css/css-f4486-76277.css",
+          "/templates/system/css/system.css",
+          "/t3-assets/css/css-e51bf-76277.css",
+          "/t3-assets/css/css-67cae-76279.css",
+          "/t3-assets/css/css-dbfad-76277.css",
+          "/t3-assets/css/css-3b626-76277.css"
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-directory/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "plain": {
+        "data": []
+      },
+      "worn": {
+        "data": []
+      }
+    }
+  ]
+}

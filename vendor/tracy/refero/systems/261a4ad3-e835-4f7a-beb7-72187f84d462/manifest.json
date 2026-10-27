@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "261a4ad3-e835-4f7a-beb7-72187f84d462",
+  "status": "complete",
+  "name": "amp",
+  "url": "https://styles.refero.design/style/261a4ad3-e835-4f7a-beb7-72187f84d462",
+  "sourceWebsite": "https://ampfit.com",
+  "extractedAt": "2026-06-03T19:15:38.828Z",
+  "capturedAt": "2026-10-08T05:09:28.069485+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "warm orange pill on cool white. The design feels like a premium fitness product photographed in a sunlit loft: one object, one accent, one confident typeface doing all the work.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/11752e5e-8721-415b-b562-1e81bf33e59a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5b9af69d-b353-4917-8b8a-0730893d0e4b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d1298234-95e3-4b71-8a93-a7489a037ea0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/86cb8a7e-6d24-45e1-92be-a01e16678b25.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9f4a748e-c053-469a-adf4-a7d1fde662ad.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "26fd40410f7649cf60d1c6d37e7a17f6dbd12ae399a18160eb16723b36616a92",
+      "bytes": 20486
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4b31f31f558ab67087a3e560dbb569cf64af200b0cf8c69ca2409f9c423b7add",
+      "bytes": 53731
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "04e18274fd2ff356508f840a88545023ead956198481a4c38a5a2bcc61b745a9",
+      "bytes": 17258
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4c6f6f3958a8087efb09bcdc66794ad6fd578a0d603d5558a61d79849c6438e9",
+      "bytes": 17170
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b23c18504af5619e7b86f0fa158912ec68880d790f0f363e965f4d625eeb273d",
+      "bytes": 12617
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ac8665e0e6df9d2085d4d4462dbaf9620bc1295e42f1e4517128c5ed1d0efd52",
+      "bytes": 3823
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c9569239fba1bfb1e14e47df1dd3425b017d9e48dfecebae76530d96a4653b57",
+      "bytes": 568
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8d22437a530d7e455b203d8b13ada3601af32e072dfcfc1dfa8aea6e74a65ce6",
+      "bytes": 585
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "be645c6889dfe65ab5d24c13bb3568ab38ce07b260178acf17656a44de4ee7f6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1d4826abf2269061af1e777c2b2252700f0e6006b534d5388b579a6e95d1483d",
+      "bytes": 46594
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a1715b26c73183f0d13867f25d24f45db73652965520f65c351ceaaec759b1b4",
+      "bytes": 24766
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "69f2262c7e18f6233b2311f3c43793adcc9175baa14ac328b84b2f685578a639",
+      "bytes": 61700
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "abbdb1fe9e0523fcb8311d05d9c2ee9c32d251d2b7866f28b7ad8e879ab25bce",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7797318e804bc90bb99129bcacea376dc43626f3e5c6eb47cca2ce9176c49604",
+      "bytes": 1926
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "593366bab285d71477070b605efd4b78f0673f336f9ea74b343e3521342b264e",
+      "bytes": 2582
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "261a4ad3-e835-4f7a-beb7-72187f84d462",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d5ed8712-0e42-4c6c-83b1-b3d7f27d1d10",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "65b30976-3663-40b2-8751-7a360ba74539",
+  "status": "complete",
+  "name": "Apollographql",
+  "url": "https://styles.refero.design/style/65b30976-3663-40b2-8751-7a360ba74539",
+  "sourceWebsite": "https://apollographql.com",
+  "extractedAt": "2026-06-03T21:06:43.089Z",
+  "capturedAt": "2026-10-08T05:12:35.075270+00:00",
+  "theme": "mixed",
+  "industry": "devtools",
+  "description": "Mission control at midnight — a starfield console where orange is the only dial that glows.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4a1d2d52-b922-4b5d-9117-a60bb38a13a9.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "438d6f261fcd674d0ddd28a3f15381eaf49a33eb3ed463422b16da81c9db080c",
+      "bytes": 18489
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "26ed18f80d45f5a8a397a553456643843ada468b60a84d57d1d665587b54cab4",
+      "bytes": 115035
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0ed3c675b683aeec9bea73e17a9d297a174abd724e0c31174a92c8e18a10a802",
+      "bytes": 16171
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dc630fe6e72c036c60275dcbc0c277dcbe70990f178f9f15531ae9ecb4f5926d",
+      "bytes": 10099
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "77c32ff96ae2e1404ef3f6383248d33f4b9554aee375581e134c80869b0eed7a",
+      "bytes": 11698
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f23ac59358c15b5cc41233f48e6ec442e205c5ec9e8b5c73264415928774c78d",
+      "bytes": 2460
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bd8766e9325af593459331e7a0dbb0cebe78e1a8385db125a904759c390fab39",
+      "bytes": 453
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a879ad08a10f01ee1bb05323c23a40ceca3d79856db8644d33d86a9ec4194e13",
+      "bytes": 470
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "91f0f86ab4adfcff14e27ae232227ee13d9e7163f50e1a7e7c3e5d7853f4f633",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8ac20f1f66fb998d1d23a8f144bcdc44eeff9fe43fd00acd181b9844aedeeca1",
+      "bytes": 43365
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "58e9ac745c60917067edc33d9da342a2ccc079ff9c9686bc79a4e86c7d13a7a0",
+      "bytes": 22709
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b38d8ad566074405fdd211cd5e06a39cc2c6e8a7352dbd76b99faf1a08fe4925",
+      "bytes": 40136
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e241cb8fc792e1f40d0c1001cd5cc2334074d4b7c371b17c89ccb5531d25d083",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c8525de9da79e3706c8d5a068a2a45c407112027d39351d9535b6439fbf9060a",
+      "bytes": 1248
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0bd8be71d696aee2ea3ece24a5545c332b90ef27a0717fbbc5400670cb2df6c2",
+      "bytes": 1897
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "65b30976-3663-40b2-8751-7a360ba74539",
+    "77b723ca-9583-4349-9b5e-2ef8b4fde002",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "dd89ce6c-f0aa-4ca8-bd63-19dcd81920a7",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

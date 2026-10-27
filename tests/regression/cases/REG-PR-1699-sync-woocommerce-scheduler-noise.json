@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-1699-sync-woocommerce-scheduler-noise",
+  "kind": "fix",
+  "title": "On a WordPress site running WooCommerce, the analytics import's progress options (woocommerce_admin_scheduler_*) are housekeeping: a Sync from live never lists them as Tracy's version kept, while real WooCommerce settings are still compared",
+  "pr": 1699,
+  "area": "sync/live",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: python3 packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"],
+  "expect": [
+    "S1: VolatileRows passes: woocommerce_admin_scheduler_* options are volatile; woocommerce_store_address, woocommerce_currency and woocommerce_admin_notices are not"
+  ],
+  "selectors": {
+    "host": "live_sync_wordpress.py VOLATILE_NAMES options prefixes"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-woocommerce-scheduler-noise.md",
+  "fence": "A sync never reports as a conflict a value no person changed",
+  "run": {
+    "cmd": ["python3", "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"]
+  }
+}

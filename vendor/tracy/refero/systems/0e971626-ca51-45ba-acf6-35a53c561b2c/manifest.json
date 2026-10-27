@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0e971626-ca51-45ba-acf6-35a53c561b2c",
+  "status": "complete",
+  "name": "Altitude",
+  "url": "https://styles.refero.design/style/0e971626-ca51-45ba-acf6-35a53c561b2c",
+  "sourceWebsite": "https://www.altitude.so",
+  "extractedAt": "2026-06-03T19:11:30.024Z",
+  "capturedAt": "2026-10-08T05:08:14.295643+00:00",
+  "theme": "dark",
+  "industry": "ai",
+  "description": "midnight financial editorial — a darkened trading floor printed on bone-white serif stock, lit only by thin borders and a single blue accent.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8a555d8f-3988-4316-9266-d1e4083bf1f6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e216103d-b32d-4431-8e33-86e01aa67765.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ff525663-009d-4dde-bcaa-3c900ea64cd5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/74b28a0f-650f-43b4-948a-6f97371d8e5e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/8458bf09-ac50-451f-a92e-6fade0eff793.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5e9e4fc3e2c6bac9d7947c59bce928179e781285f6fa97928c845ed02c32d613",
+      "bytes": 22816
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "39cb42addc567a0147427c5bb3e2de83caee469c9575ccc02b187f4b89379d5a",
+      "bytes": 42017
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a0e2a1cab2bd7ed1074553bcc965a0a927811d4f26ac4cdc6e605b02787b8ce2",
+      "bytes": 17766
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2c77505291c802e7e89908afb76874f37e2acd5bc0fb5458ce1de72ffe7f83ac",
+      "bytes": 19724
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "33a23da93d2cb392d9a8fe5d3456c469eb7ad9037b0a08017e101ea9ed41b0e5",
+      "bytes": 13385
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "907faf1bcab61642f85518eccce7cfa4ea58821f2cac6da169ff128b0972ddc7",
+      "bytes": 3868
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b693a741b8036b37f2c26a5e404cbba45ab7984d920a9c633ce6b09fff91964c",
+      "bytes": 785
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "878a48f2f89505f648afaf5db8153ba26753ed4b96f50864a747fa39fd32413f",
+      "bytes": 802
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "827ca0c9327c6ee450fbc9ea333e190dc0405a01deeebf7c3cc297bd08bdc207",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1025782e7aa8ad224d90b26a7939e574bda71ee6220dadbd1f6e160cb2b95b6e",
+      "bytes": 50241
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b75102dfdc0868e7f2603a73e5f9250f37ad3c1994c3168abacae291621d9344",
+      "bytes": 27376
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3dcebae85c1e41e1a1ccead3a3639026a6777b2496ab293a19c5accbc56737c0",
+      "bytes": 81423
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9270eb7445df8e99d3008e382bd0f82319333f990682ea4a4f71890fc9c0cd4a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0bb013b861828a9d0a61c0a164af878b78c296dc32cd7e2974cc898b631d1f0c",
+      "bytes": 2324
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "97753db5e6988c8ef4fd455c4de1bb09022f89d918fefd88f51f4b361a015765",
+      "bytes": 2988
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0c55e725-e933-41b6-9fb7-2505a6659ee5",
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b136f0a0-8064-4978-a18e-db54b9362c24",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e"
+  ]
+}

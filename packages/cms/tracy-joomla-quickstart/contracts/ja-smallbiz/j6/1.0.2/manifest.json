@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-smallbiz/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_smallbiz",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-smallbiz",
+    "id": "quickstart/ja-smallbiz/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_smallbiz",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-smallbiz-j6-webroot-1.0.2.tar.gz",
+        "bytes": 35305815,
+        "sha256": "318e41170eeecf5870e5b52b4214b8e5c61e6bcc1cb50478426d038e69b7b2f0"
+      },
+      "database": {
+        "file": "ja-smallbiz-j6-database-1.0.2.sql.gz",
+        "bytes": 92365,
+        "sha256": "9325d94bfec53ff4bf5a6174137fb3674dcb559f93261d9816b9c0045a91b8bf"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T10:00:52.456Z",
+    "builtFrom": {
+      "site": "smallbiz-j6-g2",
+      "tag": "quickstart/ja-smallbiz/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-smallbiz/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,81 @@
+{
+  "note": "Independent oracle sources the flows cases cite (case.oracle.source), pinned by sha256 of the file in this tree; sha256 null = the source is absent from this tree, so the cases citing it cannot be PASS.",
+  "base": "6aefcf5d3074b2885b50e00be177bcee0bd7ccf3",
+  "sources": [
+    {
+      "path": "CONTEXT.md",
+      "sha256": "ce4142df10f98973667a5a0792606d9e13ad722252d607f3ad087b0fb4518445",
+      "cases": 27
+    },
+    {
+      "path": "apps/tracy-web/src/api-reference/routes/people.js",
+      "sha256": "60c61a6b043b7afd0827daf409b4328f4060f667e14d1e89670acc8f8b3a938b",
+      "cases": 16
+    },
+    {
+      "path": "docs/adr/0001-seat-door-and-enforcement-boundary.md",
+      "sha256": "9f2a0aff45086009d984a2e34f9f4743572398ad88d1bccab56427fd791d1c31",
+      "cases": 15
+    },
+    {
+      "path": "docs/adr/0014-one-dsh-per-host-commands-in-web-container.md",
+      "sha256": "d2148073cfdaf22b62e66382cbee2be44b3033b720caee09173fdb636b948e93",
+      "cases": 3
+    },
+    {
+      "path": "docs/adr/0024-backup-is-a-complete-restore-point.md",
+      "sha256": "61151bc8782864b75fd0df7fcbd0ee3d67d932036ba6ec4081d35ab5e7952e27",
+      "cases": 5
+    },
+    {
+      "path": "docs/adr/0025-close-comment-on-write-evidence.md",
+      "sha256": "46c477a4f44d71a4827bd6e045e0599e881dfcebaf6101b2c553098ed1183f60",
+      "cases": 3
+    },
+    {
+      "path": "docs/adr/0026-inbox-and-email-notifications.md",
+      "sha256": "3b973755784d8e0f7592c5ca7096208c363875acfd1b4dadddb969c44bbaaf36",
+      "cases": 3
+    },
+    {
+      "path": "tests/e2e-dev/journeys/J13.test.mjs",
+      "sha256": "01265b7ab861492beb7ed91a7417c5f926fa213dc82fb019f0bf25a9746b8812",
+      "cases": 1
+    },
+    {
+      "path": "tests/qa/oracles/signin/issue-993.md",
+      "sha256": "b539f1d0e97803263f3a912cbbf18d24dab6bfd79dd4a47da677793241aea679",
+      "cases": 7
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-936-sign-in-source.json",
+      "sha256": "16142e0054114a99a57e35800412ada77572e1f048b3efac78980c470b2eaaf6",
+      "cases": 6
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-948-site-publish-flow.json",
+      "sha256": "bbf9323b047c2ada25eee51a3378ce080667dde9fde9416c0091b9b324487a7e",
+      "cases": 18
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-970-site-changes-undo.json",
+      "sha256": "66a2f0480ce26a823b13385642edcea4ab8306335846b197d8b4a6a6f287f3aa",
+      "cases": 6
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-972-ops-waitlist.json",
+      "sha256": "18bdcb1ed0e9c998f8e9f669c4f1f4d9eeb1ee4341f14a70466860911deaef64",
+      "cases": 7
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-973-mail-footer-terms.json",
+      "sha256": "af6ac77cd18e57708636d327a5bd7017d3a11f84ae72bdc661386bf4d1cdc0e2",
+      "cases": 3
+    },
+    {
+      "path": "tests/regression/cases/REG-PR-998-add-site-questions-sheet.json",
+      "sha256": "9399c1478393dadb5a0757de72a0b03f84aae0273231de666872048997986e4c",
+      "cases": 12
+    }
+  ]
+}

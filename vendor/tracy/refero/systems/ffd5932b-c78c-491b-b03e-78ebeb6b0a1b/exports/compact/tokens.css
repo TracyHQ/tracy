@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-plaster-canvas: #f4ede6;
+  --color-gallery-white: #ffffff;
+  --color-ink: #000000;
+  --color-footer-cream: #eddbcc;
+  --color-reception-navy: #001060;
+  --color-terracotta-wash: #e5c0a4;
+
+  /* Typography — Font Families */
+  --font-stkbureau-sans: 'STKBureau-Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-stkbureau-serif: 'STKBureau-Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

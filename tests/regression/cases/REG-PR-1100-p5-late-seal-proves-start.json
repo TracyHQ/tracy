@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1100-p5-late-seal-proves-start",
+  "kind": "fix",
+  "title": "A turn seal that ends late but seals nothing while nothing else commits on the site takes the turn's unsealed_start off, so its Undo is not refused",
+  "pr": 1100,
+  "area": "site-changes/turn-undo",
+  "cms": ["any"],
+  "needs": ["checkout", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set to a Postgres the run may use, run: node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='late seal|handing a seal over' apps/tracy-web/test/door-follow-up.test.mjs apps/tracy-web/test/sites-route.test.mjs",
+    "S2: Record the exit code and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 and every test in run.tests reports ok, none skipped (the database was really used).",
+    "sealProvesStart is true for the dskeepjo T4b records (seal 1791570660534..1791570675835, sealed null, skipped null, door lead 40 ms; a restore that ended before, a cms-log-pull inside, the turn's own moment after).",
+    "sealProvesStart is false when the seal sealed or skipped something, when the door's lead is missing or above SEAL_LEAD_MAX_MS, when the seal's host times are missing, and when a job that may commit ran inside the seal's window (a moment that committed, a sealing seal, webroot-changes, a restore, an unknown kind, a failed or unended or never-polled job); a moment that committed nothing and a seal that sealed nothing inside the window do not count.",
+    "handOver marks a seal's turn unsealed_start in the same statement, marks nothing for a moment, and does not overwrite the verdict of a seal the sweep already followed through.",
+    "Through the doors: POST /turn whose seal outlives the wait answers unsealedStart true; after the host ends that seal with sealed null and the follow-up sweep runs, site_turn.unsealed_start is false and nothing is owed.",
+    "Through the doors: when the previous turn's moment (answered 202) committed inside the next turn's seal window, that next turn's unsealed_start stays true after the sweep."
+  ],
+  "selectors": {
+    "rule": "sealProvesStart in apps/tracy-web/src/sites/door-follow-up.js",
+    "hand-over": "handOver in apps/tracy-web/src/sites/door-follow-up.js",
+    "door": "POST /api/sites/:key/turn (payload.lead), POST /api/sites/:key/moment"
+  },
+  "evidence": "Local stand 09/10/2026, dskeepjo.tracy.test turn session-92adbee5-821f-44fc-98b4-abf881aa13f7:1 (T4b): job 2e07c9b3d255 webroot-seal-outside ran 15.3 s on the host (16.5 s as tracy-web saw it) and answered {\"sealed\":null,\"skipped\":null,\"outside\":[]} with no other webroot job on the site; site_turn.unsealed_start stayed true and Undo was refused with SHARED_CHANGE cause unsealed.",
+  "fence": "a late seal clears unsealed_start only when it proves the turn's start: nothing sealed or skipped, the door asked within SEAL_LEAD_MAX_MS, and no job that may commit ran in its window on the host's clock",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=late seal|handing a seal over",
+      "apps/tracy-web/test/door-follow-up.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a late seal that sealed nothing, asked for at once, with nothing committing in its window proves the turn's start",
+      "a late seal proves nothing when it sealed or skipped something, or its door or its times cannot be trusted",
+      "a late seal proves nothing when something that commits ran while it waited",
+      "handing a seal over marks its turn as started unsealed in the same statement",
+      "L31: a late seal that sealed nothing while nothing else committed on the site takes the turn's unsealed mark off",
+      "L31: a late seal that sealed nothing keeps the mark when the previous turn's late moment committed while it waited"
+    ]
+  }
+}

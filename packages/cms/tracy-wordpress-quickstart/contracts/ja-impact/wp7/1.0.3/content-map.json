@@ -1,0 +1,2141 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from quickstart/ja-impact/wp7 1.0.3's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "JA Impact"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": ""
+    },
+    {
+      "key": "page-home",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home"
+      }
+    },
+    {
+      "key": "page-about",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about"
+      }
+    },
+    {
+      "key": "page-help-faqs",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "help-faqs"
+      }
+    },
+    {
+      "key": "page-donations",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "donations"
+      }
+    },
+    {
+      "key": "page-events",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "events"
+      }
+    },
+    {
+      "key": "page-blog",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "blog"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "JA Impact",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "home.hero.sub-title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.sub-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "All-in-one Giving",
+      "maxCharacters": 80,
+      "label": "home — hero.sub-title.1"
+    },
+    {
+      "key": "home.hero.title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How to engage help our planet",
+      "maxCharacters": 80,
+      "label": "home — hero.title.1"
+    },
+    {
+      "key": "home.hero.desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We want to make giving simple, fun and meaningful for you.",
+      "maxCharacters": 136,
+      "label": "home — hero.desc.1"
+    },
+    {
+      "key": "home.hero.button.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get help now",
+      "maxCharacters": 80,
+      "label": "home — hero.button.1"
+    },
+    {
+      "key": "home.hero.button.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — hero.button.1 (link)"
+    },
+    {
+      "key": "home.hero.sub-title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.sub-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "All-in-one Giving",
+      "maxCharacters": 80,
+      "label": "home — hero.sub-title.2"
+    },
+    {
+      "key": "home.hero.title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How to engage help our planet",
+      "maxCharacters": 80,
+      "label": "home — hero.title.2"
+    },
+    {
+      "key": "home.hero.desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We want to make giving simple, fun and meaningful for you.",
+      "maxCharacters": 136,
+      "label": "home — hero.desc.2"
+    },
+    {
+      "key": "home.hero.button.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get help now",
+      "maxCharacters": 80,
+      "label": "home — hero.button.2"
+    },
+    {
+      "key": "home.hero.button.2.url",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — hero.button.2 (link)"
+    },
+    {
+      "key": "home.cta.module-title",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Helpline is open 24/7",
+      "maxCharacters": 80,
+      "label": "home — cta.module-title"
+    },
+    {
+      "key": "home.cta.cta-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Don’t worry, we can help you. Feel free to contact with our team!",
+      "maxCharacters": 150,
+      "label": "home — cta.cta-desc"
+    },
+    {
+      "key": "home.cta.cta-highlight",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-highlight",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1 800 458 56 97",
+      "maxCharacters": 80,
+      "label": "home — cta.cta-highlight"
+    },
+    {
+      "key": "home.cta.cta-link",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-link",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get a quote",
+      "maxCharacters": 80,
+      "label": "home — cta.cta-link"
+    },
+    {
+      "key": "home.cta.cta-link.url",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-link",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — cta.cta-link (link)"
+    },
+    {
+      "key": "home.features.feature-tag",
+      "entity": "page-home",
+      "target": {
+        "block": "features.feature-tag",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Activities",
+      "maxCharacters": 80,
+      "label": "home — features.feature-tag"
+    },
+    {
+      "key": "home.features.feature-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "features.feature-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.  Lorem ipsum dolor sit amet, ne sit justo propriae facilisi, est cu . Mea paulo dictas atomorum ea, suas regione explicari pro ut. Harum possit persecuti.",
+      "maxCharacters": 468,
+      "label": "home — features.feature-desc"
+    },
+    {
+      "key": "home.features.sub-feature-desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+      "maxCharacters": 612,
+      "label": "home — features.sub-feature-desc.1"
+    },
+    {
+      "key": "home.features.feature-subtitle",
+      "entity": "page-home",
+      "target": {
+        "block": "features.feature-subtitle",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "HELPING HANDS",
+      "maxCharacters": 80,
+      "label": "home — features.feature-subtitle"
+    },
+    {
+      "key": "home.features.charity-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features.charity-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Charity",
+      "maxCharacters": 80,
+      "label": "home — features.charity-title"
+    },
+    {
+      "key": "home.features.feature-charity-pct",
+      "entity": "page-home",
+      "target": {
+        "block": "features.feature-charity-pct",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "72%",
+      "maxCharacters": 80,
+      "label": "home — features.feature-charity-pct"
+    },
+    {
+      "key": "home.features.donation-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features.donation-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donation",
+      "maxCharacters": 80,
+      "label": "home — features.donation-title"
+    },
+    {
+      "key": "home.features.feature-donation-pct",
+      "entity": "page-home",
+      "target": {
+        "block": "features.feature-donation-pct",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "92%",
+      "maxCharacters": 80,
+      "label": "home — features.feature-donation-pct"
+    },
+    {
+      "key": "home.features.sub-feature-title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Mission",
+      "maxCharacters": 80,
+      "label": "home — features.sub-feature-title.1"
+    },
+    {
+      "key": "home.features.sub-feature-title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Vision",
+      "maxCharacters": 80,
+      "label": "home — features.sub-feature-title.2"
+    },
+    {
+      "key": "home.features.sub-feature-desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque volutpat mattis",
+      "maxCharacters": 182,
+      "label": "home — features.sub-feature-desc.2"
+    },
+    {
+      "key": "home.features.module-sub-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features.module-sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "what we do",
+      "maxCharacters": 80,
+      "label": "home — features.module-sub-title"
+    },
+    {
+      "key": "home.features.module-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Saving endangered species is crucial",
+      "maxCharacters": 92,
+      "label": "home — features.module-title"
+    },
+    {
+      "key": "home.features.title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Adélie penguin",
+      "maxCharacters": 80,
+      "label": "home — features.title.1"
+    },
+    {
+      "key": "home.features.description.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "home — features.description.1"
+    },
+    {
+      "key": "home.features.button.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "home — features.button.1"
+    },
+    {
+      "key": "home.features.button.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.button.1 (link)"
+    },
+    {
+      "key": "home.features.title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The crabeater seal",
+      "maxCharacters": 80,
+      "label": "home — features.title.2"
+    },
+    {
+      "key": "home.features.description.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "home — features.description.2"
+    },
+    {
+      "key": "home.features.button.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "home — features.button.2"
+    },
+    {
+      "key": "home.features.button.2.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.button.2 (link)"
+    },
+    {
+      "key": "home.features.title.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Snowy owl",
+      "maxCharacters": 80,
+      "label": "home — features.title.3"
+    },
+    {
+      "key": "home.features.description.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "home — features.description.3"
+    },
+    {
+      "key": "home.features.button.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "home — features.button.3"
+    },
+    {
+      "key": "home.features.button.3.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.button.3 (link)"
+    },
+    {
+      "key": "home.features.title.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dolor Sit Amet",
+      "maxCharacters": 80,
+      "label": "home — features.title.4"
+    },
+    {
+      "key": "home.features.description.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "home — features.description.4"
+    },
+    {
+      "key": "home.features.button.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "home — features.button.4"
+    },
+    {
+      "key": "home.features.button.4.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.button.4 (link)"
+    },
+    {
+      "key": "home.features.title.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Vivamus Porttitor",
+      "maxCharacters": 80,
+      "label": "home — features.title.5"
+    },
+    {
+      "key": "home.features.description.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "home — features.description.5"
+    },
+    {
+      "key": "home.features.button.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "home — features.button.5"
+    },
+    {
+      "key": "home.features.button.5.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.5",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.button.5 (link)"
+    },
+    {
+      "key": "home.features.title.6",
+      "entity": "page-home",
+      "target": {
+        "block": "features.title.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Praesent Tempus",
+      "maxCharacters": 80,
+      "label": "home — features.title.6"
+    },
+    {
+      "key": "home.features.description.6",
+      "entity": "page-home",
+      "target": {
+        "block": "features.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "home — features.description.6"
+    },
+    {
+      "key": "home.features.button.6",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "home — features.button.6"
+    },
+    {
+      "key": "home.features.button.6.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.button.6",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.button.6 (link)"
+    },
+    {
+      "key": "home.features.btn-block",
+      "entity": "page-home",
+      "target": {
+        "block": "features.btn-block",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donate today",
+      "maxCharacters": 80,
+      "label": "home — features.btn-block"
+    },
+    {
+      "key": "home.features.btn-block.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.btn-block",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features.btn-block (link)"
+    },
+    {
+      "key": "home.articles-category.sub-title",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Funds",
+      "maxCharacters": 80,
+      "label": "home — articles-category.sub-title"
+    },
+    {
+      "key": "home.articles-category.main-section",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Listen to their stories",
+      "maxCharacters": 80,
+      "label": "home — articles-category.main-section"
+    },
+    {
+      "key": "home.features.sub-feature-title.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "480",
+      "maxCharacters": 80,
+      "label": "home — features.sub-feature-title.3"
+    },
+    {
+      "key": "home.features.sub-feature-desc.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Volunteers joined the cause",
+      "maxCharacters": 80,
+      "label": "home — features.sub-feature-desc.3"
+    },
+    {
+      "key": "home.features.video-url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.video-url",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Play video",
+      "maxCharacters": 80,
+      "label": "home — features.video-url"
+    },
+    {
+      "key": "home.features.video-url.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features.video-url",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "https://www.youtube.com/watch?v=5kozt0uDa4c",
+      "maxCharacters": 2048,
+      "label": "home — features.video-url (link)"
+    },
+    {
+      "key": "home.features.follow-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features.follow-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow us",
+      "maxCharacters": 80,
+      "label": "home — features.follow-title"
+    },
+    {
+      "key": "home.articles-category.title-btn",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "View all our blog",
+      "maxCharacters": 80,
+      "label": "home — articles-category.title-btn"
+    },
+    {
+      "key": "home.articles-category.title-btn.url",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/category-blog/",
+      "maxCharacters": 2048,
+      "label": "home — articles-category.title-btn (link)"
+    },
+    {
+      "key": "about.features.feature-tag",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-tag",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Activities",
+      "maxCharacters": 80,
+      "label": "about — features.feature-tag"
+    },
+    {
+      "key": "about.features.feature-desc",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet, ne sit justo propriae facilisi, est cu labitur dolorem philosophia. Te latine malorum debitis eum. Mea paulo dictas atomorum ea, suas regione explicari pro ut. Harum possit persecuti.",
+      "maxCharacters": 848,
+      "label": "about — features.feature-desc"
+    },
+    {
+      "key": "about.features.sub-feature-desc.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+      "maxCharacters": 612,
+      "label": "about — features.sub-feature-desc.1"
+    },
+    {
+      "key": "about.features.module-sub-title",
+      "entity": "page-about",
+      "target": {
+        "block": "features.module-sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Mission & Vision.",
+      "maxCharacters": 80,
+      "label": "about — features.module-sub-title"
+    },
+    {
+      "key": "about.features.module-title",
+      "entity": "page-about",
+      "target": {
+        "block": "features.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What makes us different?",
+      "maxCharacters": 80,
+      "label": "about — features.module-title"
+    },
+    {
+      "key": "about.features.sub-feature-title.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Safe havens for support",
+      "maxCharacters": 80,
+      "label": "about — features.sub-feature-title.1"
+    },
+    {
+      "key": "about.features.sub-feature-title.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Good that grows",
+      "maxCharacters": 80,
+      "label": "about — features.sub-feature-title.2"
+    },
+    {
+      "key": "about.features.sub-feature-desc.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+      "maxCharacters": 612,
+      "label": "about — features.sub-feature-desc.2"
+    },
+    {
+      "key": "about.features.sub-feature-title.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Customized programs",
+      "maxCharacters": 80,
+      "label": "about — features.sub-feature-title.3"
+    },
+    {
+      "key": "about.features.sub-feature-desc.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspicia-tis unde omnis iste natus error sit voluptatem accusantium doloremque. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cup-idatat",
+      "maxCharacters": 692,
+      "label": "about — features.sub-feature-desc.3"
+    },
+    {
+      "key": "about.features.title.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Adélie penguin",
+      "maxCharacters": 80,
+      "label": "about — features.title.1"
+    },
+    {
+      "key": "about.features.description.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "about — features.description.1"
+    },
+    {
+      "key": "about.features.button.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "about — features.button.1"
+    },
+    {
+      "key": "about.features.button.1.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.button.1 (link)"
+    },
+    {
+      "key": "about.features.title.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The crabeater seal",
+      "maxCharacters": 80,
+      "label": "about — features.title.2"
+    },
+    {
+      "key": "about.features.description.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "about — features.description.2"
+    },
+    {
+      "key": "about.features.button.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "about — features.button.2"
+    },
+    {
+      "key": "about.features.button.2.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.button.2 (link)"
+    },
+    {
+      "key": "about.features.title.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Snowy owl",
+      "maxCharacters": 80,
+      "label": "about — features.title.3"
+    },
+    {
+      "key": "about.features.description.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "about — features.description.3"
+    },
+    {
+      "key": "about.features.button.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "about — features.button.3"
+    },
+    {
+      "key": "about.features.button.3.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.button.3 (link)"
+    },
+    {
+      "key": "about.features.title.4",
+      "entity": "page-about",
+      "target": {
+        "block": "features.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Dolor Sit Amet",
+      "maxCharacters": 80,
+      "label": "about — features.title.4"
+    },
+    {
+      "key": "about.features.description.4",
+      "entity": "page-about",
+      "target": {
+        "block": "features.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "about — features.description.4"
+    },
+    {
+      "key": "about.features.button.4",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "about — features.button.4"
+    },
+    {
+      "key": "about.features.button.4.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.button.4 (link)"
+    },
+    {
+      "key": "about.features.title.5",
+      "entity": "page-about",
+      "target": {
+        "block": "features.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Vivamus Porttitor",
+      "maxCharacters": 80,
+      "label": "about — features.title.5"
+    },
+    {
+      "key": "about.features.description.5",
+      "entity": "page-about",
+      "target": {
+        "block": "features.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "about — features.description.5"
+    },
+    {
+      "key": "about.features.button.5",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "about — features.button.5"
+    },
+    {
+      "key": "about.features.button.5.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.5",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.button.5 (link)"
+    },
+    {
+      "key": "about.features.title.6",
+      "entity": "page-about",
+      "target": {
+        "block": "features.title.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Praesent Tempus",
+      "maxCharacters": 80,
+      "label": "about — features.title.6"
+    },
+    {
+      "key": "about.features.description.6",
+      "entity": "page-about",
+      "target": {
+        "block": "features.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With 144 years of experience, we are the second oldest homeless mission",
+      "maxCharacters": 162,
+      "label": "about — features.description.6"
+    },
+    {
+      "key": "about.features.button.6",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Take action",
+      "maxCharacters": 80,
+      "label": "about — features.button.6"
+    },
+    {
+      "key": "about.features.button.6.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.button.6",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.button.6 (link)"
+    },
+    {
+      "key": "about.features.btn-block",
+      "entity": "page-about",
+      "target": {
+        "block": "features.btn-block",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donate today",
+      "maxCharacters": 80,
+      "label": "about — features.btn-block"
+    },
+    {
+      "key": "about.features.btn-block.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.btn-block",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.btn-block (link)"
+    },
+    {
+      "key": "about.features.count-number.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.count-number.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "01",
+      "maxCharacters": 80,
+      "label": "about — features.count-number.1"
+    },
+    {
+      "key": "about.features.feature-tag.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-tag.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "GIVE MONEY",
+      "maxCharacters": 80,
+      "label": "about — features.feature-tag.1"
+    },
+    {
+      "key": "about.features.feature-title.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Will you change a child’s  life today?",
+      "maxCharacters": 96,
+      "label": "about — features.feature-title.1"
+    },
+    {
+      "key": "about.features.feature-desc.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sed ut perspicia-tis unde omnis iste natus error sit voluptatem accusantium doloremque. Duis aute irure dolor in reprehenderit in voluptate velit esse.",
+      "maxCharacters": 322,
+      "label": "about — features.feature-desc.1"
+    },
+    {
+      "key": "about.features.btn-label.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.btn-label.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donate now",
+      "maxCharacters": 80,
+      "label": "about — features.btn-label.1"
+    },
+    {
+      "key": "about.features.btn-label.1.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.btn-label.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.btn-label.1 (link)"
+    },
+    {
+      "key": "about.features.count-number.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.count-number.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "02",
+      "maxCharacters": 80,
+      "label": "about — features.count-number.2"
+    },
+    {
+      "key": "about.features.feature-tag.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-tag.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "GIVE TIME",
+      "maxCharacters": 80,
+      "label": "about — features.feature-tag.2"
+    },
+    {
+      "key": "about.features.feature-title.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Share your time, share  your love.",
+      "maxCharacters": 88,
+      "label": "about — features.feature-title.2"
+    },
+    {
+      "key": "about.features.feature-desc.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna .",
+      "maxCharacters": 322,
+      "label": "about — features.feature-desc.2"
+    },
+    {
+      "key": "about.features.btn-label.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.btn-label.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donate now",
+      "maxCharacters": 80,
+      "label": "about — features.btn-label.2"
+    },
+    {
+      "key": "about.features.btn-label.2.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features.btn-label.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about — features.btn-label.2 (link)"
+    },
+    {
+      "key": "help-faqs.accordion.info-title",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.info-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frequently asked Questions",
+      "maxCharacters": 80,
+      "label": "help-faqs — accordion.info-title"
+    },
+    {
+      "key": "help-faqs.accordion.info-desc",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.info-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Need help with something? Here are our most frequently asked questions ?",
+      "maxCharacters": 164,
+      "label": "help-faqs — accordion.info-desc"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.1",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which kind of experts do I have access to?",
+      "maxCharacters": 104,
+      "label": "help-faqs — accordion.accordion-name.1"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.1",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.1"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.2",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Can I reach out to an Expert in another location?",
+      "maxCharacters": 118,
+      "label": "help-faqs — accordion.accordion-name.2"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.2",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.\n",
+      "maxCharacters": 386,
+      "label": "help-faqs — accordion.accordion-desc.2"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.3",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why should I pay to ask someone a question?",
+      "maxCharacters": 106,
+      "label": "help-faqs — accordion.accordion-name.3"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.3",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.3"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.4",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What are the fastest animals on Earth?",
+      "maxCharacters": 96,
+      "label": "help-faqs — accordion.accordion-name.4"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.4",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.4"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.5",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How do animals communicate with each other?",
+      "maxCharacters": 106,
+      "label": "help-faqs — accordion.accordion-name.5"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.5",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.5"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.6",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What is the largest mammal in the world?",
+      "maxCharacters": 100,
+      "label": "help-faqs — accordion.accordion-name.6"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.6",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.6"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.7",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Which animal can hold its breath the longest underwater?",
+      "maxCharacters": 132,
+      "label": "help-faqs — accordion.accordion-name.7"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.7",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.7"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.8",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What are some of the most intelligent animals besides humans?",
+      "maxCharacters": 142,
+      "label": "help-faqs — accordion.accordion-name.8"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.8",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.8"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.9",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "How do animals adapt to their environments?",
+      "maxCharacters": 106,
+      "label": "help-faqs — accordion.accordion-name.9"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.9",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.9"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-name.10",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-name.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What are some of the most endangered animal species?",
+      "maxCharacters": 124,
+      "label": "help-faqs — accordion.accordion-name.10"
+    },
+    {
+      "key": "help-faqs.accordion.accordion-desc.10",
+      "entity": "page-help-faqs",
+      "target": {
+        "block": "accordion.accordion-desc.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.",
+      "maxCharacters": 384,
+      "label": "help-faqs — accordion.accordion-desc.10"
+    },
+    {
+      "key": "donations.articles-category.sub-title",
+      "entity": "page-donations",
+      "target": {
+        "block": "articles-category.sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "funds",
+      "maxCharacters": 80,
+      "label": "donations — articles-category.sub-title"
+    },
+    {
+      "key": "donations.articles-category.main-section",
+      "entity": "page-donations",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Listen to their stories",
+      "maxCharacters": 80,
+      "label": "donations — articles-category.main-section"
+    },
+    {
+      "key": "events.articles-category.sub-title",
+      "entity": "page-events",
+      "target": {
+        "block": "articles-category.sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "COMING SOON",
+      "maxCharacters": 80,
+      "label": "events — articles-category.sub-title"
+    },
+    {
+      "key": "events.articles-category.main-section",
+      "entity": "page-events",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "You can check out our work. Our best events.",
+      "maxCharacters": 108,
+      "label": "events — articles-category.main-section"
+    },
+    {
+      "key": "blog.articles-category.sub-title",
+      "entity": "page-blog",
+      "target": {
+        "block": "articles-category.sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our blog",
+      "maxCharacters": 80,
+      "label": "blog — articles-category.sub-title"
+    },
+    {
+      "key": "blog.articles-category.main-section",
+      "entity": "page-blog",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Latest news & articles",
+      "maxCharacters": 80,
+      "label": "blog — articles-category.main-section"
+    },
+    {
+      "key": "home.hero.image-hero.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.image-hero.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-2.jpg",
+      "sampleId": 106,
+      "maxCharacters": 255,
+      "label": "home — hero.image-hero.1"
+    },
+    {
+      "key": "home.hero.image-hero.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.image-hero.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-2.jpg",
+      "sampleId": 107,
+      "maxCharacters": 255,
+      "label": "home — hero.image-hero.2"
+    },
+    {
+      "key": "home.cta.cta-media",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-media",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/avatar-1.png",
+      "sampleId": 92,
+      "maxCharacters": 255,
+      "label": "home — cta.cta-media"
+    },
+    {
+      "key": "home.features.sub-feature-img.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/activities-2.jpg",
+      "sampleId": 94,
+      "maxCharacters": 255,
+      "label": "home — features.sub-feature-img.1"
+    },
+    {
+      "key": "home.features.sub-feature-media.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-media.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-8.png",
+      "sampleId": 80,
+      "maxCharacters": 255,
+      "label": "home — features.sub-feature-media.1"
+    },
+    {
+      "key": "home.features.sub-feature-media.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-media.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-9.png",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "home — features.sub-feature-media.2"
+    },
+    {
+      "key": "home.features.section-bg",
+      "entity": "page-home",
+      "target": {
+        "block": "features.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-1.jpg",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "home — features.section-bg"
+    },
+    {
+      "key": "home.features.img-icon.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-1.png",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "home — features.img-icon.1"
+    },
+    {
+      "key": "home.features.img-icon.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-2.png",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "home — features.img-icon.2"
+    },
+    {
+      "key": "home.features.img-icon.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-3.png",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "home — features.img-icon.3"
+    },
+    {
+      "key": "home.features.img-icon.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features.img-icon.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-1.png",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "home — features.img-icon.4"
+    },
+    {
+      "key": "home.features.img-icon.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features.img-icon.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-2.png",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "home — features.img-icon.5"
+    },
+    {
+      "key": "home.features.img-icon.6",
+      "entity": "page-home",
+      "target": {
+        "block": "features.img-icon.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-3.png",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "home — features.img-icon.6"
+    },
+    {
+      "key": "home.features.block-img",
+      "entity": "page-home",
+      "target": {
+        "block": "features.block-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-4.png",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "home — features.block-img"
+    },
+    {
+      "key": "home.features.sub-feature-img.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/assistance_2.png",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "home — features.sub-feature-img.2"
+    },
+    {
+      "key": "home.features.sub-feature-img.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features.sub-feature-img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/assistance_3.png",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "home — features.sub-feature-img.3"
+    },
+    {
+      "key": "home.features.ft-video",
+      "entity": "page-home",
+      "target": {
+        "block": "features.ft-video",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/contact-1.jpg",
+      "sampleId": 105,
+      "maxCharacters": 255,
+      "label": "home — features.ft-video"
+    },
+    {
+      "key": "about.features.sub-feature-img.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/activities-2.jpg",
+      "sampleId": 94,
+      "maxCharacters": 255,
+      "label": "about — features.sub-feature-img.1"
+    },
+    {
+      "key": "about.features.feature-main-img",
+      "entity": "page-about",
+      "target": {
+        "block": "features.feature-main-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/activities-1.jpg",
+      "sampleId": 93,
+      "maxCharacters": 255,
+      "label": "about — features.feature-main-img"
+    },
+    {
+      "key": "about.features.sub-feature-img.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/out-mission.jpg",
+      "sampleId": 95,
+      "maxCharacters": 255,
+      "label": "about — features.sub-feature-img.3"
+    },
+    {
+      "key": "about.features.section-bg",
+      "entity": "page-about",
+      "target": {
+        "block": "features.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/bg-1.jpg",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "about — features.section-bg"
+    },
+    {
+      "key": "about.features.img-icon.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-1.png",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "about — features.img-icon.1"
+    },
+    {
+      "key": "about.features.img-icon.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-2.png",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "about — features.img-icon.2"
+    },
+    {
+      "key": "about.features.img-icon.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-3.png",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "about — features.img-icon.3"
+    },
+    {
+      "key": "about.features.img-icon.4",
+      "entity": "page-about",
+      "target": {
+        "block": "features.img-icon.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-1.png",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "about — features.img-icon.4"
+    },
+    {
+      "key": "about.features.img-icon.5",
+      "entity": "page-about",
+      "target": {
+        "block": "features.img-icon.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-2.png",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "about — features.img-icon.5"
+    },
+    {
+      "key": "about.features.img-icon.6",
+      "entity": "page-about",
+      "target": {
+        "block": "features.img-icon.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-3.png",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "about — features.img-icon.6"
+    },
+    {
+      "key": "about.features.block-img",
+      "entity": "page-about",
+      "target": {
+        "block": "features.block-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/icon-4.png",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "about — features.block-img"
+    },
+    {
+      "key": "about.features.sub-feature-img.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features.sub-feature-img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/assistance_2.png",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "about — features.sub-feature-img.2"
+    }
+  ]
+}

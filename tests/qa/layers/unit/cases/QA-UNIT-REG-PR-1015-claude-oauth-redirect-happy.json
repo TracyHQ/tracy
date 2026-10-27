@@ -1,0 +1,45 @@
+{
+  "id": "QA-UNIT-REG-PR-1015-claude-oauth-redirect-happy",
+  "itemIds": ["regression:REG-PR-1015-claude-oauth-redirect"],
+  "requirement": "Connect Claude asks Anthropic for the loopback redirect http://localhost:53692/callback (not the old console.anthropic.com code-paste address Anthropic refuses with \"Invalid request format\"), catches the callback itself and exchanges the code with that same redirect",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1015-claude-oauth-redirect.json",
+    "ref": "PR #1015 (fix); fix evidence: none recorded",
+    "invariant": "S1: clean TAP; the named test passes. S2: 200; redirectUri = http://localhost:53692/callback; autoCatch = true; the URL is https://claude.ai/oauth/authorize with redirect_uri = that loopback, code = true, client_id 9d1c250a-e61b-44d9-88ed-5944d1962f5e, code_challenge_method S256; TCP 53692 listens.",
+    "productSources": ["vendor/tracy/dsh-subscriptions/lib/index.js:1"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "vendor/tracy/dsh-subscriptions/lib/import-auth.js:74 readFile() with a computed path",
+      "vendor/tracy/dsh-subscriptions/lib/vendors/claude-cli.js:12 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1015-claude-oauth-redirect.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1015-claude-oauth-redirect"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1015-claude-oauth-redirect",
+    "pr": 1015,
+    "kind": "fix",
+    "area": "desktop/plan-connect",
+    "file": "tests/regression/cases/REG-PR-1015-claude-oauth-redirect.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1015-claude-oauth-redirect.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 300
+}

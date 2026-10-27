@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-ivory-paper: #f3f2ec;
+  --color-sage-mist: #e3e4df;
+  --color-bone-gray: #cbc9bd;
+  --color-ink-black: #131313;
+  --color-pure-black: #000000;
+  --color-snow-white: #ffffff;
+  --color-ember-coral: #f68e6d;
+  --color-powder-blue: #7faad2;
+
+  /* Typography — Font Families */
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cardinal-fruit: 'Cardinal Fruit', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

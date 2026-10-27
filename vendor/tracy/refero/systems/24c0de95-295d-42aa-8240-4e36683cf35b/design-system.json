@@ -1,0 +1,219 @@
+{
+  "dos": [
+    "Use Zapf-Humanist exclusively for large, emotive headlines, otherwise default to SuisseIntl.",
+    "Maintain sharp 0px corners on all rectangular UI elements like cards, buttons, and inputs.",
+    "Rely on generous whitespace (96px+ between sections) for separation, not dividers or shadows.",
+    "Center-align text and imagery within product cards and feature blocks.",
+    "Use the Parchment (#fffef2) and Charcoal (#333333) combination for primary content.",
+    "Keep layouts simple: centered stacks or balanced multi-column grids.",
+    "Use the Dark Action Button for all primary purchasing actions."
+  ],
+  "tags": [
+    "minimalist",
+    "editorial",
+    "monochrome",
+    "typography-driven",
+    "premium",
+    "apothecary",
+    "structured",
+    "high-contrast",
+    "brutalist-inspired"
+  ],
+  "donts": [
+    "Do not use rounded corners on any element other than circular icon buttons.",
+    "Do not use drop shadows or any other 3D-effect for elevation.",
+    "Do not introduce new colors; the palette is intentionally restricted.",
+    "Do not use gradients.",
+    "Do not place text over complex parts of images; ensure high contrast.",
+    "Do not use lifestyle photography that shows models or hands using products.",
+    "Do not create complex, overlapping, or asymmetrical layouts."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fffef2",
+      "name": "Parchment",
+      "role": "Primary page background, light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Charcoal",
+      "role": "Primary text, UI icons, primary buttons, borders.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Hero section text, high-emphasis text elements.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#252525",
+      "name": "Carbon",
+      "role": "Footer background, secondary dark surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Stone",
+      "role": "Secondary body text.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d6d5cc",
+      "name": "Slate",
+      "role": "Carousel scrollbar track.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Alabaster",
+      "role": "Text on dark backgrounds, rare highlight surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#945c26",
+      "name": "Umber",
+      "role": "Accent text on specific badges; provides a rare, earthy color pop.",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page follows a highly structured, architectural model with a generous max-width of around 1600px, within which content is neatly centered. The structure is a vertical stack of full-width bands, often alternating between the Parchment background and full-bleed imagery or video in the hero. Vertical rhythm is defined by expansive gaps (96px+) between sections. Content is arranged in simple, centered stacks or rigid 3-column grids for product carousels. This methodical, spacious, and grid-based approach reinforces the brand's precision and focus.",
+  "imagery": "The visual language for imagery is stark and artifact-like. Product photography features items isolated and centrally framed against the Parchment (#fffef2) background, akin to specimens in a lab or objects in a gallery. There is a deliberate absence of lifestyle context, models, or hands. The focus is purely on the product's form, amber glass, and typographic labels. Hero sections may use moody, atmospheric video focusing on texture and sensation (e.g., fur, water) rather than direct product use, providing a sensory counterpoint to the clinical product shots.",
+  "similar": [
+    {
+      "why": "Similar minimalist product photography, monochrome palettes, and premium typographic focus.",
+      "business": "Byredo"
+    },
+    {
+      "why": "Shares the 'apothecary' label aesthetic, reliance on typography for branding, and a refined e-commerce experience.",
+      "business": "Le Labo"
+    },
+    {
+      "why": "Employs a similar brutalist-inspired grid layout and a strong, singular sans-serif font as a core identity element.",
+      "business": "SSENSE"
+    },
+    {
+      "why": "Swiss design sensibility with a focus on gridded layouts, high-quality typography (sans-serif), and clean product presentation.",
+      "business": "Vitra"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "0px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "96-128px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1600px"
+  },
+  "category": "e-commerce",
+  "northStar": "NGLORA - Apothecary's Formulary. A meticulously organized space where typography and product photography are treated with scientific precision.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.7
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "heading-sm",
+      "size": 18,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "html": "<div style=\"--color-parchment:#fffef2;--color-charcoal:#333333;--color-ink-black:#000000;--color-carbon:#252525;--color-stone:#666666;--color-slate:#d6d5cc;--color-alabaster:#ffffff;--color-umber:#945c26;--font-suisseintl:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;--font-zapf-humanist:'Optima','Palatino',Georgia,serif;\">\n<div style=\"background:var(--color-parchment);padding:40px 24px 32px;max-width:320px;margin:0 auto;font-family:var(--font-suisseintl);text-align:center;position:relative;\">\n  <!-- Bookmark icon -->\n  <div style=\"position:absolute;top:16px;right:16px;cursor:pointer;\">\n    <svg width=\"16\" height=\"20\" viewBox=\"0 0 16 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M2 2h12v16l-6-4-6 4V2z\" stroke=\"#333333\" stroke-width=\"1\" fill=\"none\"/>\n    </svg>\n  </div>\n  <!-- Product image placeholder (amber bottle) -->\n  <div style=\"width:160px;height:260px;margin:0 auto 28px;background:linear-gradient(160deg,#b8722a 0%,#8a4e1a 60%,#5c3010 100%);border-radius:4px;display:flex;align-items:center;justify-content:center;\">\n    <div style=\"width:80px;height:36px;background:rgba(255,255,255,0.88);border-radius:2px;display:flex;align-items:center;justify-content:center;\">\n      <span style=\"font-family:var(--font-suisseintl);font-size:8px;color:#333;letter-spacing:0.04em;text-align:center;line-height:1.3;\">Āesop.<br><strong>ANIMAL</strong></span>\n    </div>\n  </div>\n  <!-- Product name -->\n  <div style=\"font-family:var(--font-suisseintl);font-size:18px;font-weight:700;color:var(--color-charcoal);margin-bottom:6px;line-height:1.33;\">Animal</div>\n  <!-- Subtitle -->\n  <div style=\"font-family:var(--font-suisseintl);font-size:14px;color:var(--color-stone);margin-bottom:24px;line-height:1.6;\">For pampered pets</div>\n  <!-- Size info -->\n  <div style=\"text-align:center;margin-bottom:4px;\">\n    <div style=\"font-family:var(--font-suisseintl);font-size:11px;color:var(--color-stone);line-height:1.7;\">One size only</div>\n    <div style=\"font-family:var(--font-suisseintl);font-size:14px;color:var(--color-charcoal);line-height:1.6;\">16.9 fl oz</div>\n  </div>\n  <!-- Price -->\n  <div style=\"font-family:var(--font-suisseintl);font-size:16px;font-weight:400;color:var(--color-charcoal);margin:16px 0 20px;line-height:1.2;\">$48.00</div>\n  <!-- Add to cart button -->\n  <button style=\"width:100%;background:var(--color-charcoal);color:var(--color-parchment);font-family:var(--font-suisseintl);font-size:14px;font-weight:400;padding:16px 24px;border:none;border-radius:0;cursor:pointer;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px;\">\n    <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" style=\"animation:none;\">\n      <path d=\"M7 1v12M1 7h12\" stroke=\"#fffef2\" stroke-width=\"1.2\"/>\n    </svg>\n    Add to cart\n  </button>\n</div>\n</div>",
+      "name": "Product Card — Animal",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<div style=\"--color-parchment:#fffef2;--color-charcoal:#333333;--color-ink-black:#000000;--color-carbon:#252525;--color-stone:#666666;--color-slate:#d6d5cc;--color-alabaster:#ffffff;--color-umber:#945c26;--font-suisseintl:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;--font-zapf-humanist:'Optima','Palatino',Georgia,serif;\">\n<section style=\"background:var(--color-parchment);padding:60px 24px 48px;font-family:var(--font-suisseintl);max-width:600px;margin:0 auto;box-sizing:border-box;\">\n  <!-- Section heading -->\n  <div style=\"text-align:center;margin-bottom:40px;\">\n    <h2 style=\"font-family:var(--font-zapf-humanist);font-size:31px;font-weight:400;color:var(--color-charcoal);margin:0 0 12px;line-height:1.33;\">New and notable</h2>\n    <p style=\"font-family:var(--font-suisseintl);font-size:14px;color:var(--color-stone);margin:0;line-height:1.6;max-width:480px;margin-left:auto;margin-right:auto;\">A collection of longstanding formulations and recent additions to the range—each likely to make for a memorable gift.</p>\n  </div>\n  <!-- Product cards grid -->\n  <div style=\"display:grid;grid-template-columns:1fr 1fr;gap:0 24px;\">\n    <!-- Card 1 -->\n    <div style=\"text-align:center;position:relative;\">\n      <div style=\"position:absolute;top:0;right:0;cursor:pointer;\">\n        <svg width=\"14\" height=\"18\" viewBox=\"0 0 14 18\" fill=\"none\"><path d=\"M1.5 1.5h11v15l-5.5-3.5-5.5 3.5V1.5z\" stroke=\"#333\" stroke-width=\"1\" fill=\"none\"/></svg>\n      </div>\n      <!-- Badge -->\n      <div style=\"font-family:var(--font-suisseintl);font-size:11px;font-weight:700;color:var(--color-umber);margin-bottom:12px;letter-spacing:0.03em;min-height:16px;\">New addition</div>\n      <!-- Image placeholder -->\n      <div style=\"width:110px;height:200px;margin:0 auto 20px;background:linear-gradient(170deg,#c07d30 0%,#7a4010 100%);border-radius:3px;\"></div>\n      <div style=\"font-family:var(--font-suisseintl);font-size:14px;font-weight:700;color:var(--color-charcoal);margin-bottom:4px;line-height:1.4;\">Resolute Facial Concentrate</div>\n      <div style=\"font-family:var(--font-suisseintl);font-size:12px;color:var(--color-stone);margin-bottom:16px;line-height:1.5;\">For renewed, replenished, resilient skin.</div>\n      <!-- Size select -->\n      <div style=\"border:1px solid rgba(51,51,51,0.2);padding:8px 12px;background:var(--color-parchment);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;\">\n        <span style=\"font-size:11px;color:var(--color-stone);display:block;line-height:1;\">Size</span>\n        <span style=\"font-size:13px;color:var(--color-charcoal);\">2.0 oz</span>\n        <svg width=\"10\" height=\"6\" viewBox=\"0 0 10 6\" fill=\"none\"><path d=\"M1 1l4 4 4-4\" stroke=\"#333\" stroke-width=\"1.2\"/></svg>\n      </div>\n      <div style=\"font-family:var(--font-suisseintl);font-size:15px;color:var(--color-charcoal);margin-bottom:14px;\">$179.00</div>\n      <button style=\"width:100%;background:var(--color-charcoal);color:var(--color-parchment);font-family:var(--font-suisseintl);font-size:12px;padding:14px 8px;border:none;border-radius:0;cursor:pointer;\">Add to cart</button>\n    </div>\n    <!-- Card 2 -->\n    <div style=\"text-align:center;position:relative;\">\n      <div style=\"position:absolute;top:0;right:0;cursor:pointer;\">\n        <svg width=\"14\" height=\"18\" viewBox=\"0 0 14 18\" fill=\"none\"><path d=\"M1.5 1.5h11v15l-5.5-3.5-5.5 3.5V1.5z\" stroke=\"#333\" stroke-width=\"1\" fill=\"none\"/></svg>\n      </div>\n      <!-- Badge -->\n      <div style=\"font-family:var(--font-suisseintl);font-size:11px;font-weight:700;color:var(--color-umber);margin-bottom:12px;letter-spacing:0.03em;\">Beloved formulation</div>\n      <!-- Image placeholder -->\n      <div style=\"width:110px;height:200px;margin:0 auto 20px;background:linear-gradient(170deg,#c07d30 0%,#7a4010 100%);border-radius:3px;\"></div>\n      <div style=\"font-family:var(--font-suisseintl);font-size:14px;font-weight:700;color:var(--color-charcoal);margin-bottom:4px;line-height:1.4;\">Resurrection Aromatique Hand Wash</div>\n      <div style=\"font-family:var(--font-suisseintl);font-size:12px;color:var(--color-stone);margin-bottom:16px;line-height:1.5;\">Clear, low-foaming gel for gentle cleansing</div>\n      <!-- Size select -->\n      <div style=\"border:1px solid rgba(51,51,51,0.2);padding:8px 12px;background:var(--color-parchment);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;\">\n        <span style=\"font-size:11px;color:var(--color-stone);display:block;line-height:1;\">Size</span>\n        <span style=\"font-size:13px;color:var(--color-charcoal);\">16.9 fl oz</span>\n        <svg width=\"10\" height=\"6\" viewBox=\"0 0 10 6\" fill=\"none\"><path d=\"M1 1l4 4 4-4\" stroke=\"#333\" stroke-width=\"1.2\"/></svg>\n      </div>\n      <div style=\"font-family:var(--font-suisseintl);font-size:15px;color:var(--color-charcoal);margin-bottom:14px;\">$47.00</div>\n      <button style=\"width:100%;background:var(--color-charcoal);color:var(--color-parchment);font-family:var(--font-suisseintl);font-size:12px;padding:14px 8px;border:none;border-radius:0;cursor:pointer;\">Add to cart</button>\n    </div>\n  </div>\n  <!-- Carousel dots -->\n  <div style=\"display:flex;justify-content:center;gap:8px;margin-top:32px;align-items:center;\">\n    <div style=\"width:32px;height:2px;background:var(--color-charcoal);\"></div>\n    <div style=\"width:32px;height:2px;background:var(--color-slate);\"></div>\n    <div style=\"width:32px;height:2px;background:var(--color-slate);\"></div>\n    <div style=\"width:32px;height:2px;background:var(--color-slate);\"></div>\n  </div>\n</section>\n</div>",
+      "name": "Product Carousel Section — New and Notable",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<div style=\"--color-parchment:#fffef2;--color-charcoal:#333333;--color-ink-black:#000000;--color-carbon:#252525;--color-stone:#666666;--color-slate:#d6d5cc;--color-alabaster:#ffffff;--color-umber:#945c26;--font-suisseintl:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;--font-zapf-humanist:'Optima','Palatino',Georgia,serif;\">\n<div style=\"position:relative;width:100%;max-width:600px;margin:0 auto;overflow:hidden;\">\n  <!-- Background image placeholder (moody warm-grey tone) -->\n  <div style=\"width:100%;height:400px;background:linear-gradient(180deg,#9a8c7a 0%,#6e6055 40%,#4a3a2e 100%);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:48px;box-sizing:border-box;\">\n    <!-- Overlay for text legibility -->\n    <div style=\"position:absolute;inset:0;background:rgba(0,0,0,0.22);\"></div>\n    <!-- Content -->\n    <div style=\"position:relative;z-index:1;text-align:center;padding:0 32px;\">\n      <p style=\"font-family:var(--font-suisseintl);font-size:12px;font-weight:700;color:var(--color-alabaster);letter-spacing:0.08em;text-transform:uppercase;margin:0 0 10px;line-height:1.4;\">Of paws and poise</p>\n      <h1 style=\"font-family:var(--font-zapf-humanist);font-size:31px;font-weight:400;color:var(--color-alabaster);margin:0 0 16px;line-height:1.33;\">For discerning canines</h1>\n      <p style=\"font-family:var(--font-suisseintl);font-size:13px;color:rgba(255,254,242,0.88);line-height:1.6;margin:0 0 28px;max-width:420px;\">An aromatic wash that is gentle on skin yet tough on mud, crud and other undesirable debris. Animal extends our philosophy of efficacious, sensorial care to pets.</p>\n      <!-- Hero outline button -->\n      <a href=\"#\" style=\"display:inline-flex;align-items:center;gap:12px;font-family:var(--font-suisseintl);font-size:14px;color:var(--color-alabaster);border:1px solid var(--color-alabaster);padding:14px 28px;text-decoration:none;letter-spacing:0.02em;border-radius:0;\">\n        Discover more\n        <svg width=\"16\" height=\"12\" viewBox=\"0 0 16 12\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n          <path d=\"M1 6h14M9 1l6 5-6 5\" stroke=\"#fffef2\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n        </svg>\n      </a>\n    </div>\n  </div>\n  <!-- Bottom controls row -->\n  <div style=\"position:absolute;bottom:16px;left:16px;display:flex;gap:8px;\">\n    <!-- Pause button -->\n    <button style=\"width:32px;height:32px;border-radius:9999px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;\">\n      <svg width=\"10\" height=\"12\" viewBox=\"0 0 10 12\" fill=\"none\"><rect x=\"1\" y=\"1\" width=\"3\" height=\"10\" fill=\"#fff\" rx=\"0.5\"/><rect x=\"6\" y=\"1\" width=\"3\" height=\"10\" fill=\"#fff\" rx=\"0.5\"/></svg>\n    </button>\n    <!-- Sound button -->\n    <button style=\"width:32px;height:32px;border-radius:9999px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;\">\n      <svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\"><path d=\"M2 4H5L9 1v10L5 8H2V4z\" fill=\"#fff\"/><path d=\"M10 3c1 0.8 1.5 1.8 1.5 3s-0.5 2.2-1.5 3\" stroke=\"#fff\" stroke-width=\"1\" fill=\"none\"/></svg>\n    </button>\n  </div>\n</div>\n</div>",
+      "name": "Hero CTA Banner",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Dark Action Button",
+      "role": "Primary call-to-action, such as 'Add to Cart'.",
+      "description": "Background: Charcoal (#333333). Text: Parchment (#fffef2). Padding: 12px 24px. Radius: 0px. No border. Font: SuisseIntl."
+    },
+    {
+      "name": "Outline Navigation Button",
+      "role": "Secondary header actions like 'Email sign up' or 'Search'.",
+      "description": "Background: transparent. Text: Charcoal (#333333). Border: 1px solid rgba(51, 51, 51, 0.2). Padding: ~8px 16px. Radius: 0px. Font: SuisseIntl."
+    },
+    {
+      "name": "Text Link",
+      "role": "Inline navigation or tertiary actions.",
+      "description": "Background: transparent. Text: Charcoal (#333333). No border or padding. Underlined on hover. Font: SuisseIntl."
+    },
+    {
+      "name": "Hero Outline Button",
+      "role": "Main CTA within the hero section.",
+      "description": "Background: transparent. Text: Alabaster (#FFFFFF) or Ink Black (#000000) depending on hero video. Border: 1px solid matching text color. Padding: 12px 24px. Radius: 0px. Font: SuisseIntl."
+    },
+    {
+      "name": "Text Input / Select",
+      "role": "Form fields for user input or selection.",
+      "description": "Background: Parchment (#fffef2). Text: Charcoal (#333333). Border: 1px solid rgba(51, 51, 51, 0.2). Radius: 0px. Padding: ~12px 20px."
+    },
+    {
+      "name": "Informational Badge",
+      "role": "Small text labels above product titles, e.g., 'New addition'.",
+      "description": "Background: transparent. Text: Charcoal (#333333). Radius: 0px. Font: SuisseIntl, 11px, bold."
+    },
+    {
+      "name": "Circular Arrow Button",
+      "role": "Carousel navigation controls.",
+      "description": "Background: transparent. Border: none. Radius: 9999px. Contains a simple arrow icon in Charcoal (#333333)."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The workhorse font for all UI text, body copy, navigation, product titles, and buttons. Its neutrality provides a stable, legible foundation for the more expressive serif.",
+      "sizes": "11px, 12px, 14px, 16px, 18px, 30px",
+      "family": "SuisseIntl",
+      "weight": "400, 700",
+      "lineHeight": "1.20-2.86",
+      "substitute": "Inter, Helvetica Neue"
+    },
+    {
+      "role": "Reserved for major, atmospheric headlines. Its humanist serif form contrasts with the clinical sans-serif, adding an editorial, classic quality.",
+      "sizes": "31px",
+      "family": "Zapf-Humanist",
+      "weight": "400",
+      "lineHeight": "1.33",
+      "substitute": "Optima, Palatino"
+    }
+  ],
+  "description": "The design evokes a scholarly apothecary's formulary, where every element is presented with meticulous precision. It operates on a starkly limited palette of warm off-white and charcoal, creating a high-contrast, text-forward environment. A rigid, architectural layout with sharp 0px corners dominates, reinforcing a sense of order and clinical quality. The system's signature is the typographic tension between the humanist serif 'Zapf-Humanist' for expressive headlines and the neutral sans-serif 'SuisseIntl' for all functional text, lending an air of classicism to a modern digital interface.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "### Quick Color Reference\n- **Page Background**: `Parchment` (#fffef2)\n- **Primary Text**: `Charcoal` (#333333)\n- **Primary CTA Background**: `Charcoal` (#333333)\n- **Primary CTA Text**: `Parchment` (#fffef2)\n- **Borders**: `rgba(51, 51, 51, 0.2)`\n\n### Example Component Prompts\n1.  **Hero Section**: \"Create a full-screen hero with a dark, atmospheric video background. Center-align the text. The headline should be 'For discerning canines' in `Zapf-Humanist`, 31px, `Alabaster` (#FFFFFF). Below it, add body text in `SuisseIntl`, 18px, `Alabaster`. Finally, add an outline button with text 'Discover more ->', 1px `Alabaster` border, 0px radius, and padding 12px 24px.\"\n2.  **Product Carousel Section**: \"Create a product carousel on a `Parchment` (#fffef2) background. The section heading 'New and notable' should be 30px `SuisseIntl`, color `Charcoal` (#333333). Arrange three product cards in a row. Each card has a 0px radius, `Parchment` background, and centered content. Product image on top, then the product name 'Animal' in 18px `SuisseIntl` bold, then description in 14px `SuisseIntl`. Below it, add a dark action button with text 'Loading...' using `Charcoal` background, `Parchment` text, 0px radius, and 12px 24px padding.\"\n3.  **Text Input Field**: \"Design a text input field for a form. It should have a `Parchment` (#fffef2) background, 0px radius, and a 1px solid border of `rgba(51, 51, 51, 0.2)`. Placeholder text should be `SuisseIntl`, 14px, `Charcoal` (#333333). The input's padding should be approximately 12px 20px.\""
+    }
+  ],
+  "elevationPhilosophy": "This system actively avoids shadows for elevation. Depth and hierarchy are achieved through typographic scale, stark color contrast between Parchment (#fffef2) and Charcoal (#333333), and generous whitespace, not through layered surfaces or drop shadows. This creates a flat, graphic, and print-inspired aesthetic."
+}

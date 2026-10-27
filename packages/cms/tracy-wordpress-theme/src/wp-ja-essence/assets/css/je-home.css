@@ -1,0 +1,66 @@
+/* je-home — page-group stylesheet (loaded after wp-ja-essence.css). */
+/* g1: blog list cards as measured on the source home (784px column, 200px picture, body at +236, excerpt full width below) */
+.je-lead__items > li, .je-minirow__items > li, .je-choice__items > li, .je-list__items > li { margin-block: 0 !important; }
+.je-header__bottom .je-search { align-self: center; }
+/* g1: with a sidebar (twocol) the source card is vertical: 668x446 picture on top, 54px padding */
+/* pager: round 48px buttons, active one in the accent (source .pagination) */
+/* g1: sidebar cards as measured (328 wide column, 24 padding, 80x80 thumbs, 24 gap, no flow margins inside the rows) */
+/* g1: home-4 grid of centred cards (3 columns, 18px inner picture) */
+.je-list.je-list--grid { max-width: none; }
+.je-list--grid .je-list__items { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.je-list--grid .je-list__items > li { margin: 0 !important; }
+.je-list--grid .je-card, .je-twocol .je-list--grid .je-card { display: block; padding: 12px 12px 24px; text-align: center; }
+.je-list--grid .je-card__body { display: block; }
+.je-list--grid .je-card__img img { width: 100%; height: auto; aspect-ratio: 3 / 2; }
+.je-list--grid .je-card .je-badge { margin: 24px 0 0; display: block; }
+.je-list--grid .je-card__title { font-size: 20px; margin: 12px 0 8px; }
+.je-list--grid .je-card .je-meta { justify-content: center; }
+@media (max-width: 1023px) { .je-list--grid .je-list__items { grid-template-columns: 1fr; } }
+.je-list--grid { margin-top: 36px; }
+/* g1: warm lists (home-2, home-5) keep the horizontal card even beside a sidebar */
+@media (max-width: 767px) { .je-twocol .je-list--warm .je-card { grid-template-columns: 1fr; } }
+
+/* Follow-me card (social ACM, section-social): white card, 40px round service buttons, 64px pitch as measured on the source module 128. The seeder sets the item class only in the block comment, not in the saved markup, so the service glyph is chosen by position: the module lists Facebook, X, Instagram, RSS in that order (DECISIONS S-02). */
+.je-side--social { padding: 36px; border-radius: var(--ds-card-radius, 16px); }
+.je-side--social .je-sec__title { font-size: 24px; line-height: 1.3; margin: 0 0 24px; }
+.je-side--social .je-social { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
+.je-side--social .je-social__item { margin: 0 !important; }
+.je-side--social .je-social__link { margin: 0; }
+.je-side--social .je-social__link .wp-block-button__link { position: relative; display: block; box-sizing: border-box; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; font-size: 0; line-height: 0; color: #fff; overflow: hidden; } /* ds-keep: white glyph on the social service's own brand colour */
+.je-side--social .je-social__link .wp-block-button__link::after { content: ""; position: absolute; inset: 12px; background: var(--ds-c-surface, #fff); -webkit-mask: var(--je-ico) center / contain no-repeat; mask: var(--je-ico) center / contain no-repeat; }
+.je-side--social .je-social__item:nth-child(1) .wp-block-button__link { background-color: var(--ds-c-accent, #1877f2); --je-ico: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cpath d=%22M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10z%22/%3E%3C/svg%3E"); }
+.je-side--social .je-social__item:nth-child(2) .wp-block-button__link { background-color: var(--ds-c-accent, #1da1f2); --je-ico: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cpath d=%22M13.982 10.622 20.54 3h-1.554l-5.693 6.618L8.745 3H3.5l6.876 10.007L3.5 21h1.554l6.012-6.989L15.868 21h5.245l-7.131-10.378Zm-2.128 2.474-.697-.997-5.543-7.93H8l4.474 6.4.697.996 5.815 8.318h-2.387l-4.745-6.787Z%22/%3E%3C/svg%3E"); }
+.je-side--social .je-social__item:nth-child(3) .wp-block-button__link { background-color: var(--ds-c-accent, #e4405f); --je-ico: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Crect x=%224%22 y=%224%22 width=%2216%22 height=%2216%22 rx=%224.5%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22/%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%223.6%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22/%3E%3Ccircle cx=%2216.8%22 cy=%227.2%22 r=%221.1%22/%3E%3C/svg%3E"); }
+.je-side--social .je-social__item:nth-child(4) .wp-block-button__link { background-color: var(--ds-c-accent, #f9b439); --je-ico: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cpath d=%22M2 8.667V12c5.515 0 10 4.485 10 10h3.333C15.333 14.637 9.363 8.667 2 8.667zM2 2v3.333c9.19 0 16.667 7.477 16.667 16.667H22C22 10.955 13.045 2 2 2zM4.5 17C3.118 17 2 18.12 2 19.5S3.118 22 4.5 22 7 20.88 7 19.5 5.882 17 4.5 17z%22/%3E%3C/svg%3E"); }
+
+/* 1.0.9: the footer logo is a pair of Site Logo blocks, the site logo in light and the dark-background logo (option
+   tracy_logo_dark) in dark; an inverted picture wrecked any coloured logo, and a missing dark logo shows the name as text. */
+.je-footer__logo--dark { display: none !important; }
+:root[data-theme="dark"] .je-footer__logo--light { display: none !important; }
+:root[data-theme="dark"] .je-footer__logo--dark { display: flex !important; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .je-footer__logo--light { display: none !important; } :root:not([data-theme="light"]) .je-footer__logo--dark { display: flex !important; } :root:not([data-theme="light"]) .je-pager .page-numbers:not(.current), :root:not([data-theme="light"]) .je-pager .wp-block-query-pagination-next, :root:not([data-theme="light"]) .je-pager .wp-block-query-pagination-previous { background: rgba(255, 255, 255, 0.1); color: var(--ds-c-fg, #eef1f6); } }
+
+/* 1.0.1 — lead slider controls (assets/js/wp-ja-essence.js): previous / next buttons around one dot per page, under a row
+   that scrolls natively (touch swipe works without them). 24px+ targets. */
+.je-slider__nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; }
+.je-slider__nav[hidden] { display: none; }
+.je-slider__btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--wp--preset--color--border); border-radius: 50%; background: var(--wp--preset--color--surface); color: var(--wp--preset--color--fg-2); font-size: 28px; line-height: 1; cursor: pointer; }
+.je-slider__btn:disabled { opacity: .4; cursor: default; }
+.je-slider__btn:focus-visible, .je-slider__dots button:focus-visible { outline: 2px solid var(--ds-c-focus-ring, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))); outline-offset: 2px; }
+.je-slider__dots { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.je-slider__dots button { position: relative; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; }
+.je-slider__dots button::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: light-dark(rgba(33, 37, 41, .25), rgba(238, 241, 246, .35)); }
+.je-slider__dots button[aria-current="true"]::before { background: var(--wp--preset--color--accent); }
+
+/* 1.0.3 — home-4: the Trending module is a blue card in the grid, after the fourth article of every page (source: article-highlight). */
+.je-list--grid .je-list__items > li.je-trend-cell { display: block; }
+.je-trend { background: var(--wp--preset--color--accent); color: var(--wp--preset--color--accent-on); border-radius: var(--ds-card-radius, 8px); padding: 36px; height: 100%; box-sizing: border-box; }
+.je-trend__title { margin: 0 0 24px; font-size: 24px; line-height: 31.2px; color: inherit; }
+.je-trend__items { list-style: none; margin: 0; padding: 0; }
+.je-trend__item { display: flex; gap: 18px; align-items: flex-start; padding: 18px 0; border-top: 1px solid var(--je-accent-on-20, var(--ds-c-accent-on, rgba(255, 255, 255, .2))); }
+.je-trend__item:first-child { border-top: 0; padding-top: 0; }
+.je-trend__img { flex: 0 0 80px; display: block; }
+.je-trend__img img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--ds-card-radius, 8px); display: block; }
+.je-trend__body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.je-trend__link { color: inherit; text-decoration: none; font-family: var(--ds-font-display, var(--wp--preset--font-family--display, Jost, sans-serif)); font-size: 18px; line-height: 23.4px; }
+.je-trend__date { font-size: 13px; opacity: .85; }

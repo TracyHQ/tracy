@@ -1,0 +1,59 @@
+{
+  "color": {
+    "crimson-marquee": {
+      "$value": "#821e1e",
+      "$type": "color",
+      "$description": "Crimson Marquee — Brand wordmark bar, release-date tags, selected-state borders, and the singular chromatic accent that anchors an otherwise monochrome system — deep, slightly oxidized, never orange, never bright"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, icon strokes, heading color, button text, and dark-surface fills (hero overlay, footer)"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surface, button text on dark fills, input fields, badge text"
+    },
+    "bone": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Bone — Alternate card surface and section background, used to separate one row of film tiles from the next without a hard divider"
+    },
+    "silver": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Silver — Hairline borders on cards, buttons, inputs, and dividers — the universal 1px rule that frames almost every element"
+    },
+    "smoke": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Smoke — Secondary surface tint and shadow base; used sparingly where a surface needs to read as slightly recessed from Bone"
+    },
+    "cornflower": {
+      "$value": "#9dc1fb",
+      "$type": "color",
+      "$description": "Cornflower — Focus ring and link/hover halo only — a cool sky-blue that signals interactivity without competing with the crimson brand color"
+    }
+  },
+  "font": {
+    "flatspot": {
+      "$value": "Flatspot",
+      "$type": "fontFamily",
+      "$description": "(Letter-spacing note) Body and body-small run on -0.010em to -0.011em tracking; the 9-10px caption/metadata tier sits at -0.012em — tighter as the size shrinks, which is unusual and gives the tiniest text a compressed, almost stenciled feel."
+    },
+    "girott": {
+      "$value": "Girott",
+      "$type": "fontFamily",
+      "$description": "Display-only face used for page heroes and feature titles. The 160px / 0.80 line-height / -0.031em tracking combination is the signature move: a single film title bleeds across the full viewport edge-to-edge, set tight against itself so descenders nearly touch ascenders. The 36-42px range covers secondary display moments (sub-hero headlines, featured card titles)."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://neonrated.com",
+      "siteName": "NEON Rated",
+      "extractedAt": "2026-06-03T18:46:08.905Z",
+      "variant": "compact"
+    }
+  }
+}

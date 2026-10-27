@@ -1,0 +1,2950 @@
+{
+  "contractId": "tracy-apple-studio",
+  "contractHash": "b54fc5f3117b836fbdb1bbe0ada8bf0fd885827f261729a33048681954874a10",
+  "surfaces": [
+    {
+      "id": "marketing/newsletter-light.html",
+      "fields": {
+        "masthead.name": {
+          "ref": "company.name"
+        },
+        "masthead.issue": {
+          "template": "Studio notes · Issue 01"
+        },
+        "preheader": {
+          "template": "Three parts of website work, and where each one starts."
+        },
+        "lede.kicker": {
+          "template": "In this issue"
+        },
+        "lede.headline": {
+          "template": "Three parts of website work that decide how the next year reads"
+        },
+        "lede.blurb": {
+          "ref": "company.summary"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "story1.title": {
+          "ref": "services.strategy.name"
+        },
+        "story1.body": {
+          "ref": "services.strategy.description"
+        },
+        "story1.link": {
+          "template": "How a page plan takes shape"
+        },
+        "story1.href": {
+          "ref": "services.strategy.href"
+        },
+        "story2.title": {
+          "ref": "services.design.name"
+        },
+        "story2.body": {
+          "ref": "services.design.description"
+        },
+        "story2.link": {
+          "template": "See the design language in use"
+        },
+        "story2.href": {
+          "ref": "services.design.href"
+        },
+        "story3.title": {
+          "ref": "services.care.name"
+        },
+        "story3.body": {
+          "ref": "services.care.description"
+        },
+        "story3.link": {
+          "template": "What a regular review covers"
+        },
+        "story3.href": {
+          "ref": "services.care.href"
+        },
+        "closing": {
+          "template": "That is the issue. {{company.name}} writes again next month."
+        },
+        "footer.audience": {
+          "ref": "company.audience"
+        },
+        "footer.services.label": {
+          "ref": "cta.services.label"
+        },
+        "footer.services.href": {
+          "ref": "cta.services.href"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/newsletter-dark.html",
+      "fields": {
+        "masthead.name": {
+          "ref": "company.name"
+        },
+        "masthead.issue": {
+          "template": "Studio notes · Issue 01"
+        },
+        "preheader": {
+          "template": "Three parts of website work, and where each one starts."
+        },
+        "lede.kicker": {
+          "template": "In this issue"
+        },
+        "lede.headline": {
+          "template": "Three parts of website work that decide how the next year reads"
+        },
+        "lede.blurb": {
+          "ref": "company.summary"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "story1.title": {
+          "ref": "services.strategy.name"
+        },
+        "story1.body": {
+          "ref": "services.strategy.description"
+        },
+        "story1.link": {
+          "template": "How a page plan takes shape"
+        },
+        "story1.href": {
+          "ref": "services.strategy.href"
+        },
+        "story2.title": {
+          "ref": "services.design.name"
+        },
+        "story2.body": {
+          "ref": "services.design.description"
+        },
+        "story2.link": {
+          "template": "See the design language in use"
+        },
+        "story2.href": {
+          "ref": "services.design.href"
+        },
+        "story3.title": {
+          "ref": "services.care.name"
+        },
+        "story3.body": {
+          "ref": "services.care.description"
+        },
+        "story3.link": {
+          "template": "What a regular review covers"
+        },
+        "story3.href": {
+          "ref": "services.care.href"
+        },
+        "closing": {
+          "template": "That is the issue. {{company.name}} writes again next month."
+        },
+        "footer.audience": {
+          "ref": "company.audience"
+        },
+        "footer.services.label": {
+          "ref": "cta.services.label"
+        },
+        "footer.services.href": {
+          "ref": "cta.services.href"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/email-light.html",
+      "fields": {
+        "masthead.name": {
+          "ref": "company.name"
+        },
+        "preheader": {
+          "template": "What changes when strategy, design and development sit at one table."
+        },
+        "kicker": {
+          "template": "A note from the studio"
+        },
+        "headline": {
+          "template": "A website your team can keep moving"
+        },
+        "lede": {
+          "ref": "company.summary"
+        },
+        "greeting": {
+          "template": "Hello,"
+        },
+        "intro": {
+          "template": "We wrote this for one group of readers. {{company.audience}}"
+        },
+        "point1.title": {
+          "ref": "services.development.name"
+        },
+        "point1.body": {
+          "ref": "services.development.description"
+        },
+        "point1.href": {
+          "ref": "services.development.href"
+        },
+        "point2.title": {
+          "ref": "services.content.name"
+        },
+        "point2.body": {
+          "ref": "services.content.description"
+        },
+        "point2.href": {
+          "ref": "services.content.href"
+        },
+        "point3.title": {
+          "ref": "services.care.name"
+        },
+        "point3.body": {
+          "ref": "services.care.description"
+        },
+        "point3.href": {
+          "ref": "services.care.href"
+        },
+        "product.title": {
+          "ref": "product.name"
+        },
+        "product.body": {
+          "ref": "product.summary"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "signoff": {
+          "template": "Reply to a real message and someone from the studio answers."
+        },
+        "footer.name": {
+          "ref": "company.name"
+        },
+        "footer.note": {
+          "template": "This is a sample message from the {{company.name}} demo website."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/email-dark.html",
+      "fields": {
+        "masthead.name": {
+          "ref": "company.name"
+        },
+        "preheader": {
+          "template": "What changes when strategy, design and development sit at one table."
+        },
+        "kicker": {
+          "template": "A note from the studio"
+        },
+        "headline": {
+          "template": "A website your team can keep moving"
+        },
+        "lede": {
+          "ref": "company.summary"
+        },
+        "greeting": {
+          "template": "Hello,"
+        },
+        "intro": {
+          "template": "We wrote this for one group of readers. {{company.audience}}"
+        },
+        "point1.title": {
+          "ref": "services.development.name"
+        },
+        "point1.body": {
+          "ref": "services.development.description"
+        },
+        "point1.href": {
+          "ref": "services.development.href"
+        },
+        "point2.title": {
+          "ref": "services.content.name"
+        },
+        "point2.body": {
+          "ref": "services.content.description"
+        },
+        "point2.href": {
+          "ref": "services.content.href"
+        },
+        "point3.title": {
+          "ref": "services.care.name"
+        },
+        "point3.body": {
+          "ref": "services.care.description"
+        },
+        "point3.href": {
+          "ref": "services.care.href"
+        },
+        "product.title": {
+          "ref": "product.name"
+        },
+        "product.body": {
+          "ref": "product.summary"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "signoff": {
+          "template": "Reply to a real message and someone from the studio answers."
+        },
+        "footer.name": {
+          "ref": "company.name"
+        },
+        "footer.note": {
+          "template": "This is a sample message from the {{company.name}} demo website."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/poster-light.html",
+      "fields": {
+        "wordmark": {
+          "ref": "company.name"
+        },
+        "kicker": {
+          "template": "Website studio"
+        },
+        "focal": {
+          "template": "Strategy, design and development, on one website"
+        },
+        "subhead": {
+          "ref": "company.summary"
+        },
+        "service1.name": {
+          "ref": "services.strategy.name"
+        },
+        "service2.name": {
+          "ref": "services.design.name"
+        },
+        "service3.name": {
+          "ref": "services.development.name"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "signature.name": {
+          "ref": "company.name"
+        },
+        "signature.note": {
+          "ref": "company.audience"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/poster-dark.html",
+      "fields": {
+        "wordmark": {
+          "ref": "company.name"
+        },
+        "kicker": {
+          "template": "Website studio"
+        },
+        "focal": {
+          "template": "Strategy, design and development, on one website"
+        },
+        "subhead": {
+          "ref": "company.summary"
+        },
+        "service1.name": {
+          "ref": "services.strategy.name"
+        },
+        "service2.name": {
+          "ref": "services.design.name"
+        },
+        "service3.name": {
+          "ref": "services.development.name"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "signature.name": {
+          "ref": "company.name"
+        },
+        "signature.note": {
+          "ref": "company.audience"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/deck-light.html",
+      "fields": {
+        "cover.kicker": {
+          "template": "Studio introduction"
+        },
+        "cover.title": {
+          "ref": "company.name"
+        },
+        "cover.lede": {
+          "ref": "company.summary"
+        },
+        "audience.kicker": {
+          "template": "Who we work with"
+        },
+        "audience.title": {
+          "template": "The website has to help the people the business depends on"
+        },
+        "audience.body": {
+          "ref": "company.audience"
+        },
+        "offer.kicker": {
+          "template": "The offer"
+        },
+        "offer.title": {
+          "template": "Six ways the studio works on a website"
+        },
+        "offer.item1": {
+          "ref": "services.strategy.name"
+        },
+        "offer.item2": {
+          "ref": "services.design.name"
+        },
+        "offer.item3": {
+          "ref": "services.development.name"
+        },
+        "offer.item4": {
+          "ref": "services.content.name"
+        },
+        "offer.item5": {
+          "ref": "services.care.name"
+        },
+        "offer.item6": {
+          "ref": "services.campaign.name"
+        },
+        "service1.name": {
+          "ref": "services.strategy.name"
+        },
+        "service1.body": {
+          "ref": "services.strategy.description"
+        },
+        "service2.name": {
+          "ref": "services.design.name"
+        },
+        "service2.body": {
+          "ref": "services.design.description"
+        },
+        "service3.name": {
+          "ref": "services.development.name"
+        },
+        "service3.body": {
+          "ref": "services.development.description"
+        },
+        "service4.name": {
+          "ref": "services.content.name"
+        },
+        "service4.body": {
+          "ref": "services.content.description"
+        },
+        "service5.name": {
+          "ref": "services.care.name"
+        },
+        "service5.body": {
+          "ref": "services.care.description"
+        },
+        "service6.name": {
+          "ref": "services.campaign.name"
+        },
+        "service6.body": {
+          "ref": "services.campaign.description"
+        },
+        "product.kicker": {
+          "template": "What the team keeps"
+        },
+        "product.title": {
+          "ref": "product.name"
+        },
+        "product.body": {
+          "ref": "product.summary"
+        },
+        "process.kicker": {
+          "template": "How a project runs"
+        },
+        "process.title": {
+          "template": "Four steps, in the same order every time"
+        },
+        "step1.name": {
+          "ref": "process.step-1.name"
+        },
+        "step1.body": {
+          "ref": "process.step-1.description"
+        },
+        "step2.name": {
+          "ref": "process.step-2.name"
+        },
+        "step2.body": {
+          "ref": "process.step-2.description"
+        },
+        "step3.name": {
+          "ref": "process.step-3.name"
+        },
+        "step3.body": {
+          "ref": "process.step-3.description"
+        },
+        "step4.name": {
+          "ref": "process.step-4.name"
+        },
+        "step4.body": {
+          "ref": "process.step-4.description"
+        },
+        "team.kicker": {
+          "template": "The people on the work"
+        },
+        "team.title": {
+          "template": "A small team, on the project from brief to handover"
+        },
+        "team1.name": {
+          "ref": "team.hale.name"
+        },
+        "team1.role": {
+          "ref": "team.hale.role"
+        },
+        "team1.bio": {
+          "ref": "team.hale.bio"
+        },
+        "team1.image": {
+          "ref": "team.hale.image"
+        },
+        "team1.image-alt": {
+          "ref": "team.hale.image-alt"
+        },
+        "team2.name": {
+          "ref": "team.lang.name"
+        },
+        "team2.role": {
+          "ref": "team.lang.role"
+        },
+        "team2.bio": {
+          "ref": "team.lang.bio"
+        },
+        "team2.image": {
+          "ref": "team.lang.image"
+        },
+        "team2.image-alt": {
+          "ref": "team.lang.image-alt"
+        },
+        "team3.name": {
+          "ref": "team.lindqvist.name"
+        },
+        "team3.role": {
+          "ref": "team.lindqvist.role"
+        },
+        "team3.bio": {
+          "ref": "team.lindqvist.bio"
+        },
+        "team3.image": {
+          "ref": "team.lindqvist.image"
+        },
+        "team3.image-alt": {
+          "ref": "team.lindqvist.image-alt"
+        },
+        "team4.name": {
+          "ref": "team.meyer.name"
+        },
+        "team4.role": {
+          "ref": "team.meyer.role"
+        },
+        "team4.bio": {
+          "ref": "team.meyer.bio"
+        },
+        "team4.image": {
+          "ref": "team.meyer.image"
+        },
+        "team4.image-alt": {
+          "ref": "team.meyer.image-alt"
+        },
+        "pricing.kicker": {
+          "template": "Levels of support"
+        },
+        "pricing.title": {
+          "template": "Three illustrative ways to work together"
+        },
+        "plan1.name": {
+          "ref": "pricing.starter.name"
+        },
+        "plan1.amount": {
+          "ref": "pricing.starter.amount"
+        },
+        "plan1.period": {
+          "ref": "pricing.starter.period"
+        },
+        "plan2.name": {
+          "ref": "pricing.studio.name"
+        },
+        "plan2.amount": {
+          "ref": "pricing.studio.amount"
+        },
+        "plan2.period": {
+          "ref": "pricing.studio.period"
+        },
+        "plan3.name": {
+          "ref": "pricing.foundry.name"
+        },
+        "plan3.amount": {
+          "ref": "pricing.foundry.amount"
+        },
+        "plan3.period": {
+          "ref": "pricing.foundry.period"
+        },
+        "pricing.notice": {
+          "ref": "pricing.notice"
+        },
+        "ask.kicker": {
+          "template": "Next step"
+        },
+        "ask.title": {
+          "template": "Tell us about the website you have now"
+        },
+        "ask.body": {
+          "template": "Bring the current site, the brief or the question you are stuck on."
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "services.label": {
+          "ref": "cta.services.label"
+        },
+        "services.href": {
+          "ref": "cta.services.href"
+        },
+        "company.name": {
+          "ref": "company.name"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/deck-dark.html",
+      "fields": {
+        "cover.kicker": {
+          "template": "Studio introduction"
+        },
+        "cover.title": {
+          "ref": "company.name"
+        },
+        "cover.lede": {
+          "ref": "company.summary"
+        },
+        "audience.kicker": {
+          "template": "Who we work with"
+        },
+        "audience.title": {
+          "template": "The website has to help the people the business depends on"
+        },
+        "audience.body": {
+          "ref": "company.audience"
+        },
+        "offer.kicker": {
+          "template": "The offer"
+        },
+        "offer.title": {
+          "template": "Six ways the studio works on a website"
+        },
+        "offer.item1": {
+          "ref": "services.strategy.name"
+        },
+        "offer.item2": {
+          "ref": "services.design.name"
+        },
+        "offer.item3": {
+          "ref": "services.development.name"
+        },
+        "offer.item4": {
+          "ref": "services.content.name"
+        },
+        "offer.item5": {
+          "ref": "services.care.name"
+        },
+        "offer.item6": {
+          "ref": "services.campaign.name"
+        },
+        "service1.name": {
+          "ref": "services.strategy.name"
+        },
+        "service1.body": {
+          "ref": "services.strategy.description"
+        },
+        "service2.name": {
+          "ref": "services.design.name"
+        },
+        "service2.body": {
+          "ref": "services.design.description"
+        },
+        "service3.name": {
+          "ref": "services.development.name"
+        },
+        "service3.body": {
+          "ref": "services.development.description"
+        },
+        "service4.name": {
+          "ref": "services.content.name"
+        },
+        "service4.body": {
+          "ref": "services.content.description"
+        },
+        "service5.name": {
+          "ref": "services.care.name"
+        },
+        "service5.body": {
+          "ref": "services.care.description"
+        },
+        "service6.name": {
+          "ref": "services.campaign.name"
+        },
+        "service6.body": {
+          "ref": "services.campaign.description"
+        },
+        "product.kicker": {
+          "template": "What the team keeps"
+        },
+        "product.title": {
+          "ref": "product.name"
+        },
+        "product.body": {
+          "ref": "product.summary"
+        },
+        "process.kicker": {
+          "template": "How a project runs"
+        },
+        "process.title": {
+          "template": "Four steps, in the same order every time"
+        },
+        "step1.name": {
+          "ref": "process.step-1.name"
+        },
+        "step1.body": {
+          "ref": "process.step-1.description"
+        },
+        "step2.name": {
+          "ref": "process.step-2.name"
+        },
+        "step2.body": {
+          "ref": "process.step-2.description"
+        },
+        "step3.name": {
+          "ref": "process.step-3.name"
+        },
+        "step3.body": {
+          "ref": "process.step-3.description"
+        },
+        "step4.name": {
+          "ref": "process.step-4.name"
+        },
+        "step4.body": {
+          "ref": "process.step-4.description"
+        },
+        "team.kicker": {
+          "template": "The people on the work"
+        },
+        "team.title": {
+          "template": "A small team, on the project from brief to handover"
+        },
+        "team1.name": {
+          "ref": "team.hale.name"
+        },
+        "team1.role": {
+          "ref": "team.hale.role"
+        },
+        "team1.bio": {
+          "ref": "team.hale.bio"
+        },
+        "team1.image": {
+          "ref": "team.hale.image"
+        },
+        "team1.image-alt": {
+          "ref": "team.hale.image-alt"
+        },
+        "team2.name": {
+          "ref": "team.lang.name"
+        },
+        "team2.role": {
+          "ref": "team.lang.role"
+        },
+        "team2.bio": {
+          "ref": "team.lang.bio"
+        },
+        "team2.image": {
+          "ref": "team.lang.image"
+        },
+        "team2.image-alt": {
+          "ref": "team.lang.image-alt"
+        },
+        "team3.name": {
+          "ref": "team.lindqvist.name"
+        },
+        "team3.role": {
+          "ref": "team.lindqvist.role"
+        },
+        "team3.bio": {
+          "ref": "team.lindqvist.bio"
+        },
+        "team3.image": {
+          "ref": "team.lindqvist.image"
+        },
+        "team3.image-alt": {
+          "ref": "team.lindqvist.image-alt"
+        },
+        "team4.name": {
+          "ref": "team.meyer.name"
+        },
+        "team4.role": {
+          "ref": "team.meyer.role"
+        },
+        "team4.bio": {
+          "ref": "team.meyer.bio"
+        },
+        "team4.image": {
+          "ref": "team.meyer.image"
+        },
+        "team4.image-alt": {
+          "ref": "team.meyer.image-alt"
+        },
+        "pricing.kicker": {
+          "template": "Levels of support"
+        },
+        "pricing.title": {
+          "template": "Three illustrative ways to work together"
+        },
+        "plan1.name": {
+          "ref": "pricing.starter.name"
+        },
+        "plan1.amount": {
+          "ref": "pricing.starter.amount"
+        },
+        "plan1.period": {
+          "ref": "pricing.starter.period"
+        },
+        "plan2.name": {
+          "ref": "pricing.studio.name"
+        },
+        "plan2.amount": {
+          "ref": "pricing.studio.amount"
+        },
+        "plan2.period": {
+          "ref": "pricing.studio.period"
+        },
+        "plan3.name": {
+          "ref": "pricing.foundry.name"
+        },
+        "plan3.amount": {
+          "ref": "pricing.foundry.amount"
+        },
+        "plan3.period": {
+          "ref": "pricing.foundry.period"
+        },
+        "pricing.notice": {
+          "ref": "pricing.notice"
+        },
+        "ask.kicker": {
+          "template": "Next step"
+        },
+        "ask.title": {
+          "template": "Tell us about the website you have now"
+        },
+        "ask.body": {
+          "template": "Bring the current site, the brief or the question you are stuck on."
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "services.label": {
+          "ref": "cta.services.label"
+        },
+        "services.href": {
+          "ref": "cta.services.href"
+        },
+        "company.name": {
+          "ref": "company.name"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/form-light.html",
+      "fields": {
+        "panel.wordmark": {
+          "ref": "company.name"
+        },
+        "panel.title": {
+          "template": "Tell us about the website you have now"
+        },
+        "panel.blurb": {
+          "ref": "company.summary"
+        },
+        "panel.reason1": {
+          "template": "{{process.step-1.name}} — {{process.step-1.description}}"
+        },
+        "panel.reason2": {
+          "template": "{{process.step-2.name}} — {{process.step-2.description}}"
+        },
+        "panel.reason3": {
+          "template": "{{process.step-3.name}} — {{process.step-3.description}}"
+        },
+        "panel.audience": {
+          "ref": "company.audience"
+        },
+        "form.title": {
+          "ref": "contact.title"
+        },
+        "form.sub": {
+          "template": "This layout is a design sample. The fields below are not connected."
+        },
+        "field.name.label": {
+          "template": "Your name"
+        },
+        "field.email.label": {
+          "template": "Email address"
+        },
+        "field.topic.label": {
+          "template": "What would you like to talk about?"
+        },
+        "field.topic.prompt": {
+          "template": "Choose one…"
+        },
+        "field.topic.option1": {
+          "ref": "services.strategy.name"
+        },
+        "field.topic.option2": {
+          "ref": "services.design.name"
+        },
+        "field.topic.option3": {
+          "ref": "services.development.name"
+        },
+        "field.topic.option4": {
+          "ref": "services.care.name"
+        },
+        "field.message.label": {
+          "template": "What should we know about the website?"
+        },
+        "submit.label": {
+          "template": "Preview only — nothing is sent"
+        },
+        "notice.preview": {
+          "template": "Nothing was sent. This form has no recipient and the sample does not deliver messages."
+        },
+        "notice.recipient": {
+          "ref": "contact.notice"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/form-dark.html",
+      "fields": {
+        "panel.wordmark": {
+          "ref": "company.name"
+        },
+        "panel.title": {
+          "template": "Tell us about the website you have now"
+        },
+        "panel.blurb": {
+          "ref": "company.summary"
+        },
+        "panel.reason1": {
+          "template": "{{process.step-1.name}} — {{process.step-1.description}}"
+        },
+        "panel.reason2": {
+          "template": "{{process.step-2.name}} — {{process.step-2.description}}"
+        },
+        "panel.reason3": {
+          "template": "{{process.step-3.name}} — {{process.step-3.description}}"
+        },
+        "panel.audience": {
+          "ref": "company.audience"
+        },
+        "form.title": {
+          "ref": "contact.title"
+        },
+        "form.sub": {
+          "template": "This layout is a design sample. The fields below are not connected."
+        },
+        "field.name.label": {
+          "template": "Your name"
+        },
+        "field.email.label": {
+          "template": "Email address"
+        },
+        "field.topic.label": {
+          "template": "What would you like to talk about?"
+        },
+        "field.topic.prompt": {
+          "template": "Choose one…"
+        },
+        "field.topic.option1": {
+          "ref": "services.strategy.name"
+        },
+        "field.topic.option2": {
+          "ref": "services.design.name"
+        },
+        "field.topic.option3": {
+          "ref": "services.development.name"
+        },
+        "field.topic.option4": {
+          "ref": "services.care.name"
+        },
+        "field.message.label": {
+          "template": "What should we know about the website?"
+        },
+        "submit.label": {
+          "template": "Preview only — nothing is sent"
+        },
+        "notice.preview": {
+          "template": "Nothing was sent. This form has no recipient and the sample does not deliver messages."
+        },
+        "notice.recipient": {
+          "ref": "contact.notice"
+        },
+        "cta.label": {
+          "ref": "cta.primary.label"
+        },
+        "cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/typography-light.html",
+      "fields": {
+        "title": {
+          "template": "Type and colour at {{company.name}}"
+        },
+        "company.name": {
+          "ref": "company.name"
+        },
+        "summary": {
+          "ref": "company.summary"
+        },
+        "specimen.display": {
+          "template": "Every {{company.name}} page starts with one clear sentence."
+        },
+        "specimen.page": {
+          "template": "A page title names the page, never the whole studio."
+        },
+        "specimen.section": {
+          "template": "Sections read as a sequence of assertions."
+        },
+        "specimen.card": {
+          "template": "Service cards, plan cards and dialogs share this size."
+        },
+        "specimen.lead": {
+          "template": "The lead paragraph sets the pace: one idea, said once, in the studio voice."
+        },
+        "specimen.body": {
+          "template": "Body text carries the argument. It should read at arm’s length on a phone and stay calm on a wide screen, which is why the studio keeps a measure of about seventy characters."
+        },
+        "specimen.caption": {
+          "template": "Captions carry metadata, labels and helper lines, never anything the reader must not miss."
+        },
+        "voice.title": {
+          "template": "How the studio writes"
+        },
+        "voice.rule1": {
+          "template": "Plain, specific English about the audience, the work and the next action."
+        },
+        "voice.rule2": {
+          "template": "Strategy, design, development, content and care are described as one offer: {{product.name}}."
+        },
+        "voice.rule3": {
+          "template": "Plans, team profiles and imagery stay illustrative — never a customer endorsement."
+        },
+        "services.summary": {
+          "template": "{{services.strategy.name}} · {{services.design.name}} · {{services.development.name}} · {{services.content.name}} · {{services.care.name}} · {{services.campaign.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "marketing/typography-dark.html",
+      "fields": {
+        "title": {
+          "template": "Type and colour at {{company.name}}"
+        },
+        "company.name": {
+          "ref": "company.name"
+        },
+        "summary": {
+          "ref": "company.summary"
+        },
+        "specimen.display": {
+          "template": "Every {{company.name}} page starts with one clear sentence."
+        },
+        "specimen.page": {
+          "template": "A page title names the page, never the whole studio."
+        },
+        "specimen.section": {
+          "template": "Sections read as a sequence of assertions."
+        },
+        "specimen.card": {
+          "template": "Service cards, plan cards and dialogs share this size."
+        },
+        "specimen.lead": {
+          "template": "The lead paragraph sets the pace: one idea, said once, in the studio voice."
+        },
+        "specimen.body": {
+          "template": "Body text carries the argument. It should read at arm’s length on a phone and stay calm on a wide screen, which is why the studio keeps a measure of about seventy characters."
+        },
+        "specimen.caption": {
+          "template": "Captions carry metadata, labels and helper lines, never anything the reader must not miss."
+        },
+        "voice.title": {
+          "template": "How the studio writes"
+        },
+        "voice.rule1": {
+          "template": "Plain, specific English about the audience, the work and the next action."
+        },
+        "voice.rule2": {
+          "template": "Strategy, design, development, content and care are described as one offer: {{product.name}}."
+        },
+        "voice.rule3": {
+          "template": "Plans, team profiles and imagery stay illustrative — never a customer endorsement."
+        },
+        "services.summary": {
+          "template": "{{services.strategy.name}} · {{services.design.name}} · {{services.development.name}} · {{services.content.name}} · {{services.care.name}} · {{services.campaign.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/",
+      "fields": {
+        "page.title": {
+          "template": "Home"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        },
+        "brand.name": {
+          "ref": "company.name"
+        },
+        "hero.cta.href": {
+          "ref": "cta.primary.href"
+        },
+        "contact.email": {
+          "ref": "contact.info.email"
+        }
+      }
+    },
+    {
+      "id": "/product",
+      "fields": {
+        "page.title": {
+          "template": "Product"
+        },
+        "page.heading": {
+          "template": "A clear foundation for the work ahead."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services",
+      "fields": {
+        "page.title": {
+          "template": "Service"
+        },
+        "page.heading": {
+          "template": "Website services"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        },
+        "service1.name": {
+          "ref": "services.strategy.name"
+        },
+        "service2.name": {
+          "ref": "services.design.name"
+        },
+        "service3.name": {
+          "ref": "services.development.name"
+        },
+        "service4.name": {
+          "ref": "services.content.name"
+        },
+        "service5.name": {
+          "ref": "services.care.name"
+        },
+        "service6.name": {
+          "ref": "services.campaign.name"
+        }
+      }
+    },
+    {
+      "id": "/services/service-detail",
+      "fields": {
+        "page.title": {
+          "template": "Website design and build"
+        },
+        "page.heading": {
+          "template": "Website design and build"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/website-strategy",
+      "fields": {
+        "page.title": {
+          "template": "{{services.strategy.name}}"
+        },
+        "page.heading": {
+          "template": "{{services.strategy.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/brand-and-interface-design",
+      "fields": {
+        "page.title": {
+          "template": "{{services.design.name}}"
+        },
+        "page.heading": {
+          "template": "{{services.design.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/website-development",
+      "fields": {
+        "page.title": {
+          "template": "{{services.development.name}}"
+        },
+        "page.heading": {
+          "template": "{{services.development.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/content-and-photography",
+      "fields": {
+        "page.title": {
+          "template": "{{services.content.name}}"
+        },
+        "page.heading": {
+          "template": "{{services.content.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pricing",
+      "fields": {
+        "page.title": {
+          "template": "Pricing"
+        },
+        "page.heading": {
+          "template": "Choose the level of support that fits."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        },
+        "plan1.name": {
+          "ref": "pricing.starter.name"
+        },
+        "plan1.amount": {
+          "ref": "pricing.starter.amount"
+        },
+        "plan1.period": {
+          "ref": "pricing.starter.period"
+        },
+        "plan2.name": {
+          "ref": "pricing.studio.name"
+        },
+        "plan2.amount": {
+          "ref": "pricing.studio.amount"
+        },
+        "plan2.period": {
+          "ref": "pricing.studio.period"
+        },
+        "plan3.name": {
+          "ref": "pricing.foundry.name"
+        },
+        "plan3.amount": {
+          "ref": "pricing.foundry.amount"
+        },
+        "plan3.period": {
+          "ref": "pricing.foundry.period"
+        },
+        "pricing.notice": {
+          "ref": "pricing.notice"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog",
+      "fields": {
+        "page.title": {
+          "template": "Blog"
+        },
+        "page.heading": {
+          "template": "Content guides"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/category-list",
+      "fields": {
+        "page.title": {
+          "template": "All articles"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/archive",
+      "fields": {
+        "page.title": {
+          "template": "Archive"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories",
+      "fields": {
+        "page.title": {
+          "template": "Topics"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-procurement",
+      "fields": {
+        "page.title": {
+          "template": "Website planning"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter",
+      "fields": {
+        "page.title": {
+          "template": "Website operations"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-world",
+      "fields": {
+        "page.title": {
+          "template": "Studio notes"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/style-guide",
+      "fields": {
+        "page.title": {
+          "template": "Style guide"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/typography",
+      "fields": {
+        "page.title": {
+          "template": "Typography"
+        },
+        "page.heading": {
+          "template": "Typography"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/colors",
+      "fields": {
+        "page.title": {
+          "template": "Color roles"
+        },
+        "page.heading": {
+          "template": "Color roles"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/spacing",
+      "fields": {
+        "page.title": {
+          "template": "Spacing and radius"
+        },
+        "page.heading": {
+          "template": "Spacing and radius"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/faq",
+      "fields": {
+        "page.title": {
+          "template": "Questions"
+        },
+        "page.heading": {
+          "template": "Questions"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/contact",
+      "fields": {
+        "page.title": {
+          "template": "Contact us"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        },
+        "contact.title": {
+          "ref": "contact.title"
+        },
+        "contact.notice": {
+          "ref": "contact.notice"
+        },
+        "contact.email": {
+          "ref": "contact.info.email"
+        }
+      }
+    },
+    {
+      "id": "/resources/search",
+      "fields": {
+        "page.title": {
+          "template": "Search"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/tags",
+      "fields": {
+        "page.title": {
+          "template": "Tags"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/sign-in",
+      "fields": {
+        "page.title": {
+          "template": "Sign in"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/home-2",
+      "fields": {
+        "page.title": {
+          "template": "Home — variant"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/single-contact",
+      "fields": {
+        "page.title": {
+          "template": "Talk to sales"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/single-tag",
+      "fields": {
+        "page.title": {
+          "template": "Joomla"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/marketing-samples",
+      "fields": {
+        "page.title": {
+          "template": "Marketing samples"
+        },
+        "page.heading": {
+          "template": "One identity. Every message."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/home-variation",
+      "fields": {
+        "page.title": {
+          "template": "Home variation"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/home-onepage",
+      "fields": {
+        "page.title": {
+          "template": "Home - Onepage"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        },
+        "brand.name": {
+          "ref": "company.name"
+        },
+        "member1.name": {
+          "ref": "team.hale.name"
+        },
+        "member2.name": {
+          "ref": "team.lang.name"
+        },
+        "member3.name": {
+          "ref": "team.lindqvist.name"
+        },
+        "member4.name": {
+          "ref": "team.meyer.name"
+        }
+      }
+    },
+    {
+      "id": "/company/about",
+      "fields": {
+        "page.title": {
+          "template": "About"
+        },
+        "page.heading": {
+          "template": "Make the first impression feel like you."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team",
+      "fields": {
+        "page.title": {
+          "template": "Team"
+        },
+        "page.heading": {
+          "template": "People"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        },
+        "member1": {
+          "template": "{{team.hale.name}} — {{team.hale.role}}"
+        },
+        "member2": {
+          "template": "{{team.lang.name}} — {{team.lang.role}}"
+        },
+        "member3": {
+          "template": "{{team.lindqvist.name}} — {{team.lindqvist.role}}"
+        },
+        "member4": {
+          "template": "{{team.meyer.name}} — {{team.meyer.role}}"
+        }
+      }
+    },
+    {
+      "id": "/company/careers",
+      "fields": {
+        "page.title": {
+          "template": "Careers"
+        },
+        "page.heading": {
+          "template": "Small steps, a shared direction."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/contact-category",
+      "fields": {
+        "page.title": {
+          "template": "Contact category"
+        },
+        "page.heading": {
+          "template": "Studio contacts"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/featured-contacts",
+      "fields": {
+        "page.title": {
+          "template": "Featured contacts"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/news-feeds",
+      "fields": {
+        "page.title": {
+          "template": "News feeds"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/wrapper",
+      "fields": {
+        "page.title": {
+          "template": "Wrapper"
+        },
+        "page.heading": {
+          "template": "Design reference"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/account/create-account",
+      "fields": {
+        "page.title": {
+          "template": "Create account"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/account/profile",
+      "fields": {
+        "page.title": {
+          "template": "Sign in"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/account/reset-password",
+      "fields": {
+        "page.title": {
+          "template": "Reset password"
+        },
+        "page.heading": {
+          "template": "Reset password"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/account/forgot-username",
+      "fields": {
+        "page.title": {
+          "template": "Forgot username"
+        },
+        "page.heading": {
+          "template": "Forgot username"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "fields": {
+        "page.title": {
+          "template": "{{services.care.name}}"
+        },
+        "page.heading": {
+          "template": "{{services.care.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/43-22-sure-fire-headline-formulas-that-work",
+      "fields": {
+        "page.title": {
+          "template": "{{services.campaign.name}}"
+        },
+        "page.heading": {
+          "template": "{{services.campaign.name}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "fields": {
+        "page.title": {
+          "template": "Writing a useful website brief"
+        },
+        "page.heading": {
+          "template": "Writing a useful website brief"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "fields": {
+        "page.title": {
+          "template": "Designing a contact page people can use"
+        },
+        "page.heading": {
+          "template": "Designing a contact page people can use"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/36-how-to-write-like-hemingway",
+      "fields": {
+        "page.title": {
+          "template": "Editing website copy for clarity"
+        },
+        "page.heading": {
+          "template": "Editing website copy for clarity"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/37-how-much-money-do-youtubers-make",
+      "fields": {
+        "page.title": {
+          "template": "Choosing what belongs on the homepage"
+        },
+        "page.heading": {
+          "template": "Choosing what belongs on the homepage"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "fields": {
+        "page.title": {
+          "template": "Building an editorial calendar"
+        },
+        "page.heading": {
+          "template": "Building an editorial calendar"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/tracyagent",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/tags/t4-framework",
+      "fields": {
+        "page.title": {
+          "template": "T4 Framework"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "fields": {
+        "page.title": {
+          "template": "Making service pages more specific"
+        },
+        "page.heading": {
+          "template": "Making service pages more specific"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "fields": {
+        "page.title": {
+          "template": "Writing headings that guide a reader"
+        },
+        "page.heading": {
+          "template": "Writing headings that guide a reader"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "fields": {
+        "page.title": {
+          "template": "Using customer stories responsibly"
+        },
+        "page.heading": {
+          "template": "Using customer stories responsibly"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "fields": {
+        "page.title": {
+          "template": "A simple content review workflow"
+        },
+        "page.heading": {
+          "template": "A simple content review workflow"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "fields": {
+        "page.title": {
+          "template": "Lessons from a website discovery workshop"
+        },
+        "page.heading": {
+          "template": "Lessons from a website discovery workshop"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "fields": {
+        "page.title": {
+          "template": "Keeping project communication clear"
+        },
+        "page.heading": {
+          "template": "Keeping project communication clear"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "fields": {
+        "page.title": {
+          "template": "A thoughtful follow-up after launch"
+        },
+        "page.heading": {
+          "template": "A thoughtful follow-up after launch"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised",
+      "fields": {
+        "page.title": {
+          "template": "Studio resources"
+        },
+        "page.heading": {
+          "template": "Studio resources"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories",
+      "fields": {
+        "page.title": {
+          "template": "Explore the studio"
+        },
+        "page.heading": {
+          "template": "Explore the studio"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical",
+      "fields": {
+        "page.title": {
+          "template": "Practical guides"
+        },
+        "page.heading": {
+          "template": "Practical guides"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "fields": {
+        "page.title": {
+          "template": "Inside the studio"
+        },
+        "page.heading": {
+          "template": "Inside the studio"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "fields": {
+        "page.title": {
+          "template": "Studio life"
+        },
+        "page.heading": {
+          "template": "Studio life"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages",
+      "fields": {
+        "page.title": {
+          "template": "Website pages"
+        },
+        "page.heading": {
+          "template": "Website pages"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/17-magazine",
+      "fields": {
+        "page.title": {
+          "template": "Insights"
+        },
+        "page.heading": {
+          "template": "Insights"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "fields": {
+        "page.title": {
+          "template": "Choosing a CMS your team can use"
+        },
+        "page.heading": {
+          "template": "Choosing a CMS your team can use"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/demo",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "fields": {
+        "page.title": {
+          "template": "Asking better questions about hosting"
+        },
+        "page.heading": {
+          "template": "Asking better questions about hosting"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "fields": {
+        "page.title": {
+          "template": "Preparing an asset inventory"
+        },
+        "page.heading": {
+          "template": "Preparing an asset inventory"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "fields": {
+        "page.title": {
+          "template": "Reviewing third-party integrations"
+        },
+        "page.heading": {
+          "template": "Reviewing third-party integrations"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "fields": {
+        "page.title": {
+          "template": "Comparing proposals on the same basis"
+        },
+        "page.heading": {
+          "template": "Comparing proposals on the same basis"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "fields": {
+        "page.title": {
+          "template": "Studio notes: making time for improvements"
+        },
+        "page.heading": {
+          "template": "Studio notes: making time for improvements"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "fields": {
+        "page.title": {
+          "template": "Studio notes: welcoming a new perspective"
+        },
+        "page.heading": {
+          "template": "Studio notes: welcoming a new perspective"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "fields": {
+        "page.title": {
+          "template": "Studio notes: reviewing work together"
+        },
+        "page.heading": {
+          "template": "Studio notes: reviewing work together"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "fields": {
+        "page.title": {
+          "template": "Studio notes: a better project kickoff"
+        },
+        "page.heading": {
+          "template": "Studio notes: a better project kickoff"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "fields": {
+        "page.title": {
+          "template": "Studio notes: starting with the customer"
+        },
+        "page.heading": {
+          "template": "Studio notes: starting with the customer"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "fields": {
+        "page.title": {
+          "template": "Reducing unnecessary page weight"
+        },
+        "page.heading": {
+          "template": "Reducing unnecessary page weight"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "fields": {
+        "page.title": {
+          "template": "Making recovery part of launch planning"
+        },
+        "page.heading": {
+          "template": "Making recovery part of launch planning"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/Lawrence",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "fields": {
+        "page.title": {
+          "template": "A routine for website updates"
+        },
+        "page.heading": {
+          "template": "A routine for website updates"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "fields": {
+        "page.title": {
+          "template": "Keeping forms connected to your team"
+        },
+        "page.heading": {
+          "template": "Keeping forms connected to your team"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "fields": {
+        "page.title": {
+          "template": "Reading website analytics with a purpose"
+        },
+        "page.heading": {
+          "template": "Reading website analytics with a purpose"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/DamonZ",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/tags/jooma-4-x",
+      "fields": {
+        "page.title": {
+          "template": "Jooma 4.x"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/tags/joomla-3-9",
+      "fields": {
+        "page.title": {
+          "template": "Joomla 3.9"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": {
+          "template": "{{team.hale.name}} — {{team.hale.role}}"
+        },
+        "page.heading": {
+          "template": "{{team.hale.name}} — {{team.hale.role}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "fields": {
+        "page.title": {
+          "template": "{{team.lang.name}} — {{team.lang.role}}"
+        },
+        "page.heading": {
+          "template": "{{team.lang.name}} — {{team.lang.role}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "fields": {
+        "page.title": {
+          "template": "{{team.lindqvist.name}} — {{team.lindqvist.role}}"
+        },
+        "page.heading": {
+          "template": "{{team.lindqvist.name}} — {{team.lindqvist.role}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "fields": {
+        "page.title": {
+          "template": "{{team.meyer.name}} — {{team.meyer.role}}"
+        },
+        "page.heading": {
+          "template": "{{team.meyer.name}} — {{team.meyer.role}}"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "fields": {
+        "page.title": {
+          "template": "How the demo team works together"
+        },
+        "page.heading": {
+          "template": "How the demo team works together"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "fields": {
+        "page.title": {
+          "template": "Meet the people behind a project"
+        },
+        "page.heading": {
+          "template": "Meet the people behind a project"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised",
+      "fields": {
+        "page.title": {
+          "template": "News feeds"
+        },
+        "page.heading": {
+          "template": "Industry updates"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/margarete69",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/authors/author/dion.parker",
+      "fields": {
+        "page.title": {
+          "template": "Authors"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/1-about-us",
+      "fields": {
+        "page.title": {
+          "template": "About us"
+        },
+        "page.heading": {
+          "template": "About us"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/13-full-width",
+      "fields": {
+        "page.title": {
+          "template": "Full width"
+        },
+        "page.heading": {
+          "template": "Full width"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "fields": {
+        "page.title": {
+          "template": "Sidebar Left + Content"
+        },
+        "page.heading": {
+          "template": "Sidebar Left + Content"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "fields": {
+        "page.title": {
+          "template": "Content + Sidebar Right"
+        },
+        "page.heading": {
+          "template": "Content + Sidebar Right"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "fields": {
+        "page.title": {
+          "template": "Testing a website before launch"
+        },
+        "page.heading": {
+          "template": "Testing a website before launch"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": {
+          "template": "Planning a website migration"
+        },
+        "page.heading": {
+          "template": "Planning a website migration"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "fields": {
+        "page.title": {
+          "template": "Keeping images sharp on smaller screens"
+        },
+        "page.heading": {
+          "template": "Keeping images sharp on smaller screens"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "fields": {
+        "page.title": {
+          "template": "Making a website easy to maintain"
+        },
+        "page.heading": {
+          "template": "Making a website easy to maintain"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "fields": {
+        "page.title": {
+          "template": "A practical handover checklist"
+        },
+        "page.heading": {
+          "template": "A practical handover checklist"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "fields": {
+        "page.title": {
+          "template": "Testing keyboard navigation"
+        },
+        "page.heading": {
+          "template": "Testing keyboard navigation"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": {
+          "template": "Inside a collaborative design review"
+        },
+        "page.heading": {
+          "template": "Inside a collaborative design review"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "fields": {
+        "page.title": {
+          "template": "Preparing for a team photo session"
+        },
+        "page.heading": {
+          "template": "Preparing for a team photo session"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "fields": {
+        "page.title": {
+          "template": "A workspace that supports creative work"
+        },
+        "page.heading": {
+          "template": "A workspace that supports creative work"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "fields": {
+        "page.title": {
+          "template": "From workshop notes to a page plan"
+        },
+        "page.heading": {
+          "template": "From workshop notes to a page plan"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "fields": {
+        "page.title": {
+          "template": "Organising a useful inspiration library"
+        },
+        "page.heading": {
+          "template": "Organising a useful inspiration library"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "fields": {
+        "page.title": {
+          "template": "Keeping project decisions findable"
+        },
+        "page.heading": {
+          "template": "Keeping project decisions findable"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "fields": {
+        "page.title": {
+          "template": "Making room for informal conversations"
+        },
+        "page.heading": {
+          "template": "Making room for informal conversations"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "fields": {
+        "page.title": {
+          "template": "A team lunch with a purpose"
+        },
+        "page.heading": {
+          "template": "A team lunch with a purpose"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "fields": {
+        "page.title": {
+          "template": "Collecting inspiration outside the studio"
+        },
+        "page.heading": {
+          "template": "Collecting inspiration outside the studio"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "fields": {
+        "page.title": {
+          "template": "Sharing knowledge in small sessions"
+        },
+        "page.heading": {
+          "template": "Sharing knowledge in small sessions"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/32-header-1",
+      "fields": {
+        "page.title": {
+          "template": "Header 1"
+        },
+        "page.heading": {
+          "template": "Header 1"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/33-header-2",
+      "fields": {
+        "page.title": {
+          "template": "Header 2"
+        },
+        "page.heading": {
+          "template": "Header 2"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/34-header-3",
+      "fields": {
+        "page.title": {
+          "template": "Header 3"
+        },
+        "page.heading": {
+          "template": "Header 3"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/35-header-4",
+      "fields": {
+        "page.title": {
+          "template": "Header 4 (Main menu - Logo - Topbar right)"
+        },
+        "page.heading": {
+          "template": "Header 4 (Main menu - Logo - Topbar right)"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "fields": {
+        "page.title": {
+          "template": "Joomla! announcements"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/16-3-columns",
+      "fields": {
+        "page.title": {
+          "template": "3 Columns"
+        },
+        "page.heading": {
+          "template": "3 Columns"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/17-layouts",
+      "fields": {
+        "page.title": {
+          "template": "Layouts"
+        },
+        "page.heading": {
+          "template": "Layouts"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/31-home-dark",
+      "fields": {
+        "page.title": {
+          "template": "Home Dark"
+        },
+        "page.heading": {
+          "template": "Home Dark"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/65-offline-page",
+      "fields": {
+        "page.title": {
+          "template": "Offline page"
+        },
+        "page.heading": {
+          "template": "Offline page"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/46-features-page",
+      "fields": {
+        "page.title": {
+          "template": "Features page"
+        },
+        "page.heading": {
+          "template": "Features page"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/48-faqs",
+      "fields": {
+        "page.title": {
+          "template": "FAQs"
+        },
+        "page.heading": {
+          "template": "FAQs"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "/resources/all-categories/14-pages/64-error-page",
+      "fields": {
+        "page.title": {
+          "template": "Error page"
+        },
+        "page.heading": {
+          "template": "Error page"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    }
+  ]
+}

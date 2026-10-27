@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1100-p9-emdash-business-1-7-6",
+  "kind": "fix",
+  "title": "Tracy Business EmDash 1.7.6 carries the hero call to action that reads the design-system slot's button padding: 1.7.5 is published without it, so the change takes its own number, stamped in the theme and registered in the where-map (with the released 1.7.5 zip recorded as verified) and in template-profiles.json before the release is cut",
+  "pr": 1100,
+  "area": "cms/emdash-release",
+  "cms": ["em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no network. In the TCH checkout at the commit under test, with dependencies installed (pnpm install), run from the checkout root: node tests/regression/scripts/REG-PR-1100-p9-emdash-business-1-7-6.mjs",
+    "S2: Read its 'ok -' / 'not ok -' lines and its exit code."
+  ],
+  "expect": [
+    "ok - package.json, template.config.json, the Dockerfile label io.tracy.template.version and docs/generated/inventory.json of packages/cms/tracy-emdash-theme-business all say 1.7.6.",
+    "ok - apps/tracy-web/src/sites/where/emdash-tracy-business.json names 1.7.5 and 1.7.6, and its verifiedReleases record for 1.7.5 carries zipSha256 0fc612da0e30c6a65aac5af322fbabc434b90f0f33814ead0d210c0b696b1017 (the released tracy-business-emdash-quickstart-1.7.5.zip).",
+    "ok - apps/tracy-web/src/lib/template-profiles.json has releases['tracy-business/emdash-0.x']['1.7.6'] with logos 'pair', brandReady true, faviconReady true and a note starting 'As 1.7.5;'.",
+    "ok - src/views/Home.astro's hero call to action is class=\"btn-primary !px-[var(--ds-btn-pad-x,28px)] !py-[var(--ds-btn-pad-y,15px)] !text-[15px] [[data-ds-worn]_&]:inline-flex [[data-ds-worn]_&]:items-center\" (the label centred in the stretched button while a system is worn, nothing changed when none is).",
+    "ok - node --test apps/tracy-web/test/content-where.test.mjs exits 0 with fail 0, cancelled 0, skipped 0.",
+    "ok - the theme's tests/ds-slot-hero.test.mjs exits 0 with fail 0, cancelled 0, skipped 0.",
+    "The script exits 0."
+  ],
+  "selectors": {
+    "stamps": "packages/cms/tracy-emdash-theme-business/{package.json,template.config.json,Dockerfile,docs/generated/inventory.json} version",
+    "whereMap": "apps/tracy-web/src/sites/where/emdash-tracy-business.json versions, verifiedReleases",
+    "profiles": "apps/tracy-web/src/lib/template-profiles.json releases['tracy-business/emdash-0.x']['1.7.6']",
+    "hero": "packages/cms/tracy-emdash-theme-business/src/views/Home.astro hero_cta1_label"
+  },
+  "evidence": "10/10/2026: gh release view tracy-business/emdash-0.x -R JoomlArt-Products/ja-products showed tracy-business-emdash-quickstart-1.7.5.zip (digest sha256:0fc612da…) and tracy_setting.json version 1.7.5 uploaded 10:09:36–52Z; the zip is byte-identical to origin/develop 422bd06e2's theme (279 files, 0 differ) and its Home.astro:85 still reads 'btn-primary !px-7 !py-[15px] !text-[15px]'. All 46 template proofs of the where-map, and every collection, field and /app/ file it names, held on that zip. A 1.7.6 release built from this branch merged with develop differs from the 1.7.5 zip only in Home.astro's hero line, tests/ds-slot-hero.test.mjs and the version stamps (evidence: tasks/evidence/followups-2026-10-10/p9-emdash/).",
+  "fence": "The repository side of the release only: version stamps and the two tables Tracy reads a version from. Not covered: the upload to ja-products (a person runs it) and a site built from the uploaded assets.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1100-p9-emdash-business-1-7-6.mjs"]
+  }
+}

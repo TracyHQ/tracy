@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5",
+  "kind": "fix",
+  "title": "JA Impact wp7 1.0.5: page heights and layout match the Joomla source on the donations, contact, charity, author, blog and home views at phone and tablet widths",
+  "pr": 996,
+  "area": "wordpress-theme/wp-ja-impact",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read packages/cms/tracy-wordpress-theme/src/wp-ja-impact/style.css and the zz-behaviour.css of the shipped theme and of its overlay (comments stripped, whitespace flattened) for the rules this release added, plus the Version line.",
+    "S2: Read tasks/ja-impact-wp7/release/fix-measure.json (taken by site-sweep.mjs on the released zip) and the zip's line in tasks/ja-impact-wp7/release/SHA256SUMS."
+  ],
+  "expect": [
+    "S1: style.css reads Version: 1.0.5 once; the shipped theme and the overlay both hold the seven rules (donations footer columns, 94 px header bar, contact card title spacing, contact stack gap, author list row gap, donations pager counter, typography demo margin).",
+    "S2: the measure names site-sweep.mjs, its zip sha256 equals the SHA256SUMS line of wp-ja-impact-1.0.5.zip, 11/11 checks pass, heights has 0 defects, and the baseline (1.0.4) had heights failing."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.mjs",
+    "evidence": "tasks/ja-impact-wp7/review.config.json"
+  },
+  "evidence": "Full site sweep of 07/10/2026 against the local Joomla source stand on the clean restore of the packed 1.0.5 site: 11/11, heights 0 open and 22 accepted, 0 not measured; the 1.0.4 baseline failed overflow, background, fixed-widgets and heights",
+  "fence": "Shipped CSS rules and the recorded browser measure of the released zip; the sweep exits non-zero on a defect and on anything it could not measure",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.mjs"]
+  }
+}

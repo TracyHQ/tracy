@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6ec18fa7-41ff-41e0-8824-94f6fa104a75",
+  "status": "complete",
+  "name": "Glyphy",
+  "url": "https://styles.refero.design/style/6ec18fa7-41ff-41e0-8824-94f6fa104a75",
+  "sourceWebsite": "https://glyphy.io",
+  "extractedAt": "2026-06-03T20:26:35.703Z",
+  "capturedAt": "2026-10-08T05:13:06.159996+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "buttercream specimen sheet beneath sunset bands. A warm cream page sliced by yellow-to-plum horizontal stripes, anchored by an oversized neo-grotesque wordmark and tiny pixel Japanese eyebrows.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ce073fd5-ff2e-44ab-a88d-d6f747feafc0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6e5d4a87-1f62-4cb3-ac4e-6a76117eec9b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/90424229-998d-4771-abdf-db8b1aed753c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8965c9b7-2f09-4665-b010-c240fccbaba4.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3214bc3b-a5b3-4f57-b773-0a0ce3dfe08e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "15b55c9e5e4c49a77cc69d0cc4ec34ef3199652ef65d6dc29e90f5030d4eb19c",
+      "bytes": 19775
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1a1fa0f3af571333181ee1a7abf25fd0458e959f319df32ced6c7ea2ff515abb",
+      "bytes": 74028
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d8259334b97abf70855a695faa79fddc81a837e8dea0548b5719e08fcdf70598",
+      "bytes": 16129
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8746fcf97385a01aa8a3b5eb746de1920fba2a0d70bbe8a2f9db2112d1e82e0a",
+      "bytes": 11586
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5d4105849b0e5eccb41b1ee9818fe3336975797e3234f91e57c7bf890ddd11ae",
+      "bytes": 12178
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bbb375367fac47106a5bcc504453bfce5197cd6d03332540448fc8ebdfeb9bab",
+      "bytes": 3680
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f7be7a2d3679348641b3c27c228cff69a6b474d6b45b454e7aafcdac2e35da82",
+      "bytes": 962
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "70a613c51b150c27919de7c76be561dca8113f3744b5af2fab64b20e26b848cd",
+      "bytes": 979
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "31a895a6c10dbc4e6069cf35cf6aaddb36ef75bd3f028e129f955fb92662d050",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "faccc84b85d4426ae7ca198f807e58b20568b9f365234ead4d978fe087bb9c74",
+      "bytes": 43293
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "733103949d1522ce29510a6bb09c3360d5cd13342dcfbf99b939d7f797be708b",
+      "bytes": 22638
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d617359cef7fdbc055d2b1fdaf147099155b56b1abee920b3b699019848d350b",
+      "bytes": 40825
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9e770cc7752ee5e721f2697886f888606790b844defd2b64cca4b788b9605e00",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a319c350e7ae30ca76166584db1323268b19ec715f7c224c30fbab9514f33c71",
+      "bytes": 1699
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "88e5fbc8af894560900eed43cb0ab4ad41eb8546b4bb5f7f1736793448cd9681",
+      "bytes": 2210
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "67bb82e2-d81c-4ead-a882-a8a2534eb221",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "6ec18fa7-41ff-41e0-8824-94f6fa104a75",
+    "71db2a51-118e-42b1-879d-29872d52142f",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "c445eb73-e403-4a00-8b90-f454c9181fd6",
+    "c46ecd77-9c92-4a85-9162-c6d4afd99d95",
+    "d991c31d-2ffa-4a94-ab37-7f7d8f7d6a0c",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

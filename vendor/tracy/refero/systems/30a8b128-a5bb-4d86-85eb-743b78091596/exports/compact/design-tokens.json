@@ -1,0 +1,59 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#f3f1ed",
+      "$type": "color",
+      "$description": "Parchment — Primary page canvas — the warm off-white that gives the entire system its editorial, non-digital feel"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, badge fills, and inset panels — sits one step above the parchment canvas to create gentle elevation without shadows"
+    },
+    "ink-black": {
+      "$value": "#181011",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, default borders, nav strokes, and structural outlines — the dominant typographic and border color across all contexts"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Secondary headings and heavier-weight text where slightly softer than Ink Black is desired"
+    },
+    "aubergine-black": {
+      "$value": "#302023",
+      "$type": "color",
+      "$description": "Aubergine Black — Dramatic dark-section backgrounds (Problem, full-bleed inverse bands) — the only near-saturated tone, used to invert the page temperature"
+    },
+    "ash": {
+      "$value": "#aaaaaa",
+      "$type": "color",
+      "$description": "Ash — Muted text, inactive states, and lighter border treatments where Ink Black would be too heavy"
+    },
+    "dim": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Dim — Captions, timestamps, and tertiary metadata where hierarchy needs to recede"
+    },
+    "bone": {
+      "$value": "#d8d4d4",
+      "$type": "color",
+      "$description": "Bone — Hairline borders, illustration fills, and low-emphasis dividers — the lightest structural line color"
+    }
+  },
+  "font": {
+    "abcfavorit-book": {
+      "$value": "ABCfavorit Book",
+      "$type": "fontFamily",
+      "$description": "Single-family system carrying all UI text. The two-weight binary (regular/bold) replaces color or size variation for hierarchy. Weight 400 reads as body and supporting text; weight 700 is reserved for emphasis lines, key headings, and navigation. The two stylistic alternates ss04 and ss11 are enabled globally — these likely alter specific glyphs (likely the 'a' and 'g' or similar) that give ABCfavorit its distinctive contemporary grotesque character."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pravah.com",
+      "siteName": "Pravah",
+      "extractedAt": "2026-06-03T18:17:28.007Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-podcast/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_podcast",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-podcast",
+    "id": "quickstart/ja-podcast/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_podcast",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-podcast-j6-webroot-1.0.4.tar.gz",
+        "bytes": 70420667,
+        "sha256": "065b888f0f733763bbeac51af6a9b1c3e8205657fd6d1dbd5f00398e94c15f09"
+      },
+      "database": {
+        "file": "ja-podcast-j6-database-1.0.4.sql.gz",
+        "bytes": 110340,
+        "sha256": "7b687d1cfa29630adbd806f495eccd0bf523a3804bfcd193f0bcb5f17ffdb2dd"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T19:00:57.263Z",
+    "builtFrom": {
+      "from": "quickstart/ja-podcast/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-podcast/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.25",
+  "mode": "content-recommendation"
+}

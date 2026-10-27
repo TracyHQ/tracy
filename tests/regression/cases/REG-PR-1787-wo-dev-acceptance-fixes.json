@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1787-wo-dev-acceptance-fixes",
+  "kind": "fix",
+  "title": "Business brief dev acceptance: a thinking model's reading is read, not cut off, and Read menu again asks only for a place with a Menu",
+  "pr": 1787,
+  "area": "wo/business-brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Call the business reading step with a model answer that follows a long reasoning part, with the answer in a json code fence, cut off by the token limit, empty, and not JSON.",
+    "S2: Ask menuAgainTarget for the Read menu again preview with a detail answer that has no Menu and one that has a Menu."
+  ],
+  "expect": [
+    "S1: the long-reasoning answer and the fenced answer are read; the cut-off answer falls back to rules with reason truncated; empty and not JSON give reason empty and unreadable.",
+    "S2: no target without a Menu, the opportunity id with a Menu."
+  ],
+  "selectors": {
+    "tests": "packages/wo/website-opportunities/test/business-reading-model-answer.test.mjs, packages/site/tracy-website-opportunities/test/client-menu-model.test.mjs"
+  },
+  "evidence": "On dev a business reading settled at its 12 cent ceiling and was stored unreadable; Details of a non-food place called research-again with parts menu-file and menu-photos",
+  "fence": "Pure functions: the reading parser and the menu preview target, run without a database or a model",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/business-reading-model-answer.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-menu-model.test.mjs"
+    ],
+    "tests": [
+      "Read menu again asks for a preview only when the place has a Menu",
+      "a thinking model that reasons as it did on dev still has room to answer, and the answer is read",
+      "an answer in a json code fence is read",
+      "an answer cut off by the token limit falls back to the rules, and says it was cut off",
+      "an empty answer and an answer that is not JSON are told apart"
+    ]
+  }
+}

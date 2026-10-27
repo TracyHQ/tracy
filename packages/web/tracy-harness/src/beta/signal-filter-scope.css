@@ -1,0 +1,31 @@
+/* Dim only metrics that cannot be associated with the active customer/site filters. */
+.signals-screen .signals-unaffected {
+  opacity: 0.65;
+}
+
+.signals-screen .signals-scope-note {
+  display: block;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 400;
+  white-space: normal;
+}
+
+.signals-screen .signals-unaffected-column button {
+  flex-wrap: wrap;
+}
+
+.signals-screen .signals-unaffected-column .signals-scope-note {
+  flex-basis: 100%;
+  text-align: right;
+}
+
+.signals-screen .signals-legend-chip:has(.signals-scope-note) {
+  flex-wrap: wrap;
+  max-width: 260px;
+}
+
+.signals-screen .signals-legend-chip .signals-scope-note {
+  flex-basis: 100%;
+  text-align: left;
+}

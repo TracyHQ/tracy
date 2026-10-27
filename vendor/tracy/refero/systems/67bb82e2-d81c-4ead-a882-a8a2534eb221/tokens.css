@@ -1,0 +1,85 @@
+:root {
+  /* Colors */
+  --color-paper: #ffffff;
+  --color-blush-paper: #f7eef1;
+  --color-control-gray: #eeeeee;
+  --color-mint-wash: #e9f3eb;
+  --color-ink: #000000;
+  --color-cherry-ink: #42242e;
+  --color-workshop-green: #1e3219;
+  --color-acid-glyph: #9aff00;
+  --color-signal-orange: #f66a06;
+  --color-mustard-proof: #f2ad0d;
+  --color-cyan-blueprint: #1ad1e6;
+  --color-ochre-ink: #604900;
+  --color-burnt-ink: #4d2f1a;
+  --color-blueprint-ink: #243f42;
+
+  /* Typography — Font Families */
+  --font-symbol-helper: 'Symbol Helper', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-nav: 14px;
+  --leading-nav: 1.43;
+  --tracking-nav: 0px;
+  --text-body: 18px;
+  --leading-body: 1.4;
+  --tracking-body: 0px;
+  --text-label: 20px;
+  --leading-label: 1.25;
+  --tracking-label: 0px;
+  --text-kicker: 24px;
+  --leading-kicker: 1.25;
+  --tracking-kicker: 0px;
+  --text-intro: 34px;
+  --leading-intro: 1.18;
+  --tracking-intro: 0px;
+  --text-testimonial: 50px;
+  --leading-testimonial: 1.1;
+  --tracking-testimonial: 0px;
+  --text-display: 80px;
+  --leading-display: 1;
+  --tracking-display: 0px;
+  --text-decorative-glyph: 480px;
+  --leading-decorative-glyph: 1;
+  --tracking-decorative-glyph: 0px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+
+  /* Spacing */
+  --spacing-unit: 4px;
+  --spacing-4: 4px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-36: 36px;
+  --spacing-40: 40px;
+  --spacing-60: 60px;
+  --spacing-80: 80px;
+  --spacing-100: 100px;
+  --spacing-140: 140px;
+
+  /* Layout */
+  --section-gap: 40px;
+  --card-padding: 36-40px;
+  --element-gap: 20px;
+
+  /* Border Radius */
+  --radius-md: 5px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+
+  /* Named Radii */
+  --radius-cards: 10px;
+  --radius-pills: 9999px;
+  --radius-buttons: 5px;
+  --radius-product-canvases: 10px;
+  --radius-circular-controls: 50%;
+
+  /* Surfaces */
+  --surface-paper: #ffffff;
+  --surface-blush-paper: #f7eef1;
+  --surface-mint-wash: #e9f3eb;
+  --surface-control-gray: #eeeeee;
+  --surface-acid-glyph: #9aff00;
+}

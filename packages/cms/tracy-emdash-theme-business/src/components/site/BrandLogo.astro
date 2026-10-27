@@ -1,0 +1,30 @@
+---
+/**
+ * One logo spot: the customer's picture for each theme that has one, the template's text lockup (the default slot) for
+ * the theme that does not. Which is which is decided by `logoSpots` (`src/lib/brand.ts`); `global.css` hides a spot
+ * outside its theme. With no customer logo the slot renders alone and unwrapped: the demo's own markup.
+ */
+import { THEME_CLASS, type LogoSpot } from '@/lib/brand'
+
+interface Props {
+  spots: LogoSpot[]
+  alt: string
+  /** Classes of the <img>: its height and how wide it may grow. */
+  imgClass?: string
+}
+const { spots, alt, imgClass = '' } = Astro.props
+---
+
+{
+	spots.map((spot) =>
+		spot.kind === "image" ? (
+			<img src={spot.src} alt={alt} class:list={["site-logo", imgClass, THEME_CLASS[spot.theme]]} decoding="async" />
+		) : spot.theme === "any" ? (
+			<slot />
+		) : (
+			<span class={THEME_CLASS[spot.theme]} style="display: contents">
+				<slot />
+			</span>
+		)
+	)
+}

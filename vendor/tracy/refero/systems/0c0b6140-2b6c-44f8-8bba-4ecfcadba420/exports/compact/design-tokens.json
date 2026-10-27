@@ -1,0 +1,79 @@
+{
+  "color": {
+    "lime-sprout": {
+      "$value": "#94e130",
+      "$type": "color",
+      "$description": "Lime Sprout — Primary action button, icon highlights, accent tags — the singular chromatic punctuation that makes actions feel switched on against the cream canvas"
+    },
+    "paper-cream": {
+      "$value": "#f9f6f2",
+      "$type": "color",
+      "$description": "Paper Cream — Page canvas, hero background, section backgrounds — warm off-white that replaces standard white with a paper-like quality"
+    },
+    "ivory-card": {
+      "$value": "#f4eee5",
+      "$type": "color",
+      "$description": "Ivory Card — Alternate card surface, warm-toned elevated panels that sit one step deeper than the cream canvas"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Elevated card surfaces, product screenshot containers, button text on dark fills"
+    },
+    "slate-border": {
+      "$value": "#e7e7e7",
+      "$type": "color",
+      "$description": "Slate Border — Card borders, hairline dividers between content sections and list items"
+    },
+    "smoke": {
+      "$value": "#a1a1a1",
+      "$type": "color",
+      "$description": "Smoke — Muted link borders, nav underlines, subtle structural dividers"
+    },
+    "stone": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Stone — Helper text, tertiary body content, subdued annotations"
+    },
+    "graphite": {
+      "$value": "#4e4d4c",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, icon strokes, subdued UI labels"
+    },
+    "iron": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Iron — Dark surface elements, body borders on inverted sections"
+    },
+    "charcoal": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Charcoal — Primary text, dark filled buttons, heading color — the near-black that carries all weight in the type system"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Maximum-contrast borders, footer rules, SVG fills where absolute black is needed"
+    }
+  },
+  "font": {
+    "figtree": {
+      "$value": "Figtree",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI — display, headings, body, nav, buttons. Weight 300 at 72px hero is a signature choice: whisper-light headlines that feel editorial and confident rather than bold-and-shouting. The geometric humanist forms of Figtree at 300 weight give the warm cream canvas a modern editorial feel."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary body text at 16–20px, likely fallback or supplementary paragraph copy. Used sparingly alongside Figtree for longer-form descriptive text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://evernote.com",
+      "siteName": "Evernote",
+      "extractedAt": "2026-06-03T19:06:10.500Z",
+      "variant": "compact"
+    }
+  }
+}

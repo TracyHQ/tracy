@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1700-help-keeps-guide-facts",
+  "kind": "feat",
+  "title": "Help on the zero-site home keeps the guide facts of earlier answers and always carries the add-site article, so it stops retracting what it said",
+  "pr": 1700,
+  "area": "assistant/help",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-web/test/assistant.test.mjs: the system prompt on the zero-site home, for a lone question and for a follow-up after an earlier question."
+  ],
+  "expect": [
+    "S1: the Add site article is in the prompt on every zero-site turn; an article an earlier question brought in is still in the prompt for the follow-up; the start screen Help offers no Add site link."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/assistant/prompt.js, apps/tracy-web/src/assistant/route.js"
+  },
+  "fence": "Prompt assembly is checked, not what a model answers",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/assistant.test.mjs"],
+    "tests": [
+      "Help prompt: on the zero-site home the Add site article rides in full on every turn",
+      "Help prompt: an article an earlier question brought in stays for the follow-up",
+      "Help on the start screen offers no Add site or Design templates link and names only the buttons"
+    ]
+  }
+}

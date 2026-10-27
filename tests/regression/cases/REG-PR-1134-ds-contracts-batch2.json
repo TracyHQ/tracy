@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1134-ds-contracts-batch2",
+  "kind": "feat",
+  "title": "Batch 2 of the JA Joomla j6 slot contracts: all eleven templates carry a contract that says whether it is offered; JA Alumni is offered from its tokenized 1.0.1 only, with its kept bands keeping their own text colour, and every text of a kind is judged against itself",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/design/tracy-ds-slot: node --test test/contracts.test.mjs test/tokenize.test.mjs test/cms.test.mjs.",
+    "S2: Read templates/joomla-ja-alumni.json and ask apps/tracy-web/src/lib/ds-slot.js contractFor('joomla/ja-alumni', {key: 'quickstart/ja-alumni/j6', version}) with version 1.0.0 and 1.0.1 (every other batch-2 template was made ready in round 3 and is judged by its own case: r3b, r3c, r3d).",
+    "S3: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-alumni --port 53292 --cdp 9792 --evidence <tmp> (release quickstart/ja-alumni/j6 restored in Docker, stylesheets tokenized with this tree's contract, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-batch2.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped — among them 'translucent text follows at its own opacity only where a contract asks (alphaText)', 'a fill painted with an accent variable pairs its text only where a contract asks (pairVarFill)', 'Joomla: a kept band gives its texts back the colour they inherited as released (keepColors)' and 'a contract offered to customers says what measured it'.",
+    "S2: ja-alumni's template is joomla/ja-alumni and it is ready, with minVersion {'quickstart/ja-alumni/j6': '1.0.1'} and a readyNote naming tasks/evidence/ds-contracts-batch2-2026-10-11/templates/ja-alumni-j6; contractFor gives TEMPLATE_NEEDS_UPDATE at 1.0.0 and the contract at 1.0.1. Every other batch-2 template is ready since round 3 and judged by its own case (JA Aiga, Alpha, Artsy and Athena: REG-PR-1134-ds-contracts-r3b; JA Beauty, Blockk, Boxing and Campaign: REG-PR-1134-ds-contracts-r3c; JA Candidate and Cityguide: REG-PR-1134-ds-contracts-r3d).",
+    "S3: verdicts 12/12 (its kept bands keep their look under every system); controls 0,0,0,0; no text reads under 4.5:1 and worse than the same text on the default page; the lowest share of the painted page that follows is at least 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-*.json ready, readyNote, minVersion, keepScopes, alphaText, templateVars",
+    "probe": "scripts/flow.mjs contrast samples (every visible match, keyed by document order) and judgeContrast (regressed, bands)"
+  },
+  "evidence": "tasks/evidence/ds-contracts-batch2-2026-10-11/README.md: each template's rounds (as drafted, with regressed bands kept), screenshots.",
+  "fence": "which batch-2 templates are offered and the measuring that decided it; not the release upload (~/tracy-bench-work/RELEASE-DS-BATCH2.sh, a person runs it) nor the ten not offered (their causes are recorded, not fixed), nor the eye check of screenshots that turned three numeric passes down (recorded in the evidence)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-batch2.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

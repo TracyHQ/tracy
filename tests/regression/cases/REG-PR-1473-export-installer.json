@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1473-export-installer",
+  "kind": "feat",
+  "title": "Export as ZIP for WordPress and Joomla carries installer.php, and an install code travels only as a hash for a remote database",
+  "pr": 1473,
+  "area": "site-export/installer",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the installer unit test (serialized replace, dump reader, tar names, config editors, database host classification, install code and the attempt lock).",
+    "S2: Build a WordPress package with an install code and read its members.",
+    "S3: Build a package with no code and one with a malformed code.",
+    "S4: Build a full WordPress package end to end through the export command."
+  ],
+  "expect": [
+    "S1: every unit check passes.",
+    "S2: installer.php, README.md and index.html at the root; the code appears only as a PBKDF2-SHA256 record in install-code.json inside the tracy-package-<32 hex> folder, never in plain text in any member.",
+    "S3: no install-code.json without a code; a malformed code is refused and not echoed.",
+    "S4: one zip, uploaded once, with config placeholders, the dump unchanged and sums that hold."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/lib/{export-installer.php,export-package.py}",
+    "tool": "packages/fleet/tracy-fleet-operation/test/{export-installer.test.mjs,backup-export.test.mjs}"
+  },
+  "evidence": "Before this change the WordPress/Joomla package held only a README and the customer moved the database and config by hand",
+  "fence": "Package shape and installer logic at unit level; installing on a real PHP host is covered by test/e2e/export-installer/run.sh (Docker), not by this case",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/export-installer.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/backup-export.test.mjs"
+    ],
+    "tests": [
+      "export installer: serialized replace",
+      "export-package: the install code travels only as a PBKDF2 hash",
+      "export-package: no install code, no record",
+      "export: a full WordPress point becomes one zip"
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "color": {
+    "manuscript-cream": {
+      "$value": "#f9f9f7",
+      "$type": "color",
+      "$description": "Manuscript Cream — Page canvas, card surfaces, button text on dark — warm off-white that reads as paper rather than screen"
+    },
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — All borders, body text, headings, icon strokes — the single ink that draws the entire structural system"
+    },
+    "sage-border": {
+      "$value": "#d2ddd2",
+      "$type": "color",
+      "$description": "Sage Border — Secondary card and button borders where a softer hairline is needed — desaturated green-gray"
+    },
+    "mist-green": {
+      "$value": "#dee5dd",
+      "$type": "color",
+      "$description": "Mist Green — Icon strokes and fills, button borders on tertiary controls — barely-there gray-green for subordinate elements"
+    },
+    "paper-shadow": {
+      "$value": "#edf0e9",
+      "$type": "color",
+      "$description": "Paper Shadow — Button fill for neutral or disabled states — warm gray-green, almost a shadow of the cream canvas"
+    },
+    "smoke": {
+      "$value": "#c7c7c6",
+      "$type": "color",
+      "$description": "Smoke — The only shadow tone used — rgba(0,0,0,0.2) modulated to a neutral mid-gray for the single soft button shadow"
+    },
+    "highlighter-lime": {
+      "$value": "#edfe5e",
+      "$type": "color",
+      "$description": "Highlighter Lime — Primary accent fill on cards, tags, and featured swatches — electric yellow-green that reads as a marker pen swiped across the page"
+    },
+    "cornflower-wash": {
+      "$value": "#bed4fb",
+      "$type": "color",
+      "$description": "Cornflower Wash — Secondary accent fill on cards, category chips, and illustration swatches — dusty cornflower blue that cools the palette without darkening it"
+    },
+    "spring-green": {
+      "$value": "#31e992",
+      "$type": "color",
+      "$description": "Spring Green — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    }
+  },
+  "font": {
+    "abcarizonasans": {
+      "$value": "ABCArizonaSans",
+      "$type": "fontFamily",
+      "$description": "Body, UI controls, navigation, captions, links, footer — the workhorse grotesque for everything that isn't a heading"
+    },
+    "abcarizonaflare": {
+      "$value": "ABCArizonaFlare",
+      "$type": "fontFamily",
+      "$description": "Section and card headings — flared terminals and light weights create editorial authority; weight 300 at 57px is a deliberate whisper that trusts the reader to lean in"
+    },
+    "abccameraheavy": {
+      "$value": "ABCCameraHeavy",
+      "$type": "fontFamily",
+      "$description": "Hero and display headings — extremely tight leading (0.74) stacks letters into dense editorial blocks; this is the loudest voice on the page and is used sparingly"
+    },
+    "abcarizonamixvariable": {
+      "$value": "ABCArizonaMixVariable",
+      "$type": "fontFamily",
+      "$description": "Subheadings and inline labels — sits between body and section heading, bridging the grotesque to the display faces"
+    },
+    "abcarizonasansvariable": {
+      "$value": "ABCArizonaSansVariable",
+      "$type": "fontFamily",
+      "$description": "ABCArizonaSansVariable — detected in extracted data but not described by AI"
+    },
+    "abcarizonatext": {
+      "$value": "ABCArizonaText",
+      "$type": "fontFamily",
+      "$description": "ABCArizonaText — detected in extracted data but not described by AI"
+    },
+    "abcarizonamix": {
+      "$value": "ABCArizonaMix",
+      "$type": "fontFamily",
+      "$description": "ABCArizonaMix — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://switch-lit.com",
+      "siteName": "Switch-Lit",
+      "extractedAt": "2026-06-03T21:15:29.096Z",
+      "variant": "compact"
+    }
+  }
+}

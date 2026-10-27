@@ -1,0 +1,282 @@
+{
+  "kind": "mock-colour",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs, the detector's own probe on the plain and the worn page). broken: only the entries the detector flags and their plain twins; clean: the whole probe of a page with none. Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "tracy-base/emdash-0.x@0.5.4 (https://base-emdash.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#9a6700",
+        "#eae5cc",
+        "#eee9cf",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/main:1/section:1/div:2/div:1/div:2/div:2/div:2/div:1/span:3",
+            "at": "span.flex-1.bg-[#0a4fa8]",
+            "source": "class",
+            "colours": { "backgroundColor": { "r": 10, "g": 79, "b": 168, "a": 1 } }
+          },
+          {
+            "path": "div:1/main:1/section:1/div:2/div:1/div:2/div:2/div:2/div:1/span:6",
+            "at": "span.flex-1.bg-[#0a4fa8]",
+            "source": "class",
+            "colours": { "backgroundColor": { "r": 10, "g": 79, "b": 168, "a": 1 } }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/main:1/section:1/div:2/div:1/div:2/div:2/div:2/div:1/span:3",
+            "at": "span.flex-1.bg-[#0a4fa8]",
+            "source": "class",
+            "colours": { "backgroundColor": { "r": 10, "g": 79, "b": 168, "a": 1 } }
+          },
+          {
+            "path": "div:1/main:1/section:1/div:2/div:1/div:2/div:2/div:2/div:1/span:6",
+            "at": "span.flex-1.bg-[#0a4fa8]",
+            "source": "class",
+            "colours": { "backgroundColor": { "r": 10, "g": 79, "b": 168, "a": 1 } }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-resume/j6@1.0.3 (https://ja-resume-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#5cb85c",
+        "#f0ad4e",
+        "#d9534f",
+        "#333333",
+        "#d3e1fe"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:1/div:1/div:2",
+            "at": "div.ppc-percents",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 255, "g": 255, "b": 255, "a": 1 } }
+          },
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:1/div:1/div:2/div:1/span:1",
+            "at": "span",
+            "source": "style",
+            "colours": { "color": { "r": 252, "g": 97, "b": 93, "a": 1 } }
+          },
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:2/div:1/div:2",
+            "at": "div.ppc-percents",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 255, "g": 255, "b": 255, "a": 1 } }
+          },
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:2/div:1/div:2/div:1/span:1",
+            "at": "span",
+            "source": "style",
+            "colours": { "color": { "r": 30, "g": 205, "b": 226, "a": 1 } }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:1/div:1/div:2",
+            "at": "div.ppc-percents",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 255, "g": 255, "b": 255, "a": 1 } }
+          },
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:1/div:1/div:2/div:1/span:1",
+            "at": "span",
+            "source": "style",
+            "colours": { "color": { "r": 252, "g": 97, "b": 93, "a": 1 } }
+          },
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:2/div:1/div:2",
+            "at": "div.ppc-percents",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 255, "g": 255, "b": 255, "a": 1 } }
+          },
+          {
+            "path": "div:2/section:2/div:3/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/ul:1/li:2/div:1/div:2/div:1/span:1",
+            "at": "span",
+            "source": "style",
+            "colours": { "color": { "r": 30, "g": 205, "b": 226, "a": 1 } }
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "tracy-business/emdash-0.x@1.7.19 (https://business-emdash.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#4e6695",
+        "#4e6594",
+        "#eae5cc",
+        "#eee9cf",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/main:1/section:5/div:1/div:1/h2:1",
+            "at": "h2.h-section.mb-2.5.text-[#F5F3EE]",
+            "source": "class",
+            "colours": { "color": { "r": 244, "g": 239, "b": 212, "a": 1 } }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/main:1/section:5/div:1/div:1/h2:1",
+            "at": "h2.h-section.mb-2.5.text-[#F5F3EE]",
+            "source": "class",
+            "colours": { "color": { "r": 245, "g": 243, "b": 238, "a": 1 } }
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-vital/j6@1.0.4 (https://ja-vital-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#28a745",
+        "#ffc107",
+        "#dc3545",
+        "#ffffff",
+        "#6f6f6f",
+        "#323183",
+        "#26b0eb",
+        "#17a2b8",
+        "#f8f9fa",
+        "#333333",
+        "#212529",
+        "#007bff",
+        "#6c757d",
+        "#354564",
+        "#475d88",
+        "#526b9c"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 132, "g": 172, "b": 251, "a": 1 } }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 132, "g": 172, "b": 251, "a": 1 } }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:3/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 132, "g": 172, "b": 251, "a": 1 } }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:4/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 132, "g": 172, "b": 251, "a": 1 } }
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 38, "g": 176, "b": 235, "a": 1 } }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 60, "g": 184, "b": 237, "a": 1 } }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:3/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 81, "g": 192, "b": 239, "a": 1 } }
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:2/div:1/div:1/div:4/div:1",
+            "at": "div.stats-asset",
+            "source": "style",
+            "colours": { "backgroundColor": { "r": 104, "g": 200, "b": 241, "a": 1 } }
+          }
+        ]
+      }
+    }
+  ]
+}

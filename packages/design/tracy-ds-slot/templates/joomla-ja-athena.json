@@ -1,0 +1,299 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-athena",
+  "release": "quickstart/ja-athena/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1",
+    "body": "p",
+    "button-primary": "a.btn.btn-primary",
+    "container": "div.container",
+    "section": "#t4-section-2:not([class*=\"py-\"])",
+    "input": "#email_field_203"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 80px",
+    "displayFace": "Glegoo 400, tracking -0.013em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(32, 67, 151)",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 120px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 30px"
+  },
+  "keepScopes": [".t4-section-5", ".t4-footnav", ".features-content", ".ja-masthead", ".bg-secondary"],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#212529",
+    "--fg-2": "#212529",
+    "--accent": "#204397",
+    "--accent-hover": "#c8475b",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#131e3c",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#eeeeee",
+    "--muted": "#828282",
+    "--font-display": "\"Glegoo\", sans-serif",
+    "--font-body": "\"Inter\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#204397",
+      "accent-hover": "#c8475b",
+      "surface": "#f8f9fa",
+      "surface-warm": "#131e3c",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#eeeeee",
+      "muted": "#828282"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#828282",
+      "fg-2": "#333333",
+      "accent": "#204397",
+      "accent-on": "#ffffff",
+      "surface-warm": "#204397"
+    },
+    {
+      "accent": "#c8475b"
+    },
+    {
+      "fg": "#212529"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#f8fafc",
+      "fg": "#212529",
+      "muted": "#828282",
+      "border-soft": "#dee2e6",
+      "accent-hover": "#c8475b"
+    },
+    {
+      "surface": "#f1f5f9",
+      "border-soft": "#e9ecef"
+    },
+    {
+      "surface": "#f8f9fc"
+    },
+    {
+      "surface": "#eeeeee"
+    },
+    {
+      "surface": "#f4f7fa"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (61 line colours, 53 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#t4-section-2"],
+    "bodyFace": ["body"],
+    "inkImages": ["img.logo-img"],
+    "onAccent": [".acm-cta.style-1 .cta-inner", ".acm-cta.style-1 .cta-inner .btn-outline-light"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 19 tried (byte 6013); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#f8fafc",
+      "uses": 42,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#212529",
+      "uses": 27,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#828282",
+      "uses": 12,
+      "kind": "custom",
+      "role": "muted",
+      "near": "#828282",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f1f5f9",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 8
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 5,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f8f9fc",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#c8475b",
+      "uses": 4,
+      "kind": "custom",
+      "role": "accent-hover",
+      "near": "#c8475b",
+      "distance": 0
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 19
+    },
+    {
+      "hex": "#f4f7fa",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-40", "fg-50"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-athena/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3b-2026-10-11/templates/ja-athena-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 91% or more of the page follows, the kept bands unchanged; round 1's 22 changed texts in the kept video band (.t4-section-5: its own --body-link-color, white at 50%, lost to the page's given back) yield to the band's own declarations (keepDefaultsYield), and the footer newsletter title keeps its #333 (keepDefaults --heading-color, which T4 computes once at the root); the navy wordmark is inverted with its hues kept on a dark system; checked by eye on the four systems' screenshots, desktop and phone. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 93% or more of the page follows, every contrast kind sampled at 1440 and 390; the call-to-action panel on the accent writes its text in the accent's own text colour (selectors.onAccent); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-athena-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-athena 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 93-98% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-athena-j6",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-accent-text)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#212529",
+    "--body-link-color": "#204397",
+    "--body-link-hover-color": "#c8475b",
+    "--color-primary": "#204397",
+    "--color-secondary": "#c8475b",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#333333",
+    "--mainnav-link-color": "#333333",
+    "--mainnav-link-hover-color": "#204397",
+    "--mainnav-link-active-color": "#0a58ca",
+    "--footer-bg-color": "#131e3c",
+    "--footer-text-color": "rgba(255, 255, 255, 0.5)",
+    "--footer-link-color": "#9ea9c6",
+    "--footer-link-hover-color": "#ffffff",
+    "--heading-color": "#333333"
+  },
+  "keepNote": "kept after measuring 11/10/2026: the blue video band (.t4-section-5), the dark footer nav (.t4-footnav) and the rose features panel (.features-content), each with the variables its released page computed (keepDefaults, yielding to the band's own: keepDefaultsYield); 15/10/2026 (v10 inner measure, /index.php/about-us/about-us): two blocks the template paints with its brand colours under white words are kept and worn the same way: the inner pages' title band (.ja-masthead, background var(--color-primary), white title and breadcrumb) and every rose panel (.bg-secondary, var(--color-secondary) !important: the hero modules' panels .feature-inner.bg-secondary, seven modules of the demo; the home's .features-content is one, with the same colours). Followed, both took a light system's accent under their white words: Moxie's #84acfb under the title and breadcrumb (2.26:1, the template's 9.09:1) and under the panel titles h4.h3 (2.26:1, the template's 4.66:1), desktop and phone",
+  "keepDefaultsYield": true,
+  "inkNote": "the wordmark is an image in the template's navy for its light page: shown inverted with its hues kept on a dark system's page (Moxie's black: navy 2.2:1 before)",
+  "minVersion": {
+    "quickstart/ja-athena/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-athena/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t4-section-5": {
+      "ground": "#204397",
+      "texts": ["#90a1cb", "#ffffff"],
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#131e3c",
+      "texts": ["#9ea9c6", "#ffffff", "#898f9e", "#b9bcc5"],
+      "important": true
+    },
+    ".features-content": {
+      "ground": "#c8475b",
+      "texts": ["#ffffff", "#f8f9fa"],
+      "important": true
+    },
+    ".cta-inner": {
+      "ground": "#204397",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".main-heading", ".cta-desc"]
+    },
+    ".ja-masthead": {
+      "ground": "#204397",
+      "texts": ["#ffffff"]
+    },
+    ".bg-secondary": {
+      "ground": "#c8475b",
+      "texts": ["#ffffff", "#f8f9fa"],
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 15/10/2026 (v10 inner measure): .ja-masthead and .bg-secondary are brand bands with white words like .features-content: each wears the system's accent where white reads on it, else its ink (its surface on a dark page), so the words, the white Athena logo and the star rules on the panels keep reading: white on #1a1a1a 17.40:1 under Moxie, on #533afd 6.19:1 under Stripe, 4.52:1 or more under the fifteen featured systems",
+  "rolesNote": "15/10/2026 (v10 inner measure): the section role is a home-layout id; on about-us #t4-section-2 is the stats strip the template pads tight with Bootstrap's py-5 (!important), so it asked the home's rhythm of another block: a section carrying a padding utility is not this role"
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Tabs Style 1</title>
+  <fields name="tabs">
+    <fieldset name="band" label="TPL_TRACY_ACM_TABS_BAND_LABEL">
+      <field name="eyebrow" type="text" default="" label="TPL_TRACY_ACM_TABS_EYEBROW_LABEL" />
+      <field name="heading" type="text" default="" label="TPL_TRACY_ACM_TABS_HEADING_LABEL" />
+      <field name="ground" type="list" default="canvas" label="TPL_TRACY_ACM_TABS_GROUND_LABEL">
+        <option value="canvas">TPL_TRACY_ACM_GROUND_CANVAS</option>
+        <option value="warm">TPL_TRACY_ACM_GROUND_WARM</option>
+        <option value="gray">TPL_TRACY_ACM_GROUND_GRAY</option>
+      </field>
+    </fieldset>
+    <fieldset multiple="1" name="panels" label="TPL_TRACY_ACM_TABS_PANELS_LABEL">
+      <fields name="tab" multiple="1" label="TPL_TRACY_ACM_TABS_TAB_LABEL">
+        <field name="tab-label" type="text" default="" label="TPL_TRACY_ACM_TABS_LABEL_LABEL" />
+        <field name="tab-title" type="text" default="" label="TPL_TRACY_ACM_TABS_TITLE_LABEL" />
+        <field name="tab-body" type="editor" filter="safehtml" default="" label="TPL_TRACY_ACM_TABS_BODY_LABEL" />
+        <field name="tab-image" type="media" default="" label="TPL_TRACY_ACM_TABS_IMAGE_LABEL" />
+      </fields>
+    </fieldset>
+  </fields>
+</form>

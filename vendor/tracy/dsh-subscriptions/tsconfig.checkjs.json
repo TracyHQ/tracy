@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": false,
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "lib/http.js",
+    "lib/blob.js",
+    "lib/session-pin.js",
+    "lib/refs.js",
+    "lib/health.js",
+    "lib/relative-time.js",
+    "lib/rotate.js",
+    "lib/stream-rotate.js",
+    "lib/wire.js",
+    "lib/accounts.js",
+    "lib/vendors/**/*.js"
+  ]
+}

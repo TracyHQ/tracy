@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d9fbc68b-0d42-4c09-829d-1207b781f46a",
+  "status": "complete",
+  "name": "Wayfinder",
+  "url": "https://styles.refero.design/style/d9fbc68b-0d42-4c09-829d-1207b781f46a",
+  "sourceWebsite": "https://wayfinder.nfb.ca",
+  "extractedAt": "2026-06-03T18:31:48.595Z",
+  "capturedAt": "2026-10-08T05:18:12.904088+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "A black cinema screen with one whispered title floating over a living illustration. The interface is a dimmer switch, not a dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/a677feac-a88d-4222-ab6a-57093b9cacec.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "90a8e0684052ffce5f7df5006263b0853dc7183c2fce2fed89be6d46a1fcaea3",
+      "bytes": 16021
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c21fddf01fc2c03f1efe4c7a76f8f1691c81bb4b0d837e4511e624500e18403e",
+      "bytes": 140889
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b02a8a05f51d28b88b9f6cffe8b31300249c1c120081eed9678fec1016109935",
+      "bytes": 13654
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4bc6dac931ffe6d38e896e2bd299a449804983d2dcda660043a6dbfe1d45e724",
+      "bytes": 5158
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c5c6ca249fe951b106f6c1e8d5db68fbe5f5ed3c420c27c3f9815ae55c4eee3d",
+      "bytes": 9808
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "10ea2fc164686fa3ee8a007bdbdcdd37333e0594139db30c4c20e529b1b2d143",
+      "bytes": 2426
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6998fdacf5437fc66d78524bdb2e9975f444cd6fe3c1aad0ad60f42e0a8a0bb3",
+      "bytes": 604
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a03ab4c2619b6c6d4229a195169b3d701f81eedc27196d9cae7ed4b0b13f4f8d",
+      "bytes": 621
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8449b95b9817db489265107eca0c0c9490020e38bb9e5e689eb70e73f28b41f2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "13c0d601654bc8b3ca142122484c26c4c8044822681da636e2b208b66b5ce314",
+      "bytes": 39247
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f4eb12e4d40b897493392228c3765535488f03b8d45be0561aa46d9366df4c2c",
+      "bytes": 20469
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b5e4265f0adfd969f4d72fa5f481eb5558aa9a68548495c51e6019db2ce7e602",
+      "bytes": 25233
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "da2eced2f6d444be62feb1788afb14e58c51c84d237f04bd57c8086f60c51ff3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f55dbb34c072c006c0248afff8f1f317a95d17639f13327f15feaeca7f436bd2",
+      "bytes": 1016
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ca3730a9ca6cf40aaa902dac07c9954be507ecbaac4dfa9c16e7c218809a85ae",
+      "bytes": 1469
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "03e03554-d7aa-40da-9764-79320ecfa1d0",
+    "09e43758-12c5-4a2b-8ae8-ded156ef66bf",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "2d4fc4ba-2ea4-465f-8644-f3ff5c6713a2",
+    "2d78835a-fffe-4416-8e3d-ac37207fbd6b",
+    "3416bd14-96bb-4c23-bd01-b2ea178ba5ce",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "80b2cc74-62c5-4898-bc2b-12aa94ed2943",
+    "94ed6ce8-c2e5-45bf-83bd-e5d1daf63efc",
+    "c406697b-677f-40c7-a3a2-10ea545278f1",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "d9fbc68b-0d42-4c09-829d-1207b781f46a",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "edf7f95d-da5f-42bf-94c5-b33ade0a2ba2",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

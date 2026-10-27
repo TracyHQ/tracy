@@ -1,0 +1,64 @@
+{
+  "color": {
+    "electric-lime": {
+      "$value": "#d1f470",
+      "$type": "color",
+      "$description": "Electric Lime — Primary CTA buttons, active indicators, accent highlights — the only saturated color on the page, so it carries 100% of the interactive signaling weight"
+    },
+    "forest-canopy": {
+      "$value": "#203524",
+      "$type": "color",
+      "$description": "Forest Canopy — Event/announcement banner backgrounds — deep forest green that creates visual separation from page content without using darkness alone"
+    },
+    "deep-grove": {
+      "$value": "#2d4c33",
+      "$type": "color",
+      "$description": "Deep Grove — Secondary dark-green surfaces, card backgrounds in dark sections"
+    },
+    "lime-fade": {
+      "$value": "#d1f470",
+      "$type": "color",
+      "$description": "Lime Fade — Decorative fade effects, scroll-indicator overlays in lime-to-transparent direction"
+    },
+    "near-black-ink": {
+      "$value": "#11110d",
+      "$type": "color",
+      "$description": "Near-Black Ink — Primary text, nav labels, body copy, button labels — warm near-black with green undertone instead of pure black"
+    },
+    "warm-white": {
+      "$value": "#f5f5f2",
+      "$type": "color",
+      "$description": "Warm White — Page backgrounds, card surfaces, section fills — one step off pure white, giving the page an organic warmth"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Hero section background, button text on dark surfaces, icon fills on dark backgrounds"
+    },
+    "midnight": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight — Icon fills, SVG strokes, high-contrast borders in dark contexts"
+    },
+    "stone-divider": {
+      "$value": "#90918c",
+      "$type": "color",
+      "$description": "Stone Divider — Subtle borders and divider lines between sections"
+    }
+  },
+  "font": {
+    "vanilla-sans": {
+      "$value": "Vanilla Sans",
+      "$type": "fontFamily",
+      "$description": "Single typeface for the entire system — custom humanist sans with slightly organic curves. Used at weight 300 for large hero headlines (anti-convention whisper-weight at 68–74px), weight 400–500 for body and subheadings, weight 600–700 for UI labels and nav items. The 0.054em letter-spacing appears as a global tracking value applied broadly, giving the UI a slightly airy, premium feel at smaller sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://zendesk.com",
+      "siteName": "Zendesk",
+      "extractedAt": "2026-04-11T19:21:37.090Z",
+      "variant": "compact"
+    }
+  }
+}

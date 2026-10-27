@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bc2c6ecc-7a0d-4693-86e5-9fa93b165601",
+  "status": "complete",
+  "name": "Loom",
+  "url": "https://styles.refero.design/style/bc2c6ecc-7a0d-4693-86e5-9fa93b165601",
+  "sourceWebsite": "https://loom.com",
+  "extractedAt": "2026-06-03T16:16:05.858Z",
+  "capturedAt": "2026-10-08T05:16:47.055471+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Sunlit message lounge — a bright, pill-shaped communication booth on white marble, lit by one confident blue lamp.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d095c45f-a57a-436e-b68a-426cde91a4d0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5eb2696d-0977-4636-a3a0-811add6eb5bb.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/1a4a35ca-0427-488e-853a-16d26842ed47.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6a2e233e-fca6-4e2a-9289-ed71ee096b2e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ca55c906-3e1d-4316-9731-4c8ab1213e41.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1d5ef82a703cdae0aa6f085141753a43a9843b69be7fdd7c625d621e62ebf46b",
+      "bytes": 20290
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e2279632bb2ddde261db0ed405cd223eceba6186a35494661b28791f976b616d",
+      "bytes": 101533
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8b12607cbdf98750194eaf63127d3438351d7b0b655d51d1ef4d300d44e160fb",
+      "bytes": 16907
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7c1f6b579682485b61e49a7b54cb52706fe563df5782312ce8454f6eae7dc31e",
+      "bytes": 12552
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ff3bfd449d0b614f34694349d645733b91b71013e4844038a65abc1f82f0a651",
+      "bytes": 12026
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c9c023875f26187fef918f992478acfa098a96a192bb6ea91544dbc8b908479a",
+      "bytes": 3692
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e18bee104484e0fac4c2c8928fed9c5af7fc602b8be0800c8d2c6b26ee465a30",
+      "bytes": 745
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "bd5a8a9f5b7117501a92cd4fc39fa6cd6a26533e09f06d7b7d2fded965ef2593",
+      "bytes": 762
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "54538ee2ce48db68f0e58af34f617e33ee291a457803ac79fbede62338979a2f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5731d6a8934f07c291a160d167b1cce91673c7bf60ead60415fd8766b6b22475",
+      "bytes": 44862
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "43e57ef85ad9363e9bf78378dde2b1589cd38a7775e88563ff6ca8fbff683ea4",
+      "bytes": 23786
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "be35e2f2eeea20f6499e660374950054399c8de5ec0ed94eb5c93538ab14d5f0",
+      "bytes": 57613
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "23ab73a512acf4dc97ba4e90808be2556f61b915d54c07b983f3432396b2cbde",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9aa4ff748cf4f95585fc55f5d363e8316144abcf8cb32a9fdeee50d8ffc8daea",
+      "bytes": 1848
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4250d728018406f81d3debdcd142aa66d85050bad4a921f04bde74beee70319a",
+      "bytes": 2497
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "035a098b-5a27-48a3-8a3a-c68a698e3eab",
+    "03b3d707-2a30-4f53-a524-347d1b70eb2c",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2db41cd9-c898-4f59-b704-3042c0d87f45",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9be20798-843b-424c-bc87-192edc0cce22",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "bc2c6ecc-7a0d-4693-86e5-9fa93b165601",
+    "caca412f-7fc7-4510-aacc-5664d4f8ce9f",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

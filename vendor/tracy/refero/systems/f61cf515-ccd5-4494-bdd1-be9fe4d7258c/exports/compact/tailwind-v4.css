@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-deep-ink: #000d10;
+  --color-pure-white: #ffffff;
+  --color-cool-ash: #8e8e95;
+  --color-pebble: #d5d3d4;
+  --color-midnight-hull: #0f0f1c;
+  --color-charcoal-deck: #151623;
+  --color-clay-ember: #bc7155;
+
+  /* Typography */
+  --font-helveticanowdisplay: 'HelveticaNowDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

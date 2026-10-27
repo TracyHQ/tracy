@@ -1,0 +1,61 @@
+{
+  "name": "emdash-page-list",
+  "version": "0.1.4",
+  "description": "Collection-backed and menu-backed page lists for EmDash CMS",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./plugin": "./src/plugin.ts",
+    "./astro": "./src/astro/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "emdash",
+    "astro",
+    "cms",
+    "plugin",
+    "portable-text",
+    "menu",
+    "page-list"
+  ],
+  "author": "Mason James",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "plugin": {
+    "id": "page-list"
+  },
+  "peerDependencies": {
+    "astro": ">=6.0.0-beta.0",
+    "emdash": ">=0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "astro": ">=6.0.0-beta.0",
+    "emdash": "^0.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masonjames/emdash-page-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/masonjames/emdash-page-list/issues"
+  },
+  "homepage": "https://github.com/masonjames/emdash-page-list#readme",
+  "packageManager": "pnpm@10.28.0"
+}

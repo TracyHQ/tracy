@@ -1,0 +1,79 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, inverted text on dark washes. The neutral ground everything else is mounted on"
+    },
+    "soft-ash": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Soft Ash — Light neutral action fill for buttons on dark surfaces."
+    },
+    "mist-sage": {
+      "$value": "#d5e4e8",
+      "$type": "color",
+      "$description": "Mist Sage — Announcement bar and quiet informational washes — a desaturated teal that reads as utility, never as decoration"
+    },
+    "graphite": {
+      "$value": "#474747",
+      "$type": "color",
+      "$description": "Graphite — Primary body text, default borders, the dominant hairline tone. The structural neutral of the system"
+    },
+    "charcoal": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Charcoal — Headings, list item dividers, emphasis borders — the darkening step when hierarchy needs weight"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Body text where maximum contrast is required, SVG icon fills, the occasional heavy border"
+    },
+    "slate": {
+      "$value": "#2b2b2b",
+      "$type": "color",
+      "$description": "Slate — Navigation border accents and nav text — sits between Graphite and Onyx, reserved for chrome"
+    },
+    "fog": {
+      "$value": "#7b7b7b",
+      "$type": "color",
+      "$description": "Fog — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color"
+    },
+    "indigo-pulse": {
+      "$value": "#574cd5",
+      "$type": "color",
+      "$description": "Indigo Pulse — Filled CTA button background, the single chromatic moment in the system. Used sparingly so the action reads as switched-on against an otherwise monochrome page"
+    }
+  },
+  "font": {
+    "neuehaasunicaw1g": {
+      "$value": "NeueHaasUnicaW1G",
+      "$type": "fontFamily",
+      "$description": "The workhorse grotesque for navigation, body copy, list items, footers, buttons, and links. The 900 weight is reserved for the logo wordmark and heaviest display moments; 500 carries sub-emphasis; 400 is the default body voice."
+    },
+    "instrument-sans": {
+      "$value": "Instrument Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary sans for nav, search input, and section headings. Slightly warmer and more humanist than NeueHaas — used where the page needs a softer informational register without leaving the neutral palette."
+    },
+    "accessibly": {
+      "$value": "accessibly",
+      "$type": "fontFamily",
+      "$description": "The display/brand voice. Used for the 'graf lantz' wordmark, the 'SHOP COASTERS' pill CTA, and the hero heading. The 1.0 line-height and slightly humanist geometry make it sit above the system rather than inside it."
+    },
+    "source-sans-pro": {
+      "$value": "Source Sans Pro",
+      "$type": "fontFamily",
+      "$description": "Minor fallback — appears once, treat as legacy/utility and do not introduce into new screens."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://glob.land",
+      "siteName": "Graf Lantz",
+      "extractedAt": "2026-06-03T21:30:57.226Z",
+      "variant": "compact"
+    }
+  }
+}

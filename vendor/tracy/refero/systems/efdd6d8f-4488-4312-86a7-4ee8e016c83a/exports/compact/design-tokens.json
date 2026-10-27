@@ -1,0 +1,64 @@
+{
+  "color": {
+    "strava-orange": {
+      "$value": "#fc5200",
+      "$type": "color",
+      "$description": "Strava Orange — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "link-blue": {
+      "$value": "#0060d0",
+      "$type": "color",
+      "$description": "Link Blue — Inline text links and policy references; the only secondary chromatic color and reserved strictly for navigational links"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "warm-linen": {
+      "$value": "#f9f8f5",
+      "$type": "color",
+      "$description": "Warm Linen — Footer background, secondary surface elevation, subtle banding beneath white"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary body and heading text, icon strokes, hairline borders, button outlines"
+    },
+    "graphite": {
+      "$value": "#21211f",
+      "$type": "color",
+      "$description": "Graphite — Button text, filled icon strokes, high-contrast warm near-black"
+    },
+    "charcoal": {
+      "$value": "#43423f",
+      "$type": "color",
+      "$description": "Charcoal — Secondary body text, nav links, metadata — warm dark gray for sub-headings and long-form copy"
+    },
+    "pewter": {
+      "$value": "#64635e",
+      "$type": "color",
+      "$description": "Pewter — Muted helper text, tertiary copy, placeholder labels"
+    },
+    "bone": {
+      "$value": "#e0e0de",
+      "$type": "color",
+      "$description": "Bone — Hairline borders, input outlines, dividers between secondary sections"
+    }
+  },
+  "font": {
+    "boathouse": {
+      "$value": "Boathouse",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI, headings, body, nav, and footer. The weight contrast is deliberately binary — 400 for almost everything, 600 reserved for the wordmark, headings, and CTA labels. Tight line-heights (1.0 on display) give headings a compressed, assertive posture rather than the airy SaaS default."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://strava.com",
+      "siteName": "Strava",
+      "extractedAt": "2026-06-03T17:33:21.537Z",
+      "variant": "compact"
+    }
+  }
+}

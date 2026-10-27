@@ -1,0 +1,5 @@
+# Inserts its own row; the profile or bundle that loads it must ALSO disable dsh-base's `sandbox`
+# row — two providers registering `ctx.sandbox` is a throw at boot, not a warning.
+- insert:
+    - id: tracy-sandbox-docker
+      name: '@tracy/dsh-sandbox-docker'

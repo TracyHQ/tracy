@@ -1,0 +1,50 @@
+{
+  "id": "QA-UNIT-REG-PR-1219-published-wordpress-green-happy",
+  "itemIds": ["regression:REG-PR-1219-published-wordpress-green"],
+  "requirement": "The eight Published WordPress quickstarts keep their template-layer fixes: translatable interface words, no English date formats, declared demo names, a profile row per new version",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1219-published-wordpress-green.json",
+    "ref": "PR #1219 (fix); fix evidence: Template Customization Question Readiness on each new pack (12/10/2026): 0 FAIL for all eight; on the served versions the same check failed LANG-2, LANG-6, ABOUT-3 and the logo/profile rules",
+    "invariant": "S1: no interface word written outside a translation in any of those files. S2: no English-order date format. S3: each copy file's demoCompanyNames renames that release's demo blogname (JA Essence, JA Impact, Kinetic, JA Morgan, ja_nova, JA Vega, Tracy Base, Northgate). S4: each release has a row for its new version.",
+    "productSources": [
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/english-date-formats.js:72",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/hard-coded-words.js:146",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/site-pages/wordpress-blocks.js:18"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1219-published-wordpress-green.mjs:55 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1219-published-wordpress-green.mjs:59 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1219-published-wordpress-green.mjs:71 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1219-published-wordpress-green.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1219-published-wordpress-green"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1219-published-wordpress-green",
+    "pr": 1219,
+    "kind": "fix",
+    "area": "wordpress-theme/published-green",
+    "file": "tests/regression/cases/REG-PR-1219-published-wordpress-green.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1219-published-wordpress-green.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

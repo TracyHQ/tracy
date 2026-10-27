@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-voltage-lime: #e3fc03;
+  --color-obsidian: #000000;
+  --color-graphite: #323232;
+  --color-carbon: #1a1a1a;
+  --color-paper-white: #ffffff;
+  --color-concrete: #e6e6e6;
+
+  /* Typography — Font Families */
+  --font-whyteregular: 'WhyteRegular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-whyte: 'Whyte', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-whyte-book: 'Whyte Book', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-whyte-inktrap: 'Whyte Inktrap', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

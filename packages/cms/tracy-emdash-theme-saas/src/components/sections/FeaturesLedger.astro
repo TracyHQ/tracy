@@ -1,0 +1,504 @@
+---
+/**
+ * features_ledger — one collection, three looks chosen by `layout`:
+ *  - `metrics`: the production-metrics card (label + LIVE badge head, one column per stat). On a tinted
+ *    band the source drops the card chrome and keeps only the divided columns (/company/about).
+ *  - `ledger`: a ruled heading over a card of numbered capability rows (/product/features).
+ *  - anything else: stat cards with value, label, icon and title — what the source renders for the
+ *    empty layout of the landing page.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the 760px article column of inner pages (DECISIONS D18). */
+  narrow?: boolean
+}
+const { data, index, narrow = false } = Astro.props
+const items: Record<string, any>[] = Array.isArray(data.items) ? data.items : []
+// No rows (the demo's emptied by seed/personalize.json `facts`), no section: never a heading over nothing.
+const layout = data.layout === 'metrics' || data.layout === 'ledger' ? data.layout : 'stats'
+// The source tints sections at even positions with the elevated band.
+const band = index % 2 === 0
+const hasCardHead = Boolean(data.card_label || data.card_badge)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'features_ledger', null)
+---
+
+{items.length > 0 && (
+<section class:list={['fl', `fl--${layout}`, band && 'k-band fl--band', narrow && 'is-narrow']} {...s()}>
+	<div class="k-container">
+		{
+			layout === 'ledger' && (
+				<>
+					{(data.eyebrow || data.title || data.sub) && (
+						<header class="fl-ruled">
+							<h2 class="fl-ruled-l">
+								{data.eyebrow && <span class="fl-ruled-idx" {...s('eyebrow')}>{data.eyebrow}</span>}
+								{data.title && <span class="fl-ruled-title" {...s('title')}>{data.title}</span>}
+							</h2>
+							{data.sub && <span class="fl-ruled-count" {...s('sub')}>{data.sub}</span>}
+						</header>
+					)}
+					<div class="fl-list k-card">
+						{hasCardHead && (
+							<div class="fl-list-head">
+								{data.card_label && <span class="fl-list-label" {...s('card_label')}>{data.card_label}</span>}
+								{data.card_badge && <span class="fl-list-badge" {...s('card_badge')}>{data.card_badge}</span>}
+							</div>
+						)}
+						<ol class="fl-rows">
+							{items.map((item) => (
+								<li class="fl-row" {...s.block('items')}>
+									<span class="fl-row-num" {...s('items.number')}>{item.number}</span>
+									<div class="fl-row-copy">
+										{item.item_title && <h3 class="fl-row-title" {...s('items.item_title')}>{item.item_title}</h3>}
+										{item.item_text && <p class="fl-row-text" {...s('items.item_text')}>{item.item_text}</p>}
+									</div>
+									{item.icon && (
+										<span class="fl-tile">
+											<Icon name={item.icon} size={22} />
+										</span>
+									)}
+								</li>
+							))}
+						</ol>
+					</div>
+				</>
+			)
+		}
+
+		{
+			layout !== 'ledger' && (data.eyebrow || data.title || data.sub) && (
+				<header class="fl-head">
+					{data.eyebrow && <p class="k-eyebrow fl-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+					{data.title && <h2 class="k-h2" {...s('title')}>{data.title}</h2>}
+					{data.sub && <p class="k-sub fl-sub" {...s('sub')}>{data.sub}</p>}
+				</header>
+			)
+		}
+
+		{
+			layout === 'metrics' && (
+				<div class="fl-metrics">
+					{hasCardHead && (
+						<div class="fl-metrics-head">
+							{data.card_label && <span class="fl-metrics-label" {...s('card_label')}>{data.card_label}</span>}
+							{data.card_badge && (
+								<span class="fl-metrics-badge" {...s('card_badge')}>
+									<span class="k-dot fl-dot" aria-hidden="true" />
+									{data.card_badge}
+								</span>
+							)}
+						</div>
+					)}
+					<div class="fl-metrics-row">
+						{items.map((item) => (
+							<div class="fl-metric" {...s.block('items')}>
+								{item.stat_label && <span class="fl-metric-label" {...s('items.stat_label')}>{item.stat_label}</span>}
+								{item.stat_value && <span class="fl-metric-value" {...s('items.stat_value')}>{item.stat_value}</span>}
+								{item.item_text && <span class="fl-metric-desc" {...s('items.item_text')}>{item.item_text}</span>}
+							</div>
+						))}
+					</div>
+				</div>
+			)
+		}
+
+		{
+			layout === 'stats' && (
+				<div class="fl-stats">
+					{items.map((item) => (
+						<div class="fl-stat k-card" {...s.block('items')}>
+							{item.stat_value && <div class="fl-stat-value" {...s('items.stat_value')}>{item.stat_value}</div>}
+							{item.stat_label && <div class="fl-stat-label" {...s('items.stat_label')}>{item.stat_label}</div>}
+							{(item.icon || item.item_title) && (
+								<div class="fl-stat-head">
+									{item.icon && (
+										<span class="fl-stat-icon">
+											<Icon name={item.icon} size={20} />
+										</span>
+									)}
+									{item.item_title && <h3 class="fl-stat-title" {...s('items.item_title')}>{item.item_title}</h3>}
+								</div>
+							)}
+							{item.item_text && <p class="fl-stat-text" {...s('items.item_text')}>{item.item_text}</p>}
+						</div>
+					))}
+				</div>
+			)
+		}
+	</div>
+</section>
+)}
+
+<style>
+	.fl {
+		padding-block: 80px;
+	}
+	.fl--band {
+		border-block: 1px solid var(--k-border);
+	}
+	.fl :global(svg) {
+		display: block;
+	}
+
+	/* Shared heading (metrics eyebrow, stats title). */
+	.fl-head {
+		max-width: 720px;
+		margin-bottom: 40px;
+	}
+	.fl-eyebrow {
+		margin-bottom: 14px;
+	}
+	.fl-head .fl-eyebrow:last-child {
+		margin-bottom: 0;
+	}
+	.fl-sub {
+		margin-top: 14px;
+	}
+	/* The stat-cards heading is larger than the shared section heading on the source. */
+	.fl-head .k-h2 {
+		font-size: 38px;
+		line-height: 1.08;
+		letter-spacing: -1px;
+	}
+	@media (max-width: 575px) {
+		.fl-head .k-h2 {
+			font-size: 27px;
+			letter-spacing: -0.6px;
+		}
+	}
+
+	/* --- ledger --- */
+	.fl-ruled {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 16px;
+		border-top: 1px solid var(--k-border);
+		padding-top: 14px;
+		margin-bottom: 24px;
+	}
+	.fl-ruled-l {
+		display: flex;
+		align-items: flex-end;
+		gap: 12px;
+		min-width: 0;
+	}
+	.fl-ruled-idx {
+		font-family: var(--font-mono);
+		font-size: 14px;
+		line-height: 1;
+		font-weight: 400;
+		color: var(--k-primary);
+		padding-bottom: 3px;
+	}
+	.fl-ruled-title {
+		font-family: var(--font-heading);
+		font-size: 30px;
+		line-height: 1;
+		letter-spacing: -0.6px;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.fl-ruled-count {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+		white-space: nowrap;
+	}
+	.fl-list {
+		overflow: hidden;
+	}
+	.fl-list-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 20px 28px;
+		border-bottom: 1px solid var(--k-border);
+		font-family: var(--font-mono);
+	}
+	.fl-list-label {
+		font-size: 13px;
+		color: var(--k-muted);
+	}
+	.fl-list-badge {
+		font-size: 12px;
+		letter-spacing: 1px;
+		color: var(--k-primary);
+	}
+	.fl-row {
+		display: grid;
+		grid-template-columns: 96px minmax(0, 1fr) 46px;
+		gap: 24px;
+		align-items: center;
+		padding: 24px 28px;
+	}
+	.fl-row + .fl-row {
+		border-top: 1px solid var(--k-border);
+	}
+	.fl-row-num {
+		font-family: var(--font-heading);
+		font-size: 34px;
+		line-height: 1;
+		letter-spacing: -0.5px;
+		font-weight: 700;
+		color: var(--k-primary);
+	}
+	.fl-row-title {
+		font-size: 24px;
+		line-height: 1.06;
+		letter-spacing: -0.5px;
+		font-weight: 600;
+	}
+	.fl-row-text {
+		margin-top: 10px;
+		font-size: 14.5px;
+		line-height: 22px;
+	}
+	.fl-tile {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 46px;
+		height: 46px;
+		border-radius: 11px;
+		color: var(--k-primary);
+		background: color-mix(in srgb, var(--k-primary) 12%, transparent);
+	}
+
+	/* --- metrics --- */
+	.fl-metrics {
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: var(--radius-card);
+		overflow: hidden;
+	}
+	.fl-metrics-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 14px 24px;
+		background: var(--k-elevated);
+		border-bottom: 1px solid var(--k-border);
+		font-family: var(--font-mono);
+	}
+	.fl-metrics-label {
+		font-size: 11px;
+		letter-spacing: 1.5px;
+		color: var(--k-muted);
+	}
+	.fl-metrics-badge {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		font-size: 10.5px;
+		letter-spacing: 1px;
+		color: var(--k-primary);
+	}
+	.fl-dot {
+		width: 7px;
+		height: 7px;
+	}
+	.fl-metrics-row {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+	}
+	.fl-metric {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 28px 26px;
+	}
+	.fl-metric + .fl-metric {
+		border-left: 1px solid var(--k-border);
+	}
+	.fl-metric-label {
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.fl-metric-value {
+		font-family: var(--font-heading);
+		font-size: 42px;
+		line-height: 1;
+		letter-spacing: -1.5px;
+		font-weight: 700;
+		color: var(--k-heading);
+		overflow-wrap: anywhere;
+	}
+	.fl-metric-desc {
+		font-size: 13px;
+		line-height: 19px;
+	}
+	/* On a band the source keeps only the divided columns: no card, no tinted head. */
+	.fl--band .fl-metrics {
+		background: none;
+		border: 0;
+		border-radius: 0;
+	}
+	.fl--band .fl-metrics-head {
+		background: none;
+		border: 0;
+		padding: 0 0 28px;
+	}
+	.fl--band .fl-metric {
+		padding-block: 0;
+	}
+	.fl--band .fl-metric:first-child {
+		padding-left: 0;
+	}
+
+	/* --- stats --- */
+	.fl-stats {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 16px;
+	}
+	.fl-stat {
+		padding: 30px 28px;
+		border-radius: 12px;
+	}
+	.fl-stat-value {
+		font-family: var(--font-heading);
+		font-size: 44px;
+		line-height: 1;
+		letter-spacing: -1.5px;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.fl-stat-label {
+		margin-top: 6px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.fl-stat-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 22px;
+	}
+	.fl-stat-icon {
+		display: flex;
+		color: var(--k-primary);
+	}
+	.fl-stat-title {
+		font-size: 18px;
+		line-height: 1.06;
+		letter-spacing: -0.3px;
+		font-weight: 600;
+	}
+	.fl-stat-text {
+		margin-top: 10px;
+		font-size: 14.5px;
+		line-height: 1.55;
+	}
+
+	@media (max-width: 767px) {
+		.fl {
+			padding-block: 56px;
+		}
+		.fl-metrics-head {
+			padding: 14px 20px;
+		}
+		.fl-metrics-label,
+		.fl-metrics-badge {
+			font-size: 10px;
+			letter-spacing: 1.2px;
+		}
+		.fl-metrics-row {
+			grid-auto-flow: row;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.fl-metric {
+			gap: 6px;
+			padding: 22px 20px;
+		}
+		.fl-metric + .fl-metric {
+			border-left: 0;
+		}
+		.fl-metric:nth-child(2n) {
+			border-left: 1px solid var(--k-border);
+		}
+		.fl-metric:nth-child(n + 3) {
+			border-top: 1px solid var(--k-border);
+		}
+		.fl-metric-label {
+			font-size: 10px;
+		}
+		.fl-metric-value {
+			font-size: 32px;
+			letter-spacing: -1.2px;
+		}
+		.fl-metric-desc {
+			font-size: 12.5px;
+			line-height: 18px;
+		}
+		.fl--band .fl-metric {
+			padding: 18px 0 18px 20px;
+		}
+		.fl--band .fl-metric:nth-child(2n + 1) {
+			padding-left: 0;
+		}
+		.fl-row {
+			grid-template-columns: auto minmax(0, 1fr) 40px;
+			gap: 16px;
+			padding: 20px;
+		}
+		.fl-row-num {
+			font-size: 24px;
+		}
+		.fl-row-title {
+			font-size: 20px;
+		}
+		.fl-tile {
+			width: 40px;
+			height: 40px;
+			border-radius: 10px;
+		}
+		.fl-list-head {
+			padding: 16px 20px;
+		}
+	}
+
+	/* Inside the 760px article column. The source keeps 42px metric values there and lets them spill
+	   out of their 174px columns; a smaller value keeps every figure inside its column. */
+	.fl.is-narrow {
+		padding-block: 72px;
+	}
+	.is-narrow .fl-metric-value {
+		font-size: 32px;
+		letter-spacing: -1.2px;
+	}
+	@media (max-width: 767px) {
+		/* The source's article column keeps a 20px inset from the viewport on phones. */
+		.fl.is-narrow {
+			padding-block: 56px;
+			margin-inline: 20px;
+		}
+		.is-narrow .fl-row-title {
+			font-size: 22px;
+		}
+		/* Two columns of 114px inside the inset column: 32px splits "<400ms" across lines. */
+		.is-narrow .fl-metric-value {
+			font-size: 28px;
+			letter-spacing: -1px;
+		}
+	}
+</style>

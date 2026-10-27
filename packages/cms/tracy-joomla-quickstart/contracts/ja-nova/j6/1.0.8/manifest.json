@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-nova/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_nova",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-nova",
+    "id": "quickstart/ja-nova/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_nova",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-nova-j6-webroot-1.0.8.tar.gz",
+        "bytes": 56797929,
+        "sha256": "9a5e24151bf7a6f4a537deaf823645a5d0bafc62a3a3a1a308d2f09613c137fc"
+      },
+      "database": {
+        "file": "ja-nova-j6-database-1.0.8.sql.gz",
+        "bytes": 90481,
+        "sha256": "982b553e18ca009559a8bd4102f05f2cc08b9f5a761d66ad0f134804803df680"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T07:04:46.420Z",
+    "builtFrom": {
+      "from": "quickstart/ja-nova/j6@1.0.7",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 247 files replaced (templates/ja_nova/AGENTS.md, templates/ja_nova/CHANGELOG.md, templates/ja_nova/CLAUDE.md, templates/ja_nova/README.md, templates/ja_nova/component.php, templates/ja_nova/error-t4.php, templates/ja_nova/error.php, templates/ja_nova/favicon.ico, templates/ja_nova/index.php, templates/ja_nova/layout.json, templates/ja_nova/offline.php, templates/ja_nova/templateDetails.xml, templates/ja_nova/templateInfo.php, templates/ja_nova/template_preview.png, templates/ja_nova/template_thumbnail.png, templates/ja_nova/css, templates/ja_nova/docs, templates/ja_nova/etc, templates/ja_nova/fonts, templates/ja_nova/images, templates/ja_nova/js, templates/ja_nova/scss, templates/ja_nova/acm, templates/ja_nova/html, templates/ja_nova/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-nova/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

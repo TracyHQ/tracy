@@ -1,0 +1,99 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary canvas, page background, base borders — the absolute ground zero of the visual system"
+    },
+    "carbon": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Carbon — Card and elevated surface background, subtle border tint — the first lift off pure black"
+    },
+    "tar": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Tar — Deep surface fill for nested elements, icon containers — sits between canvas and card"
+    },
+    "bone": {
+      "$value": "#d4d0c9",
+      "$type": "color",
+      "$description": "Bone — Light neutral action fill for buttons on dark surfaces."
+    },
+    "ash": {
+      "$value": "#878581",
+      "$type": "color",
+      "$description": "Ash — Muted body text, secondary headings, low-emphasis borders — warm mid-gray companion to Bone"
+    },
+    "smoke": {
+      "$value": "#615f5c",
+      "$type": "color",
+      "$description": "Smoke — Tertiary borders, disabled states, link underlines in rest position — the lowest visible neutral"
+    },
+    "pearl": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Pearl — Cool-toned secondary text, icon fills on hover, light surface highlights"
+    },
+    "graphite": {
+      "$value": "#a1a1a1",
+      "$type": "color",
+      "$description": "Graphite — Supporting text and icon borders, mid-weight border emphasis"
+    },
+    "chalk": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Chalk — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "nb-international-pro": {
+      "$value": "NB International Pro",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all contexts. The 300 weight for headlines is the signature choice — most enterprise brands shout at 700; Henry whispers at 300 and achieves more authority. The 204px display weight 400 with tight tracking is unmistakably editorial, treating the product name like a magazine cover. NB International Pro's geometric humanist forms carry warmth without friendliness — it is NB Studio's workhorse, not a generic grotesque."
+    },
+    "nb-international-pro-mono": {
+      "$value": "NB International Pro Mono",
+      "$type": "fontFamily",
+      "$description": "Used at 10px for metadata, tags, and technical annotations in the product UI mockup — the mono variant signals 'this is a system label, not marketing copy'"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary UI font for dense body contexts, form labels, and table-like content. Inter's wider x-height handles small sizes better than NB International Pro. The -0.037em tracking at 12px compensates for Inter's tendency to look loose at caption sizes."
+    },
+    "nb-international-pro-light": {
+      "$value": "NB International Pro Light",
+      "$type": "fontFamily",
+      "$description": "NB International Pro Light — detected in extracted data but not described by AI"
+    },
+    "nb-international-pro-regular": {
+      "$value": "NB International Pro Regular",
+      "$type": "fontFamily",
+      "$description": "NB International Pro Regular — detected in extracted data but not described by AI"
+    },
+    "nb-international-pro-cg-medium": {
+      "$value": "NB International Pro CG Medium",
+      "$type": "fontFamily",
+      "$description": "NB International Pro CG Medium — detected in extracted data but not described by AI"
+    },
+    "nb-international-pro-cg-mono": {
+      "$value": "NB International Pro CG Mono",
+      "$type": "fontFamily",
+      "$description": "NB International Pro CG Mono — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ai.work",
+      "siteName": "Henry",
+      "extractedAt": "2026-06-03T17:46:22.754Z",
+      "variant": "compact"
+    }
+  }
+}

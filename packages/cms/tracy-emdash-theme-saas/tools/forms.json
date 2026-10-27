@@ -1,0 +1,91 @@
+{
+  "_note": "Forms-plugin definitions created/updated by `node tools/seed-apply.mjs forms`; ids are written into the fields named by template.config.json forms.bindings. Labels match the newsletter band's own words (newsletter/footer-newsletter); the confirmation message is the plugin's default, the source's AcyMailing success text is not stored in the database (content-gaps G12).",
+  "forms": [
+    {
+      "name": "Contact (EN)",
+      "slug": "contact-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Name",
+              "name": "name",
+              "required": true,
+              "width": "half"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half"
+            },
+            {
+              "id": "subject-en",
+              "type": "text",
+              "label": "Subject",
+              "name": "subject",
+              "required": true,
+              "width": "full"
+            },
+            {
+              "id": "message-en",
+              "type": "textarea",
+              "label": "Message",
+              "name": "message",
+              "required": true,
+              "width": "full"
+            },
+            {
+              "id": "consent-en",
+              "type": "checkbox",
+              "label": "By submitting this form you agree to the Privacy Policy of this website and the storing of the submitted information.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your submission.",
+        "notifyEmails": ["hello@helix.dev"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send Email",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Footer newsletter (EN)",
+      "slug": "newsletter-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "you@company.com"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your submission.",
+        "notifyEmails": [],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Subscribe",
+        "retentionDays": 0
+      }
+    }
+  ]
+}

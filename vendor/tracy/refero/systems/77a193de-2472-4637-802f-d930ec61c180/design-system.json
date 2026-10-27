@@ -1,0 +1,327 @@
+{
+  "dos": [
+    "Use Mango Grotesque at 88px or larger for any headline meant to carry the page; below 48px, switch to Nohemi weight 600.",
+    "Set all Nohemi text to letter-spacing 0.10em and uppercase — the airy tracking on small text is the signature of this system.",
+    "Use Peach Cream (#ffe0ce) as the default text and hairline border color; reserve Coral Flame and Lavender for typographic accent only, not body content.",
+    "Keep display headlines compressed at line-height 0.80–0.85 and allow them to bleed off the viewport edge — the overflow is the point.",
+    "Render cards on Charcoal or Ultraviolet surfaces with 10px radius and the four-layer black drop shadow stack, never flat against the green canvas.",
+    "Anchor the status bar (location / availability / contact) to the bottom of every page; it is a persistent furniture element, not a footer block.",
+    "Pair 3D illustration tiles with slight rotation (-5° to +5°) so they read as a collage, not a grid."
+  ],
+  "donts": [
+    "Do not introduce a filled button variant — all actions in this system are ghost-stroked with Peach Cream borders.",
+    "Do not set Mango Grotesque below 32px; the compressed grotesque loses its identity at body sizes.",
+    "Do not use white (#ffffff) text or borders; the system runs on warm Peach Cream and Bone, never neutral white.",
+    "Do not tighten letter-spacing on Nohemi — the +0.10em tracking is what makes the tiny UI text legible against the dark green canvas.",
+    "Do not center-align the hero headline — Flayks uses asymmetric, left-bleeding editorial composition throughout.",
+    "Do not add gradients; the design is strictly flat color with single-direction drop shadows only.",
+    "Do not use the violet card surfaces (#2d0458, #1e1779) for more than one tile per section — they are accent canvases, not default cards."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#00381c",
+      "name": "Forest Ink",
+      "role": "Page canvas, section backgrounds — deep saturated green creates the base atmosphere; the page reads as forest-green, not black, which warms the dark theme and separates this system from generic dark-mode SaaS",
+      "group": "brand"
+    },
+    {
+      "hex": "#002d16",
+      "name": "Forest Deep",
+      "role": "Shadow and recessed surface tone — used in card drop-shadows and inner depth layers, the slightly darker shade of the canvas adds dimension without breaking the monochrome green field",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffe0ce",
+      "name": "Peach Cream",
+      "role": "Primary text, hairline borders, outlined-action strokes — the system's only near-gray warm tone; carries the majority of legibility weight and acts as the universal border color across lists, cards, and images. Outlined ghost-button stroke color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6e9d9",
+      "name": "Bone",
+      "role": "Secondary text, decorative stroke and fill accents — a slightly cooler cream for subtle differentiation from Peach Cream without breaking the warm neutrals family",
+      "group": "neutral"
+    },
+    {
+      "hex": "#272221",
+      "name": "Charcoal",
+      "role": "Card surface, elevated panels, secondary dark surface — sits one step off pure black, warm enough to harmonize with the green canvas, used for the back-layer of illustrated artwork tiles",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Deepest surface, button border, text on light card — true black reserved for max-contrast elements and neutral button outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2c2f34",
+      "name": "Slate",
+      "role": "Neutral card surface variant for utility panels — cool-tinted alternative to Charcoal for sections that need to feel mechanical rather than warm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c3bfbc",
+      "name": "Fog",
+      "role": "Muted neutral card surface — desaturated warm gray for low-emphasis panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff8370",
+      "name": "Coral Flame",
+      "role": "Display type accent, link text, emphasis headings — vivid warm orange that dominates the hero typography and section labels; against the green canvas it reads as high-energy poster ink, not a UI CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#d1adff",
+      "name": "Lavender",
+      "role": "Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis.",
+      "group": "accent"
+    },
+    {
+      "hex": "#546f57",
+      "name": "Sage",
+      "role": "Body background panels, list dividers, utility surfaces — desaturated green that sits between Forest Ink and the cream text, used for secondary content blocks and list separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2d0458",
+      "name": "Ultraviolet",
+      "role": "Dramatic card surface for featured work tiles — deep saturated violet as an alternative canvas for highlight cards; high contrast with Peach Cream text",
+      "group": "accent"
+    },
+    {
+      "hex": "#1e1779",
+      "name": "Indigo Depth",
+      "role": "Accent card surface — vivid indigo for occasional card variants that need to feel different from the green field without going warm",
+      "group": "accent"
+    },
+    {
+      "hex": "#977eac",
+      "name": "Heather",
+      "role": "Muted card surface — dusty violet for low-priority cards and section dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#002a3b",
+      "name": "Navy Depths",
+      "role": "Cool card surface — deep blue-teal for cards that need to break from the warm/green field with a cool note",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed editorial composition with no max-width container — every section runs edge-to-edge against the Forest Ink canvas. The page is built in horizontal bands: hero (massive Mango Grotesque headline bleeding off the right edge + 3D illustration tile clustered bottom-left), about (asymmetric title + small Nohemi body), and a 'selected projects' section that shifts to a near-black canvas with centered Mango Grotesque section labels. Navigation is a vertical pill stack anchored to the left edge rather than a top bar; the status meta bar is pinned to the bottom of the viewport and persists across all sections. Vertical rhythm comes from oversized display type and clustered 3D tiles rather than from a column grid — the layout reads as a printed broadsheet, not a SaaS app. Section gaps are 60–100px but the giant typography makes the actual visual gaps feel larger.",
+  "imagery": "3D illustration is the dominant visual language: glossy plastic-rendered vehicles, crystalline architectural forms, sci-fi vehicles on blue-sky backgrounds with cartoon clouds, and bubbly extruded logo marks. Tiles are square or near-square, slightly rotated, with a collage arrangement rather than a grid. Photography is absent — all visual content is either 3D render or hand-drawn/illustrated logo objects. The mint-turquoise 3D 'FLAYKS' wordmark with cream highlights establishes the material palette: high-gloss plastic, warm light, soft pastel environments. Imagery occupies roughly 30–40% of the hero viewport and clusters asymmetrically alongside the oversized typography rather than behind it.",
+  "similar": [
+    {
+      "why": "Same editorial-portfolio treatment: oversized compressed display type that bleeds off the canvas, dark moody page tone, 3D illustration as primary visual content, asymmetric collage layout rather than grid.",
+      "business": "Locomotive (locomotive.ca)"
+    },
+    {
+      "why": "Full-bleed editorial dark canvases, paired custom typefaces with extreme scale contrast between display and body, work tiles rendered as illustrated cards floating off the page edge.",
+      "business": "Pentagram (pentagram.com)"
+    },
+    {
+      "why": "Same maximalist agency-portfolio language: oversize condensed display headlines, 3D-rendered project tiles, single saturated accent color against a dark field, ghost-stroked navigation rather than filled buttons.",
+      "business": "Active Theory (activetheory.net)"
+    },
+    {
+      "why": "Custom condensed display grotesque used at near-illegible sizes, warm peach/cream against a deep dark canvas, tiny tracked-out Nohemi-style UI text anchoring the corners of the page.",
+      "business": "Gunner (gunner.io)"
+    },
+    {
+      "why": "Agency portfolio with 3D-illustrated project tiles, asymmetric collage composition, and oversized display typography that treats the viewport as a printed spread rather than a screen.",
+      "business": "B-Reel (b-reel.com)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "md": "10px",
+      "sm": "6px",
+      "pill": "900px"
+    },
+    "elementGap": "4-10px",
+    "sectionGap": "64px",
+    "cardPadding": "12-16px",
+    "pageMaxWidth": null
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#00381c",
+      "name": "Forest Ink Canvas",
+      "level": 0,
+      "purpose": "The page field — all sections and heroes sit directly on this deep green; no lighter background exists at the page level."
+    },
+    {
+      "hex": "#546f57",
+      "name": "Sage Panel",
+      "level": 1,
+      "purpose": "Body and list background panels that need a subtle lift from the canvas without breaking the green field."
+    },
+    {
+      "hex": "#272221",
+      "name": "Charcoal Card",
+      "level": 2,
+      "purpose": "Elevated cards and illustration tile backings — warm dark surface that complements the green canvas."
+    },
+    {
+      "hex": "#2d0458",
+      "name": "Ultraviolet Feature Card",
+      "level": 3,
+      "purpose": "Accent surface for featured work tiles — the only high-chroma card surface in the system."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.2) 0px 0px 112px 0px, rgba(0, 0, 0, 0.1) 4px -4px 12px 0px",
+      "element": "Floating Illustration Tile"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.01) 0px 62px 25px 0px, rgba(0, 0, 0, 0.05) 0px 35px 21px 0px, rgba(0, 0, 0, 0.09) 0px 16px 16px 0px, rgba(0, 0, 0, 0.1) 0px 4px 9px 0px",
+      "element": "Project Preview Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.01) 0px 262px 105px 0px, rgba(0, 0, 0, 0.05) 0px 148px 89px 0px, rgba(0, 0, 0, 0.09) 0px 66px 66px 0px, rgba(0, 0, 0, 0.1) 0px 16px 36px 0px",
+      "element": "Hero Feature Card"
+    }
+  ],
+  "northStar": "Oversized editorial broadsheet — dark forest green page, peach ink headlines bleeding off the page edges, tiny Nohemi caption text anchoring the corners.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.8
+    },
+    {
+      "role": "subheading",
+      "size": 32,
+      "lineHeight": 1,
+      "letterSpacing": 0.48
+    },
+    {
+      "role": "heading-sm",
+      "size": 48,
+      "lineHeight": 0.85,
+      "letterSpacing": 0.96
+    },
+    {
+      "role": "heading",
+      "size": 88,
+      "lineHeight": 0.85,
+      "letterSpacing": 1.76
+    },
+    {
+      "role": "heading-lg",
+      "size": 144,
+      "lineHeight": 0.8,
+      "letterSpacing": 2.88
+    },
+    {
+      "role": "display",
+      "size": 256,
+      "lineHeight": 0.8,
+      "letterSpacing": 5.12
+    }
+  ],
+  "components": [
+    {
+      "name": "Status Bar Footer",
+      "role": "Persistent meta-information strip across the entire page",
+      "description": "Fixed to the bottom edge of the viewport, full-width, transparent over the green canvas. Three zones — left: location marker (Lavender dot) + 'CURRENTLY IN TOULOUSE, FR (CET)'; center: 'AVAILABLE FOR NEW PROJECTS'; right: snowflake icon + 'CONTACT'. Nohemi 14px, weight 400, letter-spacing 0.10em, uppercase, color Peach Cream. Dot indicators use 6px circles in Lavender. No background fill, no border — the type floats directly on the Forest Ink canvas with 12–16px vertical padding."
+    },
+    {
+      "name": "Wordmark Logo",
+      "role": "Brand identity lockup anchored top-left",
+      "description": "Bubbly 3D-extruded 'FLAYKS' wordmark in turquoise/mint (#7df0d8 range) with cream highlights and a soft drop shadow — treated as an illustration object, not a text logotype. Pairs a glossy plastic material against the matte dark green canvas. Sits at top-left with 14px padding from the viewport edge and functions as a home link."
+    },
+    {
+      "name": "Floating Illustration Tile",
+      "role": "Featured project artwork displayed as a physical card",
+      "description": "Square or near-square card containing 3D-illustrated artwork (crystalline structures, sci-fi vehicles, clouds) on a bright blue sky background. Card sits on Charcoal (#272221) backing with slight rotation (-3° to +5°) for collage feel. 10px border-radius, 6px Peach Cream border, layered shadow stack: rgba(0,0,0,0.2) 0 0 112px 0 (ambient glow) + rgba(0,0,0,0.1) 4px -4px 12px 0 (directional). Width varies 240–400px. Tiles overlap or cluster asymmetrically rather than aligning to a grid."
+    },
+    {
+      "name": "Ghost Action Button",
+      "role": "Outlined interactive trigger — the only button variant in the system",
+      "description": "Transparent fill, 1.5–2px Peach Cream border, Nohemi 14px uppercase weight 600, letter-spacing 0.10em. 6px border-radius. Padding 10px 16px. No filled state — hover increases border weight or shifts to Coral Flame. There is no filled-button variant in this system; all CTAs are ghost-strokes against the dark canvas."
+    },
+    {
+      "name": "Vertical Side Navigation",
+      "role": "Section-anchor list rendered as a vertical pill stack",
+      "description": "Left-edge vertical list of section markers — 6–8px Lavender circles or rounded pills, 10px vertical gap. Active item renders as a larger filled Lavender dot or pill with Nohemi 14px label beside it. Inactive items are outline-only circles. The nav reads as a precise gauge rather than a horizontal bar — the page's primary navigation surface is a thin vertical column."
+    },
+    {
+      "name": "Meta Label Tag",
+      "role": "Small uppercase caption for section context",
+      "description": "Nohemi 14px, weight 400, letter-spacing 0.10em, uppercase, Peach Cream. No background, no border. Used for captions like 'I'M FÉLIX', 'UP NEXT', 'SHOWCASE OF DIVERSE WORKS'. Sits 8–16px above the element it labels. The tag is the typographic system doing the work of a section header at the smallest scale."
+    },
+    {
+      "name": "Project Preview Card",
+      "role": "Selected-project showcase tile with shadow and border",
+      "description": "Rectangular card on Ultraviolet (#2d0458) or Charcoal (#272221) background, 10px border-radius, 1px Peach Cream border. Multi-layer drop shadow: rgba(0,0,0,0.01) 0 62px 25px / 0.05 0 35px 21px / 0.09 0 16px 16px / 0.1 0 4px 9px. 16px internal padding. Contains Mango Grotesque title and Nohemi meta. Acts as a hard-edged container against the soft green canvas."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Separator line for list items and section breaks",
+      "description": "1px Peach Cream line at full or partial width, often used inside Sage (#546f57) or dark panels. No margin on the line itself — adjacent elements supply 8–16px vertical breathing room. Functions as the structural rhythm of lists and metadata stacks."
+    },
+    {
+      "name": "Oversized Headline Block",
+      "role": "Hero display type that bleeds off the viewport",
+      "description": "Mango Grotesque weight 700 at 144–518px, line-height 0.80, letter-spacing 0.015–0.025em, color Coral Flame. Headline is positioned to overflow the right and/or bottom edge of the viewport — this is intentional, not a bug. The bleed creates the editorial-poster effect that defines the system's hero rhythm. Sits on Forest Ink with no container."
+    },
+    {
+      "name": "Section Accent Label",
+      "role": "Colored eyebrow text marking section transitions",
+      "description": "Mango Grotesque weight 500 at 32–48px, Lavender (#d1adff) or Coral Flame (#ff8370), letter-spacing 0.025em, line-height 0.85. Examples: 'SELECTED', 'PROJECTS', 'DIGI-TAL'. Acts as a visual chapter mark — bold enough to be a typographic moment, small enough not to compete with the hero headline."
+    },
+    {
+      "name": "Status Dot Indicator",
+      "role": "Colored circular marker for live meta states",
+      "description": "6px filled circle in Lavender (#d1adff) with a subtle 1px Peach Cream outer ring. Sits inline with Nohemi 14px caption text. Used to indicate 'live' status (current location, availability, active nav). The dot is the smallest semantic mark in the system."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading — Mango Grotesque is a condensed grotesque used at near-illegible sizes (88–518px) with compressed line-height (0.80–0.85), intentionally bleeding off the viewport. The tight tracking plus compressed leading is what makes the type read as 'poster' rather than 'web headline'. Substitutes: Anton, Bebas Neue, Druk Wide for the mass, Archivo Black for smaller weights.",
+      "sizes": "32, 40, 48, 88, 94, 97, 144, 256, 518px",
+      "family": "Mango Grotesque",
+      "weight": "500, 700",
+      "lineHeight": "0.80, 0.85, 1.00, 1.20",
+      "substitute": "Anton or Archivo Black",
+      "letterSpacing": "0.0150em, 0.0200em, 0.0250em"
+    },
+    {
+      "role": "UI body, navigation, buttons, meta text — Nohemi runs at a deliberately tiny 14–18px with generous +0.10em tracking, a signature move that makes the UI text feel like caption furniture rather than body copy. The +10% tracking is anti-convention: most body systems tighten tracking, this loosens it to keep the small text airy and readable against the dark green. Substitutes: Inter, General Sans, Satoshi.",
+      "sizes": "14, 18px",
+      "family": "Nohemi",
+      "weight": "400, 600",
+      "lineHeight": "0.85, 1.10, 1.20, 1.35",
+      "substitute": "Inter or General Sans",
+      "letterSpacing": "0.1000em"
+    },
+    {
+      "role": "System fallback for the smallest UI metadata — 13px Arial is used purely as a safe baseline when custom fonts fail; treated as invisible utility, not a design choice.",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "Arial",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Flayks is a maximalist editorial portfolio that treats every screen like a printed broadsheet: a deep forest-green canvas, oversized compressed display type that intentionally overflows the viewport, and a single warm peach tone as the dominant text and border color. The system pairs two custom typefaces — Mango Grotesque for monumental condensed headlines and Nohemi for the tiny UI chrome — creating an extreme scale contrast that defines the visual rhythm. Accents appear sparingly: coral-orange for emphasis type, lavender-violet for section labels and selected states. Surfaces are flat with a single deep shadow drop pattern on cards; 3D illustration tiles float above the canvas, slightly rotated, giving the page a tactile collage quality rather than a flat app feel.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text (primary): #ffe0ce (Peach Cream)\n- Text (secondary): #f6e9d9 (Bone)\n- Canvas: #00381c (Forest Ink)\n- Card surface: #272221 (Charcoal) or #2d0458 (Ultraviolet)\n- Accent / emphasis type: #ff8370 (Coral Flame)\n- Accent / nav active / tags: #d1adff (Lavender)\n- primary action: #ffe0ce (outlined action border)\n\n## Example Component Prompts\n\n1. **Outlined Ghost Action Button**: Transparent background, 1.5px border in #ffe0ce (Peach Cream), border-radius 6px, padding 10px 16px. Label in Nohemi weight 600, 14px, uppercase, letter-spacing 0.10em, color #ffe0ce. Hover state shifts border to #ff8370 (Coral Flame).\n\n2. **Oversized Bleeding Headline**: Mango Grotesque weight 700 at 256px, line-height 0.80, letter-spacing 0.020em, color #ff8370 (Coral Flame). Position the text block so it overflows the right viewport edge by 10–15% — this bleed is the signature. Background is #00381c (Forest Ink) with no container.\n\n3. **Floating 3D Illustration Tile**: 320px square card, background #272221 (Charcoal), border-radius 10px, 1px border in #ffe0ce (Peach Cream). Contains a 3D render (crystalline vehicle on blue sky) filling the card. Apply a slight rotation of -3°. Add the ambient shadow stack: rgba(0,0,0,0.2) 0 0 112px 0 plus rgba(0,0,0,0.1) 4px -4px 12px 0.\n\n4. **Status Bar Footer Strip**: Full-width, pinned to viewport bottom, transparent over #00381c (Forest Ink). Three columns: left is a 6px #d1adff (Lavender) dot followed by Nohemi 14px uppercase weight 400, letter-spacing 0.10em, #ffe0ce, reading 'CURRENTLY IN TOULOUSE, FR (CET)'. Center column: same type, 'AVAILABLE FOR NEW PROJECTS'. Right column: a snowflake glyph + 'CONTACT'. Vertical padding 14px.\n\n5. **Project Preview Card**: 400px wide, internal padding 16px, background #2d0458 (Ultraviolet), border-radius 10px, 1px border #ffe0ce (Peach Cream). Apply the four-layer card shadow. Title in Mango Grotesque weight 700 at 48px, line-height 0.85, color #ffe0ce. Meta line in Nohemi 14px uppercase, letter-spacing 0.10em, color #d1adff (Lavender)."
+    }
+  ]
+}

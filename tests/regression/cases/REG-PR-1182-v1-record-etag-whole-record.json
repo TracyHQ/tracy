@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1182-v1-record-etag-whole-record",
+  "kind": "fix",
+  "title": "/v1 record ETag covers the whole editable record: a second PATCH with the same If-Match after a title change is 412 REVISION_STALE, nothing written",
+  "pr": 1182,
+  "area": "api/v1-records",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: recordRevision over a record: reorder keys, CRLF, NFD, a number as text, comment_count; then change title, content, excerpt, status, slug.",
+    "S2: With a fake WordPress plugin 0.17.0: GET the record's ETag, PATCH post_title with If-Match = that tag, then PATCH again with the SAME tag.",
+    "S3: Change the body after the GET (at Tracy's read, and only at the plugin's lock) and PATCH with the old tag."
+  ],
+  "expect": [
+    "S1: the normalisations and comment_count leave the revision unchanged; every editable field moves it; no body_revision → no revision.",
+    "S2: first PATCH 200; second 412 error.code REVISION_STALE with the current ETag; no second content.update sent; the title stays the first write's.",
+    "S3: both 412 REVISION_STALE in one wording; the write carried expected_body_revision of Tracy's read."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/api-v1.test.mjs",
+    "door": "PATCH /v1/sites/{key}/records/{kind}/{id}"
+  },
+  "evidence": "tasks/evidence/e2e-full-dev/2026-10-04/R-wp/bugs/J13.2.md",
+  "fence": "lib/v1-routes.js recordRevision + api/route.js holdToRecord",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/api-v1.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "recordRevision (sweep ",
+      "GET /v1 record: the ETag covers the whole record",
+      "🔒 J13.2: a second PATCH with the same If-Match after a TITLE change",
+      "🔒 PATCH /v1 record whose If-Match no longer names the body: 412",
+      "🔒 PATCH /v1 record: a body write that lands between the read and the plugin’s lock",
+      "/v1: one code, one wording"
+    ]
+  }
+}

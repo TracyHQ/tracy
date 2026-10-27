@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-warm-linen: #eee2d4;
+  --color-press-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-tape-gray: #efefef;
+  --color-tomo-red: #ff6347;
+
+  /* Typography — Font Families */
+  --font-recife: 'Recife', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

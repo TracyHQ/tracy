@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "Airbnb",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "#f7f7f7"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#222222"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#3f3f3f"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#6a6a6a"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#929292"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#dddddd"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "#ebebeb"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#ff385c"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "#e31c5f"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "#e00b41"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#008a05"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#c47700"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#c13515"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"Airbnb Cereal VF\", \"Airbnb Cereal App\", Circular,\n    -apple-system, system-ui, \"Helvetica Neue\", Roboto, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "\"Airbnb Cereal VF\", \"Airbnb Cereal App\", Circular,\n    -apple-system, system-ui, \"Helvetica Neue\", Roboto, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Monaco,\n    Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "20px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "22px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "28px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "44px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "56px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1280px",
+      "wideSize": "1280px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.43",
+        "tight": "1.2"
+      },
+      "tracking": {
+        "display": "-0.02em"
+      },
+      "sectionY": {
+        "desktop": "64px",
+        "tablet": "48px",
+        "phone": "32px"
+      },
+      "radius": {
+        "sm": "8px",
+        "md": "14px",
+        "lg": "20px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "rgba(0, 0, 0, 0.02) 0 0 0 1px,\n    rgba(0, 0, 0, 0.04) 0 2px 6px 0,\n    rgba(0, 0, 0, 0.1) 0 4px 8px 0"
+      },
+      "focusRing": "0 0 0 2px var(--wp--preset--color--fg)",
+      "motion": {
+        "fast": "150ms",
+        "base": "200ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)"
+      },
+      "container": {
+        "max": "1280px",
+        "gutterDesktop": "40px",
+        "gutterTablet": "24px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "airbnb"
+      }
+    }
+  }
+}

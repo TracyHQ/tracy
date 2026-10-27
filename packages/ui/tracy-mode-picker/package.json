@@ -1,0 +1,54 @@
+{
+  "name": "@tracy/dsh-mode-picker",
+  "version": "0.2.4",
+  "description": "Tracy's Mode+Platform picker (mockup Option C) \u2014 replaces dsh's default agent-preset hero chip.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src/host",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/ui/tracy-mode-picker"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-api-session-controller",
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ],
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "typescript": "^5.9.0",
+    "@deepseek-ai/dsh-client-ui-primitives": "workspace:*"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@deepseek-ai/dsh-llm": "workspace:*"
+  }
+}

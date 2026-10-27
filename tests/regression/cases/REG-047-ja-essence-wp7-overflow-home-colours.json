@@ -1,0 +1,27 @@
+{
+  "id": "REG-047",
+  "kind": "fix",
+  "pr": 867,
+  "title": "JA Essence wp7: no sideways overflow on the list pages at 1024px, home page and chip colours match the source, and a dark-OS visitor gets a dark page",
+  "area": "wordpress-theme/wp-ja-essence",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-essence theme under test (local stand from the quickstart pack) and the Joomla source (local stand from quickstart/ja-essence/j6).",
+    "S2: From the TCH checkout run: node tasks/ja-essence-wp7/tools/measure105.mjs --site <site> --source <source> --out <dir> (add --zip <theme.zip> --record <BROWSER.json> to bind the run to the theme bytes; the full run takes about 40 minutes).",
+    "S3: Read the final line and each PASS/FAIL line."
+  ],
+  "expect": [
+    "measure105: TOTAL 10/10 checks pass (A1-A7 of measure104 as a regression group, then B1, B2, B3).",
+    "B1: on every route at 320, 390, 768, 1024, 1180 and 1440px, light and dark, the page is not wider than the viewport by more than 1px wherever the source is not (category-style-2, category-blog and category-style-4 at 1024px).",
+    "B2: on the five home variants, light and dark, the page colour (home-5 white like the source) and every category chip's background, text colour, padding and radius equal the source's, paired by section and order.",
+    "B3: on every route at 1440 and 390, light and dark, the page colour and the header height equal the source's; a visitor whose OS is dark and who has no saved choice gets the whole page dark."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-essence-wp7/tools/measure105.mjs",
+    "evidence": "tasks/ja-essence-wp7/release/BROWSER.json"
+  },
+  "evidence": "Sweeps of 04/10/2026 against the Joomla source: 2 overflow cases and 198 chip mismatches and 130 page/header mismatches before, 0 after (measure105 10/10 on 1.0.5, bound to wp-ja-essence-1.0.5.zip 8971c52e; tasks/ja-essence-wp7/release/BROWSER.json)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the tool fails closed on a crash or a deadline"
+}

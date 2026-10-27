@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1777-emdash-site-network-isolation",
+  "kind": "fix",
+  "title": "secure-site-access.sh can isolate a quickstart EmDash site: render-compose keeps its tracy/<template>-emdash[-tools] image and mounts the access key",
+  "pr": 1777,
+  "area": "fleet/site-access",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run render-compose.test.mjs: a site dir with PLATFORM=emdash, compose image tracy/tracy-base-emdash:0.5.6-tools (and tracy/tracy-business-emdash:1.7.23-tools), the network-isolated marker and .site-access/<label>/key.json; render it the way secure-site-access.sh does (strict).",
+    "S2: Same with the plain template image tracy/tracy-business-emdash:1.7.23 and no marker.",
+    "S3: Same with an image outside Tracy's namespace (ghcr.io/someone/shop-emdash:1.0)."
+  ],
+  "expect": [
+    "S1: the render succeeds; the image line is exactly the one the site ran; the web service is on [default] only, no tracy_tracy network; the key directory is mounted read-only at /run/tracy-access.",
+    "S2: the render succeeds and the image line is unchanged.",
+    "S3: the render is refused with 'refusing rather than moving it' and the compose file is byte-for-byte unchanged."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/lib/web-image.sh (tracy_emdash_web_image); scripts/provision/render-compose.sh (tracy_site_mounts, tracy_detect_platform)"
+  },
+  "evidence": "26/10/2026: secure-site-access.sh failed on every EmDash site (prod1 base-emdash, business-emdash; 15 on dev) with '!! tracy/tracy-base-emdash:0.5.6-tools is not a tracy/emdash tag ... refusing rather than moving it', so EmDash sites stayed on the shared tracy_tracy network and could reach every other site's container by name.",
+  "fence": "Static: render-compose.sh against temp site dirs with --no-image-check; no docker, no stand.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/render-compose.test.mjs"],
+    "cwd": "packages/fleet/tracy-fleet-operation",
+    "tests": [
+      "P0: a quickstart EmDash site (-tools image) re-renders isolated, on exactly the image it runs",
+      "a quickstart EmDash image without -tools is kept too",
+      "an EmDash site on an image outside Tracy's namespace is still refused, compose untouched"
+    ]
+  }
+}

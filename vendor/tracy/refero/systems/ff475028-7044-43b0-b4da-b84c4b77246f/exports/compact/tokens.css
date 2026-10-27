@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-gallery-black: #000000;
+  --color-projection-white: #ffffff;
+  --color-index-gray: #999999;
+
+  /* Typography — Font Families */
+  --font-helveesti: 'Helveesti', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

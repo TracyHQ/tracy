@@ -1,0 +1,59 @@
+{
+  "color": {
+    "cosmic-ink": {
+      "$value": "#15252d",
+      "$type": "color",
+      "$description": "Cosmic Ink — Hero background, testimonial card surface, headline text on light surfaces, footer, and the entire dark-mode layer"
+    },
+    "cinder": {
+      "$value": "#254250",
+      "$type": "color",
+      "$description": "Cinder — Secondary dark surface for testimonial and profile cards — a slightly lifted step above Cosmic Ink so cards read as separate panels without leaving the dark family"
+    },
+    "fog": {
+      "$value": "#9fb2bc",
+      "$type": "color",
+      "$description": "Fog — Muted dividers, dashed card separators, secondary icon strokes on dark surfaces"
+    },
+    "mist": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, section dividers, subtle outline controls on light surfaces"
+    },
+    "cloud": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Cloud — Page canvas, card surface, input fill — the default light ground"
+    },
+    "ash": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Ash — Alternate section background that breaks Cloud bands without introducing a different color"
+    },
+    "signal-orange": {
+      "$value": "#e75e15",
+      "$type": "color",
+      "$description": "Signal Orange — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All interface and editorial type. Weight 400 for body and nav, 500 for UI labels, 600 for subheadings and small headlines, 700 for section headings, 900 reserved for the hero headline — the only place Apollo uses the heaviest weight, creating a clear 'stage voice'"
+    },
+    "fira-code": {
+      "$value": "Fira Code",
+      "$type": "fontFamily",
+      "$description": "Reserved for code-as-heading treatments and developer-facing copy blocks — the monospace signal tells the reader 'this is code or technical content' even when displayed at heading size. Tracking is widened to 0.08em to keep monospace headings legible"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://apollographql.com",
+      "siteName": "Apollographql",
+      "extractedAt": "2026-06-03T21:06:43.089Z",
+      "variant": "compact"
+    }
+  }
+}

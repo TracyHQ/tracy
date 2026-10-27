@@ -1,0 +1,54 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, section backgrounds — the paper of the monograph"
+    },
+    "graphite": {
+      "$value": "#181818",
+      "$type": "color",
+      "$description": "Graphite — Primary text, body copy, hairline rules, column dividers — softer than pure black, reads as printed ink"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Hardest rule weights, foot dividers, densest border lines — the purest black on the page"
+    },
+    "ash": {
+      "$value": "#6e6e6e",
+      "$type": "color",
+      "$description": "Ash — Muted column rules, secondary divider strokes — the gray that softens the grid"
+    },
+    "vermillion": {
+      "$value": "#fc523b",
+      "$type": "color",
+      "$description": "Vermillion — Link arrows, the wireframe illustration, the only chromatic accent — a printer’s mark red, not an interface brand color"
+    }
+  },
+  "font": {
+    "garamond": {
+      "$value": "Garamond",
+      "$type": "fontFamily",
+      "$description": "Editorial serif used for headlines, body copy, and the introductory address. Set exclusively at weight 400 — the typeface’s contrast and oldstyle proportions do the visual lifting. The 36px tier is the opening statement, 29px is section copy, 25px is dense paragraphs."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Small UI metadata — navigation labels, contact lines, service labels, collaborator names. Renders with tabular figures and stylistic alternates (ss04, ss07, zero) so columns of names align like a typeset index."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Micro-copy at 10px — copyright, fine print, the smallest annotations. System serif fallback for the tiniest type tier."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.liesingers.com",
+      "siteName": "Simon Liesinger",
+      "extractedAt": "2026-06-03T18:49:45.007Z",
+      "variant": "compact"
+    }
+  }
+}

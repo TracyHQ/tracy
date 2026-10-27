@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1696-wo-hub-principal-email",
+  "kind": "fix",
+  "title": "The operator's place detail names accounts through the host instead of reading the account table, and Tracy finds a principal by email whatever its case",
+  "pr": 1696,
+  "area": "website-opportunities/hub",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: On the open package's schema (no account table) a principal saved a place twice; placeDetail is called with and without the host's emailOf and displayNameOf.",
+    "S2: Tracy's host is asked principalOf with the email in another case, and emailOf for an account and for an unknown id.",
+    "S3: The /ops/wo place detail door is read on Tracy."
+  ],
+  "expect": [
+    "S1: with them the account row has the email, name and 2 opportunities; without them email and name are null; no error.",
+    "S2: the same principal is found; emailOf answers the email, null for the unknown id.",
+    "S3: the detail names every account by email as before."
+  ],
+  "selectors": {
+    "store": "packages/wo/website-opportunities/src/wo-places-store.js placeDetail",
+    "host": "packages/wo/website-opportunities/src/host.js emailOf",
+    "tracy": "apps/tracy-web/src/lib/wo-principal.js principalOf, emailOf"
+  },
+  "evidence": "Before: placeDetail joined Tracy's account table, failing on the open schema; principalOf compared the email case-sensitively",
+  "fence": "placeDetail groups wo_opportunity by account_id and names each through emailOf/displayNameOf; principalOf compares lower(email)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/place-ops-principal.test.mjs",
+      "apps/tracy-web/test/wo-host-contract.test.mjs",
+      "apps/tracy-web/test/ops-wo-places.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the place detail names its accounts through the host",
+      "Tracy's principal is found whatever the case of the email",
+      "Tracy's host names a principal's email",
+      "the detail names every account by email"
+    ]
+  }
+}

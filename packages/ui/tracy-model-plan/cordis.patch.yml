@@ -1,0 +1,11 @@
+# Insert the plugin's row. Whatever bundle loads this package puts that row into the loader tree.
+#
+# This row does NOT run when a profile loads `@tracy/dsh-native-bundle`: a package's patch applies
+# only when that package itself is named in `dsh.profile.bundles`. Listing BOTH the bundle and this
+# package in one profile inserts the row twice, so the id collides and dsh REFUSES TO BOOT.
+#
+# The native bundle inserts it DISABLED: Settings › Model plan belongs to the desktop app's own dsh
+# only, which turns it on in the patch it writes (`packages/desktop/tracy-desktop/src/plan-profile.js`).
+- insert:
+    - id: tracy-model-plan
+      name: '@tracy/dsh-model-plan'

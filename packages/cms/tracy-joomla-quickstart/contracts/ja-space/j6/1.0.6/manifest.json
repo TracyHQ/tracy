@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-space/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_space",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-space",
+    "id": "quickstart/ja-space/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_space",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-space-j6-webroot-1.0.6.tar.gz",
+        "bytes": 36174178,
+        "sha256": "efee57391e66af53d6907fb845706741a331eaa56a02190a40ec87c3083d8969"
+      },
+      "database": {
+        "file": "ja-space-j6-database-1.0.6.sql.gz",
+        "bytes": 78788,
+        "sha256": "50b89438fcbcb6e672bc4fb765f2203d1c7135c57c18bcaa25796bb84ab55064"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T16:11:06.029Z",
+    "builtFrom": {
+      "from": "quickstart/ja-space/j6@1.0.5",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 307 files replaced (templates/ja_space/component.php, templates/ja_space/error.php, templates/ja_space/favicon.ico, templates/ja_space/index.html, templates/ja_space/index.php, templates/ja_space/offline.php, templates/ja_space/templateDetails.xml, templates/ja_space/templateHook.php, templates/ja_space/templateInfo.php, templates/ja_space/template_preview.png, templates/ja_space/template_thumbnail.png, templates/ja_space/thememagic.xml, templates/ja_space/contenttype, templates/ja_space/css, templates/ja_space/etc, templates/ja_space/fonts, templates/ja_space/html, templates/ja_space/images, templates/ja_space/js, templates/ja_space/less, templates/ja_space/tpls, templates/ja_space/acm, templates/ja_space/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-space/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

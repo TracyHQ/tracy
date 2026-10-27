@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2112d018-bf95-4a87-a1f3-6e948330b207",
+  "status": "complete",
+  "name": "TinyFaces NFT",
+  "url": "https://styles.refero.design/style/2112d018-bf95-4a87-a1f3-6e948330b207",
+  "sourceWebsite": "https://nft.tinyfac.es",
+  "extractedAt": "2026-06-03T20:26:03.918Z",
+  "capturedAt": "2026-10-08T05:09:15.088422+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "Printed collector's catalog on warm paper. Imagine a heavyweight art-book spread where vivid vinyl-toy photography sits beside oversized editorial serifs and pastel-tinted feature panels — the interface is the binding, the characters are the exhibition.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d2212a06-167e-4dc5-87cd-07dc25b1be82.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "27538d08d0c0027764fbbdfa0f4cbc25abb45a79e7cf32ae0f2d19926a3dd46b",
+      "bytes": 19728
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4c8684eb4b12d5b8a0720b5fcf9d7b7d01a75f5abc4b070bd50d19aee48a0394",
+      "bytes": 135688
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5212839f0d01bb12d367e8f0c6bf2705719b51d7e11c7f87925306a20e9c2547",
+      "bytes": 16502
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ac195555c3248284302a2cfefc1b38184f01f7a2c1cb0832ee2ccea529aebe19",
+      "bytes": 9722
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e234e86425eaf7c3df8d355ef77ac0fd0cd3340d18b8ab71ceb8d9c8f52d1e53",
+      "bytes": 13283
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ef90f95869d972f93d6593b8832d8676765cf27926ad5805e3e6327a9626b07a",
+      "bytes": 3530
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ef38ba24e1e9215f6fbbc65784b79a475bf7220e4599edfb1904672ec26824a8",
+      "bytes": 700
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "db509d02c811f0ae958e5ca4cb4b1a8e87cfd3267c2bfc117bd1c13fc47b7cf6",
+      "bytes": 717
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d19fb37008a632cc3774c6feb705a8f245ab8ff9e6be5cbb8b3c0399e55ba4a5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e72cf8230da4cc6cfbd4412ef0a2d6fde3c34e1a450485027eb472160b18e537",
+      "bytes": 43834
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "16b4e71afa5754b1a46bd945ae4f4bb036a650f0774562261a44d80acb6c6638",
+      "bytes": 22790
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e13bf4ee584d98eaf611324c93684890e0dd65d95dd90c9c0fc0c96119690230",
+      "bytes": 38314
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4dd6351ab4fd69cb50cd6e8ca01c3cb0b080427d357ece2da990ab87d7a0d931",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4f7119abe44d4907d42fc04c1afb31a349c853ba927ee097e6af1c7149cb9c4e",
+      "bytes": 1322
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9c16b274ad67ea8c215f1d688fd8e7b40397c17d4382cd0ff87937375699b90d",
+      "bytes": 1913
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1bcae895-2245-4d33-aa43-1c1e80719554",
+    "2112d018-bf95-4a87-a1f3-6e948330b207",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "71db2a51-118e-42b1-879d-29872d52142f",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9afa0254-423b-4354-a852-8894c33d2e6b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "ea11696a-17c0-41f8-9b08-c820851e0ea9",
+    "eefc0305-818c-4f57-80ce-a4bc1f7aac92",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

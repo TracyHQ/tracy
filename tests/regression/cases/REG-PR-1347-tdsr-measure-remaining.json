@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1347-tdsr-measure-remaining",
+  "kind": "feat",
+  "title": "Eight re-measured Joomla rows pass every built-site rule on /ops, and JA Vital passes BAND-1 through keepWhole",
+  "pr": 1347,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "S2: Read packages/cms/tracy-joomla-quickstart/contracts/{ja-voyara/j6/1.0.8,ja-vital/j6/1.0.4,ja-kinetic/j6/1.0.6,ja-trip/j6/1.0.5,ja-tour/j6/1.0.2,ja-podcast/j6/1.0.4,ja-phio/j6/1.0.5,ja-morgan/j6/1.0.5}/design-system-measurement.json."
+  ],
+  "expect": [
+    "S1: every test passes, among them the eight-row test: ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1, IDENT-1 and MODE-1 pass 'Measured on <version>, 2026-10-14, imac', MODE-2 not applicable, BAND-1 pass (JA Vital included).",
+    "S2: each file measured 2026-10-14 on the iMac with od:bmw, od:stripe, od:spotify and Moxie, ident and modeMatch read on every view, themeToggle false."
+  ],
+  "selectors": {
+    "contract": "packages/design/tracy-ds-slot/templates/joomla-ja-vital.json keepWhole .btn-white",
+    "files": "the eight design-system-measurement.json files above"
+  },
+  "evidence": "Before: /ops graded the eight rows C on 'Not measured yet' (IDENT-1, MODE-1, MODE-2; every built-site rule on JA Voyara 1.0.8), and JA Vital BAND-1 Worth fixing (.btn-white kept but undeclared)",
+  "fence": "No threshold or template change; only the JA Vital contract gains a keepWhole entry",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/template-design-system-readiness.test.mjs"]
+  }
+}

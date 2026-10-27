@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-kinetic/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_kinetic",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-kinetic",
+    "id": "quickstart/ja-kinetic/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.3"
+    },
+    "template": "ja_kinetic",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-kinetic-j6-webroot-1.0.2.tar.gz",
+        "bytes": 68610182,
+        "sha256": "da6887d420627bbb03d77ccfa5984be7edb2b27d2e9c051779ffda372d1c743f"
+      },
+      "database": {
+        "file": "ja-kinetic-j6-database-1.0.2.sql.gz",
+        "bytes": 1018276,
+        "sha256": "23759a7cd33713bef184d53a97ecd969092b32c144ccc61d0491e6da9574e1f5"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-09-26T17:19:49.005Z",
+    "builtFrom": {
+      "site": "ja-kinetic-j6-dev",
+      "tag": "quickstart/ja-kinetic/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-kinetic/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

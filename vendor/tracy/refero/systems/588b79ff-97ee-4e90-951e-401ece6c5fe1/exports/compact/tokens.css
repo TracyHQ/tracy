@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-aubergine-ink: #321929;
+  --color-warm-linen: #e0dddf;
+  --color-soft-white: #ffffff;
+  --color-charcoal: #1d1d1f;
+  --color-pure-black: #000000;
+  --color-smoke-gray: #636363;
+  --color-ink: #141414;
+  --color-stone: #6f6d6b;
+  --color-pale-mist: #f0f0f0;
+
+  /* Typography — Font Families */
+  --font-neue-haas-grotesk: 'Neue Haas Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bongusta: 'Bongusta', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

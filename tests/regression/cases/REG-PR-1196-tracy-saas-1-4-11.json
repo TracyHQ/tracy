@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1196-tracy-saas-1-4-11",
+  "kind": "feat",
+  "title": "Tracy SaaS 1.4.12, Tracy Business 1.7.16 and Tracy Base 0.5.1 ship sharp (/_image answers 200) and SaaS ships the design-system slot reader; the SaaS call-to-action eyebrow reads under every system (bandText)",
+  "pr": 1196,
+  "area": "design/slot",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: for packages/cms/tracy-emdash-theme-{saas,business,base}: read package.json (version, dependencies.sharp), template.config.json, Dockerfile, docs/generated/inventory.json and src/lib/ds-slot.ts.",
+    "S2: node tools/distribution.mjs pack qa.contract.json <tmp> in each theme while it is at its release version; read artifactHash. Read apps/tracy-web/src/lib/template-profiles.json rows.",
+    "S3: loadContract() of emdash-tracy-saas, emdash-tracy-business, emdash-base; contractFor()/versionKeyOf() of apps/tracy-web/src/lib/ds-slot.js for tracy-saas/emdash-0.x 1.4.10, 1.4.11, 1.4.12.",
+    "S4: emdash-tracy-saas bandText['.cta--card'].text; node --test test/slot.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S5: node --test tests/ds-slot.test.mjs (cwd the SaaS theme), scripts/test/emdash-templates-sharp.test.mjs, test/design-system-door.test.mjs (cwd apps/tracy-web).",
+    "All of it: node tests/regression/scripts/REG-PR-1196-tracy-saas-1-4-11.mjs"
+  ],
+  "expect": [
+    "S1: SaaS 1.4.13, Business 1.7.18, Base 0.5.3 (1.4.12 / 1.7.16 / 0.5.1 at #1196; 0.5.2 adds readiness rules only, #1238; 1.4.13 / 1.7.17 / 0.5.3 carry the personalize tool of #1297; 1.7.18 adds the two-mode slot of #1321) in all four places; sharp listed; each carries the reader.",
+    "S2: SaaS sha256:73a9b9bc…426418 (1.4.13), Business sha256:9ded02e6…bf2d87 (1.7.18, the tree's pack until its release is built; 1.7.17 packed to sha256:28ab2a66…3abb7), Base sha256:1e61c312…acdaba9 (0.5.3) (the releases built and verified on 13/10/2026, TCH #1297)",
+    "S3: all ready; SaaS [1.4.12, 1.4.13], Business [1.7.6, 1.7.18], Base [0.5.0, 0.5.3]; SaaS 1.4.12 offered, 1.4.10 and 1.4.11 TEMPLATE_NEEDS_UPDATE need 1.4.12.",
+    "S4: [\".cta-eyebrow\"]; slot.test.mjs passes.",
+    "S5: the three suites pass with 0 failures."
+  ],
+  "selectors": {
+    "theme": "packages/cms/tracy-emdash-theme-saas",
+    "contract": "packages/design/tracy-ds-slot/templates/emdash-tracy-saas.json (bandText, minVersion, maxVersion)",
+    "emitter": "packages/design/tracy-ds-slot/src/emit.mjs bandTextRules"
+  },
+  "evidence": "tasks/evidence/tracy-saas-1-4-11-2026-10-12/README.md (1.4.11 build and 18/18 measure; the sharp rebuild of all three: /_image 200 webp on the new releases, 500 MissingSharp on the live ones, slot flow per release).",
+  "fence": "No stand, no model, no network. Nothing is published here: ~/tracy-bench-work/RELEASE-EMDASH-SHARP.sh is for a person to run.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1196-tracy-saas-1-4-11.mjs"],
+    "needs": [],
+    "timeout_s": 900
+  }
+}

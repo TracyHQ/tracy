@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-boot-graph-happy",
+  "itemIds": ["gate:boot-graph"],
+  "requirement": "Gate boot-graph (scripts/check-boot-graph.ts) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/check-boot-graph.ts",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/check-boot-graph.ts; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:282", "scripts/check-boot-graph.ts:30"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": ["node", "tsx (node_modules)", "heavy-gate:boot-graph"],
+  "assertionIds": ["static.boot-graph.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "boot-graph",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "boot-graph"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/check-boot-graph.ts",
+  "mode": "heavy",
+  "mutations": []
+}

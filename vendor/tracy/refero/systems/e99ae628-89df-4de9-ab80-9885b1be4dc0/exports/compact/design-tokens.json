@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, structural rules, image borders, heading fills — the dominant ink that draws the entire page"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, reverse text on dark blocks — the surface that lets the black type speak"
+    },
+    "charcoal-plate": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Charcoal Plate — Dark surface blocks and image backgrounds where white reverse type sits — a softer alternative to pure black for large dark areas"
+    },
+    "silver-hairline": {
+      "$value": "#b0b0b0",
+      "$type": "color",
+      "$description": "Silver Hairline — Subtle dividers and muted secondary links — a quiet mid-gray that recedes behind the black ink without disappearing"
+    }
+  },
+  "font": {
+    "haas-grotesk-ds-pro": {
+      "$value": "Haas Grotesk DS Pro",
+      "$type": "fontFamily",
+      "$description": "Display and section wordmarks — used at 48–288px with extremely tight leading (0.77–0.80) so multi-line display type nearly touches. The DS variant's compressed proportions are what let 288px headlines fit within a single viewport without breaking rhythm. Substitute: Neue Haas Grotesk Display, or Akzidenz-Grotesk Pro Medium"
+    },
+    "haas-grotesk-tx-pro": {
+      "$value": "Haas Grotesk TX Pro",
+      "$type": "fontFamily",
+      "$description": "Body copy, captions, image labels, navigation links, UI text. Weight 400 for body, weight 500 for navigation labels and emphasis. The 36px size at line-height 0.90 creates a tight subheading that bridges body and display scales. Substitute: Neue Haas Grotesk Text, or Inter"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://atlason.com",
+      "siteName": "Altason",
+      "extractedAt": "2026-06-03T21:20:41.927Z",
+      "variant": "compact"
+    }
+  }
+}

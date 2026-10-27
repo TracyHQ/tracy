@@ -1,0 +1,79 @@
+{
+  "color": {
+    "newsprint-cream": {
+      "$value": "#f7f4ed",
+      "$type": "color",
+      "$description": "Newsprint Cream — Page canvas, hero background, section backgrounds — the warm off-white that makes the entire interface feel printed rather than digital"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated panels, form inputs, and any surface that needs to lift off the cream canvas"
+    },
+    "ink": {
+      "$value": "#242424",
+      "$type": "color",
+      "$description": "Ink — Primary text, body copy, links, heading text — slightly warmer than pure black, sits comfortably on cream"
+    },
+    "body-gray": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Body Gray — Secondary text and default body color where slightly lighter than Ink is needed without losing contrast"
+    },
+    "button-black": {
+      "$value": "#191919",
+      "$type": "color",
+      "$description": "Button Black — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "marginalia-gray": {
+      "$value": "#6b6b6b",
+      "$type": "color",
+      "$description": "Marginalia Gray — Supporting neutral for secondary UI, dividers, and muted labels."
+    }
+  },
+  "font": {
+    "medium-content-sans-serif-font": {
+      "$value": "medium-content-sans-serif-font",
+      "$type": "fontFamily",
+      "$description": "medium-content-sans-serif-font — detected in extracted data but not described by AI"
+    },
+    "gt-super": {
+      "$value": "GT Super",
+      "$type": "fontFamily",
+      "$description": "Display headlines and hero — a transitional book serif at extreme scale with tight tracking and 0.83 line-height. The choice to use weight 400 (not bold) at 120px is the signature: the letterforms do the work, not the weight. The negative tracking pulls the optical gaps closed, making 'Human stories & ideas' read as a single typographic block."
+    },
+    "shne": {
+      "$value": "Söhne",
+      "$type": "fontFamily",
+      "$description": "UI sans-serif for navigation, buttons, subheadings, and small headings. The 13–14px range handles nav and button labels; 20–22px covers subheadings and secondary hero text. Clean grotesque with humanist proportions — readable at small sizes, unobtrusive at large."
+    },
+    "charter-georgia-stack": {
+      "$value": "Charter / Georgia stack",
+      "$type": "fontFamily",
+      "$description": "Body content serif for reading view — the long-form article font. Set at 16px with tight 1.2 line-height, optimized for the column width of Medium's reader."
+    },
+    "shne-extended": {
+      "$value": "Söhne (extended)",
+      "$type": "fontFamily",
+      "$description": "Body sans-serif for non-reading contexts — descriptions, cards, inline content. Matches the content serif's metrics so the two can coexist at the same size."
+    },
+    "sohne": {
+      "$value": "sohne",
+      "$type": "fontFamily",
+      "$description": "sohne — detected in extracted data but not described by AI"
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://medium.com",
+      "siteName": "Medium",
+      "extractedAt": "2026-06-03T15:18:59.835Z",
+      "variant": "compact"
+    }
+  }
+}

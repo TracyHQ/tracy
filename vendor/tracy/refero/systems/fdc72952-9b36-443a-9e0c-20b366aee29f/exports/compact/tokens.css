@@ -1,0 +1,18 @@
+:root {
+  /* Colors */
+  --color-forest-ink: #004737;
+  --color-mint-pulse: #56f09f;
+  --color-mint-mist: #d4ffe8;
+  --color-cream-canvas: #fffbec;
+  --color-deep-loam: #032019;
+  --color-sage-whisper: #99b5af;
+  --color-stone-mist: #ccdad7;
+  --color-bone: #faf2d5;
+  --color-charcoal: #222222;
+  --color-iris-spark: #8f37ff;
+
+  /* Typography — Font Families */
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roobert: 'roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

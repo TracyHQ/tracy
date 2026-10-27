@@ -1,0 +1,49 @@
+// ------------------------------------
+// FORMS
+// ------------------------------------
+
+// Extend style in base
+// --------------------
+@import "../../../plugins/system/t4/themes/base/scss/_forms";
+
+// 
+// Button
+// -----------------------------------
+.btn {
+	&.btn-outline-primary:hover {
+		color: $white !important;
+	}
+
+	&.btn-outline-white:hover {
+		color: $gray-900 !important;
+	}
+}
+
+// 
+// Textual form controls
+// -----------------------------------
+.form-control {
+
+}
+
+.control-label {  
+  .form-control-feedback {
+  }
+}
+
+// 
+// Input group
+// ---------------------------
+.input-group-addon {
+  > span {
+  }
+}
+
+
+// 
+// Btn Toolbar
+// --------------------------
+.btn-toolbar {
+  .btn-group + .btn-group {
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-PR-960-tracy-assertion-service-happy",
+  "itemIds": ["regression:REG-PR-960-tracy-assertion-service"],
+  "requirement": "dsh-passwords 2.7.7: the password gate provides tracyAssertion again, so the tabs plugin records a turn's moment and the tools plugin signs the person who typed",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-960-tracy-assertion-service.json",
+    "ref": "PR #960 (fix); fix evidence: none recorded",
+    "invariant": "S2: 0 failures, 0 skipped. 'a signed assertion lives sixty seconds and names the lower-cased address' passes. 'an address that is not one is never signed' passes. 'what this gate signs, tracy-web accepts; another secret or an expired one it refuses' passes: tracy-web's own verifyActor accepts the token. 'the service is provided as `tracyAssertion` when the fleet secret is set, and not at all when it is not' passes. 'the plugin entry provides it from the fleet secret, outside the \"gateway configured\" branch' passes.",
+    "productSources": [
+      "apps/tracy-web/src/lib/actor.js:10",
+      "vendor/tracy/dsh-passwords/src/plugin.ts:25",
+      "vendor/tracy/dsh-passwords/src/tracy/assertion.ts:31"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a signed assertion lives sixty seconds and names the lower-cased address",
+    "an address that is not one is never signed",
+    "what this gate signs, tracy-web accepts",
+    "the service is provided as `tracyAssertion` when the fleet secret is set",
+    "the plugin entry provides it from the fleet secret"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-960-tracy-assertion-service"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "vendor/tracy/dsh-passwords", "dsh-passwords"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-960-tracy-assertion-service",
+    "pr": 960,
+    "kind": "fix",
+    "area": "dsh-passwords/assertion",
+    "file": "tests/regression/cases/REG-PR-960-tracy-assertion-service.json"
+  },
+  "command": ["node", "--import", "tsx", "--test", "--test-reporter=tap", "test/tracy/assertion.test.ts"],
+  "cwd": "vendor/tracy/dsh-passwords",
+  "needs": [],
+  "tests": [
+    "a signed assertion lives sixty seconds and names the lower-cased address",
+    "an address that is not one is never signed",
+    "what this gate signs, tracy-web accepts",
+    "the service is provided as `tracyAssertion` when the fleet secret is set",
+    "the plugin entry provides it from the fleet secret"
+  ],
+  "timeoutS": 600
+}

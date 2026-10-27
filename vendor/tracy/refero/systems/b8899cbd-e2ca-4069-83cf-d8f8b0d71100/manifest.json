@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+  "status": "complete",
+  "name": "BMW.com",
+  "url": "https://styles.refero.design/style/b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+  "sourceWebsite": "https://bmw.com",
+  "extractedAt": "2026-06-03T15:25:48.551Z",
+  "capturedAt": "2026-10-08T05:16:38.556886+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Gallery wall for sculpted metal — a typographic frame where the cars are the only color.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b7a1a713-82ac-4e4c-9b6e-3b8f1ffeb16c.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/21f82e54-f211-43de-aaa5-2c61a217066a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4d030400-17fe-488e-be06-5d0f3890e65a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/9f33f45c-f2c4-4528-9d36-a11adc9ccfce.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/d4fa4388-be5d-4a85-97c7-e0b5340fc7dc.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0941d4020038c9b62056872adfaccd1d38994cb8339783a725d4372c8b64289f",
+      "bytes": 15987
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c6a1e32299f5798c9b0eaf202eea537fcfda698d2ea27d0c301b6525b327549c",
+      "bytes": 114690
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bef00fb276e0ac52016ea4dc35c2b69fb7085f4b8d4bd5ca3f2359715df5bc79",
+      "bytes": 13618
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a0cc9de2f1495ad928c9a3a1c74cea7053db23385d2c3393efee070c7e736235",
+      "bytes": 5505
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3e49184ba99550af36abec7263974a704e7c836fc59d958afc039dae023648e8",
+      "bytes": 9904
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c35335bc5ce65f4fa97183eb1f0bd8b39c2279906d11689d2193c3daa592ca01",
+      "bytes": 1838
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "fd2afbc79c24ae45eb6a41c70c2f14147d320bf930f8009e6b4fabe02f4132bf",
+      "bytes": 448
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "eee0e22d0f0767c8df4a155bfcb0ddff6cae2d37eaad8287d6049432e874064c",
+      "bytes": 465
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "62baa2f7fe897c68738f4232137b90622311b7d65d4f6401163c40cca9461706",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "78f5a4f8f3a256450eaf6f7a42f8bb9005b8210661230c636f9deba40a872406",
+      "bytes": 38070
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7ba397cde30fa7597c801e6e40f88c87a4e852f3af6e75e822f36f7bfb717af1",
+      "bytes": 19631
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3a4cc2922ddb9b322a5953e08bf0ed719d06b1ab11d50fa4ca3c25e72619b793",
+      "bytes": 23309
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3aee5683d71d1e9210444011e6485bc76c9346e5af43c3b174e80ab84eb077d7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "195773e31c913babfe5f703d6714d12ade960551140794ac1df9f1911fa5d22a",
+      "bytes": 863
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3c4d5ab569c10666f543ba3c06d712f7fd59765e94a839c1f935d166379ff372",
+      "bytes": 1392
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "00ce9181-45be-4340-b6a6-75a4d5d60cef",
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "80164adf-a898-4f7c-bce7-12f3f62e1649",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+    "c9c5be5a-aaa1-4338-9681-8378d2e24fbd",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-signal-orange: #e4822e;
+  --color-olive-ink: #4f503e;
+  --color-oxblood: #b13225;
+  --color-burnt-sienna: #c97f40;
+  --color-near-black: #081618;
+  --color-pearl: #feccc0;
+  --color-sage-mist: #99aa91;
+  --color-carbon: #000000;
+  --color-ink: #161616;
+  --color-charcoal: #111111;
+  --color-ash: #8d8d8d;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-helvetica-lt-pro: 'Helvetica LT Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,460 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, footer backgrounds, and black text on white pill controls"
+    },
+    "charcoal": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Charcoal — Dark product-link and secondary surface backgrounds"
+    },
+    "ink": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink — Filled add-to-bag controls and raised dark UI surfaces"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Body copy, white outlined actions, and inverted pill action fills"
+    },
+    "ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash — Muted supporting body copy"
+    },
+    "desert-butter": {
+      "$value": "#f5e78d",
+      "$type": "color",
+      "$description": "Desert Butter — Headings, navigation, hairline borders, badges, and editorial links — the warm yellow makes the black interface read like a night-lit printed zine"
+    }
+  },
+  "font": {
+    "rom": {
+      "$value": "ROM",
+      "$type": "fontFamily",
+      "$description": "Core compact sans for navigation, body copy, buttons, product metadata, links, footer content, and uppercase utility labels. Its small, dense letterforms make the store language feel typographic rather than interface-default."
+    },
+    "gaisyr": {
+      "$value": "Gaisyr",
+      "$type": "fontFamily",
+      "$description": "Editorial serif for yellow section headings, compact quotes, and collection links. The mix of sturdy 700 weight and loose tracking makes short phrases feel like printed pull quotes rather than conventional ecommerce headings."
+    },
+    "abc-rom-extended": {
+      "$value": "ABC ROM Extended",
+      "$type": "fontFamily",
+      "$description": "Ultra-compact extended sans reserved for the uppercase announcement marquee."
+    },
+    "rom-extended": {
+      "$value": "ROM Extended",
+      "$type": "fontFamily",
+      "$description": "Wide display sans for product-feature names and large promotional statements. The 48px, weight-700 display treatment is the largest measured type and stays blunt, uppercase, and untracked."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "One-off long-form supporting text treatment."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "ABC ROM Extended",
+        "fontSize": "10px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "10px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 10px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.18em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 10px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0.12em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 10px"
+    },
+    "xs-5": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "12px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-5 at 12px"
+    },
+    "xs-6": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "12px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-6 at 12px"
+    },
+    "xs-7": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-7 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "sm-7": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.12em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-7 at 14px"
+    },
+    "sm-8": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.12em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-8 at 14px"
+    },
+    "sm-9": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-9 at 14px"
+    },
+    "sm-10": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-10 at 14px"
+    },
+    "sm-11": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-11 at 14px"
+    },
+    "sm-12": {
+      "$value": {
+        "fontFamily": "GTStandard-M",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-12 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "20px",
+        "fontWeight": 700,
+        "lineHeight": 1.1,
+        "letterSpacing": "0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Gaisyr",
+        "fontSize": "20px",
+        "fontWeight": 700,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "ROM",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "ROM Extended",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "ROM Extended",
+        "fontSize": "48px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "100": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Spacing 100px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "2px",
+      "$type": "dimension",
+      "$description": "Border radius sm"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "full": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgb(255, 255, 255) 0px 0px 0px 1px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    }
+  },
+  "surface": {
+    "void-canvas": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 0: Page background, footer, and deepest full-bleed section field."
+    },
+    "charcoal-surface": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Surface level 1: Dark link and product surface layer."
+    },
+    "ink-control": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Surface level 2: Filled purchase controls and raised dark UI."
+    },
+    "white-inversion": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 3: Inverted pill links and light text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bedouinsdaughter.com",
+      "siteName": "Bedouin's Daughter",
+      "extractedAt": "2026-09-20T19:29:36.676Z",
+      "variant": "extended"
+    }
+  }
+}

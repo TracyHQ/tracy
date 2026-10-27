@@ -1,0 +1,382 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-impact/j6/1.0.5",
+  "baseHash": "5d812addd95b6fc506f852fca1dd1330a6c9f69332a16133c6b4c30195ecea27",
+  "baseFiles": {
+    "manifest.json": "046389edb87f840bd5cc9bfd9a87dd2da37ddcfd0c7b93598eea0e25c33a7e73",
+    "content-map.json": "bb5d96e1c3b6e2515211e307b11ac5d993b49b08083c9135aea35f313fa083d2",
+    "presentation-lock.json": "3ab250b85358601b96aa2e14d3846f92d9545f64d5ff5d68d7f569f6367a0b5d"
+  },
+  "inputs": {},
+  "decisionsHash": "9e0498b551efd035240232f6d0165eabf91aee7d4f46f91f599708132760fdd2",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-111",
+      "identity": {
+        "path": "pages/j-page/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Page\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-112",
+      "identity": {
+        "path": "pages/j-page/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Page\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-114",
+      "identity": {
+        "path": "pages/j-page/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Page\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-117",
+      "identity": {
+        "path": "pages/j-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"J!Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-118",
+      "identity": {
+        "path": "pages/j-content/author-listting",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Author listting",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-136",
+      "identity": {
+        "path": "pages/j-content/blog-detail",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blog Detail",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J!Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "About",
+      "where": "mainmenu/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Donations",
+      "where": "mainmenu/donations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Events",
+      "where": "mainmenu/events",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-105",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "User",
+      "where": "mainmenu/pages/user",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Login Form",
+      "where": "mainmenu/pages/user/login-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Registration Form",
+      "where": "mainmenu/pages/user/registration-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "User Profile",
+      "where": "mainmenu/pages/user/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/j-page/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "Blog",
+      "where": "mainmenu/category-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-119",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "Help & FAQs",
+      "where": "need-help/help-faqs",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Your account",
+      "where": "need-help/your-account",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-122",
+      "label": "Track your order",
+      "where": "need-help/track-your-order",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "Contact info",
+      "where": "need-help/contact-info",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-124",
+      "label": "Store Locations",
+      "where": "guide/store-locations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Registry",
+      "where": "guide/registry",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "Blog",
+      "where": "guide/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Shipping info",
+      "where": "guide/shipping-info",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "About us",
+      "where": "get-to-know-us/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Term of service",
+      "where": "get-to-know-us/term-of-service",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "Careers",
+      "where": "get-to-know-us/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Affiliates",
+      "where": "get-to-know-us/affiliates",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Twitter",
+      "where": "follow-us/twitter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Facebook",
+      "where": "follow-us/facebook",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "Instagram",
+      "where": "follow-us/instagram",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Threads",
+      "where": "follow-us/threads",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Category Blog",
+      "where": "mainmenu/pages/j-content/category-blog",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:9: a branch hide may not take real content along"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 15 entries stay"
+    },
+    {
+      "key": "module-118",
+      "label": "Get to know us",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders get-to-know-us: 4 entries stay"
+    },
+    {
+      "key": "module-119",
+      "label": "Guide",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders guide: 4 entries stay"
+    },
+    {
+      "key": "module-120",
+      "label": "Need help",
+      "where": "mod_menu@footnav-4",
+      "rule": "keep.default",
+      "reason": "renders need-help: 4 entries stay"
+    },
+    {
+      "key": "module-121",
+      "label": "Follow us",
+      "where": "mod_menu@footnav-5",
+      "rule": "keep.default",
+      "reason": "renders follow-us: 4 entries stay"
+    },
+    {
+      "key": "module-154",
+      "label": "Off Canvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 15 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-110",
+      "label": "J!Page",
+      "where": "mainmenu/pages/j-page",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-113, which stays"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/j-page/smart-search",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_finder (view=search) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "J!Content",
+      "where": "mainmenu/pages/j-content",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-154, which stays"
+    }
+  ],
+  "counts": {
+    "menuItems": 6,
+    "modules": 0,
+    "kept": 35,
+    "unresolved": 3
+  }
+}

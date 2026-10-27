@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/popular-tags",
+  "version": "0.1.0",
+  "title": "Popular tags",
+  "category": "design",
+  "icon": "tag",
+  "description": "Top-N tags ordered by post count DESC, then name ASC — the source's own sort on every tag rail it draws (`category/blog.php` browse-strip tags, `category/thumbs.php` sidebar tags, `archive/default.php` tags rail: all `ORDER BY cnt DESC, title ASC`). Core's `wp:tag-cloud` block has no ordering attribute (`wp_generate_tag_cloud()` orders by name); this reads `get_tags()` directly instead.",
+  "textdomain": "wp-ja-kinetic",
+  "attributes": {
+    "numberOfTags": {
+      "type": "number",
+      "default": 10
+    },
+    "className": {
+      "type": "string",
+      "default": ""
+    },
+    "linkClassName": {
+      "type": "string",
+      "default": "tag-cloud-link",
+      "description": "The source uses a different per-context pill class on every tag rail it draws (e.g. `hxcat-chip` on the thumbs sidebar) — never its own generic name."
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes-pending",
+  "itemIds": ["regression:REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes"],
+  "requirement": "JA Kinetic wp7 1.1.6: sticky header, dimmed drawer backdrop, newsletter focus ring, back-to-top mark and the other measured differences from the source are gone on every page",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes.json",
+    "ref": "PR #942 (fix); fix evidence: Sweeps of 05/10/2026 against the local Joomla source: baseline (1.0.3 pack + theme 1.1.5) 6/10 checks pass; final on the restored 1.0.4 pack with theme 1.1.6 including the Contact change merged from develop (sha256 b603b4f0) 10/10 pass, 0 defects (tasks/ja-kinetic-wp7/release/fix-measure.json)",
+    "invariant": "site-sweep: fix-measure.json written, 10/10 checks pass (overflow, scheme, background, header, chips, fixed-widgets, icons, forms, text, first-interaction), 0 defects on 30 routes at 320, 390, 768, 1024, 1180 and 1440px in light and dark; the only not-measured cause is touch-control-not-found (2 cases), recorded in review.config.json sweep.accept with a hand measurement. The header bar stays fixed at the top on scroll; the open drawer dims the page behind it; the newsletter field shows the source's outline and ring on focus; the back-to-top mark has the source's size; the header band colour in dark on the Blueprint and Signal homes equals the source's. measure115: 9/9 checks pass (author, features, overflow, mega, tablet, footer, eyebrow, comments, timeline404). The Contact page of the demo (no tracy_site_identity / tracy_contact_to) shows no mailbox and its form answers 'An error occurred while sending the email.' (decision D-59); the sweep reports no group for it.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes",
+    "pr": 942,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-kinetic",
+    "file": "tests/regression/cases/REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

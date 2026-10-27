@@ -1,0 +1,58 @@
+{
+  "name": "@tracy/dsh-site-build-wordpress",
+  "version": "0.2.0",
+  "description": "Build a NEW WordPress site from a design inspiration: the WordPress Build tab on better-sidebar, six stages (check · theme · style · copy · seed · shot) run through the seat door in the name of the person who pressed, and one agent tool, tracy_site_build_wordpress. Everything shared with the Joomla plugin is @tracy/site-build-core, bundled in.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "words",
+    "cordis.patch.yml",
+    "questions.json"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs && node scripts/build-host.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/site/tracy-site-build-wordpress"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "dsh-better-sidebar"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "dsh-better-sidebar": ">=0.24.1-tracy.40 <0.24.1"
+  },
+  "peerDependenciesMeta": {
+    "dsh-better-sidebar": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tracy/site-build-core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@types/react": "^19.2.0",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@tracy/wordpress-theme": "workspace:^"
+  }
+}

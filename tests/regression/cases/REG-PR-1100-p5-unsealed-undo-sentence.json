@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1100-p5-unsealed-undo-sentence",
+  "kind": "fix",
+  "title": "A turn whose opening seal did not land in time says its start was not recorded, not that it is mixed with another request",
+  "pr": 1100,
+  "area": "site-changes/turn-undo",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/ui/tracy-chat-input/test/turn-card.test.mjs",
+    "S2: Record the exit code and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 and every test in run.tests reports ok.",
+    "reasonWords({code: 'SHARED_CHANGE', cause: 'unsealed'}) reads \"When this request started, Tracy couldn't record the site in time, so it can't tell this request's file changes apart from earlier ones.\" and the card is blocked with Ask Tracy to revert.",
+    "reasonWords for SHARED_CHANGE with cause apply-id or concurrent still reads \"This request's changes are mixed with another request's, so it can't be undone on its own.\""
+  ],
+  "selectors": {
+    "words": "reasonWords in packages/core/tracy-core/src/turn-undo/index.mjs",
+    "key": "undo.blocked.unsealed in tracy-chat-input and tracy-site-tabs strings.ts"
+  },
+  "evidence": "Local stand 09/10/2026, dskeepjo.tracy.test turn T4b: Undo refused with SHARED_CHANGE cause unsealed, and the card said \"This request's changes are mixed with another request's\" although no other request was on the site.",
+  "fence": "the blocked sentence follows the server's SHARED_CHANGE cause: unsealed has its own sentence",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-chat-input/test/turn-card.test.mjs"],
+    "tests": [
+      "a change shared with another request: one sentence for both causes, and Ask Tracy to revert",
+      "a turn whose start was not recorded in time says so, not that another request is mixed in"
+    ]
+  }
+}

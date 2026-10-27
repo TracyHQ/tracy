@@ -1,0 +1,27 @@
+@theme {
+  /* Colors */
+  --color-parchment-canvas: #f7f7f2;
+  --color-pure-surface: #ffffff;
+  --color-midnight-ink: #0e0f0c;
+  --color-deep-charcoal: #292929;
+  --color-carbon: #454745;
+  --color-slate: #72726e;
+  --color-graphite: #818179;
+  --color-ash-border: #e3e3e3;
+  --color-stone-border: #d5d5d2;
+  --color-fog-surface: #eaebe5;
+  --color-olive-press: #b2c248;
+  --color-forest-cta: #5b6f00;
+  --color-fern-border: #788c15;
+  --color-sprout-tint: #e5eacd;
+  --color-twitter-blue: #1d9bf0;
+  --color-link-cobalt: #006fd6;
+  --color-ember-fill: #e95d3d;
+  --color-ember-border: #bd4a30;
+
+  /* Typography */
+  --font-melange: 'Melange', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-quadrant: 'Quadrant', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system-system-ui: '-apple-system / system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui: 'system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

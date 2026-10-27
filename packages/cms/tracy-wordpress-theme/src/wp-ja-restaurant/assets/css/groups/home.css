@@ -1,0 +1,640 @@
+/* Group "home": the sections of the home page that the carried Joomla rules do not draw on WordPress markup
+   (slideshow, hero, features-intro 1 and 2, gallery slide, subscribe form, home main body).
+   The carried rules live in css/source/*.css; only wrappers, core block defaults and the carousel layout are here. */
+
+/* ---------- Shared: core blocks inside the source markup ---------- */
+.acm-slideshow figure,
+.acm-hero figure,
+.acm-features figure,
+.gallery-slide figure,
+.acm-testimonials figure,
+.t3-section-module figure,
+.t3-section-module > .jr-section-bg {
+  margin: 0;
+  border: 0; /* the template's own `figure { border; background }` are for article pictures */
+  background: none;
+}
+.t3-section-module > .t3-section-inner {
+  margin-block: 0; /* it follows the absolute background figure, so the block gap would count */
+}
+.tracy-motion-track > .item {
+  margin-block: 0;
+}
+.acm-slideshow img,
+.acm-hero img,
+.acm-features img,
+.gallery-slide img,
+.acm-testimonials img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.acm-hero .hero-img img {
+  display: inline;
+  vertical-align: top;
+}
+.acm-hero p,
+.acm-slideshow p,
+.acm-features .price p,
+.gallery-slide p,
+.acm-testimonials p.testimonial-text {
+  margin-top: 0;
+}
+
+/* ---------- Slideshow (owl in the source, the motion carousel here) ---------- */
+.acm-slideshow .tracy-motion-carousel {
+  position: relative;
+  overflow: hidden;
+}
+.acm-slideshow .tracy-motion-track,
+.gallery-slide .tracy-motion-track,
+.acm-testimonials .tracy-motion-track {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.acm-slideshow .item {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+.acm-slideshow .item a {
+  display: block;
+  color: inherit;
+}
+.acm-slideshow .item .img-bg img {
+  width: 100%;
+  object-fit: cover;
+}
+.acm-slideshow .item .slide-content {
+  margin: 0;
+}
+.acm-slideshow .item .slide-title {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+}
+.acm-slideshow .tracy-motion-carousel > * {
+  margin-block: 0;
+}
+.acm-slideshow .tracy-motion-nav button,
+.acm-slideshow .tracy-motion-dot {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.acm-slideshow .tracy-motion-nav button {
+  position: absolute;
+  top: 50%;
+  left: -80px;
+  z-index: 2;
+  width: 80px;
+  height: 80px;
+  margin: -40px 0 0;
+  padding: 0;
+  border-radius: var(--ds-btn-radius, 0);
+  background: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+  font-size: 22px;
+  line-height: 80px;
+  text-align: center;
+  opacity: 0.6;
+  transition: all 500ms;
+}
+.acm-slideshow .tracy-motion-nav button.tracy-motion-next {
+  right: -80px;
+  left: auto;
+}
+.acm-slideshow .tracy-motion-nav button::before {
+  font-family: FontAwesome;
+  content: "\f177";
+}
+.acm-slideshow .tracy-motion-nav button.tracy-motion-next::before {
+  content: "\f178";
+}
+.acm-slideshow .tracy-motion-carousel:hover .tracy-motion-nav button,
+.acm-slideshow .tracy-motion-nav button:focus-visible {
+  left: 0;
+}
+.acm-slideshow .tracy-motion-carousel:hover .tracy-motion-nav button.tracy-motion-next,
+.acm-slideshow .tracy-motion-nav button.tracy-motion-next:focus-visible {
+  right: 0;
+  left: auto;
+}
+.acm-slideshow .tracy-motion-nav button:hover,
+.acm-slideshow .tracy-motion-nav button:focus-visible {
+  opacity: 0.8;
+}
+.acm-slideshow .tracy-motion-nav button:focus-visible,
+.acm-slideshow .tracy-motion-dot:focus-visible {
+  outline: 1px solid var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+  outline-offset: -3px;
+}
+.acm-slideshow .tracy-motion-dots {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 50px;
+  box-sizing: border-box;
+  counter-reset: jr-dot;
+}
+.acm-slideshow .tracy-motion-dot {
+  min-width: 0;
+  margin: 15px 7.5px;
+  padding: 2px 10px;
+  border-radius: var(--ds-btn-radius, 0);
+  /* owl.theme's inactive number: slate grey #869791 with white text, half transparent over the photo */
+  background: var(--ds-c-disabled-bg, #869791);
+  color: #ffffff; /* ds-keep: white number on owl.theme's half-transparent grey chip over the slideshow photo */
+  font-size: 12px;
+  line-height: 22.5px;
+  opacity: 0.5;
+}
+.acm-slideshow .tracy-motion-dot::before {
+  counter-increment: jr-dot;
+  content: counter(jr-dot);
+}
+.acm-slideshow .tracy-motion-dot[aria-current] {
+  background: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+  opacity: 1;
+}
+@media (min-width: 992px) {
+  .acm-slideshow .tracy-motion-dots {
+    padding-right: 145px;
+  }
+}
+@media (max-width: 767px) {
+  .acm-slideshow .tracy-motion-nav {
+    display: none;
+  }
+  .acm-slideshow .tracy-motion-dots {
+    bottom: 0;
+    padding-right: 15px;
+  }
+  .acm-slideshow .tracy-motion-dot {
+    min-width: 40px;
+    line-height: 36px;
+  }
+}
+
+/* ---------- Hero ---------- */
+.acm-hero .hero-img {
+  margin: 0;
+}
+
+/* ---------- Features intro 1 and 2: the stepped layout is set by js/groups/home.js (odd / even classes, picture order) ---------- */
+.acm-features .row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.acm-features p.features-btn {
+  margin: 0;
+}
+.acm-features.style-2 .features-item {
+  position: relative;
+}
+.acm-features.style-2 .price {
+  z-index: 1;
+}
+.acm-features.style-2 .price p {
+  margin: 0;
+}
+/* The source's "h3 + span" rules, for the short line drawn as a paragraph. */
+.acm-features.style-2 h3 + p.features-short {
+  position: relative;
+  margin: 0;
+  color: var(--ds-c-fg, light-dark(#3a352f, #e9e4d6));
+  font-size: 14px;
+  opacity: 0.5;
+}
+.acm-features.style-2 h3 + p.features-short::after {
+  content: "";
+  position: absolute;
+  bottom: -20px; /* the source's -25px is measured from its inline span (19px tall) inside a 30px line; this box is the whole 30px line */
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: url("../../img/decor.png") no-repeat bottom center;
+  text-align: center;
+}
+@media (max-width: 1199px) {
+  .acm-features.style-2 h3 + p.features-short::after {
+    display: none;
+  }
+}
+
+/* ---------- Gallery slide (owl, 6 / 4 / 3 / 2 / 1 to a view in the source) ---------- */
+.gallery-slide .tracy-motion-carousel {
+  overflow: hidden;
+}
+.gallery-slide .item {
+  flex: 0 0 16.6667%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+@media (max-width: 1199px) {
+  .gallery-slide .item {
+    flex-basis: 25%;
+  }
+}
+@media (max-width: 979px) {
+  .gallery-slide .item {
+    flex-basis: 33.3333%;
+  }
+}
+@media (max-width: 768px) {
+  .gallery-slide .item {
+    flex-basis: 50%;
+  }
+}
+@media (max-width: 479px) {
+  .gallery-slide .item {
+    flex-basis: 100%;
+  }
+}
+.gallery-slide .item a {
+  display: block;
+}
+.gallery-slide .ja-gallery-list .btn-play {
+  display: block;
+}
+.gallery-slide .ja-gallery-list .btn-play i,
+.gallery-slide .ja-gallery-list .btn-play p {
+  display: inline-block;
+  margin: 0;
+}
+
+/* ---------- Subscribe form (a core/html block on WordPress) ---------- */
+.jr-subscribe-form {
+  margin: 0;
+}
+.jr-subscribe-form .acym_form {
+  border-collapse: collapse;
+}
+.jr-subscribe-form .acym_form td {
+  padding: 0;
+}
+.acym_fulldiv .acym_module_form .acym_introtext {
+  margin-top: 0;
+}
+.acym_fulldiv .acym_module_form .subbutton {
+  cursor: pointer;
+}
+
+/* ---------- Home main body ---------- */
+.t3-mainbody .t3-content::after,
+.t3-mainbody .article-aside::after,
+.t3-mainbody .article-intro::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.blog-featured .page-header h1 {
+  margin-top: 0;
+  letter-spacing: 6px;
+  line-height: 1;
+}
+/* the source tightens every page title to 3px on a phone (template.css, max-width 767px); this rule must not undo it */
+@media (max-width: 767px) {
+  .blog-featured .page-header h1 {
+    letter-spacing: 3px;
+  }
+}
+.blog-featured figure {
+  border: 0;
+  background: none;
+}
+.blog-featured .wp-block-post-template {
+  display: flow-root;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The source has one `.items-row.cols-1` (50 px under it) per article; here the rows are the list's items. */
+.blog-featured .wp-block-post-template > li {
+  display: flow-root; /* the article floats; the row must hold it so the 50 px counts */
+  margin: 0 0 50px;
+}
+
+/* The source's `.items-row.cols-1 .intro-image img` is 250 px high, centred and cropped by the box; the WordPress picture
+   sits in a figure and a link that must be as high as the box for its `height: 100%` to count. */
+.blog-featured .items-row .intro-image .item-image :is(figure, a) {
+  display: block;
+  margin: 0;
+}
+.blog-featured .wp-block-post-template > li:last-child {
+  margin-bottom: 30px; /* the source's last row ends 30 px lower than its siblings' pitch on phones */
+}
+@media (min-width: 768px) {
+  .blog-featured .wp-block-post-template > li:last-child {
+    margin-bottom: 0;
+  }
+  .blog-featured .items-row .intro-image .item-image :is(figure, a) {
+    height: 100%;
+  }
+  .blog-featured .items-row .intro-image .item-image img {
+    height: 100%;
+    width: auto;
+    max-width: none;
+  }
+}
+.blog-featured .items-row :is(article, .info-article, .article-header, .article-aside) > * {
+  margin-block-start: 0;
+}
+.blog-featured .wp-block-query.items-row {
+  margin-block: 0;
+}
+.blog-featured .article-title {
+  margin-top: 0;
+}
+.blog-featured .article-aside {
+  margin-bottom: 15px;
+}
+/* The source's "dl.article-info dd" rules, for groups. */
+.article-info > .createdby,
+.article-info > .category-name,
+.article-info > .published {
+  display: inline-block;
+  margin: 0 5px 0 0;
+  white-space: nowrap;
+}
+.article-info > .category-name::before,
+.article-info > .published::before {
+  content: "/";
+  margin-right: 5px;
+}
+.article-info p,
+.article-info .wp-block-post-author-name,
+.article-info .wp-block-post-terms,
+.article-info .wp-block-post-date {
+  display: inline;
+  margin: 0;
+}
+.article-info .category-name a {
+  border-bottom: 1px dotted var(--ds-c-border, var(--wp--preset--color--border));
+  color: var(--ds-c-meta, var(--wp--preset--color--meta));
+  text-decoration: none;
+}
+.article-info .category-name a:hover,
+.article-info .category-name a:focus {
+  border-bottom-color: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent-hover));
+}
+.blog-featured .article-intro {
+  margin: 0;
+}
+.blog-featured .article-intro p {
+  margin-top: 0;
+}
+.t3-sidebar .categories-module {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.t3-sidebar .module-title {
+  margin-top: 0;
+}
+.acm-testimonials .tracy-motion-carousel {
+  position: relative;
+  overflow: hidden;
+}
+.acm-testimonials .item {
+  flex: 0 0 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.acm-testimonials .item > * {
+  margin-block-start: 0;
+}
+.acm-testimonials .item > .testimonial-text {
+  margin-block-end: 15px;
+}
+.acm-testimonials .item > .text-center {
+  text-align: center;
+}
+.acm-testimonials .item > .text-center p {
+  margin: 0;
+}
+.acm-testimonials .author-info .author-image {
+  display: block;
+}
+.acm-testimonials .tracy-motion-carousel > * {
+  margin-block-start: 0;
+}
+.acm-testimonials .tracy-motion-nav button {
+  appearance: none;
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--ds-c-border, light-dark(#615e59, #3a352f));
+  border-radius: var(--ds-btn-radius, 0);
+  background: none;
+  color: var(--ds-c-muted, #615e59);
+  cursor: pointer;
+  line-height: 56px;
+  text-align: center;
+}
+.acm-testimonials .tracy-motion-nav button.tracy-motion-next {
+  right: 20px;
+  left: auto;
+}
+.acm-testimonials .tracy-motion-nav button::before {
+  /* the source's `fa-long-arrow-alt-left` / `-right` at 12px: the thin long arrows, not chevrons (FA 4.6.3 long-arrow-left / -right) */
+  font-family: FontAwesome;
+  content: "\f177";
+  font-size: 12px;
+}
+.acm-testimonials .tracy-motion-nav button.tracy-motion-next::before {
+  content: "\f178";
+}
+.acm-testimonials .tracy-motion-nav button:hover,
+.acm-testimonials .tracy-motion-nav button:focus-visible {
+  border-color: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+.acm-testimonials .tracy-motion-nav button:focus-visible {
+  outline: 1px solid var(--ds-c-accent, var(--wp--preset--color--accent));
+  outline-offset: 2px;
+}
+
+/* Bootstrap's h1 margin (30 / 15) that the source's first headings keep; core's :first-child rule would zero the top one. */
+.acm-hero .hero-heading,
+.acm-features .features-item-inner > h1 {
+  margin-top: 30px;
+}
+.gallery-slide > .btn {
+  margin-block: 0;
+}
+
+/* "Discover our story" (features-intro style-1): WordPress's block gap (16 px above every flow child) and its block
+   figure/paragraph wrappers undone, so the source's own spacing, offsets and right-aligned inset photo hold. */
+.acm-features .row > .features-item,
+.acm-features .features-item > * {
+  margin-block-start: 0;
+}
+.acm-features.style-1 .features-item-inner > :not(h1) {
+  margin-block-start: 0;
+}
+.acm-features.style-1 .features-item-inner > h1 {
+  margin-block-end: 15px;
+}
+.acm-features.style-1 .features-item-inner > p {
+  margin-block-end: 15px;
+}
+.acm-features.style-1 .features-item-inner > .features-btn {
+  margin-block-end: 0;
+}
+.acm-features.style-1 .img-icon {
+  margin: 0;
+}
+.acm-features.style-1 .img-icon-bottom img {
+  margin-left: auto;
+}
+
+/* Special Offers (features-intro style-2): the source's script gives every card the same height (its text box is as
+   tall as the card's photo, which is as wide as the column); the same from the column width. */
+@media (min-width: 768px) {
+  .acm-features.style-2 .features-item {
+    container-type: inline-size;
+  }
+  .acm-features.style-2 .features-item-inner {
+    min-height: calc(100cqw + 50px); /* the item pads 25 px each side; the photo spans it */
+    box-sizing: border-box;
+  }
+}
+/* The sub-title is an inline span in the source, so its line is as tall as the card text's 30 px strut (the span's own 14px / 26.25px line sits inside it). */
+.acm-features.style-2 .features-short {
+  line-height: 26.25px;
+  padding-block: 1.875px; /* (30 - 26.25) / 2: the paragraph takes the 30px line the source's span sits in */
+}
+
+/* Dark mode of the welcome block. The yellow bar behind the heading stays yellow, so the heading's text is dark
+   where the bar is (30 to 90 px from the heading's top, the source's `:before`) and light elsewhere; the stars
+   are the heading's `::after`, inverted to light ink. Under a design system (D-30) the bar reads `bg`, so the
+   whole heading is plain `fg`: `--ds-c-fg` is a colour, which is not valid as a background image, so the
+   gradient falls away, and as the text fill it replaces `transparent`; without a system both read their
+   fallback, the drawing above. The chef picture (label, photo, signature) is dark ink and is inverted, with the hue
+   turned back so the photo keeps its colours; the ornament under a special offer's subtitle is inverted too. */
+:root[data-theme='dark'] .acm-hero .hero-heading {
+  background-image: var(
+    --ds-c-fg,
+    linear-gradient(to bottom, #f0ece2 0 30px, #11100e 30px 90px, #f0ece2 90px)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: var(--ds-c-fg, transparent);
+}
+/* the rating stars are dark ink (stars.png); on the dark page they are drawn by their own layer, inverted to light ink */
+:root[data-theme='dark'] .acm-hero .hero-heading::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 10px;
+  background: url('../../img/stars.png') no-repeat center bottom;
+  filter: invert(1);
+}
+:root[data-theme='dark'] .acm-hero .hero-img img {
+  filter: invert(1) hue-rotate(180deg);
+}
+:root[data-theme='dark'] .acm-features.style-2 h3 + span::after,
+:root[data-theme='dark'] .acm-features.style-2 .features-short::after {
+  filter: invert(1);
+}
+
+/* Dark mode: the tab strip uses the source's own brown (#3a352f in both themes) instead of the near-black ink, so it is
+   a raised band on the dark panel, not a heavy slab; the cell dividers stay the source's grey. */
+.acm-container-tabs .container-tabs-nav.container-tabs-nav,
+.acm-container-tabs .container-tabs-nav .nav-tabs {
+  background-color: var(--ds-c-ink, light-dark(#3a352f, #3a352f));
+}
+/* the last tab's divider would be a lone line at the strip's edge in the dark */
+:root[data-theme='dark'] .acm-container-tabs .container-tabs-nav .nav-tabs li:last-child {
+  border-right-color: transparent;
+}
+.acm-container-tabs .container-tabs-nav .nav-tabs li {
+  border-right-color: #615e59; /* ds-keep: hairline on the template's own dark band; no page border role reads there */
+}
+
+/* The sidebar column is a sibling of the content column in the source's `.row`, not a block after a gap: core's block gap
+   (margin-block-start: 16px on a layout child) put it 16px lower than the news column. */
+.t3-mainbody .t3-sidebar.wp-block-group {
+  margin-block-start: 0;
+}
+/* and the 60px tail of the source's `.module` is kept on the last module too (core zeroes a last child's end margin) */
+.t3-mainbody .t3-sidebar.wp-block-group > .t3-module {
+  margin-block: 0 60px;
+}
+
+/* Dark only (the source has no dark): the Learn more button sits on the ink box in dark, so its outline took the near-black soft border. */
+.acm-features .features-item-inner .btn.btn-decor {
+  border-color: var(--ds-c-on-ink, #ffffff);
+}
+/* Testimonial arrows: the source's fixed #615e59 line and glyph nearly vanish on the dark ground. */
+.acm-testimonials .tracy-motion-nav button {
+  border-color: var(--ds-c-muted, light-dark(#615e59, #b5ad9e));
+  color: var(--ds-c-muted, light-dark(#615e59, #b5ad9e));
+}
+.acm-testimonials .tracy-motion-nav button:hover,
+.acm-testimonials .tracy-motion-nav button:focus-visible {
+  border-color: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+/* Hero: the heading and the intro are groups so their pieces can be edited as plain text (Customize). The groups carry the
+   classes the source rules read (`.hero-heading`, `.hero-intro`); the pieces inside draw as one line of that type. */
+.acm-hero .hero-heading > :is(.hero-heading-title, .hero-heading-accent) {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+/* The three pieces run on as one sentence. The line breaks between the blocks are white space the source does not have
+   (a gap before the full stop), so the group's own font size is zero and each piece restores the source's 16 px. */
+.acm-hero .hero-content .hero-intro {
+  font-size: 0;
+}
+.acm-hero .hero-content .hero-intro > p {
+  display: inline;
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Words on a ground a role paints read that ground's own "on" role (the source sheets hard-code white): the active tab
+   link and the "Discover our story" accent card sit on --ds-c-accent, the dark card on --ds-c-ink. Without a system the
+   fallbacks are the same white as before. Kept here, not in the carried source sheets, which are regenerated. */
+body .acm-container-tabs .container-tabs-nav .nav-tabs li.active a,
+body .acm-container-tabs .container-tabs-nav .nav-tabs li a.active {
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.acm-features.style-1 .features-item.odd .features-item-inner {
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.acm-features.style-1 .features-item.even .features-item-inner {
+  color: var(--ds-c-on-ink, #ffffff);
+}
+
+/* The decorated primary button is drawn on --ds-c-accent (ink on hover/focus): its label reads the matching "on" role.
+   The carried sheet's `.btn.btn-decor` colour (on-ink) outranks Bootstrap's `.btn-primary` colour (accent-on). */
+.btn.btn-primary.btn-decor {
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.btn.btn-primary.btn-decor:hover,
+.btn.btn-primary.btn-decor:focus {
+  color: var(--ds-c-on-ink, #ffffff);
+}

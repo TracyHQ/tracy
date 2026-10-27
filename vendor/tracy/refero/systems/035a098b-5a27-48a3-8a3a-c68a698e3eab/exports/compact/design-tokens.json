@@ -1,0 +1,109 @@
+{
+  "color": {
+    "page-cream": {
+      "$value": "#f9f4f2",
+      "$type": "color",
+      "$description": "Page Cream — Page background, large section surfaces — the warm paper tone that sets the entire mood"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, elevated panels, input fills, inverse text on dark buttons"
+    },
+    "charcoal-ink": {
+      "$value": "#2d2c2b",
+      "$type": "color",
+      "$description": "Charcoal Ink — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#44423f",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, muted UI labels, icon strokes, nav links"
+    },
+    "slate": {
+      "$value": "#4b4c4d",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, footer body, helper copy, low-emphasis borders"
+    },
+    "stone": {
+      "$value": "#63605d",
+      "$type": "color",
+      "$description": "Stone — Disabled states, lowest-emphasis text, decorative dividers"
+    },
+    "driftwood": {
+      "$value": "#c6c1b9",
+      "$type": "color",
+      "$description": "Driftwood — Hairline list dividers, subtle structural separators"
+    },
+    "linen": {
+      "$value": "#e2ded9",
+      "$type": "color",
+      "$description": "Linen — Card borders, input borders, subtle elevation shadows — the neutral that separates surfaces on cream"
+    },
+    "ash": {
+      "$value": "#d0d0d0",
+      "$type": "color",
+      "$description": "Ash — Input border, focused field rings, checkbox borders"
+    },
+    "soft-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Soft Black — True black for maximum-contrast dark buttons and bold display text"
+    },
+    "brand-orange": {
+      "$value": "#f47d31",
+      "$type": "color",
+      "$description": "Brand Orange — Headspace logo mark — the single warm dot that anchors the brand identity across all surfaces"
+    },
+    "mindful-blue": {
+      "$value": "#0061ef",
+      "$type": "color",
+      "$description": "Mindful Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "sunbeam-yellow": {
+      "$value": "#ffce00",
+      "$type": "color",
+      "$description": "Sunbeam Yellow — Headspace signature brand yellow — top banner backgrounds, feature card highlights, optimistic punctuation"
+    },
+    "deep-indigo": {
+      "$value": "#3b197f",
+      "$type": "color",
+      "$description": "Deep Indigo — Contemplative illustration fills, meditation-related visual moments — the serious counterpart to the cheerful yellow"
+    },
+    "twilight-violet": {
+      "$value": "#281466",
+      "$type": "color",
+      "$description": "Twilight Violet — Deep illustration fills paired with Deep Indigo, gradient companion, night-mode meditation contexts"
+    },
+    "plum": {
+      "$value": "#5f2b89",
+      "$type": "color",
+      "$description": "Plum — Mid-tone violet for illustration gradients and decorative fills"
+    },
+    "mauve": {
+      "$value": "#8144a8",
+      "$type": "color",
+      "$description": "Mauve — Lighter violet in illustration gradients — soft, warm purple"
+    },
+    "celeste": {
+      "$value": "#00a4ff",
+      "$type": "color",
+      "$description": "Celeste — Bright sky blue used in category icons and decorative illustration accents"
+    }
+  },
+  "font": {
+    "headspace-apercu": {
+      "$value": "Headspace Apercu",
+      "$type": "fontFamily",
+      "$description": "Single-family system used for everything from body copy to display headlines. Weights are 400 (body), 500 (subheadings, nav), 700 (headings, buttons). The custom geometric forms give a friendly-but-precise feel; tight tracking on display sizes sculpts the headlines into confident shapes rather than defaulting to bold shouts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://headspace.com",
+      "siteName": "Headspace",
+      "extractedAt": "2026-06-03T14:58:55.460Z",
+      "variant": "compact"
+    }
+  }
+}

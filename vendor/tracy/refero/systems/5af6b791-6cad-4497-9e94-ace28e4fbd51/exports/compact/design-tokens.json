@@ -1,0 +1,64 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#faf6f0",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas, section backgrounds, card surfaces — the warm off-white ground that makes the whole site read like a print artifact rather than a screen"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Headlines, body text, primary filled buttons, logo mark, dividers, icons — the dominant structural color carrying almost all information"
+    },
+    "slate-whisper": {
+      "$value": "#5e697f",
+      "$type": "color",
+      "$description": "Slate Whisper — Secondary body text, muted descriptions, helper text, subdued labels — the single desaturated accent that softens body copy without competing with headlines"
+    },
+    "charcoal": {
+      "$value": "#555555",
+      "$type": "color",
+      "$description": "Charcoal — Secondary paragraph text, sub-labels, low-emphasis copy where Slate Whisper isn't deployed — fills the gap between ink-black headlines and whisper-gray annotations"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Product mockup surfaces, card-internal backgrounds, floating badge fills — the crisp inset color that product UI sits on, creating a paper-on-paper layering effect against the cream canvas"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "unbounded": {
+      "$value": "Unbounded",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines only. The geometric, slightly quirky letterforms are the brand's only expressive color — at 62px and 82px they dominate screens with editorial confidence. The slight positive tracking (+0.01–0.02em) keeps the wide geometric shapes from feeling cold. Substitute: Space Grotesk for a similar geometric-friendliness, or DM Sans Display."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI, navigation, subheadings, button labels. The tight negative tracking (-0.02em) at all sizes gives Inter a confident editorial density that pairs with Unbounded's looser display feel. Weight 400 is the workhorse; 500–600 for subheadings; 700 reserved for inline emphasis."
+    },
+    "inter-bold": {
+      "$value": "Inter-Bold",
+      "$type": "fontFamily",
+      "$description": "Inter-Bold — detected in extracted data but not described by AI"
+    },
+    "inter-medium": {
+      "$value": "Inter-Medium",
+      "$type": "fontFamily",
+      "$description": "Inter-Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://helloivy.co",
+      "siteName": "Helloivy",
+      "extractedAt": "2026-06-03T20:25:20.801Z",
+      "variant": "compact"
+    }
+  }
+}

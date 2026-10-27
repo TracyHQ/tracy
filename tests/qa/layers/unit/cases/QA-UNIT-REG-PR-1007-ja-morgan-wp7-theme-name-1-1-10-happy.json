@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10-happy",
+  "itemIds": ["regression:REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10"],
+  "requirement": "JA Morgan wp7 1.1.10: the theme is listed in WordPress as \"WP Morgan\" and the release records a passing site sweep on the released zip",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.json",
+    "ref": "PR #1007 (fix); fix evidence: Name-only release of 06/10/2026: the clean restore of 1.1.10 passes 11/11 sweep checks on the released zip; `wp theme list` on the restore shows wp-ja-morgan titled WP Morgan at 1.1.10.",
+    "invariant": "S1: both style.css files have exactly one 'Theme Name: WP Morgan' line; the shipped style.css has one 'Version: 1.1.10' line and the overlay's theme.config.json version is 1.1.10. S2: fix-measure.json names site-sweep.mjs, its themeZipSha256 equals the zip line of SHA256SUMS, and 11 of 11 checks pass with none failing.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.mjs:31 packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/style.css has no code line to point at",
+      "tests/regression/scripts/lib.mjs:139 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10",
+    "pr": 1007,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-morgan",
+    "file": "tests/regression/cases/REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1166-onboard-connect-now-done",
+  "kind": "feat",
+  "title": "Desktop first-run: Connect now on the AI-account step turns the step Done in place (browser and device sign-ins)",
+  "pr": 1166,
+  "area": "desktop/onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-onboard mount/flow/render tests and the tracy-model-plan connect tests (node:test, jsdom page, fake seat-plan doors).",
+    "S2: the end-to-end form of this case is ST-6 in tests/acceptance/desktop-onboard-v2 (app from source on a stand, Copilot device flow faked at the seat-plan doors)."
+  ],
+  "expect": [
+    "stepsDone: the AI step is done exactly when an account is connected.",
+    "Connect now: the caught callback connects and the step turns Done without closing the screen; a device sign-in shows the code, polls, then answers the status.",
+    "The connect panel shows idle (Connect now), pending (browser/device) and connected states; no connected account leaves the step not done."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/flow.test.mjs",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/steps-render.test.mjs",
+      "packages/ui/tracy-model-plan/test/connect.test.mjs"
+    ],
+    "tests": [
+      "stepsDone: signed in always",
+      "Connect now: the vendor page opens through the app",
+      "no connected account: the AI step is not done",
+      "the Done / Not done chip and the checklist follow each step",
+      "connect panel A idle",
+      "connect panel B pending (device)",
+      "connect panel C connected",
+      "a device sign-in shows the code, polls until confirmed"
+    ],
+    "timeout_s": 180
+  },
+  "fence": "the AI step's Done is derived from the seat-plan status a connect answers, not from a click",
+  "selectors": {
+    "panel": "[data-connect]",
+    "connect": "[data-action='connect']",
+    "chip": ".tv-ob-chip[data-done]"
+  }
+}

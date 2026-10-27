@@ -1,0 +1,47 @@
+{
+  "id": "QA-UNIT-REG-PR-1236-running-label-thinking-happy",
+  "itemIds": ["regression:REG-PR-1236-running-label-thinking"],
+  "requirement": "The running status under the chat says Thinking, never the DeepSeek 'Deep diving' pun or name, in every interface language",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1236-running-label-thinking.json",
+    "ref": "PR #1236 (fix); fix evidence: Screenshot 12/10/2026 14:32 on cowork.tracy.site: the running status read 'Deep diving for 6s ···'.",
+    "invariant": "Every line is ok: the fork's English chat.deepDiving / chat.deepDivingFor are 'Thinking' / 'Thinking for {duration} ···' and zh is 思考中; no source or built bundle of the vi, de, fr, it, nl, zh-TW/HK/MO and es packs says Deep diving, 深度求索, lặn sâu, đào sâu, Tiefensuche, approfondi, Diep aan het graven or en profundidad for either key (pre-fix: 'Deep diving for 6s ···' on cowork.tracy.site, 12/10/2026). The fork's package.json version is a plain 0.2.0-rc.N-tracy.M that passes vendor/tracy/dsh-passwords/src/tracy/dsh-runtime.ts TRACY_DSH_RE (0.2.0-rc.2-tracy.43 passes; the first cut 0.2.0-rc.2-tracy.40.1 failed, and on prod 12/10/2026 the dsh container refused to start with 'Unsupported or invalid DSH version 0.2.0-rc.2-tracy.40.1' and the deploy rolled back; build metadata such as +thinking is refused by the dsh build itself).",
+    "productSources": [
+      "vendor/tracy/deepseek-harness/packages/client/ui-chat/src/client/locale.ts:4",
+      "vendor/tracy/dsh-passwords/src/tracy/dsh-runtime.ts:7"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1236-running-label-thinking.mjs:6 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1236-running-label-thinking.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1236-running-label-thinking"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1236-running-label-thinking",
+    "pr": 1236,
+    "kind": "fix",
+    "area": "chat/running-status",
+    "file": "tests/regression/cases/REG-PR-1236-running-label-thinking.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1236-running-label-thinking.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

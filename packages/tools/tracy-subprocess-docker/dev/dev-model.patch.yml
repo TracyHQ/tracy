@@ -1,0 +1,16 @@
+# A DEV-ONLY patch layer, mounted by compose.yml and named through DSH_PATCH.
+#
+# WHY IT IS NOT IN THE IMAGE. The image ships to the fleet, where the model is chosen per
+# deployment (a credential in `/desk-home/.credentials.yaml`, a row written by provisioning), and a
+# baked default is a decision one machine made for every other. It lived in
+# `image/profile/cordis.patch.yml` until 06/09, where it also made the image's own build asserts
+# pass for a reason that had nothing to do with the fleet.
+#
+# The route itself is in the image's `settings.yaml`: `apiKeyEnv: OPENROUTER_API_KEY`, so the key
+# is read per request from the container's environment and no secret is ever written down here.
+- id: agent-default-model
+  config:
+    provider: openrouter
+    # The free model that actually answered on this machine. The paid one returned 402 and two
+    # other free ones 429 — see dev/README.md §Traps.
+    model: nvidia/nemotron-3-super-120b-a12b:free

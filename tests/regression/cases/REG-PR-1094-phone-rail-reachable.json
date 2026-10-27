@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1094-phone-rail-reachable",
+  "kind": "fix",
+  "title": "On a 360 px phone the person's face at the foot of the rail stays pressable beside a fullscreen right panel, and a submenu that fits neither side opens off its own row",
+  "pr": 1094,
+  "area": "ui/sidebar/rail",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the two e2e cases of packages/ui/tracy-sidebar/test/e2e/rail-beside-fullscreen-panel.test.mjs (a page laid out like dsh's frame with Tracy's real stylesheet).",
+    "S2: Run the popover keyboard case for a phone width in packages/core/tracy-core/test/popover-keyboard.test.mjs."
+  ],
+  "expect": [
+    "S1: at 360x740 elementFromPoint at the face's centre is the face and the panel starts at x 56; at 1280 a fullscreen panel still starts at x 0.",
+    "S2: the side panel lies above or below its row, never over it, and stays on screen."
+  ],
+  "selectors": {
+    "face": "[data-tracy-account-trigger]",
+    "panel": "dsh fullscreen right panel (ui-sidebar-right)"
+  },
+  "evidence": "Stand acm 09/10/2026: at 360x740 the Browser panel covered the rail (iframe at the face's centre); tasks/evidence/account-menu/stand/mobile-fix-*.png.",
+  "fence": "Tracy CSS max-width on the fullscreen panel below 768 px and PopoverSubmenu placement. Not covered: a rail expanded to 280 px on a phone.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-sidebar/test/e2e/rail-beside-fullscreen-panel.test.mjs",
+      "packages/core/tracy-core/test/popover-keyboard.test.mjs"
+    ],
+    "tests": [
+      "at 360×740 the face at the rail foot can be pressed beside a fullscreen right panel",
+      "on a wide window a fullscreen panel the person chose still covers the whole frame",
+      "on a phone width where neither side fits, the side panel opens below its row, not over it"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "color": {
+    "deep-teal": {
+      "$value": "#088177",
+      "$type": "color",
+      "$description": "Deep Teal — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink": {
+      "$value": "#1b1b1b",
+      "$type": "color",
+      "$description": "Ink — Primary body text, headings, icon strokes, link text, and nav labels — a near-black that softens to charcoal, avoiding the harshness of pure black on warm white"
+    },
+    "canvas-warmth": {
+      "$value": "#faf8f5",
+      "$type": "color",
+      "$description": "Canvas Warmth — Page background — a warm, paper-like off-white that gives the entire interface a human, editorial quality distinct from clinical SaaS whites"
+    },
+    "surface-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "hairline": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Hairline — Subtle borders, dividers between content blocks, and input field outlines — light enough to recede but present enough to structure information"
+    },
+    "border-soft": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Border Soft — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Reserved for icon fills and the rare element requiring maximum contrast — used sparingly alongside the softer Ink"
+    },
+    "teal-mist": {
+      "$value": "#d8edeb",
+      "$type": "color",
+      "$description": "Teal Mist — Light teal-tinted surface for accent backgrounds, highlight panels, and soft washes that echo the brand color without dominating"
+    },
+    "blush-neutral": {
+      "$value": "#f5e1e3",
+      "$type": "color",
+      "$description": "Blush Neutral — Warm pink-tinted surface for category differentiation in editorial layouts — used as a subtle alternative to teal-tinted sections"
+    }
+  },
+  "font": {
+    "n26": {
+      "$value": "N26",
+      "$type": "fontFamily",
+      "$description": "The workhorse sans-serif for all navigation, body copy, buttons, labels, and UI micro-text. Weight 500 for emphasis, 700 for primary action labels and key headings. Slight positive tracking (0.008–0.019em) gives small sizes a controlled, legible quality — the custom feel comes from this restrained openness rather than display flourishes."
+    },
+    "n26-extended": {
+      "$value": "N26-Extended",
+      "$type": "fontFamily",
+      "$description": "Display face reserved for hero headlines, section titles, and large statement copy. The wider proportions at 58–80px create breathing room that contrasts the compact N26 body face — this duality (tight UI type + expansive display type) is the typographic signature. Normal letter-spacing lets the wide letterforms do the work."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://n26.com",
+      "siteName": "The online bank",
+      "extractedAt": "2026-06-03T18:35:03.395Z",
+      "variant": "compact"
+    }
+  }
+}

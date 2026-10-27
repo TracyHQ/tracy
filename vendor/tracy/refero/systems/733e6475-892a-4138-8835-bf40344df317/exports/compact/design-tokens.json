@@ -1,0 +1,39 @@
+{
+  "color": {
+    "warm-paper": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Warm Paper — Page background — the only surface; everything floats on this warm off-white"
+    },
+    "graphite": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Graphite — Body text, nav labels, footer copy — medium-dark gray keeps long-form reading comfortable without high-contrast harshness"
+    },
+    "ink": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Ink — Secondary body text, navigation labels, and subdued headings."
+    }
+  },
+  "font": {
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Body and navigation. At 21px / 600 / line-height 1.55 with -0.01em tracking, the system stack carries the entire page — the signature is the size and rhythm, not a custom face. 13px / 400 nav labels use the same -0.002em micro-tracking. A 16px / 400 utility size appears for small captions."
+    },
+    "wealthsimple-sans-display": {
+      "$value": "Wealthsimple Sans Display",
+      "$type": "fontFamily",
+      "$description": "Reserved for the \"Wealthsimple\" link — a single display-grade cut at 21px / 700 / -0.01em. It signals partnership without changing the page's monochrome restraint."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://feyapp.com",
+      "siteName": "Fey",
+      "extractedAt": "2026-07-03T03:32:17.142Z",
+      "variant": "compact"
+    }
+  }
+}

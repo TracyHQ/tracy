@@ -1,0 +1,395 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-fresco",
+  "release": "quickstart/ja-fresco/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title",
+    "heading": "h2.h1",
+    "body": "div.dish-item p.dish-description",
+    "container": "div.container",
+    "section": "#Mod114"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 90px",
+    "displayFace": "Playfair Display 400, tracking 0em",
+    "heading": "first section heading: 46px",
+    "body": "running text: a menu dish's description (the intro paragraphs above it are a light 300 .lead, the template's own lead style)",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 128px",
+    "displayPhone": "the same heading at 390 on the published release: 28px"
+  },
+  "keepScopes": [".t4-hero", ".acm-features", "#t4-section-8"],
+  "keptButtons": {
+    ".t4-hero": {
+      "ground": "#0a0b0a",
+      "buttons": [".btn-primary", ".btn-white", ".btn-light", ".btn-outline-primary", ".btn-outline-light"]
+    },
+    ".acm-features": {
+      "ground": "#0a0b0a",
+      "buttons": [".btn-primary", ".btn-white", ".btn-light", ".btn-outline-primary", ".btn-outline-light"]
+    },
+    ".acm-features.style-3": {
+      "ground": "#0a0b0a",
+      "buttons": [".btn-primary", ".btn-white", ".btn-light", ".btn-outline-primary", ".btn-outline-light"]
+    }
+  },
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#0a0b0a",
+    "--fg-2": "#ffffff",
+    "--accent": "#e6c9a2",
+    "--accent-hover": "#e6c9a2",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#1a191b",
+    "--meta": "#ffffff",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#373b3e",
+    "--muted": "#666666",
+    "--font-display": "\"Playfair Display\", sans-serif",
+    "--font-body": "\"Roboto\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#0a0b0a",
+      "fg-2": "#1b1a1c",
+      "accent": "#e6c9a2",
+      "accent-hover": "#e6c9a2",
+      "surface": "#f8f9fa",
+      "surface-warm": "#1a191b",
+      "meta": "#ffffff",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#373b3e",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#0a0b0a",
+      "fg-2": "#ffffff",
+      "surface-warm": "#1b1a1c"
+    },
+    {
+      "accent": "#e6c9a2"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#ffffff",
+      "bg": "#000000",
+      "surface": "#f8f9fa",
+      "fg": "#212529",
+      "border-soft": "#dee2e6",
+      "border": "#343a40"
+    },
+    {
+      "surface": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (54 line colours, 38 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#Mod114"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": ".t4-section :is(h1, h2, h3, h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 4620); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 75,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#000000",
+      "uses": 68,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#0a0b0a",
+      "distance": 18
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 39,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#212529",
+      "uses": 30,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#1d1d1f",
+      "distance": 13
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 21,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 23
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#343a40",
+      "uses": 5,
+      "kind": "custom",
+      "role": "border",
+      "near": "#373b3e",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "sideRules": {
+    "light": {
+      ".navbar-brand .logo-img": {
+        "filter": "invert(1)"
+      },
+      ".ja-masthead.has-bg::before": {
+        "background-image": "linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%)"
+      },
+      ".ja-masthead.has-bg :is(.ja-masthead-title, .ja-masthead-description)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".acm-gallery .item-inner span": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-off-canvas-header .logo-img": {
+        "filter": "invert(1)"
+      },
+      ".bd-example > .btn": {
+        "font-size": "0.875rem"
+      },
+      ".category-name a": {
+        "border-radius": "var(--ds-btn-radius)"
+      }
+    },
+    "dark": {
+      ".bd-example > .btn": {
+        "font-size": "0.875rem"
+      },
+      ".category-name a": {
+        "border-radius": "var(--ds-btn-radius)"
+      }
+    }
+  },
+  "sideNote": "the header logo is a white picture (images/joomlart/logo/logo.png) on the template's dark page: under a light system the header ground turns light and the logo vanished (Apple) or nearly so (MotherDuck), seen by eye 12/10/2026 while the probe read 12/12 (a picture is not text); inverted under a light system only (sideRules.light, the JA Mason form); the off-canvas logo sits on the template's own light #f8f9fa header and is left as it is",
+  "ready": true,
+  "readyNote": "re-verified 12/10/2026 with the unified probe (flow.mjs) on the published 1.0.1 (tasks/evidence/ds-reverify-b-2026-10-12/ja-fresco-j6): 12/12, controls 0, no text under 4.5:1, 97-98% of the page follows; the eye saw the white header logo vanish under Apple and nearly so under MotherDuck (the header ground turns light, a picture is not text to the probe): inverted under a light system (sideRules.light, sideNote), measured again 12/12 and the header read by eye under MotherDuck, Apple and Moxie (…/fix); earlier: re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the published release 1.0.1 (quickstart/ja-fresco/j6, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-fresco-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 97% or more of the page follows, checked by eye on the four systems' screenshots; with the earlier contract the footer's outline button (text in --color-light, which the family points at the surface the footer now wears) read 1:1 under every system, and the testimonial band (painted with --color-dark, the system text) turned light under a dark system with its quote and author at 1–1.96:1 — fixed by followRules (.t4-footer .btn.btn-outline-light takes the system text) and keepScopes/keepText (#t4-section-8 keeps its dark ground, white quote and gold author); the footer sits below the 3,000 px screenshot and is judged by the probe's numbers. Earlier: measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-fresco/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r2b-2026-10-11/templates/ja-fresco-j6), and before it on 1.0.0 tokenized in place: 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 98% of the page follows; the bands drawn on photos (the hero, the .acm-features tiles with their translucent .bg-primary / .bg-dark masks) keep the template's own overlays and text (keepScopes, keepText, keepDefaults): round 1's 1:1 'mask link' was an empty overlay link, but the tiles' titles on those masks really were pink on pink and blue on blue (judged on the screenshots: the probe cannot see text on a translucent mask over a photo); body probe re-pointed to running text (the intro is a light .lead); checked by eye on the four systems' screenshots, desktop and phone",
+  "keepScopesNote": "the bands drawn on photos keep the template's own overlays and text: the hero (a dark gradient over the dish photo, white title and outlined buttons) and the feature tiles (.acm-features: the three photo cards with their dark fade, and 'Your Private Event' / 'Book A Table', whose 0.93-opaque .bg-primary / .bg-dark masks carry the text): under a system the masks and fades took the system's accent and ground while the text on them followed the page — pink on pink (Toggl Track), blue on blue (Apple, Moxie), cream under white (Moxie). The contrast probe cannot see text on a translucent mask over a photo; this was judged on the screenshots",
+  "keepDefaults": {
+    "--body-bg-color": "#0a0b0a",
+    "--body-text-color": "rgba(255, 255, 255, 0.8)",
+    "--body-link-color": "#e6c9a2",
+    "--body-link-hover-color": "#e6c9a2",
+    "--color-primary": "#e6c9a2",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#1b1a1c",
+    "--mainnav-text-color": "#ffffff",
+    "--mainnav-link-color": "#ffffff",
+    "--mainnav-link-hover-color": "#e6c9a2",
+    "--mainnav-link-active-color": "#e6c9a2",
+    "--footer-bg-color": "#1a191b",
+    "--footer-text-color": "#ffffff",
+    "--footer-link-color": "#ffffff",
+    "--footer-link-hover-color": "#e6c9a2",
+    "--t4-link-color-rgb": "13, 110, 253",
+    "--t4-link-hover-color-rgb": "10, 88, 202",
+    "--t4-primary-rgb": "13, 110, 253",
+    "--t4-body-color-rgb": "33, 37, 41",
+    "--t4-body-bg-rgb": "255, 255, 255",
+    "--heading-color": "#fff",
+    "--t4-heading-color": "#fff"
+  },
+  "keepDefaultsNote": "what the released page computes for the variables the slot repoints (T4 runtime and RGB triplets), read on .t4-hero 11/10/2026",
+  "keepText": [".t4-hero", ".acm-features", "#t4-section-8"],
+  "minVersion": {
+    "quickstart/ja-fresco/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-fresco/j6": "1.0.4"
+  },
+  "maxVersionNote": "1.0.4 20/10/2026: built from 1.0.3 (release-batch.mjs --overlay); only css/template.css and scss/_ds-bootstrap-roles.scss differ: the headings inside a status fill read the text role the fill re-points (TEXT-1), a rule that applies only while a system is worn; CSS-1 and CSS-2 pass; unworn the page is the release's own (VERIFICATION.json). 1.0.3 20/10/2026: built from 1.0.2 (release-batch.mjs --overlay); every role variable the template paints is read with its own value as the fallback (role scan 0 unresolved), CSS-1 and CSS-2 pass; unworn the page is the release's own (VERIFICATION.json: 0 computed differences). 1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "templateVars": {
+    "--heading-font-family": "var(--ds-font-heading)"
+  },
+  "templateVarsNote": "20/10/2026 (1.0.3): --heading-font-family is the T4 face of every heading rule, the .h1-.h6 classes and the form legends included (span.h1.main-title, div.info-title.h1 kept Playfair Display while h1-h4 wore the system face: FONT-2); it reads the system heading face. Earlier: none beyond the family's: measured so (11/10/2026, round 2 r2b) — an empty map also keeps pass-joomla.mjs from deriving T4 theme variables (and dropping keepDefaults) on a later run",
+  "contrastNote": "block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026; text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples) — added at the re-measure of 11/10/2026, the contract was ready on the four first-match probes only",
+  "followRules": {
+    ".t4-footer .btn.btn-outline-light": {
+      "color": "fg",
+      "border-color": "fg"
+    },
+    ".t4-off-canvas-header": {
+      "background-color": "bg"
+    },
+    ".btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active": {
+      "background-color": "surface!",
+      "border-color": "success!",
+      "color": "success-text!"
+    },
+    ".btn-danger, .btn-danger:hover, .btn-danger:focus, .btn-danger:active": {
+      "background-color": "surface!",
+      "border-color": "danger!",
+      "color": "danger-text!"
+    },
+    ".acm-text-slider.style-1": {
+      "background-color": "surface-warm"
+    },
+    "ul.pagination .page-link:hover, ul.pagination .page-link:focus, ul.pagination .page-link:active": {
+      "background-color": "accent",
+      "border-color": "accent",
+      "color": "accent-on"
+    }
+  },
+  "followNote": "the footer follows to the surface, and its outline button writes in --color-light, which the T4 family points at the surface too: text and ground were one colour (1:1) under every system — the footer button takes the system text; the /about testimonials sit in a .t4-mod-wrap.bg-dark panel, a step lighter than the template’s dark page, which its stylesheet paints through the page ink: under a dark system the panel turned the system’s light text colour, cream under Moxie with its pale quote on it (1.8:1), and navy under Stripe with a grey quote (2.2:1, visual review 14/10/2026). 20/10/2026 (1.0.3): the template’s shared Bootstrap role block wears every .bg-dark as the system’s ink with its on-ink words (its headings and text roles too), so the panel no longer takes the warm surface, whose ground left those words light on light (/menu under Figma); 14/10/2026 (visual review, round 3): with the off-canvas menu panel now on the system’s page (general rule), its header strip (.t4-off-canvas-header) kept Bootstrap’s dark #212529 with the close × in the system’s grey: 1.98:1 under Stripe. The strip takes the page too; on the light side its white logo is inverted as the header’s is (sideRules.light); 20/10/2026 (1.0.3): the Home 3 text slider paints its strip with T4’s --color-dark, which the slot points at the system text colour: a cream strip with the headings’ own cream on it under Moxie (1.82:1), black under Figma; it takes the warm surface, the step lighter than the page it is in the template’s look; 20/10/2026 (1.0.4): the pagination's hover, focus and pressed states take the accent fill and its words, as the template fills them with its gold: the slot's framework rule (.page-link on the surface) outweighed the template's state rule, so under a system a page link looked the same under the pointer as at rest (HOVER-2 hover-same, the typography page's Previous / Next under Moxie)",
+  "keepNote": "the testimonial band (#t4-section-8, the layout section that holds it; its .bg-dark wrapper is painted with --color-dark, which the family points at the system text) keeps its dark ground, white quote and gold author: worn, its ground turned light under a dark system and the quote read 1.3–1.8:1",
+  "bands": {
+    ".t4-hero": {
+      "ground": "#0a0b0a",
+      "texts": ["#cecece", "#ffffff"],
+      "vars": {
+        "--color-primary": "accent"
+      },
+      "picture": true,
+      "important": true
+    },
+    ".acm-features": {
+      "ground": "#0a0b0a",
+      "texts": ["#ffffff", "#cecece"],
+      "vars": {
+        "--color-primary": "accent"
+      },
+      "root": false,
+      "paint": {
+        ".t4-content": {
+          "background-color": "ground"
+        },
+        ".mask-action.bg-primary": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    "#t4-section-8": {
+      "ground": "#1b1a1c",
+      "texts": ["#ffffff"],
+      "vars": {
+        "--color-primary": "accent"
+      },
+      "root": false,
+      "paint": {
+        ".testimonial-author": {
+          "color": "accent"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6):not(.section-title)": {
+          "color": "text"
+        },
+        ".t4-mod-wrap": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".acm-features.style-4": {
+      "ground": "#0a0b0a",
+      "texts": ["#ffffff", "#cecece"],
+      "vars": {
+        "--color-primary": "accent"
+      },
+      "kind": "ink",
+      "paint": {
+        ":is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6):not(.section-title)": {
+          "color": "text"
+        }
+      },
+      "important": true
+    },
+    ".acm-features.style-5": {
+      "ground": "#0a0b0a",
+      "texts": ["#ffffff", "#cecece"],
+      "vars": {
+        "--color-primary": "accent"
+      },
+      "kind": "ink",
+      "paint": {
+        ":is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6):not(.section-title)": {
+          "color": "text"
+        }
+      },
+      "important": true
+    },
+    ".acm-features.style-3": {
+      "ground": "#0a0b0a",
+      "texts": ["#ffffff", "#cecece"],
+      "vars": {
+        "--color-primary": "accent"
+      },
+      "kind": "ink",
+      "paint": {
+        ":is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6):not(.section-title)": {
+          "color": "text"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; on /about two blocks of features (.acm-features.style-4, the text beside the restaurant photo, and .acm-features.style-5, the six feature cards) sit straight on the template’s dark page with its white words and white line icons: in the kept .acm-features band (no ground of its own) they were white on white under every light system (Stripe, visual review 14/10/2026). Narrowed bands of the same scope paint their own ground, an ink of the system on which the white words read. 20/10/2026 (1.0.4): the headings of the testimonial band and the three ink feature bands take the band's own words of the system (paint text), which is the system's heading colour wherever that reads on the band's ground: kept white, they split from every other heading of the page under a dark system (HIER-2 heading split under Moxie: the home testimonial, the /about “Efforts to curb soda consumption” and the Home 3 “OPENING HOURS” white beside cream headings); the accent section eyebrows (.section-title) keep the accent",
+  "sideRulesNote": "the page-title masthead (.ja-masthead.has-bg) fades its photo into the page with a ::before gradient to the page colour, under white words made for the dark page: under a light system it faded to white under the white title (Stripe, visual review 14/10/2026). On a light system the photo is darkened instead (black at 30% to 70%) and its title and description take the system page colour; the home gallery’s hover captions (.acm-gallery .item-inner span, on a black-at-60% overlay over the photo) likewise take the page colour on a light system; 14/10/2026: the off-canvas header’s logo (.t4-off-canvas-header .logo-img, white, outside .navbar-brand) is inverted on the light side like the header’s, now that the strip takes the page 20/10/2026 (1.0.3): the Typography page lays Bootstrap’s nine demo buttons in one wrapping row sized for the template’s 14px uppercase label; at the system’s 16px label the row took a fourth line (LAYOUT-3 under Figma), so that row keeps the template’s label size on both sides (colours, corner, weight and padding stay the system’s). The blog category chips (.category-name a: a link drawn as a small accent tag) take the system’s button corner on both sides (BTN-1 button-role: 0px where the system’s button has 13px); the template paints them, so they are not one of the contract’s buttons.",
+  "keptButtonsNote": "20/10/2026 (1.0.3): the calls to action of the kept hero and feature bands are outline buttons (.btn-outline-primary on the hero and the /about features, .btn-outline-light on the Home 2/Home 3 feature panels), which the default kept-band buttons (the primary, white and light ones) left in Bootstrap’s fallback blue #0d6efd and light #f8f9fa under a system (BTN-1 button-role, ACCENT-LEAK): they wear the system’s button pair on the band’s ground."
+}

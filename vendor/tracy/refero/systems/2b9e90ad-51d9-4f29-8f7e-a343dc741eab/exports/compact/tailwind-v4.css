@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+
+  /* Typography */
+  --font-title: 'title', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neue-haas-grotesk-display: 'neue-haas-grotesk-display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

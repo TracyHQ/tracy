@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-893-wp-other-languages-own-words",
+  "kind": "fix",
+  "title": "WordPress Apply: another language's copies get the source's treatment in their own words, without emptying a page on a model's failure",
+  "pr": 893,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/brief-shared.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a second language is given the source's treatment in its own words: its second and third blocks of a name, its other lines, its second chance\"; \"a language whose second chance fails removes nothing: its demo blocks stay until somebody can say better, and it is said\"; \"a second chance that answers but says nothing of a line takes its block off when its source counterpart was rewritten\"; \"a language with a batch of its first pass that failed removes nothing on the second chance's silence\"; \"a line the site refused in the source language keeps the other language's block too\"; \"blocks with no honest line never empty a page: a copy that would lose most of what it says keeps them, and it is said\"; \"one language's failure never costs another language's lines, nor its own lines already answered\"; \"a line that is only an interface is never taken off a copy on the second chance's silence\"; \"more blocks of one language with no honest line than MAX_DROPS is a model gone wrong: none of them goes, and it is said\"; \"the other languages' copies have their title, description and heading said again in their own language\"; \"a retry asked live counts as a call\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 76).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): a second language's second and third blocks of a name, its other lines and its second chance are planned in its own language; a copy's demo block goes on silence only when its source line went in and every call of the language's plan answered; blocks never empty a page; one language's failure costs no other language's lines; an interface-only line is never taken off; more failed blocks than MAX_DROPS take none; the copies' title, description and heading are said again in their own language."
+  ],
+  "selectors": {
+    "engine": "apps/tracy-web/src/sites/brief-engines/wordpress.js (edition fallback, second chance)",
+    "lines": "planLines in apps/tracy-web/src/sites/brief-engines/wp-leaves.js; editBlocks in wp-residue.js"
+  },
+  "evidence": "Ledger L15, 05/10/2026: on a two-language Tracy Business wp7 site after the L01 fix, the Vietnamese About page kept a whole demo section (heading and intro naming an industrial park and five cities): 7 demo words, duplicates and unslotted lines were rewritten for the source language only. Reds 4f6bbb9bc, b1b93999a, 414a5da18, fa26ee0e9, d26f5f821, 4f546157d; fixes b9d4aff65, 7cc0c9b8e, 758a34c31, 4a04416ab, b06215e05, 10a589255; guards 18ca3d03d.",
+  "fence": "A model gone wrong removes nothing: a copy loses a block only when the source counterpart was rewritten and the language answered.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-shared.test.mjs"
+    ],
+    "tests": [
+      "a second language is given the source's treatment in its own words: its second and third blocks of a name, its other lines, its second chance",
+      "a language whose second chance fails removes nothing: its demo blocks stay until somebody can say better, and it is said",
+      "a second chance that answers but says nothing of a line takes its block off when its source counterpart was rewritten",
+      "a language with a batch of its first pass that failed removes nothing on the second chance's silence",
+      "a line the site refused in the source language keeps the other language's block too",
+      "blocks with no honest line never empty a page: a copy that would lose most of what it says keeps them, and it is said",
+      "one language's failure never costs another language's lines, nor its own lines already answered",
+      "a line that is only an interface is never taken off a copy on the second chance's silence",
+      "more blocks of one language with no honest line than MAX_DROPS is a model gone wrong: none of them goes, and it is said",
+      "the other languages' copies have their title, description and heading said again in their own language",
+      "a retry asked live counts as a call"
+    ]
+  }
+}
