@@ -737,7 +737,11 @@ POLICIES = {
             ("history", {"key": "version_id"}),
             ("redirect_links", {}),
             ("assets", {"refs": [("assets", "parent_id", None), ("content", "asset_id", None),
-                                 ("categories", "asset_id", None), ("modules", "asset_id", None)]}),
+                                 ("categories", "asset_id", None), ("modules", "asset_id", None),
+                                 ("fields", "asset_id", None), ("fieldgroups", "asset_id", None),
+                                 ("contact_details", "asset_id", None), ("banners", "asset_id", None),
+                                 ("workflows", "asset_id", None), ("workflow_stages", "asset_id", None),
+                                 ("workflow_transitions", "asset_id", None)]}),
         ],
         "normalise": [
             "UPDATE `{prefix}extensions`\n"

@@ -1165,3 +1165,41 @@ test(
     )
   }
 )
+
+test('renumbered assets update custom fields and every other core asset reference', opts, () => {
+  const tables = [
+    'fields',
+    'fieldgroups',
+    'contact_details',
+    'banners',
+    'workflows',
+    'workflow_stages',
+    'workflow_transitions'
+  ]
+  const base =
+    `CREATE TABLE jos_assets (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100));
+INSERT INTO jos_assets VALUES (1,'root.1');` +
+    tables
+      .map((t) => `CREATE TABLE jos_${t} (id INT PRIMARY KEY, asset_id INT, title VARCHAR(100));`)
+      .join('\n')
+  sql(
+    ['sb', 'sm', 'st']
+      .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+      .join('\n') +
+      `\nUSE sm; INSERT INTO jos_assets VALUES (155,'com_content.category.2');
+USE st; INSERT INTO jos_assets VALUES (155,'com_content.field.3');` +
+      tables.map((t) => `INSERT INTO jos_${t} VALUES (3,155,'live');`).join('\n')
+  )
+  const answer = merge(null, 'ours')
+  const moved = answer.renumbered.find((r) => r.table === 'assets')
+  assert.ok(moved, JSON.stringify(answer.renumbered))
+  for (const table of tables) {
+    assert.deepEqual(
+      rows(`SELECT a.name FROM sm.jos_${table} r JOIN sm.jos_assets a ON a.id=r.asset_id`),
+      [['com_content.field.3']],
+      table
+    )
+    assert.notEqual(rows(`SELECT asset_id FROM sm.jos_${table}`)[0][0], '155', table)
+  }
+  assert.deepEqual(rows('SELECT name FROM sm.jos_assets WHERE id=155'), [['com_content.category.2']])
+})
