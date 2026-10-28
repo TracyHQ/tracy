@@ -9,7 +9,7 @@
  * `status` is `pass`, `fail`, `live-only` (only a built site can tell), `not-applicable` (the rule
  * does not concern this CMS) or `not-checked` (the rule needs evidence from outside the release, such
  * as the bytes of the Claude Cowork plugin a new site gets, and it could not be read: never a pass). `owner` says who fixes a failure: `template` (whoever makes the
- * template, repo `ja-products`), `contract`, `plugin` or `tracy`.
+ * template, repo `joomlart-products`), `contract`, `plugin` or `tracy`.
  *
  * Static only: every rule reads the release's own files (setting, page list, demo database, source
  * zip) through a release source, which is passed in. No network client is created here, so a test

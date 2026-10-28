@@ -4,7 +4,7 @@
 # Two callers reach them by different roads, and the difference is only where the bytes come from:
 #
 #   deploy-quickstart.sh   a release directory (manifest.json + SHA256SUMS + the two assets),
-#                          downloaded from ja-products or already on disk — the demo-host road.
+#                          downloaded from joomlart-products or already on disk — the demo-host road.
 #   platform/emdash.sh     the pinned catalog (`quickstarts.json`, fetched and checksummed by
 #                          `quickstart.py`) — the road a customer's site takes through provision.
 #

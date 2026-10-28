@@ -3,7 +3,7 @@
 // host needs to download a quickstart release from a private repo, minted here on the machine
 // that holds the App key and never stored on the host (ADR 0023: the fleet holds no App key).
 //
-//   node scripts/quickstart-token.mjs [owner/repo]        default JoomlArt-Products/ja-products
+//   node scripts/quickstart-token.mjs [owner/repo]        default JoomlArt-Products/joomlart-products
 //
 //   ssh root@<fleet-host> 'read -r GITHUB_TOKEN; export GITHUB_TOKEN;
 //     /opt/tracy-fleet/provision/emdash/deploy-quickstart.sh tracy-business' \
@@ -22,7 +22,7 @@ const env = Object.fromEntries(
     .filter((l) => l.includes('=') && !l.startsWith('#'))
     .map((l) => l.split('=').map((s) => s.trim()))
 )
-const repo = process.argv[2] ?? 'JoomlArt-Products/ja-products'
+const repo = process.argv[2] ?? 'JoomlArt-Products/joomlart-products'
 const config = {
   appId: env.GITHUB_HOST_APP_ID,
   privateKey: readFileSync(path.resolve(root, env.GITHUB_HOST_APP_PRIVATE_KEY_FILE), 'utf8')

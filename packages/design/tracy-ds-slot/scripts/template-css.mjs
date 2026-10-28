@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 /**
- * A JA Joomla template's stylesheets compiled from its own sources in ja-products — T4 SCSS with dart-sass,
+ * A JA Joomla template's stylesheets compiled from its own sources in joomlart-products — T4 SCSS with dart-sass,
  * T3 LESS with lessc — the way the role-variable batches rebuild css/*.css after editing scss/ or less/:
  *
- *   node scripts/template-css.mjs <ja-products>/products/joomlart/paid-templates/ja_x/source
+ *   node scripts/template-css.mjs <joomlart-products>/products/joomlart/paid-templates/ja_x/source
  *        [--files template,darkmode]   only these entries (default: every entry whose css/<name>.css exists)
  *        [--write]                     replace css/<name>.css (and its .map when the template keeps one)
  *
  * The sources import the framework by a site path (`../../../plugins/system/t4/themes/base/vendors/...`,
  * `../../../plugins/system/t3/base-bs3/...`), so the compile runs in a throwaway site layout:
  * <tmp>/templates/<tpl> and <tmp>/plugins/system/<fw> are symlinks to the template source and to the
- * framework source in the same ja-products checkout (products/joomlart/frameworks/<fw>/source/plg_system_<fw>).
- * Compilers are pinned: sass 1.97.3 (JA Kinetic, ja-products 45a895423; TEMPLATE_CSS_SASS=<x.y.z> for another) and less 4.2.0 with --math=always
+ * framework source in the same joomlart-products checkout (products/joomlart/frameworks/<fw>/source/plg_system_<fw>).
+ * Compilers are pinned: sass 1.97.3 (JA Kinetic, joomlart-products 45a895423; TEMPLATE_CSS_SASS=<x.y.z> for another) and less 4.2.0 with --math=always
  * (Bootstrap 3 divides without parentheses) and --rewrite-urls=all (T3 writes urls relative to css/).
  *
  * Every entry is compared with the committed css/<name>.css with comments, whitespace, hex case/length and
@@ -61,7 +61,7 @@ if (!fw) throw new Error(`${SRC}: neither scss/ (T4) nor less/ (T3)`)
 const srcDir = join(SRC, fw === 't4' ? 'scss' : 'less')
 const ext = fw === 't4' ? '.scss' : '.less'
 
-// the ja-products checkout the template sits in: the first parent with products/joomlart/frameworks
+// the joomlart-products checkout the template sits in: the first parent with products/joomlart/frameworks
 let root = SRC
 while (root !== dirname(root) && !existsSync(join(root, 'products/joomlart/frameworks'))) root = dirname(root)
 const plugin = join(root, `products/joomlart/frameworks/${fw}/source/plg_system_${fw}`)

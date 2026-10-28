@@ -45,7 +45,7 @@ import {
   validateSetting
 } from '../packages/site/tracy-site-build-core/src/tracy-setting.mjs'
 
-const REPO = 'JoomlArt-Products/ja-products'
+const REPO = 'JoomlArt-Products/joomlart-products'
 /** The Design inspiration card of a release — its own asset since 16/09, next to the setting. */
 const CARD_FILE = 'tracy_design_inspiration.json'
 

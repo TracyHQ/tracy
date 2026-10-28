@@ -681,7 +681,7 @@ function fakeGithub({ assets = [], uploadStatus = 201 } = {}) {
     const url = typeof input === 'string' ? input : input.url
     const method = init.method ?? 'GET'
     calls.push(`${method} ${url}`)
-    if (url.startsWith('https://api.github.com/repos/JoomlArt-Products/ja-products/releases/tags/'))
+    if (url.startsWith('https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/tags/'))
       return new Response(JSON.stringify(release), { status: 200 })
     if (/^https:\/\/api\.github\.com\/.*\/releases\/assets\/\d+$/.test(url) && method === 'DELETE') {
       release.assets = release.assets.filter((a) => `${a.id}` !== url.split('/').pop())

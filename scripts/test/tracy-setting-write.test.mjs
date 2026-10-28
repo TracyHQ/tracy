@@ -218,7 +218,7 @@ test('every hand-pinned release file in the tree is collected, whichever file pi
       artifacts: {
         'a-1.0.0': {
           release: 'tracy-apple/j6',
-          url: 'https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/a-1.0.0.zip',
+          url: 'https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/a-1.0.0.zip',
           sha256: 'a'.repeat(64)
         }
       }
@@ -228,7 +228,7 @@ test('every hand-pinned release file in the tree is collected, whichever file pi
         webroot: {
           file: 'tracy-apple-j6-webroot-1.2.0.tar.gz',
           sha256: 'b'.repeat(64),
-          url: 'https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.2.0.tar.gz'
+          url: 'https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.2.0.tar.gz'
         }
       }
     })
@@ -245,7 +245,7 @@ test('every hand-pinned release file in the tree is collected, whichever file pi
   assert.equal(pins[0].where, 'packages/site/tracy-site-build-joomla/src/host/capabilities.json')
   assert.equal(
     pins[0].repo,
-    'JoomlArt-Products/ja-products',
+    'JoomlArt-Products/joomlart-products',
     'the repository is read off the URL, not assumed'
   )
 })
@@ -381,7 +381,7 @@ test('a card that leaves the template out takes the one the setting declares —
   assert.throws(() => designInspirationFrom({ tag: EMDASH.tag, doc }), /template must be a template id/)
 })
 test('a pin naming a file the release does not carry is reported, and one that matches is not', () => {
-  const repo = 'JoomlArt-Products/ja-products'
+  const repo = 'JoomlArt-Products/joomlart-products'
   const assets = { [`${repo} tracy-apple/j6`]: ['a-1.0.0.zip'] }
   const problems = pinProblems(
     [

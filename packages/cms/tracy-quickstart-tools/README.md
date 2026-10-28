@@ -56,7 +56,7 @@ first and alone) · `--jobs N` (≤ 4) · `--project-prefix P --project-capacity
 `--design slug=null|<catalogue id>` (the one decision the tool never makes: a design the catalogue names
 needs a person to pick its `.design.json`).
 
-What decides which templates are in scope is read from the releases of `JoomlArt-Products/ja-products` on
+What decides which templates are in scope is read from the releases of `JoomlArt-Products/joomlart-products` on
 every run: published (not a draft), a valid `tracy_design_inspiration.json`, no
 `tracy_design_inspiration_hidden.json`, a valid `tracy_setting.json` whose pinned checksums match what
 GitHub reports. Nothing keeps a list of templates.

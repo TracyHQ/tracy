@@ -109,7 +109,7 @@ function records() {
       template: 'ja-kinetic',
       cms: 'j6',
       templateUrl: 'https://www.joomlart.com/joomla/templates/ja-kinetic',
-      releaseUrl: 'https://github.com/JoomlArt-Products/ja-products/releases/tag/quickstart/ja-kinetic/j6',
+      releaseUrl: 'https://github.com/JoomlArt-Products/joomlart-products/releases/tag/quickstart/ja-kinetic/j6',
       referrer: 'https://www.joomlart.com/joomla/templates/ja-kinetic',
       source: { medium: 'blog', source: 'Newsletter' },
       attention: 1
@@ -127,7 +127,7 @@ function records() {
       template: 'ja-purity',
       cms: 'wp',
       templateUrl: null,
-      releaseUrl: 'https://github.com/JoomlArt-Products/ja-products/releases/tag/quickstart/ja-purity/wp',
+      releaseUrl: 'https://github.com/JoomlArt-Products/joomlart-products/releases/tag/quickstart/ja-purity/wp',
       referrer: null
     }
   ]

@@ -1,5 +1,5 @@
 ---
-description: Release a quickstart on ja-products — the two files Tracy reads, how to compose them, and how Tracy reads the release list.
+description: Release a quickstart on joomlart-products — the two files Tracy reads, how to compose them, and how Tracy reads the release list.
 sources:
   - scripts/tracy-setting.mjs
   - scripts/check-pack-modes.mjs
@@ -15,7 +15,7 @@ sources:
 # Releasing a quickstart
 
 A **quickstart** is a pre-built site that a customer's new site starts from. Since 15/09/2026, its source
-of truth is **a release on `JoomlArt-Products/ja-products`**, not any file in the repo
+of truth is **a release on `JoomlArt-Products/joomlart-products`**, not any file in the repo
 ([ADR 0017](../adr/0017-github-release-is-quickstart-source-of-truth.md)).
 
 **Quickstart name = tag name.** `tracy-business/emdash-0.x`, `tracy-base/wp7`, `quickstart/ja-kinetic/j6`.
@@ -354,7 +354,7 @@ download rather than what the release has published.
 
 ## How Tracy reads the release list
 
-`tracy-web` calls the GitHub API through the **App installed on `ja-products`** (`config.github`; fallback for the
+`tracy-web` calls the GitHub API through the **App installed on `joomlart-products`** (`config.github`; fallback for the
 dev machine: `TRACY_RELEASES_GITHUB_TOKEN`), downloads `tracy_setting.json` of every release that has one, validates it against the
 asset list, then stores it in table `quickstart_releases`. Refresh: at boot · every 10 minutes · webhook
 `release` · the **Refresh from GitHub** button on `/ops/cms/quickstarts`.

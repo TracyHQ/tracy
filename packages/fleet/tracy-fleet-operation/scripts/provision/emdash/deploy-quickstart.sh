@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Put a Tracy EmDash quickstart on this fleet host from a ja-products release — the same bytes
+# Put a Tracy EmDash quickstart on this fleet host from a joomlart-products release — the same bytes
 # anyone can download — and expose it through the host's Cloudflare tunnel.
 #
 #   deploy-quickstart.sh <product> [--version 1.0.0|latest] [--from <dir>] [--host <fqdn>] [--port N]
@@ -25,7 +25,7 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd -P)"
 PRODUCT="${1:?product (e.g. tracy-business)}"; shift
-VERSION=latest FROM="" HOST="" PORT="" REPO="JoomlArt-Products/ja-products" LABEL=""
+VERSION=latest FROM="" HOST="" PORT="" REPO="JoomlArt-Products/joomlart-products" LABEL=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --version) VERSION="$2"; shift 2 ;;

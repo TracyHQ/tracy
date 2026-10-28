@@ -409,7 +409,7 @@ function main() {
   const out = deriveProfile({
     sql: readDump(args.dump),
     release,
-    card: { slug, version, tag: args.tag, repo: args.repo ?? 'JoomlArt-Products/ja-products', assets: {} },
+    card: { slug, version, tag: args.tag, repo: args.repo ?? 'JoomlArt-Products/joomlart-products', assets: {} },
     coworkVersion: args['cowork-version'],
     themeRoots: args['theme-roots'].split(','),
     allText: args['all-text'] === true,

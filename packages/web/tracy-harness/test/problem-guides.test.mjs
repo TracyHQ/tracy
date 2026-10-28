@@ -639,7 +639,7 @@ test('no contract on Joomla: ONE prompt with the whole sequence, the version not
   const prompt = o.text
   assert.ok(
     prompt.startsWith(
-      'Use the quickstart-contract skill to make the content contract for the Joomla release quickstart/ja-restaurant/j6 (currently 1.0.2). First check this machine has what the skill needs (DDEV, Docker, gh signed in on the machine that runs DDEV, tracy-dev 0.7.1, checkouts of claude-cowork and ja-products, and a local Tracy) and tell me what is missing before you start.'
+      'Use the quickstart-contract skill to make the content contract for the Joomla release quickstart/ja-restaurant/j6 (currently 1.0.2). First check this machine has what the skill needs (DDEV, Docker, gh signed in on the machine that runs DDEV, tracy-dev 0.7.1, checkouts of claude-cowork and joomlart-products, and a local Tracy) and tell me what is missing before you start.'
     ),
     prompt
   )
@@ -884,7 +884,7 @@ test('Customize your site: the score in the title, both groups, ONE prompt namin
   const prompt = g.outside.text
   for (const rule of ['LOGO-1', 'STAB-1', 'LANG-6']) assert.match(prompt, new RegExp(rule))
   assert.match(prompt, /quickstart\/ja-restaurant\/j6/)
-  assert.match(prompt, /JoomlArt-Products\/ja-products/)
+  assert.match(prompt, /JoomlArt-Products\/joomlart-products/)
   assert.match(prompt, /joomlart-t4-template skill/)
   assert.match(prompt, /quickstart-contract skill/)
   assert.match(prompt, /template-customization-question-readiness\.mjs/)
@@ -918,7 +918,7 @@ test('Customize your site names the skill of each CMS, and a rule only Tracy fix
   assert.equal(tracyOnly.outside.label, 'Send to the dev team')
 })
 
-test('Customize your site sends each fix where its file lives: the contract in tch, a JA template to ja-products, an EmDash template to its folder in tch', () => {
+test('Customize your site sends each fix where its file lives: the contract in tch, a JA template to joomlart-products, an EmDash template to its folder in tch', () => {
   const about3 = (owner) => ({
     ...CUSTOMIZE_FAILING,
     mustFix: [
@@ -945,10 +945,10 @@ test('Customize your site sends each fix where its file lives: the contract in t
   })
   assert.match(wp, /ABOUT-3 \(must fix, Business name, fix in the content contract in the tch repository/)
   assert.doesNotMatch(wp, /fix in the template package/)
-  // A JA template's source is on ja-products, in its own product folder.
+  // A JA template's source is on joomlart-products, in its own product folder.
   assert.match(
     prompt('template', JOOMLA),
-    /fix in the template source in JoomlArt-Products\/ja-products \(products\/joomlart\/\*\/ja_restaurant\/source\)\)/
+    /fix in the template source in JoomlArt-Products\/joomlart-products \(products\/joomlart\/\*\/ja_restaurant\/source\)\)/
   )
   // Tracy's EmDash templates are built from their folder in tch, and that folder exists.
   const em = prompt('template', {
@@ -1057,7 +1057,7 @@ test('every tch file or folder a Customize your site prompt names exists, on eve
   assert.deepEqual([...missing], [])
 })
 
-test('a template fix goes where that template is made: JA Joomla on ja-products, Tracy Joomla to the patches, WordPress to its overlay', () => {
+test('a template fix goes where that template is made: JA Joomla on joomlart-products, Tracy Joomla to the patches, WordPress to its overlay', () => {
   const at = (tag) =>
     promptOf(
       FAMILIES.find((f) => f.tag === tag),
@@ -1065,7 +1065,7 @@ test('a template fix goes where that template is made: JA Joomla on ja-products,
     )
   assert.match(
     at('quickstart/ja-kinetic/j6'),
-    /fix in the template source in JoomlArt-Products\/ja-products \(products\/joomlart\/\*\/ja_kinetic\/source\)/
+    /fix in the template source in JoomlArt-Products\/joomlart-products \(products\/joomlart\/\*\/ja_kinetic\/source\)/
   )
   for (const tag of ['tracy-business/j6', 'tracy-base/j6', 'tracy-apple/j6']) {
     assert.match(at(tag), /packages\/cms\/tracy-joomla-quickstart\/template-patches/, tag)
@@ -1320,7 +1320,7 @@ test('Content coverage red: the prompt carries the whole fix loop, so an agent t
   // template and page problems: the template source, the next version, the same package format; language strings by override
   assert.match(
     text,
-    /fix the template source in JoomlArt-Products\/ja-products, build the next quickstart version in the same package format/
+    /fix the template source in JoomlArt-Products\/joomlart-products, build the next quickstart version in the same package format/
   )
   assert.match(text, /language override/)
   // core: nothing; accepted only with a reason of 12 characters or more; measure again; order of PRs and releases

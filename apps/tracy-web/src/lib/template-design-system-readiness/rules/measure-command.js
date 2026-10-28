@@ -52,7 +52,7 @@ export function measureCommandOf({ platform, tag, version, contract, setting = n
     const state = setting?.install?.state?.file ?? `<state tar of ${version}>`
     lines.push(
       `rm -rf ${WORK} && mkdir -p ${WORK}/src ${WORK}/state && cd ${WORK}`,
-      `gh release download ${q(tag)} -R JoomlArt-Products/ja-products -p ${q(source)} -p ${q(state)}`,
+      `gh release download ${q(tag)} -R JoomlArt-Products/joomlart-products -p ${q(source)} -p ${q(state)}`,
       `unzip -q ${q(source)} -d src && tar -xzf ${q(state)} -C state`,
       `docker build -q -t ${NAME}:${q(version)} "$(dirname "$(find src -maxdepth 3 -name Dockerfile | head -1)")"`,
       `docker run -d --name ${NAME}-web -p 127.0.0.1:${PORT}:4321 -v ${WORK}/state/data:/app/data -v ${WORK}/state/uploads:/app/uploads ${NAME}:${q(version)}`,

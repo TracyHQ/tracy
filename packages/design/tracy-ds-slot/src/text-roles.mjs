@@ -7,7 +7,7 @@
  * read on, and the readable accent as words is `--ds-c-accent-text`; the page colour as words reads only
  * on the band or fill it was meant for, whose words have their own role (`--ds-c-on-ink`,
  * `--ds-c-accent-on`). A code review of JA Restaurant (20/10/2026) found a text `color` reading
- * `var(--ds-c-accent)` in the ja-products sources: under a system with a light accent its words faded
+ * `var(--ds-c-accent)` in the joomlart-products sources: under a system with a light accent its words faded
  * into the page. Read by the Template Design System Readiness rule TEXT-1.
  *
  * The role judged is the one the value paints under a system, its outermost slot read

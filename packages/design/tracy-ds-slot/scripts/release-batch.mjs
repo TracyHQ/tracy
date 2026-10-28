@@ -80,7 +80,7 @@ const OVERLAY = opt('--overlay')
 const SQL = opt('--sql')
 const REPLACE = opt('--replace')
 const BASELINE = opt('--baseline')
-// overlays: the ja-products checkout whose template sources were fixed, and the ref they changed since
+// overlays: the joomlart-products checkout whose template sources were fixed, and the ref they changed since
 const PRODUCTS = opt('--products')
 const BASE = opt('--base')
 const slugs = args.filter((a) => /^[a-z0-9][a-z0-9-]+$/.test(a))
@@ -118,7 +118,7 @@ const contractOf = (slug) => {
         'download',
         tagOf(slug),
         '-R',
-        'JoomlArt-Products/ja-products',
+        'JoomlArt-Products/joomlart-products',
         '-p',
         'tracy_setting.json',
         '-O',
@@ -138,7 +138,7 @@ for (const slug of slugs) {
   const rel = join(dir, 'release')
   if (cmd === 'overlays') {
     if (!PRODUCTS || !BASE) {
-      console.error('overlays needs --products <ja-products checkout> --base <ref>')
+      console.error('overlays needs --products <joomlart-products checkout> --base <ref>')
       process.exit(1)
     }
     const element = slug.replace(/-/g, '_')
@@ -215,7 +215,7 @@ for (const slug of slugs) {
           'download',
           tagOf(slug),
           '-R',
-          'JoomlArt-Products/ja-products',
+          'JoomlArt-Products/joomlart-products',
           '-D',
           join(dir, 'from'),
           '-p',
@@ -253,7 +253,7 @@ for (const slug of slugs) {
             'download',
             tagOf(slug),
             '-R',
-            'JoomlArt-Products/ja-products',
+            'JoomlArt-Products/joomlart-products',
             '-D',
             to,
             '-p',
@@ -461,13 +461,13 @@ for (const slug of slugs) {
     ]
     console.log(`# ${slug} ${m.builtFrom.from} → ${m.version}`)
     console.log(
-      `(cd "${rel}" && shasum -a 256 -c SHA256SUMS && gh release upload "${tagOf(slug)}" -R JoomlArt-Products/ja-products --clobber ${files.join(' ')})`
+      `(cd "${rel}" && shasum -a 256 -c SHA256SUMS && gh release upload "${tagOf(slug)}" -R JoomlArt-Products/joomlart-products --clobber ${files.join(' ')})`
     )
     console.log(
       `# the switch, after the Claude Cowork plugin carrying contract ${m.product ?? slug}/j6/${m.version} is released:`
     )
     console.log(
-      `(cd "${rel}" && gh release upload "${tagOf(slug)}" -R JoomlArt-Products/ja-products --clobber tracy_setting.json)`
+      `(cd "${rel}" && gh release upload "${tagOf(slug)}" -R JoomlArt-Products/joomlart-products --clobber tracy_setting.json)`
     )
   } else if (cmd === 'cowork') {
     if (!COWORK || !/^\d+\.\d+\.\d+$/.test(COWORK_VER ?? ''))
