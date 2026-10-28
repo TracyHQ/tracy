@@ -229,6 +229,9 @@ export function demoQaBody(body) {
     // The business name a wordmark is drawn from where the template's logo shows (`readInPage` `drawWordmark`).
     wordmark:
       typeof body.wordmark === 'string' && body.wordmark.trim() ? body.wordmark.trim().slice(0, 80) : null,
+    // The sweep's brand writer wore the business's own logo (`client-demo.js` `businessLogoDue`): the header logo it
+    // uploaded (`tracy-brand/logo-…`, a folder only that writer fills) is the business's.
+    logoWorn: body.logoWorn === true,
     // The business's own logo as the build imported it, laid in the template logo's box (`fitLogoInPage`).
     logoPicture:
       typeof body.logoPicture === 'string' &&
@@ -3689,7 +3692,13 @@ export function checkCollectedUsed(
 const JOOMLA_LOGO_PLACE =
   ' — on Joomla T4 Tracy puts the business’s logo in the header itself after this check (the template’s site settings): never edit template files or template-style params for it; if a later check still names it, leave it for the reviewer. On T3 use the template style’s logo setting (content.update {kind:"templateStyle"})'
 
-export function checkHeaderBrand(reads, { collected = null, placedSources = {}, platform = null } = {}) {
+/** A logo Tracy's brand writer uploaded (`brand-joomla-places.js`, `brand-wordpress.js`): `<role>-<sha 16>-<stamp>.png`. */
+const BRAND_WRITER_LOGO = /(?:^|\/)tracy-brand\/logo(?:-light|-dark)?-[0-9a-f]{16}-[\w-]+\.png$/
+
+export function checkHeaderBrand(
+  reads,
+  { collected = null, placedSources = {}, platform = null, logoWorn = false } = {}
+) {
   const expected =
     'the header shows the collected logo, or the business name when no logo was collected; it keeps its brand block'
   const judged = reads.filter((r) => r.brand && typeof r.brand === 'object')
@@ -3724,8 +3733,11 @@ export function checkHeaderBrand(reads, { collected = null, placedSources = {}, 
       // The sweep sets a copy of the logo fitted to the template's logo box; it counts when this page's read
       // matched it to the logo by its pixels.
       const fitted = r.fittedLogo?.matches === true && r.fittedLogo.logo ? [fileOf(r.fittedLogo.logo)] : []
+      // The logo the sweep's brand writer wore, fitted to the template's frame under its own name, is the business's
+      // (local measure 28/10/2026: worn on a Joomla T4 header, the check still named the template's logo).
+      const worn = logoWorn && images.some((img) => BRAND_WRITER_LOGO.test(fileOf(img.src)))
       // WordPress's site-logo block shows its own size cut of the file (`<name>-150x150.png`): the same logo.
-      if (!images.some((img) => matchesFile(uncut(fileOf(img.src)), [...logoFiles, ...fitted])))
+      if (!worn && !images.some((img) => matchesFile(uncut(fileOf(img.src)), [...logoFiles, ...fitted])))
         findings.push({
           page: r.path,
           code: 'LOGO_NOT_IN_HEADER',

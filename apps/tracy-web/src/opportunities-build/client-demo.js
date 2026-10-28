@@ -791,6 +791,8 @@ export function createClientDemoService(deps) {
       ...(!logo && typeof name === 'string' && name.trim() ? { wordmark: name.trim() } : {}),
       // The business's own logo, laid in the template logo's box by the page reader (`fittedLogo`).
       ...(logo ? { logoPicture: logo.url } : {}),
+      // …and worn by the sweep's brand writer, under that writer's own file name (`businessLogoDue`).
+      ...(logo && state.build.qa?.brandLogoWorn === logo.url ? { logoWorn: true } : {}),
       // A heading repeating a template post's title is residue the sweep plans, not the page's frame.
       templateTitles: templatePostTitles(checkedPlan(state.build.content.agentDemo)),
       // `collected-used`: everything the research collected is on the site, not only nothing false.

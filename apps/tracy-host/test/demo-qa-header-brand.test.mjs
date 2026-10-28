@@ -137,3 +137,22 @@ test('css-intact: a block stylesheet no longer loaded names the block that was r
   })
   assert.doesNotMatch(theme.detail[0].fix ?? '', /block/)
 })
+
+// Local measure 28/10/2026: the sweep wore Death & Co's logo on its Joomla T4 header under the brand writer's own
+// name, and the check still said the header showed no logo of the business.
+test("header-brand: the logo the sweep's brand writer wore counts, only once it is worn and only from its folder", () => {
+  const withLogo = {
+    ...asked({ name: 'Death & Co', logo: 'm-logo' }, { [LOGO]: '$logo' }),
+    platform: 'joomla'
+  }
+  const header = (src) => [page({ brand: brand({ images: [{ src: `http://x/${src}`, alt: '' }] }) })]
+  const worn = 'images/tracy-brand/logo-c703b88468adc5b4-sweep-logo-mvshdh23.png'
+  assert.equal(checkHeaderBrand(header(worn), { ...withLogo, logoWorn: true }).pass, true)
+  // Not worn by this build's sweep: a brand-writer file alone proves nothing.
+  assert.equal(checkHeaderBrand(header(worn), withLogo).detail[0].code, 'LOGO_NOT_IN_HEADER')
+  // Worn, but the header shows the template's own logo.
+  assert.equal(
+    checkHeaderBrand(header('images/joomlart/logo/logo.png'), { ...withLogo, logoWorn: true }).detail[0].code,
+    'LOGO_NOT_IN_HEADER'
+  )
+})
