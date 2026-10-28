@@ -63,6 +63,52 @@ const BASELINE_ROUTES_MS = 90_000
 const CHECK_ROUTES_MS = 150_000
 /** How long the look may start batches: every route at `LOOK_PARALLEL` calls at once, inside the same wait. */
 const LOOK_MS = 150_000
+/**
+ * 🔒 THE EYE SEES EVERY PAGE AND A FEW OF EACH SITE'S POSTS (local measure 28/10/2026). A look ran out of `LOOK_MS` on 9 of
+ * a Joomla site's 29 pages, 20 of them template posts of one layout, and the next check looked at the same 9 again:
+ * `looks-finished` could never pass, and a WordPress build spent $16 of vision on it. Every page is looked at, then
+ * `LOOK_POSTS` template posts, those the last look did not see first, so successive checks see different posts; the data
+ * checks still read every post. The look's time follows what it looks at, per page, within its bounds.
+ */
+export const LOOK_POSTS = 2
+const LOOK_MS_PER_PAGE = 25_000
+const LOOK_MS_MAX = 300_000
+
+/**
+ * The pages a look looks at, in order: every page that is not a template post as given, then up to `LOOK_POSTS` posts,
+ * those `seen` does not name first. `posts` names the template posts' paths.
+ * @param {string[]} pages @param {Set<string>} posts @param {string[]} [seen]
+ * @returns {{ pages: string[], postsLeft: number }}
+ */
+export function lookSample(pages, posts, seen = []) {
+  const plain = pages.filter((page) => !posts.has(page))
+  const asPost = pages.filter((page) => posts.has(page))
+  const ordered = [
+    ...asPost.filter((page) => !seen.includes(page)),
+    ...asPost.filter((page) => seen.includes(page))
+  ]
+  const picked = ordered.slice(0, LOOK_POSTS)
+  return {
+    pages: [...plain, ...asPost.filter((page) => picked.includes(page))],
+    postsLeft: asPost.length - picked.length
+  }
+}
+/** A look's time for `n` pages. */
+export const lookBudgetMs = (n) => Math.min(LOOK_MS_MAX, Math.max(LOOK_MS, n * LOOK_MS_PER_PAGE))
+/** The paths a build's template posts answer at: their frozen routes and where they moved since (`postRoutes`). */
+function templatePostPaths(build, postRoutes = []) {
+  const records = build.content?.agentDemo?.structure?.inventory?.records ?? []
+  const paths = new Set()
+  for (const record of records)
+    if (isTemplatePost(record, records))
+      for (const route of record.routes ?? []) {
+        const p = typeof route === 'string' ? route : route?.pattern
+        if (typeof p === 'string') paths.add(p)
+      }
+  for (const moved of postRoutes)
+    for (const p of [moved?.was, moved?.route]) if (typeof p === 'string') paths.add(p)
+  return paths
+}
 
 /** The frozen inventory's routes for one QA run, with the time they may take; nothing without an inventory. */
 function qaRoutes(build, routeBudgetMs) {
@@ -723,12 +769,13 @@ export function createClientDemoService(deps) {
     const name = nameHeldOf(state.revision.brief)
       ? siteNameOf(state.revision.brief)
       : (checkedResearch(state.revision).profile?.name ?? state.revision.brief?.business?.name)
+    const routesNow = currentQaRoutes(state.build, inventory, site.platform, CHECK_ROUTES_MS)
     const measured = await deps.demoQa(site, {
       pages: ['/'],
       discover: true,
       incremental,
       baseline: baselineForHost(state.build.qa.baseline),
-      ...currentQaRoutes(state.build, inventory, site.platform, CHECK_ROUTES_MS),
+      ...routesNow,
       ...briefOf(state.revision),
       ...(!logo && typeof name === 'string' && name.trim() ? { wordmark: name.trim() } : {}),
       // The business's own logo, laid in the template logo's box by the page reader (`fittedLogo`).
@@ -829,7 +876,7 @@ export function createClientDemoService(deps) {
     const sweep = sweepOf(worn)
     const lookStarted = now()
     // 🔒 A ROUND THAT SWEEPS IS NOT LOOKED AT (28/10/2026). Its answer is the sweep's calls and is not counted; dsh runs
-    // them and checks again, and that check looks. A look here (up to `LOOK_MS`, every page at both widths) was thrown
+    // them and checks again, and that check looks. A look here (up to `LOOK_MS_MAX`, every page at both widths) was thrown
     // away, up to six times in one check. The last look is carried instead, every page read anew since it named
     // unlooked, so no later check keeps a verdict on a page that changed after it was looked at (`lookCarried`).
     const sweeping = sweepDecision(
@@ -845,18 +892,28 @@ export function createClientDemoService(deps) {
     if (sweeping) judged = lookCarried(lastLook, readPages, reused)
     else {
       kept = reusableLookPages(lastLook, readPages, reused)
-      fresh = readPages.filter((p) => !kept.includes(p))
+      const sample = lookSample(
+        readPages.filter((p) => !kept.includes(p)),
+        templatePostPaths(state.build, routesNow.postRoutes),
+        Array.isArray(lastLook?.seen) ? lastLook.seen : []
+      )
+      fresh = sample.pages
       const lookNow = deps.demoLook
         ? await deps.demoLook(site, {
             pages: fresh.length ? fresh : ['/'],
             accountId: auth.accountId,
             opportunityId: state.action.opportunity_id,
-            budgetMs: LOOK_MS,
+            budgetMs: lookBudgetMs(fresh.length || 1),
             buildId: state.build.id
           })
         : null
       const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
       judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
+      if (judged && sample.postsLeft > 0)
+        judged = {
+          ...judged,
+          measured: `${judged.measured}; ${sample.postsLeft} more template posts left to the data checks (the eye sees ${LOOK_POSTS} a check)`
+        }
     }
     if (judged) checks.splice(head.length, 0, judged)
     // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).

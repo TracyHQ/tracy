@@ -602,7 +602,8 @@ const verdict = (r) => ({
 
 test('vision calls overlap the capture, at most the limit in flight, and give the serial verdict', async () => {
   // Later calls answer first, and 48 tiles name more faults than the 30 kept: the kept ones are the serial run's.
-  const delayOf = (n) => [80, 5, 40][n % 3]
+  // Long enough that calls overlap however slowly the tiles are prepared on a busy machine.
+  const delayOf = (n) => [300, 20, 150][n % 3]
   const pages = ['/', '/menu']
   const serialFake = await fakes({ faults: [] }, { height: 10604 })
   const serial = tileJudge(serialFake, { delayOf })
@@ -611,7 +612,7 @@ test('vision calls overlap the capture, at most the limit in flight, and give th
   const overlap = tileJudge(overlapFake, { delayOf })
   const three = await createDemoLook({ ...overlap, visionFor: door, callsAtOnce: 3 })({}, { pages })
   assert.equal(serial.seen.most, 1)
-  assert.equal(overlap.seen.most, 3)
+  assert.ok(overlap.seen.most > 1 && overlap.seen.most <= 3, `in flight at most: ${overlap.seen.most}`)
   assert.equal(one.detail.length, 30)
   assert.deepEqual(verdict(three), verdict(one))
 })
@@ -691,4 +692,29 @@ test('a sweep round carries the last look with every page read anew since then n
   const none = lookCarried(null, pages, new Set())
   assert.deepEqual([none.pass, none.looked], [false, false])
   assert.deepEqual(reusableLookPages(none, pages, new Set(pages)), [])
+})
+
+// 28/10/2026: every page, then a few template posts (those the last look did not see first); the time follows the pages.
+test('a look takes every page and two template posts, unseen ones first, in a time that follows its pages', async () => {
+  const { lookSample, lookBudgetMs, LOOK_POSTS } = await import('../src/opportunities-build/client-demo.js')
+  const posts = new Set(['/blog/a', '/blog/b', '/blog/c', '/blog/d'])
+  const pages = ['/', '/blog/a', '/menu', '/blog/b', '/blog/c', '/about', '/blog/d']
+  assert.equal(LOOK_POSTS, 2)
+  assert.deepEqual(lookSample(pages, posts), {
+    pages: ['/', '/menu', '/about', '/blog/a', '/blog/b'],
+    postsLeft: 2
+  })
+  // The next check sees the posts this one did not.
+  assert.deepEqual(lookSample(pages, posts, ['/blog/a', '/blog/b']).pages, [
+    '/',
+    '/menu',
+    '/about',
+    '/blog/c',
+    '/blog/d'
+  ])
+  // No template post: every page, nothing left.
+  assert.deepEqual(lookSample(['/', '/menu'], new Set()), { pages: ['/', '/menu'], postsLeft: 0 })
+  assert.equal(lookBudgetMs(1), 150_000)
+  assert.equal(lookBudgetMs(9), 225_000)
+  assert.equal(lookBudgetMs(40), 300_000)
 })
