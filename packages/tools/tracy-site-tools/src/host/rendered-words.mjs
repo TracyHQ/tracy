@@ -837,13 +837,23 @@ export async function replaceRendered(input) {
       }))
     if (plan.all === false && plan.expect === null)
       for (const [i, c] of changes.entries())
-        if (placesOf(i) > 1)
+        if (c.expect === undefined && placesOf(i) > 1)
           return refuse(
             'AMBIGUOUS',
             renderedText('ambiguousError', { find: c.find, n: placesOf(i), path }),
             renderedText('ambiguousNext'),
             { find: c.find, candidates: shown.slice(0, 4) }
           )
+    // A change that carries its own `expect` is counted on its own, as the store search counts it (`countRefusal`).
+    for (const [i, c] of changes.entries())
+      if (c.expect !== undefined && placesOf(i) !== c.expect)
+        return refuse(
+          'COUNT_MISMATCH',
+          replaceText('countMismatchError', { expect: c.expect, n: placesOf(i), find: c.find }),
+          replaceText('countMismatchNext', { n: placesOf(i) }),
+          { would: shown, count: placesOf(i), ...(changes.length > 1 ? { change: i } : {}) }
+        )
+    const unconfirmed = changes.reduce((n, c, i) => n + (c.expect === undefined ? placesOf(i) : 0), 0)
     if (plan.expect !== null && places !== plan.expect)
       return refuse(
         'COUNT_MISMATCH',
@@ -860,13 +870,13 @@ export async function replaceRendered(input) {
       plan.expect === null &&
       input.confirmed !== true &&
       !plan.dryRun &&
-      places > REPLACE_CONFIRM_OVER
+      unconfirmed > REPLACE_CONFIRM_OVER
     )
       return refuse(
         'VALUE_NOT_ALLOWED',
-        replaceText('confirmCountError', { n: places, how: '' }),
-        replaceText('confirmCountNext', { n: places }),
-        { rule: 'confirm-count', would: shown, count: places }
+        replaceText('confirmCountError', { n: unconfirmed, how: '' }),
+        replaceText('confirmCountNext', { n: unconfirmed }),
+        { rule: 'confirm-count', would: shown, count: unconfirmed }
       )
     if (rebase) {
       const identity = (/** @type {Record<string, any>} */ r) =>
