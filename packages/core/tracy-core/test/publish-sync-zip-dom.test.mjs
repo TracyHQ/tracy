@@ -1204,3 +1204,17 @@ test('Sync: "x minutes ago" is redrawn every half minute while the step is open'
     Date.now = realNow
   }
 })
+
+test('Sync: firewall, HTTP password, rate limit and token each have actionable words', () => {
+  const keys = {
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }
+  for (const [code, key] of Object.entries(keys)) {
+    assert.equal(lib.failureText(code, t), t(key))
+    assert.ok(!t(key).includes('⟦'))
+  }
+  assert.equal(new Set(Object.keys(keys).map((code) => lib.failureText(code, t))).size, 4)
+})

@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-92-sync-access-refusals",
+  "kind": "fix",
+  "title": "Live sync explains HTTP protection and respects Retry-After without resending uncertain writes",
+  "pr": 92,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run both sync clients against real HTTP protection responses."],
+  "expect": [
+    "Firewall, HTML challenge, HTTP password and token refusals have distinct codes.",
+    "Numeric and HTTP-date Retry-After prevent early retries, including a 120-second delay.",
+    "A rate limit never probes another endpoint immediately."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-network-errors.test.mjs"
+    ],
+    "tests": [
+      "pull: firewall, password, challenge and token refusals remain distinct",
+      "push: firewall, password, challenge and token refusals remain distinct",
+      "pull: a 429 respects Retry-After and preserves rate-limit classification",
+      "push: a 429 respects Retry-After and preserves rate-limit classification",
+      "the stand route preserves an HTTP-date Retry-After header for both directions"
+    ]
+  }
+}

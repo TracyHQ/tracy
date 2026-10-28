@@ -1388,7 +1388,7 @@ test(
 
 // #1564: the read's own reason reaches the answer — the owner is told the site kept changing, not
 // that it could not be read. No database: the read ends before any lock or merge.
-test('a live site that kept changing is answered LIVE_BUSY; any other failed read LIVE_READ_FAILED', () => {
+test('failed live reads retain busy and access codes; unknown failures use LIVE_READ_FAILED', () => {
   const srv = mkdtempSync(join(tmpdir(), 'tracy-live-sync-read-'))
   try {
     const priv = join(srv, LABEL)
@@ -1423,7 +1423,13 @@ test('a live site that kept changing is answered LIVE_BUSY; any other failed rea
     const busy = { ok: false, code: 'LIVE_BUSY', detail: 'the database kept changing (content, weblinks)' }
     assert.deepEqual(said(busy), { ok: false, code: 'LIVE_BUSY', read: busy })
     const refused = { ok: false, code: 'TOKEN_REFUSED' }
-    assert.deepEqual(said(refused), { ok: false, code: 'LIVE_READ_FAILED', read: refused })
+    assert.deepEqual(said(refused), { ok: false, code: 'TOKEN_REFUSED', read: refused })
+    for (const code of ['LIVE_PASSWORD_PROTECTED', 'LIVE_BLOCKED', 'LIVE_RATE_LIMITED']) {
+      const read = { ok: false, code }
+      assert.deepEqual(said(read), { ok: false, code, read })
+    }
+    const unknown = { ok: false, code: 'UNKNOWN_READ_FAILURE' }
+    assert.deepEqual(said(unknown), { ok: false, code: 'LIVE_READ_FAILED', read: unknown })
   } finally {
     rmSync(srv, { recursive: true, force: true })
   }
