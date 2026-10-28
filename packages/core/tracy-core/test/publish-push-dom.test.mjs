@@ -824,6 +824,13 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
   assert.equal(lib.pushStepOf('failed', row({ state: 'failed', phase: 'apply' })), 'send')
   assert.equal(lib.pushFailureText('PREVIEW_STALE', t), t('push.error.copyChanged'))
   assert.equal(lib.pushFailureText('LIVE_UNREACHABLE', t), t('push.error.liveUnreachable'))
+  for (const [code, key] of Object.entries({
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }))
+    assert.equal(lib.pushFailureText(code, t), t(key))
   assert.equal(lib.pushFailureText('NOT_PUSHED', t), t('push.error.notPushed'))
   assert.equal(lib.pushFailureText('WEIRD', t), t('push.failed', { error: 'WEIRD' }))
   assert.equal(lib.itemName({ id: 'x', kind: 'post', title: null }, t), 'Post')

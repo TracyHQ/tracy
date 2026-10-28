@@ -438,7 +438,13 @@ export function timingOf(output) {
  * (#1564): the owner is told to try again when the site is quiet, not that it could not be read.
  */
 function failedCode(said, fallback) {
-  if (said?.code === 'LIVE_READ_FAILED' && said.read?.code === 'LIVE_BUSY') return 'LIVE_BUSY'
+  if (
+    said?.code === 'LIVE_READ_FAILED' &&
+    ['LIVE_BUSY', 'LIVE_BLOCKED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED', 'TOKEN_REFUSED'].includes(
+      said.read?.code
+    )
+  )
+    return said.read.code
   return said?.code ?? fallback
 }
 
