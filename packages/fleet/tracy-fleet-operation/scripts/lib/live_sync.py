@@ -535,6 +535,31 @@ def stat_manifest(repo: str, rev: str, stat: dict) -> dict[str, dict]:
 # Conditions of `refs` that reach the record's kind through another table of the same schema.
 FIELD_CONTEXT = "field_id IN (SELECT f.id FROM {{fields}} f WHERE f.context {context})"
 UCM_TYPE = "ucm_type_id IN (SELECT ct.type_id FROM {{content_types}} ct WHERE ct.type_alias = '{alias}')"
+# Phoca Cart's rows that belong to one product, read from its install SQL
+# (admin/install/sql/mysql/install.utf8.sql, Phoca Cart 6.1.9, PhocaCz/PhocaCart@87834868): the
+# product's own tables keyed by its id, its translations, tags, labels, parameter values, related
+# products, and its customer groups (`item_groups`, type 3 = product: admin/libraries/phocacart/group/
+# group.php). Orders, reviews, wishlists and hits name a product but are a customer's, not the product's.
+PHOCACART_PRODUCT_ROWS = [
+    ("phocacart_product_categories", "product_id", None, None),
+    ("phocacart_product_featured", "product_id", None, None),
+    ("phocacart_product_images", "product_id", None, None),
+    ("phocacart_product_files", "product_id", None, None),
+    ("phocacart_product_discounts", "product_id", None, None),
+    ("phocacart_product_price_groups", "product_id", None, None),
+    ("phocacart_product_point_groups", "product_id", None, None),
+    ("phocacart_product_stock", "product_id", None, None),
+    ("phocacart_product_price_history", "product_id", None, None),
+    ("phocacart_attributes", "product_id", None, None),
+    ("phocacart_specifications", "product_id", None, None),
+    ("phocacart_products_i18n", "id", None, None),
+    ("phocacart_tags_related", "item_id", None, None),
+    ("phocacart_taglabels_related", "item_id", None, None),
+    ("phocacart_parameter_values_related", "item_id", None, None),
+    ("phocacart_product_related", "product_a", None, None),
+    ("phocacart_product_related", "product_b", None, None),
+    ("phocacart_item_groups", "item_id", "type = 3", None),
+]
 
 POLICIES = {
     "joomla": {
@@ -568,6 +593,8 @@ POLICIES = {
         "naturalKeys": {
             "contentitem_tag_map": ["type_alias", "content_item_id", "tag_id"],
             "fields_values": ["field_id", "item_id", "value"],
+            # Phoca Cart 6.1.9 gives it no key at all; its four columns are NOT NULL and are the row.
+            "phocacart_item_groups": ["item_id", "group_id", "product_id", "type"],
         },
         # Columns a CMS restamps on every save of the record they belong to, never edited by a
         # person: not compared (a row that differs only there is the same row) and never taken on
@@ -587,7 +614,11 @@ POLICIES = {
         # changed it: Tracy wins), these rows of it stay too, though the live site deleted them with
         # it. (table, column, condition, the record's column it holds — its id when None). Without
         # them the record stays half: an article with no workflow row is missing from the
-        # administrator's list while the site still serves it (#1647, 23/10/2026).
+        # administrator's list while the site still serves it (#1647, 23/10/2026). The other way too:
+        # when the live site's new record is held (`added-both`: both sites added one under the same
+        # number, in a table the adapter cannot number again), the rows the live site added with it
+        # stay out of the copy and are named with it (`belonging`); taken one by one, Tracy's product
+        # gained the live product's category and nothing said so (27/10/2026).
         "dependents": {
             "content": [("workflow_associations", "item_id", "extension = 'com_content.article'", None),
                         ("contentitem_tag_map", "content_item_id", "type_alias = 'com_content.article'", None),
@@ -605,6 +636,7 @@ POLICIES = {
             "modules": [("modules_menu", "moduleid", None, None), ("assets", "id", None, "asset_id")],
             "users": [("user_usergroup_map", "user_id", None, None),
                       ("fields_values", "item_id", FIELD_CONTEXT.format(context="= 'com_users.user'"), None)],
+            "phocacart_products": PHOCACART_PRODUCT_ROWS,
         },
         # Counters both sites move on their own (a page view, a banner shown or clicked): when both
         # moved one, the larger stays and it is not a clash (#1648: an impression count was listed
@@ -627,7 +659,8 @@ POLICIES = {
         "uncountedTables": {"assets", "workflow_associations", "ucm_content", "ucm_base", "contentitem_tag_map",
                             "content_frontpage", "modules_menu", "user_usergroup_map", "fields_values",
                             "history", "ucm_history", "action_logs", "messages", "scheduler_logs",
-                            "redirect_links", "update_sites", "update_sites_extensions", "schemas"},
+                            "redirect_links", "update_sites", "update_sites_extensions", "schemas",
+                            *{t for t, _, _, _ in PHOCACART_PRODUCT_ROWS}},
         "volatileColumns": {"lastvisitDate", "lastResetTime",
                             "resetCount", "modified", "modified_by", "modified_user_id", "modified_time",
                             "version",
@@ -1366,6 +1399,10 @@ class DbMerge:
                        "skipped": 0, "records": 0}
         # The live site's rows `skipped` counts, named: a count alone told nobody what (#1648).
         self.skipped: list[dict] = []
+        # The live site's new records the merge did not take (`added-both`, not picked "theirs"), per
+        # table of records (`dependents`): `{name: {id: its conflict, or None when a person picked
+        # "ours"}}`. The rows the live site added with them stay out (`held_record_rows`).
+        self.held_records: dict[str, dict[str, dict | None]] = {}
         self.order_kept = False
         self.schemas: tuple = ()
         self.theirs = Schema(theirs)
@@ -1887,6 +1924,10 @@ class DbMerge:
             if self.counted(name):
                 self.counts["records"] += self.live_records(table, name, key, M) if key else 1
             self.take_table(table)
+            # Taken whole, then the rows the live site added with a record the merge held go again
+            # (`held_record_rows`): only those. Kept from being taken whole instead, a table with no
+            # key (Phoca Cart's `item_groups`) was the copy's entirely, live rows of other records too.
+            self.drop_held_rows(table, name, key)
             return "from-theirs"
         if not same_columns:
             return self.table_conflict(table, "schema-changed")
@@ -1944,6 +1985,96 @@ class DbMerge:
     def holds_kept_rows(self, table: str, name: str) -> bool:
         cond = self.kept_record_rows(name)
         return bool(cond and self.sql.run(f"SELECT 1 FROM {self.ref('ours', table)} r WHERE {cond} LIMIT 1;"))
+
+    def held_rules(self, name: str) -> list[tuple[str, str, str | None, str]]:
+        """The `dependents` rules that make rows of table `name` belong to a record the merge held:
+        (the records' table, the row's column, its condition, the record's column it holds)."""
+        out = []
+        for parent, rules in self.policy.get("dependents", {}).items():
+            if not self.held_records.get(parent):
+                continue
+            for table, column, where, holds in rules:
+                if table == name:
+                    out.append((parent, column, where, holds or self.ids.key(parent)))
+        return out
+
+    def held_record_rows(self, name: str) -> str | None:
+        """A condition on a row `r` of table `name` in the live read: it belongs to a new record of the
+        live site the merge held (`held_records`). None when no held record has rows there."""
+        parts = []
+        for parent, column, where, holds in self.held_rules(name):
+            ids = ", ".join(sql_str(i) for i in sorted(self.held_records[parent]))
+            cond = (f"r.{q(column)} IN (SELECT p.{q(holds)} FROM {self.ref('theirs', self.prefix + parent)} p"
+                    f" WHERE CAST(p.{q(self.ids.key(parent))} AS CHAR) IN ({ids}))")
+            if where:
+                cond += f" AND ({self.ids.cond(self.names['theirs'], where)})"
+            parts.append(f"({cond})")
+        return " OR ".join(parts) or None
+
+    def drop_held_rows(self, table: str, name: str, key: list[str] | None) -> None:
+        """After `table` was taken whole (the copy had left it as the base): the rows of a record the
+        merge held go again, named with it — one the live site added goes, one it changed to point
+        at that record is the base's (the copy's) again. Matched to the base by the table's key; a
+        table with none by every column, where a changed row reads as one deleted and one added,
+        and the deleted one is the live site's change of another record."""
+        cond = self.held_record_rows(name)
+        if not cond:
+            return
+        m, b = self.ref("ours", table), self.ref("base", table)
+        names = {c for c, _ in self.schemas[0].columns.get(table, [])}
+        cols = [c for c, _ in self.schemas[2].columns[table] if c in names]
+        match = key if key and all(c in names for c in key) else None
+        if not cols:
+            return
+        same = " AND ".join(f"x.{q(c)} <=> r.{q(c)}" for c in (match or cols))
+        moved = f"NOT EXISTS (SELECT 1 FROM {b} x WHERE {' AND '.join(f'x.{q(c)} <=> r.{q(c)}' for c in cols)})"
+        self.name_held_rows(table, name, match or cols, f"{m} r WHERE {moved}", keyed=bool(match))
+        listed = ", ".join(q(c) for c in cols)
+        back = f"{q(self.work)}.{q('held_back_' + hashlib.sha1(table.encode()).hexdigest()[:16])}"
+        script = []
+        if match:
+            # Before the live rows go: the base's version of each row the live site pointed there.
+            script.append(f"CREATE TEMPORARY TABLE {back} AS SELECT x.* FROM {b} x WHERE EXISTS"
+                          f" (SELECT 1 FROM {m} r WHERE ({cond}) AND {moved} AND {same});")
+        script.append(f"DELETE r FROM {m} r WHERE ({cond}) AND {moved};")
+        if match:
+            script.append(f"INSERT INTO {m} ({listed}) SELECT {listed} FROM {back};")
+            script.append(f"DROP TEMPORARY TABLE {back};")
+        self.sql.run("\n".join(script))
+
+    def name_held_rows(self, table: str, name: str, pk: list[str], rows_of: str, keyed: bool) -> None:
+        """The rows of `table` left out as a held record's, named with that record: on its conflict
+        (`belonging`), or in `skipped` when a person already picked the copy's record. `rows_of`: the
+        rows that may be, as `<table> r WHERE …`; each rule's condition picks among them. `keyed`:
+        `pk` matches a row to the base's, and a row the base had is named `changed` (the copy kept
+        its own version; the live one, pointed at the held record, was not taken)."""
+        b = self.ref("base", table)
+        in_base = (f"EXISTS (SELECT 1 FROM {b} x WHERE {' AND '.join(f'x.{q(c)} <=> r.{q(c)}' for c in pk)})"
+                   if keyed else "FALSE")
+        for parent, column, where, holds in self.held_rules(name):
+            key = q(self.ids.key(parent))
+            # The rule's condition inside a table of its own: its bare columns are the row's.
+            cond = f" AND ({self.ids.cond(self.names['theirs'], where)})" if where else ""
+            picked = f"(SELECT r.* FROM {rows_of}{cond}) r"
+            rows = self.sql.run(
+                f"SELECT CAST(p.{key} AS CHAR), {in_base}, {', '.join('HEX(CAST(r.' + q(c) + ' AS BINARY))' for c in pk)}"
+                f" FROM {picked} JOIN {self.ref('theirs', self.prefix + parent)} p ON p.{q(holds)} = r.{q(column)}"
+                f" ORDER BY {', '.join('r.' + q(c) for c in pk)};")
+            for row in rows:
+                if row[0] not in self.held_records[parent]:
+                    continue
+                key_of = dict(zip(pk, (bytes.fromhex(h).decode("utf-8", "replace") for h in row[2:])))
+                entry = {"table": table, "key": key_of, **({"changed": True} if row[1] == "1" else {})}
+                conflict = self.held_records[parent][row[0]]
+                if conflict is not None:
+                    if len(conflict.setdefault("belonging", [])) < SKIPPED_LIMIT:
+                        conflict["belonging"].append(entry)
+                    conflict["belongingCount"] = conflict.get("belongingCount", 0) + 1
+                else:
+                    self.counts["skipped"] += 1
+                    self.skipped.append({"id": f"db:{table}:{json.dumps(list(key_of.values()), ensure_ascii=False)}",
+                                         "kind": "row", **entry, "reason": "belongs-to-held",
+                                         "record": {"table": self.prefix + parent, "id": row[0]}})
 
     # ── the order of a tree's siblings ──────────────────────────────────────────────────────────
 
@@ -2106,6 +2237,13 @@ class DbMerge:
                 script.append(f"DELETE k FROM {k} k JOIN {side} r ON {on('k', 'r')} WHERE {tracy_rows};")
         script.append(f"UPDATE {k} SET cls = CASE WHEN ht <=> hb OR hm <=> ht THEN NULL"
                       f" WHEN hm <=> hb THEN 'T' ELSE 'X' END;")
+        held_rows = self.held_record_rows(name)
+        if held_rows:
+            # The live site added the row with a new record of its own the merge held (`added-both`),
+            # or pointed a row it had at that record: not taken onto the copy's record that has its
+            # number. Set aside — the copy keeps its own version, if any — and named with it.
+            script.append(f"UPDATE {k} SET cls = 'H' WHERE cls IN ('T', 'X') AND ht IS NOT NULL AND ({pk_list}) IN"
+                          f" (SELECT {', '.join('r.' + q(c) for c in pk)} FROM {t} r WHERE {held_rows});")
         kept_rows = self.kept_record_rows(name)
         if kept_rows:
             # The live site deleted a row the copy left alone, with the record it belongs to; the
@@ -2133,6 +2271,9 @@ class DbMerge:
                           f" LEFT JOIN {k} kd ON {on('kd', 'rm')} AND kd.cls = 'T' AND kd.ht IS NULL"
                           f" SET k.cls = 'U' WHERE k.cls IN ('T', 'X') AND kd.{first} IS NULL;")
         self.sql.run("\n".join(script))
+        if held_rows:
+            self.name_held_rows(table, name, pk, f"{t} r WHERE ({', '.join('r.' + q(c) for c in pk)}) IN"
+                                                 f" (SELECT {pk_list} FROM {k} WHERE cls = 'H')", keyed=True)
 
         # The records this table brings, read before anything is written (`records`): a row the live
         # site added or deleted, or changed in a column a person edits (only the live site: T; both,
@@ -2179,11 +2320,17 @@ class DbMerge:
                 continue
             if reason:
                 pick = self.decisions.get(rid)
+                conflict = None
                 if pick == "theirs":
                     take_rows.append(keys)
                 elif pick != "ours":
-                    found.append({"id": rid, "kind": "row", "table": table, "reason": reason,
-                                  "key": dict(zip(pk, key)), "_keys": keys, "_columns": None})
+                    conflict = {"id": rid, "kind": "row", "table": table, "reason": reason,
+                                "key": dict(zip(pk, key)), "_keys": keys, "_columns": None}
+                    found.append(conflict)
+                # The live site's new record stays out: so do the rows it added with it (`dependents`).
+                if (reason == "added-both" and pick != "theirs" and name in self.policy.get("dependents", {})
+                        and pk == [self.ids.key(name)]):
+                    self.held_records.setdefault(name, {})[key[0]] = conflict
                 continue
             for c in filter(None, cc.split(",")):
                 pick = self.decisions.get(f"{rid}:{c}")

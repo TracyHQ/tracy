@@ -196,7 +196,7 @@ function write(root, files) {
   }
 }
 
-function stack() {
+function stack(extraTables = '') {
   const srv = mkdtempSync(join(tmpdir(), 'tracy-live-sync-'))
   const priv = join(srv, LABEL)
   const webroot = join(priv, '.webroot')
@@ -239,7 +239,7 @@ function stack() {
     sql(`DROP DATABASE \`${db}\``)
   }
   sql('CREATE DATABASE joomla CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
-  sql(TABLES, 'joomla')
+  sql(TABLES + extraTables, 'joomla')
   sql(`UPDATE jos_extensions SET params='{"domain": ""}' WHERE element='sef'`, 'joomla')
   write(webroot, { ...SITE_FILES, 'configuration.php': config(COPY_CONFIG) })
   execFileSync(
@@ -254,7 +254,7 @@ function stack() {
   const live = join(srv, 'live-site')
   write(live, { ...SITE_FILES, 'configuration.php': config(LIVE_CONFIG) })
   sql('CREATE DATABASE livesrc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
-  sql(TABLES, 'livesrc')
+  sql(TABLES + extraTables, 'livesrc')
 
   let reads = 0
   return {
@@ -311,6 +311,39 @@ function stack() {
       })
       assert.equal(r.status, 0, r.stderr)
       return JSON.parse(r.stdout.trim().split('\n').at(-1))
+    },
+    /**
+     * `sync` as tracy-host starts it, with a live read that succeeds: a `live-pull.mjs` stand-in
+     * that lays the read in `from` (a `read()`'s `live/`) into the run and answers `pull`. The
+     * script's own stderr comes back with the answer: the progress tracy-host keeps from it.
+     */
+    syncPulled: (dir, pull, from) => {
+      const lib = join(srv, 'lib-copy-pull')
+      if (!existsSync(lib)) {
+        mkdirSync(lib)
+        for (const name of readdirSync(join(scripts, 'lib')))
+          if (name !== 'live-pull.mjs') symlinkSync(join(scripts, 'lib', name), join(lib, name))
+        writeFileSync(
+          join(lib, 'live-pull.mjs'),
+          `import { cpSync } from 'node:fs'
+cpSync(process.env.FAKE_LIVE, process.argv[2] + '/live', { recursive: true })
+console.log(process.env.FAKE_PULL)
+`
+        )
+      }
+      const r = spawnSync('bash', [SYNC, '--label', LABEL, '--op', 'sync', '--dir', dir], {
+        encoding: 'utf8',
+        env: {
+          ...env,
+          TRACY_LIB_DIR: lib,
+          TRACY_SYNC_ENDPOINT: 'https://shop.example/claudecowork',
+          TRACY_SYNC_TOKEN: 'token-of-test',
+          FAKE_LIVE: from,
+          FAKE_PULL: JSON.stringify(pull)
+        }
+      })
+      assert.equal(r.status, 0, r.stderr)
+      return { answer: JSON.parse(r.stdout.trim().split('\n').at(-1)), stderr: r.stderr }
     },
     /**
      * `sync` as tracy-host starts a Sync anyway (#1649): the held sync's run named, people's word
@@ -1405,3 +1438,92 @@ test('the live read is normalised the way provision normalised the copy (one sta
   assert.ok(provision.includes("WHERE type = 'plugin' AND folder = 'system' AND element = 'sef'"))
   assert.ok(engine.includes("WHERE type = 'plugin' AND folder = 'system' AND element = 'sef'"))
 })
+
+// Phoca Cart's product tables (Phoca Cart 6.1.9's install SQL, the columns the merge reads): a table
+// the adapter cannot number again, and two tables of rows that belong to a product.
+const PHOCA_TABLES = `
+CREATE TABLE jos_phocacart_products (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), alias VARCHAR(255));
+CREATE TABLE jos_phocacart_product_categories (product_id INT NOT NULL DEFAULT 0, category_id INT NOT NULL DEFAULT 0,
+  ordering INT NOT NULL DEFAULT 0, UNIQUE KEY idx_category (product_id, category_id));
+CREATE TABLE jos_phocacart_product_images (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT NOT NULL DEFAULT 0,
+  image VARCHAR(255) NOT NULL DEFAULT '');
+INSERT INTO jos_phocacart_products VALUES (5,'Mug','mug');
+INSERT INTO jos_phocacart_product_categories VALUES (5,1,1);
+`
+
+test(
+  'a product both sites added under one number is held with the rows the live site made for it; Sync anyway leaves them out, and the read’s timing line reaches the row',
+  opts,
+  async () => {
+    const { syncProgressLine } = await import('../../../../apps/tracy-host/src/webroot.js')
+    const { timingOf } = await import('../../../../apps/tracy-web/src/sites/live-sync.js')
+    const s = stack(PHOCA_TABLES)
+    try {
+      sql(
+        "INSERT INTO jos_phocacart_products VALUES (6,'Tracy hat','tracy-hat'); INSERT INTO jos_phocacart_product_categories VALUES (6,1,2);",
+        'joomla'
+      )
+      sql(
+        "INSERT INTO jos_phocacart_products VALUES (6,'Live scarf','live-scarf'); INSERT INTO jos_phocacart_product_categories VALUES (6,2,1);" +
+          " INSERT INTO jos_phocacart_product_images VALUES (2,6,'scarf.jpg');",
+        'livesrc'
+      )
+      const staged = s.read()
+      const dir = join(s.priv, 'sync', 'runs', 'phoca')
+      mkdirSync(dir, { recursive: true })
+      writeFileSync(join(staged, 'live', 'fingerprint.json'), JSON.stringify({ version: 1, pageSize: 50000 }))
+      const pull = {
+        ok: true,
+        liveReadAt: '2026-10-28T09:00:00.000Z',
+        mode: 'incremental',
+        seconds: 3.2,
+        timing: { fingerprint: 0.4, database: 2.1, files: 0.7 }
+      }
+      const { answer, stderr } = s.syncPulled(dir, pull, join(staged, 'live'))
+      assert.equal(answer.state, 'needs_attention', JSON.stringify(answer))
+      assert.deepEqual(
+        answer.held.map((h) => [h.id, h.reason, h.belonging]),
+        [
+          [
+            'db:jos_phocacart_products:["6"]',
+            'added-both',
+            [
+              { table: 'jos_phocacart_product_categories', key: { product_id: '6', category_id: '2' } },
+              { table: 'jos_phocacart_product_images', key: { id: '2' } }
+            ]
+          ]
+        ]
+      )
+      // F1: the read's timing line as the real script printed it, kept by tracy-host and read by tracy-web.
+      const kept = stderr.split('\n').map(syncProgressLine).filter(Boolean)
+      assert.ok(
+        kept.some((l) => l.startsWith('{')),
+        `no read line kept from:\n${stderr}`
+      )
+      assert.deepEqual(timingOf(kept.join('\n')).read, {
+        mode: 'incremental',
+        seconds: 3.2,
+        parts: { fingerprint: 0.4, database: 2.1, files: 0.7 }
+      })
+
+      // Sync anyway: Tracy's product stays as Tracy made it, in its own category, with no live image.
+      const anywayDir = join(s.priv, 'sync', 'runs', 'phoca-anyway')
+      mkdirSync(anywayDir, { recursive: true })
+      const anyway = s.syncAnyway(anywayDir, dir, {
+        check: { ok: true, unchanged: 'fingerprint', liveReadAt: '2026-10-28T09:00:00.000Z' }
+      })
+      assert.equal(anyway.answer.state, 'applied', JSON.stringify(anyway.answer))
+      assert.deepEqual(rows('SELECT title FROM jos_phocacart_products WHERE id = 6'), [['Tracy hat']])
+      assert.deepEqual(
+        rows('SELECT product_id, category_id FROM jos_phocacart_product_categories ORDER BY 1, 2'),
+        [
+          ['5', '1'],
+          ['6', '1']
+        ]
+      )
+      assert.deepEqual(rows('SELECT id FROM jos_phocacart_product_images'), [])
+    } finally {
+      s.dispose()
+    }
+  }
+)
