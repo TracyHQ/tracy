@@ -852,7 +852,6 @@ restore_sqlite() {
   fi
   rm -rf "$stage"
   step swap done
-  rm -f "$fk_plan"
   step check done
   restore_answer 1 "" "" "" ""
 }
