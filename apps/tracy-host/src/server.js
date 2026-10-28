@@ -58,7 +58,9 @@ export async function start({
   const shoot = await makeShoot({ log, visionStreams: config.browserRuns })
   const outline = await makeOutline({ log })
   const demoQa = await makeDemoQa({ log, runsAtOnce: config.browserRuns, tabsAtOnce: config.demoQaTabs })
-  log.log(`[host] browser work at once: ${config.browserRuns} QA run(s) and capture(s), ${config.demoQaTabs} tab(s) a run`)
+  log.log(
+    `[host] browser work at once: ${config.browserRuns} QA run(s) and capture(s), ${config.demoQaTabs} tab(s) a run`
+  )
   const app = buildApp({ config, jobs, run, shoot, outline, demoQa })
 
   const server = await new Promise((resolve) => {

@@ -85,7 +85,10 @@ test(
           })
         },
         ...Object.fromEntries(
-          ['facebook', 'instagram', 'tiktok', 'youtube'].map((s) => [s, { available: false, collect: async () => null }])
+          ['facebook', 'instagram', 'tiktok', 'youtube'].map((s) => [
+            s,
+            { available: false, collect: async () => null }
+          ])
         )
       }),
       fetchPlaceDetails: async () => ({
@@ -110,7 +113,10 @@ test(
         }
       }
     }
-    const settings = { ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false }), tripadvisorReviews: false }
+    const settings = {
+      ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false }),
+      tripadvisorReviews: false
+    }
     const ledger = createCostLedger({ pool, caps: async () => ({ dailyCapCents: 1000, jobCapCents: 1000 }) })
     const ex = createExecutor({
       host: woHost,
@@ -147,7 +153,13 @@ test(
     // In list order; p9 is p3's picture, so p3's row is the one kept.
     assert.deepEqual(
       kept.map((r) => r.source_url),
-      [...urls.slice(0, 6), 'https://cdn.test/v1.mp4', 'https://cdn.test/v2.mp4', ...urls.slice(6, 9), ...urls.slice(10)]
+      [
+        ...urls.slice(0, 6),
+        'https://cdn.test/v1.mp4',
+        'https://cdn.test/v2.mp4',
+        ...urls.slice(6, 9),
+        ...urls.slice(10)
+      ]
     )
   }
 )

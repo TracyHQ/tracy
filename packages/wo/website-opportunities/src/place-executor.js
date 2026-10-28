@@ -1021,19 +1021,27 @@ export function createPlaceRunner(h) {
       const onePart = Boolean(ctx.job.only_source)
       if (onePart && base?.profile?.pageSpeed && base.profile.website === profile.website)
         profile.pageSpeed = base.profile.pageSpeed
-      if (
+      // 🔒 THREE READINGS AT ONCE, LANDING IN ORDER (28/10/2026). The PageSpeed audit, the menu (links, file, photos)
+      // and the business reading need nothing from one another: the reading takes the name, the bio and the review
+      // sources, all set before it starts and read before its first wait. Run one after another they were up to
+      // minutes of each research. They start together now; each lands in the profile where and when the serial run
+      // put it, and a failure throws in the serial order (the audit's, then the menu's, then the reading's).
+      const pageSpeedDue =
         !onePart &&
         !profile.pageSpeed &&
         settings.pageSpeedCheckEnabled &&
         keys.google &&
         typeof profile.website === 'string' &&
         profile.website
-      ) {
-        const pageSpeed = await charge(ctx, 'google', 'pagespeed', ceilingCents('google', 'pagespeed'), () =>
-          checkPageSpeed(profile.website, keys.google, { fetch: h.apiFetch, now })
-        )
-        if (pageSpeed) profile.pageSpeed = pageSpeed
-      }
+      const pageSpeedSlot = pageSpeedDue && !('pageSpeed' in profile)
+      // The audit's place among the profile's keys is kept, so the saved profile reads as it did.
+      if (pageSpeedSlot) profile.pageSpeed = undefined
+      const pageSpeedTask = pageSpeedDue
+        ? charge(ctx, 'google', 'pagespeed', ceilingCents('google', 'pagespeed'), () =>
+            checkPageSpeed(profile.website, keys.google, { fetch: h.apiFetch, now })
+          )
+        : null
+      pageSpeedTask?.catch(() => {})
       if (google) profile.googlePlace = google
       const tripadvisor = sources.find((s) => s.source === TRIPADVISOR_SOURCE && s.collected_at)?.collected
       const googleMaps = sources.find((s) => s.source === GOOGLE_MAPS_SOURCE && s.collected_at)?.collected
@@ -1042,22 +1050,43 @@ export function createPlaceRunner(h) {
           ...(tripadvisor ? { tripadvisor } : {}),
           ...(googleMaps ? { googleMaps } : {})
         }
-      if (onePart) {
-        if (base?.profile?.menus) profile.menus = base.profile.menus
-      } else if (!ctx.prefetch) await menuLinksFor(ctx, profile, google)
-      // The menu link Google Maps lists for the place (read from the Maps lookup already paid for); no extra call.
-      const mapsMenu = googleMaps?.menuLink
-      if (mapsMenu?.url && !(profile.menus ?? []).some((m) => m?.url === mapsMenu.url))
-        profile.menus = [...(profile.menus ?? []), { url: mapsMenu.url, source: GOOGLE_MAPS_SOURCE }]
-      // The Menu's two parts (`menu-file`, then `menu-photos`), merged into the profile's dishes (contract §5).
-      if (!ctx.prefetch) Object.assign(profile, await readMenu(ctx, profile, google, base?.profile ?? null))
       // What the business sells, who it is for, its team and story (`business-reading.js`): once per run, from the texts
       // collected; a one-part run keeps the reading it had.
+      const readingTask =
+        ctx.prefetch || onePart
+          ? null
+          : readBusinessOf(ctx, profile, google, sources, base?.profile?.businessReading ?? null)
+      readingTask?.catch(() => {})
+      const landPageSpeed = async () => {
+        if (!pageSpeedTask) return
+        const pageSpeed = await pageSpeedTask
+        if (pageSpeed) profile.pageSpeed = pageSpeed
+        else if (pageSpeedSlot) delete profile.pageSpeed
+      }
+      // The Menu: its links, then its two parts (`menu-file`, then `menu-photos`), merged into the profile's dishes
+      // (contract §5).
+      const menuOf = async () => {
+        if (onePart) {
+          if (base?.profile?.menus) profile.menus = base.profile.menus
+        } else if (!ctx.prefetch) await menuLinksFor(ctx, profile, google)
+        // The menu link Google Maps lists for the place (read from the Maps lookup already paid for); no extra call.
+        const mapsMenu = googleMaps?.menuLink
+        if (mapsMenu?.url && !(profile.menus ?? []).some((m) => m?.url === mapsMenu.url))
+          profile.menus = [...(profile.menus ?? []), { url: mapsMenu.url, source: GOOGLE_MAPS_SOURCE }]
+        if (!ctx.prefetch) Object.assign(profile, await readMenu(ctx, profile, google, base?.profile ?? null))
+      }
+      try {
+        await menuOf()
+      } catch (error) {
+        await landPageSpeed()
+        throw error
+      }
+      await landPageSpeed()
       const reading = ctx.prefetch
         ? null
         : onePart
           ? (base?.profile?.businessReading ?? null)
-          : await readBusinessOf(ctx, profile, google, sources, base?.profile?.businessReading ?? null)
+          : await readingTask
       if (reading) profile.businessReading = reading
       await fenced(pool, lease, (db) => saveSnapshotProfile(db, snapshotId, { profile }))
       // A one-source run of another source buys no listing photo.
