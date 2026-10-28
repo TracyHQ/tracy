@@ -1258,3 +1258,28 @@ INSERT INTO jos_assets VALUES (102,'com_contact.contact.2'),(104,'com_content.fi
     assert.deepEqual(rows('SELECT * FROM sm.jos_assets'), [])
   }
 })
+
+test('a live delete kept as a copy edit is not counted as taken', opts, () => {
+  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+  const answer = merge(null, 'ours')
+  assert.equal(answer.counts.records, 0)
+  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Tracy edit']])
+  assert.equal(answer.kept[0].reason, 'delete-modify')
+  stageRecords('', 'DELETE FROM jos_content WHERE id=1;')
+  const removed = merge(null, 'ours')
+  assert.equal(removed.counts.records, 1)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+  const chosenDelete = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
+  assert.equal(chosenDelete.counts.records, 1)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
+  const keptDelete = merge(null, 'ours')
+  assert.equal(keptDelete.counts.records, 0)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
+  const chosenLive = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
+  assert.equal(chosenLive.counts.records, 1)
+  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Live edit']])
+})
+

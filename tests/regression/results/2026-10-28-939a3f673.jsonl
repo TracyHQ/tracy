@@ -1,0 +1,1 @@
+{"id":"REG-PR-67-sync-live-delete-count","verdict":"PASS","commit":"939a3f67350acd71a4dcb692b990c3837c2123d6","ran_at":"2026-10-28T15:17:34.689Z","evidence":"tests/regression/.runs/2026-10-28-939a3f673/REG-PR-67-sync-live-delete-count.log"}
