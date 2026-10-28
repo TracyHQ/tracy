@@ -557,6 +557,7 @@ export const en = Object.freeze({
   'tpl.nav.label': 'Main',
   'tpl.nav.templates': 'Free Templates',
   'tpl.nav.help': 'Help Center',
+  'tpl.nav.downloadApp': 'Download app',
   'tpl.nav.getStarted': 'Get Started',
   'tpl.nav.openMenu': 'Open the menu',
   'tpl.nav.closeMenu': 'Close the menu',
