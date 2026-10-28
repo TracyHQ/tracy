@@ -283,16 +283,46 @@ test('a T4 skill re-pin runs checks plus its declared readers, no interop, e2e o
   assert.equal(p.runsAll, false)
   assert.deepEqual(p.related.workers, T4.readers)
   assert.equal(p.related.interop, false)
-  assert.deepEqual(
-    groups(planOf([`${T4.prefix}SKILL.md`, `${SKILL}SKILL.md`, `${EMDASH_SKILL}SKILL.md`])),
-    RELATED
-  )
+  assert.deepEqual(groups(planOf([`${T4.prefix}SKILL.md`, `${SKILL}SKILL.md`])), RELATED)
 })
 
-test('an EmDash skill re-pin runs checks only; the CMS and the Bravada theme still run the EmDash suites', () => {
-  const p = planOf([`${EMDASH_SKILL}SKILL.md`, `${EMDASH_SKILL}IMPORT-NOTE.md`])
-  assert.deepEqual(groups(p), ['checks'])
-  assert.equal(p.related.workers.length, 0)
+test('a Tracy skill edit runs checks plus its audited readers, not the full suite', () => {
+  // Found by name: spelling the skill path out here would make this file a reader of the tree.
+  const prMerge = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/pr-merge/'))
+  const changed = [`${prMerge.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
+  const p = planOf(changed, { allFiles: [...dataFiles, ...prMerge.readers] })
+  assert.deepEqual(groups(p), RELATED)
+  assert.equal(p.runsAll, false)
+  assert.deepEqual(p.related.workers, prMerge.readers)
+  assert.equal(p.related.interop, false)
+  // Its reader gone, the planner cannot vouch for the selection.
+  assert.equal(planOf(changed).runsAll, true)
+  // The skill that triggered the change: its REG-PR-1228 check is a worker test now, so it stays narrow.
+  const contract = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/quickstart-contract/'))
+  const edit = [`${contract.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
+  const narrow = planOf(edit, { allFiles: [...dataFiles, ...contract.readers] })
+  assert.deepEqual(groups(narrow), RELATED)
+  assert.equal(narrow.runsAll, false)
+  assert.deepEqual([...narrow.related.workers].sort(), [...contract.readers].sort())
+  assert.equal(narrow.related.interop, false)
+})
+
+test('a skill a regression script reads runs every row: no CI row runs regression scripts', () => {
+  for (const prefix of [EMDASH_SKILL]) {
+    const readers = REVIEWED_SKILLS.find((skill) => skill.prefix === prefix).readers
+    assert.ok(
+      readers.some((file) => file.startsWith('tests/regression/scripts/')),
+      prefix
+    )
+    const p = planOf([`${prefix}SKILL.md`, 'changes/2026-10-28-x.md'], {
+      allFiles: [...dataFiles, ...readers]
+    })
+    assert.equal(p.runsAll, true, prefix)
+    assert.equal(groups(p).length, 7, prefix)
+  }
+})
+
+test('the EmDash CMS and the Bravada theme still run the EmDash suites; a look-alike of the skill is not the skill', () => {
   for (const other of [
     'vendor/emdash/emdash/IMPORT-NOTE.md',
     'vendor/emdash/emdash-theme-bravada/IMPORT-NOTE.md'
@@ -304,13 +334,7 @@ test('an EmDash skill re-pin runs checks only; the CMS and the Bravada theme sti
       'checks'
     ])
   }
-  // A look-alike sibling of the skill folder is not the skill.
   assert.ok(groups(planOf([`${EMDASH_SKILL.slice(0, -1)}-x/a.md`])).length > 1)
-  // Mixed with theme code, the theme row still runs.
-  assert.deepEqual(
-    groups(planOf([`${EMDASH_SKILL}SKILL.md`, 'packages/cms/tracy-emdash-theme-base/x.astro'])),
-    ['tests emdash-base', 'checks']
-  )
 })
 
 test('a lost declared reader, a deleted skill reader and release events run every row', () => {
