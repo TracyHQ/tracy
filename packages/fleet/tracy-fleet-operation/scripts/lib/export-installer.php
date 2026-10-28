@@ -674,6 +674,141 @@ function ti_mariadb_only(string $sql): bool
     return trim($rest) === '';
 }
 
+// ── collations the target server may not know ───────────────────────────────────────────────────
+//
+// A site dumped on a newer server names collations an older one has never heard of: MariaDB 10.10+
+// gives a table created without COLLATE `utf8mb4_uca1400_ai_ci`, MySQL 8 `utf8mb4_0900_ai_ci`. A
+// host on MariaDB 10.x or MySQL 5.7 refused the first such table (error 1273, Unknown collation) in
+// the middle of the import, and Try again ran the same statement into the same refusal (beta report,
+// 25/10/2026: `jd_claudecowork_apply_log`, a table the Cowork component created on Tracy's MariaDB).
+// So `scan` lists the collations the dump's definitions name, asks the server which it knows, and
+// plans the nearest one it has for each it does not (`ti_collation_plan`); `import` writes the plan
+// into those definitions only (`ti_apply_collations`), never into the rows. A collation the server
+// knows is left exactly as it is.
+
+/** Statement kinds whose text names collations for the server: definitions and session settings. */
+const TI_COLLATION_KINDS = ['table', 'view', 'trigger', 'procedure', 'function', 'event', 'set'];
+
+/**
+ * The collation names a definition or session setting gives: `COLLATE x`, `COLLATE=x` and
+ * `collation_connection = x` (mysqldump's line around triggers and routines).
+ *
+ * @return string[]
+ */
+function ti_collations_in(string $sql): array
+{
+    preg_match_all('/\b(?:COLLATE|collation_(?:connection|server|database))\s*=?\s*[\'"`]?([A-Za-z0-9]+_[A-Za-z0-9_]+)/i', $sql, $m);
+    return array_values(array_unique(array_map('strtolower', $m[1])));
+}
+
+/**
+ * The collations to try, nearest first, for one the server does not know: a case- or
+ * accent-sensitive one (`_cs`, `_bin`) keeps every distinct value distinct on `<charset>_bin`;
+ * any other takes the charset's Unicode collation, the newer UCA first. `utf8mb3` is `utf8` on a
+ * server older than the `utf8mb3` names. The charset's own default comes last (`ti_collation_plan`).
+ *
+ * @return string[]
+ */
+function ti_collation_candidates(string $collation): array
+{
+    $at = strpos($collation, '_');
+    if ($at === false) {
+        return [];
+    }
+    $charsets = [substr($collation, 0, $at)];
+    if ($charsets[0] === 'utf8mb3') {
+        $charsets[] = 'utf8';
+    }
+    $sensitive = (bool) preg_match('/_(?:as_)?cs$|_bin$/', $collation);
+    $out = [];
+    foreach ($charsets as $cs) {
+        if ($cs !== $charsets[0]) {
+            $out[] = $cs . substr($collation, $at);
+        }
+        foreach ($sensitive ? [$cs . '_bin'] : [$cs . '_unicode_520_ci', $cs . '_unicode_ci'] as $c) {
+            $out[] = $c;
+        }
+    }
+    return array_values(array_unique(array_diff($out, [$collation])));
+}
+
+/**
+ * For each collation the dump names that the server does not know, the one to write instead.
+ * `$known` answers whether the server knows a collation; `$fallback` gives a charset's own default
+ * collation, or null when the server knows no such charset. A collation with nothing to stand for it
+ * is listed under `missing`, for `scan` to refuse before anything is written.
+ *
+ * @param string[] $named
+ * @return array{0: array<string, string>, 1: string[]} [plan, missing]
+ */
+function ti_collation_plan(array $named, callable $known, callable $fallback): array
+{
+    $plan = [];
+    $missing = [];
+    foreach ($named as $collation) {
+        if (!preg_match('/^[a-z0-9]+_[a-z0-9_]+$/', $collation) || $known($collation)) {
+            continue;
+        }
+        $pick = null;
+        foreach (ti_collation_candidates($collation) as $candidate) {
+            if ($known($candidate)) {
+                $pick = $candidate;
+                break;
+            }
+        }
+        if ($pick === null) {
+            $cs = substr($collation, 0, (int) strpos($collation, '_'));
+            foreach ($cs === 'utf8mb3' ? ['utf8mb3', 'utf8'] : [$cs] as $charset) {
+                $default = $fallback($charset);
+                if ($default !== null && $known($default)) {
+                    $pick = $default;
+                    break;
+                }
+            }
+        }
+        if ($pick === null) {
+            $missing[] = $collation;
+        } else {
+            $plan[$collation] = $pick;
+        }
+    }
+    return [$plan, $missing];
+}
+
+/** A definition or session setting with the planned collations in place of the ones the server lacks. */
+function ti_apply_collations(string $sql, array $plan): string
+{
+    foreach ($plan as $from => $to) {
+        $sql = preg_replace('/(?<![A-Za-z0-9_])' . preg_quote($from, '/') . '(?![A-Za-z0-9_])/i', $to, $sql);
+    }
+    return $sql;
+}
+
+/** Whether this server knows a collation (by name, charset included). */
+function ti_collation_known(mysqli $link, string $collation): bool
+{
+    if (!preg_match('/^([a-z0-9]+)_[a-z0-9_]+$/', $collation, $m)) {
+        return false;
+    }
+    $r = $link->query("SELECT CONVERT('' USING " . $m[1] . ') COLLATE ' . $collation);
+    if ($r instanceof mysqli_result) {
+        $r->free();
+        return true;
+    }
+    return false;
+}
+
+/** A charset's default collation on this server, or null when it has no such charset. */
+function ti_charset_default(mysqli $link, string $charset): ?string
+{
+    if (!preg_match('/^[a-z0-9]+$/', $charset)) {
+        return null;
+    }
+    $r = $link->query("SELECT DEFAULT_COLLATE_NAME FROM information_schema.CHARACTER_SETS WHERE CHARACTER_SET_NAME = '" . $charset . "'");
+    $row = $r instanceof mysqli_result ? $r->fetch_row() : null;
+    return is_array($row) && is_string($row[0]) ? strtolower($row[0]) : null;
+}
+
 // ── tar reader ──────────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -1765,7 +1900,7 @@ function ti_check(TiInstaller $ti, array $input): array
         'address' => ['old' => $old, 'new' => $new],
         'payload' => basename($payload),
         'facts' => $facts + ['server' => $version, 'entries' => count($entries)],
-        'scan' => ['offset' => 0, 'delimiter' => ';', 'tables' => [], 'views' => [], 'objects' => [], 'needs' => [], 'largest' => 0, 'statements' => 0],
+        'scan' => ['offset' => 0, 'delimiter' => ';', 'tables' => [], 'views' => [], 'objects' => [], 'needs' => [], 'largest' => 0, 'statements' => 0, 'collations' => []],
         'notes' => [],
     ];
 }
@@ -1853,6 +1988,11 @@ function ti_scan(TiInstaller $ti): ?string
             [$kind, $name] = ti_sql_classify($sql);
             $s['statements']++;
             $s['largest'] = max($s['largest'], strlen($sql));
+            if (in_array($kind, TI_COLLATION_KINDS, true)) {
+                foreach (ti_collations_in($sql) as $collation) {
+                    $s['collations'][$collation] = true;
+                }
+            }
             switch ($kind) {
                 case 'table':
                     $s['tables'][$name] = true;
@@ -1943,6 +2083,18 @@ function ti_scan(TiInstaller $ti): ?string
         $link->close();
         throw new TiRefusal('The database file has a statement of ' . number_format($s['largest']) . ' bytes, more than this database server accepts in one go (max_allowed_packet = ' . number_format($packet) . '). Ask your host to raise max_allowed_packet, then start again.');
     }
+    // Collations the dump names that this server does not know: the nearest it has, or a refusal now.
+    [$plan, $missing] = ti_collation_plan(
+        array_keys($s['collations'] ?? []),
+        fn (string $c) => ti_collation_known($link, $c),
+        fn (string $cs) => ti_charset_default($link, $cs)
+    );
+    if ($missing) {
+        $version = (string) $link->server_info;
+        $link->close();
+        throw new TiRefusal('The database file uses ' . implode(', ', array_slice($missing, 0, 5)) . ', which this database server (' . $version . ') does not know, and it has no collation to stand in. Ask your host for a newer MariaDB or MySQL, then start again. Nothing was written.');
+    }
+    $ti->state['facts']['collations'] = $plan;
     $kinds = array_unique(array_map(fn ($o) => $o[0], $s['objects']));
     if (array_intersect($kinds, ['trigger', 'function', 'procedure'])) {
         $row = TiInstaller::q($link, 'SELECT @@log_bin, @@log_bin_trust_function_creators')->fetch_row();
@@ -2124,6 +2276,10 @@ function ti_import(TiInstaller $ti): ?string
             }
             if (in_array($kind, ['table', 'view', 'trigger', 'procedure', 'function', 'event'], true)) {
                 $sql = ti_strip_definer($sql);
+            }
+            $collations = $ti->state['facts']['collations'] ?? [];
+            if ($collations && in_array($kind, TI_COLLATION_KINDS, true)) {
+                $sql = ti_apply_collations($sql, $collations);
             }
             $writes = in_array($kind, ['insert', 'table', 'view', 'trigger', 'procedure', 'function', 'event'], true);
             if ($writes && $pending !== null && (int) $pending['end'] === $end) {
