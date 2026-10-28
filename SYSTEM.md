@@ -742,6 +742,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy
   just created is not copied back to the copy twice. `pushed.json` is dropped when a sync run puts its read in place (`remember_read`).
+- **Live access refusals:** both sync directions distinguish HTTP password protection (401), firewall/non-engine responses (403 or non-engine HTTP 200), rate limits (429), and an engine-refused token. Read retries respect numeric or HTTP-date Retry-After; rate limits never trigger an alternate-door request. Mutations retain the durable receipt rule and do not resend an uncertain response.
 - **Retention:** `<private>/<label>/push/previews/<id>/` (changeset; swept after 24 hours), `<private>/<label>/push/<id>/`
   (`before.json` 0600 = the live values at write time + a re-read after writing, `journal.jsonl` to resume when cut off; 30 days).
   Before each mutation, `requests.json` durably stores its item identity and preimage, then stores the engine ACK before

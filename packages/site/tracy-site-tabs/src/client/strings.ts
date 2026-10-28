@@ -1581,6 +1581,14 @@ export const en = {
   /** An earlier apply was cut off and the copy changed since: nothing was written (APPLY_INTERRUPTED_KEPT). */
   'sync.error.interruptedKept':
     'An earlier sync was stopped by a Tracy update while it was putting changes on this copy, and this copy has changed since. Tracy left it as it is. To undo that earlier sync, restore the backup point “Before restore” in Backups, then sync again.',
+  'sync.error.liveBlocked':
+    'Your live site returned a blocked or non-engine response. Check its firewall or bot protection and allow Tracy’s requests.',
+  'sync.error.livePassword':
+    'Your live site requires an HTTP password. Allow Tracy to access the Claude Cowork endpoint without that password, then try again.',
+  'sync.error.liveRateLimited':
+    'Your live site is limiting requests. Wait before trying again; Tracy respects its Retry-After delay.',
+  'sync.error.liveToken':
+    'Your live site refused the Claude Cowork token. Reconnect the live site with its current token, then try again.',
   'sync.error.liveUnreachable':
     'Tracy could not read your original site. Nothing on this copy was changed. Check that the site is online and that Claude Cowork is still installed on it.',
   'sync.error.copyChanged': 'This copy changed while the sync ran, so nothing was put in place. Try again.',
