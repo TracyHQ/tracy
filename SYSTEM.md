@@ -2622,3 +2622,15 @@ re-run, and content, mail and publish state are unchanged. Custom policies and `
 loosened. A sync error returns a pre-translated, embeddable notice page before reading the CMS; the next turn
 retries. Regular visitors and hosts outside the system cause no configuration writes.
 
+
+
+### Foreign keys during Sync from live and database restore
+
+The merge disables foreign-key checks only in its scratch SQL session and copies foreign-key
+metadata when taking a whole table. Restore captures outgoing constraints of replaced tables and
+incoming constraints from retained tables before the atomic rename. It temporarily drops that
+subset and recreates it in the site database with checks enabled. Cross-schema outgoing references
+keep their original target; inbound references from other databases are outside the site contract.
+The private site folder holds `.restore-foreign-keys.json` before any live FK DDL; interrupted-sync
+recovery and the next restore repair that graph before interpreting row checksums. A failed graph
+validation invokes the existing database/files rollback, and an incomplete rollback keeps its plan.

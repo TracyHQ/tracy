@@ -408,3 +408,11 @@ _tracy_trash_prune() {
   fi
   return 0
 }
+
+# Foreign-key cutover plans share the restore's private artifact directory. SQL uses the same
+# site-local client as the dump; the password travels in its environment, never in a log.
+tracy_db_foreign_keys() {
+  local client
+  client="$(python3 -c 'import json,sys; print(json.dumps(["docker", "compose", "exec", "-T", "-e", "MYSQL_PWD=" + sys.argv[1], "db", "mariadb", "-uroot"]))' "$(_tracy_env_value DB_PASSWORD)")" || return 1
+  ( cd "$STACK" && TRACY_SYNC_SQL="$client" python3 "$LIB_DIR/foreign_keys.py" "$@" )
+}
