@@ -4726,10 +4726,10 @@ window.__ModuleLoader__.load({
           "sync.error.liveUnreachable": "Tracy konnte Ihre ursprüngliche Site nicht lesen. An dieser Kopie wurde nichts geändert. Prüfen Sie, ob die Site online ist und Claude Cowork noch darauf installiert ist.",
           "sync.error.copyChanged": "Diese Kopie hat sich während der Synchronisierung geändert, daher wurde nichts übernommen. Versuche es erneut.",
           "sync.error.noSpace": "Auf dem Server von Tracy war nicht genug Platz für diese Synchronisierung. An dieser Kopie wurde nichts geändert. Bitte kontaktiere uns.",
-          "sync.error.liveBlocked": "Deine Live-Website hat eine blockierte Antwort oder keine Engine-Antwort zurückgegeben. Prüfe Firewall und Bot-Schutz und erlaube Anfragen von Tracy.",
-          "sync.error.livePassword": "Deine Live-Website verlangt ein HTTP-Passwort. Erlaube Tracy den Zugriff auf den Claude-Cowork-Endpunkt ohne dieses Passwort und versuche es erneut.",
-          "sync.error.liveRateLimited": "Deine Live-Website begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
-          "sync.error.liveToken": "Deine Live-Website hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut."
+          "sync.error.liveBlocked": "Deine Live-Site hat eine blockierte Antwort oder keine Engine-Antwort zurückgegeben. Prüfe Firewall und Bot-Schutz und erlaube Anfragen von Tracy.",
+          "sync.error.livePassword": "Deine Live-Site verlangt ein HTTP-Passwort. Erlaube Tracy den Zugriff auf den Claude-Cowork-Endpunkt ohne dieses Passwort und versuche es erneut.",
+          "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
+          "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut."
         },
         "tracy-tab-link": {
           "launcher.empty": "Klicken Sie auf +, um zu starten",
@@ -11461,10 +11461,10 @@ window.__ModuleLoader__.load({
           "sync.error.liveUnreachable": "Tracy no pudo leer tu site original. No se cambió nada en esta copia. Comprueba que el site está en línea y que Claude Cowork sigue instalado en él.",
           "sync.error.copyChanged": "Esta copia cambió durante la sincronización, así que no se aplicó nada. Inténtalo de nuevo.",
           "sync.error.noSpace": "El servidor de Tracy no tenía espacio para esta sincronización. No se cambió nada en esta copia. Contáctanos.",
-          "sync.error.liveBlocked": "Tu sitio en línea devolvió una respuesta bloqueada o que no procede del motor. Revisa el cortafuegos o la protección contra bots y permite las solicitudes de Tracy.",
-          "sync.error.livePassword": "Tu sitio en línea requiere una contraseña HTTP. Permite que Tracy acceda al punto de conexión de Claude Cowork sin esa contraseña y vuelve a intentarlo.",
-          "sync.error.liveRateLimited": "Tu sitio en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
-          "sync.error.liveToken": "Tu sitio en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo."
+          "sync.error.liveBlocked": "Tu site en línea devolvió una respuesta bloqueada o que no procede del motor. Revisa el cortafuegos o la protección contra bots y permite las solicitudes de Tracy.",
+          "sync.error.livePassword": "Tu site en línea requiere una contraseña HTTP. Permite que Tracy acceda al punto de conexión de Claude Cowork sin esa contraseña y vuelve a intentarlo.",
+          "sync.error.liveRateLimited": "Tu site en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
+          "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo."
         },
         "tracy-tab-link": {
           "launcher.empty": "Haga clic en + para empezar",
@@ -17533,7 +17533,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveBlocked": "Votre site en ligne a renvoyé une réponse bloquée ou qui ne provient pas du moteur. Vérifiez le pare-feu ou la protection contre les robots et autorisez les requêtes de Tracy.",
           "sync.error.livePassword": "Votre site en ligne exige un mot de passe HTTP. Autorisez Tracy à accéder au point de terminaison Claude Cowork sans ce mot de passe, puis réessayez.",
           "sync.error.liveRateLimited": "Votre site en ligne limite les requêtes. Patientez avant de réessayer ; Tracy respecte le délai Retry-After.",
-          "sync.error.liveToken": "Votre site en ligne a refusé le jeton Claude Cowork. Reconnectez-le avec son jeton actuel, puis réessayez."
+          "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez."
         },
         "tracy-tab-link": {
           "launcher.empty": "Cliquez sur + pour commencer",
@@ -23270,10 +23270,10 @@ window.__ModuleLoader__.load({
           "sync.error.liveUnreachable": "Tracy non è riuscito a leggere il tuo site originale. In questa copia non è cambiato nulla. Controlla che il site sia online e che Claude Cowork sia ancora installato.",
           "sync.error.copyChanged": "Questa copia è cambiata durante la sincronizzazione, quindi non è stato applicato nulla. Riprova.",
           "sync.error.noSpace": "Sul server di Tracy non c’era spazio per questa sincronizzazione. Su questa copia non è cambiato nulla. Contattaci.",
-          "sync.error.liveBlocked": "Il sito online ha restituito una risposta bloccata o non proveniente dal motore. Controlla il firewall o la protezione dai bot e consenti le richieste di Tracy.",
-          "sync.error.livePassword": "Il sito online richiede una password HTTP. Consenti a Tracy di accedere all’endpoint Claude Cowork senza questa password, poi riprova.",
-          "sync.error.liveRateLimited": "Il sito online sta limitando le richieste. Attendi prima di riprovare; Tracy rispetta il ritardo Retry-After.",
-          "sync.error.liveToken": "Il sito online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova."
+          "sync.error.liveBlocked": "Il site online ha restituito una risposta bloccata o non proveniente dal motore. Controlla il firewall o la protezione dai bot e consenti le richieste di Tracy.",
+          "sync.error.livePassword": "Il site online richiede una password HTTP. Consenti a Tracy di accedere all’endpoint Claude Cowork senza questa password, poi riprova.",
+          "sync.error.liveRateLimited": "Il site online sta limitando le richieste. Attendi prima di riprovare; Tracy rispetta il ritardo Retry-After.",
+          "sync.error.liveToken": "Il site online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova."
         },
         "tracy-tab-link": {
           "launcher.empty": "Faccia clic su + per iniziare",
@@ -29010,10 +29010,10 @@ window.__ModuleLoader__.load({
           "sync.error.liveUnreachable": "Tracy kon je oorspronkelijke site niet lezen. Aan deze kopie is niets gewijzigd. Controleer of de site online is en Claude Cowork er nog op staat.",
           "sync.error.copyChanged": "Deze kopie veranderde tijdens het synchroniseren, dus er is niets toegepast. Probeer het opnieuw.",
           "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op.",
-          "sync.error.liveBlocked": "Je livewebsite gaf een geblokkeerd antwoord of een antwoord dat niet van de engine komt. Controleer de firewall of botbeveiliging en sta verzoeken van Tracy toe.",
-          "sync.error.livePassword": "Je livewebsite vereist een HTTP-wachtwoord. Geef Tracy toegang tot het Claude Cowork-eindpunt zonder dat wachtwoord en probeer het opnieuw.",
-          "sync.error.liveRateLimited": "Je livewebsite beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
-          "sync.error.liveToken": "Je livewebsite heeft het Claude Cowork-token geweigerd. Verbind de website opnieuw met het huidige token en probeer het opnieuw."
+          "sync.error.liveBlocked": "Je live-site gaf een geblokkeerd antwoord of een antwoord dat niet van de engine komt. Controleer de firewall of botbeveiliging en sta verzoeken van Tracy toe.",
+          "sync.error.livePassword": "Je live-site vereist een HTTP-wachtwoord. Geef Tracy toegang tot het Claude Cowork-eindpunt zonder dat wachtwoord en probeer het opnieuw.",
+          "sync.error.liveRateLimited": "Je live-site beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
+          "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw."
         },
         "tracy-tab-link": {
           "launcher.empty": "Klik op + om te beginnen",
@@ -34072,10 +34072,10 @@ window.__ModuleLoader__.load({
           "sync.error.liveUnreachable": "Tracy 无法读取你的原始 site。此副本没有任何更改。请检查 site 是否在线，以及 Claude Cowork 是否仍安装在上面。",
           "sync.error.copyChanged": "同步期间此副本发生了变化，因此没有放入任何内容。请重试。",
           "sync.error.noSpace": "Tracy 的服务器没有足够空间完成此次同步。此副本没有任何改动。请联系我们。",
-          "sync.error.liveBlocked": "线上网站返回了被拦截或并非来自引擎的响应。请检查防火墙或机器人防护，并允许 Tracy 的请求。",
-          "sync.error.livePassword": "线上网站需要 HTTP 密码。请允许 Tracy 无需该密码即可访问 Claude Cowork 端点，然后重试。",
-          "sync.error.liveRateLimited": "线上网站正在限制请求。请稍后重试；Tracy 会遵守 Retry-After 指定的等待时间。",
-          "sync.error.liveToken": "线上网站拒绝了 Claude Cowork 令牌。请使用当前令牌重新连接线上网站，然后重试。"
+          "sync.error.liveBlocked": "线上 site返回了被拦截或并非来自引擎的响应。请检查防火墙或机器人防护，并允许 Tracy 的请求。",
+          "sync.error.livePassword": "线上 site需要 HTTP 密码。请允许 Tracy 无需该密码即可访问 Claude Cowork 端点，然后重试。",
+          "sync.error.liveRateLimited": "线上 site正在限制请求。请稍后重试；Tracy 会遵守 Retry-After 指定的等待时间。",
+          "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。"
         },
         "tracy-tab-link": {
           "launcher.empty": "点击 + 开始",
