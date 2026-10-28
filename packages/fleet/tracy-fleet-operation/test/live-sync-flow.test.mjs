@@ -1254,7 +1254,7 @@ test(
       // Cut off after the files and before the database swap, nothing else on the copy: put back.
       const dir3 = s.read()
       assert.equal(s.merge(dir3).state, 'ready')
-      s.applyKilledAt(dir3, 'restore-swap')
+      s.applyKilledAt(dir3, 'restore-foreign-keys')
       assert.equal(
         readFileSync(join(s.webroot, 'images/team.jpg'), 'utf8'),
         'team',
