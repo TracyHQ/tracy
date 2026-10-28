@@ -96,7 +96,7 @@ const STANDALONE = /^packages\/cms\/tracy-emdash-theme-(?:base|business|saas)\//
 const GLOBAL =
   /^(?:\.github\/workflows\/tracy-ci\.yml|\.node-version|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|scripts\/check-(?:all|tests)\.ts|scripts\/ci\/|scripts\/test-timings\.json|vendor\/tracy\/deepseek-harness(?:\/|$))/
 const DOCS =
-  /^(?:(?:docs|tasks)\/.*\.md$|tasks\/(?:bang-chung|evidence)\/|tests\/regression\/|\.github\/pull_request_template\.md$|(?:AGENTS|CLAUDE|CONTEXT|DESIGN|SYSTEM|README)\.md$)/
+  /^(?:(?:docs|tasks)\/.*\.md$|changes\/[^/]+\.md$|tasks\/(?:bang-chung|evidence)\/|tests\/regression\/|\.github\/pull_request_template\.md$|(?:AGENTS|CLAUDE|CONTEXT|DESIGN|SYSTEM|README)\.md$)/
 
 /**
  * Vendored skill trees whose change runs the `checks` row plus only the tests that read the tree.
