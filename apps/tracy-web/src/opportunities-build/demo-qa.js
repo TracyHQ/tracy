@@ -5,6 +5,7 @@ import { withBuildChoice } from './build-choice.js'
 import { checkedFactText, demoFactEvidence } from './demo-fact-evidence.js'
 import { neutralWords } from 'website-opportunities/domain/neutral-copy.mjs'
 import { forbiddenFillers } from 'website-opportunities/domain/slot-fill-manifest.mjs'
+import { liveReadinessOf } from './live-readiness.js'
 /**
  * The demo QA gate after "Hand to the agent" (tasks/plan-wo-qa-gate-and-fb-photos.md §3 as amended by
  * the council in §6). tracy-host reads the site in a browser and judges it (`/_host/demo-qa`); this
@@ -388,6 +389,12 @@ export function qaOutcome(qa, checks) {
 }
 
 /** What a round keeps of every check: its id, verdict and measure (the failed ones are kept whole). */
+/** The round's live readiness, when its brief measured one. */
+function readinessOfRound(revision, checks) {
+  const readiness = liveReadinessOf(revision?.brief?.readiness, checks)
+  return readiness ? { readiness } : {}
+}
+
 export const summary = (checks) => checks.map((c) => ({ id: c.id, pass: c.pass, measured: c.measured }))
 
 /**
@@ -942,7 +949,9 @@ async function runRound(pool, deps, { build, lease }) {
     pages: read,
     ...(Array.isArray(answer.body.visited) ? { visited: answer.body.visited } : {}),
     checks: summary(checks),
-    failed
+    failed,
+    // What the live site shows of the brief: sample text left, collected items shown (#50, `live-readiness.js`).
+    ...readinessOfRound(revisions[0], checks)
   })
   const outcome = qaOutcome(qa, checks)
   if (

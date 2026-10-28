@@ -3,8 +3,12 @@
  * build's own batched vision call (`lib/picture-vision.js` `labelWithVision`, same prompt and key) and its shared cache
  * (`media-analysis.js`), so a picture labelled here is never paid for again by a build, and the other way round.
  *
- * 🔒 CAPPED. At most `maxPictures` photographs (24 = three calls of 8 by default; `TRACY_BRIEF_VISION_MAX_PICTURES`),
- * the largest first, never the logo or a profile picture, never one too small for any place on a site.
+ * 🔒 EVERY OWN PHOTO, THEN CUSTOMERS UP TO THE CAP (#48). Every photograph the business published is labelled; others
+ * fill up to `maxPictures` in total (60 by default; `TRACY_BRIEF_VISION_MAX_PICTURES`): the business's own first, then
+ * photos of unknown uploader, then customers', the largest first in each. Never the logo or a profile picture, never one
+ * too small for any place on a site. A video has no poster frame collected yet, so it stays unlabelled (`video`).
+ * 🔒 THE BRIEF'S CLOSED LIST GOES WITH THE PICTURES. The model links a photo only to the brief's own offerings and people
+ * (`closedList`); a cached label made against another list is asked again, the same list never.
  * 🔒 EVERY UNLABELLED PICTURE SAYS WHY (`note.unlabelled`, id → reason): never shown (a video, the logo, too small, past
  * the cap) or shown and not answered, per picture. A call that fails is sent once more (`retry: 1`), within a budget that
  * names both rounds; "labelled" means every picture asked was, "partial" that some were not.
@@ -16,10 +20,13 @@ import { createChargeable } from 'website-opportunities/src/cost-ledger.js'
 import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-prices.js'
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { photographsOnly } from 'website-opportunities/domain/pictures/brief-media.mjs'
+import { closedListDigest, ownershipOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { labelWithVision } from '../lib/picture-vision.js'
-import { claimAnalyses, doneAnalyses, settleAnalysis } from './media-analysis.js'
+import { claimAnalyses, doneAnalyses, reopenAnalyses, settleAnalysis } from './media-analysis.js'
 
-export const BRIEF_VISION_MAX_PICTURES = 24
+export const BRIEF_VISION_MAX_PICTURES = 60
+/** Who published a photo, in the order photos are labelled. */
+const OWNERSHIP_RANK = { owner: 0, unknown: 1, customer: 2 }
 /** Pictures sent in one call (as a build sends them). */
 const BATCH = 8
 /** A picture smaller than this on its long side is never shown to the model: no place on a site takes it. */
@@ -80,10 +87,22 @@ export function createBriefPictureLabels({
   }
 
   /**
-   * @param {{media: any[], brand: any, accountId: string | null, trade: string | null}} input a brief read's media
+   * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
+   *   closedList?: {offerings?: any[], people?: any[]} | null, businessName?: string | null}} input a brief read's media,
+   *   the brief's closed list of offerings and people (`picture-links.mjs closedListOf`) and the business's name
    * @returns {Promise<{labels: Map<string, {key: string, model: string, labels: any}>, note: Record<string, any>}>}
    */
-  return async function labelBriefPictures({ media, brand, accountId, trade }) {
+  return async function labelBriefPictures({
+    media,
+    brand,
+    accountId,
+    trade,
+    closedList = null,
+    businessName = null
+  }) {
+    const digest = closedListDigest(closedList)
+    /** A label made against this closed list (none made against none). */
+    const current = (l) => l && typeof l === 'object' && (l.closedList ?? null) === digest
     const labels = new Map()
     const note = { status: 'none', asked: 0, labelled: 0, cached: 0, max: maxPictures }
     /** @type {Record<string, string>} why each picture is left unlabelled */
@@ -124,12 +143,16 @@ export function createBriefPictureLabels({
         photographs.filter((m) => m.sha256 && tooSmall(m)).map((m) => m.id),
         'too_small'
       )
+      const rank = (m) => OWNERSHIP_RANK[ownershipOf(m, businessName)]
       const ranked = photographs
         .filter((m) => m.sha256 && !tooSmall(m))
-        .sort((a, b) => area(b) - area(a) || String(a.id).localeCompare(String(b.id)))
-      const wanted = ranked.slice(0, maxPictures)
+        .sort((a, b) => rank(a) - rank(b) || area(b) - area(a) || String(a.id).localeCompare(String(b.id)))
+      // Every own photo, then the others up to the cap in total.
+      const owned = ranked.filter((m) => rank(m) === OWNERSHIP_RANK.owner).length
+      const cap = Math.max(owned, maxPictures)
+      const wanted = ranked.slice(0, cap)
       mark(
-        ranked.slice(maxPictures).map((m) => m.id),
+        ranked.slice(cap).map((m) => m.id),
         'over_cap'
       )
       if (!wanted.length) return done(note)
@@ -140,14 +163,21 @@ export function createBriefPictureLabels({
         vision
       )
       const ask = []
+      const stale = []
       for (const m of wanted) {
         const own = m.labels?.vision?.key === vision.key ? m.labels.vision.labels : null
-        const held = own ?? (m.origin === 'place' ? cachedLabels.get(m.sha256) : null)
+        const shared = m.origin === 'place' ? cachedLabels.get(m.sha256) : null
+        const held = current(own) ? own : current(shared) ? shared : null
         if (held) labels.set(m.id, entryOf(vision, held))
-        else ask.push(m)
+        else {
+          ask.push(m)
+          if (shared) stale.push(m.sha256)
+        }
       }
       note.cached = labels.size
       if (!ask.length) return done({ ...note, status: 'cached' })
+      // A shared label made against another list is asked again: open it for the claim below.
+      await reopenAnalyses(pool, stale, vision)
       claimed = await claimAnalyses(
         pool,
         ask.filter((m) => m.origin === 'place').map((m) => m.sha256),
@@ -178,7 +208,7 @@ export function createBriefPictureLabels({
           payer: accountId ? { kind: 'account', accountId } : null,
           tokens: (r) => modelTokensOf((r.usage?.requests ?? []).map((q) => q.usage))
         },
-        () => label({ door: vision.door, pictures, trade, batch: BATCH, retry: RETRY })
+        () => label({ door: vision.door, pictures, trade, closedList, batch: BATCH, retry: RETRY })
       )
       for (const m of sent) {
         const got = answer.labels.get(m.id) ?? null
