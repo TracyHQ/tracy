@@ -9,6 +9,7 @@ import { renderSocialFigures, socialFiguresOf } from './agent-prompt.mjs'
 import { aboutLineOf, evidenceCountOf, labelQuoted, withReadingPicks } from './business-reading.mjs'
 import { inSentence, withoutDashes } from './plain-prose.mjs'
 import {
+  factsWithoutHeldQuotes,
   heldPeopleOf,
   heldReviewsSplit,
   readingWithoutHeldReviews,
@@ -319,22 +320,23 @@ export function buildBrief({
     })
   // A dish states a fact only when the brief keeps it (`menuItemsOf`: never one without a source).
   const dishes0 = new Set(read.map((i) => String(i.name).toLowerCase()))
-  const stated = briefFactsOf(held, {
+  const statedAsRead = briefFactsOf(held, {
     food,
     decisions:
       placeProfile && Array.isArray(factAssessment)
         ? decisionsOfAssessment(factAssessment)
         : decisionsOf(held, { overrides: factOverrides ?? cand.factOverrides ?? null })
   }).filter((f) => f.field !== 'menu' || dishes0.has(String(f.value?.name ?? '').toLowerCase()))
-  const isOn = (field, match) => shown(factOf(stated, field, match))
   // 🔒 A review that names someone the brief holds off the site is quoted nowhere (`held-reviews.mjs`): not as a
-  // testimonial, and not as the evidence of the kind of business, a key message or any other reading item. The reading
-  // keeps owner text and usable reviews only, before anything picks a quote from it.
-  const heldPeople = heldPeopleOf(withheldMissing(stated))
+  // testimonial, and not as the evidence of a fact, the kind of business, a key message or any other reading item. The
+  // facts and the reading keep owner text and usable reviews only, before anything picks a quote from them.
+  const heldPeople = heldPeopleOf(withheldMissing(statedAsRead))
   const heldReviews = reviewsNamingHeld(
     [...(googlePlace?.reviews ?? []), ...reviewSitesReviewsOf(profile)],
     heldPeople
   )
+  const stated = factsWithoutHeldQuotes(statedAsRead, { names: heldPeople, held: heldReviews })
+  const isOn = (field, match) => shown(factOf(stated, field, match))
   const usableReading = readingWithoutHeldReviews(profile.businessReading, {
     names: heldPeople,
     held: heldReviews
@@ -1122,10 +1124,11 @@ export function seoOf({ name = null, noun, city = null, services = [] }) {
 
 /** The reading as a brief carries it: each item's words, quote and source, the team's place on the site, the About line. */
 function briefReading(reading, about) {
+  // A held person's team entry has no quote (`readingWithoutHeldReviews`): it is named, never quoted.
   const item = (i) => ({
     id: i.id,
     label: i.label,
-    quote: i.quote,
+    ...(nonEmpty(i.quote) ? { quote: i.quote } : {}),
     source: i.source,
     ...(i.basis ? { basis: i.basis } : {}),
     ...(i.mentions?.length ? { mentions: i.mentions } : {})

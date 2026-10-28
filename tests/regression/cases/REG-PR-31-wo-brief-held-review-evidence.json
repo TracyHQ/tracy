@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-31-wo-brief-held-review-evidence",
+  "kind": "fix",
+  "title": "WO brief: held review text kept out of fact evidence quotes and held team quotes",
+  "pr": 31,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the held name and held reviews domain tests of packages/wo/website-opportunities, including the whole-brief grep and factsWithoutHeldQuotes."
+  ],
+  "expect": [
+    "S1: every test passes: no string of the brief JSON, the markdown or the agent prompt carries held review text; a fact whose evidence quoted a held review keeps its source and ref with no quote; a held team entry keeps its name, role and source with no quote; owner text and usable reviews keep their quotes."
+  ],
+  "selectors": {
+    "test": "packages/wo/website-opportunities/test/domain-brief-held-name-reviews.test.mjs"
+  },
+  "evidence": "Dev measurement of brief revision 9 found held review fragments in fact evidence and reading.team quotes",
+  "fence": "pure domain functions on a fictional brief",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-brief-held-name-reviews.test.mjs"
+    ]
+  }
+}
