@@ -441,5 +441,12 @@ check('apply: the definition takes the plan, a name that only starts the same st
     str_replace(['utf8mb4_uca1400_as_cs', 'COLLATE=utf8mb4_uca1400_ai_ci'], ['utf8mb4_bin', 'COLLATE=utf8mb4_unicode_520_ci'], $table) . ' COMMENT=\'utf8mb4_uca1400_ai_ci_x\'');
 check('apply: no plan, the bytes as they were', ti_apply_collations($table, []), $table);
 
+// A definition may carry customer data too: defaults, comments and routine bodies are not names.
+$literal = "CREATE TABLE t (`utf8mb4_uca1400_ai_ci` text DEFAULT 'COLLATE utf8mb4_uca1400_ai_ci') COLLATE=utf8mb4_uca1400_ai_ci COMMENT='utf8mb4_uca1400_ai_ci'";
+$literalPlan = ['utf8mb4_uca1400_ai_ci' => 'utf8mb4_unicode_520_ci'];
+check('collations: defaults, comments and identifiers are preserved', ti_apply_collations($literal, $literalPlan), str_replace(') COLLATE=utf8mb4_uca1400_ai_ci', ') COLLATE=utf8mb4_unicode_520_ci', $literal));
+check('collations: text in defaults and comments names no collation', ti_collations_in("CREATE TABLE t (v text DEFAULT 'COLLATE utf8mb4_uca1400_ai_ci') COMMENT='COLLATE utf8mb4_0900_ai_ci'"), []);
+check('collations: quoted session setting in executable comment', ti_apply_collations("/*!50003 SET collation_connection = 'utf8mb4_uca1400_ai_ci' */", $literalPlan), "/*!50003 SET collation_connection = 'utf8mb4_unicode_520_ci' */");
+
 echo $failures === 0 ? "all passed\n" : "$failures failed\n";
 exit($failures === 0 ? 0 : 1);

@@ -695,10 +695,25 @@ const TI_COLLATION_KINDS = ['table', 'view', 'trigger', 'procedure', 'function',
  *
  * @return string[]
  */
+function ti_collation_pattern(): string
+{
+    // Quoted values and identifiers, and ordinary comments, are consumed before looking for SQL
+    // collation clauses. Executable dump comments (/*! and /*M!) still contain live SQL.
+    return <<<'REGEX'
+~'(?:\\.|''|[^'\\])*'|"(?:\\.|""|[^"\\])*"|`(?:``|[^`])*`|/\*(?!!|M!)[\s\S]*?\*/|\#[^\r\n]*|--[ \t][^\r\n]*|\b(?:COLLATE|collation_(?:connection|server|database))\s*=?\s*['"`]?([A-Za-z0-9]+_[A-Za-z0-9_]+)~i
+REGEX;
+}
+
 function ti_collations_in(string $sql): array
 {
-    preg_match_all('/\b(?:COLLATE|collation_(?:connection|server|database))\s*=?\s*[\'"`]?([A-Za-z0-9]+_[A-Za-z0-9_]+)/i', $sql, $m);
-    return array_values(array_unique(array_map('strtolower', $m[1])));
+    preg_match_all(ti_collation_pattern(), $sql, $matches, PREG_SET_ORDER);
+    $names = [];
+    foreach ($matches as $match) {
+        if (isset($match[1])) {
+            $names[] = strtolower($match[1]);
+        }
+    }
+    return array_values(array_unique($names));
 }
 
 /**
@@ -778,10 +793,15 @@ function ti_collation_plan(array $named, callable $known, callable $fallback): a
 /** A definition or session setting with the planned collations in place of the ones the server lacks. */
 function ti_apply_collations(string $sql, array $plan): string
 {
-    foreach ($plan as $from => $to) {
-        $sql = preg_replace('/(?<![A-Za-z0-9_])' . preg_quote($from, '/') . '(?![A-Za-z0-9_])/i', $to, $sql);
+    if (!$plan) {
+        return $sql;
     }
-    return $sql;
+    return preg_replace_callback(ti_collation_pattern(), static function (array $match) use ($plan): string {
+        if (!isset($match[1]) || !isset($plan[strtolower($match[1])])) {
+            return $match[0];
+        }
+        return substr($match[0], 0, strlen($match[0]) - strlen($match[1])) . $plan[strtolower($match[1])];
+    }, $sql);
 }
 
 /** Whether this server knows a collation (by name, charset included). */

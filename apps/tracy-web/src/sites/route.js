@@ -6267,7 +6267,8 @@ export function sitesRoutes({
             !answered.body?.error,
           refusal: refusalCodeOf(answered.body),
           // Why an imported site's copy was not verified, from `pairFleetCopy`'s closed set.
-          ...(answered.body?.code === 'COMPONENT_NOT_ON_FLEET_COPY' && FLEET_COPY_WHYS.has(answered.body?.copyReason)
+          ...(answered.body?.code === 'COMPONENT_NOT_ON_FLEET_COPY' &&
+          FLEET_COPY_WHYS.has(answered.body?.copyReason)
             ? { copy_reason: answered.body.copyReason }
             : {}),
           from_comment: call.comment == null ? null : Boolean(commentNumbers(call.comment)?.length),

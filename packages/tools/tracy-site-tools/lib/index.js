@@ -2575,7 +2575,6 @@ var MAX_SESSIONS = 500;
 var MAX_READS = 200;
 var MAX_RECEIPTS = 50;
 var MAX_CONFIRMS = 50;
-var SITE_WIDE_REASONS = /* @__PURE__ */ new Set(["site", "shared"]);
 var CONFIRM_TTL_MS = 5 * 6e4;
 var MAX_REFUSED = 100;
 var MAX_LEARNED = 500;
@@ -2747,10 +2746,6 @@ function createCallMemory(opts = {}) {
         receipts: /* @__PURE__ */ new Map(),
         wp: /* @__PURE__ */ new Map(),
         confirms: /* @__PURE__ */ new Map(),
-        // The turn in which the customer said yes to a change every page shows (`siteWideAgreed`), or -1.
-        siteWideYes: -1,
-        declinedAtYes: 0,
-        siteWideYesAt: 0,
         declined: 0,
         refused: /* @__PURE__ */ new Map(),
         shrinks: /* @__PURE__ */ new Map(),
@@ -2962,11 +2957,6 @@ ${typeof key.actor === "string" ? key.actor : ""}`;
         if (agreed.includes(id)) {
           c.said = "yes";
           c.yesAt = now();
-          if (c.reason !== void 0 && SITE_WIDE_REASONS.has(c.reason)) {
-            s.siteWideYes = s.turn;
-            s.declinedAtYes = s.declined;
-            s.siteWideYesAt = now();
-          }
         } else if (declined.includes(id)) {
           c.said = "no";
           c.typed = typed.includes(id);
@@ -3772,10 +3762,8 @@ ${prefix}`;
      *   which record, how many places, which amounts — the agent may word the rest
      * @param {'delete' | 'hide' | null} [intent] - what the call does to a record, which the card must
      *   say in the person's language (`confirm-words.mjs`); null for any other change
-     * @param {string} [reason] - the consequence the question is about (`consequence.mjs`), when one
-     *   is: a yes to a reach-only one (`SITE_WIDE_REASONS`) covers the turn (`siteWideAgreed`)
      */
-    confirmAsked(sessionId, call, own = true, facts = [], intent = null, reason = void 0) {
+    confirmAsked(sessionId, call, own = true, facts = [], intent = null) {
       if (!named3(sessionId)) return;
       const s = session(sessionId);
       const key = callKeyOf(call);
@@ -3786,34 +3774,13 @@ ${prefix}`;
         own,
         facts: facts.filter((f) => typeof f === "string" && f.trim() !== ""),
         yesAt: 0,
-        intent,
-        ...typeof reason === "string" ? { reason } : {}
+        intent
       });
       while (s.confirms.size > MAX_CONFIRMS) {
         const oldest = s.confirms.keys().next().value;
         if (oldest === void 0) break;
         s.confirms.delete(oldest);
       }
-    },
-    /**
-     * Whether the customer said yes, in THIS turn, to a change every page of the site shows — a look
-     * or a part every page shows (`consequence.mjs` reasons `site` and `shared`), never a delete, a
-     * record taken off the pages, a price or words replaced in many places.
-     *
-     * 🔒 ONE "EVERY PAGE" QUESTION A TURN (beta report, 26/10/2026). A customer agreed to a site-wide
-     * header colour; the write had no effect, the agent took the other road to the same header (its
-     * template part) and asked again — and that second card was never answered: the turn stood open
-     * until the stale sweep, and the customer got no reply at all. The question tells the customer the
-     * change reaches every page; once they agreed to that for what they asked in this message, the
-     * door does not ask it again for the same message, within the life of a yes (`CONFIRM_TTL_MS`). A
-     * new message, a No, a destructive or a money call asks as before.
-     * @param {unknown} sessionId
-     * @returns {boolean}
-     */
-    siteWideAgreed(sessionId) {
-      if (!named3(sessionId)) return false;
-      const s = session(sessionId);
-      return s.siteWideYes === s.turn && s.declined === s.declinedAtYes && now() - s.siteWideYesAt <= CONFIRM_TTL_MS;
     },
     /**
      * Whether the customer agreed to this call since it was refused. True once: the confirmation is
@@ -13270,6 +13237,8 @@ function refusalNext(answer, given = {}) {
     case "CONFIRM_FIRST":
       if (a.typed === true)
         return "The customer typed words instead of choosing, which opens nothing: ask_user_question with this ask once more (id as given), asking them to pick an option; still none: tell them nothing changed.";
+      if (a.confirmationMissing === true)
+        return "No recorded yes for this exact call; confirm:true is not consent. Use ask_user_question with this ask (id unchanged, options in order); wait for the customer, then retry with confirm:true.";
       if (typeof a.languages === "number" && a.languages > 1)
         return "ask_user_question with this answer's ask (id as given, options in order, customer's words); one answer covers every language: on the first, the same call with confirm:true removes them all";
       if (typeof a.otherLanguages === "number" && a.otherLanguages > 0)
@@ -18485,8 +18454,7 @@ async function runSiteCall(input) {
   let wholeGroup = null;
   let rowGroup = null;
   const planAgreed = consequence !== null && tier !== "destructive" && typeof input.planAgreed === "function" ? await input.planAgreed() === true : false;
-  const turnAgreed = consequence !== null && tier !== "destructive" && SITE_WIDE_REASONS.has(consequence.reason) && typeof sessionId === "string" && sessionId !== "" && memory?.siteWideAgreed?.(sessionId) === true;
-  if (tier === "destructive" || consequence !== null && !planAgreed && !turnAgreed) {
+  if (tier === "destructive" || consequence !== null && !planAgreed) {
     const group = n0.kind === "relay" && groupDeleteApplies(platform, n0) ? await translationGroupOf({
       send,
       memory,
@@ -18575,7 +18543,7 @@ async function runSiteCall(input) {
     }) ?? consequence : consequence;
     const facts2 = shownConsequence?.facts?.length ? shownConsequence.facts : recordTitle !== "" ? [recordTitle] : [];
     if (!agreed && !mediaPreviewOnly && sessionId)
-      memory?.confirmAsked?.(sessionId, confirmKey3, true, facts2, intent, consequence?.reason);
+      memory?.confirmAsked?.(sessionId, confirmKey3, true, facts2, intent);
     if (!agreed && !mediaPreviewOnly) {
       const size2 = group === null ? 0 : group.members.length;
       const named3 = group === null ? "" : recordNamed(group);
@@ -18583,6 +18551,7 @@ async function runSiteCall(input) {
       return done({
         ok: false,
         code: "CONFIRM_FIRST",
+        ...n0.kind === "relay" && n0.host?.confirm === true ? { confirmationMissing: true } : {},
         action: plan.action,
         tier,
         ...consequence !== null ? { consequence: consequence.reason } : {},
@@ -49617,11 +49586,11 @@ ${text6}`);
         const { confirm, ...call } = params;
         const key2 = `tracy_site:${sameCallKey("tracy_site", { action: plan.action, params: call })}`;
         if (confirm === true && memory.confirmed(sessionId, key2)) return null;
-        if (SITE_WIDE_REASONS.has(consequence.reason) && memory.siteWideAgreed(sessionId)) return null;
-        memory.confirmAsked(sessionId, key2, true, consequence.facts, null, consequence.reason);
+        memory.confirmAsked(sessionId, key2, true, consequence.facts);
         return withNext({
           ok: false,
           code: "CONFIRM_FIRST",
+          ...confirm === true ? { confirmationMissing: true } : {},
           action: plan.action,
           tier: "mutating",
           consequence: consequence.reason,

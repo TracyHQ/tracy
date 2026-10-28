@@ -2880,3 +2880,12 @@ test('planCall: content.renderedWords is the engine’s own call, refused to the
     assert.ok(!out.actions?.includes('content.renderedWords'), 'never offered back')
   }
 })
+
+test('CONFIRM_FIRST retry explains missing consent without widening the approved call', () => {
+  const next =
+    refusalNext({ ok: false, code: 'CONFIRM_FIRST', confirmationMissing: true }, { platform: 'wordpress' }) ??
+    ''
+  assert.match(next, /confirm:true is not consent/)
+  assert.match(next, /wait for the customer/)
+  assert.ok(next.length <= 200)
+})

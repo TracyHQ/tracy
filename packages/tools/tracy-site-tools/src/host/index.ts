@@ -41,7 +41,6 @@ import {
   confirmQuestion,
   createCallMemory,
   flightSeat,
-  SITE_WIDE_REASONS,
   sameCallKey,
   untranslatedConfirmCard
 } from './call-memory.mjs'
@@ -2554,10 +2553,7 @@ function lookSetMeasure(
       req: req as any,
       path: at.path,
       publicOrigin: at.publicOrigin
-    })) as Record<
-      string,
-      any
-    >
+    })) as Record<string, any>
     return read.ok === true ? { ok: true, payload: read.payload, url: at.url } : read
   }
 }
@@ -5376,12 +5372,11 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         const { confirm, ...call } = params
         const key = `tracy_site:${sameCallKey('tracy_site', { action: plan.action, params: call })}`
         if (confirm === true && memory.confirmed(sessionId, key)) return null
-        // One "every page" question a turn (`call-memory.mjs` `siteWideAgreed`).
-        if (SITE_WIDE_REASONS.has(consequence.reason) && memory.siteWideAgreed(sessionId)) return null
-        memory.confirmAsked(sessionId, key, true, consequence.facts, null, consequence.reason)
+        memory.confirmAsked(sessionId, key, true, consequence.facts)
         return withNext({
           ok: false,
           code: 'CONFIRM_FIRST',
+          ...(confirm === true ? { confirmationMissing: true } : {}),
           action: plan.action,
           tier: 'mutating',
           consequence: consequence.reason,

@@ -905,6 +905,8 @@ export function refusalNext(answer, given = {}) {
       // other roads (an unpublish) instead of asking once more for the one thing the door reads.
       if (a.typed === true)
         return 'The customer typed words instead of choosing, which opens nothing: ask_user_question with this ask once more (id as given), asking them to pick an option; still none: tell them nothing changed.'
+      if (a.confirmationMissing === true)
+        return 'No recorded yes for this exact call; confirm:true is not consent. Use ask_user_question with this ask (id unchanged, options in order); wait for the customer, then retry with confirm:true.'
       if (typeof a.languages === 'number' && a.languages > 1)
         return "ask_user_question with this answer's ask (id as given, options in order, customer's words); one answer covers every language: on the first, the same call with confirm:true removes them all"
       if (typeof a.otherLanguages === 'number' && a.otherLanguages > 0)
