@@ -2284,7 +2284,7 @@ class DbMerge:
             taken = " OR ".join(f"({differs(c, 'rt', 'rb')} AND NOT {differs(c, 'rm', 'rb')})" for c in edited) or "FALSE"
             got = self.sql.run(
                 f"SELECT IFNULL(SUM(k.cls = 'T' AND (k.hb IS NULL OR k.ht IS NULL OR ({live_edit}))), 0)"
-                f" + IFNULL(SUM(k.cls = 'X' AND ({taken})), 0) FROM {k} k"
+                f" + IFNULL(SUM(k.cls = 'X' AND k.ht IS NOT NULL AND k.hm IS NOT NULL AND ({taken})), 0) FROM {k} k"
                 f" LEFT JOIN {b} rb ON {on('k', 'rb')} LEFT JOIN {m} rm ON {on('k', 'rm')}"
                 f" LEFT JOIN {t} rt ON {on('k', 'rt')};"
             )
