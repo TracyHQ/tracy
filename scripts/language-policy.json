@@ -87,6 +87,11 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "84bcce538282172171709b1d3121a51679123278",
       "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "8366f9fcda5de2b431afcc1eaa191250282b2f63",
+      "reason": "Exact regenerated language bundle for the PR #53 CI follow-up. Italian, Spanish and Chinese setup translations retain the required site term. The bundle reproduces from the localized JSON; future bytes still need review."
     }
   ]
 }
