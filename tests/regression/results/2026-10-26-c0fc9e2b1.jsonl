@@ -1,2 +1,0 @@
-{"id":"REG-PR-1739-hano-copy-pictures-memory","verdict":"PASS","commit":"c0fc9e2b16423211dc4fa1c056cff936aeeb4dcb","ran_at":"2026-10-26T21:56:26.540Z","evidence":"REG-PR-1739-hano-copy-pictures-memory.log"}
-{"id":"REG-PR-1739-vision-shot-coverage","verdict":"PASS","commit":"c0fc9e2b16423211dc4fa1c056cff936aeeb4dcb","ran_at":"2026-10-26T21:56:27.957Z","evidence":"REG-PR-1739-vision-shot-coverage.log"}
