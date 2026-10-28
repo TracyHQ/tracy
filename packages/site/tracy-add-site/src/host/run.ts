@@ -464,7 +464,9 @@ export function startRun(input: StartInput): RunState {
       // A `call_failed` names the call and what came back (`export.ts`): the head of the body in the
       // operator log, its closed-set kind in the stuck signal.
       if (reason === 'call_failed' && error instanceof ExportFailed && error.detail)
-        console.warn(`[tracy-add-site] run ${run.id} (${run.siteKey}) call_failed at ${run.step}: ${error.detail}`)
+        console.warn(
+          `[tracy-add-site] run ${run.id} (${run.siteKey}) call_failed at ${run.step}: ${error.detail}`
+        )
       const firewall =
         error instanceof ExportFailed && reason === 'blocked_by_firewall' ? error.detail : undefined
       if (reason === 'blocked_by_firewall') logFirewall(run, firewall)

@@ -674,7 +674,8 @@ export async function captureView({
       launch: async (t) => {
         const pinned = hostBrowserTarget(t)
         // A route dsh cannot pin to this container's loopback is not drawn from dsh at all.
-        if (pinned === null) return { code: 0, stdout: 'TRACY_BROWSER NOCHROME no route to pin', stderr: '', timedOut: false }
+        if (pinned === null)
+          return { code: 0, stdout: 'TRACY_BROWSER NOCHROME no route to pin', stderr: '', timedOut: false }
         return onHost.run({ target: pinned, file: frame, deadlineMs: VIEW_DEADLINE_MS })
       }
     }))

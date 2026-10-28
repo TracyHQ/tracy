@@ -713,7 +713,9 @@ function answerKind(text2) {
   const t = String(text2 ?? "").trim();
   if (t === "") return "empty";
   if (/\b(?:Fatal error|Parse error|Uncaught\s+\w+)\b/.test(t)) return "php_fatal";
-  if (PHP_NOTICE_LINE.test(t.split(/\r?\n/).find((line) => line.trim() !== "" && !/^<br\s*\/?>$/i.test(line.trim())) ?? ""))
+  if (PHP_NOTICE_LINE.test(
+    t.split(/\r?\n/).find((line) => line.trim() !== "" && !/^<br\s*\/?>$/i.test(line.trim())) ?? ""
+  ))
     return "php_notice";
   if (t.startsWith("<")) return "html";
   if (parseJson(t) !== void 0) return "json";
@@ -4079,7 +4081,9 @@ ${detail}`
       );
     }
     if (reason === "call_failed" && error instanceof ExportFailed && error.detail)
-      console.warn(`[tracy-add-site] run ${run.id} (${run.siteKey}) call_failed at ${run.step}: ${error.detail}`);
+      console.warn(
+        `[tracy-add-site] run ${run.id} (${run.siteKey}) call_failed at ${run.step}: ${error.detail}`
+      );
     const firewall = error instanceof ExportFailed && reason === "blocked_by_firewall" ? error.detail : void 0;
     if (reason === "blocked_by_firewall") logFirewall(run, firewall);
     const diagnostic = error instanceof ExportFailed ? error.diagnostic : void 0;

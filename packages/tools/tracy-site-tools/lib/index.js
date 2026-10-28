@@ -29668,7 +29668,8 @@ async function runVisualCheck(job) {
     if (ask === void 0 || ask.turn !== job.turn) return skip("no-ask");
     if (!siteChangedInTurn(job.events)) return skip("no-write");
     const before = ask.before ?? ask.fallback ?? null;
-    if (before === null) return skip(`no-before: ${ask.missing ?? (ask.hold === void 0 ? "not-held" : "none")}`);
+    if (before === null)
+      return skip(`no-before: ${ask.missing ?? (ask.hold === void 0 ? "not-held" : "none")}`);
     if (!before.loaded) return skip("before-not-loaded");
     const view2 = { ...before.view, y: before.y ?? before.view.y };
     if (ask.comment) {
@@ -46380,7 +46381,8 @@ async function captureView({
       publicOrigin,
       launch: async (t) => {
         const pinned = hostBrowserTarget(t);
-        if (pinned === null) return { code: 0, stdout: "TRACY_BROWSER NOCHROME no route to pin", stderr: "", timedOut: false };
+        if (pinned === null)
+          return { code: 0, stdout: "TRACY_BROWSER NOCHROME no route to pin", stderr: "", timedOut: false };
         return onHost.run({ target: pinned, file: frame, deadlineMs: VIEW_DEADLINE_MS });
       }
     }));

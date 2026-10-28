@@ -168,7 +168,13 @@ test('an import diagnostic keeps only values from closed sets, the same ones the
 test('a call_failed diagnostic keeps the engine call, what came back and the engine code, from closed sets', () => {
   const { importDiagnostic } = accepted
   assert.deepEqual(
-    importDiagnostic({ at: 'export', check: 'no_engine_reply', status: 200, action: 'db.dump', answer: 'php_notice' }),
+    importDiagnostic({
+      at: 'export',
+      check: 'no_engine_reply',
+      status: 200,
+      action: 'db.dump',
+      answer: 'php_notice'
+    }),
     { at: 'export', check: 'no_engine_reply', status: 200, action: 'db.dump', answer: 'php_notice' }
   )
   // a value outside the lists is dropped, an engine code outside them is `other`
@@ -190,7 +196,13 @@ test('a call_failed diagnostic keeps the engine call, what came back and the eng
         step: 'reading_content',
         reason: 'call_failed',
         platform: 'wordpress',
-        detail: { at: 'export', check: 'no_engine_reply', status: 200, action: 'db.dump', answer: 'php_notice' }
+        detail: {
+          at: 'export',
+          check: 'no_engine_reply',
+          status: 200,
+          action: 'db.dump',
+          answer: 'php_notice'
+        }
       }
     },
     'DEV'

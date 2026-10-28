@@ -429,7 +429,10 @@ test('a first read: the database twice in agreement, the whole tree checked file
 })
 
 test('a host that prints PHP notices ahead of each answer is read all the same (PHP 8.5 curl_close)', async () => {
-  const site = await engine({ phpNotice: '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n' })
+  const site = await engine({
+    phpNotice:
+      '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
+  })
   try {
     const dir = join(root, 'notice')
     const { answer } = await pull(dir, site.url)

@@ -89,10 +89,15 @@ test('the engine reply after PHP notices is the engine reply; HTML or plain noti
 })
 
 test('only PHP notice lines are taken off, and what remains must be the engine', () => {
-  assert.equal(engineReply('<b>Fatal error</b>: Allowed memory size exhausted in /x.php on line 3\n{"ok":true}'), null)
+  assert.equal(
+    engineReply('<b>Fatal error</b>: Allowed memory size exhausted in /x.php on line 3\n{"ok":true}'),
+    null
+  )
   assert.equal(engineReply('Please wait on line 3\n{"ok":true}'), null)
   assert.equal(
-    engineReply('<br />\n<b>Deprecated</b>:  x in <b>/a.php</b> on line <b>1</b><br />\n<html>Coming soon</html>'),
+    engineReply(
+      '<br />\n<b>Deprecated</b>:  x in <b>/a.php</b> on line <b>1</b><br />\n<html>Coming soon</html>'
+    ),
     null
   )
   assert.equal(engineReply('Deprecated: x in /a.php on line 1\n{"error":true,"code":403}'), null)
@@ -101,11 +106,16 @@ test('only PHP notice lines are taken off, and what remains must be the engine',
 
 test('what came back instead of the engine is named by kind, never by its text', () => {
   assert.equal(answerKind(''), 'empty')
-  assert.equal(answerKind('<br />\n<b>Fatal error</b>: Allowed memory size of 134217728 bytes exhausted'), 'php_fatal')
-  assert.equal(answerKind('<br />\n<b>Warning</b>:  x in <b>/a.php</b> on line <b>2</b><br />\n<html></html>'), 'php_notice')
+  assert.equal(
+    answerKind('<br />\n<b>Fatal error</b>: Allowed memory size of 134217728 bytes exhausted'),
+    'php_fatal'
+  )
+  assert.equal(
+    answerKind('<br />\n<b>Warning</b>:  x in <b>/a.php</b> on line <b>2</b><br />\n<html></html>'),
+    'php_notice'
+  )
   assert.equal(answerKind('<!DOCTYPE html><html></html>'), 'html')
   assert.equal(answerKind('{"error":true,"code":403}'), 'json')
   assert.equal(answerKind('0'), 'json')
   assert.equal(answerKind('Service unavailable'), 'text')
 })
-

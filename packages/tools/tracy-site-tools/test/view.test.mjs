@@ -903,10 +903,22 @@ test('captureView: where the site has no browser, the visual check’s picture i
     chrome: '/usr/local/bin/tracy-chrome',
     run: async (/** @type {any} */ input) => {
       onHost.push(input)
-      return { code: 0, stderr: '', timedOut: false, stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) }
+      return {
+        code: 0,
+        stderr: '',
+        timedOut: false,
+        stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') })
+      }
     }
   }
-  const drawn = await captureView({ label: 'demo1', view: VIEW, internalPort: 80, run: r.run, gate: GATE_OK, host })
+  const drawn = await captureView({
+    label: 'demo1',
+    view: VIEW,
+    internalPort: 80,
+    run: r.run,
+    gate: GATE_OK,
+    host
+  })
   assert.deepEqual(drawn, { ok: true, jpeg: JPEG, y: 0, loaded: true })
   assert.equal(onHost.length, 1)
   assert.deepEqual(onHost[0].target, {
@@ -922,7 +934,14 @@ test('captureView: where the site has no browser, the visual check’s picture i
   assert.deepEqual(none, { ok: false, code: 'NO_BROWSER' })
   // A site browser that answers is used, and dsh's is never started.
   const own = runner({ stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) })
-  const used = await captureView({ label: 'demo1', view: VIEW, internalPort: 80, run: own.run, gate: GATE_OK, host })
+  const used = await captureView({
+    label: 'demo1',
+    view: VIEW,
+    internalPort: 80,
+    run: own.run,
+    gate: GATE_OK,
+    host
+  })
   assert.equal(used.ok, true)
   assert.equal(onHost.length, 1)
 })

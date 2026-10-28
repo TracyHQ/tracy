@@ -326,7 +326,8 @@ async function callPlugin(
         throw error
       }
     }
-    const code = typeof result.error === 'string' && DIAGNOSTIC_ENGINE_ERRORS.has(result.error) ? result.error : 'other'
+    const code =
+      typeof result.error === 'string' && DIAGNOSTIC_ENGINE_ERRORS.has(result.error) ? result.error : 'other'
     throw new ExportFailed('call_failed', detail, {
       at: 'export',
       check: 'engine_refused',

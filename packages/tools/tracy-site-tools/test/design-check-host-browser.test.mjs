@@ -396,11 +396,12 @@ test('🔒 host mode, a view (the visual check): the site’s own pictures and f
       { resourceType: 'Image', request: { method: 'POST', url: `${ORIGIN}/images/logo.png`, headers: {} } }
     ]
   })
-  assert.deepEqual(
-    r.docker.map((a) => a.at(-1)).sort(),
-    ['http://127.0.0.1:80/fonts/a.woff2', 'http://127.0.0.1:80/images/logo.png']
-  )
-  for (const a of r.docker) assert.deepEqual(a.slice(0, 5), ['exec', '-u', 'www-data', 'northgate-web-1', 'curl'])
+  assert.deepEqual(r.docker.map((a) => a.at(-1)).sort(), [
+    'http://127.0.0.1:80/fonts/a.woff2',
+    'http://127.0.0.1:80/images/logo.png'
+  ])
+  for (const a of r.docker)
+    assert.deepEqual(a.slice(0, 5), ['exec', '-u', 'www-data', 'northgate-web-1', 'curl'])
   assert.equal(r.cdp.filter((m) => m.method === 'Fetch.continueRequest').length, 0)
   assert.equal(r.cdp.filter((m) => m.method === 'Fetch.failRequest').length, 3)
   const i = r.cdp.findIndex((m) => m.method === 'Emulation.setScriptExecutionDisabled')

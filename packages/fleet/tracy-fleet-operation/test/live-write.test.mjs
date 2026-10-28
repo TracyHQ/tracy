@@ -515,7 +515,8 @@ test('an update is written where the live site still holds the base value; what 
 
 test('a host that prints PHP notices ahead of each answer is written all the same (PHP 8.5 curl_close)', async () => {
   const live = await engine({ records: { article: { 1: article(1) } } })
-  live.phpNotice = '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
+  live.phpNotice =
+    '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
   try {
     const dir = pushDir([update(1, { title: 'New one' }, { title: 'Article 1' })])
     const { answer } = await apply(live, dir)

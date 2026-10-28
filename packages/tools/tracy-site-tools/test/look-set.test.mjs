@@ -1109,7 +1109,9 @@ test('🔒 WordPress, a block theme: a preset theme.json’s own styles.css sets
   const themeJson = JSON.stringify({
     version: 3,
     settings: { color: { palette: [{ slug: 'bg', color: '#0a0b0a' }] } },
-    styles: { css: ':root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #0a0b0a),var(--ds-c-bg, #0a0b0a));}' }
+    styles: {
+      css: ':root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #0a0b0a),var(--ds-c-bg, #0a0b0a));}'
+    }
   })
   const bgRow = (/** @type {string} */ hex) => ({
     value: hex === '#0a0b0a' ? 'rgb(10, 11, 10)' : 'rgb(42, 43, 38)',
@@ -1118,7 +1120,15 @@ test('🔒 WordPress, a block theme: a preset theme.json’s own styles.css sets
     by: '.tracy-header',
     sheet: `/wp-content/themes/${THEME}/assets/css/tracy.css`,
     line: 163,
-    tokens: [{ name: '--wp--preset--color--bg', value: '#0a0b0a', by: ':root', sheet: 'global-styles-inline-css', on: '<html>' }]
+    tokens: [
+      {
+        name: '--wp--preset--color--bg',
+        value: '#0a0b0a',
+        by: ':root',
+        sheet: 'global-styles-inline-css',
+        on: '<html>'
+      }
+    ]
   })
   const info = {
     el: '<header.tracy-header>',
@@ -1130,7 +1140,8 @@ test('🔒 WordPress, a block theme: a preset theme.json’s own styles.css sets
   const site = fakeSite({
     'wp-config.php': '<?php\n',
     [`wp-content/themes/${THEME}/theme.json`]: themeJson,
-    [`wp-content/themes/${THEME}/assets/css/tracy.css`]: '.tracy-header {\n  background: var(--wp--preset--color--bg);\n}\n'
+    [`wp-content/themes/${THEME}/assets/css/tracy.css`]:
+      '.tracy-header {\n  background: var(--wp--preset--color--bg);\n}\n'
   })
   const { measure } = readings(
     wpButton({ 'background-color': bgRow('#0a0b0a') }, info),

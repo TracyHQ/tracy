@@ -640,7 +640,8 @@ export async function runVisualCheck(job) {
     const before = ask.before ?? ask.fallback ?? null
     // 🔒 A MISSING "BEFORE" ALWAYS SAYS WHY (beta report, 28/10/2026: 10 customer turns on production
     // were a bare `no-before`). No reason from the hold means no write of this turn was held at all.
-    if (before === null) return skip(`no-before: ${ask.missing ?? (ask.hold === undefined ? 'not-held' : 'none')}`)
+    if (before === null)
+      return skip(`no-before: ${ask.missing ?? (ask.hold === undefined ? 'not-held' : 'none')}`)
     if (!before.loaded) return skip('before-not-loaded')
     const view = { ...before.view, y: before.y ?? before.view.y }
     if (ask.comment) {

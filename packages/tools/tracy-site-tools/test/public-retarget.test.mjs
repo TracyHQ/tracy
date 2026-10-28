@@ -42,7 +42,11 @@ test('publicRetarget: exactly the public origin becomes the public route, pinned
     via: '127.0.0.1:80',
     resolverRule: '--host-resolver-rules=MAP mysite.tracy.ai ~NOTFOUND'
   })
-  const deep = publicRetarget({ ...LOOPBACK, url: 'http://127.0.0.1:8080/contact' }, `${PUBLIC}/contact/?a=1#top`, PUBLIC)
+  const deep = publicRetarget(
+    { ...LOOPBACK, url: 'http://127.0.0.1:8080/contact' },
+    `${PUBLIC}/contact/?a=1#top`,
+    PUBLIC
+  )
   assert.equal(deep?.url, `${PUBLIC}/contact/?a=1`, 'the path and query it was sent to, never the fragment')
   assert.equal(deep?.via, '127.0.0.1:8080', 'the port the browser was dialling')
   const canonical = publicRetarget(
@@ -56,7 +60,11 @@ test('publicRetarget: exactly the public origin becomes the public route, pinned
     `${PUBLIC}/`,
     PUBLIC
   )
-  assert.equal(canonical?.via, '127.0.0.1:80', 'a canonical-port target keeps the port its resolver rule pinned')
+  assert.equal(
+    canonical?.via,
+    '127.0.0.1:80',
+    'a canonical-port target keeps the port its resolver rule pinned'
+  )
 })
 
 test('publicRetarget: anything but exactly the public origin stays off-site', () => {
@@ -66,7 +74,13 @@ test('publicRetarget: anything but exactly the public origin stays off-site', ()
   assert.equal(publicRetarget(LOOPBACK, 'https://mysite.tracy.ai:8443/', PUBLIC), null, 'another port')
   assert.equal(publicRetarget(LOOPBACK, 'https://evil.mysite.tracy.ai/', PUBLIC), null, 'a sub-name')
   assert.equal(publicRetarget(LOOPBACK, 'unknown', PUBLIC), null, 'no address')
-  const already = { url: `${PUBLIC}/`, origin: PUBLIC, container: 'mysite-web-1', resolverRule: '', via: '127.0.0.1:80' }
+  const already = {
+    url: `${PUBLIC}/`,
+    origin: PUBLIC,
+    container: 'mysite-web-1',
+    resolverRule: '',
+    via: '127.0.0.1:80'
+  }
   assert.equal(publicRetarget(already, `${PUBLIC}/`, PUBLIC), null, 'already asked as that origin: no loop')
   assert.equal(
     publicRetarget({ ...LOOPBACK, url: 'http://10.0.0.5/', origin: 'http://10.0.0.5' }, `${PUBLIC}/`, PUBLIC),
@@ -100,7 +114,10 @@ test('page.look {style} of the home page: the site’s own public redirect is re
     props: { 'background-color': { value: 'rgb(10, 11, 10)', rules: [] } },
     loaded: true
   }
-  const s = scripted([`TRACY_BROWSER OFFSITE ${PUBLIC}/`, `TRACY_BROWSER OK ${PUBLIC}/\n${JSON.stringify(payload)}`])
+  const s = scripted([
+    `TRACY_BROWSER OFFSITE ${PUBLIC}/`,
+    `TRACY_BROWSER OK ${PUBLIC}/\n${JSON.stringify(payload)}`
+  ])
   const answer = /** @type {any} */ (
     await styleLook({
       run: s.run,
@@ -136,12 +153,22 @@ test('page.look {style} of the home page: the site’s own public redirect is re
 })
 
 test('page.text’s browser and the customer view take the same road', async () => {
-  const dom = scripted([`TRACY_BROWSER OFFSITE ${PUBLIC}/`, `TRACY_BROWSER OK ${PUBLIC}/\n<html><body>Home</body></html>`])
+  const dom = scripted([
+    `TRACY_BROWSER OFFSITE ${PUBLIC}/`,
+    `TRACY_BROWSER OK ${PUBLIC}/\n<html><body>Home</body></html>`
+  ])
   const read = await browserDom({
     run: dom.run,
     label: 'mysite',
     internalPort: 80,
-    route: { kind: 'loopback', origin: 'http://127.0.0.1', host: '127.0.0.1', proto: 'http', connectPort: 80, container: 'mysite-web-1' },
+    route: {
+      kind: 'loopback',
+      origin: 'http://127.0.0.1',
+      host: '127.0.0.1',
+      proto: 'http',
+      connectPort: 80,
+      container: 'mysite-web-1'
+    },
     pathAndQuery: '/',
     publicOrigin: PUBLIC
   })
