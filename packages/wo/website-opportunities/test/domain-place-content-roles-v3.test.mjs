@@ -151,6 +151,7 @@ test('version 3 lists every new role, the split decorative picture and the artic
     true,
     'the default version is the one capture writes'
   )
+  // test-quality: contract capture keeps writing version 2 until a template adopts version 3
   assert.equal(domain.ROLE_VOCABULARY_VERSION, V2)
   // test-quality: contract during the expand step a content map may name either vocabulary
   assert.deepEqual(domain.CONTENT_MAP_ROLE_VOCABULARY_VERSIONS, [V2, V3])
