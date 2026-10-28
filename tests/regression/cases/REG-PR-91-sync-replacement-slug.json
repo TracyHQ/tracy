@@ -4,17 +4,10 @@
   "title": "A replacement keeps its page address and Undo restores the original slug safely",
   "pr": 91,
   "area": "sync/live",
-  "cms": [
-    "wp",
-    "jo"
-  ],
-  "needs": [
-    "python3"
-  ],
+  "cms": ["wp", "jo"],
+  "needs": ["python3"],
   "flaky_model": false,
-  "steps": [
-    "Run changeset generation and writer replacement cases."
-  ],
+  "steps": ["Run changeset generation and writer replacement cases."],
   "expect": [
     "Only a matching WordPress slug in the same type and parent scope depends on its deletion.",
     "Unconfirmed or conflicting deletion prevents creation; a failed create leaves the original available for Undo.",
