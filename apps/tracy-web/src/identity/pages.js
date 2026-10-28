@@ -282,7 +282,7 @@ function signInLinks() {
   const link = (href, label, mark) =>
     `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${mark}${escapeHtml(label)}</a>`
   return `<nav class="signin-links">
-${link(LINKS.home, 'tracy.ai', GLOBE_MARK)}
+${link(LINKS.home, new URL(LINKS.home).host, GLOBE_MARK)}
 ${link(LINKS.discord, 'Discord', DISCORD_MARK)}
 ${link(LINKS.x, '@tracydotai', X_MARK)}
 </nav>`
