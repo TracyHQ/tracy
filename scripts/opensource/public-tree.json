@@ -3867,27 +3867,6 @@
       "reason": "the no-reply author identity of the squashed export commit"
     },
     {
-      "path": "tests/qa/fixtures/mail/facts.json",
-      "category": "email",
-      "match": "^[a-z.]+@tracy\\.ai$",
-      "kind": "placeholder",
-      "reason": "fictional recipients on Tracy's own domain: the mail QA needs deliverable-looking addresses, reserved domains are dropped by the transport"
-    },
-    {
-      "path": "tests/qa/layers/mail/machine.mjs",
-      "category": "email",
-      "match": "^[A-Za-z.]+@[Tt]racy\\.ai$",
-      "kind": "placeholder",
-      "reason": "fictional recipients on Tracy's own domain: the mail QA needs deliverable-looking addresses, reserved domains are dropped by the transport"
-    },
-    {
-      "path": "tests/qa/oracles/mail/oracle.json",
-      "category": "email",
-      "match": "^someone@tracy\\.ai$",
-      "kind": "placeholder",
-      "reason": "the deliverable counterpart of the reserved-domain oracle; a fictional address on Tracy's own domain"
-    },
-    {
       "path": "scripts/test/check-origins.test.ts",
       "category": "email",
       "match": "^name@tracy\\.ai$",
@@ -3916,25 +3895,11 @@
       "reason": "test inputs and template demo addresses quoted by regression cases (Tracy's no-reply sender, JoomlArt demo companies, made-up inputs)"
     },
     {
-      "path": "tests/qa/layers/unit/cases/**",
-      "category": "email",
-      "match": "^(a@b\\.co|noreply@tracy\\.ai|sales@northgate-ind\\.ru|sales@kinetic\\.dev|linh@example\\.vn)$",
-      "kind": "placeholder",
-      "reason": "generated from the regression cases; same test inputs and template demo addresses"
-    },
-    {
       "path": "scripts/test/qa-fence.test.mjs",
       "category": "ip",
       "match": "^10\\.1\\.2\\.3$",
       "kind": "placeholder",
       "reason": "made-up private address in a fence test"
-    },
-    {
-      "path": "tests/qa/layers/mail/test/runner.test.mjs",
-      "category": "ip",
-      "match": "^10\\.0\\.0\\.5$",
-      "kind": "placeholder",
-      "reason": "made-up private address in a test"
     },
     {
       "path": "scripts/qa/stand/**",
@@ -3956,13 +3921,6 @@
       "match": "^6\\.2\\.2\\.2$",
       "kind": "false-positive",
       "reason": "RFC 3986 section number"
-    },
-    {
-      "path": "tests/qa/layers/cms/specs/tracy-setting.mjs",
-      "category": "ip",
-      "match": "^1\\.0\\.0\\.0$",
-      "kind": "false-positive",
-      "reason": "a version string in a version-parsing test"
     },
     {
       "path": "scripts/check-test-quality.mjs",
@@ -4000,13 +3958,6 @@
       "reason": "made-up home directory used as test input"
     },
     {
-      "path": "tests/qa/layers/static/test/runner.test.mjs",
-      "category": "machine-path",
-      "match": "^/Users/\\.\\.$",
-      "kind": "placeholder",
-      "reason": "a path-traversal input in a test"
-    },
-    {
       "path": "scripts/qa/fence/*",
       "category": "machine-path",
       "match": "^/Users/Shared$",
@@ -4030,12 +3981,6 @@
       "category": "vietnamese",
       "kind": "language-data",
       "reason": "regression cases quote the Vietnamese UI strings, customer inputs and place names they test"
-    },
-    {
-      "path": "tests/qa/layers/unit/cases/**",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "generated from the regression cases; quotes the same Vietnamese test data"
     },
     {
       "path": "tests/regression/scripts/**",
@@ -4138,62 +4083,6 @@
       "category": "vietnamese",
       "kind": "language-data",
       "reason": "Vietnamese inputs, language names and the currency sign the journeys use"
-    },
-    {
-      "path": "tests/qa/layers/api/scenarios.mjs",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "a Vietnamese question label as test data"
-    },
-    {
-      "path": "tests/qa/layers/flows/generate.mjs",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "slug normaliser for the Vietnamese letter d with stroke"
-    },
-    {
-      "path": "tests/qa/layers/mail/test/footer.test.mjs",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "the Vietnamese footer words the mail test expects"
-    },
-    {
-      "path": "tests/qa/oracles/mail/oracle.json",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "the Vietnamese footer words copied from the regression case"
-    },
-    {
-      "path": "tests/qa/layers/related/specs/chain.mjs",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "matches the pin line of vendored IMPORT-NOTE files, written in Vietnamese upstream"
-    },
-    {
-      "path": "tests/qa/layers/ui/denominator.json",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "the Vietnamese language name as the switch shows it"
-    },
-    {
-      "path": "tests/qa/oracles/infra/oracles.json",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "an excerpt quoted verbatim from a planning spec kept outside the public tree"
-    },
-    {
-      "path": "tests/qa/selftest/catchup.test.mjs",
-      "category": "vietnamese",
-      "kind": "language-data",
-      "reason": "the journal entry label of the team change log format"
-    },
-    {
-      "path": "tests/qa/layers/unit/cases/QA-UNIT-REG-PR-1134-ds-contracts-batch6-happy.json",
-      "category": "secret",
-      "match": "^(generic-api-key)$",
-      "secretSha256": ["967a896c1ecce74d88fc2cfefd479887670c7dededa205854114f689c153e84c"],
-      "kind": "placeholder",
-      "reason": "generated copy of tests/regression/cases/REG-PR-1134-ds-contracts-batch6.json; the same fake credential of that case"
     },
     {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.0/manifest.json",
@@ -4656,7 +4545,7 @@
     }
   ],
   "excludeReasons": {
-    "tests/regression/results/": "run history of regression cases (machine paths, internal commit ids); the gate only reads results a PR adds, so a public checkout needs none (27/10/2026)",
+    "tests/regression/results/": "run history of regression cases (machine paths, internal commit ids); the gate only reads results a PR adds, so a public checkout needs none (27/10/2026); the history up to 28/10/2026 is deleted, each PR still commits its own PASS records here",
     "apps/tracy-web/test/wo-quality-*": "tests of the excluded one-off WO measurement stands; they import scripts/lib/wo-quality-* (27/10/2026)",
     "scripts/wo-quality-*": "one-off WO measurement stands (20/10/2026) fenced to one machine's paths and real places; not product code (P3, 26/10/2026)"
   }

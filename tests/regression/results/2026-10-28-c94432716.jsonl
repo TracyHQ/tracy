@@ -1,1 +1,0 @@
-{"id":"REG-PR-56-host-run-settle-on-slow-disk","verdict":"PASS","commit":"c94432716d33a3a33cd58252de35628817233bac","ran_at":"2026-10-28T11:39:43.537Z","evidence":"tests/regression/.runs/2026-10-28-c94432716/REG-PR-56-host-run-settle-on-slow-disk.log"}

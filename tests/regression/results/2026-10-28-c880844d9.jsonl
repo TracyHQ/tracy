@@ -1,1 +1,0 @@
-{"id":"REG-PR-25-wo-sweep-one-write-per-page","verdict":"PASS","commit":"c880844d9b751d7da812b15051f7518b76cfe2a9","ran_at":"2026-10-28T07:17:37.414Z","evidence":"tests/regression/.runs/2026-10-28-c880844d9/REG-PR-25-wo-sweep-one-write-per-page.log"}
