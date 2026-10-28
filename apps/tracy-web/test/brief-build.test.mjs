@@ -4,10 +4,7 @@
  * every failure is soft. The engines are doubles; what each CMS's engine writes is tested beside it.
  */
 import assert from 'node:assert/strict'
-import { test, after, before, beforeEach } from 'node:test'
-
-import { briefOf } from '../src/sites/brief-store.js'
-import { createSite, deleteSite } from '../src/sites/store.js'
+import { after, before, beforeEach, test } from 'node:test'
 import {
   createBriefBuilds,
   LOST_ON_RESTART,
@@ -17,6 +14,8 @@ import {
   STAGE
 } from '../src/sites/brief-build.js'
 import { recordedDoor } from '../src/sites/brief-engines/shared.js'
+import { briefOf } from '../src/sites/brief-store.js'
+import { createSite, deleteSite } from '../src/sites/store.js'
 import { fileDb } from './_db.mjs'
 
 const db = fileDb()
@@ -930,6 +929,12 @@ test(
     const b = builds(pool, { wordpress: engine() })
     const g = await b.gate('began.tracy.test')
     assert.deepEqual(g, { open: false, step: null, state: 'failed', error: LOST_PLACING })
+    assert.equal((await briefOf(pool, 'began.tracy.test')).timings.lostFrom, 'applying')
+    assert.deepEqual(
+      await b.start({ siteKey: 'began.tracy.test', platform: 'wordpress', brief: { about: 'Retry' } }),
+      { started: false }
+    )
+    assert.equal((await briefOf(pool, 'began.tracy.test')).error, LOST_PLACING)
   }
 )
 
@@ -1110,5 +1115,36 @@ test(
       assert.equal(row.state, 'failed')
       assert.match(row.error, /BRAND_|identity store unavailable/)
     }
+  }
+)
+
+test(
+  'startup recovery with no saved apply ID prevents Create and WO retry from overwriting uncertain writes',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    await pool.query(
+      `insert into site_brief (site_key, platform, brief, state, stage, updated_at)
+    values ('unknown-write.tracy.test', 'wordpress', '{"about":"Original"}', 'applying', $1, now() - interval '1 minute')`,
+      [STAGE.placing]
+    )
+    const eng = engine()
+    const b = builds(pool, { wordpress: eng }, { recoverOnStart: true })
+    await b.recovered
+    assert.equal((await briefOf(pool, 'unknown-write.tracy.test')).timings.lostFrom, 'applying')
+    for (const extra of [{}, { retryActionId: 'wo-retry-unknown' }]) {
+      assert.deepEqual(
+        await b.start({
+          siteKey: 'unknown-write.tracy.test',
+          platform: 'wordpress',
+          brief: { about: 'Retry' },
+          ...extra
+        }),
+        { started: false }
+      )
+    }
+    const row = await briefOf(pool, 'unknown-write.tracy.test')
+    assert.equal(row.error, LOST_PLACING)
+    assert.deepEqual(row.brief, { about: 'Original' })
   }
 )

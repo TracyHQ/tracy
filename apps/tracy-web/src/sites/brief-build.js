@@ -249,7 +249,7 @@ export function createBriefBuilds({
       const ending = lostEnding(row)
       const { rowCount } = await pool.query(
         `update site_brief set state = $3, stage = null, error = $4,
-           timings = timings || jsonb_build_object('lost', $5::text), updated_at = now()
+           timings = timings || jsonb_build_object('lost', $5::text, 'lostFrom', $2::text), updated_at = now()
          where site_key = $1 and state = $2 and updated_at = $6::timestamptz`,
         [row.site_key, row.state, ending.state, ending.error, LOST_ON_RESTART, row.seen]
       )
@@ -640,7 +640,11 @@ export function createBriefBuilds({
     // read on the database clock that stamped `updated_at`, not compared with this process's clock.
     if (!running.has(siteKey) && Number(row.idle_ms) > cap.staleMs) {
       const ending = lostEnding(row)
-      const taken = await advanceBrief(pool, siteKey, [row.state], { ...ending, stage: null })
+      const taken = await advanceBrief(pool, siteKey, [row.state], {
+        ...ending,
+        stage: null,
+        timings: { lostFrom: row.state }
+      })
       // Another process settled the row between the read and the write: say what it settled.
       if (!taken) return gate(siteKey)
       return { open: false, step: null, state: ending.state, error: ending.error }

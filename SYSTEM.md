@@ -1970,7 +1970,9 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   the build still goes through `POST /api/sites` itself, keeping that door's permission/quota/template/site_design checks.
   The build receipt keeps `demoActionId`: an accepted failure of the current action does not re-provision on its own because of
   app/DB clock drift. Fill Retry keeps `timings.woRetryActionId` in the same `failed → queued` transaction; the same action does not
-  restart a fill that just failed, and does not create a brief for a site that has been replaced. A lost provision receipt may
+  restart a fill that just failed, and does not create a brief for a site that has been replaced. A recovery that interrupted
+  `applying` records `timings.lostFrom`; Create and Retry leave that row stopped even when no apply ID was saved,
+  because a write may have reached the site before its receipt was recorded. A lost provision receipt may
   replay the same `buildId` within the attempt limit; it is the same site, with no promise of exactly one POST. Dying after
   the fill is queued still follows the brief runner's lost-worker detection and needs a new Retry once failed.
   EmDash recognises WO through the link `site_creation.build_id` → `wo_build` before picking a model (callback

@@ -17,7 +17,8 @@
     "'a worker that died as placing began, before any write was kept, does not claim the site is untouched' passes: a stale `applying` row with no apply id settles `failed` with LOST_PLACING ('…may still have the template’s own words').",
     "'an open row whose worker died with the process is not held for ever' still passes: a stale `preparing` row settles `failed` with LOST_WORK.",
     "'a worker that died after a write that reused an apply id says the words are partly in' passes: a stale `applying` row whose timings carry only reusedApplyIds ['dtrim-seed'] settles `applied` with LOST_PART (before review fix L1: `failed` with LOST_PLACING, which a second press would write over).",
-    "Before the fix (brief-build.js gate at 77545996c7): every stale open row, `applying` included, settled `failed` with LOST_WORK ('the site has the template’s own words') — 2 failures in this file."
+    "Before the fix (brief-build.js gate at 77545996c7): every stale open row, `applying` included, settled `failed` with LOST_WORK ('the site has the template’s own words') — 2 failures in this file.",
+    "A failed applying row without saved apply IDs records timings.lostFrom=applying; repeated Create and WO Retry both return started:false and preserve the original brief. Startup and poll recovery enforce the same fence."
   ],
   "selectors": {
     "gate": "createBriefBuilds().gate (apps/tracy-web/src/sites/brief-build.js), called by GET /api/sites/jobs/:id once the host says done",
@@ -33,7 +34,8 @@
       "a worker that died while placing words that reached the site",
       "a worker that died as placing began",
       "a worker that died after a write that reused an apply id",
-      "an open row whose worker died with the process"
+      "an open row whose worker died with the process",
+      "startup recovery with no saved apply ID prevents Create and WO retry from overwriting uncertain writes"
     ]
   }
 }

@@ -1,4 +1,4 @@
-import { CURRENT_BRIEF as CURRENT, briefOf } from '../lib/site-brief-row.js'
+import { briefOf, CURRENT_BRIEF as CURRENT } from '../lib/site-brief-row.js'
 
 /**
  * The rows behind "Apply" in the Add site popup (`db/migrations/052-site-brief.sql`).
@@ -59,6 +59,7 @@ export async function restartBrief(pool, siteKey, brief, retryActionId = null) {
                       else jsonb_build_object('woRetryActionId', $3::text) end,
        brief = $2::jsonb, updated_at = now()
      where site_key = $1 and state = 'failed'
+       and coalesce(timings->>'lostFrom', '') <> 'applying'
        and ($3::text is null or (
          timings->>'woRetryActionId' is distinct from $3::text
          and not exists (select 1 from site s where s.site_key=b.site_key and s.created_at>b.created_at)
