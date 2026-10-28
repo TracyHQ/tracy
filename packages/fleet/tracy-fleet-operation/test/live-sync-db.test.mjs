@@ -1165,3 +1165,58 @@ test(
     )
   }
 )
+
+function stageHeldContactFields(ours, theirs) {
+  const base = `
+CREATE TABLE jos_contact_details (id INT PRIMARY KEY, name VARCHAR(100), asset_id INT);
+CREATE TABLE jos_fields (id INT PRIMARY KEY, title VARCHAR(100), context VARCHAR(100), asset_id INT);
+CREATE TABLE jos_fields_values (field_id INT, item_id VARCHAR(100), value TEXT, PRIMARY KEY(field_id,item_id));
+CREATE TABLE jos_fields_categories (field_id INT, category_id INT, PRIMARY KEY(field_id,category_id));
+CREATE TABLE jos_contentitem_tag_map (type_alias VARCHAR(100), content_item_id INT, tag_id INT, PRIMARY KEY(type_alias,content_item_id,tag_id));
+CREATE TABLE jos_ucm_content (core_content_id INT PRIMARY KEY, core_content_item_id INT, core_type_alias VARCHAR(100));
+CREATE TABLE jos_content_types (type_id INT PRIMARY KEY, type_alias VARCHAR(100));
+CREATE TABLE jos_ucm_base (ucm_id INT PRIMARY KEY, ucm_item_id INT, ucm_type_id INT);
+CREATE TABLE jos_assets (id INT PRIMARY KEY, name VARCHAR(100));
+INSERT INTO jos_content_types VALUES (1,'com_contact.contact');
+INSERT INTO jos_fields VALUES (1,'Contact field','com_contact.contact',0);
+INSERT INTO jos_fields_values VALUES (1,'1','base');`
+  sql(
+    ['sb', 'sm', 'st']
+      .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+      .join('\n') + `\nUSE sm; ${ours}\nUSE st; ${theirs}`
+  )
+}
+
+test('held contacts and custom fields keep live dependent rows off the copy', opts, () => {
+  for (const rowMerge of [false, true]) {
+    const ours = `INSERT INTO jos_contact_details VALUES (2,'Tracy contact',0);
+INSERT INTO jos_fields VALUES (4,'Tracy field','com_content.article',0);
+${rowMerge ? "UPDATE jos_fields_values SET value='copy base' WHERE field_id=1;" : ''}`
+    const theirs = `INSERT INTO jos_contact_details VALUES (2,'Live contact',102);
+INSERT INTO jos_fields VALUES (4,'Live field','com_content.article',104);
+INSERT INTO jos_fields_values VALUES (1,'2','contact value'),(4,'9','article value');
+INSERT INTO jos_fields_categories VALUES (4,9);
+INSERT INTO jos_contentitem_tag_map VALUES ('com_contact.contact',2,7),('com_content.article',2,8);
+INSERT INTO jos_ucm_content VALUES (1,2,'com_contact.contact');
+INSERT INTO jos_ucm_base VALUES (1,2,1);
+INSERT INTO jos_assets VALUES (102,'com_contact.contact.2'),(104,'com_content.field.4');`
+    stageHeldContactFields(ours, theirs)
+    const answer = merge(null, 'ours')
+    assert.equal(
+      answer.held.find((h) => h.table === 'jos_contact_details')?.belongingCount,
+      5,
+      JSON.stringify(answer.held)
+    )
+    assert.equal(
+      answer.held.find((h) => h.table === 'jos_fields')?.belongingCount,
+      3,
+      JSON.stringify(answer.held)
+    )
+    assert.deepEqual(rows('SELECT field_id,item_id FROM sm.jos_fields_values ORDER BY 1,2'), [['1', '1']])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_fields_categories'), [])
+    assert.deepEqual(rows('SELECT type_alias FROM sm.jos_contentitem_tag_map'), [['com_content.article']])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_ucm_content'), [])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_ucm_base'), [])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_assets'), [])
+  }
+})
