@@ -30280,14 +30280,21 @@ async function drawFor(job, hold) {
   if (!needMain && !needShared) return [];
   const budget2 = (job.budgetMs ?? BEFORE_HOLD_MS) - hold.spentMs;
   const started = now();
-  const left = () => budget2 - (now() - started);
+  let spent = false;
+  const left = () => spent ? 0 : budget2 - (now() - started);
+  const inBudget = async (promise, failed) => {
+    const got = await within(promise, left(), failed);
+    if (got === null) spent = true;
+    return got;
+  };
   const drew = [];
   try {
     let reach = job.reach;
     if (reach.shared === "some" && reach.usedOn === void 0 && job.usage !== void 0 && left() > 0) {
-      const usage = await within(job.usage(reach), left(), null);
-      if (usage?.all === true) reach = { ...reach, shared: "site" };
-      else if (usage !== null) reach = { ...reach, usedOn: usage.pages };
+      const usage = await inBudget(job.usage(reach), false);
+      if (usage === false || usage === null) reach = job.reach;
+      else if (usage.all === true) reach = { ...reach, shared: "site" };
+      else reach = { ...reach, usedOn: usage.pages };
     }
     let main = null;
     let fromEarly = false;
@@ -30302,9 +30309,8 @@ async function drawFor(job, hold) {
         const fits = main === null || reach.shared === "site" || pageOf2(main) === pageOf2(early.path);
         const wanted = main === null ? ask.fallback === void 0 : fits;
         if (wanted) {
-          const got = await within(
+          const got = await inBudget(
             early.picture,
-            left(),
             /** @type {Drawn | string} */
             "capture-ERROR"
           );
@@ -30347,9 +30353,8 @@ async function drawFor(job, hold) {
         break;
       }
       const at = now();
-      const got = await within(
+      const got = await inBudget(
         job.draw(view2),
-        left(),
         /** @type {Capture} */
         { ok: false, code: "ERROR" }
       );
