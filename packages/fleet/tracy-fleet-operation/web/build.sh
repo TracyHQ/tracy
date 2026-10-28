@@ -21,6 +21,13 @@
 # EmDash is built from whatever tracy/emdash images are already here, one web image per version,
 # because its version is a fact about this host rather than a constant in the repo.
 #
+# JOOMLA needs the T4 skill tree (vendor/joomla/joomlart-t4-skill, ~66 MB) in its build context, and
+# finds it in one of two places: a checkout of the repo (this script is four levels below its root, the
+# way CI and the master run it), or /opt/tracy-fleet/vendor/joomla/joomlart-t4-skill beside this web/
+# directory (a host with no checkout: the tracy-host image carries the tree and sync-fleet-files.sh puts
+# it there). In neither place, the Joomla images fail with a line naming both paths; WordPress and
+# EmDash do not need the tree and build as before.
+#
 # 🔒 `-e` IS LEFT OUT ON PURPOSE, and that is the whole design above: with it, the first failed
 # build would end the run and the remaining images would be silently not built. Every failure is
 # collected in FAILED instead, and the exit code at the bottom carries them. So a command whose
@@ -39,24 +46,60 @@ FAILED=""
 # image's inputs, and their hash is stamped on the image as a label.
 WEB_FILES="tracy-sendmail tracy-sendmail.ini"
 
-# The main build context. Joomla's Dockerfile copies the T4 skill from `vendor/`, so it needs the
-# repo root — the reason `bash web/build.sh joomla` died on `"/vendor/joomla/joomlart-t4-skill":
-# not found` from 13/09 (tasks/nhat-ky-main.md). The other two copy nothing from the main context,
-# and keep this directory: a repo-root context ships far more to the daemon for nothing.
-context_for() { # platform
-  local repo
-  case "$1" in
-    joomla)
-      repo="$(cd "$HERE/../../../.." 2>/dev/null && pwd)"
-      if [ -n "$repo" ] && [ -d "$repo/vendor/joomla/joomlart-t4-skill" ]; then
-        printf '%s\n' "$repo"
-      else
-        echo "!! joomla needs a checkout of the repo (vendor/joomla/joomlart-t4-skill beside packages/) — run this from one" >&2
-        return 1
-      fi
-      ;;
-    *) printf '%s\n' "$HERE" ;;
-  esac
+# The main build context. Joomla's Dockerfile copies the T4 skill from `vendor/` (`COPY
+# vendor/joomla/joomlart-t4-skill /opt/tracy/joomlart-t4`), so its context must hold that path — the
+# reason `bash web/build.sh joomla` died on `"/vendor/joomla/joomlart-t4-skill": not found` from 13/09
+# (tasks/nhat-ky-main.md). The other two copy nothing from the main context, and keep this directory:
+# a repo-root context ships far more to the daemon for nothing.
+#
+# Joomla's context is the repo root when there is a checkout (as ever). With no checkout — a shard —
+# it is a temporary directory holding a copy of the skill tree at the same relative path, made once
+# per run and removed on exit.
+#
+# 🔒 joomla.Dockerfile ITSELF IS NOT CHANGED FOR THIS, and must not be edited to take the tree some
+# other way (a named build context, say): its bytes are part of the `tracy.web.inputs` stamp of every
+# Joomla image, so any edit — a comment included — makes this script REFUSE every Joomla image a host
+# has already built ("exists but was built from other inputs") until IMAGE_TAGS names new tags.
+SKILL_REL="vendor/joomla/joomlart-t4-skill"
+STAGED_CTX=""
+
+cleanup() { if [ -n "$STAGED_CTX" ]; then rm -rf "$STAGED_CTX"; fi; }
+trap cleanup EXIT
+
+# stage_skill <skill dir>: STAGED_CTX = a temporary context with that tree at $SKILL_REL (once per run).
+stage_skill() {
+  [ -z "$STAGED_CTX" ] || return 0
+  if ! STAGED_CTX="$(mktemp -d "${TMPDIR:-/tmp}/web-build-ctx.XXXXXX")"; then
+    STAGED_CTX=""
+    echo "!! cannot make a temporary build context for $1 (mktemp failed)" >&2
+    return 1
+  fi
+  if ! mkdir -p "$STAGED_CTX/$(dirname "$SKILL_REL")" || ! cp -Rp "$1" "$STAGED_CTX/$SKILL_REL"; then
+    rm -rf "$STAGED_CTX"
+    STAGED_CTX=""
+    echo "!! cannot copy $1 into a temporary build context" >&2
+    return 1
+  fi
+}
+
+# set_context <platform>: sets CONTEXT, or says why it cannot and returns 1. Not printed through
+# $(…): that subshell would lose STAGED_CTX, and every Joomla image would copy the tree again.
+set_context() {
+  local repo checkout installed
+  CONTEXT="$HERE"
+  [ "$1" = joomla ] || return 0
+  repo="$(cd "$HERE/../../../.." 2>/dev/null && pwd)"
+  checkout="${repo%/}/$SKILL_REL"
+  installed="$(cd "$HERE/.." && pwd)/$SKILL_REL"
+  if [ -n "$repo" ] && [ -d "$checkout" ]; then
+    CONTEXT="$repo"
+  elif [ -d "$installed" ]; then
+    stage_skill "$installed" || return 1
+    CONTEXT="$STAGED_CTX"
+  else
+    echo "!! joomla needs the T4 skill tree and found it in neither place: $checkout (a checkout of the repo) or $installed (a host that has the tracy-host image's files: sync-fleet-files.sh puts it there)" >&2
+    return 1
+  fi
 }
 
 # sha256 of the Dockerfile and every file above, in a fixed order. Not the vendor tree Joomla
@@ -82,7 +125,7 @@ inputs_hash() { # dockerfile
 #   emdash image, label missing/differs  rebuilt: its tag is the EmDash version, a fact about the
 #                                        host that carries no revision to bump
 build_one() { # dockerfile base image [rebuild-when-stale]
-  local dockerfile="$1" base="$2" image="$3" stale_rebuilds="${4:-}" platform context want have
+  local dockerfile="$1" base="$2" image="$3" stale_rebuilds="${4:-}" platform want have
   platform="$(basename "$dockerfile" .Dockerfile)"
   want="$(inputs_hash "$dockerfile")"
   if [ -z "${FORCE:-}" ] && docker image inspect "$image" >/dev/null 2>&1; then
@@ -103,14 +146,14 @@ build_one() { # dockerfile base image [rebuild-when-stale]
     fi
   fi
   echo "==> $image  (from $base)"
-  if ! context="$(context_for "$platform")"; then
+  if ! set_context "$platform"; then
     FAILED="$FAILED $image"
     return 1
   fi
   if ! docker build -f "$dockerfile" --build-arg BASE="$base" \
          --build-context tracy-web-files="$HERE" \
          --label tracy.web.inputs="$want" \
-         -t "$image" "$context"; then
+         -t "$image" "$CONTEXT"; then
     echo "!! $image failed to build from $base" >&2
     FAILED="$FAILED $image"
     return 1

@@ -13,6 +13,7 @@ const UNREAD = REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix
 const T4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
 const EMDASH_SKILL = REVIEWED_SKILLS.find((skill) => skill.prefix.startsWith('vendor/emdash/')).prefix
 const T4_READERS = T4.readers
+const T4_TREE = T4.prefix.replace(/\/$/, '')
 const [DATA, MAPPED] = [...DATA_FILE_TESTS.entries()][0]
 
 const files = [
@@ -236,7 +237,13 @@ const INVENTORY_LINE = {
   'scripts/ci/plan-ci.mjs': [/^const EMDASH_INPUTS = String\.raw`[^`]+`$/],
   'scripts/check-tests.ts': [/^\s*tree: '[^']+',?$/, /Its home is /],
   // The shard installer test only checks that the sparse-checkout path list names the tree.
-  'scripts/test/install-shard.test.mjs': [/^\s*\/sparse-checkout set deploy /]
+  'scripts/test/install-shard.test.mjs': [/^\s*\/sparse-checkout set deploy /],
+  // The tracy-host image carries the T4 skill whole, for a shard with no checkout. These two tests name
+  // the tree as a path (what the Dockerfile copies, what sync-fleet-files.sh lifts); neither opens a file of it.
+  'scripts/test/tracy-host-fleet-files-image.test.mjs': [
+    new RegExp(`^\\s*\\['/opt/tracy-fleet/${T4_TREE}', '${T4_TREE}'\\]$`)
+  ],
+  'scripts/test/sync-fleet-files.test.mjs': [new RegExp(`^const SKILL = '${T4_TREE}'$`)]
 }
 
 function treeReferences(text, prefix) {

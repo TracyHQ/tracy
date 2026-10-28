@@ -217,15 +217,23 @@ export function shardCheck({ pool, signal = null, tags, masterHead, now = Date.n
   async function tell(shard, beat, row) {
     const last = beat.last_update
     const lastTag = last?.app_tag ?? last?.dsh_tag ?? null
+    // One alert per (shard, target tag), not per attempt: a failed shard backs off an hour and
+    // retries the same tag, so a key on finished_at told the same failure every hour (s1, 27/10/2026).
+    // The latest attempt stays on /ops (last_update); a new target tag is told again.
     if (last && !last.ok && last.finished_at)
       await signal?.record('shard.update_failed', {
         data: { shard: shard.name, tag: lastTag, finished_at: last.finished_at },
-        dedupeKey: `update:${shard.name}:${last.finished_at}`
+        dedupeKey: `update:${shard.name}:${lastTag ?? last.finished_at}`
       })
-    if (last?.web_images_missing)
+    // Told only for an update that happened: a failed one is already told by shard.update_failed
+    // above, and "updated to <tag> without its site web images" would be false for it. The shard
+    // keeps reporting the missing images on every heartbeat, and after a failure it retries the same
+    // tag every hour with a new finished_at. ops_signal has a unique dedupe_key, so the key is one
+    // per (shard, target tag) and not one per attempt: one alert per tag.
+    if (last?.ok && last.web_images_missing)
       await signal?.record('shard.web_images_missing', {
         data: { shard: shard.name, tag: lastTag },
-        dedupeKey: `webimg:${shard.name}:${last.finished_at ?? 'unknown'}`
+        dedupeKey: `webimg:${shard.name}:${lastTag ?? 'unknown'}`
       })
     const backup = beat.last_backup
     const backupAt = backup?.at ? Date.parse(backup.at) : Number.NaN

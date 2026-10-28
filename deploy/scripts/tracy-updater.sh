@@ -30,7 +30,7 @@
 #      provision,tools,webroot,web} out of it (W5 P4; spec 5 item 19). stack/ is flat, in the image
 #      as on this machine (contract section 10);
 #   3. shard-env-check.sh on tracy-web.env: a forbidden variable would fail the boot anyway;
-#   4. web/IMAGE_TAGS changed: web/build.sh builds the missing site images BEFORE the new tracy-host
+#   4. web/IMAGE_TAGS changed, or names an image this host lacks: web/build.sh builds the missing site images BEFORE the new tracy-host
 #      goes live, because the provision inside that image reads the new IMAGE_TAGS (amendment 4);
 #   5. app tag differs: deploy-tracy-stack.sh --tag <app> --services postgres,tracy-web,tracy-host;
 #   6. dsh tag differs: deploy-host-dsh.sh --tag <dsh> (drains customer work up to 1200 s);
@@ -228,7 +228,7 @@ plan_steps() {
   if [ "$SKIP_WEB_IMAGES" = 1 ]; then
     say "would not: build site images from web/IMAGE_TAGS (TRACY_SKIP_WEB_IMAGES=1)"
   else
-    say "would: web/build.sh, only if web/IMAGE_TAGS changed"
+    say "would: web/build.sh, if web/IMAGE_TAGS changed or names an image this host lacks"
   fi
   [ "$WANT_APP" = "$CUR_APP" ] || say "would: deploy-tracy-stack.sh --tag $WANT_APP --services postgres,tracy-web,tracy-host${PROJECT:+ --project $PROJECT} (env file $WEB_ENV)"
   [ "$WANT_DSH" = "$CUR_DSH" ] || say "would: deploy-host-dsh.sh --tag $WANT_DSH (env file $DSH_ENV)"
@@ -314,6 +314,8 @@ deploy_dsh() {
 
 # The same reading as build-app-images.yml:530-541: every image an IMAGE_TAGS line names that this
 # host does not have. A new site whose line names one gets the upstream image, with no agent tools.
+# Each image once: a default line (`joomla=`) and the base line it repeats name the same image, and
+# listing it twice made updater.json (and the alert text) count it twice.
 missing_web_images() {
   local line image
   [ -f "$FLEET_DIR/web/IMAGE_TAGS" ] || return 0
@@ -321,7 +323,7 @@ missing_web_images() {
     case "$line" in ''|'#'*) continue ;; esac
     image="${line#*=}"
     docker image inspect "$image" >/dev/null 2>&1 || printf '%s\n' "$image"
-  done < "$FLEET_DIR/web/IMAGE_TAGS"
+  done < "$FLEET_DIR/web/IMAGE_TAGS" | awk '!seen[$0]++'
 }
 
 build_web_images_if_changed() {
@@ -329,10 +331,23 @@ build_web_images_if_changed() {
     echo "updater: site images are not built here (TRACY_SKIP_WEB_IMAGES=1)"
     return 0
   fi
+  # Also when IMAGE_TAGS is unchanged but still names an image this host lacks: a run that failed
+  # after sync-fleet-files.sh had already put the new IMAGE_TAGS in place leaves nothing "changed" for
+  # every later run, and the missing images would then never be built (shard s1, 27-28/10/2026).
+  # web/build.sh builds only what is missing, so a host that has them all pays one inspect per line.
+  local reason=""
   if [ "$(sha_of "$FLEET_DIR/web/IMAGE_TAGS")" != "$(cat "$RUN_DIR/web-before")" ]; then
-    echo "updater: web/IMAGE_TAGS changed - building the site images this host is missing (web/build.sh)"
-    # Never fails the update: Joomla's image needs vendor/joomla/joomlart-t4-skill from a checkout
-    # (web/build.sh context_for), which the tracy-host image does not carry yet (W5 follow-up).
+    reason="web/IMAGE_TAGS changed"
+  elif [ -n "$(missing_web_images)" ]; then
+    reason="web/IMAGE_TAGS names images this host lacks"
+  fi
+  if [ -n "$reason" ]; then
+    echo "updater: $reason - building the site images this host is missing (web/build.sh)"
+    # Never fails the update. Joomla's images need the T4 skill tree (vendor/joomla/joomlart-t4-skill):
+    # the tracy-host image carries it from 28/10/2026 and sync-fleet-files.sh has put it under
+    # $FLEET_DIR/vendor/joomla/ by now, which is where web/build.sh looks when there is no checkout.
+    # An update to an OLDER image still cannot build them; the images stay in web-missing, and
+    # updater.json reports them, rather than the update failing for them.
     bash "$FLEET_DIR/web/build.sh" || echo "updater: web/build.sh reported failures; the missing images are listed in updater.json"
   fi
   missing_web_images > "$RUN_DIR/web-missing" || true

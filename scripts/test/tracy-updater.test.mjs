@@ -175,7 +175,7 @@ test('the plan runs in the order the spec and amendment 4 require', { skip }, ()
     `docker pull ghcr.io/tracyhq/tracy-host:${NEW.app}`,
     'sync-fleet-files.sh --from-image',
     'shard-env-check.sh',
-    'web/build.sh, only if web/IMAGE_TAGS changed',
+    'web/build.sh, if web/IMAGE_TAGS changed or names an image this host lacks',
     `deploy-tracy-stack.sh --tag ${NEW.app}`,
     `deploy-host-dsh.sh --tag ${NEW.dsh}`,
     'nginx -t and recreate',
@@ -318,4 +318,88 @@ test('ECR login (fake docker): the pull key reaches the aws-cli container throug
   ])
   assert.equal(readFileSync(`${log}.stdin`, 'utf8'), 'fake-ecr-token')
   assert.ok(!existsSync(readFileSync(`${log}.path`, 'utf8').trim()), 'the key file is gone')
+})
+
+test('missing_web_images (fake docker): an image is listed once, however many IMAGE_TAGS lines name it', () => {
+  const dir = tempDir('updater-missing-images-')
+  writeFiles(dir, {
+    'fleet/web/IMAGE_TAGS': [
+      '# a default line repeats the base line it points at',
+      'wordpress=tracy/web-wordpress:apache-T',
+      'joomla=tracy/web-joomla:5-apache-T',
+      '',
+      'wordpress:apache=tracy/web-wordpress:apache-T',
+      'joomla:5-apache=tracy/web-joomla:5-apache-T',
+      'joomla:6-apache=tracy/web-joomla:6-apache-T',
+      ''
+    ].join('\n'),
+    // `docker image inspect` succeeds for the images this host has, fails for the rest.
+    'bin/docker': [
+      '#!/usr/bin/env bash',
+      '[ "$1 $2" = "image inspect" ] || exit 2',
+      'for have in $FAKE_HAVE; do [ "$have" = "$3" ] && exit 0; done',
+      'exit 1',
+      ''
+    ].join('\n')
+  })
+  chmodSync(path.join(dir, 'bin/docker'), 0o755)
+  const run = bash(['-c', 'source "$0"; missing_web_images', script('tracy-updater.sh')], {
+    env: {
+      TRACY_UPDATER_NO_MAIN: '1',
+      TRACY_FLEET_DIR: path.join(dir, 'fleet'),
+      FAKE_HAVE: 'tracy/web-wordpress:apache-T',
+      PATH: `${path.join(dir, 'bin')}:${process.env.PATH}`
+    }
+  })
+  assert.equal(run.status, 0, run.stderr)
+  assert.deepEqual(run.stdout.trim().split('\n'), [
+    'tracy/web-joomla:5-apache-T',
+    'tracy/web-joomla:6-apache-T'
+  ])
+})
+
+test('site images: build.sh also runs when IMAGE_TAGS is unchanged but names an image this host lacks', () => {
+  const dir = tempDir('updater-build-missing-')
+  writeFiles(dir, {
+    'fleet/web/IMAGE_TAGS': 'joomla=tracy/web-joomla:5-apache-T\n',
+    'fleet/web/build.sh': 'echo BUILD-RAN >> "$FAKE_BUILD_LOG"\n',
+    'bin/docker': [
+      '#!/usr/bin/env bash',
+      '[ "$1 $2" = "image inspect" ] || exit 2',
+      'for have in $FAKE_HAVE; do [ "$have" = "$3" ] && exit 0; done',
+      'exit 1',
+      ''
+    ].join('\n'),
+    'run/web-missing': ''
+  })
+  chmodSync(path.join(dir, 'bin/docker'), 0o755)
+  const buildLog = path.join(dir, 'build.log')
+  // web-before = the sha of the IMAGE_TAGS already in place: a run after one that synced it and failed.
+  const runWith = (have) =>
+    bash(
+      [
+        '-c',
+        'source "$0"; RUN_DIR="$1"; sha_of "$FLEET_DIR/web/IMAGE_TAGS" > "$RUN_DIR/web-before"; build_web_images_if_changed; cat "$RUN_DIR/web-missing"',
+        script('tracy-updater.sh'),
+        path.join(dir, 'run')
+      ],
+      {
+        env: {
+          TRACY_UPDATER_NO_MAIN: '1',
+          TRACY_FLEET_DIR: path.join(dir, 'fleet'),
+          FAKE_HAVE: have,
+          FAKE_BUILD_LOG: buildLog,
+          PATH: `${path.join(dir, 'bin')}:${process.env.PATH}`
+        }
+      }
+    )
+  const missing = runWith('')
+  assert.equal(missing.status, 0, missing.stderr)
+  assert.match(missing.stdout, /names images this host lacks - building/)
+  assert.match(missing.stdout, /tracy\/web-joomla:5-apache-T/)
+  assert.equal(readFileSync(buildLog, 'utf8'), 'BUILD-RAN\n')
+  const complete = runWith('tracy/web-joomla:5-apache-T')
+  assert.equal(complete.status, 0, complete.stderr)
+  assert.doesNotMatch(complete.stdout, /building/)
+  assert.equal(readFileSync(buildLog, 'utf8'), 'BUILD-RAN\n', 'nothing missing, nothing changed: build.sh is not run')
 })

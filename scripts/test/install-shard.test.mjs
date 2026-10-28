@@ -449,6 +449,20 @@ test('step 9: tracy-web.env holds every line the silent failures of may-dev.md n
   )
 })
 
+test('step 9: tracy-web.env carries MINIO_PASSWORD, which compose requires on a server although no MinIO runs', () => {
+  const run = install()
+  assert.equal(run.status, 0, run.stderr)
+  const env = printedFile(run.stdout, '/tracy-web.env')
+  // The dry-run listing masks every *PASSWORD value, so the line is checked as <set>.
+  assert.equal(env.filter((l) => l.startsWith('MINIO_PASSWORD=')).length, 1, 'written once')
+  assert.ok(env.includes('MINIO_PASSWORD=<set>'), 'a value is present')
+  // A fixed non-secret literal, not one of the eight generated secrets (step 2 still names eight).
+  assert.doesNotMatch(run.stdout, /would add MINIO_PASSWORD to /)
+  const steps = readFileSync(path.join(R, 'deploy/scripts/install-shard-steps.sh'), 'utf8')
+  assert.match(steps, /^MINIO_PASSWORD=no-minio-runs-on-a-shard$/m)
+  assert.doesNotMatch(steps, /^SECRET_SPECS=.*MINIO_PASSWORD/m)
+})
+
 test('--phase g1: no SESSION_DOMAIN, and site labels prefixed <name>t- (amendment 8)', () => {
   const env = printedFile(install(['--phase', 'g1']).stdout, '/tracy-web.env')
   assert.ok(!env.some((l) => l.startsWith('SESSION_DOMAIN=')))

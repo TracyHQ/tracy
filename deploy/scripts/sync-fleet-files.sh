@@ -19,6 +19,12 @@
 # written here). FILES below is the one list of that layout; apps/tracy-host/Dockerfile copies it
 # file by file, and a test holds the two equal.
 #
+# One more tree travels the same way, but OPTIONAL: vendor/joomla/joomlart-t4-skill (about 66 MB). It is
+# what web/build.sh copies into the Joomla site images, and a shard has no checkout to read it from, so
+# the tracy-host image carries it under /opt/tracy-fleet/vendor/joomla/ and it is lifted onto the host
+# with the rest. An image built before 28/10/2026 does not carry it: that is said in one line and the
+# sync goes on (a host with no skill tree cannot build the Joomla images, the WordPress ones are fine).
+#
 # Like the actions: no --delete (a host carries files this repository does not know), hooks/ and
 # migrate/ are not synced (a host's role is chosen when it is built), the stack directory is flat
 # (scripts beside the compose files), and every change is said before it is made: "+ <path>" new,
@@ -86,6 +92,12 @@ $F/scripts/tools tools
 $F/scripts/webroot webroot
 $F/web web
 "
+# Trees an older image does not carry: absent from the source is said in one line, never an error,
+# and nothing is checked for them before the first write. <dir in the repository> <dir under /opt/tracy-fleet>.
+# The one line says what its only member costs (Joomla site images), so add a column before adding a tree.
+OPTIONAL_TREES="
+vendor/joomla/joomlart-t4-skill vendor/joomla/joomlart-t4-skill
+"
 # Files those trees must hold: provision.sh sources the four lib files (the deploy action asserts the
 # same four); bootstrap.sh is step 4 of install-shard.sh; IMAGE_TAGS and build.sh are what
 # tracy-updater.sh reads and runs. <path in the repository> <path under /opt/tracy-fleet>.
@@ -130,12 +142,16 @@ print_list() {
   done <<< "$TREES"
   while read -r repo under; do
     [ -n "$repo" ] || continue
+    printf 'optional-tree %s %s\n' "$repo" "$under"
+  done <<< "$OPTIONAL_TREES"
+  while read -r repo under; do
+    [ -n "$repo" ] || continue
     printf 'need %s %s\n' "$repo" "$under"
   done <<< "$NEEDS"
 }
 
 fetch_image() {
-  local part
+  local part repo under
   CID="$(docker create --pull never "$IMAGE" 2>/dev/null)" \
     || { CID=""; echo "sync-fleet-files: $IMAGE is not on this host (docker pull it first)" >&2; exit 1; }
   if ! docker cp "$CID:/opt/tracy-fleet/stack" "$STAGE/stack" >/dev/null 2>&1; then
@@ -148,6 +164,13 @@ fetch_image() {
   fi
   docker cp "$CID:/opt/tracy-fleet/dsh" "$STAGE/dsh" >/dev/null
   for part in lib provision tools webroot web; do docker cp "$CID:/opt/tracy-fleet/$part" "$STAGE/$part" >/dev/null; done
+  # An older image has no optional tree: a failed copy means "absent" here and install_all says so.
+  # The half-copied directory is removed first, so a partial tree is never installed.
+  while read -r repo under; do
+    [ -n "$repo" ] || continue
+    mkdir -p "$STAGE/$(dirname "$under")"
+    docker cp "$CID:/opt/tracy-fleet/$under" "$STAGE/$under" >/dev/null 2>&1 || rm -rf "${STAGE:?}/$under"
+  done <<< "$OPTIONAL_TREES"
 }
 
 check_source() {
@@ -187,19 +210,35 @@ put() {
   mv -f "$dest.sync-tmp.$$" "$dest"
 }
 
+# put_tree <source dir> <dir under DEST>: every file below the source dir, each keeping its own mode.
+put_tree() {
+  local root="$1" under="$2" rel
+  while IFS= read -r rel; do
+    put "$root/$rel" "$under/$rel" keep
+  done < <(cd "$root" && find . -type f | sed 's|^\./||' | LC_ALL=C sort)
+}
+
 install_all() {
-  local repo under mode root rel
+  local repo under mode root
   while read -r repo under mode; do
     [ -n "$repo" ] || continue
     put "$(source_path "$repo" "$under")" "$under" "$mode"
   done <<< "$FILES"
   while read -r repo under; do
     [ -n "$repo" ] || continue
-    root="$(source_path "$repo" "$under")"
-    while IFS= read -r rel; do
-      put "$root/$rel" "$under/$rel" keep
-    done < <(cd "$root" && find . -type f | sed 's|^\./||' | LC_ALL=C sort)
+    put_tree "$(source_path "$repo" "$under")" "$under"
   done <<< "$TREES"
+  while read -r repo under; do
+    [ -n "$repo" ] || continue
+    root="$(source_path "$repo" "$under")"
+    if [ -d "$root" ]; then
+      put_tree "$root" "$under"
+    elif [ -n "$IMAGE" ]; then
+      echo "sync-fleet-files: image carries no $under (built before 28/10/2026); Joomla site images cannot be built from it" >&2
+    else
+      echo "sync-fleet-files: checkout carries no $under; Joomla site images cannot be built from it" >&2
+    fi
+  done <<< "$OPTIONAL_TREES"
   if [ "$DRY_RUN" = 0 ]; then
     # The same as the deploy action: a checkout made on a filesystem without the x bit still runs.
     chmod +x "$DEST"/lib/*.sh "$DEST"/tools/*.sh "$DEST"/provision/*.sh 2>/dev/null || true

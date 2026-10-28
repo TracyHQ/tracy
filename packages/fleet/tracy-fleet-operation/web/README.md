@@ -95,10 +95,24 @@ the 🔒 rule above, now held by a machine); no stamp → treated as already bui
 `tracy/web-emdash` image with a missing/different stamp → **rebuilt** in place, because its tag is the EmDash version, there is
 no `-rN` to change. Test: `test/web-image-mail.test.mjs`.
 
-⚠ **Joomla builds from the repo root.** `joomla.Dockerfile` copies `vendor/joomla/joomlart-t4-skill`, so
-`build.sh joomla` uses the repo root as context (from 13/09 to 23/09 it used `web/` and always died with
-`"/vendor/joomla/joomlart-t4-skill": not found`). Consequence: the Joomla image can only be built from a repo
-checkout, not from a bare `/opt/tracy-fleet/web` — `build.sh` says so plainly when it is missing.
+⚠ **Joomla needs the T4 skill tree in its build context.** `joomla.Dockerfile` copies
+`vendor/joomla/joomlart-t4-skill` (about 66 MB, 63 MB of it `assets/`), so `build.sh joomla` takes the tree from
+the first of two places (from 13/09 to 23/09 it used `web/` and always died with
+`"/vendor/joomla/joomlart-t4-skill": not found`):
+
+- **a checkout of the repo** (CI and the master): the repo root is the context, as it has always been;
+- **`/opt/tracy-fleet/vendor/joomla/joomlart-t4-skill`** beside `web/` (a shard has no checkout): the tracy-host
+  image carries the tree, `deploy/scripts/sync-fleet-files.sh` puts it there, and `build.sh` copies it once per
+  run into a temporary context at the path the `COPY` names, removed when the run ends.
+
+In neither place only the Joomla images fail, with a `!!` line naming both paths; WordPress and EmDash build as
+before. A tracy-host image built before 28/10/2026 carries no tree, so a shard on it cannot build the Joomla images.
+
+🔒 **`joomla.Dockerfile` takes the tree through a plain `COPY`, and its bytes must not change just to deliver it
+differently** (a named build context, say): the Dockerfile is part of the `tracy.web.inputs` stamp of every Joomla
+image, so any edit — a comment included — makes `build.sh` REFUSE each Joomla image a host has already built, until
+`IMAGE_TAGS` names new tags. The stamp is the same from a checkout and from `/opt/tracy-fleet`
+(`test/web-image-mail.test.mjs`).
 
 ## Image size, after adding `node` + `python3` (06/09)
 

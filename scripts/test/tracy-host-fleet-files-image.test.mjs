@@ -57,6 +57,15 @@ const CARRIED = new Map([
   [`${STACK}tracy-backup-postgres.timer`, 'deploy/systemd/tracy-backup-postgres.timer']
 ])
 
+/**
+ * Whole directories the image carries for a machine with no checkout: path in the image → source.
+ * A shard builds `tracy/web-joomla:*` from /opt/tracy-fleet with no checkout, and joomla.Dockerfile
+ * copies this tree into the site image. About 66 MB, 63 MB of it assets/, all read at run time.
+ */
+const CARRIED_TREES = new Map([
+  ['/opt/tracy-fleet/vendor/joomla/joomlart-t4-skill', 'vendor/joomla/joomlart-t4-skill']
+])
+
 /** COPY lines as {sources, dest}: continuations joined, `--from=` copies and flags dropped. */
 function copies(text) {
   const out = []
@@ -140,6 +149,9 @@ test('every file the host-dsh deploy installs is in the image, at the same name'
 test('the image also carries what an updater and an installer use without a checkout', () => {
   const files = imageFiles(DOCKERFILE)
   for (const [dest, src] of CARRIED) assert.equal(files.get(dest), src, `${src} is not copied to ${dest}`)
+  // One literal line per tree: the next test holds every COPY source to a tracked git path.
+  for (const [dest, src] of CARRIED_TREES)
+    assert.equal(files.get(dest), src, `${src} is not copied to ${dest}`)
   const installed = new Set([
     ...installs('.github/actions/deploy-tracy-stack/action.yml', 'stack').map(
       (s) => `${STACK}${s.split('/').at(-1)}`
@@ -176,6 +188,20 @@ test('the root .dockerignore drops none of the fleet files the image copies', ()
   for (const [dest, src] of imageFiles(DOCKERFILE)) {
     if (!dest.startsWith(STACK) && !dest.startsWith(DSH)) continue
     assert.equal(excludedFromContext(src), false, `${src} is outside the build context`)
+  }
+})
+
+test('the root .dockerignore drops no file of the trees the image carries whole', () => {
+  for (const src of CARRIED_TREES.values()) {
+    const tracked = execFileSync('git', ['-C', ROOT, '--literal-pathspecs', 'ls-files', '--', src], {
+      encoding: 'utf8'
+    })
+      .trim()
+      .split('\n')
+    assert.ok(tracked.length > 200, `${src}: ${tracked.length} tracked files read`)
+    assert.equal(excludedFromContext(`${src}/node_modules/x/index.js`), true, 'the matcher sees an ignore')
+    const dropped = tracked.filter((file) => excludedFromContext(file))
+    assert.deepEqual(dropped, [], `${src}: files the build context would silently lose`)
   }
 })
 
@@ -306,4 +332,18 @@ test('every file sync-fleet-files.sh installs is in the image at the same path, 
   )
   assert.equal(listed.size, 33, "the fleet's 15 files and the shard's 18")
   assert.deepEqual(copied, listed)
+})
+
+test('the optional trees sync-fleet-files.sh lifts are the trees the Dockerfile copies, to the same path', () => {
+  const files = imageFiles(DOCKERFILE)
+  const listed = execFileSync('bash', [join(ROOT, 'deploy/scripts/sync-fleet-files.sh'), '--list'], {
+    encoding: 'utf8'
+  })
+    .trim()
+    .split('\n')
+    .filter((line) => line.startsWith('optional-tree '))
+    .map((line) => line.split(' '))
+    .map(([, src, under]) => [`/opt/tracy-fleet/${under}`, src])
+  assert.deepEqual(new Map(listed), CARRIED_TREES)
+  for (const [dest, src] of listed) assert.equal(files.get(dest), src, `${src} is not copied to ${dest}`)
 })

@@ -380,6 +380,10 @@ TRACY_PRIVATE_ROOT=$PRIVATE_ROOT
 TRACY_DSH_HOME=$DSH_HOME
 POSTGRES_PASSWORD=$S_POSTGRES_PASSWORD
 DATABASE_URL=postgres://tracy:$S_POSTGRES_PASSWORD@postgres:5432/tracy
+# compose interpolates the local-only MinIO services on a server too and has no default for this
+# name: without it every docker compose call dies. No MinIO runs on a shard, so any value does;
+# a fixed non-secret literal, not one of the generated secrets.
+MINIO_PASSWORD=no-minio-runs-on-a-shard
 WEB_PORT=51710
 TRACY_HOST_PORT=51720
 TRACY_NETWORK_PREFIX=$NET_PREFIX
@@ -510,14 +514,15 @@ step_web_images() {
     return 0
   fi
   if [ "$SOURCE" = git ]; then
-    # From the checkout: Joomla's build needs vendor/joomla/joomlart-t4-skill beside packages/ (web/build.sh context_for).
+    # From the checkout: Joomla's build needs vendor/joomla/joomlart-t4-skill beside packages/ (web/build.sh set_context).
     run env DEFAULTS_ONLY=1 bash "$WORK/tch/packages/fleet/tracy-fleet-operation/web/build.sh" \
       || warn "web/build.sh reported failures; site creation still works, on upstream images for those bases"
   else
-    # From the image: WordPress and EmDash build from /opt/tracy-fleet/web alone; Joomla needs the
-    # skill tree the image does not carry yet (W5 follow-up), so its line fails here, said out loud.
+    # From the image: WordPress and EmDash build from /opt/tracy-fleet/web alone; Joomla also needs the
+    # skill tree, which the tracy-host image carries (sync-fleet-files.sh put it under
+    # $FLEET_DIR/vendor/joomla/). An image built before 28/10/2026 has none: its Joomla line fails here, said out loud.
     run env DEFAULTS_ONLY=1 bash "$FLEET_DIR/web/build.sh" \
-      || warn "web/build.sh reported failures (Joomla needs REPO_TOKEN until W5 ships the skill tree); site creation still works on upstream images"
+      || warn "web/build.sh reported failures (a tracy-host image built before 28/10/2026 carries no Joomla skill tree; use REPO_TOKEN or a newer image); site creation still works on upstream images"
   fi
 }
 

@@ -231,7 +231,7 @@ test('a shard backing off after a failed update gets no turn for an hour', opts,
 })
 
 test(
-  'a full shard, or one short of memory three beats running, stops taking people, told once; a failed update and missing web images are told once',
+  'a full shard, or one short of memory three beats running, stops taking people, told once; a failed update is told once, and says nothing about web images',
   opts,
   async () => {
     const { pool } = db
@@ -258,6 +258,8 @@ test(
     }
     await h.check('s3', beat({ last_update: failed }))
     await h.check('s3', beat({ last_update: failed }))
+    // The hourly retry of the same tag fails again with a new finished_at: still one key.
+    await h.check('s3', beat({ last_update: { ...failed, finished_at: '2026-10-20T04:10:00Z' } }))
     assert.deepEqual(
       h.alerts.filter((a) => a.kind === 'shard.closed').map((a) => a.data),
       [
@@ -266,15 +268,54 @@ test(
       ]
     )
     const told = h.alerts.filter((a) => a.kind === 'shard.update_failed')
-    assert.deepEqual(new Set(told.map((a) => a.dedupeKey)), new Set(['update:s3:2026-10-20T03:10:00Z']))
+    assert.deepEqual(new Set(told.map((a) => a.dedupeKey)), new Set(['update:s3:app-new000000000']))
     assert.deepEqual(told[0].data, {
       shard: 's3',
       tag: 'app-new000000000',
       finished_at: '2026-10-20T03:10:00Z'
     })
+    // An update that failed is told by shard.update_failed alone: it updated to nothing, so "without
+    // its site web images" would be false, and the shard retries hourly with a new finished_at.
+    assert.deepEqual(
+      h.alerts.filter((a) => a.kind === 'shard.web_images_missing'),
+      []
+    )
+  }
+)
+
+test(
+  'missing web images are told once per target tag, for an update that succeeded, however often it beats',
+  opts,
+  async () => {
+    const { pool } = db
+    const h = await harness(pool)
+    const updated = (finishedAt, over = {}) => ({
+      app_tag: 'app-new000000000',
+      dsh_tag: MASTER.dshTag,
+      ok: true,
+      finished_at: finishedAt,
+      log_tail: '',
+      web_images_missing: true,
+      ...over
+    })
+    await h.check('s3', beat({ last_update: updated('2026-10-20T03:10:00Z') }))
+    await h.check('s3', beat({ last_update: updated('2026-10-20T03:10:00Z') }))
+    // The same tag run again an hour later (a new finished_at): still the same alert.
+    await h.check('s3', beat({ last_update: updated('2026-10-20T04:10:00Z') }))
     const images = h.alerts.filter((a) => a.kind === 'shard.web_images_missing')
-    assert.deepEqual(new Set(images.map((a) => a.dedupeKey)), new Set(['webimg:s3:2026-10-20T03:10:00Z']))
+    assert.deepEqual(new Set(images.map((a) => a.dedupeKey)), new Set(['webimg:s3:app-new000000000']))
     assert.deepEqual(images[0].data, { shard: 's3', tag: 'app-new000000000' })
+    // Another target tag with the images still missing is a new alert; images present is none.
+    await h.check(
+      's3',
+      beat({ last_update: updated('2026-10-21T03:10:00Z', { app_tag: 'app-newer0000000' }) })
+    )
+    await h.check('s2', beat({ last_update: updated('2026-10-21T03:10:00Z', { web_images_missing: false }) }))
+    assert.deepEqual(
+      new Set(h.alerts.filter((a) => a.kind === 'shard.web_images_missing').map((a) => a.dedupeKey)),
+      new Set(['webimg:s3:app-new000000000', 'webimg:s3:app-newer0000000'])
+    )
+    assert.equal(h.alerts.filter((a) => a.kind === 'shard.update_failed').length, 0)
   }
 )
 

@@ -18,6 +18,15 @@ const EXTRAS = [
   [`${FLEET}/scripts/migrate/move.sh`, 'migrate/move.sh'],
   [`${FLEET}/web/wordpress.Dockerfile`, 'web/wordpress.Dockerfile']
 ]
+// The T4 skill tree web/build.sh copies into the Joomla site images: optional, because an image built
+// before 28/10/2026 does not carry it. Same path in the repository and under /opt/tracy-fleet.
+const SKILL = 'vendor/joomla/joomlart-t4-skill'
+const SKILL_FILES = [
+  `${SKILL}/README.md`,
+  `${SKILL}/assets/t4/t4-framework-for-joomla-6.zip`,
+  `${SKILL}/skills/joomlart-t4-template/SKILL.md`,
+  `${SKILL}/skills/joomlart-t4-template/scripts/clear-cache.sh`
+]
 // The 18 shard files of section 10 of the shard interface contract, flat in stack/.
 const CONTRACT_SHARD_FILES = [
   'install-shard.sh',
@@ -51,14 +60,16 @@ function listed() {
 
 // One build's source files, laid out as a checkout (by repo path) or as the tracy-host image
 // (opt/tracy-fleet/<path under /opt/tracy-fleet>): every file and need line of --list, plus EXTRAS.
-// `drop` leaves one repo path out; `change` gives one a second version.
-function sourceFiles(layout, { drop = null, change = null } = {}) {
+// `drop` leaves one repo path out; `change` gives one a second version; `skill: false` leaves the
+// optional T4 skill tree out, as an older image or a checkout without it would.
+function sourceFiles(layout, { drop = null, change = null, skill = true } = {}) {
   const pairs = listed()
     .map((line) => line.split(' '))
     .filter(([kind]) => kind === 'file' || kind === 'need')
     .map(([, repo, under]) => [repo, under])
   const files = {}
-  for (const [repo, under] of [...pairs, ...EXTRAS]) {
+  const optional = skill ? SKILL_FILES.map((file) => [file, file]) : []
+  for (const [repo, under] of [...pairs, ...EXTRAS, ...optional]) {
     if (repo === drop) continue
     const at = layout === 'image' ? path.join('opt/tracy-fleet', under) : repo
     files[at] = `${repo === change ? 'v2' : 'v1'} ${repo}\n`
@@ -102,6 +113,7 @@ test('--list names what the deploy actions ship, the shard files and web/, never
     `file ${FLEET}/dsh/seed-profile.sh dsh/seed-profile.sh 0755`,
     `tree ${FLEET}/scripts/lib lib`,
     `tree ${FLEET}/web web`,
+    `optional-tree ${SKILL} ${SKILL}`,
     `need ${FLEET}/scripts/lib/web-image.sh lib/web-image.sh`,
     `need ${FLEET}/web/IMAGE_TAGS web/IMAGE_TAGS`
   ])
@@ -153,6 +165,9 @@ test('from a checkout onto an empty host: every file lands, scripts flat beside 
     assert.ok(existsSync(path.join(dest, rel)), rel)
   assert.ok(existsSync(path.join(dest, 'tools/extra-tool.sh')), 'whole trees, not only the required files')
   assert.ok(existsSync(path.join(dest, 'web/wordpress.Dockerfile')))
+  for (const file of SKILL_FILES)
+    assert.ok(existsSync(path.join(dest, file)), `${file}: the whole skill tree`)
+  assert.doesNotMatch(run.stderr, /carries no/, 'a checkout that has the skill says nothing about it')
   assert.ok(!existsSync(path.join(dest, 'hooks')) && !existsSync(path.join(dest, 'migrate')))
   for (const sub of ['stack/scripts', 'stack/nginx', 'stack/systemd'])
     assert.ok(!existsSync(path.join(dest, sub)), `${sub}: flat, like the deploy action and the contract`)
@@ -217,6 +232,10 @@ test('from the tracy-host image (fake docker): name for name; an image without t
   assert.ok(
     existsSync(path.join(dest, 'web/build.sh')) && existsSync(path.join(dest, 'provision/bootstrap.sh'))
   )
+  for (const file of SKILL_FILES)
+    assert.ok(existsSync(path.join(dest, file)), `${file}: lifted from the image`)
+  assert.equal(readFileSync(path.join(dest, SKILL_FILES[3]), 'utf8'), `v1 ${SKILL_FILES[3]}\n`)
+  assert.doesNotMatch(run.stderr, /carries no/)
   assert.ok(!existsSync(path.join(dest, 'hooks')))
   // Before W5 P4: no /opt/tracy-fleet/stack at all.
   const old = writeFiles(tempDir('image-old-'), { 'opt/tracy-fleet/lib/web-image.sh': 'v1\n' })
@@ -237,6 +256,41 @@ test('from the tracy-host image (fake docker): name for name; an image without t
   )
   assert.equal(half.status, 3)
   assert.match(half.stderr, /built before the shard line/)
+})
+
+test('an image built before the skill tree rode along still syncs: one line says so, the rest lands', () => {
+  const image = writeFiles(tempDir('image-no-skill-'), sourceFiles('image', { skill: false }))
+  const dest = tempDir('sync-dest-')
+  const run = sync(
+    ['--from-image', 'ghcr.io/tracyhq/tracy-host:app-before-skill', '--dest', dest],
+    fakeDocker(image)
+  )
+  assert.equal(run.status, 0, run.stderr)
+  assert.deepEqual(run.stderr.trim().split('\n'), [
+    `sync-fleet-files: image carries no ${SKILL} (built before 28/10/2026); Joomla site images cannot be built from it`
+  ])
+  assert.ok(existsSync(path.join(dest, 'web/build.sh')) && existsSync(path.join(dest, 'stack/compose.yml')))
+  assert.ok(!existsSync(path.join(dest, 'vendor')), 'no half tree, no empty directory')
+  assert.match(run.stdout, /: \d+ changed under /)
+  // A skill tree an earlier, newer image put on the host stays: there is no --delete.
+  writeFiles(dest, { [SKILL_FILES[0]]: 'from an earlier image\n' })
+  const again = sync(
+    ['--from-image', 'ghcr.io/tracyhq/tracy-host:app-before-skill', '--dest', dest],
+    fakeDocker(image)
+  )
+  assert.equal(again.status, 0, again.stderr)
+  assert.equal(readFileSync(path.join(dest, SKILL_FILES[0]), 'utf8'), 'from an earlier image\n')
+})
+
+test('a checkout without the skill tree says so in one line and installs the rest', () => {
+  const dest = tempDir('sync-dest-')
+  const source = writeFiles(tempDir('sync-src-'), sourceFiles('checkout', { skill: false }))
+  const run = sync(['--from-dir', source, '--dest', dest])
+  assert.equal(run.status, 0, run.stderr)
+  assert.deepEqual(run.stderr.trim().split('\n'), [
+    `sync-fleet-files: checkout carries no ${SKILL}; Joomla site images cannot be built from it`
+  ])
+  assert.ok(existsSync(path.join(dest, 'web/build.sh')) && !existsSync(path.join(dest, 'vendor')))
 })
 
 test('no source, two sources, or a flag without its value is a usage error (exit 2)', () => {

@@ -109,6 +109,16 @@ COPY packages/fleet/tracy-fleet-operation/scripts /opt/tracy-fleet
 # template's scss/ with the site's own PHP — the stock joomla image has no node and no sass (27/09).
 COPY vendor/php/scssphp/src /opt/tracy-fleet/vendor/scssphp
 COPY vendor/php/scssphp/LICENSE.md /opt/tracy-fleet/vendor/scssphp/LICENSE.md
+# The JoomlArt T4 skill (vendor/joomla/joomlart-t4-skill, ADR 0006) rides beside them, whole, because
+# a shard builds `tracy/web-joomla:*` from /opt/tracy-fleet/web with NO checkout: joomla.Dockerfile
+# copies this tree into the site image, and web/build.sh finds it at /opt/tracy-fleet/vendor/joomla/
+# joomlart-t4-skill (sync-fleet-files.sh lifts it onto the host). Without it the four Joomla images of
+# IMAGE_TAGS cannot be built on a shard and the updater reports them missing on every run.
+# About 66 MB, 63 MB of it `assets/` — and all of it is read at run time (SKILL.md says
+# <PLUGIN_ROOT> is the folder holding `assets/` and `skills/`), so nothing is trimmed.
+# One tracked directory path, never a glob: scripts/ci/image-context.mjs fingerprints each COPY
+# source as a git path, so a change to the skill rebuilds this image.
+COPY vendor/joomla/joomlart-t4-skill /opt/tracy-fleet/vendor/joomla/joomlart-t4-skill
 # `web/` BELONGS BESIDE THEM, and leaving it out breaks provisioning with a message that names
 # the wrong thing. `lib/web-image.sh` resolves the base image a site's agent gets by reading
 # `$TRACY_FLEET_DIR/web/IMAGE_TAGS`; with the file absent it gives up with "no web/IMAGE_TAGS

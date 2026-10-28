@@ -2291,6 +2291,14 @@ reads those copies.
   next query and updates itself. The list and the places that must stay in step with it: the `CARRIED` table in
   `scripts/test/tracy-host-fleet-files-image.test.mjs`, the `FILES` table in the check script below, and the
   `sync-fleet-files.sh --list` list (one test holds all three against the Dockerfile).
+- **The Joomla skill tree travels with the image.** Beyond those 33 files, one `COPY` puts the whole
+  `vendor/joomla/joomlart-t4-skill` tree (about 66 MB, 63 MB of it `assets/`, all read by the skill at run time) at
+  `/opt/tracy-fleet/vendor/joomla/joomlart-t4-skill`. A shard has no checkout, and `web/build.sh` needs this tree to build
+  `tracy/web-joomla:*`: `sync-fleet-files.sh` lifts it onto the host (its `OPTIONAL_TREES` list; an older image without it
+  is reported in one line and the sync goes on), and `build.sh` looks for it in a checkout first, then there. Editing the
+  skill tree changes the `hctx` fingerprint like editing one of the 33 files. `joomla.Dockerfile` is not edited to take the
+  tree another way, because its bytes are part of the `tracy.web.inputs` label of every Joomla image already built
+  ([`web/README.md`](packages/fleet/tracy-fleet-operation/web/README.md)).
 - The `deploy-dev` job compares the copies in the image with the checkout byte by byte using
   [`check-fleet-files-in-image.sh`](deploy/scripts/check-fleet-files-in-image.sh); a mismatch turns the job red (the deploy has already finished
   before this step). The first run on a real image is the first `deploy-dev` run after the merge.
