@@ -41,6 +41,7 @@ import {
   confirmQuestion,
   createCallMemory,
   flightSeat,
+  SITE_WIDE_REASONS,
   sameCallKey,
   untranslatedConfirmCard
 } from './call-memory.mjs'
@@ -395,6 +396,8 @@ import { isTurnStopped, stoppableSleep, stoppedAnswer } from './turn-stop.mjs'
 import { asksAttachment, filesTabPictures, mediaUpload, readChatPicture } from './upload.mjs'
 import type { AttachmentReader } from './upload.mjs'
 import {
+  VIEW_EXEC_MS,
+  VIEW_MAX_BUFFER,
   VIEW_PLUGIN,
   agentReadsImages,
   captureView,
@@ -2934,16 +2937,44 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    * `config.viewContext: false` — the door then keeps nothing and no step is given a picture.
    */
   const viewsOn = config.viewContext !== false
-  /** One page of a site drawn in its own container, in one window and scroll (`captureView`). */
-  const drawView = async (label: string, view: Parameters<typeof captureView>[0]['view']) => {
+  /**
+   * One page of a site drawn in its own container, in one window and scroll (`captureView`). `check`:
+   * drawn for the visual check, which falls back on dsh's own browser where the container has none
+   * (`captureView` `host`); the conversation's own picture of the page does not.
+   */
+  const drawView = async (
+    label: string,
+    view: Parameters<typeof captureView>[0]['view'],
+    { check = false }: { check?: boolean } = {}
+  ) => {
     const sitesRoot = resolveSitesRoot(undefined)
+    const chrome = check
+      ? config.hostChrome !== undefined
+        ? config.hostChrome
+        : hostChromeOf(process.env, existsSync)
+      : null
     return captureView({
       label,
       view,
       internalPort: await sitePortFor(config, sitesRoot, label),
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
-      door: contentDoor(NO_SITE_FACTS)
+      door: contentDoor(NO_SITE_FACTS),
+      host: chrome
+        ? {
+            chrome,
+            run: ({ target, file, deadlineMs }) =>
+              hostBrowserExec({
+                chrome,
+                target,
+                mode: 'view',
+                file,
+                deadlineMs,
+                timeoutMs: VIEW_EXEC_MS,
+                maxBuffer: VIEW_MAX_BUFFER
+              })
+          }
+        : null
     })
   }
   // Words a page in Voice said it is about to send (`voice-reply.mjs`): the step that takes them gets
@@ -2953,9 +2984,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view }) => {
+    capture: async ({ label, view, check }) => {
       try {
-        return await drawView(label, view)
+        return await drawView(label, view, { check: check === true })
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -4362,7 +4393,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
           turn,
           events,
           eyes: () => pickEyes(llm, route, config.lookModel),
-          capture: (view) => drawView(label, view),
+          capture: (view) => drawView(label, view, { check: true }),
           store: (jpeg) => storePicture(ctx, { jpeg } as Parameters<typeof storePicture>[1]),
           llm,
           ...(signal ? { signal } : {})
@@ -4674,7 +4705,11 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         const ask = turnAsks.get(root)
         if (ask === undefined || ask.checked || (turn !== null && ask.turn !== turn)) return decision
         const label = sessionSite(exec?.agent)
-        if (label === null) return decision
+        if (label === null) {
+          // Said at the check (`no-before-no-site`): a write from a session standing in no site's folder.
+          ask.missing ??= 'no-site'
+          return decision
+        }
         const postTypeOf = (id: number) => memory.readOf(sessionId, { kind: 'post', id })?.postType ?? null
         if (asksFirst(call, { postTypeOf })) return decision
         const reach = writeReach(call, {
@@ -5341,7 +5376,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         const { confirm, ...call } = params
         const key = `tracy_site:${sameCallKey('tracy_site', { action: plan.action, params: call })}`
         if (confirm === true && memory.confirmed(sessionId, key)) return null
-        memory.confirmAsked(sessionId, key, true, consequence.facts)
+        // One "every page" question a turn (`call-memory.mjs` `siteWideAgreed`).
+        if (SITE_WIDE_REASONS.has(consequence.reason) && memory.siteWideAgreed(sessionId)) return null
+        memory.confirmAsked(sessionId, key, true, consequence.facts, null, consequence.reason)
         return withNext({
           ok: false,
           code: 'CONFIRM_FIRST',

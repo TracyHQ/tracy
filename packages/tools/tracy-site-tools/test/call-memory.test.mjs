@@ -1355,3 +1355,44 @@ test("🔒 the door's card still in English is stopped for a person who speaks a
     "a question of the agent's own is its business"
   )
 })
+
+/**
+ * 🔒 ONE "EVERY PAGE" QUESTION A TURN (beta report, 26/10/2026): a yes to a site-wide look covered the
+ * header part the agent wrote next for the same message; the second card was never answered and the
+ * turn stood open with no reply. Only reach-only consequences, only this turn, only within a yes's life.
+ */
+test('🔒 a yes to a change every page shows covers the rest of the turn — not a new message, a No, a delete or an old yes', () => {
+  let clock = 1_000_000
+  const m = createCallMemory({ now: () => clock })
+  const yes = (/** @type {string} */ key) => {
+    const q = confirmQuestion(key, 'x').questions[0]
+    m.customerAnswered('s', { questions: [q] }, { answers: [{ id: q.id, selected: ['Yes, go ahead'] }] })
+  }
+  m.newTurn('s')
+  assert.equal(m.siteWideAgreed('s'), false, 'nothing agreed yet')
+  m.confirmAsked('s', 'look-set-site', true, [], null, 'site')
+  yes('look-set-site')
+  assert.equal(m.siteWideAgreed('s'), true, 'the header part asked next is covered')
+  assert.equal(m.siteWideAgreed('other'), false, 'another conversation is not')
+  clock += CONFIRM_TTL_MS + 1
+  assert.equal(m.siteWideAgreed('s'), false, 'an old yes opens nothing')
+  clock -= CONFIRM_TTL_MS + 1
+  m.newTurn('s')
+  assert.equal(m.siteWideAgreed('s'), false, 'a new message asks again')
+
+  // a yes to anything but reach does not cover the turn
+  for (const reason of ['hides', 'price', 'many', undefined]) {
+    const key = `k-${String(reason)}`
+    m.confirmAsked('s', key, true, [], reason === 'hides' ? 'hide' : null, reason)
+    yes(key)
+    assert.equal(m.siteWideAgreed('s'), false, String(reason))
+  }
+  // a No in the same turn after the yes shuts it again
+  m.confirmAsked('s', 'shared-part', true, [], null, 'shared')
+  yes('shared-part')
+  assert.equal(m.siteWideAgreed('s'), true)
+  m.confirmAsked('s', 'another', true, [], null, 'site')
+  const q = confirmQuestion('another', 'x').questions[0]
+  m.customerAnswered('s', { questions: [q] }, { answers: [{ id: q.id, selected: ['No, keep it'] }] })
+  assert.equal(m.siteWideAgreed('s'), false, 'a No after it')
+})

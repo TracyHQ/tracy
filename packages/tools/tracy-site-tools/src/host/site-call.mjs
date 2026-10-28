@@ -17,7 +17,7 @@
  */
 
 import { AsyncLocalStorage } from 'node:async_hooks'
-import { bodyRef, confirmQuestion, sameCallKey, sameCallRefused, wpRecordOf } from './call-memory.mjs'
+import { SITE_WIDE_REASONS, bodyRef, confirmQuestion, sameCallKey, sameCallRefused, wpRecordOf } from './call-memory.mjs'
 import {
   groupAnswer,
   groupConfirmKey,
@@ -1818,7 +1818,16 @@ export async function runSiteCall(input) {
     consequence !== null && tier !== 'destructive' && typeof input.planAgreed === 'function'
       ? (await input.planAgreed()) === true
       : false
-  if (tier === 'destructive' || (consequence !== null && !planAgreed)) {
+  // …nor a change every page shows once the customer agreed to one in this turn (`siteWideAgreed`): a
+  // look or a shared part only, never a delete, a record taken off the pages, a price or many places.
+  const turnAgreed =
+    consequence !== null &&
+    tier !== 'destructive' &&
+    SITE_WIDE_REASONS.has(consequence.reason) &&
+    typeof sessionId === 'string' &&
+    sessionId !== '' &&
+    memory?.siteWideAgreed?.(sessionId) === true
+  if (tier === 'destructive' || (consequence !== null && !planAgreed && !turnAgreed)) {
     const group =
       n0.kind === 'relay' && groupDeleteApplies(platform, n0)
         ? await translationGroupOf({
@@ -1957,7 +1966,7 @@ export async function runSiteCall(input) {
         ? [recordTitle]
         : []
     if (!agreed && !mediaPreviewOnly && sessionId)
-      memory?.confirmAsked?.(sessionId, confirmKey, true, facts, intent)
+      memory?.confirmAsked?.(sessionId, confirmKey, true, facts, intent, consequence?.reason)
     if (!agreed && !mediaPreviewOnly) {
       const size = group === null ? 0 : group.members.length
       const named = group === null ? '' : recordNamed(group)

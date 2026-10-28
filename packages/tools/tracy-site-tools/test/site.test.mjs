@@ -1000,6 +1000,11 @@ test('refusalNext: each door code names the next step — the customer, the call
       answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'unreachable', transient: true },
       has: [/still warming up/, /Retry the same call/]
     },
+    // 28/10: a copy silent for a day is not warming up — no retry, the customer is told it needs checking.
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'timeout', transient: false },
+      has: [/has not answered for a long while/, /Do not retry/, /needs checking/, /do not write another way/]
+    },
     {
       answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'unauthorized', transient: false },
       has: [/does not accept the token/, /pairing again/, /do not write another way/]

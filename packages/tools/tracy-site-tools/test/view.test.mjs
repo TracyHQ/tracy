@@ -894,3 +894,35 @@ test('viewNotice: the summary of a very long page address stays one short line',
   })
   assert.ok(long.summary.length <= 120)
 })
+
+test('captureView: where the site has no browser, the visual check’s picture is drawn by dsh’s own, pinned to the container', async () => {
+  const r = runner({ code: 127, stdout: '', stderr: 'exec: "node": executable file not found' })
+  /** @type {any[]} */
+  const onHost = []
+  const host = {
+    chrome: '/usr/local/bin/tracy-chrome',
+    run: async (/** @type {any} */ input) => {
+      onHost.push(input)
+      return { code: 0, stderr: '', timedOut: false, stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) }
+    }
+  }
+  const drawn = await captureView({ label: 'demo1', view: VIEW, internalPort: 80, run: r.run, gate: GATE_OK, host })
+  assert.deepEqual(drawn, { ok: true, jpeg: JPEG, y: 0, loaded: true })
+  assert.equal(onHost.length, 1)
+  assert.deepEqual(onHost[0].target, {
+    url: 'http://127.0.0.1/pricing',
+    origin: 'http://127.0.0.1',
+    container: 'demo1-web-1',
+    via: '127.0.0.1:80'
+  })
+  assert.deepEqual(JSON.parse(onHost[0].file), { w: VIEW.w, h: VIEW.h, y: VIEW.y, dark: VIEW.dark })
+  assert.equal(onHost[0].deadlineMs, VIEW_DEADLINE_MS)
+  // Without dsh's browser (the conversation's own picture never passes one): no picture, as before.
+  const none = await captureView({ label: 'demo1', view: VIEW, internalPort: 80, run: r.run, gate: GATE_OK })
+  assert.deepEqual(none, { ok: false, code: 'NO_BROWSER' })
+  // A site browser that answers is used, and dsh's is never started.
+  const own = runner({ stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) })
+  const used = await captureView({ label: 'demo1', view: VIEW, internalPort: 80, run: own.run, gate: GATE_OK, host })
+  assert.equal(used.ok, true)
+  assert.equal(onHost.length, 1)
+})

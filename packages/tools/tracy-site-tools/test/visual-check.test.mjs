@@ -231,7 +231,10 @@ test('🔒 no claim without both pictures of the right page, a write, a model or
     [{ ask: undefined }, 'no-ask'],
     [{ turn: 4 }, 'no-ask'],
     [{ events: log({ calls: [{ name: 'read', arguments: { path: 'a' } }] }) }, 'no-write'],
-    [{ ask: ask({ before: null }) }, 'no-before'],
+    // A missing "before" always says why (beta report 28/10/2026): no write held, the hold's own reason.
+    [{ ask: ask({ before: null }) }, 'no-before: not-held'],
+    [{ ask: { ...ask({ before: null }), hold: { spentMs: 0 } } }, 'no-before: none'],
+    [{ ask: { ...ask({ before: null }), missing: 'no-site' } }, 'no-before: no-site'],
     [
       { ask: ask({ before: { view: VIEW, jpeg: JPEG, y: 0, loaded: false, takenAt: 900 } }) },
       'before-not-loaded'

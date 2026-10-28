@@ -68,6 +68,12 @@ const MAX_READS = 200
 const MAX_RECEIPTS = 50
 /** Destructive calls waiting for the customer's answer, per conversation. */
 const MAX_CONFIRMS = 50
+
+/**
+ * The consequences whose question is about REACH only — a look every page shows, a part every page
+ * shows (`consequence.mjs`): one yes to them covers the rest of the turn (`siteWideAgreed`).
+ */
+export const SITE_WIDE_REASONS = new Set(['site', 'shared'])
 /**
  * How long the customer's yes holds for the call it opens (council 19/10/2026: 5 minutes). Past it, the
  * call is asked again: a yes given before a long pause may no longer be about the site as it is.
@@ -408,7 +414,8 @@ export function createCallMemory(opts = {}) {
    *   titles: Map<string, string>,
    *   receipts: Map<string, { applyIds: string[], ok: Set<string>, unknown: Set<string>, idMap: Map<string, string>, records: Map<string, Map<string, number>>, unknownRecords: Map<string, Set<string>> }>,
    *   wp: Map<string, { turn: number, base: string, n: number }>,
-   *   confirms: Map<string, { askedAt: number, said: 'yes' | 'no' | null, own: boolean, facts: string[], yesAt: number, intent: 'delete' | 'hide' | null, typed?: boolean }>,
+   *   confirms: Map<string, { askedAt: number, said: 'yes' | 'no' | null, own: boolean, facts: string[], yesAt: number, intent: 'delete' | 'hide' | null, typed?: boolean, reason?: string }>,
+   *   siteWideYes: number, declinedAtYes: number, siteWideYesAt: number,
    *   declined: number,
    *   refused: Map<string, { code: string, error: string, next: string | null, turn: number, generation: number, label: string }>,
    *   shrinks: Map<string, number>,
@@ -454,6 +461,10 @@ export function createCallMemory(opts = {}) {
         receipts: new Map(),
         wp: new Map(),
         confirms: new Map(),
+        // The turn in which the customer said yes to a change every page shows (`siteWideAgreed`), or -1.
+        siteWideYes: -1,
+        declinedAtYes: 0,
+        siteWideYesAt: 0,
         declined: 0,
         refused: new Map(),
         shrinks: new Map(),
@@ -734,6 +745,11 @@ export function createCallMemory(opts = {}) {
         if (agreed.includes(id)) {
           c.said = 'yes'
           c.yesAt = now()
+          if (c.reason !== undefined && SITE_WIDE_REASONS.has(c.reason)) {
+            s.siteWideYes = s.turn
+            s.declinedAtYes = s.declined
+            s.siteWideYesAt = now()
+          }
         } else if (declined.includes(id)) {
           c.said = 'no'
           // Typed words and no option (09/10/2026): still a No to the call, said so on its next refusal.
@@ -1567,8 +1583,10 @@ export function createCallMemory(opts = {}) {
      *   which record, how many places, which amounts — the agent may word the rest
      * @param {'delete' | 'hide' | null} [intent] - what the call does to a record, which the card must
      *   say in the person's language (`confirm-words.mjs`); null for any other change
+     * @param {string} [reason] - the consequence the question is about (`consequence.mjs`), when one
+     *   is: a yes to a reach-only one (`SITE_WIDE_REASONS`) covers the turn (`siteWideAgreed`)
      */
-    confirmAsked(sessionId, call, own = true, facts = [], intent = null) {
+    confirmAsked(sessionId, call, own = true, facts = [], intent = null, reason = undefined) {
       if (!named(sessionId)) return
       const s = session(sessionId)
       const key = callKeyOf(call)
@@ -1579,13 +1597,38 @@ export function createCallMemory(opts = {}) {
         own,
         facts: facts.filter((f) => typeof f === 'string' && f.trim() !== ''),
         yesAt: 0,
-        intent
+        intent,
+        ...(typeof reason === 'string' ? { reason } : {})
       })
       while (s.confirms.size > MAX_CONFIRMS) {
         const oldest = s.confirms.keys().next().value
         if (oldest === undefined) break
         s.confirms.delete(oldest)
       }
+    },
+
+    /**
+     * Whether the customer said yes, in THIS turn, to a change every page of the site shows — a look
+     * or a part every page shows (`consequence.mjs` reasons `site` and `shared`), never a delete, a
+     * record taken off the pages, a price or words replaced in many places.
+     *
+     * 🔒 ONE "EVERY PAGE" QUESTION A TURN (beta report, 26/10/2026). A customer agreed to a site-wide
+     * header colour; the write had no effect, the agent took the other road to the same header (its
+     * template part) and asked again — and that second card was never answered: the turn stood open
+     * until the stale sweep, and the customer got no reply at all. The question tells the customer the
+     * change reaches every page; once they agreed to that for what they asked in this message, the
+     * door does not ask it again for the same message, within the life of a yes (`CONFIRM_TTL_MS`). A
+     * new message, a No, a destructive or a money call asks as before.
+     * @param {unknown} sessionId
+     * @returns {boolean}
+     */
+    siteWideAgreed(sessionId) {
+      if (!named(sessionId)) return false
+      const s = session(sessionId)
+      // The same life as one call's yes (`CONFIRM_TTL_MS`): an old yes opens nothing.
+      return (
+        s.siteWideYes === s.turn && s.declined === s.declinedAtYes && now() - s.siteWideYesAt <= CONFIRM_TTL_MS
+      )
     },
 
     /**

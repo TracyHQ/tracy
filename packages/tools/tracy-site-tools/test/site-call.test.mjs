@@ -8,7 +8,7 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { createCallMemory, sameCallRefused } from '../src/host/call-memory.mjs'
+import { confirmQuestion, createCallMemory, sameCallRefused } from '../src/host/call-memory.mjs'
 import { WALK_FIELDS } from '../src/host/delete-group.mjs'
 import { LEGACY_BOUND_MESSAGE, LEGACY_STRUCTURE_CODE } from '../src/host/legacy-refusal.mjs'
 import { planCall, RELAY_ACTIONS, withNext } from '../src/host/site.mjs'
@@ -5440,6 +5440,34 @@ test('a build whose saved plan agreed is not asked about a shared write; a delet
     joomlaWrite({ title: 'X' })
   )
   assert.equal(plain.code, 'CONFIRM_FIRST')
+})
+
+test('🔒 a yes to a change every page shows in this turn covers a shared write next; a delete, or a new message, still asks (beta report 26/10/2026)', async () => {
+  /** @type {Array<[string, Record<string, any>]>} */
+  const sent = []
+  const send = async (/** @type {string} */ action, /** @type {Record<string, any>} */ params) => {
+    sent.push([action, params])
+    if (action === 'content.get') return { ok: true, item: { id: 442, title: 'Hotline bar' } }
+    return { ok: true, kind: 'module', id: 442 }
+  }
+  const memory = createCallMemory({ now: () => 1_000 })
+  const ctx = openJ(send, { modelCall: true, memory })
+  memory.newTurn('session-a')
+  // Asked before anything: the shared module write asks as it always did.
+  const first = await call(ctx, joomlaWrite({ title: 'A' }))
+  assert.equal(first.code, 'CONFIRM_FIRST')
+  // The customer agrees to a look every page shows (look.set site scope), in this same message.
+  memory.confirmAsked('session-a', 'look-set-site', true, [], null, 'site')
+  const q = confirmQuestion('look-set-site', 'x').questions[0]
+  memory.customerAnswered('session-a', { questions: [q] }, { answers: [{ id: q.id, selected: ['Yes, go ahead'] }] })
+  const covered = await call(ctx, joomlaWrite({ title: 'B' }))
+  assert.notEqual(covered.code, 'CONFIRM_FIRST', JSON.stringify(covered).slice(0, 300))
+  assert.equal(count(sent, 'content.update'), 1)
+  const deleted = await call(ctx, { action: 'content.delete', params: { kind: 'article', id: 5 } })
+  assert.equal(deleted.code, 'CONFIRM_FIRST', 'a delete always asks')
+  memory.newTurn('session-a')
+  const next = await call(ctx, joomlaWrite({ title: 'C' }))
+  assert.equal(next.code, 'CONFIRM_FIRST', 'a new message asks again')
 })
 
 // ── The residue sweep's placeholder on a template post of one block (product owner, 24/10/2026) ──────────────────

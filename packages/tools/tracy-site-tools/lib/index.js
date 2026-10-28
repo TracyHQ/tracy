@@ -2575,6 +2575,7 @@ var MAX_SESSIONS = 500;
 var MAX_READS = 200;
 var MAX_RECEIPTS = 50;
 var MAX_CONFIRMS = 50;
+var SITE_WIDE_REASONS = /* @__PURE__ */ new Set(["site", "shared"]);
 var CONFIRM_TTL_MS = 5 * 6e4;
 var MAX_REFUSED = 100;
 var MAX_LEARNED = 500;
@@ -2746,6 +2747,10 @@ function createCallMemory(opts = {}) {
         receipts: /* @__PURE__ */ new Map(),
         wp: /* @__PURE__ */ new Map(),
         confirms: /* @__PURE__ */ new Map(),
+        // The turn in which the customer said yes to a change every page shows (`siteWideAgreed`), or -1.
+        siteWideYes: -1,
+        declinedAtYes: 0,
+        siteWideYesAt: 0,
         declined: 0,
         refused: /* @__PURE__ */ new Map(),
         shrinks: /* @__PURE__ */ new Map(),
@@ -2957,6 +2962,11 @@ ${typeof key.actor === "string" ? key.actor : ""}`;
         if (agreed.includes(id)) {
           c.said = "yes";
           c.yesAt = now();
+          if (c.reason !== void 0 && SITE_WIDE_REASONS.has(c.reason)) {
+            s.siteWideYes = s.turn;
+            s.declinedAtYes = s.declined;
+            s.siteWideYesAt = now();
+          }
         } else if (declined.includes(id)) {
           c.said = "no";
           c.typed = typed.includes(id);
@@ -3762,8 +3772,10 @@ ${prefix}`;
      *   which record, how many places, which amounts — the agent may word the rest
      * @param {'delete' | 'hide' | null} [intent] - what the call does to a record, which the card must
      *   say in the person's language (`confirm-words.mjs`); null for any other change
+     * @param {string} [reason] - the consequence the question is about (`consequence.mjs`), when one
+     *   is: a yes to a reach-only one (`SITE_WIDE_REASONS`) covers the turn (`siteWideAgreed`)
      */
-    confirmAsked(sessionId, call, own = true, facts = [], intent = null) {
+    confirmAsked(sessionId, call, own = true, facts = [], intent = null, reason = void 0) {
       if (!named3(sessionId)) return;
       const s = session(sessionId);
       const key = callKeyOf(call);
@@ -3774,13 +3786,34 @@ ${prefix}`;
         own,
         facts: facts.filter((f) => typeof f === "string" && f.trim() !== ""),
         yesAt: 0,
-        intent
+        intent,
+        ...typeof reason === "string" ? { reason } : {}
       });
       while (s.confirms.size > MAX_CONFIRMS) {
         const oldest = s.confirms.keys().next().value;
         if (oldest === void 0) break;
         s.confirms.delete(oldest);
       }
+    },
+    /**
+     * Whether the customer said yes, in THIS turn, to a change every page of the site shows — a look
+     * or a part every page shows (`consequence.mjs` reasons `site` and `shared`), never a delete, a
+     * record taken off the pages, a price or words replaced in many places.
+     *
+     * 🔒 ONE "EVERY PAGE" QUESTION A TURN (beta report, 26/10/2026). A customer agreed to a site-wide
+     * header colour; the write had no effect, the agent took the other road to the same header (its
+     * template part) and asked again — and that second card was never answered: the turn stood open
+     * until the stale sweep, and the customer got no reply at all. The question tells the customer the
+     * change reaches every page; once they agreed to that for what they asked in this message, the
+     * door does not ask it again for the same message, within the life of a yes (`CONFIRM_TTL_MS`). A
+     * new message, a No, a destructive or a money call asks as before.
+     * @param {unknown} sessionId
+     * @returns {boolean}
+     */
+    siteWideAgreed(sessionId) {
+      if (!named3(sessionId)) return false;
+      const s = session(sessionId);
+      return s.siteWideYes === s.turn && s.declined === s.declinedAtYes && now() - s.siteWideYesAt <= CONFIRM_TTL_MS;
     },
     /**
      * Whether the customer agreed to this call since it was refused. True once: the confirmation is
@@ -12210,7 +12243,7 @@ function probeArgv({ container, url, timeoutMs = 2e3, via = "" }) {
     ...via ? [via] : []
   ];
 }
-var BROWSER_SCRIPT = `const {spawn}=require('child_process');const fs=require('fs');const os=require('os');const path=require('path');const mode=process.argv[1],url=process.argv[2],origin=process.argv[3],file=process.argv[4]||"";const req=mode==='style'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Array.isArray(r.props)?r:null}catch{return null}})():null;const vreq=mode==='view'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Number.isInteger(r.w)&&Number.isInteger(r.h)&&Number.isInteger(r.y)&&r.w>0&&r.h>0&&r.y>=0?r:null}catch{return null}})():null;const FIND=${JSON.stringify(String(findTarget))},DESCRIBE=${JSON.stringify(String(describeTarget))},VPS=${JSON.stringify(STYLE_VIEWPORTS)};const SCROLL=${JSON.stringify(String(scrollForView))},VIEWW=${JSON.stringify(VIEW_WAITS)};const RESOLVE=(${String(resolveStyles)});const PSEL=(${String(paintSelectors)}),PAINTS=${JSON.stringify(String(countPaints))};const sheets={};let onLoad=null;const loaded=new Promise((r)=>{onLoad=r});const PROBE=` + JSON.stringify(STYLE_PROBE) + ";const SETTLE_MS=Number(process.argv[5])||" + BROWSER_SETTLE_MS + ",DEADLINE_MS=Number(process.argv[6])||" + BROWSER_DEADLINE_MS + ",FLUSH_MS=Number(process.argv[7])||" + BROWSER_FLUSH_MS + ";const via=(process.env&&process.env.TRACY_PUBLIC_VIA)||'';const viaM=/^127\\.0\\.0\\.1:([0-9]{1,5})$/.exec(via);const CHROME=(process.env&&process.env.TRACY_CHROME)||'chromium';const serveIn=(process.env&&process.env.TRACY_SERVE_CONTAINER)||'';let profile='';try{profile=fs.mkdtempSync(path.join(os.tmpdir(),'tracy-look-'))}catch{}let child=null,hard=null,finished=false,sid=null,topFrame=null,offsite=null,navStarted=false,errorText=null;const clean=()=>{try{if(profile)fs.rmSync(profile,{recursive:true,force:true})}catch{}};if(process.on)process.on('exit',clean);const stop=()=>{try{process.kill(-child.pid,'SIGKILL')}catch{}try{child.kill('SIGKILL')}catch{}};const done=(line)=>{if(finished)return;finished=true;if(hard)clearTimeout(hard);if(child)stop();clean();const bail=setTimeout(()=>process.exit(1),FLUSH_MS);try{process.stdout.write(line,()=>{clearTimeout(bail);process.exit(0)})}catch{clearTimeout(bail);process.exit(1)}};if(process.on)process.on('SIGTERM',()=>done('TRACY_BROWSER ERR stopped'));const flags=['--headless=new','--disable-features=MacAppCodeSignClone','--disable-gpu','--no-crash-upload','--disable-breakpad','--no-first-run','--no-default-browser-check','--remote-debugging-pipe'];if(mode==='shot'||mode==='styles')flags.push('--hide-scrollbars','--window-size=1280,800');if(mode==='style'||mode==='view')flags.push('--hide-scrollbars');if(!serveIn&&process.env&&process.env.TRACY_RESOLVER_RULE)flags.push(process.env.TRACY_RESOLVER_RULE);if(serveIn)flags.push('--host-resolver-rules=MAP * ~NOTFOUND','--proxy-server=http://127.0.0.1:9','--proxy-bypass-list=<-loopback>');if(!profile){done('TRACY_BROWSER ERR could not create a private browser profile')}else if(via&&(!viaM||Number(viaM[1])<1||Number(viaM[1])>65535)){done('TRACY_BROWSER ERR the public route is not a loopback port')}else if(serveIn&&(!/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(serveIn)||!viaM||mode!=='styles')){done('TRACY_BROWSER ERR the host route needs a container name, its loopback port and the styles mode')}else if(mode==='style'&&!req){done('TRACY_BROWSER ERR the style request is not a JSON object with props')}else if(mode==='view'&&!vreq){done('TRACY_BROWSER ERR the view request is not a JSON object with w, h and y')}else{flags.push('--user-data-dir='+profile);child=spawn(CHROME,[...flags,'about:blank'],{stdio:['ignore','ignore','ignore','pipe','pipe'],detached:true});child.on('error',(e)=>done('TRACY_BROWSER NOCHROME '+((e&&e.message)||String(e))));const pending=new Map();child.on('exit',(code,sig)=>{if(finished)return;const why='chromium exited'+(code!=null?' ('+code+')':sig?' ('+sig+')':'');for(const f of pending.values())f({error:{message:why}});pending.clear();done('TRACY_BROWSER NOCHROME '+why)});hard=setTimeout(()=>done('TRACY_BROWSER ERR timed out'),DEADLINE_MS);const wr=child.stdio[3],rd=child.stdio[4];let buf=Buffer.alloc(0),id=0;wr.on('error',()=>{});rd.on('error',()=>{});const send=(method,params,session)=>new Promise((res,rej)=>{const n=++id;pending.set(n,(m)=>{if(m&&m.error)rej(new Error(method+': '+((m.error&&m.error.message)||JSON.stringify(m.error))));else res(m)});const o={id:n,method,params:params||{}};if(session)o.sessionId=session;try{wr.write(JSON.stringify(o)+'\\0')}catch(e){pending.delete(n);rej(e instanceof Error?e:new Error(String(e)))}});const parseHttp=(b)=>{let off=0;for(let g=0;g<5;g++){const e=b.indexOf('\\r\\n\\r\\n',off);if(e===-1)return null;const head=b.slice(off,e).toString('latin1').split('\\r\\n');const sm=/^HTTP\\/[0-9.]+ ([0-9]{3})/.exec(head[0]||'');if(!sm)return null;const code=Number(sm[1]);off=e+4;if(code<200)continue;const hs=[];for(const line of head.slice(1)){const i=line.indexOf(':');if(i<1)continue;const name=line.slice(0,i).trim(),l=name.toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name,value:line.slice(i+1).trim()})}return{responseCode:code,responseHeaders:hs,body:b.slice(off).toString('base64')}}return null};let running=0;const waiting=[];const next=()=>{while(running<4&&waiting.length>0){running++;waiting.shift()(()=>{running--;next()})}};const serveExec=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const args=['exec','-u','www-data',serveIn,'curl','-sS','-i','--http1.1','--max-time','" + Math.ceil(BROWSER_SERVE_MS / 1e3) + "','--max-filesize','" + BROWSER_SERVE_MAX + "','-H','Host: '+t.host,'-H','X-Forwarded-Proto: '+t.protocol.slice(0,-1),'-H','Accept-Encoding: identity'];const rh=(p.request&&p.request.headers)||{};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;const v=String(rh[k]);if(/[\\r\\n]/.test(k+v))continue;args.push('-H',k+': '+v)}args.push('http://127.0.0.1:'+viaM[1]+t.pathname+t.search);waiting.push((release)=>{if(finished||settled)return release();require('child_process').execFile('docker',args,{encoding:'buffer',maxBuffer:" + BROWSER_SERVE_MAX + "+65536,timeout:" + BROWSER_SERVE_MS + "+2000},(err,out)=>{release();fin(err||!out?null:parseHttp(out))})});next()};const serve=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const rh=(p.request&&p.request.headers)||{},h={};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;h[k]=rh[k]}h.host=t.host;h['x-forwarded-proto']=t.protocol.slice(0,-1);h['accept-encoding']='identity';const body=typeof p.request.postData==='string'?Buffer.from(p.request.postData):null;if(body)h['content-length']=String(body.length);let q;try{q=require('http').request({host:'127.0.0.1',port:Number(viaM[1]),method:p.request.method||'GET',path:t.pathname+t.search,headers:h},(r)=>{const cs=[];let n=0;r.on('data',(d)=>{n+=d.length;if(n>" + BROWSER_SERVE_MAX + "){r.destroy();return fin(null)}cs.push(d)});r.on('error',()=>fin(null));r.on('end',()=>{const hs=[],raw=r.rawHeaders||[];for(let i=0;i+1<raw.length;i+=2){const l=String(raw[i]).toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name:String(raw[i]),value:String(raw[i+1])})}fin({responseCode:r.statusCode,responseHeaders:hs,body:Buffer.concat(cs).toString('base64')})})})}catch{return fin(null)}q.on('error',()=>fin(null));q.setTimeout(" + BROWSER_SERVE_MS + `,()=>q.destroy(new Error('timed out')));if(body)q.write(body);q.end()};const onEvent=(m)=>{if(m.method==='Page.loadEventFired'){if(onLoad)onLoad();return}if(m.method==='CSS.styleSheetAdded'){const h=m.params&&m.params.header;if(h&&h.styleSheetId)sheets[h.styleSheetId]=h;return}if(m.method==='Page.frameNavigated'){const fr=(m.params&&m.params.frame)||{};if(navStarted&&fr.id===topFrame&&!fr.parentId){let good=false;try{good=new URL(fr.url).origin===origin}catch{}if(!good){if(fr.url&&fr.url.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(fr.url||offsite||'unknown'))}}return}if(m.method!=='Fetch.requestPaused')return;const p=m.params||{};const rid=p.requestId,ru=(p.request&&p.request.url)||"";let allow=true;if(p.resourceType==='Document'&&p.frameId===topFrame){try{allow=new URL(ru).origin===origin}catch{allow=false}}if(allow&&serveIn){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own&&(p.resourceType==='Document'||p.resourceType==='Stylesheet')&&(p.request&&p.request.method)==='GET')return serveExec(p);send('Fetch.failRequest',{requestId:rid,errorReason:'BlockedByClient'},sid).catch(()=>{});return}if(allow&&via){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own)return serve(p)}if(allow){send('Fetch.continueRequest',{requestId:rid},sid).catch(()=>{})}else{offsite=ru;send('Fetch.failRequest',{requestId:rid,errorReason:'Aborted'},sid).catch(()=>{});done('TRACY_BROWSER OFFSITE '+ru)}};rd.on('data',(d)=>{if(finished)return;buf=Buffer.concat([buf,d]);let i;while((i=buf.indexOf(0))!==-1){let m=null;try{m=JSON.parse(buf.slice(0,i))}catch{}buf=buf.slice(i+1);if(!m)continue;if(m.id&&pending.has(m.id)){const f=pending.get(m.id);pending.delete(m.id);f(m)}else if(m.method)onEvent(m)}});(async()=>{const t=await send('Target.createTarget',{url:'about:blank'});const a=await send('Target.attachToTarget',{targetId:t.result&&t.result.targetId,flatten:true});sid=a.result&&a.result.sessionId;await send('Page.enable',{},sid);const ft=await send('Page.getFrameTree',{},sid);topFrame=ft.result&&ft.result.frameTree&&ft.result.frameTree.frame&&ft.result.frameTree.frame.id;await send('Fetch.enable',{patterns:via?[{urlPattern:'*',requestStage:'Request'}]:[{urlPattern:'*',resourceType:'Document',requestStage:'Request'}]},sid);if(mode==='style'){const vp=Object.prototype.hasOwnProperty.call(VPS,req.viewport)?VPS[req.viewport]:VPS.desktop;await send('Emulation.setDeviceMetricsOverride',{width:vp.width,height:vp.height,deviceScaleFactor:1,mobile:vp.mobile},sid);if(vp.mobile)await send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(mode==='view'){await send('Emulation.setDeviceMetricsOverride',{width:vreq.w,height:vreq.h,deviceScaleFactor:1,mobile:false},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:vreq.dark===true?'dark':'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(serveIn)await send('Emulation.setScriptExecutionDisabled',{value:true},sid);navStarted=true;const nav=await send('Page.navigate',{url},sid);errorText=nav.result&&nav.result.errorText;let loadedInTime=true;if(mode==='style'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(SETTLE_MS,DEADLINE_MS-7000)))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else if(mode==='view'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(Math.min(SETTLE_MS,300),Math.min(` + VIEW_LOAD_MS + ",DEADLINE_MS-9000))))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else await new Promise((r)=>setTimeout(r,SETTLE_MS));if(finished)return;if(mode==='shot'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const shot=await send('Page.captureScreenshot',{format:'png'},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));try{fs.writeFileSync(file,Buffer.from(b64,'base64'))}catch(e){return done('TRACY_BROWSER ERR '+((e&&e.message)||String(e)))}return done('TRACY_BROWSER OK '+u2)}if(mode==='view'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const sc=await send('Runtime.evaluate',{expression:'('+SCROLL+')('+JSON.stringify(vreq.y)+','+JSON.stringify(VIEWW)+')',awaitPromise:true,returnByValue:true},sid);const at=sc.result&&sc.result.result&&sc.result.result.value;if(finished)return;const shot=await send('Page.captureScreenshot',{format:'jpeg',quality:" + VIEW_QUALITY + `},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));return done('TRACY_BROWSER OK '+u2+'\\n'+JSON.stringify({y:typeof at==='number'?at:null,loaded:loadedInTime,jpeg:b64}))}if(mode==='style'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const f=await send('Runtime.evaluate',{expression:'('+FIND+')('+JSON.stringify(req)+')',returnByValue:false},sid);const ro=f.result&&f.result.result;if(!ro||ro.subtype!=='node'||!ro.objectId)return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({error:String((ro&&ro.value)||'the page returned no element'),loaded:loadedInTime}));const dv=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:req.set===true}],returnByValue:true},sid);const info=(dv.result&&dv.result.result&&dv.result.result.value)||{};await send('DOM.enable',{},sid);await send('CSS.enable',{},sid);await send('DOM.getDocument',{depth:0},sid);const matchedOf=async(oid)=>{const n=await send('DOM.requestNode',{objectId:oid},sid);const r=await send('CSS.getMatchedStylesForNode',{nodeId:n.result&&n.result.nodeId},sid);return r.result||{}};const mt=await matchedOf(ro.objectId);let painter=null;if(info.paint>0){const a=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:'function(k){let e=this;while(k-->0&&e.parentElement)e=e.parentElement;return e}',arguments:[{value:info.paint}]},sid);const ao=a.result&&a.result.result;if(ao&&ao.objectId)painter=await matchedOf(ao.objectId)}const got=RESOLVE({props:req.props,info,matched:mt,painter});if(req.set===true){try{const ps=PSEL(got.props||{});if(ps.some(Boolean)){const pc=await send('Runtime.evaluate',{expression:'('+PAINTS+')('+JSON.stringify(ps)+')',returnByValue:true},sid);const ns=pc.result&&pc.result.result&&pc.result.result.value;if(Array.isArray(ns))Object.values(got.props).forEach((r,i)=>{if(r&&typeof ns[i]==='number'&&ns[i]>=0)r.paints=ns[i]})}}catch{}}const copies=[];if(req.set===true&&Array.isArray(info.copies)){for(const c of info.copies.slice(0,3)){try{const q=await send('Runtime.evaluate',{expression:'document.querySelector('+JSON.stringify(String(c.unique))+')',returnByValue:false},sid);const co=q.result&&q.result.result;if(!co||co.subtype!=='node'||!co.objectId)continue;const cd=await send('Runtime.callFunctionOn',{objectId:co.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:false}],returnByValue:true},sid);const ci=(cd.result&&cd.result.result&&cd.result.result.value)||{};const cg=RESOLVE({props:req.props,info:ci,matched:await matchedOf(co.objectId),painter:null});for(const id of cg.sheets||[])if(!got.sheets.includes(id))got.sheets.push(id);copies.push({unique:String(c.unique),el:String(c.el||ci.el||''),props:cg.props||{}})}catch{}}}const names={};for(const id of got.sheets){const h=sheets[id];if(!h){names[id]='a stylesheet';continue}if(h.isInline&&!h.hasSourceURL){let label='a <style> in the page';try{const d=await send('DOM.describeNode',{backendNodeId:h.ownerNode},sid);const at=(d.result&&d.result.node&&d.result.node.attributes)||[];for(let i=0;i+1<at.length;i+=2)if(at[i]==='id'){label='<style id="'+String(at[i+1]).slice(0,60)+'">';break}}catch{}names[id]=label;continue}let s=String(h.sourceURL||''),isUrl=false;try{const su=new URL(s);isUrl=true;s=su.origin===new URL(u1).origin?su.pathname:su.origin+su.pathname}catch{}names[id]=s.slice(0,120)+(h.isInline&&isUrl?' (inlined in the page)':'')}const fix=(o)=>{if(!o||!o.sheet)return;const h=sheets[o.sheet];if(h&&h.isInline)delete o.line;o.sheet=names[o.sheet]||'a stylesheet'};for(const row of [...Object.values(got.props),...copies.flatMap((c)=>Object.values(c.props))]){fix(row);for(const t of row.tokens||[])fix(t);for(const pt of row.parts||[])fix(pt)}return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({info:{el:info.el,text:info.text,matches:info.matches,how:info.how,hidden:info.hidden,unique:info.unique,body:info.body,chrome:info.chrome,sheets:info.sheets,template:info.template,framework:info.framework,...(copies.length>0?{copies}:{})},props:got.props,loaded:loadedInTime}))}if(mode==='styles'){const S=await send('Runtime.evaluate',{expression:PROBE,returnByValue:true},sid);const v=S.result&&S.result.result&&S.result.result.value;if(!v||typeof v!=='object'||!Array.isArray(v.samples))return done('TRACY_BROWSER ERR the style probe returned nothing');const u3=v.href;let ok3=false;try{ok3=new URL(u3).origin===origin}catch{}if(!ok3){if(u3&&u3.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u3||offsite||'unknown'))}return done('TRACY_BROWSER OK '+u3+'\\n'+JSON.stringify(v))}const R=await send('Runtime.evaluate',{expression:'JSON.stringify({href:document.location.href,html:document.documentElement.outerHTML})',returnByValue:true},sid);const raw=R.result&&R.result.result&&R.result.result.value;let data=null;try{data=JSON.parse(raw)}catch{}const finalUrl=data&&data.href;let same=false;try{same=new URL(finalUrl).origin===origin}catch{}if(!same){if(finalUrl&&finalUrl.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(finalUrl||offsite||'unknown'))}return done('TRACY_BROWSER OK '+finalUrl+'\\n'+((data&&data.html)||''))})().catch((e)=>done('TRACY_BROWSER ERR '+((e&&e.message)||String(e))));}`;
+var BROWSER_SCRIPT = `const {spawn}=require('child_process');const fs=require('fs');const os=require('os');const path=require('path');const mode=process.argv[1],url=process.argv[2],origin=process.argv[3],file=process.argv[4]||"";const req=mode==='style'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Array.isArray(r.props)?r:null}catch{return null}})():null;const vreq=mode==='view'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Number.isInteger(r.w)&&Number.isInteger(r.h)&&Number.isInteger(r.y)&&r.w>0&&r.h>0&&r.y>=0?r:null}catch{return null}})():null;const FIND=${JSON.stringify(String(findTarget))},DESCRIBE=${JSON.stringify(String(describeTarget))},VPS=${JSON.stringify(STYLE_VIEWPORTS)};const SCROLL=${JSON.stringify(String(scrollForView))},VIEWW=${JSON.stringify(VIEW_WAITS)};const RESOLVE=(${String(resolveStyles)});const PSEL=(${String(paintSelectors)}),PAINTS=${JSON.stringify(String(countPaints))};const sheets={};let onLoad=null;const loaded=new Promise((r)=>{onLoad=r});const PROBE=` + JSON.stringify(STYLE_PROBE) + ";const SETTLE_MS=Number(process.argv[5])||" + BROWSER_SETTLE_MS + ",DEADLINE_MS=Number(process.argv[6])||" + BROWSER_DEADLINE_MS + ",FLUSH_MS=Number(process.argv[7])||" + BROWSER_FLUSH_MS + ";const via=(process.env&&process.env.TRACY_PUBLIC_VIA)||'';const viaM=/^127\\.0\\.0\\.1:([0-9]{1,5})$/.exec(via);const CHROME=(process.env&&process.env.TRACY_CHROME)||'chromium';const serveIn=(process.env&&process.env.TRACY_SERVE_CONTAINER)||'';let profile='';try{profile=fs.mkdtempSync(path.join(os.tmpdir(),'tracy-look-'))}catch{}let child=null,hard=null,finished=false,sid=null,topFrame=null,offsite=null,navStarted=false,errorText=null;const clean=()=>{try{if(profile)fs.rmSync(profile,{recursive:true,force:true})}catch{}};if(process.on)process.on('exit',clean);const stop=()=>{try{process.kill(-child.pid,'SIGKILL')}catch{}try{child.kill('SIGKILL')}catch{}};const done=(line)=>{if(finished)return;finished=true;if(hard)clearTimeout(hard);if(child)stop();clean();const bail=setTimeout(()=>process.exit(1),FLUSH_MS);try{process.stdout.write(line,()=>{clearTimeout(bail);process.exit(0)})}catch{clearTimeout(bail);process.exit(1)}};if(process.on)process.on('SIGTERM',()=>done('TRACY_BROWSER ERR stopped'));const flags=['--headless=new','--disable-features=MacAppCodeSignClone','--disable-gpu','--no-crash-upload','--disable-breakpad','--no-first-run','--no-default-browser-check','--remote-debugging-pipe'];if(mode==='shot'||mode==='styles')flags.push('--hide-scrollbars','--window-size=1280,800');if(mode==='style'||mode==='view')flags.push('--hide-scrollbars');if(!serveIn&&process.env&&process.env.TRACY_RESOLVER_RULE)flags.push(process.env.TRACY_RESOLVER_RULE);if(serveIn)flags.push('--host-resolver-rules=MAP * ~NOTFOUND','--proxy-server=http://127.0.0.1:9','--proxy-bypass-list=<-loopback>');if(!profile){done('TRACY_BROWSER ERR could not create a private browser profile')}else if(via&&(!viaM||Number(viaM[1])<1||Number(viaM[1])>65535)){done('TRACY_BROWSER ERR the public route is not a loopback port')}else if(serveIn&&(!/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(serveIn)||!viaM||(mode!=='styles'&&mode!=='view'))){done('TRACY_BROWSER ERR the host route needs a container name, its loopback port and the styles or view mode')}else if(mode==='style'&&!req){done('TRACY_BROWSER ERR the style request is not a JSON object with props')}else if(mode==='view'&&!vreq){done('TRACY_BROWSER ERR the view request is not a JSON object with w, h and y')}else{flags.push('--user-data-dir='+profile);child=spawn(CHROME,[...flags,'about:blank'],{stdio:['ignore','ignore','ignore','pipe','pipe'],detached:true});child.on('error',(e)=>done('TRACY_BROWSER NOCHROME '+((e&&e.message)||String(e))));const pending=new Map();child.on('exit',(code,sig)=>{if(finished)return;const why='chromium exited'+(code!=null?' ('+code+')':sig?' ('+sig+')':'');for(const f of pending.values())f({error:{message:why}});pending.clear();done('TRACY_BROWSER NOCHROME '+why)});hard=setTimeout(()=>done('TRACY_BROWSER ERR timed out'),DEADLINE_MS);const wr=child.stdio[3],rd=child.stdio[4];let buf=Buffer.alloc(0),id=0;wr.on('error',()=>{});rd.on('error',()=>{});const send=(method,params,session)=>new Promise((res,rej)=>{const n=++id;pending.set(n,(m)=>{if(m&&m.error)rej(new Error(method+': '+((m.error&&m.error.message)||JSON.stringify(m.error))));else res(m)});const o={id:n,method,params:params||{}};if(session)o.sessionId=session;try{wr.write(JSON.stringify(o)+'\\0')}catch(e){pending.delete(n);rej(e instanceof Error?e:new Error(String(e)))}});const parseHttp=(b)=>{let off=0;for(let g=0;g<5;g++){const e=b.indexOf('\\r\\n\\r\\n',off);if(e===-1)return null;const head=b.slice(off,e).toString('latin1').split('\\r\\n');const sm=/^HTTP\\/[0-9.]+ ([0-9]{3})/.exec(head[0]||'');if(!sm)return null;const code=Number(sm[1]);off=e+4;if(code<200)continue;const hs=[];for(const line of head.slice(1)){const i=line.indexOf(':');if(i<1)continue;const name=line.slice(0,i).trim(),l=name.toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name,value:line.slice(i+1).trim()})}return{responseCode:code,responseHeaders:hs,body:b.slice(off).toString('base64')}}return null};let running=0;const waiting=[];const next=()=>{while(running<4&&waiting.length>0){running++;waiting.shift()(()=>{running--;next()})}};const serveExec=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const args=['exec','-u','www-data',serveIn,'curl','-sS','-i','--http1.1','--max-time','" + Math.ceil(BROWSER_SERVE_MS / 1e3) + "','--max-filesize','" + BROWSER_SERVE_MAX + "','-H','Host: '+t.host,'-H','X-Forwarded-Proto: '+t.protocol.slice(0,-1),'-H','Accept-Encoding: identity'];const rh=(p.request&&p.request.headers)||{};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;const v=String(rh[k]);if(/[\\r\\n]/.test(k+v))continue;args.push('-H',k+': '+v)}args.push('http://127.0.0.1:'+viaM[1]+t.pathname+t.search);waiting.push((release)=>{if(finished||settled)return release();require('child_process').execFile('docker',args,{encoding:'buffer',maxBuffer:" + BROWSER_SERVE_MAX + "+65536,timeout:" + BROWSER_SERVE_MS + "+2000},(err,out)=>{release();fin(err||!out?null:parseHttp(out))})});next()};const serve=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const rh=(p.request&&p.request.headers)||{},h={};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;h[k]=rh[k]}h.host=t.host;h['x-forwarded-proto']=t.protocol.slice(0,-1);h['accept-encoding']='identity';const body=typeof p.request.postData==='string'?Buffer.from(p.request.postData):null;if(body)h['content-length']=String(body.length);let q;try{q=require('http').request({host:'127.0.0.1',port:Number(viaM[1]),method:p.request.method||'GET',path:t.pathname+t.search,headers:h},(r)=>{const cs=[];let n=0;r.on('data',(d)=>{n+=d.length;if(n>" + BROWSER_SERVE_MAX + "){r.destroy();return fin(null)}cs.push(d)});r.on('error',()=>fin(null));r.on('end',()=>{const hs=[],raw=r.rawHeaders||[];for(let i=0;i+1<raw.length;i+=2){const l=String(raw[i]).toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name:String(raw[i]),value:String(raw[i+1])})}fin({responseCode:r.statusCode,responseHeaders:hs,body:Buffer.concat(cs).toString('base64')})})})}catch{return fin(null)}q.on('error',()=>fin(null));q.setTimeout(" + BROWSER_SERVE_MS + `,()=>q.destroy(new Error('timed out')));if(body)q.write(body);q.end()};const onEvent=(m)=>{if(m.method==='Page.loadEventFired'){if(onLoad)onLoad();return}if(m.method==='CSS.styleSheetAdded'){const h=m.params&&m.params.header;if(h&&h.styleSheetId)sheets[h.styleSheetId]=h;return}if(m.method==='Page.frameNavigated'){const fr=(m.params&&m.params.frame)||{};if(navStarted&&fr.id===topFrame&&!fr.parentId){let good=false;try{good=new URL(fr.url).origin===origin}catch{}if(!good){if(fr.url&&fr.url.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(fr.url||offsite||'unknown'))}}return}if(m.method!=='Fetch.requestPaused')return;const p=m.params||{};const rid=p.requestId,ru=(p.request&&p.request.url)||"";let allow=true;if(p.resourceType==='Document'&&p.frameId===topFrame){try{allow=new URL(ru).origin===origin}catch{allow=false}}if(allow&&serveIn){let own=false;try{own=new URL(ru).origin===origin}catch{}const kind=p.resourceType;const served=kind==='Document'||kind==='Stylesheet'||(mode==='view'&&(kind==='Image'||kind==='Font'));if(own&&served&&(p.request&&p.request.method)==='GET')return serveExec(p);send('Fetch.failRequest',{requestId:rid,errorReason:'BlockedByClient'},sid).catch(()=>{});return}if(allow&&via){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own)return serve(p)}if(allow){send('Fetch.continueRequest',{requestId:rid},sid).catch(()=>{})}else{offsite=ru;send('Fetch.failRequest',{requestId:rid,errorReason:'Aborted'},sid).catch(()=>{});done('TRACY_BROWSER OFFSITE '+ru)}};rd.on('data',(d)=>{if(finished)return;buf=Buffer.concat([buf,d]);let i;while((i=buf.indexOf(0))!==-1){let m=null;try{m=JSON.parse(buf.slice(0,i))}catch{}buf=buf.slice(i+1);if(!m)continue;if(m.id&&pending.has(m.id)){const f=pending.get(m.id);pending.delete(m.id);f(m)}else if(m.method)onEvent(m)}});(async()=>{const t=await send('Target.createTarget',{url:'about:blank'});const a=await send('Target.attachToTarget',{targetId:t.result&&t.result.targetId,flatten:true});sid=a.result&&a.result.sessionId;await send('Page.enable',{},sid);const ft=await send('Page.getFrameTree',{},sid);topFrame=ft.result&&ft.result.frameTree&&ft.result.frameTree.frame&&ft.result.frameTree.frame.id;await send('Fetch.enable',{patterns:via?[{urlPattern:'*',requestStage:'Request'}]:[{urlPattern:'*',resourceType:'Document',requestStage:'Request'}]},sid);if(mode==='style'){const vp=Object.prototype.hasOwnProperty.call(VPS,req.viewport)?VPS[req.viewport]:VPS.desktop;await send('Emulation.setDeviceMetricsOverride',{width:vp.width,height:vp.height,deviceScaleFactor:1,mobile:vp.mobile},sid);if(vp.mobile)await send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(mode==='view'){await send('Emulation.setDeviceMetricsOverride',{width:vreq.w,height:vreq.h,deviceScaleFactor:1,mobile:false},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:vreq.dark===true?'dark':'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(serveIn)await send('Emulation.setScriptExecutionDisabled',{value:true},sid);navStarted=true;const nav=await send('Page.navigate',{url},sid);errorText=nav.result&&nav.result.errorText;let loadedInTime=true;if(mode==='style'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(SETTLE_MS,DEADLINE_MS-7000)))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else if(mode==='view'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(Math.min(SETTLE_MS,300),Math.min(` + VIEW_LOAD_MS + ",DEADLINE_MS-9000))))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else await new Promise((r)=>setTimeout(r,SETTLE_MS));if(finished)return;if(mode==='shot'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const shot=await send('Page.captureScreenshot',{format:'png'},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));try{fs.writeFileSync(file,Buffer.from(b64,'base64'))}catch(e){return done('TRACY_BROWSER ERR '+((e&&e.message)||String(e)))}return done('TRACY_BROWSER OK '+u2)}if(mode==='view'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const sc=await send('Runtime.evaluate',{expression:'('+SCROLL+')('+JSON.stringify(vreq.y)+','+JSON.stringify(VIEWW)+')',awaitPromise:true,returnByValue:true},sid);const at=sc.result&&sc.result.result&&sc.result.result.value;if(finished)return;const shot=await send('Page.captureScreenshot',{format:'jpeg',quality:" + VIEW_QUALITY + `},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));return done('TRACY_BROWSER OK '+u2+'\\n'+JSON.stringify({y:typeof at==='number'?at:null,loaded:loadedInTime,jpeg:b64}))}if(mode==='style'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const f=await send('Runtime.evaluate',{expression:'('+FIND+')('+JSON.stringify(req)+')',returnByValue:false},sid);const ro=f.result&&f.result.result;if(!ro||ro.subtype!=='node'||!ro.objectId)return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({error:String((ro&&ro.value)||'the page returned no element'),loaded:loadedInTime}));const dv=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:req.set===true}],returnByValue:true},sid);const info=(dv.result&&dv.result.result&&dv.result.result.value)||{};await send('DOM.enable',{},sid);await send('CSS.enable',{},sid);await send('DOM.getDocument',{depth:0},sid);const matchedOf=async(oid)=>{const n=await send('DOM.requestNode',{objectId:oid},sid);const r=await send('CSS.getMatchedStylesForNode',{nodeId:n.result&&n.result.nodeId},sid);return r.result||{}};const mt=await matchedOf(ro.objectId);let painter=null;if(info.paint>0){const a=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:'function(k){let e=this;while(k-->0&&e.parentElement)e=e.parentElement;return e}',arguments:[{value:info.paint}]},sid);const ao=a.result&&a.result.result;if(ao&&ao.objectId)painter=await matchedOf(ao.objectId)}const got=RESOLVE({props:req.props,info,matched:mt,painter});if(req.set===true){try{const ps=PSEL(got.props||{});if(ps.some(Boolean)){const pc=await send('Runtime.evaluate',{expression:'('+PAINTS+')('+JSON.stringify(ps)+')',returnByValue:true},sid);const ns=pc.result&&pc.result.result&&pc.result.result.value;if(Array.isArray(ns))Object.values(got.props).forEach((r,i)=>{if(r&&typeof ns[i]==='number'&&ns[i]>=0)r.paints=ns[i]})}}catch{}}const copies=[];if(req.set===true&&Array.isArray(info.copies)){for(const c of info.copies.slice(0,3)){try{const q=await send('Runtime.evaluate',{expression:'document.querySelector('+JSON.stringify(String(c.unique))+')',returnByValue:false},sid);const co=q.result&&q.result.result;if(!co||co.subtype!=='node'||!co.objectId)continue;const cd=await send('Runtime.callFunctionOn',{objectId:co.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:false}],returnByValue:true},sid);const ci=(cd.result&&cd.result.result&&cd.result.result.value)||{};const cg=RESOLVE({props:req.props,info:ci,matched:await matchedOf(co.objectId),painter:null});for(const id of cg.sheets||[])if(!got.sheets.includes(id))got.sheets.push(id);copies.push({unique:String(c.unique),el:String(c.el||ci.el||''),props:cg.props||{}})}catch{}}}const names={};for(const id of got.sheets){const h=sheets[id];if(!h){names[id]='a stylesheet';continue}if(h.isInline&&!h.hasSourceURL){let label='a <style> in the page';try{const d=await send('DOM.describeNode',{backendNodeId:h.ownerNode},sid);const at=(d.result&&d.result.node&&d.result.node.attributes)||[];for(let i=0;i+1<at.length;i+=2)if(at[i]==='id'){label='<style id="'+String(at[i+1]).slice(0,60)+'">';break}}catch{}names[id]=label;continue}let s=String(h.sourceURL||''),isUrl=false;try{const su=new URL(s);isUrl=true;s=su.origin===new URL(u1).origin?su.pathname:su.origin+su.pathname}catch{}names[id]=s.slice(0,120)+(h.isInline&&isUrl?' (inlined in the page)':'')}const fix=(o)=>{if(!o||!o.sheet)return;const h=sheets[o.sheet];if(h&&h.isInline)delete o.line;o.sheet=names[o.sheet]||'a stylesheet'};for(const row of [...Object.values(got.props),...copies.flatMap((c)=>Object.values(c.props))]){fix(row);for(const t of row.tokens||[])fix(t);for(const pt of row.parts||[])fix(pt)}return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({info:{el:info.el,text:info.text,matches:info.matches,how:info.how,hidden:info.hidden,unique:info.unique,body:info.body,chrome:info.chrome,sheets:info.sheets,template:info.template,framework:info.framework,...(copies.length>0?{copies}:{})},props:got.props,loaded:loadedInTime}))}if(mode==='styles'){const S=await send('Runtime.evaluate',{expression:PROBE,returnByValue:true},sid);const v=S.result&&S.result.result&&S.result.result.value;if(!v||typeof v!=='object'||!Array.isArray(v.samples))return done('TRACY_BROWSER ERR the style probe returned nothing');const u3=v.href;let ok3=false;try{ok3=new URL(u3).origin===origin}catch{}if(!ok3){if(u3&&u3.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u3||offsite||'unknown'))}return done('TRACY_BROWSER OK '+u3+'\\n'+JSON.stringify(v))}const R=await send('Runtime.evaluate',{expression:'JSON.stringify({href:document.location.href,html:document.documentElement.outerHTML})',returnByValue:true},sid);const raw=R.result&&R.result.result&&R.result.result.value;let data=null;try{data=JSON.parse(raw)}catch{}const finalUrl=data&&data.href;let same=false;try{same=new URL(finalUrl).origin===origin}catch{}if(!same){if(finalUrl&&finalUrl.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(finalUrl||offsite||'unknown'))}return done('TRACY_BROWSER OK '+finalUrl+'\\n'+((data&&data.html)||''))})().catch((e)=>done('TRACY_BROWSER ERR '+((e&&e.message)||String(e))));}`;
 function browserArgv({
   container,
   mode,
@@ -12278,10 +12311,26 @@ function hostBrowserTarget(target) {
   if (!(n >= 1 && n <= 65535)) return null;
   return { url: target.url, origin: target.origin, container: target.container, via: `127.0.0.1:${n}` };
 }
-function hostBrowserCommand({ chrome, target, dockerHost }) {
+function hostBrowserCommand({
+  chrome,
+  target,
+  dockerHost,
+  mode = "styles",
+  file = "",
+  settleMs = BROWSER_SETTLE_MS,
+  deadlineMs
+}) {
   return {
     file: process.execPath,
-    args: ["-e", BROWSER_SCRIPT, "styles", target.url, target.origin, ""],
+    args: [
+      "-e",
+      BROWSER_SCRIPT,
+      mode,
+      target.url,
+      target.origin,
+      file,
+      ...deadlineMs === void 0 ? [] : [String(settleMs), String(deadlineMs)]
+    ],
     env: {
       TRACY_CHROME: chrome,
       TRACY_SERVE_CONTAINER: target.container,
@@ -12295,9 +12344,19 @@ function hostBrowserExec({
   chrome,
   target,
   timeoutMs = HOST_BROWSER_TIMEOUT_MS,
-  maxBuffer = 8 * 1024 * 1024
+  maxBuffer = 8 * 1024 * 1024,
+  mode = "styles",
+  file = "",
+  deadlineMs
 }) {
-  const c = hostBrowserCommand({ chrome, target, dockerHost: resolveDockerHost(void 0, process.env) });
+  const c = hostBrowserCommand({
+    chrome,
+    target,
+    dockerHost: resolveDockerHost(void 0, process.env),
+    mode,
+    file,
+    ...deadlineMs === void 0 ? {} : { deadlineMs }
+  });
   return new Promise((resolve) => {
     execFile(
       c.file,
@@ -12999,7 +13058,7 @@ function refusalNext(answer, given = {}) {
       return `This conversation is ${here}, and ${there} is its own workspace \u2014 nothing here can reach it, and there is no other way in. If the customer wants ${there} changed, tell them to open its workspace and ask there; then carry on with ${here} only.`;
     }
     case "COMPONENT_NOT_ON_FLEET_COPY":
-      return fleetCopyNext(a.copyReason);
+      return fleetCopyNext(a.copyReason, a.transient);
     case "COWORK_WEB_UNREACHABLE":
       return "Tracy could not be reached; retry once, then tell the customer.";
     // ── The door is there, it was handed a signature, and it could not read it ───────────────────
@@ -13749,11 +13808,13 @@ function emdashSiteNext(action) {
     return 'tracy_emdash content_get {collection, id:"<slug>"}, then content_update {collection, id, _rev, data, status:"published"}.';
   return 'This site runs EmDash: tracy_emdash {tool, arguments} reaches it; content_get {collection, id:"<slug>"} reads a page ("site" holds the site-wide words).';
 }
-function fleetCopyNext(why) {
+function fleetCopyNext(why, transient2) {
   const untouched = "nothing was written and the live site was not touched";
   switch (why) {
     case "timeout":
     case "unreachable":
+      if (transient2 === false)
+        return `The hosted copy of this imported site has not answered for a long while; ${untouched}. Do not retry: tell the customer the copy is not answering and needs checking by Tracy's team; do not write another way.`;
       return `The hosted copy of this imported site is still warming up; ${untouched}. Retry the same call in a moment; if it is refused again, tell the customer the copy is not answering yet.`;
     case "unauthorized":
       return `The hosted copy of this imported site does not accept the token Tracy holds for it; ${untouched}. Tell the customer its Claude Cowork plugin needs pairing again; do not write another way.`;
@@ -18424,7 +18485,8 @@ async function runSiteCall(input) {
   let wholeGroup = null;
   let rowGroup = null;
   const planAgreed = consequence !== null && tier !== "destructive" && typeof input.planAgreed === "function" ? await input.planAgreed() === true : false;
-  if (tier === "destructive" || consequence !== null && !planAgreed) {
+  const turnAgreed = consequence !== null && tier !== "destructive" && SITE_WIDE_REASONS.has(consequence.reason) && typeof sessionId === "string" && sessionId !== "" && memory?.siteWideAgreed?.(sessionId) === true;
+  if (tier === "destructive" || consequence !== null && !planAgreed && !turnAgreed) {
     const group = n0.kind === "relay" && groupDeleteApplies(platform, n0) ? await translationGroupOf({
       send,
       memory,
@@ -18513,7 +18575,7 @@ async function runSiteCall(input) {
     }) ?? consequence : consequence;
     const facts2 = shownConsequence?.facts?.length ? shownConsequence.facts : recordTitle !== "" ? [recordTitle] : [];
     if (!agreed && !mediaPreviewOnly && sessionId)
-      memory?.confirmAsked?.(sessionId, confirmKey3, true, facts2, intent);
+      memory?.confirmAsked?.(sessionId, confirmKey3, true, facts2, intent, consequence?.reason);
     if (!agreed && !mediaPreviewOnly) {
       const size2 = group === null ? 0 : group.members.length;
       const named3 = group === null ? "" : recordNamed(group);
@@ -29637,7 +29699,7 @@ async function runVisualCheck(job) {
     if (ask === void 0 || ask.turn !== job.turn) return skip("no-ask");
     if (!siteChangedInTurn(job.events)) return skip("no-write");
     const before = ask.before ?? ask.fallback ?? null;
-    if (before === null) return skip(ask.missing ? `no-before: ${ask.missing}` : "no-before");
+    if (before === null) return skip(`no-before: ${ask.missing ?? (ask.hold === void 0 ? "not-held" : "none")}`);
     if (!before.loaded) return skip("before-not-loaded");
     const view2 = { ...before.view, y: before.y ?? before.view.y };
     if (ask.comment) {
@@ -46095,7 +46157,7 @@ function createViewStore({
   const written = /* @__PURE__ */ new Map();
   const lastWriteOf = (label) => written.get(label) ?? -Infinity;
   const sites = /* @__PURE__ */ new Map();
-  function drawInTurn(label, view2) {
+  function drawInTurn(label, view2, check = false) {
     let queue = sites.get(label);
     if (queue === void 0) {
       queue = { tail: Promise.resolve(), count: 0 };
@@ -46107,7 +46169,7 @@ function createViewStore({
     mine.count += 1;
     const start = () => {
       const at = now();
-      return capture({ label, view: view2 }).then((drawn) => ({ drawn, at }));
+      return capture(check ? { label, view: view2, check } : { label, view: view2 }).then((drawn) => ({ drawn, at }));
     };
     let job;
     try {
@@ -46276,7 +46338,7 @@ function createViewStore({
      * @returns {Promise<Capture>}
      */
     draw(label, view2) {
-      return drawInTurn(label, view2).then(
+      return drawInTurn(label, view2, true).then(
         ({ drawn }) => drawn,
         () => (
           /** @type {Capture} */
@@ -46313,14 +46375,16 @@ async function captureView({
   publicOrigin = null,
   run,
   door,
-  gate = pageLookGate
+  gate = pageLookGate,
+  host = null
 }) {
   const target = lookTarget(label, view2.path, internalPort);
   if (!target.ok) return { ok: false, code: "BAD_PATH" };
   const checked = await gate({ run, label, internalPort, publicOrigin, path: target.path, door });
   if ("legacy" in checked) return { ok: false, code: "NO_CURL" };
   if (!checked.ok) return { ok: false, code: String(checked.answer.code ?? "REFUSED") };
-  const { res } = await browseAsSite({
+  const frame = JSON.stringify({ w: view2.w, h: view2.h, y: view2.y, dark: view2.dark });
+  let { res } = await browseAsSite({
     target: checked.target,
     publicOrigin,
     launch: (t) => run({
@@ -46329,7 +46393,7 @@ async function captureView({
         mode: "view",
         url: t.url,
         origin: t.origin,
-        file: JSON.stringify({ w: view2.w, h: view2.h, y: view2.y, dark: view2.dark }),
+        file: frame,
         resolverRule: t.resolverRule,
         via: t.via,
         deadlineMs: VIEW_DEADLINE_MS
@@ -46338,9 +46402,22 @@ async function captureView({
       maxBuffer: VIEW_MAX_BUFFER
     })
   });
-  const out = parseBrowser(res.stdout);
-  if (looksLikeMissingBinary(res) || !out.ok && out.kind === "no-browser")
-    return { ok: false, code: "NO_BROWSER" };
+  let out = parseBrowser(res.stdout);
+  const noBrowser = () => looksLikeMissingBinary(res) || !out.ok && out.kind === "no-browser";
+  if (noBrowser() && host !== null) {
+    const onHost = host;
+    ({ res } = await browseAsSite({
+      target: checked.target,
+      publicOrigin,
+      launch: async (t) => {
+        const pinned = hostBrowserTarget(t);
+        if (pinned === null) return { code: 0, stdout: "TRACY_BROWSER NOCHROME no route to pin", stderr: "", timedOut: false };
+        return onHost.run({ target: pinned, file: frame, deadlineMs: VIEW_DEADLINE_MS });
+      }
+    }));
+    out = parseBrowser(res.stdout);
+  }
+  if (noBrowser()) return { ok: false, code: "NO_BROWSER" };
   if (!out.ok) return { ok: false, code: out.kind === "offsite" ? "REDIRECTED_OFF_SITE" : "LOOK_FAILED" };
   if (!(res.code === 0 && !res.spawnError && !res.timedOut)) return { ok: false, code: "LOOK_FAILED" };
   let payload = null;
@@ -47898,15 +47975,28 @@ function apply(ctx, config = {}) {
   const dryRuns = createDryRunMemory();
   const slotOf2 = (label, opts = {}) => siteSlot(config, resolveSitesRoot(void 0), label, opts);
   const viewsOn = config.viewContext !== false;
-  const drawView = async (label, view2) => {
+  const drawView = async (label, view2, { check = false } = {}) => {
     const sitesRoot = resolveSitesRoot(void 0);
+    const chrome = check ? config.hostChrome !== void 0 ? config.hostChrome : hostChromeOf(process.env, existsSync4) : null;
     return captureView({
       label,
       view: view2,
       internalPort: await sitePortFor(config, sitesRoot, label),
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
-      door: contentDoor(NO_SITE_FACTS)
+      door: contentDoor(NO_SITE_FACTS),
+      host: chrome ? {
+        chrome,
+        run: ({ target, file, deadlineMs }) => hostBrowserExec({
+          chrome,
+          target,
+          mode: "view",
+          file,
+          deadlineMs,
+          timeoutMs: VIEW_EXEC_MS,
+          maxBuffer: VIEW_MAX_BUFFER
+        })
+      } : null
     });
   };
   const voiceWords = spokenWords();
@@ -47914,9 +48004,9 @@ function apply(ctx, config = {}) {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view: view2 }) => {
+    capture: async ({ label, view: view2, check }) => {
       try {
-        return await drawView(label, view2);
+        return await drawView(label, view2, { check: check === true });
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -48823,7 +48913,7 @@ ${text6}`);
           turn,
           events,
           eyes: () => pickEyes(llm, route2, config.lookModel),
-          capture: (view2) => drawView(label, view2),
+          capture: (view2) => drawView(label, view2, { check: true }),
           store: (jpeg3) => storePicture(ctx, { jpeg: jpeg3 }),
           llm,
           ...signal ? { signal } : {}
@@ -49044,7 +49134,10 @@ ${text6}`);
         const ask = turnAsks.get(root);
         if (ask === void 0 || ask.checked || turn !== null && ask.turn !== turn) return decision;
         const label = sessionSite(exec?.agent);
-        if (label === null) return decision;
+        if (label === null) {
+          ask.missing ??= "no-site";
+          return decision;
+        }
         const postTypeOf = (id) => memory.readOf(sessionId, { kind: "post", id })?.postType ?? null;
         if (asksFirst(call, { postTypeOf })) return decision;
         const reach = writeReach(call, {
@@ -49524,7 +49617,8 @@ ${text6}`);
         const { confirm, ...call } = params;
         const key2 = `tracy_site:${sameCallKey("tracy_site", { action: plan.action, params: call })}`;
         if (confirm === true && memory.confirmed(sessionId, key2)) return null;
-        memory.confirmAsked(sessionId, key2, true, consequence.facts);
+        if (SITE_WIDE_REASONS.has(consequence.reason) && memory.siteWideAgreed(sessionId)) return null;
+        memory.confirmAsked(sessionId, key2, true, consequence.facts, null, consequence.reason);
         return withNext({
           ok: false,
           code: "CONFIRM_FIRST",

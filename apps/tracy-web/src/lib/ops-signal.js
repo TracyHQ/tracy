@@ -34,7 +34,7 @@ const FIELDS = {
   // `detail`: where a Joomla import stopped (step, check, HTTP status, bare path, error code), shaped
   // field by field in `sites/route.js` before it reaches here.
   'site.stuck': ['step', 'reason', 'platform', 'attempt', 'sign_in', 'detail'],
-  'site.edit': ['action', 'ok', 'refusal', 'from_comment'],
+  'site.edit': ['action', 'ok', 'refusal', 'copy_reason', 'from_comment'],
   // Usage (`tasks/todo-do-dung-that.md`): a person opened a site's workspace page (one per half hour),
   // and the Add site wizard opened, by the id the wizard drew for that opening — `site.create` carries
   // the same `wizard_id`, so an opening with no create after a day is a wizard left before Create.
