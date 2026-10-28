@@ -67,5 +67,22 @@ Not done, and why:
 
 ## Measures
 
-One WordPress build (Levain Bakery on JA Restaurant) before and after, on the local stand, one build at a time.
-Results in the PR description.
+One build per CMS before and after, on the local stand, one build at a time (WordPress Levain Bakery on JA Restaurant,
+Joomla Death & Co on JA Fresco, EmDash Levain Bakery on Tracy Business). Results in the PR comments.
+
+Baseline (`develop` c6206df67):
+
+| CMS | Outcome | Checks | Vision look |
+|---|---|---|---|
+| WordPress | not finished in 120 min | 4 calls, 88 min (2,762 / 988 / 612 / 944 s) | 1,621 calls, $16.27 |
+| Joomla | no plan: 9 `plan.save` refusals, agent stopped at 14 min | none | none |
+| EmDash | first check 2,394 s; the daily research cap ran out during it | 5 | 321 calls, $3.21 |
+
+Found while measuring, and fixed here: the look ran in every uncounted sweep round; a cut-short look kept nothing, so
+a ~50-page site never passed `looks-finished`; template post routes were read one at a time; a page lead held by no
+record or slot deadlocked the plan gate (Joomla).
+
+Found and **not** fixed here: the incremental read never reuses a page. `readDemoPage` fingerprints the document
+after scripts ran, which differs on every load of a real CMS page (form tokens, nonces, sliders), so every round
+reads the whole site. The fix fingerprints the served HTML with each CMS's volatile tokens taken out; a false match
+would hide a changed page, so it needs its own change and tests per CMS.
