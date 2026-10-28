@@ -192,10 +192,52 @@ test('a price the owner did not publish yields an owner question', () => {
 test('every missing or withheld fact of a brief has an owner question, none is a silent gap', () => {
   for (const [name, brief] of Object.entries(BRIEFS)) {
     const asked = new Set(ownerQuestionsOf(brief).map((q) => q.field))
+    const parked = new Set(routesOfBrief(brief).notShown.map((n) => n.kind))
     for (const m of brief.missing)
-      assert.ok(asked.has(m.field), `${name}: ${m.field} is missing and not asked`)
+      assert.ok(
+        asked.has(m.field) || parked.has(`missing.${m.field}`),
+        `${name}: ${m.field} is missing, not asked and not routed as not shown`
+      )
   }
   const fields = ownerQuestionsOf(BRIEFS.clubNoPhone).map((q) => q.field)
   assert.ok(fields.includes('phone') && fields.includes('address'), fields.join())
   for (const q of ownerQuestionsOf(BRIEFS.sparse)) assert.match(q.question, /\?/)
+})
+
+test('a source that failed is a research problem: no owner question, routed as not shown with its reason', () => {
+  const brief = structuredClone(BRIEFS.club)
+  brief.missing.push(
+    { field: 'source:map-service', why: 'failed: HTTP_429; nothing from this source is in the brief.' },
+    { field: 'source:review-site', why: 'failed: HTTP_402; nothing from this source is in the brief.' }
+  )
+  const qs = ownerQuestionsOf(brief)
+  assert.deepEqual(
+    qs.filter((q) => /source:|HTTP|map-service|review-site/.test(q.id + q.question)),
+    []
+  )
+  const parked = routesOfBrief(brief).notShown.find((n) => n.kind === 'missing.source:map-service')
+  assert.ok(parked, 'the failed source is routed as not shown')
+  assert.match(parked.reason, /HTTP_429/)
+})
+
+test('a missing field with no owner wording is never asked with its raw id, it is routed as not shown', () => {
+  const brief = structuredClone(BRIEFS.club)
+  brief.missing.push({ field: 'widget-count', why: 'No widget count was collected.' })
+  const qs = ownerQuestionsOf(brief)
+  assert.equal(
+    qs.some((q) => q.field === 'widget-count' || /widget-count/.test(q.question)),
+    false
+  )
+  const parked = routesOfBrief(brief).notShown.find((n) => n.kind === 'missing.widget-count')
+  assert.equal(parked?.reason, 'No widget count was collected.')
+})
+
+test('a missing field with owner wording keeps its question', () => {
+  const brief = structuredClone(BRIEFS.clubNoPhone)
+  const phone = ownerQuestionsOf(brief).find((q) => q.id === 'owner.phone')
+  assert.equal(phone?.question, 'What phone number should customers call? None was found.')
+  assert.equal(
+    routesOfBrief(brief).notShown.some((n) => n.kind === 'missing.phone'),
+    false
+  )
 })
